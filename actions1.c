@@ -17,7 +17,7 @@ extern carry(), discard(long), attack(), throw(), feed(), fill();
 /*  ANALYSE A VERB.  REMEMBER WHAT IT WAS, GO BACK FOR OBJECT IF SECOND WORD
  *  UNLESS VERB IS "SAY", WHICH SNARFS ARBITRARY SECOND WORD. */
 
-action(STARTAT)long STARTAT; {
+int action(STARTAT)long STARTAT; {
 	switch(STARTAT) {
 	   case 4000: goto L4000;
 	   case 4090: goto L4090;

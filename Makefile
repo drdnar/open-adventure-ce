@@ -21,3 +21,6 @@ actions2.o:	misc.h main.h share.h funcs.h
 score.o:	misc.h main.h share.h
 
 misc.o:		misc.h main.h
+
+clean:
+	rm -f *.o adventure

@@ -3,6 +3,7 @@
 #include "share.h"
 #include "funcs.h"
 #include <stdio.h>
+#include <stdbool.h>
 
 #define TRUE  (0==0)
 #define FALSE (0!=0)
@@ -164,13 +165,20 @@
  *	%B = VARIABLE NUMBER OF BLANKS
  *	%! = THE ENTIRE MESSAGE SHOULD BE SUPPRESSED */
 
-initialise() {
+static bool quick_init(void);
+static int raw_init(void);
+static void report(void);
+static void quick_save(void);
+static int finish_init(void);
+static void quick_io(void);
+
+void initialise() {
 	printf("Initialising...\n");
 	if(!quick_init()){raw_init(); report(); quick_save();}
 	finish_init();
 }
 
-static raw_init() {
+static int raw_init(void) {
 	printf("Couldn't find adventure.data, using adventure.text...\n");
 
 /*  CLEAR OUT THE VARIOUS TEXT-POINTER ARRAYS.  ALL TEXT IS STORED IN ARRAY
@@ -366,7 +374,7 @@ L1092:	LOCSND[K]=KK;
  *  CORRECT LINK TO USE.)  ABB IS ZEROED; IT CONTROLS WHETHER THE ABBREVIATED
  *  DESCRIPTION IS PRINTED.  COUNTS MOD 5 UNLESS "LOOK" IS USED. */
 
-static finish_init() {
+static int finish_init(void) {
 	/* 1101 */ for (I=1; I<=100; I++) {
 	PLACE[I]=0;
 	PROP[I]=0;
@@ -590,7 +598,7 @@ L1800:	{long x = 2*I+81; if(RTEXT[x] != 0)MAXDIE=I+1;}
 
 /*  REPORT ON AMOUNT OF ARRAYS ACTUALLY USED, TO PERMIT REDUCTIONS. */
 
-static report() {
+static void report(void) {
 	/* 1998 */ for (K=1; K<=LOCSIZ; K++) {
 	KK=LOCSIZ+1-K;
 	if(LTEXT[KK] != 0) goto L1997;
@@ -632,7 +640,7 @@ static FILE *f;
 static void quick_item(long*);
 static void quick_array(long*, long);
 
-static quick_init() {
+static bool quick_init(void) {
 #ifdef AMIGA
 	f = fopen("ram:adventure.data", READ_MODE);
 #else
@@ -652,19 +660,18 @@ static quick_init() {
 	return(init_cksum == 0);
 }
 
-static quick_save() {
+static void quick_save(void) {
 	printf("Writing adventure.data...\n");
 	f = fopen("adventure.data",WRITE_MODE);
-	if(f == NULL){printf("Can't open file!\n"); return(0);}
+	if(f == NULL){printf("Can't open file!\n"); return;}
 	init_reading = FALSE;
 	init_cksum = 1;
 	quick_io();
 	fwrite(&init_cksum,4,1,f);
 	fclose(f);
-	return(0);
 }
 
-static quick_io() {
+static void quick_io(void) {
 	quick_item(&LINUSE);
 	quick_item(&TRVS);
 	quick_item(&CLSSES);
@@ -692,7 +699,6 @@ static quick_io() {
 	quick_array(FIXD,100);
 	quick_array(ACTSPK,VRBSIZ);
 	quick_array((long *)HINTS,(HNTMAX+1)*5-1);
-	return(0);
 }
 
 static void quick_item(W)long *W; {
