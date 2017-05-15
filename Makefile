@@ -1,6 +1,4 @@
-# NOTE: This version of Adventure was developed by the author on private
-# equipment, and has been ported to Sun for entertainment purposes only.
-# The author (Don Woods) retains full rights to the work.
+# Makefile for the pen-source release of adventure 2.4
 
 OBJS=main.o init.o actions1.o actions2.o score.o misc.o datime.o
 

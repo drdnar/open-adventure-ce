@@ -1,0 +1,72 @@
+= A brief history of Colossal Cave Adventure =
+by Eric S. Raymond
+
+Adventure is the fons et origo of all later dungeon-crawling games,
+the gandaddy of interacive fiction, and one of the hallowed artifacts
+of hacker folklore.
+
+The very first version was released by Crowther in 1976, in FORTRAN on
+the PDP-10 at Bolt, Beranek, and Newman. (Crowther was at the time
+writing what we could now call firmware for the earliest ARPANET
+routers) It was a maze game based on the Colossal Cave complex in
+Kentucy, lacking the D&D-like elements now associated with the game.
+
+Adventure as we now know it, the ancestor of all later versions, was
+was released on a PDP-10 at the Stanford AI Lab by Don Woods in 1976
+(some sources, apparentl erroneously, say 1977). That version is
+sometimes known as 350-point Adventure.
+
+Between 1976 and 1995 Crowther and Woods themselves continued to work
+intermittently on the game. This main line of development cuminated
+in the 1995 release of Adventure 2.5, also known as 430-point Adventure
+
+The earliest port to C was by Jim Gillogly under an early Unix running
+at the Rand Corporation in 1976; this version was later, and still is,
+included in the BSD Games collection.  It was blessed by Crowther and
+Woods and briefly marketed in 1981 under the name "The Original
+Adventure".
+
+Many other people ported and extended the game in various directions.
+A notable version was the first game shipped for the IBM Personal
+Computer in 1981; this, for which neither Crowther nor Woods nor
+Gillogly were paid royalties, what "The Original" was competing
+against.
+
+The history of these non-mainline versions is complex and
+murky. Functional differences were generally marked by changes in the
+maximum score as people added puzzles and rooms; however, multiple
+ports of some versions existed - some in FORTRAN, some in C,
+some in other languages - so the maximum point score is not
+completely disambiguating.
+
+Many versions are collected at The Interactive Fiction Archive
+<<IFA>>. Same articles at <<DA>> are a narrative of the history of the
+game. There is some divergence of dates between these; I have
+preferred <<IF>> because its chronology makes better internal sense.
+
+Future versions of this document may attempt to untangle some of that
+history. For now, it will suffice to explain the chain of provenance
+that led from the original Adventure to the version distributed with
+this document.
+
+The original 350-point ADVENT on the PDP-10 had been one of my
+formative experiences as a fledgling hacker in 1976-77. Forty years
+later, in February 2017, while doing some casual research into the
+history of text adventure games, I looked through some source code at
+<<IFA>> and was delighted to learn of Adventure 2.5, a version of the
+Crowther-Woods mainline later than I had ever played.
+
+Adventure 2.5 had been shipped long enough ago that today's conventions of
+open-source licensing were not yet fully established. The Makefile
+contained a rights reservation by Don Woods and that was it.
+
+I wrote to Don asking permission to release 2.5 under 2-clause BSD;
+he replied on 15 May giving both permission and encouragement.
+
+== Sources ==
+
+[bibliography]
+
+- [[[IFA]]] http://rickadams.org/adventure/
+
+- [[[[DA]]] http://www.filfre.net/sitemap/
