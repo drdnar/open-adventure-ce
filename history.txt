@@ -13,11 +13,11 @@ Kentucy, lacking the D&D-like elements now associated with the game.
 
 Adventure as we now know it, the ancestor of all later versions, was
 was released on a PDP-10 at the Stanford AI Lab by Don Woods in 1976
-(some sources, apparentl erroneously, say 1977). That version is
+(some sources, apparently erroneously, say 1977). That version is
 sometimes known as 350-point Adventure.
 
 Between 1976 and 1995 Crowther and Woods themselves continued to work
-intermittently on the game. This main line of development cuminated
+intermittently on the game. This main line of development culminated
 in the 1995 release of Adventure 2.5, also known as 430-point Adventure
 
 The earliest port to C was by Jim Gillogly under an early Unix running
@@ -41,13 +41,14 @@ completely disambiguating.
 
 Many versions are collected at The Interactive Fiction Archive
 <<IFA>>. Same articles at <<DA>> are a narrative of the history of the
-game. There is some divergence of dates between these; I have
-preferred <<IF>> because its chronology makes better internal sense.
+game. There is some divergence of dates between these; pending
+correction from the authors, I have preferred <<IF>> because its
+chronology makes better internal sense.
 
-Future versions of this document may attempt to untangle some of that
-history. For now, it will suffice to explain the chain of provenance
-that led from the original Adventure to the version distributed with
-this document.
+Future versions of this document may attempt to untangle some of the
+non-mainline history. For now, it will suffice to explain the chain of
+provenance that led from the original Adventure to the version
+distributed with this document.
 
 The original 350-point ADVENT on the PDP-10 had been one of my
 formative experiences as a fledgling hacker in 1976-77. Forty years
@@ -62,6 +63,15 @@ contained a rights reservation by Don Woods and that was it.
 
 I wrote to Don asking permission to release 2.5 under 2-clause BSD;
 he replied on 15 May giving both permission and encouragement.
+
+== Nomenclature ==
+
+This project is called "Open Adventure" because it's not at all clear
+to number Adventure past 2.5 without misleading or causing
+collisions. Various of the non-mainline versions have claimed to be
+versions 3, 4, 5, 6, 7 and for all I know higher than that.  It seems
+best just to start a new numbering series while acknowledging the
+links back.
 
 == Sources ==
 
