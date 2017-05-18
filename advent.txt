@@ -1,0 +1,33 @@
+= advent(6) =
+:doctype: manpage
+
+== NAME ==
+advent - Colossal Cave Adventure
+
+== SYNOPSIS ==
+*advent* 
+
+== DESCRIPTION ==
+The original Colossal Cave Adventure from 1976 was the origin of all
+text adventures, dungeon-crawl games, and computer-hosted roleplaying
+games.
+
+This is the last version released by Crowther & Woods, its original
+authors, in 1995.  It has been known as "adventure 2.5" and "430-point
+adventure".
+
+This game is released as open source with the permission and encouragement of
+the authors.
+
+== DISAMBIGUATION ==
+There is an 'adventure' in the BSD games package that is a C
+port of the 1976 ancestor of this game.  To avoid a name collision,
+this game builds as 'advent', reflecting the fact that the PDP-10
+on which it originally ran limited filenames to 6 characters.
+
+== REPORTING BUGS ==
+Report bugs to Eric S. Raymond <esr@thyrsus.com>.  The project page is
+at http://catb.org/~esr/open-advent
+
+== SEE ALSO ==
+wumpus(6), adventure(6), zork(6), rogue(6), nethack(6).

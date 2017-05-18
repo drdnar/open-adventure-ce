@@ -8,7 +8,7 @@ of hacker folklore.
 The very first version was released by Crowther in 1976, in FORTRAN on
 the PDP-10 at Bolt, Beranek, and Newman. (Crowther was at the time
 writing what we could now call firmware for the earliest ARPANET
-routers) It was a maze game based on the Colossal Cave complex in
+routers.) It was a maze game based on the Colossal Cave complex in
 Kentucy, lacking the D&D-like elements now associated with the game.
 
 Adventure as we now know it, the ancestor of all later versions, was
@@ -66,12 +66,13 @@ he replied on 15 May giving both permission and encouragement.
 
 == Nomenclature ==
 
-This project is called "Open Adventure" because it's not at all clear
+This project is called "Open Advent" because it's not at all clear
 to number Adventure past 2.5 without misleading or causing
 collisions. Various of the non-mainline versions have claimed to be
 versions 3, 4, 5, 6, 7 and for all I know higher than that.  It seems
 best just to start a new numbering series while acknowledging the
-links back.
+links back.  I have reverted to "Advent" to avoid a name collision
+with the BSD Games version.
 
 == Sources ==
 
