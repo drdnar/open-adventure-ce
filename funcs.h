@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 /*  STATEMENT FUNCTIONS
  *
  *  AT(OBJ)	= TRUE IF ON EITHER SIDE OF TWO-PLACED OBJECT
@@ -35,7 +37,7 @@
 #define OUTSID(LOC)	((LOC) <= 8 || FOREST(LOC) || (LOC) == PLAC[SAPPH] || (LOC) == 180 || (LOC) == 182)
 #define INDEEP(LOC)	((LOC) >= 15 && !OUTSID(LOC) && (LOC) != 179)
 
-extern int carry(void), discard(long), attack(void), throw(void), feed(void), fill(void);
+extern int carry(void), discard(bool), attack(void), throw(void), feed(void), fill(void);
 void score(long);
 
 

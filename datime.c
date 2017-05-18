@@ -30,7 +30,7 @@ static int GOTX = 0, GOTY;
 #define _TIME_
 #include "time.h"
 
-fDATIME(X,Y)long *X, *Y; {
+fDATIME(long *X,long *Y) {
 	time(X); time(Y);
 	*Y /= 2;
 	/* it would be even better if the two numbers were totally
@@ -41,7 +41,7 @@ fDATIME(X,Y)long *X, *Y; {
 #ifndef _TIME_
 #include "sys/time.h"
 
-void fDATIME(X,Y)long *X, *Y; {
+void fDATIME(long *X, long *Y) {
 	struct timeval now;
 	gettimeofday(&now, 0);
 	*X = now.tv_sec;

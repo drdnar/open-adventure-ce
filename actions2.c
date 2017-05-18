@@ -3,14 +3,11 @@
 #include "share.h"
 #include "funcs.h"
 
-#define TRUE  (0==0)
-#define FALSE (0!=0)
-
 /*  CARRY AN OBJECT.  SPECIAL CASES FOR BIRD AND CAGE (IF BIRD IN CAGE, CAN'T
  *  TAKE ONE WITHOUT THE OTHER).  LIQUIDS ALSO SPECIAL, SINCE THEY DEPEND ON
  *  STATUS OF BOTTLE.  ALSO VARIOUS SIDE EFFECTS, ETC. */
 
-int carry() {
+int carry(void) {
 	if(TOTING(OBJ)) return(2011);
 	SPK=25;
 	if(OBJ == PLANT && PROP[PLANT] <= 0)SPK=115;
@@ -60,7 +57,7 @@ L9015:	SPK=238;
  *  BIRD (MIGHT ATTACK SNAKE OR DRAGON) AND CAGE (MIGHT CONTAIN BIRD) AND VASE.
  *  DROP COINS AT VENDING MACHINE FOR EXTRA BATTERIES. */
 
-int discard(just_do_it)long just_do_it; {
+int discard(bool just_do_it) {
 	if(just_do_it) goto L9021;
 	if(TOTING(ROD2) && OBJ == ROD && !TOTING(ROD))OBJ=ROD2;
 	if(!TOTING(OBJ)) return(2011);
@@ -206,7 +203,7 @@ L9128:	RSPEAK(SPK);
 	if(DLOC[I] != LOC) goto L9129;
 	K=K+1;
 	DLOC[I]=61;
-	DSEEN[I]=FALSE;
+	DSEEN[I]=false;
 L9129:	/*etc*/ ;
 	} /* end loop */
 	SPK=SPK+1+1/K;
@@ -222,7 +219,7 @@ int throw() {
 	if(!TOTING(OBJ)) return(2011);
 	if(OBJ >= 50 && OBJ <= MAXTRS && AT(TROLL)) goto L9178;
 	if(OBJ == FOOD && HERE(BEAR)) goto L9177;
-	if(OBJ != AXE) return(discard(FALSE));
+	if(OBJ != AXE) return(discard(false));
 	I=ATDWRF(LOC);
 	if(I > 0) goto L9172;
 	SPK=152;
@@ -237,7 +234,7 @@ int throw() {
 
 L9172:	SPK=48;
 	if(RAN(7) < DFLAG) goto L9175;
-	DSEEN[I]=FALSE;
+	DSEEN[I]=false;
 	DLOC[I]=0;
 	SPK=47;
 	DKILL=DKILL+1;
@@ -337,7 +334,7 @@ L9222:	SPK=29;
 	RSPEAK(145);
 	PROP[VASE]=2;
 	FIXED[VASE]= -1;
-	 return(discard(TRUE));
+	 return(discard(true));
 
 L9224:	SPK=213;
 	if(PROP[URN] != 0) return(2011);

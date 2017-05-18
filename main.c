@@ -48,7 +48,7 @@ extern int action(long);
  * MAIN PROGRAM
  */
 
-int main() {
+int main(int argc, char *argv[]) {
 
 /*  ADVENTURE (REV 2: 20 TREASURES) */
 

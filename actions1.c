@@ -1,11 +1,9 @@
 #include <stdlib.h>
+#include <stdbool.h>
 #include "misc.h"
 #include "main.h"
 #include "share.h"
 #include "funcs.h"
-
-#define TRUE  (0==0)
-#define FALSE (0!=0)
 
 /* This stuff was broken off as part of an effort to get the main program
  * to compile without running out of memory.  We're called with a number
@@ -16,7 +14,7 @@
 /*  ANALYSE A VERB.  REMEMBER WHAT IT WAS, GO BACK FOR OBJECT IF SECOND WORD
  *  UNLESS VERB IS "SAY", WHICH SNARFS ARBITRARY SECOND WORD. */
 
-int action(STARTAT)long STARTAT; {
+int action(long STARTAT) {
 	switch(STARTAT) {
 	   case 4000: goto L4000;
 	   case 4090: goto L4090;
@@ -125,7 +123,7 @@ L8010:	if(ATLOC[LOC] == 0 || LINK[ATLOC[LOC]] != 0 || ATDWRF(LOC) > 0) return(80
 /*  TRANSITIVE CARRY/DROP ARE IN SEPARATE FILE. */
 
 L9010:	return(carry());
-L9020:	return(discard(FALSE));
+L9020:	return(discard(false));
 
 /*  SAY.  ECHO WD2 (OR WD1 IF NO WD2 (SAY WHAT?, ETC.).)  MAGIC WORDS OVERRIDE. */
 
@@ -165,7 +163,7 @@ L9040:	if(OBJ == CLAM || OBJ == OYSTER) goto L9046;
 	if(!CLOSNG) goto L9043;
 	K=130;
 	if(!PANIC)CLOCK2=15;
-	PANIC=TRUE;
+	PANIC=true;
 	 return(2010);
 
 L9043:	K=34+PROP[GRATE];
@@ -372,9 +370,9 @@ L8200:	SPK=98;
 	/* 8201 */ for (I=1; I<=100; I++) {
 	if(I == BEAR || !TOTING(I)) goto L8201;
 	if(SPK == 98)RSPEAK(99);
-	BLKLIN=FALSE;
+	BLKLIN=false;
 	PSPEAK(I,-1);
-	BLKLIN=TRUE;
+	BLKLIN=true;
 	SPK=0;
 L8201:	/*etc*/ ;
 	} /* end loop */
@@ -520,7 +518,7 @@ L8305:	DATIME(I,K);
 	ZZWORD=RNDVOC(3,ZZWORD-MESH*2)+MESH*2;
 	if(KK > 0) return(8);
 	RSPEAK(266);
-	exit(FALSE);
+	exit(0);
 
 /*  RESUME.  READ A SUSPENDED GAME BACK FROM A FILE. */
 
@@ -536,7 +534,7 @@ L8312:	SETPRM(1,K/10,MOD(K,10));
 	 return(2000);
 
 L8318:	RSPEAK(270);
-	exit(FALSE);
+	exit(0);
 
 /*  FLY.  SNIDE REMARKS UNLESS HOVERING RUG IS HERE. */
 
