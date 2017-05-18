@@ -1,3 +1,8 @@
+/*
+ * The author - Don Woods - apologises for the style of the code; it
+ * is a result of running the original Fortran IV source through a
+ * home-brew Fortran-to-C converter.)
+ */
 #include <stdlib.h>
 #include <stdio.h>
 #include "main.h"
