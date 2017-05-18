@@ -1,10 +1,8 @@
-#ifdef __MSDOS__	/* define fopen modes for binary files */
+#include <time.h>
+
+/* b is not needed for POSIX but harmless */
 #define READ_MODE "rb"
 #define WRITE_MODE "wb"
-#else
-#define READ_MODE "r"
-#define WRITE_MODE "w"
-#endif
 
 extern void fSPEAK(long);
 #define SPEAK(N) fSPEAK(N)
@@ -70,8 +68,7 @@ extern void fMPINIT();
 #define MPINIT() fMPINIT()
 extern void fSAVEIO(long,long,long*);
 #define SAVEIO(OP,IN,ARR) fSAVEIO(OP,IN,ARR)
-extern void fDATIME(long*,long*);
-#define DATIME(D,T) fDATIME(&D,&T)
+#define DATIME(D,T) do {struct timespec ts; clock_gettime(CLOCK_REALTIME, &ts); D=ts.tv_sec, T=ts.tv_nsec;} while (0)
 extern long fIABS(long);
 #define IABS(N) fIABS(N)
 extern long fMOD(long,long);

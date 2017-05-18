@@ -1,6 +1,6 @@
 # Makefile for the open-source release of adventure 2.5
 
-OBJS=main.o init.o actions1.o actions2.o score.o misc.o datime.o
+OBJS=main.o init.o actions1.o actions2.o score.o misc.o
 SOURCES=$(OBJS:.o=.c) COPYING NEWS README advent.text control
 
 .c.o:

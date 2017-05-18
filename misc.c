@@ -898,10 +898,6 @@ long I, VAL; static FILE *OPENED = NULL;
 	 goto L20;
 
 L15:	if(!OPENED){
-#ifdef AMIGA
-		OPENED=fopen("ram:adventure.text","r" /* NOT binary */);
-		if(!OPENED)
-#endif
 		OPENED=fopen("adventure.text","r" /* NOT binary */);
 		if(!OPENED){printf("Can't read adventure.text!\n"); exit(FALSE);}
 		}

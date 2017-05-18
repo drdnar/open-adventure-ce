@@ -641,14 +641,10 @@ static void quick_item(long*);
 static void quick_array(long*, long);
 
 static bool quick_init(void) {
-#ifdef AMIGA
-	f = fopen("ram:adventure.data", READ_MODE);
-#else
 	extern char *getenv();
 	char *adv = getenv("ADVENTURE");
 	f = NULL;
 	if(adv)f = fopen(adv,READ_MODE);
-#endif
 	if(f == NULL)f = fopen("adventure.data",READ_MODE);
 	if(f == NULL)return(FALSE);
 	init_reading = TRUE;
