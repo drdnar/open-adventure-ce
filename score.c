@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "misc.h"
 #include "main.h"
 #include "share.h"

@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include "main.h"
 
 #include "misc.h"
 #ifdef __MSDOS__
@@ -8,12 +9,13 @@
 
 #define TRUE  (0==0)
 #define FALSE (0!=0)
+
 long ABB[186], ATAB[331], ATLOC[186], BLKLIN = TRUE, DFLAG,
 		DLOC[7], FIXED[101], HOLDNG,
 		KTAB[331], *LINES, LINK[201], LNLENG, LNPOSN,
 		PARMS[26], PLACE[101], PTEXT[101], RTEXT[278],
 		SETUP = 0, TABSIZ = 330;
-char INLINE[101], MAP1[129], MAP2[129];
+signed char INLINE[LINESIZE], MAP1[129], MAP2[129];
 
 long ABBNUM, ACTSPK[36], AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD, BONUS,
 		 BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST, CHLOC, CHLOC2,

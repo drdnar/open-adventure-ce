@@ -10,7 +10,7 @@
  *  TAKE ONE WITHOUT THE OTHER).  LIQUIDS ALSO SPECIAL, SINCE THEY DEPEND ON
  *  STATUS OF BOTTLE.  ALSO VARIOUS SIDE EFFECTS, ETC. */
 
-carry() {
+int carry() {
 	if(TOTING(OBJ)) return(2011);
 	SPK=25;
 	if(OBJ == PLANT && PROP[PLANT] <= 0)SPK=115;
@@ -60,7 +60,7 @@ L9015:	SPK=238;
  *  BIRD (MIGHT ATTACK SNAKE OR DRAGON) AND CAGE (MIGHT CONTAIN BIRD) AND VASE.
  *  DROP COINS AT VENDING MACHINE FOR EXTRA BATTERIES. */
 
-discard(just_do_it)long just_do_it; {
+int discard(just_do_it)long just_do_it; {
 	if(just_do_it) goto L9021;
 	if(TOTING(ROD2) && OBJ == ROD && !TOTING(ROD))OBJ=ROD2;
 	if(!TOTING(OBJ)) return(2011);
@@ -134,7 +134,7 @@ L9028:	PROP[VASE]=2;
  *  OBJECTS FALL INTO TWO CATEGORIES: ENEMIES (SNAKE, DWARF, ETC.)  AND OTHERS
  *  (BIRD, CLAM, MACHINE).  AMBIGUOUS IF 2 ENEMIES, OR NO ENEMIES BUT 2 OTHERS. */
 
-attack() {
+int attack() {
 	I=ATDWRF(LOC);
 	if(OBJ != 0) goto L9124;
 	if(I > 0)OBJ=DWARF;
@@ -217,7 +217,7 @@ L9129:	/*etc*/ ;
  *  AND IF DWARF IS PRESENT THEN ONE MIGHT BE KILLED.  (ONLY WAY TO DO SO!)
  *  AXE ALSO SPECIAL FOR DRAGON, BEAR, AND TROLL.  TREASURES SPECIAL FOR TROLL. */
 
-throw() {
+int throw() {
 	if(TOTING(ROD2) && OBJ == ROD && !TOTING(ROD))OBJ=ROD2;
 	if(!TOTING(OBJ)) return(2011);
 	if(OBJ >= 50 && OBJ <= MAXTRS && AT(TROLL)) goto L9178;
@@ -273,7 +273,7 @@ L9178:	SPK=159;
 /*  FEED.  IF BIRD, NO SEED.  SNAKE, DRAGON, TROLL: QUIP.  IF DWARF, MAKE HIM
  *  MAD.  BEAR, SPECIAL. */
 
-feed() {
+int feed() {
 	if(OBJ != BIRD) goto L9212;
 	SPK=100;
 	 return(2011);
@@ -315,7 +315,7 @@ L9216:	SPK=14;
 
 /*  FILL.  BOTTLE OR URN MUST BE EMPTY, AND LIQUID AVAILABLE.  (VASE IS NASTY.) */
 
-fill() {
+int fill() {
 	if(OBJ == VASE) goto L9222;
 	if(OBJ == URN) goto L9224;
 	if(OBJ != 0 && OBJ != BOTTLE) return(2011);

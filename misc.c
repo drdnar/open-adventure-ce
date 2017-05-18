@@ -1,9 +1,14 @@
+#include <stdlib.h>
+#include <stdio.h>
 #include "main.h"
 #include "misc.h"
-#include <stdio.h>
+#include "funcs.h"
 
 #define TRUE  (0==0)
 #define FALSE (0!=0)
+
+/* hack to ignore GCC Unused Result */
+#define IGNORE(r) do{if(r){}}while(0)
 
 /*  I/O ROUTINES (SPEAK, PSPEAK, RSPEAK, SETPRM, GETIN, YES) */
 
@@ -839,7 +844,7 @@ void fBUG(NUM)long NUM; {
  *	28	INVALID MONTH RETURNED BY DATE FUNCTION
  *	29	TOO MANY PARAMETERS GIVEN TO SETPRM */
 
-	printf("Fatal error %d.  See source code for interpretation.\n",
+	printf("Fatal error %ld.  See source code for interpretation.\n",
 	   NUM);
 	exit(FALSE);
 }
@@ -888,7 +893,7 @@ long I, VAL; static FILE *OPENED = NULL;
 	if(MAP2[1] == 0)MPINIT();
 
 	if(FIL) goto L15;
-	gets(INLINE+1);
+	IGNORE(fgets(INLINE+1, sizeof(INLINE)-1, stdin));
 	if(feof(stdin)) score(1);
 	 goto L20;
 
@@ -900,7 +905,7 @@ L15:	if(!OPENED){
 		OPENED=fopen("adventure.text","r" /* NOT binary */);
 		if(!OPENED){printf("Can't read adventure.text!\n"); exit(FALSE);}
 		}
-	fgets(INLINE+1,100,OPENED);
+	 IGNORE(fgets(INLINE+1,100,OPENED));
 
 L20:	LNLENG=0;
 	/* 25 */ for (I=1; I<=100 && INLINE[I]!=0; I++) {
@@ -1002,12 +1007,12 @@ L10:	fclose(F);
 	return;
 
 L20:	printf("\nFile name: ");
-	gets(NAME);
+	IGNORE(fgets(NAME, sizeof(NAME), stdin));
 	F=fopen(NAME,(IN ? READ_MODE : WRITE_MODE));
 	if(F == NULL) {printf("Can't open file, try again.\n"); goto L20;}
 	return;
 
-L30:	if(IN)fread(ARR,4,250,F);
+L30:	if(IN)IGNORE(fread(ARR,4,250,F));
 	if(!IN)fwrite(ARR,4,250,F);
 	return;
 
