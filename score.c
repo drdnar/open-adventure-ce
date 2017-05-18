@@ -3,9 +3,6 @@
 #include "main.h"
 #include "share.h"
 
-#define TRUE  (0==0)
-#define FALSE (0!=0)
-
 /*
  * SCORING AND WRAP-UP
  */
@@ -115,6 +112,6 @@ L20210: SPEAK(CTEXT[I]);
 	SETPRM(1,I,I);
 	SPK=263;
 L25000: RSPEAK(SPK);
-	exit(FALSE);
+	exit(0);
 
 }

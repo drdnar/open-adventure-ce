@@ -5,14 +5,12 @@
  */
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include "main.h"
 
 #include "misc.h"
 
-#define TRUE  (0==0)
-#define FALSE (0!=0)
-
-long ABB[186], ATAB[331], ATLOC[186], BLKLIN = TRUE, DFLAG,
+long ABB[186], ATAB[331], ATLOC[186], BLKLIN = true, DFLAG,
 		DLOC[7], FIXED[101], HOLDNG,
 		KTAB[331], *LINES, LINK[201], LNLENG, LNPOSN,
 		PARMS[26], PLACE[101], PTEXT[101], RTEXT[278],
@@ -40,7 +38,7 @@ long ABBNUM, ACTSPK[36], AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD, BO
 		TRNDEX, TRNLUZ, TRNSIZ = 5, TRNVAL[6], TRNVLS, TROLL, TROLL2, TRVS,
 		 TRVSIZ = 885, TTEXT[6], TURNS, URN, V1, V2, VASE, VEND, VERB,
 		VOLCAN, VRBSIZ = 35, VRSION = 25, WATER, WD1, WD1X, WD2, WD2X,
-		WZDARK = FALSE, ZZWORD;
+		WZDARK = false, ZZWORD;
 
 extern void initialise();
 extern void score(long);
@@ -77,7 +75,7 @@ int main(int argc, char *argv[]) {
 	LINES = (long *)calloc(LINSIZ+1,sizeof(long));
 	if(!LINES){
 		printf("Not enough memory!\n");
-		exit(FALSE);
+		exit(1);
 	}
 
 	MAP2[1] = 0;
@@ -90,7 +88,7 @@ int main(int argc, char *argv[]) {
  *  RERUN, WE COME HERE AND TELL THE PLAYER TO RUN A FRESH COPY. */
 
 	RSPEAK(201);
-	exit(FALSE);
+	exit(0);
 
 
 
@@ -111,7 +109,7 @@ L2:	if(!OUTSID(NEWLOC) || NEWLOC == 0 || !CLOSNG) goto L71;
 	RSPEAK(130);
 	NEWLOC=LOC;
 	if(!PANIC)CLOCK2=15;
-	PANIC=TRUE;
+	PANIC=true;
 
 /*  SEE IF A DWARF HAS SEEN HIM AND HAS COME FROM WHERE HE WANTS TO GO.  IF SO,
  *  THE DWARF'S BLOCKING HIS WAY.  IF COMING FROM PLACE FORBIDDEN TO PIRATE
@@ -226,7 +224,7 @@ L6023:	/*etc*/ ;
 	} /* end loop */
 L6024:	DLOC[6]=CHLOC;
 	ODLOC[6]=CHLOC;
-	DSEEN[6]=FALSE;
+	DSEEN[6]=false;
 	 goto L6030;
 
 L6025:	RSPEAK(186);
@@ -590,7 +588,7 @@ L25:	K=MOD(IABS(TRAVEL[KK]),1000);
 
 L30:	if(DETAIL < 3)RSPEAK(15);
 	DETAIL=DETAIL+1;
-	WZDARK=FALSE;
+	WZDARK=false;
 	ABB[LOC]=0;
 	 goto L2;
 
@@ -769,7 +767,7 @@ L41000: if(TALLY == 1 && PROP[JADE] < 0) goto L40010;
 L10000: PROP[GRATE]=0;
 	PROP[FISSUR]=0;
 	/* 10010 */ for (I=1; I<=6; I++) {
-	DSEEN[I]=FALSE;
+	DSEEN[I]=false;
 L10010: DLOC[I]=0;
 	} /* end loop */
 	MOVE(TROLL,0);
@@ -784,7 +782,7 @@ L10010: DLOC[I]=0;
 	FIXED[AXE]=0;
 	RSPEAK(129);
 	CLOCK1= -1;
-	CLOSNG=TRUE;
+	CLOSNG=true;
 	 goto L19999;
 
 /*  ONCE HE'S PANICKED, AND CLOCK2 HAS RUN OUT, WE COME HERE TO SET UP THE
@@ -829,7 +827,7 @@ L11010: if(TOTING(I))DSTROY(I);
 	} /* end loop */
 
 	RSPEAK(132);
-	CLOSED=TRUE;
+	CLOSED=true;
 	 goto L2;
 
 /*  ANOTHER WAY WE CAN FORCE AN END TO THINGS IS BY HAVING THE LAMP GIVE OUT.
@@ -842,11 +840,11 @@ L12000: RSPEAK(188);
 	PROP[BATTER]=1;
 	if(TOTING(BATTER))DROP(BATTER,LOC);
 	LIMIT=LIMIT+2500;
-	LMWARN=FALSE;
+	LMWARN=false;
 	 goto L19999;
 
 L12200: if(LMWARN || !HERE(LAMP)) goto L19999;
-	LMWARN=TRUE;
+	LMWARN=true;
 	SPK=187;
 	if(PLACE[BATTER] == 0)SPK=183;
 	if(PROP[BATTER] == 1)SPK=189;

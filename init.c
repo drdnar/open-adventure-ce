@@ -5,9 +5,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#define TRUE  (0==0)
-#define FALSE (0!=0)
-
 /*
  * INITIALISATION
  */
@@ -234,7 +231,7 @@ L1005:	LINUSE=KK;
 	if(LNLENG < LNPOSN)BUG(1);
 L1006:	KK=KK+1;
 	if(KK >= LINSIZ)BUG(2);
-	LINES[KK]=GETTXT(FALSE,FALSE,FALSE,KK);
+	LINES[KK]=GETTXT(false,false,false,KK);
 	if(LINES[KK] != -1) goto L1006;
 	LINES[LINUSE]=KK;
 	if(LOC == OLDLOC) goto L1005;
@@ -306,7 +303,7 @@ L1040:	J=10000;
 L1043:	KTAB[TABNDX]=GETNUM(1);
 	if(KTAB[TABNDX] == -1) goto L1002;
 	J=J+7;
-L1042:	ATAB[TABNDX]=GETTXT(TRUE,TRUE,TRUE,0)+J*J;
+L1042:	ATAB[TABNDX]=GETTXT(true,true,true,0)+J*J;
 	} /* end loop */
 	BUG(4);
 
@@ -427,7 +424,7 @@ L1200:	TALLY=TALLY-PROP[I];
  *  I.  HINTED(I) IS TRUE IFF HINT I HAS BEEN USED. */
 
 	/* 1300 */ for (I=1; I<=HNTMAX; I++) {
-	HINTED[I]=FALSE;
+	HINTED[I]=false;
 L1300:	HINTLC[I]=0;
 	} /* end loop */
 
@@ -528,7 +525,7 @@ L1300:	HINTLC[I]=0;
 	CHLOC=114;
 	CHLOC2=140;
 	/* 1700 */ for (I=1; I<=6; I++) {
-L1700:	DSEEN[I]=FALSE;
+L1700:	DSEEN[I]=false;
 	} /* end loop */
 	DFLAG=0;
 	DLOC[1]=19;
@@ -566,7 +563,7 @@ L1700:	DSEEN[I]=FALSE;
 	THRESH= -1;
 	if(TRNVLS > 0)THRESH=MOD(TRNVAL[1],100000)+1;
 	TRNLUZ=0;
-	LMWARN=FALSE;
+	LMWARN=false;
 	IGO=0;
 	IWEST=0;
 	KNFLOC=0;
@@ -584,11 +581,11 @@ L1800:	{long x = 2*I+81; if(RTEXT[x] != 0)MAXDIE=I+1;}
 	CLOCK2=50;
 	CONDS=SETBIT(11);
 	SAVED=0;
-	CLOSNG=FALSE;
-	PANIC=FALSE;
-	CLOSED=FALSE;
-	CLSHNT=FALSE;
-	NOVICE=FALSE;
+	CLOSNG=false;
+	PANIC=false;
+	CLOSED=false;
+	CLSHNT=false;
+	NOVICE=false;
 	SETUP=1;
 
 	/* if we can ever think of how, we should save it at this point */
@@ -646,8 +643,8 @@ static bool quick_init(void) {
 	f = NULL;
 	if(adv)f = fopen(adv,READ_MODE);
 	if(f == NULL)f = fopen("adventure.data",READ_MODE);
-	if(f == NULL)return(FALSE);
-	init_reading = TRUE;
+	if(f == NULL)return(false);
+	init_reading = true;
 	init_cksum = 1;
 	quick_io();
 	if(fread(&K,4,1,f) == 1) init_cksum -= K; else init_cksum = 1;
@@ -660,7 +657,7 @@ static void quick_save(void) {
 	printf("Writing adventure.data...\n");
 	f = fopen("adventure.data",WRITE_MODE);
 	if(f == NULL){printf("Can't open file!\n"); return;}
-	init_reading = FALSE;
+	init_reading = false;
 	init_cksum = 1;
 	quick_io();
 	fwrite(&init_cksum,4,1,f);

@@ -4,9 +4,6 @@
 #include "misc.h"
 #include "funcs.h"
 
-#define TRUE  (0==0)
-#define FALSE (0!=0)
-
 /* hack to ignore GCC Unused Result */
 #define IGNORE(r) do{if(r){}}while(0)
 
@@ -106,7 +103,7 @@ L380:	SHFTXT(LNPOSN+2,-2);
 	 goto L32;
 
 L40:	if(BLANK)TYPE0();
-	BLANK=FALSE;
+	BLANK=false;
 	TYPE();
 	K=L+1;
 	if(LINES[K] >= 0) goto L10;
@@ -185,17 +182,17 @@ long JUNK;
 
 
 L10:	if(BLKLIN)TYPE0();
-	MAPLIN(FALSE);
-	WORD1=GETTXT(TRUE,TRUE,TRUE,0);
+	MAPLIN(false);
+	WORD1=GETTXT(true,true,true,0);
 	if(BLKLIN && WORD1 < 0) goto L10;
-	WORD1X=GETTXT(FALSE,TRUE,TRUE,0);
-L12:	JUNK=GETTXT(FALSE,TRUE,TRUE,0);
+	WORD1X=GETTXT(false,true,true,0);
+L12:	JUNK=GETTXT(false,true,true,0);
 	if(JUNK > 0) goto L12;
-	WORD2=GETTXT(TRUE,TRUE,TRUE,0);
-	WORD2X=GETTXT(FALSE,TRUE,TRUE,0);
-L22:	JUNK=GETTXT(FALSE,TRUE,TRUE,0);
+	WORD2=GETTXT(true,true,true,0);
+	WORD2X=GETTXT(false,true,true,0);
+L22:	JUNK=GETTXT(false,true,true,0);
 	if(JUNK > 0) goto L22;
-	if(GETTXT(TRUE,TRUE,TRUE,0) <= 0)return;
+	if(GETTXT(true,true,true,0) <= 0)return;
 	RSPEAK(53);
 	 goto L10;
 }
@@ -221,10 +218,10 @@ L1:	RSPEAK(X);
 	if(REPLY == MAKEWD(1415) || REPLY == MAKEWD(14)) goto L20;
 	RSPEAK(185);
 	 goto L1;
-L10:	YES=TRUE;
+L10:	YES=true;
 	RSPEAK(Y);
 	return(YES);
-L20:	YES=FALSE;
+L20:	YES=false;
 	RSPEAK(Z);
 	return(YES);
 }
@@ -520,7 +517,7 @@ L10:	STATE=OP;
 L13:	CKSUM=BUF[0];
 	return;
 
-L15:	SAVEIO(1,TRUE,BUF);
+L15:	SAVEIO(1,true,BUF);
 	HASH=MOD(1234L*5678L-BUF[0],1048576L);
 	 goto L13;
 
@@ -528,7 +525,7 @@ L30:	if(N == 250)SAVEIO(1,STATE > 0,BUF);
 	N=MOD(N,250)+1;
 	if(STATE > 0) goto L32;
 	N--; BUF[N]=CKSUM; N++;
-	SAVEIO(1,FALSE,BUF);
+	SAVEIO(1,false,BUF);
 L32:	N--; WORD=BUF[N]-CKSUM; N++;
 	SAVEIO(-1,STATE > 0,BUF);
 	STATE=0;
@@ -846,7 +843,7 @@ void fBUG(NUM)long NUM; {
 
 	printf("Fatal error %ld.  See source code for interpretation.\n",
 	   NUM);
-	exit(FALSE);
+	exit(0);
 }
 
 
@@ -899,7 +896,7 @@ long I, VAL; static FILE *OPENED = NULL;
 
 L15:	if(!OPENED){
 		OPENED=fopen("adventure.text","r" /* NOT binary */);
-		if(!OPENED){printf("Can't read adventure.text!\n"); exit(FALSE);}
+		if(!OPENED){printf("Can't read adventure.text!\n"); exit(0);}
 		}
 	 IGNORE(fgets(INLINE+1,100,OPENED));
 
