@@ -30,7 +30,7 @@ ADVENTURE::
 
 == REPORTING BUGS ==
 Report bugs to Eric S. Raymond <esr@thyrsus.com>.  The project page is
-at http://catb.org/~esr/open-advent
+at http://catb.org/~esr/advent
 
 == SEE ALSO ==
 wumpus(6), adventure(6), zork(6), rogue(6), nethack(6).

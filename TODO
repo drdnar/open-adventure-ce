@@ -1,0 +1,9 @@
+= Open Adventure TODO =
+
+* Add command logging and command log replay.
+
+* Use that feature to make regression tests from walkthroughs.
+
+* Translate the FORTRANish mess to actual C.
+
+* Inline the database so the code doesn't need an external file.
