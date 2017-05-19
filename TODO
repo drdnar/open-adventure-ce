@@ -1,8 +1,16 @@
 = Open Adventure TODO =
 
-* Add command logging and command log replay.
+* Use a real pseudorandom-number generator with a seed rather than just
+  time-sampling.
+
+* Add command logging and command log replay.  Note that the replay log
+  needs to begin with the random-number seed.
 
 * Use that feature to make regression tests from walkthroughs.
+
+* Add command-line option to disable all extension features.  First
+  extension features: (1) Command prompt, (2) initial resource-allocation
+  number display suppressed.
 
 * Translate the FORTRANish mess to actual C.
 
