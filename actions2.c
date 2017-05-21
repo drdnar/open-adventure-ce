@@ -3,9 +3,9 @@
 #include "share.h"
 #include "funcs.h"
 
-/*  CARRY AN OBJECT.  SPECIAL CASES FOR BIRD AND CAGE (IF BIRD IN CAGE, CAN'T
- *  TAKE ONE WITHOUT THE OTHER).  LIQUIDS ALSO SPECIAL, SINCE THEY DEPEND ON
- *  STATUS OF BOTTLE.  ALSO VARIOUS SIDE EFFECTS, ETC. */
+/*  Carry an object.  Special cases for bird and cage (if bird in cage, can't
+ *  take one without the other).  Liquids also special, since they depend on
+ *  status of bottle.  Also various side effects, etc. */
 
 int carry(void) {
 	if(TOTING(OBJ)) return(2011);
@@ -53,9 +53,9 @@ L9015:	SPK=238;
 	 return(2011);
 }
 
-/*  DISCARD OBJECT.  "THROW" ALSO COMES HERE FOR MOST OBJECTS.  SPECIAL CASES FOR
- *  BIRD (MIGHT ATTACK SNAKE OR DRAGON) AND CAGE (MIGHT CONTAIN BIRD) AND VASE.
- *  DROP COINS AT VENDING MACHINE FOR EXTRA BATTERIES. */
+/*  Discard object.  "Throw" also comes here for most objects.  Special cases for
+ *  bird (might attack snake or dragon) and cage (might contain bird) and vase.
+ *  Drop coins at vending machine for extra batteries. */
 
 int discard(bool just_do_it) {
 	if(just_do_it) goto L9021;
@@ -127,9 +127,9 @@ L9028:	PROP[VASE]=2;
 	 goto L9021;
 }
 
-/*  ATTACK.  ASSUME TARGET IF UNAMBIGUOUS.  "THROW" ALSO LINKS HERE.  ATTACKABLE
- *  OBJECTS FALL INTO TWO CATEGORIES: ENEMIES (SNAKE, DWARF, ETC.)  AND OTHERS
- *  (BIRD, CLAM, MACHINE).  AMBIGUOUS IF 2 ENEMIES, OR NO ENEMIES BUT 2 OTHERS. */
+/*  Attack.  Assume target if unambiguous.  "Throw" also links here.  Attackable
+ *  objects fall into two categories: enemies (snake, dwarf, etc.)  and others
+ *  (bird, clam, machine).  Ambiguous if 2 enemies, or no enemies but 2 others. */
 
 int attack() {
 	I=ATDWRF(LOC);
@@ -170,9 +170,9 @@ L9126:	if(OBJ == 0)SPK=44;
 	if(OBJ == OGRE && I > 0) goto L9128;
 	if(OBJ == BEAR)SPK=165+(PROP[BEAR]+1)/2;
 	if(OBJ != DRAGON || PROP[DRAGON] != 0) return(2011);
-/*  FUN STUFF FOR DRAGON.  IF HE INSISTS ON ATTACKING IT, WIN!  SET PROP TO DEAD,
- *  MOVE DRAGON TO CENTRAL LOC (STILL FIXED), MOVE RUG THERE (NOT FIXED), AND
- *  MOVE HIM THERE, TOO.  THEN DO A NULL MOTION TO GET NEW DESCRIPTION. */
+/*  Fun stuff for dragon.  If he insists on attacking it, win!  Set PROP to dead,
+ *  move dragon to central loc (still fixed), move rug there (not fixed), and
+ *  move him there, too.  then do a null motion to get new description. */
 	RSPEAK(49);
 	VERB=0;
 	OBJ=0;
@@ -210,9 +210,9 @@ L9129:	/*etc*/ ;
 	 return(2011);
 }
 
-/*  THROW.  SAME AS DISCARD UNLESS AXE.  THEN SAME AS ATTACK EXCEPT IGNORE BIRD,
- *  AND IF DWARF IS PRESENT THEN ONE MIGHT BE KILLED.  (ONLY WAY TO DO SO!)
- *  AXE ALSO SPECIAL FOR DRAGON, BEAR, AND TROLL.  TREASURES SPECIAL FOR TROLL. */
+/*  Throw.  Same as discard unless axe.  Then same as attack except ignore bird,
+ *  and if dwarf is present then one might be killed.  (Only way to do so!)
+ *  Axe also special for dragon, bear, and troll.  Treasures special for troll. */
 
 int throw() {
 	if(TOTING(ROD2) && OBJ == ROD && !TOTING(ROD))OBJ=ROD2;
@@ -244,7 +244,7 @@ L9175:	RSPEAK(SPK);
 	K=NUL;
 	 return(8);
 
-/*  THIS'LL TEACH HIM TO THROW THE AXE AT THE BEAR! */
+/*  This'll teach him to throw the axe at the bear! */
 L9176:	SPK=164;
 	DROP(AXE,LOC);
 	FIXED[AXE]= -1;
@@ -252,12 +252,12 @@ L9176:	SPK=164;
 	JUGGLE(BEAR);
 	 return(2011);
 
-/*  BUT THROWING FOOD IS ANOTHER STORY. */
+/*  But throwing food is another story. */
 L9177:	OBJ=BEAR;
 	return(feed());
 
 L9178:	SPK=159;
-/*  SNARF A TREASURE FOR THE TROLL. */
+/*  Snarf a treasure for the troll. */
 	DROP(OBJ,0);
 	MOVE(TROLL,0);
 	MOVE(TROLL+100,0);
@@ -267,8 +267,8 @@ L9178:	SPK=159;
 	 return(2011);
 }
 
-/*  FEED.  IF BIRD, NO SEED.  SNAKE, DRAGON, TROLL: QUIP.  IF DWARF, MAKE HIM
- *  MAD.  BEAR, SPECIAL. */
+/*  Feed.  If bird, no seed.  snake, dragon, troll: quip.  If dwarf, make him
+ *  mad.  Bear, special. */
 
 int feed() {
 	if(OBJ != BIRD) goto L9212;
@@ -310,7 +310,7 @@ L9216:	SPK=14;
 	 return(2011);
 }
 
-/*  FILL.  BOTTLE OR URN MUST BE EMPTY, AND LIQUID AVAILABLE.  (VASE IS NASTY.) */
+/*  Fill.  Bottle or urn must be empty, and liquid available.  (Vase is nasty.) */
 
 int fill() {
 	if(OBJ == VASE) goto L9222;

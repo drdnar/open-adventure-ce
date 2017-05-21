@@ -6,161 +6,161 @@
 #include <stdbool.h>
 
 /*
- * INITIALISATION
+ * Initialisation
  */
 
-/*  CURRENT LIMITS:
- *     12500 WORDS OF MESSAGE TEXT (LINES, LINSIZ).
- *	885 TRAVEL OPTIONS (TRAVEL, TRVSIZ).
- *	330 VOCABULARY WORDS (KTAB, ATAB, TABSIZ).
- *	185 LOCATIONS (LTEXT, STEXT, KEY, COND, ABB, ATLOC, LOCSND, LOCSIZ).
- *	100 OBJECTS (PLAC, PLACE, FIXD, FIXED, LINK (TWICE), PTEXT, PROP,
+/*  Current limits:
+ *     12500 words of message text (LINES, LINSIZ).
+ *	885 travel options (TRAVEL, TRVSIZ).
+ *	330 vocabulary words (KTAB, ATAB, TABSIZ).
+ *	185 locations (LTEXT, STEXT, KEY, COND, ABB, ATLOC, LOCSND, LOCSIZ).
+ *	100 objects (PLAC, PLACE, FIXD, FIXED, LINK (TWICE), PTEXT, PROP,
  *                    OBJSND, OBJTXT).
- *	 35 "ACTION" VERBS (ACTSPK, VRBSIZ).
- *	277 RANDOM MESSAGES (RTEXT, RTXSIZ).
- *	 12 DIFFERENT PLAYER CLASSIFICATIONS (CTEXT, CVAL, CLSMAX).
- *	 20 HINTS (HINTLC, HINTED, HINTS, HNTSIZ).
- *         5 "# OF TURNS" THRESHHOLDS (TTEXT, TRNVAL, TRNSIZ).
- *  THERE ARE ALSO LIMITS WHICH CANNOT BE EXCEEDED DUE TO THE STRUCTURE OF
- *  THE DATABASE.  (E.G., THE VOCABULARY USES N/1000 TO DETERMINE WORD TYPE,
- *  SO THERE CAN'T BE MORE THAN 1000 WORDS.)  THESE UPPER LIMITS ARE:
- *	1000 NON-SYNONYMOUS VOCABULARY WORDS
- *	300 LOCATIONS
- *	100 OBJECTS */
+ *	 35 "action" verbs (ACTSPK, VRBSIZ).
+ *	277 random messages (RTEXT, RTXSIZ).
+ *	 12 different player classifications (CTEXT, CVAL, CLSMAX).
+ *	 20 hints (HINTLC, HINTED, HINTS, HNTSIZ).
+ *         5 "# of turns" threshholds (TTEXT, TRNVAL, TRNSIZ).
+ *  There are also limits which cannot be exceeded due to the structure of
+ *  the database.  (E.G., The vocabulary uses n/1000 to determine word type,
+ *  so there can't be more than 1000 words.)  These upper limits are:
+ *	1000 non-synonymous vocabulary words
+ *	300 locations
+ *	100 objects */
 
 
-/*  DESCRIPTION OF THE DATABASE FORMAT
+/*  Description of the database format
  *
  *
- *  THE DATA FILE CONTAINS SEVERAL SECTIONS.  EACH BEGINS WITH A LINE CONTAINING
- *  A NUMBER IDENTIFYING THE SECTION, AND ENDS WITH A LINE CONTAINING "-1".
+ *  The data file contains several sections.  each begins with a line containing
+ *  a number identifying the section, and ends with a line containing "-1".
  *
- *  SECTION 1: LONG FORM DESCRIPTIONS.  EACH LINE CONTAINS A LOCATION NUMBER,
- *	A TAB, AND A LINE OF TEXT.  THE SET OF (NECESSARILY ADJACENT) LINES
- *	WHOSE NUMBERS ARE X FORM THE LONG DESCRIPTION OF LOCATION X.
- *  SECTION 2: SHORT FORM DESCRIPTIONS.  SAME FORMAT AS LONG FORM.  NOT ALL
- *	PLACES HAVE SHORT DESCRIPTIONS.
- *  SECTION 3: TRAVEL TABLE.  EACH LINE CONTAINS A LOCATION NUMBER (X), A SECOND
- *	LOCATION NUMBER (Y), AND A LIST OF MOTION NUMBERS (SEE SECTION 4).
- *	EACH MOTION REPRESENTS A VERB WHICH WILL GO TO Y IF CURRENTLY AT X.
- *	Y, IN TURN, IS INTERPRETED AS FOLLOWS.  LET M=Y/1000, N=Y MOD 1000.
- *		IF N<=300	IT IS THE LOCATION TO GO TO.
- *		IF 300<N<=500	N-300 IS USED IN A COMPUTED GOTO TO
- *					A SECTION OF SPECIAL CODE.
- *		IF N>500	MESSAGE N-500 FROM SECTION 6 IS PRINTED,
- *					AND HE STAYS WHEREVER HE IS.
- *	MEANWHILE, M SPECIFIES THE CONDITIONS ON THE MOTION.
- *		IF M=0		IT'S UNCONDITIONAL.
- *		IF 0<M<100	IT IS DONE WITH M% PROBABILITY.
- *		IF M=100	UNCONDITIONAL, BUT FORBIDDEN TO DWARVES.
- *		IF 100<M<=200	HE MUST BE CARRYING OBJECT M-100.
- *		IF 200<M<=300	MUST BE CARRYING OR IN SAME ROOM AS M-200.
- *		IF 300<M<=400	PROP(M MOD 100) MUST *NOT* BE 0.
- *		IF 400<M<=500	PROP(M MOD 100) MUST *NOT* BE 1.
- *		IF 500<M<=600	PROP(M MOD 100) MUST *NOT* BE 2, ETC.
- *	IF THE CONDITION (IF ANY) IS NOT MET, THEN THE NEXT *DIFFERENT*
- *	"DESTINATION" VALUE IS USED (UNLESS IT FAILS TO MEET *ITS* CONDITIONS,
- *	IN WHICH CASE THE NEXT IS FOUND, ETC.).  TYPICALLY, THE NEXT DEST WILL
- *	BE FOR ONE OF THE SAME VERBS, SO THAT ITS ONLY USE IS AS THE ALTERNATE
- *	DESTINATION FOR THOSE VERBS.  FOR INSTANCE:
+ *  Section 1: Long form descriptions.  Each line contains a location number,
+ *	a tab, and a line of text.  The set of (necessarily adjacent) lines
+ *	whose numbers are X form the long description of location X.
+ *  Section 2: Short form descriptions.  Same format as long form.  Not all
+ *	places have short descriptions.
+ *  Section 3: Travel table.  Each line contains a location number (X), a second
+ *	location number (Y), and a list of motion numbers (see section 4).
+ *	each motion represents a verb which will go to Y if currently at X.
+ *	Y, in turn, is interpreted as follows.  Let M=Y/1000, N=Y mod 1000.
+ *		If N<=300	it is the location to go to.
+ *		If 300<N<=500	N-300 is used in a computed goto to
+ *					a section of special code.
+ *		If N>500	message N-500 from section 6 is printed,
+ *					and he stays wherever he is.
+ *	Meanwhile, M specifies the conditions on the motion.
+ *		If M=0		it's unconditional.
+ *		If 0<M<100	it is done with M% probability.
+ *		If M=100	unconditional, but forbidden to dwarves.
+ *		If 100<M<=200	he must be carrying object M-100.
+ *		If 200<M<=300	must be carrying or in same room as M-200.
+ *		If 300<M<=400	PROP(M % 100) must *not* be 0.
+ *		If 400<M<=500	PROP(M % 100) must *not* be 1.
+ *		If 500<M<=600	PROP(M % 100) must *not* be 2, etc.
+ *	If the condition (if any) is not met, then the next *different*
+ *	"destination" value is used (unless it fails to meet *its* conditions,
+ *	in which case the next is found, etc.).  Typically, the next dest will
+ *	be for one of the same verbs, so that its only use is as the alternate
+ *	destination for those verbs.  For instance:
  *		15	110022	29	31	34	35	23	43
  *		15	14	29
- *	THIS SAYS THAT, FROM LOC 15, ANY OF THE VERBS 29, 31, ETC., WILL TAKE
- *	HIM TO 22 IF HE'S CARRYING OBJECT 10, AND OTHERWISE WILL GO TO 14.
+ *	This says that, from loc 15, any of the verbs 29, 31, etc., will take
+ *	him to 22 if he's carrying object 10, and otherwise will go to 14.
  *		11	303008	49
  *		11	9	50
- *	THIS SAYS THAT, FROM 11, 49 TAKES HIM TO 8 UNLESS PROP(3)=0, IN WHICH
- *	CASE HE GOES TO 9.  VERB 50 TAKES HIM TO 9 REGARDLESS OF PROP(3).
- *  SECTION 4: VOCABULARY.  EACH LINE CONTAINS A NUMBER (N), A TAB, AND A
- *	FIVE-LETTER WORD.  CALL M=N/1000.  IF M=0, THEN THE WORD IS A MOTION
- *	VERB FOR USE IN TRAVELLING (SEE SECTION 3).  ELSE, IF M=1, THE WORD IS
- *	AN OBJECT.  ELSE, IF M=2, THE WORD IS AN ACTION VERB (SUCH AS "CARRY"
- *	OR "ATTACK").  ELSE, IF M=3, THE WORD IS A SPECIAL CASE VERB (SUCH AS
- *	"DIG") AND N MOD 1000 IS AN INDEX INTO SECTION 6.  OBJECTS FROM 50 TO
- *	(CURRENTLY, ANYWAY) 79 ARE CONSIDERED TREASURES (FOR PIRATE, CLOSEOUT).
- *  SECTION 5: OBJECT DESCRIPTIONS.  EACH LINE CONTAINS A NUMBER (N), A TAB,
- *	AND A MESSAGE.  IF N IS FROM 1 TO 100, THE MESSAGE IS THE "INVENTORY"
- *	MESSAGE FOR OBJECT N.  OTHERWISE, N SHOULD BE 000, 100, 200, ETC., AND
- *	THE MESSAGE SHOULD BE THE DESCRIPTION OF THE PRECEDING OBJECT WHEN ITS
- *	PROP VALUE IS N/100.  THE N/100 IS USED ONLY TO DISTINGUISH MULTIPLE
- *	MESSAGES FROM MULTI-LINE MESSAGES; THE PROP INFO ACTUALLY REQUIRES ALL
- *	MESSAGES FOR AN OBJECT TO BE PRESENT AND CONSECUTIVE.  PROPERTIES WHICH
- *	PRODUCE NO MESSAGE SHOULD BE GIVEN THE MESSAGE ">$<".
- *  SECTION 6: ARBITRARY MESSAGES.  SAME FORMAT AS SECTIONS 1, 2, AND 5, EXCEPT
- *	THE NUMBERS BEAR NO RELATION TO ANYTHING (EXCEPT FOR SPECIAL VERBS
- *	IN SECTION 4).
- *  SECTION 7: OBJECT LOCATIONS.  EACH LINE CONTAINS AN OBJECT NUMBER AND ITS
- *	INITIAL LOCATION (ZERO (OR OMITTED) IF NONE).  IF THE OBJECT IS
- *	IMMOVABLE, THE LOCATION IS FOLLOWED BY A "-1".  IF IT HAS TWO LOCATIONS
- *	(E.G. THE GRATE) THE FIRST LOCATION IS FOLLOWED WITH THE SECOND, AND
- *	THE OBJECT IS ASSUMED TO BE IMMOVABLE.
- *  SECTION 8: ACTION DEFAULTS.  EACH LINE CONTAINS AN "ACTION-VERB" NUMBER AND
- *	THE INDEX (IN SECTION 6) OF THE DEFAULT MESSAGE FOR THE VERB.
- *  SECTION 9: LOCATION ATTRIBUTES.  EACH LINE CONTAINS A NUMBER (N) AND UP TO
- *	20 LOCATION NUMBERS.  BIT N (WHERE 0 IS THE UNITS BIT) IS SET IN
- *	COND(LOC) FOR EACH LOC GIVEN.  THE COND BITS CURRENTLY ASSIGNED ARE:
- *		0	LIGHT
- *		1	IF BIT 2 IS ON: ON FOR OIL, OFF FOR WATER
- *		2	LIQUID ASSET, SEE BIT 1
- *		3	PIRATE DOESN'T GO HERE UNLESS FOLLOWING PLAYER
- *		4	CANNOT USE "BACK" TO MOVE AWAY
- *	BITS PAST 10 INDICATE AREAS OF INTEREST TO "HINT" ROUTINES:
- *		11	TRYING TO GET INTO CAVE
- *		12	TRYING TO CATCH BIRD
- *		13	TRYING TO DEAL WITH SNAKE
- *		14	LOST IN MAZE
- *		15	PONDERING DARK ROOM
- *		16	AT WITT'S END
- *		17	CLIFF WITH URN
- *		18	LOST IN FOREST
- *		19	TRYING TO DEAL WITH OGRE
- *		20	FOUND ALL TREASURES EXCEPT JADE
- *	COND(LOC) IS SET TO 2, OVERRIDING ALL OTHER BITS, IF LOC HAS FORCED
- *	MOTION.
- *  SECTION 10: CLASS MESSAGES.  EACH LINE CONTAINS A NUMBER (N), A TAB, AND A
- *	MESSAGE DESCRIBING A CLASSIFICATION OF PLAYER.  THE SCORING SECTION
- *	SELECTS THE APPROPRIATE MESSAGE, WHERE EACH MESSAGE IS CONSIDERED TO
- *	APPLY TO PLAYERS WHOSE SCORES ARE HIGHER THAN THE PREVIOUS N BUT NOT
- *	HIGHER THAN THIS N.  NOTE THAT THESE SCORES PROBABLY CHANGE WITH EVERY
- *	MODIFICATION (AND PARTICULARLY EXPANSION) OF THE PROGRAM.
- *  SECTION 11: HINTS.  EACH LINE CONTAINS A HINT NUMBER (ADD 10 TO GET COND
- *	BIT; SEE SECTION 9), THE NUMBER OF TURNS HE MUST BE AT THE RIGHT LOC(S)
- *	BEFORE TRIGGERING THE HINT, THE POINTS DEDUCTED FOR TAKING THE HINT,
- *	THE MESSAGE NUMBER (SECTION 6) OF THE QUESTION, AND THE MESSAGE NUMBER
- *	OF THE HINT.  THESE VALUES ARE STASHED IN THE "HINTS" ARRAY.  HNTMAX IS
- *	SET TO THE MAX HINT NUMBER (<= HNTSIZ).
- *  SECTION 12: UNUSED IN THIS VERSION.
- *  SECTION 13: SOUNDS AND TEXT.  EACH LINE CONTAINS EITHER 2 OR 3 NUMBERS.  IF
- *	2 (CALL THEM N AND S), N IS A LOCATION AND MESSAGE ABS(S) FROM SECTION
- *	6 IS THE SOUND HEARD THERE.  IF S<0, THE SOUND THERE DROWNS OUT ALL
- *	OTHER NOISES.  IF 3 NUMBERS (CALL THEM N, S, AND T), N IS AN OBJECT
- *	NUMBER AND S+PROP(N) IS THE PROPERTY MESSAGE (FROM SECTION 5) IF HE
- *	LISTENS TO THE OBJECT, AND T+PROP(N) IS THE TEXT IF HE READS IT.  IF
- *	S OR T IS -1, THE OBJECT HAS NO SOUND OR TEXT, RESPECTIVELY.  NEITHER
- *	S NOR T IS ALLOWED TO BE 0.
- *  SECTION 14: TURN THRESHHOLDS.  EACH LINE CONTAINS A NUMBER (N), A TAB, AND
- *	A MESSAGE BERATING THE PLAYER FOR TAKING SO MANY TURNS.  THE MESSAGES
- *	MUST BE IN THE PROPER (ASCENDING) ORDER.  THE MESSAGE GETS PRINTED IF
- *	THE PLAYER EXCEEDS N MOD 100000 TURNS, AT WHICH TIME N/100000 POINTS
- *	GET DEDUCTED FROM HIS SCORE.
- *  SECTION 0: END OF DATABASE. */
+ *	This says that, from 11, 49 takes him to 8 unless PROP(3)=0, in which
+ *	case he goes to 9.  Verb 50 takes him to 9 regardless of PROP(3).
+ *  Section 4: Vocabulary.  Each line contains a number (n), a tab, and a
+ *	five-letter word.  Call M=N/1000.  If M=0, then the word is a motion
+ *	verb for use in travelling (see section 3).  Else, if M=1, the word is
+ *	an object.  Else, if M=2, the word is an action verb (such as "carry"
+ *	or "attack").  Else, if M=3, the word is a special case verb (such as
+ *	"dig") and N % 1000 is an index into section 6.  Objects from 50 to
+ *	(currently, anyway) 79 are considered treasures (for pirate, closeout).
+ *  Section 5: Object descriptions.  Each line contains a number (N), a tab,
+ *	and a message.  If N is from 1 to 100, the message is the "inventory"
+ *	message for object n.  Otherwise, N should be 000, 100, 200, etc., and
+ *	the message should be the description of the preceding object when its
+ *	prop value is N/100.  The N/100 is used only to distinguish multiple
+ *	messages from multi-line messages; the prop info actually requires all
+ *	messages for an object to be present and consecutive.  Properties which
+ *	produce no message should be given the message ">$<".
+ *  Section 6: Arbitrary messages.  Same format as sections 1, 2, and 5, except
+ *	the numbers bear no relation to anything (except for special verbs
+ *	in section 4).
+ *  Section 7: Object locations.  Each line contains an object number and its
+ *	initial location (zero (or omitted) if none).  If the object is
+ *	immovable, the location is followed by a "-1".  If it has two locations
+ *	(e.g. the grate) the first location is followed with the second, and
+ *	the object is assumed to be immovable.
+ *  Section 8: Action defaults.  Each line contains an "action-verb" number and
+ *	the index (in section 6) of the default message for the verb.
+ *  Section 9: Location attributes.  Each line contains a number (n) and up to
+ *	20 location numbers.  Bit N (where 0 is the units bit) is set in
+ *	COND(LOC) for each loc given.  The cond bits currently assigned are:
+ *		0	Light
+ *		1	If bit 2 is on: on for oil, off for water
+ *		2	Liquid asset, see bit 1
+ *		3	Pirate doesn't go here unless following player
+ *		4	Cannot use "back" to move away
+ *	Bits past 10 indicate areas of interest to "hint" routines:
+ *		11	Trying to get into cave
+ *		12	Trying to catch bird
+ *		13	Trying to deal with snake
+ *		14	Lost in maze
+ *		15	Pondering dark room
+ *		16	At witt's end
+ *		17	Cliff with urn
+ *		18	Lost in forest
+ *		19	Trying to deal with ogre
+ *		20	Found all treasures except jade
+ *	COND(LOC) is set to 2, overriding all other bits, if loc has forced
+ *	motion.
+ *  Section 10: Class messages.  Each line contains a number (n), a tab, and a
+ *	message describing a classification of player.  The scoring section
+ *	selects the appropriate message, where each message is considered to
+ *	apply to players whose scores are higher than the previous N but not
+ *	higher than this N.  Note that these scores probably change with every
+ *	modification (and particularly expansion) of the program.
+ *  SECTION 11: Hints.  Each line contains a hint number (add 10 to get cond
+ *	bit; see section 9), the number of turns he must be at the right loc(s)
+ *	before triggering the hint, the points deducted for taking the hint,
+ *	the message number (section 6) of the question, and the message number
+ *	of the hint.  These values are stashed in the "hints" array.  HNTMAX is
+ *	set to the max hint number (<= HNTSIZ).
+ *  Section 12: Unused in this version.
+ *  Section 13: Sounds and text.  Each line contains either 2 or 3 numbers.  If
+ *	2 (call them N and S), N is a location and message ABS(S) from section
+ *	6 is the sound heard there.  If S<0, the sound there drowns out all
+ *	other noises.  If 3 numbers (call them N, S, and T), N is an object
+ *	number and S+PROP(N) is the property message (from section 5) if he
+ *	listens to the object, and T+PROP(N) is the text if he reads it.  If
+ *	S or T is -1, the object has no sound or text, respectively.  Neither
+ *	S nor T is allowed to be 0.
+ *  Section 14: Turn threshholds.  Each line contains a number (N), a tab, and
+ *	a message berating the player for taking so many turns.  The messages
+ *	must be in the proper (ascending) order.  The message gets printed if
+ *	the player exceeds N % 100000 turns, at which time N/100000 points
+ *	get deducted from his score.
+ *  Section 0: End of database. */
 
-/*  THE VARIOUS MESSAGES (SECTIONS 1, 2, 5, 6, ETC.) MAY INCLUDE CERTAIN
- *  SPECIAL CHARACTER SEQUENCES TO DENOTE THAT THE PROGRAM MUST PROVIDE
- *  PARAMETERS TO INSERT INTO A MESSAGE WHEN THE MESSAGE IS PRINTED.  THESE
- *  SEQUENCES ARE:
- *	%S = THE LETTER 'S' OR NOTHING (IF A GIVEN VALUE IS EXACTLY 1)
- *	%W = A WORD (UP TO 10 CHARACTERS)
- *	%L = A WORD MAPPED TO LOWER-CASE LETTERS
- *	%U = A WORD MAPPED TO UPPER-CASE LETTERS
- *	%C = A WORD MAPPED TO LOWER-CASE, FIRST LETTER CAPITALISED
- *	%T = SEVERAL WORDS OF TEXT, ENDING WITH A WORD OF -1
- *	%1 = A 1-DIGIT NUMBER
- *	%2 = A 2-DIGIT NUMBER
+/*  The various messages (sections 1, 2, 5, 6, etc.) may include certain
+ *  special character sequences to denote that the program must provide
+ *  parameters to insert into a message when the message is printed.  these
+ *  sequences are:
+ *	%S = The letter 'S' or nothing (if a given value is exactly 1)
+ *	%W = A word (up to 10 characters)
+ *	%L = A word mapped to lower-case letters
+ *	%U = A word mapped to upper-case letters
+ *	%C = A word mapped to lower-case, first letter capitalised
+ *	%T = Several words of text, ending with a word of -1
+ *	%1 = A 1-digit number
+ *	%2 = A 2-digit number
  *	...
- *	%9 = A 9-DIGIT NUMBER
- *	%B = VARIABLE NUMBER OF BLANKS
- *	%! = THE ENTIRE MESSAGE SHOULD BE SUPPRESSED */
+ *	%9 = A 9-digit number
+ *	%B = Variable number of blanks
+ *	%! = The entire message should be suppressed */
 
 static bool quick_init(void);
 static int raw_init(void);
@@ -178,15 +178,15 @@ void initialise(void) {
 static int raw_init(void) {
 	printf("Couldn't find adventure.data, using adventure.text...\n");
 
-/*  CLEAR OUT THE VARIOUS TEXT-POINTER ARRAYS.  ALL TEXT IS STORED IN ARRAY
- *  LINES; EACH LINE IS PRECEDED BY A WORD POINTING TO THE NEXT POINTER (I.E.
- *  THE WORD FOLLOWING THE END OF THE LINE).  THE POINTER IS NEGATIVE IF THIS IS
- *  FIRST LINE OF A MESSAGE.  THE TEXT-POINTER ARRAYS CONTAIN INDICES OF
- *  POINTER-WORDS IN LINES.  STEXT(N) IS SHORT DESCRIPTION OF LOCATION N.
- *  LTEXT(N) IS LONG DESCRIPTION.  PTEXT(N) POINTS TO MESSAGE FOR PROP(N)=0.
- *  SUCCESSIVE PROP MESSAGES ARE FOUND BY CHASING POINTERS.  RTEXT CONTAINS
- *  SECTION 6'S STUFF.  CTEXT(N) POINTS TO A PLAYER-CLASS MESSAGE.  TTEXT IS FOR
- *  SECTION 14.  WE ALSO CLEAR COND (SEE DESCRIPTION OF SECTION 9 FOR DETAILS). */
+/*  Clear out the various text-pointer arrays.  All text is stored in array
+ *  lines; each line is preceded by a word pointing to the next pointer (i.e.
+ *  the word following the end of the line).  The pointer is negative if this is
+ *  first line of a message.  The text-pointer arrays contain indices of
+ *  pointer-words in lines.  STEXT(N) is short description of location N.
+ *  LTEXT(N) is long description.  PTEXT(N) points to message for PROP(N)=0.
+ *  Successive prop messages are found by chasing pointers.  RTEXT contains
+ *  section 6's stuff.  CTEXT(N) points to a player-class message.  TTEXT is for
+ *  section 14.  We also clear COND (see description of section 9 for details). */
 
 	/* 1001 */ for (I=1; I<=300; I++) {
 	if(I <= 100)PTEXT[I]=0;
@@ -208,7 +208,7 @@ L1001:	/*etc*/ ;
 	CLSSES=0;
 	TRNVLS=0;
 
-/*  START NEW DATA SECTION.  SECT IS THE SECTION NUMBER. */
+/*  Start new data section.  sect is the section number. */
 
 L1002:	SECT=GETNUM(1);
 	OLDLOC= -1;
@@ -221,7 +221,7 @@ L1002:	SECT=GETNUM(1);
  *	     (10) (11) (12) (13) (14) */
 	BUG(9);
 
-/*  SECTIONS 1, 2, 5, 6, 10, 14.  READ MESSAGES AND SET UP POINTERS. */
+/*  Sections 1, 2, 5, 6, 10, 14.  Read messages and set up pointers. */
 
 L1004:	KK=LINUSE;
 L1005:	LINUSE=KK;
@@ -269,11 +269,11 @@ L1014:	TRNVLS=TRNVLS+1;
 	TRNVAL[TRNVLS]=LOC;
 	 goto L1005;
 
-/*  THE STUFF FOR SECTION 3 IS ENCODED HERE.  EACH "FROM-LOCATION" GETS A
- *  CONTIGUOUS SECTION OF THE "TRAVEL" ARRAY.  EACH ENTRY IN TRAVEL IS
- *  NEWLOC*1000 + KEYWORD (FROM SECTION 4, MOTION VERBS), AND IS NEGATED IF
- *  THIS IS THE LAST ENTRY FOR THIS LOCATION.  KEY(N) IS THE INDEX IN TRAVEL
- *  OF THE FIRST OPTION AT LOCATION N. */
+/*  The stuff for section 3 is encoded here.  Each "from-location" gets a
+ *  contiguous section of the "TRAVEL" array.  each entry in travel is
+ *  NEWLOC*1000 + KEYWORD (from section 4, motion verbs), and is negated if
+ *  this is the last entry for this location.  KEY(N) is the index in travel
+ *  of the first option at location N. */
 
 L1030:	LOC=GETNUM(1);
 	if(LOC == -1) goto L1002;
@@ -291,12 +291,12 @@ L1035:	L=GETNUM(0);
 L1039:	TRVS--; TRAVEL[TRVS]= -TRAVEL[TRVS]; TRVS++;
 	 goto L1030;
 
-/*  HERE WE READ IN THE VOCABULARY.  KTAB(N) IS THE WORD NUMBER, ATAB(N) IS
- *  THE CORRESPONDING WORD.  THE -1 AT THE END OF SECTION 4 IS LEFT IN KTAB
- *  AS AN END-MARKER.  THE WORDS ARE GIVEN A MINIMAL HASH TO MAKE DECIPHERING
- *  THE CORE-IMAGE HARDER.  (WE DON'T USE GETTXT'S HASH SINCE THAT WOULD FORCE
- *  US TO HASH EACH INPUT LINE TO MAKE COMPARISONS WORK, AND THAT IN TURN
- *  WOULD MAKE IT HARDER TO DETECT PARTICULAR INPUT WORDS.) */
+/*  Here we read in the vocabulary.  KTAB(N) is the word number, ATAB(N) is
+ *  the corresponding word.  The -1 at the end of section 4 is left in KTAB
+ *  as an end-marker.  The words are given a minimal hash to make deciphering
+ *  the core-image harder.  (We don't use gettxt's hash since that would force
+ *  us to hash each input line to make comparisons work, and that in turn
+ *  would make it harder to detect particular input words.) */
 
 L1040:	J=10000;
 	/* 1042 */ for (TABNDX=1; TABNDX<=TABSIZ; TABNDX++) {
@@ -307,9 +307,9 @@ L1042:	ATAB[TABNDX]=GETTXT(true,true,true,0)+J*J;
 	} /* end loop */
 	BUG(4);
 
-/*  READ IN THE INITIAL LOCATIONS FOR EACH OBJECT.  ALSO THE IMMOVABILITY INFO.
- *  PLAC CONTAINS INITIAL LOCATIONS OF OBJECTS.  FIXD IS -1 FOR IMMOVABLE
- *  OBJECTS (INCLUDING THE SNAKE), OR = SECOND LOC FOR TWO-PLACED OBJECTS. */
+/*  Read in the initial locations for each object.  Also the immovability info.
+ *  plac contains initial locations of objects.  FIXD is -1 for immovable
+ *  objects (including the snake), or = second loc for two-placed objects. */
 
 L1050:	OBJ=GETNUM(1);
 	if(OBJ == -1) goto L1002;
@@ -317,14 +317,14 @@ L1050:	OBJ=GETNUM(1);
 	FIXD[OBJ]=GETNUM(0);
 	 goto L1050;
 
-/*  READ DEFAULT MESSAGE NUMBERS FOR ACTION VERBS, STORE IN ACTSPK. */
+/*  Read default message numbers for action verbs, store in ACTSPK. */
 
 L1060:	VERB=GETNUM(1);
 	if(VERB == -1) goto L1002;
 	ACTSPK[VERB]=GETNUM(0);
 	 goto L1060;
 
-/*  READ INFO ABOUT AVAILABLE LIQUIDS AND OTHER CONDITIONS, STORE IN COND. */
+/*  Read info about available liquids and other conditions, store in COND. */
 
 L1070:	K=GETNUM(1);
 	if(K == -1) goto L1002;
@@ -334,7 +334,7 @@ L1071:	LOC=GETNUM(0);
 	COND[LOC]=COND[LOC]+SETBIT(K);
 	 goto L1071;
 
-/*  READ DATA FOR HINTS. */
+/*  Read data for hints. */
 
 L1080:	HNTMAX=0;
 L1081:	K=GETNUM(1);
@@ -346,7 +346,7 @@ L1083:	HINTS[K][I] =GETNUM(0);
 	HNTMAX=(HNTMAX>K ? HNTMAX : K);
 	 goto L1081;
 
-/*  READ THE SOUND/TEXT INFO, STORE IN OBJSND, OBJTXT, LOCSND. */
+/*  Read the sound/text info, store in OBJSND, OBJTXT, LOCSND. */
 
 L1090:	K=GETNUM(1);
 	if(K == -1) goto L1002;
@@ -361,15 +361,15 @@ L1092:	LOCSND[K]=KK;
 	 goto L1090;
 }
 
-/*  FINISH CONSTRUCTING INTERNAL DATA FORMAT */
+/*  Finish constructing internal data format */
 
-/*  HAVING READ IN THE DATABASE, CERTAIN THINGS ARE NOW CONSTRUCTED.  PROPS ARE
- *  SET TO ZERO.  WE FINISH SETTING UP COND BY CHECKING FOR FORCED-MOTION TRAVEL
- *  ENTRIES.  THE PLAC AND FIXD ARRAYS ARE USED TO SET UP ATLOC(N) AS THE FIRST
- *  OBJECT AT LOCATION N, AND LINK(OBJ) AS THE NEXT OBJECT AT THE SAME LOCATION
- *  AS OBJ.  (OBJ>100 INDICATES THAT FIXED(OBJ-100)=LOC; LINK(OBJ) IS STILL THE
- *  CORRECT LINK TO USE.)  ABB IS ZEROED; IT CONTROLS WHETHER THE ABBREVIATED
- *  DESCRIPTION IS PRINTED.  COUNTS MOD 5 UNLESS "LOOK" IS USED. */
+/*  Having read in the database, certain things are now constructed.  PROPS are
+ *  set to zero.  We finish setting up COND by checking for forced-motion travel
+ *  entries.  The PLAC and FIXD arrays are used to set up ATLOC(N) as the first
+ *  object at location N, and LINK(OBJ) as the next object at the same location
+ *  as OBJ.  (OBJ>100 indicates that FIXED(OBJ-100)=LOC; LINK(OBJ) is still the
+ *  correct link to use.)  ABB is zeroed; it controls whether the abbreviated
+ *  description is printed.  Counts modulo 5 unless "LOOK" is used. */
 
 static int finish_init(void) {
 	/* 1101 */ for (I=1; I<=100; I++) {
@@ -387,12 +387,12 @@ L1101:	{long x = I+100; LINK[x]=0;}
 L1102:	ATLOC[I]=0;
 	} /* end loop */
 
-/*  SET UP THE ATLOC AND LINK ARRAYS AS DESCRIBED ABOVE.  WE'LL USE THE DROP
- *  SUBROUTINE, WHICH PREFACES NEW OBJECTS ON THE LISTS.  SINCE WE WANT THINGS
- *  IN THE OTHER ORDER, WE'LL RUN THE LOOP BACKWARDS.  IF THE OBJECT IS IN TWO
- *  LOCS, WE DROP IT TWICE.  THIS ALSO SETS UP "PLACE" AND "FIXED" AS COPIES OF
- *  "PLAC" AND "FIXD".  ALSO, SINCE TWO-PLACED OBJECTS ARE TYPICALLY BEST
- *  DESCRIBED LAST, WE'LL DROP THEM FIRST. */
+/*  Set up the ATLOC and LINK arrays as described above.  We'll use the DROP
+ *  subroutine, which prefaces new objects on the lists.  Since we want things
+ *  in the other order, we'll run the loop backwards.  If the object is in two
+ *  locs, we drop it twice.  This also sets up "PLACE" and "fixed" as copies of
+ *  "PLAC" and "FIXD".  Also, since two-placed objects are typically best
+ *  described last, we'll drop them first. */
 
 	/* 1106 */ for (I=1; I<=100; I++) {
 	K=101-I;
@@ -408,10 +408,10 @@ L1106:	/*etc*/ ;
 L1107:	if(PLAC[K] != 0 && FIXD[K] <= 0)DROP(K,PLAC[K]);
 	} /* end loop */
 
-/*  TREASURES, AS NOTED EARLIER, ARE OBJECTS 50 THROUGH MAXTRS (CURRENTLY 79).
- *  THEIR PROPS ARE INITIALLY -1, AND ARE SET TO 0 THE FIRST TIME THEY ARE
- *  DESCRIBED.  TALLY KEEPS TRACK OF HOW MANY ARE NOT YET FOUND, SO WE KNOW
- *  WHEN TO CLOSE THE CAVE. */
+/*  Treasures, as noted earlier, are objects 50 through MAXTRS (CURRENTLY 79).
+ *  Their props are initially -1, and are set to 0 the first time they are
+ *  described.  TALLY keeps track of how many are not yet found, so we know
+ *  when to close the cave. */
 
 	MAXTRS=79;
 	TALLY=0;
@@ -420,15 +420,15 @@ L1107:	if(PLAC[K] != 0 && FIXD[K] <= 0)DROP(K,PLAC[K]);
 L1200:	TALLY=TALLY-PROP[I];
 	} /* end loop */
 
-/*  CLEAR THE HINT STUFF.  HINTLC(I) IS HOW LONG HE'S BEEN AT LOC WITH COND BIT
- *  I.  HINTED(I) IS TRUE IFF HINT I HAS BEEN USED. */
+/*  Clear the hint stuff.  HINTLC(I) is how long he's been at LOC with cond bit
+ *  I.  HINTED(I) is true iff hint I has been used. */
 
 	/* 1300 */ for (I=1; I<=HNTMAX; I++) {
 	HINTED[I]=false;
 L1300:	HINTLC[I]=0;
 	} /* end loop */
 
-/*  DEFINE SOME HANDY MNEMONICS.  THESE CORRESPOND TO OBJECT NUMBERS. */
+/*  Define some handy mnemonics.  these correspond to object numbers. */
 
 	AXE=VOCWRD(12405,1);
 	BATTER=VOCWRD(201202005,1);
@@ -471,7 +471,7 @@ L1300:	HINTLC[I]=0;
 	VOLCAN=VOCWRD(1765120301,1);
 	WATER=VOCWRD(1851200518,1);
 
-/*  OBJECTS FROM 50 THROUGH WHATEVER ARE TREASURES.  HERE ARE A FEW. */
+/*  Objects from 50 through whatever are treasures.  Here are a few. */
 
 	AMBER=VOCWRD(113020518,1);
 	CHAIN=VOCWRD(308010914,1);
@@ -489,7 +489,7 @@ L1300:	HINTLC[I]=0;
 	TRIDNT=VOCWRD(2018090405,1);
 	VASE=VOCWRD(22011905,1);
 
-/*  THESE ARE MOTION-VERB NUMBERS. */
+/*  These are motion-verb numbers. */
 
 	BACK=VOCWRD(2010311,0);
 	CAVE=VOCWRD(3012205,0);
@@ -500,7 +500,7 @@ L1300:	HINTLC[I]=0;
 	NUL=VOCWRD(14211212,0);
 	STREAM=VOCWRD(1920180501,0);
 
-/*  AND SOME ACTION VERBS. */
+/*  And some action verbs. */
 
 	FIND=VOCWRD(6091404,2);
 	INVENT=VOCWRD(914220514,2);
@@ -508,19 +508,19 @@ L1300:	HINTLC[I]=0;
 	SAY=VOCWRD(190125,2);
 	THROW=VOCWRD(2008181523,2);
 
-/*  INITIALISE THE DWARVES.  DLOC IS LOC OF DWARVES, HARD-WIRED IN.  ODLOC IS
- *  PRIOR LOC OF EACH DWARF, INITIALLY GARBAGE.  DALTLC IS ALTERNATE INITIAL LOC
- *  FOR DWARF, IN CASE ONE OF THEM STARTS OUT ON TOP OF THE ADVENTURER.  (NO 2
- *  OF THE 5 INITIAL LOCS ARE ADJACENT.)  DSEEN IS TRUE IF DWARF HAS SEEN HIM.
- *  DFLAG CONTROLS THE LEVEL OF ACTIVATION OF ALL THIS:
- *	0	NO DWARF STUFF YET (WAIT UNTIL REACHES HALL OF MISTS)
- *	1	REACHED HALL OF MISTS, BUT HASN'T MET FIRST DWARF
- *	2	MET FIRST DWARF, OTHERS START MOVING, NO KNIVES THROWN YET
- *	3	A KNIFE HAS BEEN THROWN (FIRST SET ALWAYS MISSES)
- *	3+	DWARVES ARE MAD (INCREASES THEIR ACCURACY)
- *  SIXTH DWARF IS SPECIAL (THE PIRATE).  HE ALWAYS STARTS AT HIS CHEST'S
- *  EVENTUAL LOCATION INSIDE THE MAZE.  THIS LOC IS SAVED IN CHLOC FOR REF.
- *  THE DEAD END IN THE OTHER MAZE HAS ITS LOC STORED IN CHLOC2. */
+/*  Initialise the dwarves.  DLOC is loc of dwarves, hard-wired in.  ODLOC is
+ *  prior loc of each dwarf, initially garbage.  DALTLC is alternate initial loc
+ *  for dwarf, in case one of them starts out on top of the adventurer.  (No 2
+ *  of the 5 initial locs are adjacent.)  DSEEN is true if dwarf has seen him.
+ *  DFLAG controls the level of activation of all this:
+ *	0	No dwarf stuff yet (wait until reaches Hall Of Mists)
+ *	1	Reached Hall Of Mists, but hasn't met first dwarf
+ *	2	Met first dwarf, others start moving, no knives thrown yet
+ *	3	A knife has been thrown (first set always misses)
+ *	3+	Dwarves are mad (increases their accuracy)
+ *  Sixth dwarf is special (the pirate).  He always starts at his chest's
+ *  eventual location inside the maze.  This loc is saved in CHLOC for ref.
+ *  the dead end in the other maze has its loc stored in CHLOC2. */
 
 	CHLOC=114;
 	CHLOC2=140;
@@ -536,27 +536,27 @@ L1700:	DSEEN[I]=false;
 	DLOC[6]=CHLOC;
 	DALTLC=18;
 
-/*  OTHER RANDOM FLAGS AND COUNTERS, AS FOLLOWS:
- *	ABBNUM	HOW OFTEN WE SHOULD PRINT NON-ABBREVIATED DESCRIPTIONS
- *	BONUS	USED TO DETERMINE AMOUNT OF BONUS IF HE REACHES CLOSING
- *	CLOCK1	NUMBER OF TURNS FROM FINDING LAST TREASURE TILL CLOSING
- *	CLOCK2	NUMBER OF TURNS FROM FIRST WARNING TILL BLINDING FLASH
- *	CONDS	MIN VALUE FOR COND(LOC) IF LOC HAS ANY HINTS
- *	DETAIL	HOW OFTEN WE'VE SAID "NOT ALLOWED TO GIVE MORE DETAIL"
- *	DKILL	NUMBER OF DWARVES KILLED (UNUSED IN SCORING, NEEDED FOR MSG)
- *	FOOBAR	CURRENT PROGRESS IN SAYING "FEE FIE FOE FOO".
- *	HOLDNG	NUMBER OF OBJECTS BEING CARRIED
- *	IGO	HOW MANY TIMES HE'S SAID "GO XXX" INSTEAD OF "XXX"
- *	IWEST	HOW MANY TIMES HE'S SAID "WEST" INSTEAD OF "W"
- *	KNFLOC	0 IF NO KNIFE HERE, LOC IF KNIFE HERE, -1 AFTER CAVEAT
- *	LIMIT	LIFETIME OF LAMP (NOT SET HERE)
- *	MAXDIE	NUMBER OF REINCARNATION MESSAGES AVAILABLE (UP TO 5)
- *	NUMDIE	NUMBER OF TIMES KILLED SO FAR
- *	THRESH	NEXT #TURNS THRESHHOLD (-1 IF NONE)
- *	TRNDEX	INDEX IN TRNVAL OF NEXT THRESHHOLD (SECTION 14 OF DATABASE)
- *	TRNLUZ	# POINTS LOST SO FAR DUE TO NUMBER OF TURNS USED
- *	TURNS	TALLIES HOW MANY COMMANDS HE'S GIVEN (IGNORES YES/NO)
- *	LOGICALS WERE EXPLAINED EARLIER */
+/*  Other random flags and counters, as follows:
+ *	ABBNUM	How often we should print non-abbreviated descriptions
+ *	BONUS	Used to determine amount of bonus if he reaches closing
+ *	CLOCK1	Number of turns from finding last treasure till closing
+ *	CLOCK2	Number of turns from first warning till blinding flash
+ *	CONDS	Min value for cond(loc) if loc has any hints
+ *	DETAIL	How often we've said "not allowed to give more detail"
+ *	DKILL	Number of dwarves killed (unused in scoring, needed for msg)
+ *	FOOBAR	Current progress in saying "FEE FIE FOE FOO".
+ *	HOLDNG	Number of objects being carried
+ *	IGO	How many times he's said "go XXX" instead of "XXX"
+ *	IWEST	How many times he's said "west" instead of "w"
+ *	KNFLOC	0 if no knife here, loc if knife here, -1 after caveat
+ *	LIMIT	Lifetime of lamp (not set here)
+ *	MAXDIE	Number of reincarnation messages available (up to 5)
+ *	NUMDIE	Number of times killed so far
+ *	THRESH	Next #turns threshhold (-1 if none)
+ *	TRNDEX	Index in TRNVAL of next threshhold (section 14 of database)
+ *	TRNLUZ	# points lost so far due to number of turns used
+ *	TURNS	Tallies how many commands he's given (ignores yes/no)
+ *	Logicals were explained earlier */
 
 	TURNS=0;
 	TRNDEX=1;
@@ -593,7 +593,7 @@ L1800:	{long x = 2*I+81; if(RTEXT[x] != 0)MAXDIE=I+1;}
 	return(0); /* then we won't actually return from initialisation */
 }
 
-/*  REPORT ON AMOUNT OF ARRAYS ACTUALLY USED, TO PERMIT REDUCTIONS. */
+/*  Report on amount of arrays actually used, to permit reductions. */
 
 static void report(void) {
 	/* 1998 */ for (K=1; K<=LOCSIZ; K++) {

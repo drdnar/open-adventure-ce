@@ -1,18 +1,18 @@
 #include <stdbool.h>
 
-/*  STATEMENT FUNCTIONS
+/*  Statement functions
  *
- *  AT(OBJ)	= TRUE IF ON EITHER SIDE OF TWO-PLACED OBJECT
- *  CNDBIT(L,N) = TRUE IF COND(L) HAS BIT N SET (BIT 0 IS UNITS BIT)
- *  DARK(DUMMY) = TRUE IF LOCATION "LOC" IS DARK
- *  FORCED(LOC) = TRUE IF LOC MOVES WITHOUT ASKING FOR INPUT (COND=2)
- *  FOREST(LOC)  = TRUE IF LOC IS PART OF THE FOREST
- *  GSTONE(OBJ)  = TRUE IF OBJ IS A GEMSTONE
- *  HERE(OBJ)	= TRUE IF THE OBJ IS AT "LOC" (OR IS BEING CARRIED)
- *  LIQ(DUMMY)	= OBJECT NUMBER OF LIQUID IN BOTTLE
- *  LIQLOC(LOC) = OBJECT NUMBER OF LIQUID (IF ANY) AT LOC
- *  PCT(N)       = TRUE N% OF THE TIME (N INTEGER FROM 0 TO 100)
- *  TOTING(OBJ) = TRUE IF THE OBJ IS BEING CARRIED */
+ *  AT(OBJ)	= true if on either side of two-placed object
+ *  CNDBIT(L,N) = true if COND(L) has bit n set (bit 0 is units bit)
+ *  DARK(DUMMY) = true if location "LOC" is dark
+ *  FORCED(LOC) = true if LOC moves without asking for input (COND=2)
+ *  FOREST(LOC)  = true if LOC is part of the forest
+ *  GSTONE(OBJ)  = true if OBJ is a gemstone
+ *  HERE(OBJ)	= true if the OBJ is at "LOC" (or is being carried)
+ *  LIQ(DUMMY)	= object number of liquid in bottle
+ *  LIQLOC(LOC) = object number of liquid (if any) at LOC
+ *  PCT(N)       = true N% of the time (N integer from 0 to 100)
+ *  TOTING(OBJ) = true if the OBJ is being carried */
 
 #define TOTING(OBJ)	(PLACE[OBJ] == -1)
 #define AT(OBJ) (PLACE[OBJ] == LOC || FIXED[OBJ] == LOC)
@@ -28,11 +28,11 @@
 #define FOREST(LOC)	((LOC) >= 145 && (LOC) <= 166)
 #define VOCWRD(LETTRS,SECT)	(VOCAB(MAKEWD(LETTRS),SECT))
 
-/*  THE FOLLOWING TWO FUNCTIONS WERE ADDED TO FIX A BUG (CLOCK1 DECREMENTED
- *  WHILE IN FOREST).  THEY SHOULD PROBABLY BE REPLACED BY USING ANOTHER
- *  "COND" BIT.  FOR NOW, HOWEVER, A QUICK FIX...  OUTSID(LOC) IS TRUE IF
- *  LOC IS OUTSIDE, INDEEP(LOC) IS TRUE IF LOC IS "DEEP" IN THE CAVE (HALL
- *  OF MISTS OR DEEPER).  NOTE SPECIAL KLUDGES FOR "FOOF" LOCS. */
+/*  The following two functions were added to fix a bug (CLOCK1 decremented
+ *  while in forest).  They should probably be replaced by using another
+ *  "cond" bit.  For now, however, a quick fix...  OUTSID(LOC) is true if
+ *  LOC is outside, INDEEP(LOC) is true if LOC is "deep" in the cave (hall
+ *  of mists or deeper).  Note special kludges for "FOOF" locs. */
 
 #define OUTSID(LOC)	((LOC) <= 8 || FOREST(LOC) || (LOC) == PLAC[SAPPH] || (LOC) == 180 || (LOC) == 182)
 #define INDEEP(LOC)	((LOC) >= 15 && !OUTSID(LOC) && (LOC) != 179)

@@ -11,8 +11,8 @@
  * similar label number for the caller to "goto".
  */
 
-/*  ANALYSE A VERB.  REMEMBER WHAT IT WAS, GO BACK FOR OBJECT IF SECOND WORD
- *  UNLESS VERB IS "SAY", WHICH SNARFS ARBITRARY SECOND WORD. */
+/*  Analyse a verb.  remember what it was, go back for object if second word
+ *  unless verb is "say", which snarfs arbitrary second word. */
 
 int action(long STARTAT) {
 	switch(STARTAT) {
@@ -28,7 +28,7 @@ L4000:	VERB=K;
 	if(VERB == SAY)OBJ=WD2;
 	if(OBJ > 0) goto L4090;
 
-/*  ANALYSE AN INTRANSITIVE VERB (IE, NO OBJECT GIVEN YET). */
+/*  Analyse an intransitive verb (ie, no object given yet). */
 
 L4080:	switch (VERB-1) { case 0: goto L8010; case 1: return(8000); case 2:
 		return(8000); case 3: goto L8040; case 4: return(2009); case 5: goto L8040;
@@ -48,7 +48,7 @@ L4080:	switch (VERB-1) { case 0: goto L8010; case 1: return(8000); case 2:
  *	     RESU FLY  LSTN ZZZZ */
 	BUG(23);
 
-/*  ANALYSE A TRANSITIVE VERB. */
+/*  Analyse a transitive verb. */
 
 L4090:	switch (VERB-1) { case 0: goto L9010; case 1: goto L9020; case 2: goto
 		L9030; case 3: goto L9040; case 4: return(2009); case 5: goto L9040;
@@ -68,11 +68,11 @@ L4090:	switch (VERB-1) { case 0: goto L9010; case 1: goto L9020; case 2: goto
  *	     RESU FLY  LSTN ZZZZ */
 	BUG(24);
 
-/*  ANALYSE AN OBJECT WORD.  SEE IF THE THING IS HERE, WHETHER WE'VE GOT A VERB
- *  YET, AND SO ON.  OBJECT MUST BE HERE UNLESS VERB IS "FIND" OR "INVENT(ORY)"
- *  (AND NO NEW VERB YET TO BE ANALYSED).  WATER AND OIL ARE ALSO FUNNY, SINCE
- *  THEY ARE NEVER ACTUALLY DROPPED AT ANY LOCATION, BUT MIGHT BE HERE INSIDE
- *  THE BOTTLE OR URN OR AS A FEATURE OF THE LOCATION. */
+/*  Analyse an object word.  See if the thing is here, whether we've got a verb
+ *  yet, and so on.  Object must be here unless verb is "find" or "invent(ory)"
+ *  (and no new verb yet to be analysed).  Water and oil are also funny, since
+ *  they are never actually dropped at any location, but might be here inside
+ *  the bottle or urn or as a feature of the location. */
 
 L5000:	OBJ=K;
 	if(!HERE(K)) goto L5100;
@@ -109,23 +109,23 @@ L5190:	if((VERB == FIND || VERB == INVENT) && WD2 <= 0) goto L5010;
 
 
 
-/*  ROUTINES FOR PERFORMING THE VARIOUS ACTION VERBS */
+/*  Routines for performing the various action verbs */
 
-/*  STATEMENT NUMBERS IN THIS SECTION ARE 8000 FOR INTRANSITIVE VERBS, 9000 FOR
- *  TRANSITIVE, PLUS TEN TIMES THE VERB NUMBER.  MANY INTRANSITIVE VERBS USE THE
- *  TRANSITIVE CODE, AND SOME VERBS USE CODE FOR OTHER VERBS, AS NOTED BELOW. */
+/*  Statement numbers in this section are 8000 for intransitive verbs, 9000 for
+ *  transitive, plus ten times the verb number.  many intransitive verbs use the
+ *  transitive code, and some verbs use code for other verbs, as noted below. */
 
-/*  CARRY, NO OBJECT GIVEN YET.  OK IF ONLY ONE OBJECT PRESENT. */
+/*  Carry, no object given yet.  OK if only one object present. */
 
 L8010:	if(ATLOC[LOC] == 0 || LINK[ATLOC[LOC]] != 0 || ATDWRF(LOC) > 0) return(8000);
 	OBJ=ATLOC[LOC];
 
-/*  TRANSITIVE CARRY/DROP ARE IN SEPARATE FILE. */
+/*  Transitive carry/drop are in separate file. */
 
 L9010:	return(carry());
 L9020:	return(discard(false));
 
-/*  SAY.  ECHO WD2 (OR WD1 IF NO WD2 (SAY WHAT?, ETC.).)  MAGIC WORDS OVERRIDE. */
+/*  SAY.  Echo WD2 (or WD1 if no WD2 (SAY WHAT?, etc.).)  Magic words override. */
 
 L9030:	SETPRM(1,WD2,WD2X);
 	if(WD2 <= 0)SETPRM(1,WD1,WD1X);
@@ -139,7 +139,7 @@ L9035:	WD2=0;
 	OBJ=0;
 	 return(2630);
 
-/*  LOCK, UNLOCK, NO OBJECT GIVEN.  ASSUME VARIOUS THINGS IF PRESENT. */
+/*  Lock, unlock, no object given.  Assume various things if present. */
 
 L8040:	SPK=28;
 	if(HERE(CLAM))OBJ=CLAM;
@@ -150,7 +150,7 @@ L8040:	SPK=28;
 	if(HERE(CHAIN))OBJ=CHAIN;
 	if(OBJ == 0) return(2011);
 
-/*  LOCK, UNLOCK OBJECT.  SPECIAL STUFF FOR OPENING CLAM/OYSTER AND FOR CHAIN. */
+/*  Lock, unlock object.  Special stuff for opening clam/oyster and for chain. */
 
 L9040:	if(OBJ == CLAM || OBJ == OYSTER) goto L9046;
 	if(OBJ == DOOR)SPK=111;
@@ -172,7 +172,7 @@ L9043:	K=34+PROP[GRATE];
 	K=K+2*PROP[GRATE];
 	 return(2010);
 
-/*  CLAM/OYSTER. */
+/*  Clam/Oyster. */
 L9046:	K=0;
 	if(OBJ == OYSTER)K=1;
 	SPK=124+K;
@@ -185,7 +185,7 @@ L9046:	K=0;
 	DROP(PEARL,105);
 	 return(2011);
 
-/*  CHAIN. */
+/*  Chain. */
 L9048:	if(VERB == LOCK) goto L9049;
 	SPK=171;
 	if(PROP[BEAR] == 0)SPK=41;
@@ -206,7 +206,7 @@ L9049:	SPK=172;
 	FIXED[CHAIN]= -1;
 	 return(2011);
 
-/*  LIGHT.  APPLICABLE ONLY TO LAMP AND URN. */
+/*  Light.  Applicable only to lamp and urn. */
 
 L8070:	if(HERE(LAMP) && PROP[LAMP] == 0 && LIMIT >= 0)OBJ=LAMP;
 	if(HERE(URN) && PROP[URN] == 1)OBJ=OBJ*100+URN;
@@ -227,7 +227,7 @@ L9073:	SPK=38;
 	PROP[URN]=2;
 	 return(2011);
 
-/*  EXTINGUISH.  LAMP, URN, DRAGON/VOLCANO (NICE TRY). */
+/*  Extinguish.  Lamp, urn, dragon/volcano (nice try). */
 
 L8080:	if(HERE(LAMP) && PROP[LAMP] == 1)OBJ=LAMP;
 	if(HERE(URN) && PROP[URN] == 2)OBJ=OBJ*100+URN;
@@ -247,7 +247,7 @@ L9086:	PROP[LAMP]=0;
 	if(DARK(0))RSPEAK(16);
 	 return(2012);
 
-/*  WAVE.  NO EFFECT UNLESS WAVING ROD AT FISSURE OR AT BIRD. */
+/*  Wave.  No effect unless waving rod at fissure or at bird. */
 
 L9090:	if((!TOTING(OBJ)) && (OBJ != ROD || !TOTING(ROD2)))SPK=29;
 	if(OBJ != ROD || !TOTING(OBJ) || (!HERE(BIRD) && (CLOSNG || !AT(FISSUR))))
@@ -267,12 +267,12 @@ L9094:	DROP(JADE,LOC);
 	SPK=208;
 	 return(2011);
 
-/*  ATTACK ALSO MOVED INTO SEPARATE MODULE. */
+/*  Attack also moved into separate module. */
 
 L9120:	return(attack());
 
-/*  POUR.  IF NO OBJECT, OR OBJECT IS BOTTLE, ASSUME CONTENTS OF BOTTLE.
- *  SPECIAL TESTS FOR POURING WATER OR OIL ON PLANT OR RUSTY DOOR. */
+/*  Pour.  If no object, or object is bottle, assume contents of bottle.
+ *  special tests for pouring water or oil on plant or rusty door. */
 
 L9130:	if(OBJ == BOTTLE || OBJ == 0)OBJ=LIQ(0);
 	if(OBJ == 0) return(8000);
@@ -302,8 +302,8 @@ L9132:	PROP[DOOR]=0;
 L9134:	OBJ=URN;
 	 goto L9220;
 
-/*  EAT.  INTRANSITIVE: ASSUME FOOD IF PRESENT, ELSE ASK WHAT.  TRANSITIVE: FOOD
- *  OK, SOME THINGS LOSE APPETITE, REST ARE RIDICULOUS. */
+/*  Eat.  Intransitive: assume food if present, else ask what.  transitive: food
+ *  ok, some things lose appetite, rest are ridiculous. */
 
 L8140:	if(!HERE(FOOD)) return(8000);
 L8142:	DSTROY(FOOD);
@@ -316,8 +316,8 @@ L9140:	if(OBJ == FOOD) goto L8142;
 		OGRE)SPK=71;
 	 return(2011);
 
-/*  DRINK.  IF NO OBJECT, ASSUME WATER AND LOOK FOR IT HERE.  IF WATER IS IN
- *  THE BOTTLE, DRINK THAT, ELSE MUST BE AT A WATER LOC, SO DRINK STREAM. */
+/*  Drink.  If no object, assume water and look for it here.  if water is in
+ *  the bottle, drink that, else must be at a water loc, so drink stream. */
 
 L9150:	if(OBJ == 0 && LIQLOC(LOC) != WATER && (LIQ(0) != WATER || !HERE(BOTTLE)))
 		return(8000);
@@ -335,7 +335,7 @@ L9153:	DSTROY(BLOOD);
 	SPK=240;
 	 return(2011);
 
-/*  RUB.  YIELDS VARIOUS SNIDE REMARKS EXCEPT FOR LIT URN. */
+/*  Rub.  Yields various snide remarks except for lit urn. */
 
 L9160:	if(OBJ != LAMP)SPK=76;
 	if(OBJ != URN || PROP[URN] != 2) return(2011);
@@ -347,16 +347,16 @@ L9160:	if(OBJ != LAMP)SPK=76;
 	SPK=216;
 	 return(2011);
 
-/*  THROW MOVED INTO SEPARATE MODULE. */
+/*  Throw moved into separate module. */
 
 L9170:	return(throw());
 
-/*  QUIT.  INTRANSITIVE ONLY.  VERIFY INTENT AND EXIT IF THAT'S WHAT HE WANTS. */
+/*  Quit.  Intransitive only.  verify intent and exit if that's what he wants. */
 
 L8180:	if(YES(22,54,54)) score(1);
 	 return(2012);
 
-/*  FIND.  MIGHT BE CARRYING IT, OR IT MIGHT BE HERE.  ELSE GIVE CAVEAT. */
+/*  Find.  Might be carrying it, or it might be here.  Else give caveat. */
 
 L9190:	if(AT(OBJ) || (LIQ(0) == OBJ && AT(BOTTLE)) || K == LIQLOC(LOC) || (OBJ ==
 		DWARF && ATDWRF(LOC) > 0))SPK=94;
@@ -364,7 +364,7 @@ L9190:	if(AT(OBJ) || (LIQ(0) == OBJ && AT(BOTTLE)) || K == LIQLOC(LOC) || (OBJ =
 	if(TOTING(OBJ))SPK=24;
 	 return(2011);
 
-/*  INVENTORY.  IF OBJECT, TREAT SAME AS FIND.  ELSE REPORT ON CURRENT BURDEN. */
+/*  Inventory.  If object, treat same as find.  Else report on current burden. */
 
 L8200:	SPK=98;
 	/* 8201 */ for (I=1; I<=100; I++) {
@@ -379,12 +379,12 @@ L8201:	/*etc*/ ;
 	if(TOTING(BEAR))SPK=141;
 	 return(2011);
 
-/* FEED/FILL ARE IN THE OTHER MODULE. */
+/* Feed/fill are in the other module. */
 
 L9210:	return(feed());
 L9220:	return(fill());
 
-/*  BLAST.  NO EFFECT UNLESS YOU'VE GOT DYNAMITE, WHICH IS A NEAT TRICK! */
+/*  Blast.  No effect unless you've got dynamite, which is a neat trick! */
 
 L9230:	if(PROP[ROD2] < 0 || !CLOSED) return(2011);
 	BONUS=133;
@@ -393,7 +393,7 @@ L9230:	if(PROP[ROD2] < 0 || !CLOSED) return(2011);
 	RSPEAK(BONUS);
 	 score(0);
 
-/*  SCORE.  CALL SCORING ROUTINE BUT TELL IT TO RETURN. */
+/*  Score.  Call scoring routine but tell it to return. */
 
 L8240:	score(-1);
 	SETPRM(1,SCORE,MXSCOR);
@@ -416,7 +416,7 @@ L8252:	FOOBAR=K;
 	FOOBAR=0;
 	if(PLACE[EGGS] == PLAC[EGGS] || (TOTING(EGGS) && LOC == PLAC[EGGS])) 
 		return(2011);
-/*  BRING BACK TROLL IF WE STEAL THE EGGS BACK FROM HIM BEFORE CROSSING. */
+/*  Bring back troll if we steal the eggs back from him before crossing. */
 	if(PLACE[EGGS] == 0 && PLACE[TROLL] == 0 && PROP[TROLL] ==
 		0)PROP[TROLL]=1;
 	K=2;
@@ -426,14 +426,14 @@ L8252:	FOOBAR=K;
 	PSPEAK(EGGS,K);
 	 return(2012);
 
-/*  BRIEF.  INTRANSITIVE ONLY.  SUPPRESS LONG DESCRIPTIONS AFTER FIRST TIME. */
+/*  Brief.  Intransitive only.  Suppress long descriptions after first time. */
 
 L8260:	SPK=156;
 	ABBNUM=10000;
 	DETAIL=3;
 	 return(2011);
 
-/*  READ.  PRINT STUFF BASED ON OBJTXT.  OYSTER (?) IS SPECIAL CASE. */
+/*  Read.  Print stuff based on objtxt.  Oyster (?) is special case. */
 
 L8270:	/* 8275 */ for (I=1; I<=100; I++) {
 L8275:	if(HERE(I) && OBJTXT[I] != 0 && PROP[I] >= 0)OBJ=OBJ*100+I;
@@ -449,7 +449,7 @@ L9270:	if(DARK(0)) goto L5190;
 L9275:	CLSHNT=YES(192,193,54);
 	 return(2012);
 
-/*  BREAK.  ONLY WORKS FOR MIRROR IN REPOSITORY AND, OF COURSE, THE VASE. */
+/*  Break.  Only works for mirror in repository and, of course, the vase. */
 
 L9280:	if(OBJ == MIRROR)SPK=148;
 	if(OBJ == VASE && PROP[VASE] == 0) goto L9282;
@@ -463,15 +463,15 @@ L9282:	SPK=198;
 	FIXED[VASE]= -1;
 	 return(2011);
 
-/*  WAKE.  ONLY USE IS TO DISTURB THE DWARVES. */
+/*  Wake.  Only use is to disturb the dwarves. */
 
 L9290:	if(OBJ != DWARF || !CLOSED) return(2011);
 	SPK=199;
 	 return(18999);
 
-/*  SUSPEND.  OFFER TO SAVE THINGS IN A FILE, BUT CHARGING SOME POINTS (SO
- *  CAN'T WIN BY USING SAVED GAMES TO RETRY BATTLES OR TO START OVER AFTER
- *  LEARNING ZZWORD). */
+/*  Suspend.  Offer to save things in a file, but charging some points (so
+ *  can't win by using saved games to retry battles or to start over after
+ *  learning zzword). */
 
 L8300:	SPK=201;
 	RSPEAK(260);
@@ -479,8 +479,8 @@ L8300:	SPK=201;
 	SAVED=SAVED+5;
 	KK= -1;
 
-/*  THIS NEXT PART IS SHARED WITH THE "RESUME" CODE.  THE TWO CASES ARE
- *  DISTINGUISHED BY THE VALUE OF KK (-1 FOR SUSPEND, +1 FOR RESUME). */
+/*  This next part is shared with the "resume" code.  the two cases are
+ *  distinguished by the value of kk (-1 for suspend, +1 for resume). */
 
 L8305:	DATIME(I,K);
 	K=I+650*K;
@@ -488,12 +488,12 @@ L8305:	DATIME(I,K);
 	K=VRSION;
 	SAVWRD(0,K);
 	if(K != VRSION) goto L8312;
-/*  HEREWITH ARE ALL THE VARIABLES WHOSE VALUES CAN CHANGE DURING A GAME,
- *  OMITTING A FEW (SUCH AS I, J, ATTACK) WHOSE VALUES BETWEEN TURNS ARE
- *  IRRELEVANT AND SOME WHOSE VALUES WHEN A GAME IS
- *  SUSPENDED OR RESUMED ARE GUARANTEED TO MATCH.  IF UNSURE WHETHER A VALUE
- *  NEEDS TO BE SAVED, INCLUDE IT.  OVERKILL CAN'T HURT.  PAD THE LAST SAVWDS
- *  WITH JUNK VARIABLES TO BRING IT UP TO 7 VALUES. */
+/*  Herewith are all the variables whose values can change during a game,
+ *  omitting a few (such as I, J, ATTACK) whose values between turns are
+ *  irrelevant and some whose values when a game is
+ *  suspended or resumed are guaranteed to match.  if unsure whether a value
+ *  needs to be saved, include it.  overkill can't hurt.  pad the last savwds
+ *  with junk variables to bring it up to 7 values. */
 	SAVWDS(ABBNUM,BLKLIN,BONUS,CLOCK1,CLOCK2,CLOSED,CLOSNG);
 	SAVWDS(DETAIL,DFLAG,DKILL,DTOTAL,FOOBAR,HOLDNG,IWEST);
 	SAVWDS(KNFLOC,LIMIT,LL,LMWARN,LOC,NEWLOC,NUMDIE);
@@ -520,7 +520,7 @@ L8305:	DATIME(I,K);
 	RSPEAK(266);
 	exit(0);
 
-/*  RESUME.  READ A SUSPENDED GAME BACK FROM A FILE. */
+/*  Resume.  Read a suspended game back from a file. */
 
 L8310:	KK=1;
 	if(LOC == 1 && ABB[1] == 1) goto L8305;
@@ -536,7 +536,7 @@ L8312:	SETPRM(1,K/10,MOD(K,10));
 L8318:	RSPEAK(270);
 	exit(0);
 
-/*  FLY.  SNIDE REMARKS UNLESS HOVERING RUG IS HERE. */
+/*  Fly.  Snide remarks unless hovering rug is here. */
 
 L8320:	if(PROP[RUG] != 2)SPK=224;
 	if(!HERE(RUG))SPK=225;
@@ -554,7 +554,7 @@ L9320:	if(OBJ != RUG) return(2011);
 	RSPEAK(SPK);
 	 return(2);
 
-/*  LISTEN.  INTRANSITIVE ONLY.  PRINT STUFF BASED ON OBJSND/LOCSND. */
+/*  Listen.  Intransitive only.  Print stuff based on objsnd/locsnd. */
 
 L8330:	SPK=228;
 	K=LOCSND[LOC];
@@ -572,7 +572,7 @@ L8335:	/*etc*/ ;
 	} /* end loop */
 	 return(2011);
 
-/*  Z'ZZZ (WORD GETS RECOMPUTED AT STARTUP; DIFFERENT EACH GAME). */
+/*  Z'ZZZ (word gets recomputed at startup; different each game). */
 
 L8340:	if(!AT(RESER) && LOC != FIXED[RESER]-1) return(2011);
 	PSPEAK(RESER,PROP[RESER]+1);

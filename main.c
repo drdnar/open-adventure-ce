@@ -50,27 +50,27 @@ extern int action(long);
 
 int main(int argc, char *argv[]) {
 
-/*  ADVENTURE (REV 2: 20 TREASURES) */
+/*  Adventure (rev 2: 20 treasures) */
 
-/*  HISTORY: ORIGINAL IDEA & 5-TREASURE VERSION (ADVENTURES) BY WILLIE CROWTHER
- *           15-TREASURE VERSION (ADVENTURE) BY DON WOODS, APRIL-JUNE 1977
- *           20-TREASURE VERSION (REV 2) BY DON WOODS, AUGUST 1978
- *		ERRATA FIXED: 78/12/25 */
+/*  History: Original idea & 5-treasure version (adventures) by Willie Crowther
+ *           15-treasure version (adventure) by Don Woods, April-June 1977
+ *           20-treasure version (rev 2) by Don Woods, August 1978
+ *		Errata fixed: 78/12/25 */
 
 
-/* LOGICAL VARIABLES:
+/* Logical variables:
  *
- *  CLOSED SAYS WHETHER WE'RE ALL THE WAY CLOSED
- *  CLOSNG SAYS WHETHER IT'S CLOSING TIME YET
- *  CLSHNT SAYS WHETHER HE'S READ THE CLUE IN THE ENDGAME
- *  LMWARN SAYS WHETHER HE'S BEEN WARNED ABOUT LAMP GOING DIM
- *  NOVICE SAYS WHETHER HE ASKED FOR INSTRUCTIONS AT START-UP
- *  PANIC SAYS WHETHER HE'S FOUND OUT HE'S TRAPPED IN THE CAVE
- *  WZDARK SAYS WHETHER THE LOC HE'S LEAVING WAS DARK */
+ *  CLOSED says whether we're all the way closed
+ *  CLOSNG says whether it's closing time yet
+ *  CLSHNT says whether he's read the clue in the endgame
+ *  LMWARN says whether he's been warned about lamp going dim
+ *  NOVICE says whether he asked for instructions at start-up
+ *  PANIC says whether he's found out he's trapped in the cave
+ *  WZDARK says whether the loc he's leaving was dark */
 
 #include "funcs.h"
 
-/*  READ THE DATABASE IF WE HAVE NOT YET DONE SO */
+/*  Read the database if we have not yet done so */
 
 	LINES = (long *)calloc(LINSIZ+1,sizeof(long));
 	if(!LINES){
@@ -82,17 +82,17 @@ int main(int argc, char *argv[]) {
 	if(!SETUP)initialise();
 	if(SETUP > 0) goto L1;
 
-/*  UNLIKE EARLIER VERSIONS, ADVENTURE IS NO LONGER RESTARTABLE.  (THIS
- *  LETS US GET AWAY WITH MODIFYING THINGS SUCH AS OBJSND(BIRD) WITHOUT
- *  HAVING TO BE ABLE TO UNDO THE CHANGES LATER.)  IF A "USED" COPY IS
- *  RERUN, WE COME HERE AND TELL THE PLAYER TO RUN A FRESH COPY. */
+/*  Unlike earlier versions, adventure is no longer restartable.  (This
+ *  lets us get away with modifying things such as OBJSND(BIRD) without
+ *  having to be able to undo the changes later.)  If a "used" copy is
+ *  rerun, we come here and tell the player to run a fresh copy. */
 
 	RSPEAK(201);
 	exit(0);
 
 
 
-/*  START-UP, DWARF STUFF */
+/*  Start-up, dwarf stuff */
 
 L1:	SETUP= -1;
 	I=RAN(-1);
@@ -103,7 +103,7 @@ L1:	SETUP= -1;
 	LIMIT=330;
 	if(NOVICE)LIMIT=1000;
 
-/*  CAN'T LEAVE CAVE ONCE IT'S CLOSING (EXCEPT BY MAIN OFFICE). */
+/*  Can't leave cave once it's closing (except by main office). */
 
 L2:	if(!OUTSID(NEWLOC) || NEWLOC == 0 || !CLOSNG) goto L71;
 	RSPEAK(130);
@@ -111,9 +111,9 @@ L2:	if(!OUTSID(NEWLOC) || NEWLOC == 0 || !CLOSNG) goto L71;
 	if(!PANIC)CLOCK2=15;
 	PANIC=true;
 
-/*  SEE IF A DWARF HAS SEEN HIM AND HAS COME FROM WHERE HE WANTS TO GO.  IF SO,
- *  THE DWARF'S BLOCKING HIS WAY.  IF COMING FROM PLACE FORBIDDEN TO PIRATE
- *  (DWARVES ROOTED IN PLACE) LET HIM GET OUT (AND ATTACKED). */
+/*  See if a dwarf has seen him and has come from where he wants to go.  If so,
+ *  the dwarf's blocking his way.  if coming from place forbidden to pirate
+ *  (dwarves rooted in place) let him get out (and attacked). */
 
 L71:	if(NEWLOC == LOC || FORCED(LOC) || CNDBIT(LOC,3)) goto L74;
 	/* 73 */ for (I=1; I<=5; I++) {
@@ -125,23 +125,23 @@ L73:	/*etc*/ ;
 	} /* end loop */
 L74:	LOC=NEWLOC;
 
-/*  DWARF STUFF.  SEE EARLIER COMMENTS FOR DESCRIPTION OF VARIABLES.  REMEMBER
- *  SIXTH DWARF IS PIRATE AND IS THUS VERY DIFFERENT EXCEPT FOR MOTION RULES. */
+/*  Dwarf stuff.  See earlier comments for description of variables.  Remember
+ *  sixth dwarf is pirate and is thus very different except for motion rules. */
 
-/*  FIRST OFF, DON'T LET THE DWARVES FOLLOW HIM INTO A PIT OR A WALL.  ACTIVATE
- *  THE WHOLE MESS THE FIRST TIME HE GETS AS FAR AS THE HALL OF MISTS (LOC 15).
- *  IF NEWLOC IS FORBIDDEN TO PIRATE (IN PARTICULAR, IF IT'S BEYOND THE TROLL
- *  BRIDGE), BYPASS DWARF STUFF.  THAT WAY PIRATE CAN'T STEAL RETURN TOLL, AND
- *  DWARVES CAN'T MEET THE BEAR.  ALSO MEANS DWARVES WON'T FOLLOW HIM INTO DEAD
- *  END IN MAZE, BUT C'EST LA VIE.  THEY'LL WAIT FOR HIM OUTSIDE THE DEAD END. */
+/*  First off, don't let the dwarves follow him into a pit or a wall.  Activate
+ *  the whole mess the first time he gets as far as the hall of mists (loc 15).
+ *  If NEWLOC is forbidden to pirate (in particular, if it's beyond the troll
+ *  bridge), bypass dwarf stuff.  That way pirate can't steal return toll, and
+ *  dwarves can't meet the bear.  Also means dwarves won't follow him into dead
+ *  end in maze, but c'est la vie.  They'll wait for him outside the dead end. */
 
 	if(LOC == 0 || FORCED(LOC) || CNDBIT(NEWLOC,3)) goto L2000;
 	if(DFLAG != 0) goto L6000;
 	if(INDEEP(LOC))DFLAG=1;
 	 goto L2000;
 
-/*  WHEN WE ENCOUNTER THE FIRST DWARF, WE KILL 0, 1, OR 2 OF THE 5 DWARVES.  IF
- *  ANY OF THE SURVIVORS IS AT LOC, REPLACE HIM WITH THE ALTERNATE. */
+/*  When we encounter the first dwarf, we kill 0, 1, or 2 of the 5 dwarves.  If
+ *  any of the survivors is at loc, replace him with the alternate. */
 
 L6000:	if(DFLAG != 1) goto L6010;
 	if(!INDEEP(LOC) || (PCT(95) && (!CNDBIT(LOC,4) || PCT(85)))) goto L2000;
@@ -158,17 +158,17 @@ L6002:	ODLOC[I]=DLOC[I];
 	DROP(AXE,LOC);
 	 goto L2000;
 
-/*  THINGS ARE IN FULL SWING.  MOVE EACH DWARF AT RANDOM, EXCEPT IF HE'S SEEN US
- *  HE STICKS WITH US.  DWARVES STAY DEEP INSIDE.  IF WANDERING AT RANDOM,
- *  THEY DON'T BACK UP UNLESS THERE'S NO ALTERNATIVE.  IF THEY DON'T HAVE TO
- *  MOVE, THEY ATTACK.  AND, OF COURSE, DEAD DWARVES DON'T DO MUCH OF ANYTHING. */
+/*  Things are in full swing.  move each dwarf at random, except if he's seen us
+ *  he sticks with us.  Dwarves stay deep inside.  If wandering at random,
+ *  they don't back up unless there's no alternative.  If they don't have to
+ *  move, they attack.  And, of course, dead dwarves don't do much of anything. */
 
 L6010:	DTOTAL=0;
 	ATTACK=0;
 	STICK=0;
 	/* 6030 */ for (I=1; I<=6; I++) {
 	if(DLOC[I] == 0) goto L6030;
-/*  FILL TK ARRAY WITH ALL THE PLACES THIS DWARF MIGHT GO. */
+/*  Fill TK array with all the places this dwarf might go. */
 	J=1;
 	KK=DLOC[I];
 	KK=KEY[KK];
@@ -193,15 +193,15 @@ L6016:	TK[J]=ODLOC[I];
 	DLOC[I]=LOC;
 	if(I != 6) goto L6027;
 
-/*  THE PIRATE'S SPOTTED HIM.  HE LEAVES HIM ALONE ONCE WE'VE FOUND CHEST.  K
- *  COUNTS IF A TREASURE IS HERE.  IF NOT, AND TALLY=1 FOR AN UNSEEN CHEST, LET
- *  THE PIRATE BE SPOTTED.  NOTE THAT PLACE(CHEST)=0 MIGHT MEAN THAT HE'S
- *  THROWN IT TO THE TROLL, BUT IN THAT CASE HE'S SEEN THE CHEST (PROP=0). */
+/*  The pirate's spotted him.  He leaves him alone once we've found chest.  K
+ *  counts if a treasure is here.  If not, and tally=1 for an unseen chest, let
+ *  the pirate be spotted.  Note that PLACE(CHEST)=0 might mean that he's
+ *  thrown it to the troll, but in that case he's seen the chest (PROP=0). */
 
 	if(LOC == CHLOC || PROP[CHEST] >= 0) goto L6030;
 	K=0;
 	/* 6020 */ for (J=50; J<=MAXTRS; J++) {
-/*  PIRATE WON'T TAKE PYRAMID FROM PLOVER ROOM OR DARK ROOM (TOO EASY!). */
+/*  Pirate won't take pyramid from plover room or dark room (too easy!). */
 	if(J == PYRAM && (LOC == PLAC[PYRAM] || LOC == PLAC[EMRALD])) goto L6020;
 	if(TOTING(J)) goto L6021;
 L6020:	if(HERE(J))K=1;
@@ -212,7 +212,7 @@ L6020:	if(HERE(J))K=1;
 	 goto L6030;
 
 L6021:	if(PLACE[CHEST] != 0) goto L6022;
-/*  INSTALL CHEST ONLY ONCE, TO INSURE IT IS THE LAST TREASURE IN THE LIST. */
+/*  Install chest only once, to insure it is the last treasure in the list. */
 	MOVE(CHEST,CHLOC);
 	MOVE(MESSAG,CHLOC2);
 L6022:	RSPEAK(128);
@@ -232,7 +232,7 @@ L6025:	RSPEAK(186);
 	MOVE(MESSAG,CHLOC2);
 	 goto L6024;
 
-/*  THIS THREATENING LITTLE DWARF IS IN THE ROOM WITH HIM! */
+/*  This threatening little dwarf is in the room with him! */
 
 L6027:	DTOTAL=DTOTAL+1;
 	if(ODLOC[I] != DLOC[I]) goto L6030;
@@ -242,9 +242,9 @@ L6027:	DTOTAL=DTOTAL+1;
 L6030:	/*etc*/ ;
 	} /* end loop */
 
-/*  NOW WE KNOW WHAT'S HAPPENING.  LET'S TELL THE POOR SUCKER ABOUT IT.
- *  NOTE THAT VARIOUS OF THE "KNIFE" MESSAGES MUST HAVE SPECIFIC RELATIVE
- *  POSITIONS IN THE RSPEAK DATABASE. */
+/*  Now we know what's happening.  Let's tell the poor sucker about it.
+ *  Note that various of the "knife" messages must have specific relative
+ *  positions in the RSPEAK database. */
 
 	if(DTOTAL == 0) goto L2000;
 	SETPRM(1,DTOTAL,0);
@@ -266,9 +266,9 @@ L6030:	/*etc*/ ;
 
 
 
-/*  DESCRIBE THE CURRENT LOCATION AND (MAYBE) GET NEXT COMMAND. */
+/*  Describe the current location and (maybe) get next command. */
 
-/*  PRINT TEXT FOR CURRENT LOC. */
+/*  Print text for current loc. */
 
 L2000:	if(LOC == 0) goto L99;
 	KK=STEXT[LOC];
@@ -282,11 +282,11 @@ L2001:	if(TOTING(BEAR))RSPEAK(141);
 	if(FORCED(LOC)) goto L8;
 	if(LOC == 33 && PCT(25) && !CLOSNG)RSPEAK(7);
 
-/*  PRINT OUT DESCRIPTIONS OF OBJECTS AT THIS LOCATION.  IF NOT CLOSING AND
- *  PROPERTY VALUE IS NEGATIVE, TALLY OFF ANOTHER TREASURE.  RUG IS SPECIAL
- *  CASE; ONCE SEEN, ITS PROP IS 1 (DRAGON ON IT) TILL DRAGON IS KILLED.
- *  SIMILARLY FOR CHAIN; PROP IS INITIALLY 1 (LOCKED TO BEAR).  THESE HACKS
- *  ARE BECAUSE PROP=0 IS NEEDED TO GET FULL SCORE. */
+/*  Print out descriptions of objects at this location.  If not closing and
+ *  property value is negative, tally off another treasure.  Rug is special
+ *  case; once seen, its PROP is 1 (dragon on it) till dragon is killed.
+ *  Similarly for chain; PROP is initially 1 (locked to bear).  These hacks
+ *  are because PROP=0 is needed to get full score. */
 
 	if(DARK(0)) goto L2012;
 	ABB[LOC]=ABB[LOC]+1;
@@ -300,17 +300,17 @@ L2004:	if(I == 0) goto L2012;
 	PROP[OBJ]=0;
 	if(OBJ == RUG || OBJ == CHAIN)PROP[OBJ]=1;
 	TALLY=TALLY-1;
-/*  NOTE: THERE USED TO BE A TEST HERE TO SEE WHETHER THE PLAYER HAD BLOWN IT
- *  SO BADLY THAT HE COULD NEVER EVER SEE THE REMAINING TREASURES, AND IF SO
- *  THE LAMP WAS ZAPPED TO 35 TURNS.  BUT THE TESTS WERE TOO SIMPLE-MINDED;
- *  THINGS LIKE KILLING THE BIRD BEFORE THE SNAKE WAS GONE (CAN NEVER SEE
- *  JEWELRY), AND DOING IT "RIGHT" WAS HOPELESS.  E.G., COULD CROSS TROLL
- *  BRIDGE SEVERAL TIMES, USING UP ALL AVAILABLE TREASURES, BREAKING VASE,
- *  USING COINS TO BUY BATTERIES, ETC., AND EVENTUALLY NEVER BE ABLE TO GET
- *  ACROSS AGAIN.  IF BOTTLE WERE LEFT ON FAR SIDE, COULD THEN NEVER GET EGGS
- *  OR TRIDENT, AND THE EFFECTS PROPAGATE.  SO THE WHOLE THING WAS FLUSHED.
- *  ANYONE WHO MAKES SUCH A GROSS BLUNDER ISN'T LIKELY TO FIND EVERYTHING
- *  ELSE ANYWAY (SO GOES THE RATIONALISATION). */
+/*  Note: There used to be a test here to see whether the player had blown it
+ *  so badly that he could never ever see the remaining treasures, and if so
+ *  the lamp was zapped to 35 turns.  But the tests were too simple-minded;
+ *  things like killing the bird before the snake was gone (can never see
+ *  jewelry), and doing it "right" was hopeless.  E.G., could cross troll
+ *  bridge several times, using up all available treasures, breaking vase,
+ *  using coins to buy batteries, etc., and eventually never be able to get
+ *  across again.  If bottle were left on far side, could then never get eggs
+ *  or trident, and the effects propagate.  So the whole thing was flushed.
+ *  anyone who makes such a gross blunder isn't likely to find everything
+ *  else anyway (so goes the rationalisation). */
 L2006:	KK=PROP[OBJ];
 	if(OBJ == STEPS && LOC == FIXED[STEPS])KK=1;
 	PSPEAK(OBJ,KK);
@@ -325,9 +325,9 @@ L2012:	VERB=0;
 	OLDOBJ=OBJ;
 	OBJ=0;
 
-/*  CHECK IF THIS LOC IS ELIGIBLE FOR ANY HINTS.  IF BEEN HERE LONG ENOUGH,
- *  BRANCH TO HELP SECTION (ON LATER PAGE).  HINTS ALL COME BACK HERE EVENTUALLY
- *  TO FINISH THE LOOP.  IGNORE "HINTS" < 4 (SPECIAL STUFF, SEE DATABASE NOTES).
+/*  Check if this loc is eligible for any hints.  If been here long enough,
+ *  branch to help section (on later page).  Hints all come back here eventually
+ *  to finish the loop.  Ignore "HINTS" < 4 (special stuff, see database notes).
 		*/
 
 L2600:	if(COND[LOC] < CONDS) goto L2603;
@@ -339,11 +339,11 @@ L2600:	if(COND[LOC] < CONDS) goto L2603;
 L2602:	/*etc*/ ;
 	} /* end loop */
 
-/*  KICK THE RANDOM NUMBER GENERATOR JUST TO ADD VARIETY TO THE CHASE.  ALSO,
- *  IF CLOSING TIME, CHECK FOR ANY OBJECTS BEING TOTED WITH PROP < 0 AND SET
- *  THE PROP TO -1-PROP.  THIS WAY OBJECTS WON'T BE DESCRIBED UNTIL THEY'VE
- *  BEEN PICKED UP AND PUT DOWN SEPARATE FROM THEIR RESPECTIVE PILES.  DON'T
- *  TICK CLOCK1 UNLESS WELL INTO CAVE (AND NOT AT Y2). */
+/*  Kick the random number generator just to add variety to the chase.  Also,
+ *  if closing time, check for any objects being toted with PROP < 0 and set
+ *  the prop to -1-PROP.  This way objects won't be described until they've
+ *  been picked up and put down separate from their respective piles.  Don't
+ *  tick CLOCK1 unless well into cave (and not at Y2). */
 
 L2603:	if(!CLOSED) goto L2605;
 	if(PROP[OYSTER] < 0 && TOTING(OYSTER))PSPEAK(OYSTER,1);
@@ -355,8 +355,8 @@ L2605:	WZDARK=DARK(0);
 	I=RAN(1);
 	GETIN(WD1,WD1X,WD2,WD2X);
 
-/*  EVERY INPUT, CHECK "FOOBAR" FLAG.  IF ZERO, NOTHING'S GOING ON.  IF POS,
- *  MAKE NEG.  IF NEG, HE SKIPPED A WORD, SO MAKE IT ZERO. */
+/*  Every input, check "FOOBAR" flag.  If zero, nothing's going on.  If pos,
+ *  make neg.  If neg, he skipped a word, so make it zero. */
 
 L2607:	FOOBAR=(FOOBAR>0 ? -FOOBAR : 0);
 	TURNS=TURNS+1;
@@ -402,20 +402,20 @@ L2630:	I=VOCAB(WD1,-1);
 		case 3: goto L2010; }
 	BUG(22);
 
-/*  GET SECOND WORD FOR ANALYSIS. */
+/*  Get second word for analysis. */
 
 L2800:	WD1=WD2;
 	WD1X=WD2X;
 	WD2=0;
 	 goto L2620;
 
-/*  GEE, I DON'T UNDERSTAND. */
+/*  Gee, I don't understand. */
 
 L3000:	SETPRM(1,WD1,WD1X);
 	RSPEAK(254);
 	 goto L2600;
 
-/* VERB AND OBJECT ANALYSIS MOVED TO SEPARATE MODULE. */
+/* Verb and object analysis moved to separate module. */
 
 L4000:	I=4000; goto Laction;
 L4090:	I=4090; goto Laction;
@@ -439,7 +439,7 @@ Laction:
 	   }
 	BUG(99);
 
-/*  RANDOM INTRANSITIVE VERBS COME HERE.  CLEAR OBJ JUST IN CASE (SEE "ATTACK").
+/*  Random intransitive verbs come here.  Clear obj just in case (see "attack").
 		*/
 
 L8000:	SETPRM(1,WD1,WD1X);
@@ -447,13 +447,13 @@ L8000:	SETPRM(1,WD1,WD1X);
 	OBJ=0;
 	goto L2600;
 
-/*  FIGURE OUT THE NEW LOCATION
+/*  Figure out the new location
  *
- *  GIVEN THE CURRENT LOCATION IN "LOC", AND A MOTION VERB NUMBER IN "K", PUT
- *  THE NEW LOCATION IN "NEWLOC".  THE CURRENT LOC IS SAVED IN "OLDLOC" IN CASE
- *  HE WANTS TO RETREAT.  THE CURRENT OLDLOC IS SAVED IN OLDLC2, IN CASE HE
- *  DIES.  (IF HE DOES, NEWLOC WILL BE LIMBO, AND OLDLOC WILL BE WHAT KILLED
- *  HIM, SO WE NEED OLDLC2, WHICH IS THE LAST PLACE HE WAS SAFE.) */
+ *  Given the current location in "LOC", and a motion verb number in "K", put
+ *  the new location in "NEWLOC".  the current loc is saved in "OLDLOC" in case
+ *  he wants to retreat.  the current OLDLOC is saved in OLDLC2, in case he
+ *  dies.  (if he does, NEWLOC will be limbo, and OLDLOC will be what killed
+ *  him, so we need OLDLC2, which is the last place he was safe.) */
 
 L8:	KK=KEY[LOC];
 	NEWLOC=LOC;
@@ -495,17 +495,17 @@ L16:	NEWLOC=MOD(LL,1000);
 	NEWLOC=LOC;
 	 goto L2;
 
-/*  SPECIAL MOTIONS COME HERE.  LABELLING CONVENTION: STATEMENT NUMBERS NNNXX
- *  (XX=00-99) ARE USED FOR SPECIAL CASE NUMBER NNN (NNN=301-500). */
+/*  Special motions come here.  labelling convention: statement numbers NNNXX
+ *  (XX=00-99) are used for special case number NNN (NNN=301-500). */
 
 L30000: NEWLOC=NEWLOC-300;
 	 switch (NEWLOC) { case 1: goto L30100; case 2: goto L30200; case 3: goto
 		L30300; }
 	BUG(20);
 
-/*  TRAVEL 301.  PLOVER-ALCOVE PASSAGE.  CAN CARRY ONLY EMERALD.  NOTE: TRAVEL
- *  TABLE MUST INCLUDE "USELESS" ENTRIES GOING THROUGH PASSAGE, WHICH CAN NEVER
- *  BE USED FOR ACTUAL MOTION, BUT CAN BE SPOTTED BY "GO BACK". */
+/*  Travel 301.  Plover-alcove passage.  Can carry only emerald.  Note: travel
+ *  table must include "useless" entries going through passage, which can never
+ *  be used for actual motion, but can be spotted by "go back". */
 
 L30100: NEWLOC=99+100-LOC;
 	if(HOLDNG == 0 || (HOLDNG == 1 && TOTING(EMRALD))) goto L2;
@@ -513,18 +513,18 @@ L30100: NEWLOC=99+100-LOC;
 	RSPEAK(117);
 	 goto L2;
 
-/*  TRAVEL 302.  PLOVER TRANSPORT.  DROP THE EMERALD (ONLY USE SPECIAL TRAVEL IF
- *  TOTING IT), SO HE'S FORCED TO USE THE PLOVER-PASSAGE TO GET IT OUT.  HAVING
- *  DROPPED IT, GO BACK AND PRETEND HE WASN'T CARRYING IT AFTER ALL. */
+/*  Travel 302.  Plover transport.  Drop the emerald (only use special travel if
+ *  toting it), so he's forced to use the plover-passage to get it out.  Having
+ *  dropped it, go back and pretend he wasn't carrying it after all. */
 
 L30200: DROP(EMRALD,LOC);
 	 goto L12;
 
-/*  TRAVEL 303.  TROLL BRIDGE.  MUST BE DONE ONLY AS SPECIAL MOTION SO THAT
- *  DWARVES WON'T WANDER ACROSS AND ENCOUNTER THE BEAR.  (THEY WON'T FOLLOW THE
- *  PLAYER THERE BECAUSE THAT REGION IS FORBIDDEN TO THE PIRATE.)  IF
- *  PROP(TROLL)=1, HE'S CROSSED SINCE PAYING, SO STEP OUT AND BLOCK HIM.
- *  (STANDARD TRAVEL ENTRIES CHECK FOR PROP(TROLL)=0.)  SPECIAL STUFF FOR BEAR. */
+/*  Travel 303.  Troll bridge.  Must be done only as special motion so that
+ *  dwarves won't wander across and encounter the bear.  (They won't follow the
+ *  player there because that region is forbidden to the pirate.)  If
+ *  PROP(TROLL)=1, he's crossed since paying, so step out and block him.
+ *  (standard travel entries check for PROP(TROLL)=0.)  Special stuff for bear. */
 
 L30300: if(PROP[TROLL] != 1) goto L30310;
 	PSPEAK(TROLL,1);
@@ -549,10 +549,10 @@ L30310: NEWLOC=PLAC[TROLL]+FIXD[TROLL]-LOC;
 	OLDLC2=NEWLOC;
 	 goto L99;
 
-/*  END OF SPECIALS. */
+/*  End of specials. */
 
-/*  HANDLE "GO BACK".  LOOK FOR VERB WHICH GOES FROM LOC TO OLDLOC, OR TO OLDLC2
- *  IF OLDLOC HAS FORCED-MOTION.  K2 SAVES ENTRY -> FORCED LOC -> PREVIOUS LOC. */
+/*  Handle "go back".  Look for verb which goes from LOC to OLDLOC, or to OLDLC2
+ *  If OLDLOC has forced-motion.  K2 saves entry -> forced loc -> previous loc. */
 
 L20:	K=OLDLOC;
 	if(FORCED(K))K=OLDLC2;
@@ -583,8 +583,8 @@ L25:	K=MOD(IABS(TRAVEL[KK]),1000);
 	KK=KEY[LOC];
 	 goto L9;
 
-/*  LOOK.  CAN'T GIVE MORE DETAIL.  PRETEND IT WASN'T DARK (THOUGH IT MAY "NOW"
- *  BE DARK) SO HE WON'T FALL INTO A PIT WHILE STARING INTO THE GLOOM. */
+/*  Look.  Can't give more detail.  Pretend it wasn't dark (though it may "now"
+ *  be dark) so he won't fall into a pit while staring into the gloom. */
 
 L30:	if(DETAIL < 3)RSPEAK(15);
 	DETAIL=DETAIL+1;
@@ -592,14 +592,14 @@ L30:	if(DETAIL < 3)RSPEAK(15);
 	ABB[LOC]=0;
 	 goto L2;
 
-/*  CAVE.  DIFFERENT MESSAGES DEPENDING ON WHETHER ABOVE GROUND. */
+/*  Cave.  Different messages depending on whether above ground. */
 
 L40:	K=58;
 	if(OUTSID(LOC) && LOC != 8)K=57;
 	RSPEAK(K);
 	 goto L2;
 
-/*  NON-APPLICABLE MOTION.  VARIOUS MESSAGES DEPENDING ON WORD GIVEN. */
+/*  Non-applicable motion.  Various messages depending on word given. */
 
 L50:	SPK=12;
 	if(K >= 43 && K <= 50)SPK=52;
@@ -616,29 +616,29 @@ L50:	SPK=12;
 
 
 
-/*  "YOU'RE DEAD, JIM."
+/*  "You're dead, Jim."
  *
- *  IF THE CURRENT LOC IS ZERO, IT MEANS THE CLOWN GOT HIMSELF KILLED.  WE'LL
- *  ALLOW THIS MAXDIE TIMES.  MAXDIE IS AUTOMATICALLY SET BASED ON THE NUMBER OF
- *  SNIDE MESSAGES AVAILABLE.  EACH DEATH RESULTS IN A MESSAGE (81, 83, ETC.)
- *  WHICH OFFERS REINCARNATION; IF ACCEPTED, THIS RESULTS IN MESSAGE 82, 84,
- *  ETC.  THE LAST TIME, IF HE WANTS ANOTHER CHANCE, HE GETS A SNIDE REMARK AS
- *  WE EXIT.  WHEN REINCARNATED, ALL OBJECTS BEING CARRIED GET DROPPED AT OLDLC2
- *  (PRESUMABLY THE LAST PLACE PRIOR TO BEING KILLED) WITHOUT CHANGE OF PROPS.
- *  THE LOOP RUNS BACKWARDS TO ASSURE THAT THE BIRD IS DROPPED BEFORE THE CAGE.
- *  (THIS KLUGE COULD BE CHANGED ONCE WE'RE SURE ALL REFERENCES TO BIRD AND CAGE
- *  ARE DONE BY KEYWORDS.)  THE LAMP IS A SPECIAL CASE (IT WOULDN'T DO TO LEAVE
- *  IT IN THE CAVE).  IT IS TURNED OFF AND LEFT OUTSIDE THE BUILDING (ONLY IF HE
- *  WAS CARRYING IT, OF COURSE).  HE HIMSELF IS LEFT INSIDE THE BUILDING (AND
- *  HEAVEN HELP HIM IF HE TRIES TO XYZZY BACK INTO THE CAVE WITHOUT THE LAMP!).
- *  OLDLOC IS ZAPPED SO HE CAN'T JUST "RETREAT". */
+ *  If the current loc is zero, it means the clown got himself killed.  we'll
+ *  allow this maxdie times.  maxdie is automatically set based on the number of
+ *  snide messages available.  Each death results in a message (81, 83, etc.)
+ *  which offers reincarnation; if accepted, this results in message 82, 84,
+ *  etc.  The last time, if he wants another chance, he gets a snide remark as
+ *  we exit.  When reincarnated, all objects being carried get dropped at OLDLC2
+ *  (presumably the last place prior to being killed) without change of props.
+ *  the loop runs backwards to assure that the bird is dropped before the cage.
+ *  (this kluge could be changed once we're sure all references to bird and cage
+ *  are done by keywords.)  The lamp is a special case (it wouldn't do to leave
+ *  it in the cave).  It is turned off and left outside the building (only if he
+ *  was carrying it, of course).  He himself is left inside the building (and
+ *  heaven help him if he tries to xyzzy back into the cave without the lamp!).
+ *  OLDLOC is zapped so he can't just "retreat". */
 
-/*  THE EASIEST WAY TO GET KILLED IS TO FALL INTO A PIT IN PITCH DARKNESS. */
+/*  The easiest way to get killed is to fall into a pit in pitch darkness. */
 
 L90:	RSPEAK(23);
 	OLDLC2=LOC;
 
-/*  OKAY, HE'S DEAD.  LET'S GET ON WITH IT. */
+/*  Okay, he's dead.  Let's get on with it. */
 
 L99:	if(CLOSNG) goto L95;
 	NUMDIE=NUMDIE+1;
@@ -659,7 +659,7 @@ L98:	/*etc*/ ;
 	OLDLOC=LOC;
 	 goto L2000;
 
-/*  HE DIED DURING CLOSING TIME.  NO RESURRECTION.  TALLY UP A DEATH AND EXIT. */
+/*  He died during closing time.  No resurrection.  Tally up a death and exit. */
 
 L95:	RSPEAK(131);
 	NUMDIE=NUMDIE+1;
@@ -668,13 +668,13 @@ L95:	RSPEAK(131);
 
 
 
-/*  HINTS */
+/*  Hints */
 
-/*  COME HERE IF HE'S BEEN LONG ENOUGH AT REQUIRED LOC(S) FOR SOME UNUSED HINT.
- *  HINT NUMBER IS IN VARIABLE "HINT".  BRANCH TO QUICK TEST FOR ADDITIONAL
- *  CONDITIONS, THEN COME BACK TO DO NEAT STUFF.  GOTO 40010 IF CONDITIONS ARE
- *  MET AND WE WANT TO OFFER THE HINT.  GOTO 40020 TO CLEAR HINTLC BACK TO ZERO,
- *  40030 TO TAKE NO ACTION YET. */
+/*  Come here if he's been long enough at required loc(s) for some unused hint.
+ *  hint number is in variable "hint".  Branch to quick test for additional
+ *  conditions, then come back to do neat stuff.  Goto 40010 if conditions are
+ *  met and we want to offer the hint.  Goto 40020 to clear HINTLC back to zero,
+ *  40030 to take no action yet. */
 
 L40000:    switch (HINT-1) { case 0: goto L40100; case 1: goto L40200; case 2: goto
 		L40300; case 3: goto L40400; case 4: goto L40500; case 5: goto
@@ -693,7 +693,7 @@ L40010: HINTLC[HINT]=0;
 L40020: HINTLC[HINT]=0;
 L40030:  goto L2602;
 
-/*  NOW FOR THE QUICK TESTS.  SEE DATABASE DESCRIPTION FOR ONE-LINE NOTES. */
+/*  Now for the quick tests.  See database description for one-line notes. */
 
 L40100: if(PROP[GRATE] == 0 && !HERE(KEYS)) goto L40010;
 	 goto L40020;
@@ -732,37 +732,37 @@ L41000: if(TALLY == 1 && PROP[JADE] < 0) goto L40010;
 
 
 
-/*  CAVE CLOSING AND SCORING */
+/*  Cave closing and scoring */
 
 
-/*  THESE SECTIONS HANDLE THE CLOSING OF THE CAVE.  THE CAVE CLOSES "CLOCK1"
- *  TURNS AFTER THE LAST TREASURE HAS BEEN LOCATED (INCLUDING THE PIRATE'S
- *  CHEST, WHICH MAY OF COURSE NEVER SHOW UP).  NOTE THAT THE TREASURES NEED NOT
- *  HAVE BEEN TAKEN YET, JUST LOCATED.  HENCE CLOCK1 MUST BE LARGE ENOUGH TO GET
- *  OUT OF THE CAVE (IT ONLY TICKS WHILE INSIDE THE CAVE).  WHEN IT HITS ZERO,
- *  WE BRANCH TO 10000 TO START CLOSING THE CAVE, AND THEN SIT BACK AND WAIT FOR
- *  HIM TO TRY TO GET OUT.  IF HE DOESN'T WITHIN CLOCK2 TURNS, WE CLOSE THE
- *  CAVE; IF HE DOES TRY, WE ASSUME HE PANICS, AND GIVE HIM A FEW ADDITIONAL
- *  TURNS TO GET FRANTIC BEFORE WE CLOSE.  WHEN CLOCK2 HITS ZERO, WE BRANCH TO
- *  11000 TO TRANSPORT HIM INTO THE FINAL PUZZLE.  NOTE THAT THE PUZZLE DEPENDS
- *  UPON ALL SORTS OF RANDOM THINGS.  FOR INSTANCE, THERE MUST BE NO WATER OR
- *  OIL, SINCE THERE ARE BEANSTALKS WHICH WE DON'T WANT TO BE ABLE TO WATER,
- *  SINCE THE CODE CAN'T HANDLE IT.  ALSO, WE CAN HAVE NO KEYS, SINCE THERE IS A
- *  GRATE (HAVING MOVED THE FIXED OBJECT!) THERE SEPARATING HIM FROM ALL THE
- *  TREASURES.  MOST OF THESE PROBLEMS ARISE FROM THE USE OF NEGATIVE PROP
- *  NUMBERS TO SUPPRESS THE OBJECT DESCRIPTIONS UNTIL HE'S ACTUALLY MOVED THE
- *  OBJECTS. */
+/*  These sections handle the closing of the cave.  The cave closes "CLOCK1"
+ *  turns after the last treasure has been located (including the pirate's
+ *  chest, which may of course never show up).  Note that the treasures need not
+ *  have been taken yet, just located.  Hence CLOCK1 must be large enough to get
+ *  out of the cave (it only ticks while inside the cave).  When it hits zero,
+ *  we branch to 10000 to start closing the cave, and then sit back and wait for
+ *  him to try to get out.  If he doesn't within CLOCK2 turns, we close the
+ *  cave; if he does try, we assume he panics, and give him a few additional
+ *  turns to get frantic before we close.  When CLOCK2 hits zero, we branch to
+ *  11000 to transport him into the final puzzle.  Note that the puzzle depends
+ *  upon all sorts of random things.  For instance, there must be no water or
+ *  oil, since there are beanstalks which we don't want to be able to water,
+ *  since the code can't handle it.  Also, we can have no keys, since there is a
+ *  grate (having moved the fixed object!) there separating him from all the
+ *  treasures.  most of these problems arise from the use of negative prop
+ *  numbers to suppress the object descriptions until he's actually moved the
+ *  objects. */
 
-/*  WHEN THE FIRST WARNING COMES, WE LOCK THE GRATE, DESTROY THE BRIDGE, KILL
- *  ALL THE DWARVES (AND THE PIRATE), REMOVE THE TROLL AND BEAR (UNLESS DEAD),
- *  AND SET "CLOSNG" TO TRUE.  LEAVE THE DRAGON; TOO MUCH TROUBLE TO MOVE IT.
- *  FROM NOW UNTIL CLOCK2 RUNS OUT, HE CANNOT UNLOCK THE GRATE, MOVE TO ANY
- *  LOCATION OUTSIDE THE CAVE, OR CREATE THE BRIDGE.  NOR CAN HE BE
- *  RESURRECTED IF HE DIES.  NOTE THAT THE SNAKE IS ALREADY GONE, SINCE HE GOT
- *  TO THE TREASURE ACCESSIBLE ONLY VIA THE HALL OF THE MT. KING.  ALSO, HE'S
- *  BEEN IN GIANT ROOM (TO GET EGGS), SO WE CAN REFER TO IT.  ALSO ALSO, HE'S
- *  GOTTEN THE PEARL, SO WE KNOW THE BIVALVE IS AN OYSTER.  *AND*, THE DWARVES
- *  MUST HAVE BEEN ACTIVATED, SINCE WE'VE FOUND CHEST. */
+/*  When the first warning comes, we lock the grate, destroy the bridge, kill
+ *  all the dwarves (and the pirate), remove the troll and bear (unless dead),
+ *  and set "CLOSNG" to true.  Leave the dragon; too much trouble to move it.
+ *  from now until CLOCK2 runs out, he cannot unlock the grate, move to any
+ *  location outside the cave, or create the bridge.  Nor can he be
+ *  resurrected if he dies.  Note that the snake is already gone, since he got
+ *  to the treasure accessible only via the hall of the mt. king.  Also, he's
+ *  been in giant room (to get eggs), so we can refer to it.  Also also, he's
+ *  gotten the pearl, so we know the bivalve is an oyster.  *And*, the dwarves
+ *  must have been activated, since we've found chest. */
 
 L10000: PROP[GRATE]=0;
 	PROP[FISSUR]=0;
@@ -808,7 +808,7 @@ L11000: PROP[BOTTLE]=PUT(BOTTLE,115,1);
 	OLDLOC=115;
 	NEWLOC=115;
 
-/*  LEAVE THE GRATE WITH NORMAL (NON-NEGATIVE) PROPERTY.  REUSE SIGN. */
+/*  Leave the grate with normal (non-negative) property.  reuse sign. */
 
 	I=PUT(GRATE,116,0);
 	I=PUT(SIGN,116,0);
@@ -830,11 +830,11 @@ L11010: if(TOTING(I))DSTROY(I);
 	CLOSED=true;
 	 goto L2;
 
-/*  ANOTHER WAY WE CAN FORCE AN END TO THINGS IS BY HAVING THE LAMP GIVE OUT.
- *  WHEN IT GETS CLOSE, WE COME HERE TO WARN HIM.  WE GO TO 12000 IF THE LAMP
- *  AND FRESH BATTERIES ARE HERE, IN WHICH CASE WE REPLACE THE BATTERIES AND
- *  CONTINUE.  12200 IS FOR OTHER CASES OF LAMP DYING.  12400 IS WHEN IT GOES
- *  OUT.  EVEN THEN, HE CAN EXPLORE OUTSIDE FOR A WHILE IF DESIRED. */
+/*  Another way we can force an end to things is by having the lamp give out.
+ *  When it gets close, we come here to warn him.  We go to 12000 if the lamp
+ *  and fresh batteries are here, in which case we replace the batteries and
+ *  continue.  12200 is for other cases of lamp dying.  12400 is when it goes
+ *  out.  Even then, he can explore outside for a while if desired. */
 
 L12000: RSPEAK(188);
 	PROP[BATTER]=1;
@@ -856,7 +856,7 @@ L12400: LIMIT= -1;
 	if(HERE(LAMP))RSPEAK(184);
 	 goto L19999;
 
-/*  OH DEAR, HE'S DISTURBED THE DWARVES. */
+/*  Oh dear, he's disturbed the dwarves. */
 
 L18999: RSPEAK(SPK);
 L19000: RSPEAK(136);

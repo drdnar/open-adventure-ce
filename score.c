@@ -4,36 +4,36 @@
 #include "share.h"
 
 /*
- * SCORING AND WRAP-UP
+ * scoring and wrap-up
  */
 
 void score(long MODE) {
 	/* <0 if scoring, >0 if quitting, =0 if died or won */
 
-/*  THE PRESENT SCORING ALGORITHM IS AS FOLLOWS:
- *     OBJECTIVE:          POINTS:        PRESENT TOTAL POSSIBLE:
- *  GETTING WELL INTO CAVE   25                    25
- *  EACH TREASURE < CHEST    12                    60
- *  TREASURE CHEST ITSELF    14                    14
- *  EACH TREASURE > CHEST    16                   224
- *  SURVIVING             (MAX-NUM)*10             30
- *  NOT QUITTING              4                     4
- *  REACHING "CLOSNG"        25                    25
- *  "CLOSED": QUIT/KILLED    10
- *            KLUTZED        25
- *            WRONG WAY      30
- *            SUCCESS        45                    45
- *  CAME TO WITT'S END        1                     1
- *  ROUND OUT THE TOTAL       2                     2
+/*  The present scoring algorithm is as follows:
+ *     Objective:          Points:        Present total possible:
+ *  Getting well into cave   25                    25
+ *  Each treasure < chest    12                    60
+ *  Treasure chest itself    14                    14
+ *  Each treasure > chest    16                   224
+ *  Surviving             (MAX-NUM)*10             30
+ *  Not quitting              4                     4
+ *  Reaching "CLOSNG"        25                    25
+ *  "Closed": Quit/Killed    10
+ *            Klutzed        25
+ *            Wrong way      30
+ *            Success        45                    45
+ *  Came to Witt's End        1                     1
+ *  Round out the total       2                     2
  *                                       TOTAL:   430
- *  POINTS CAN ALSO BE DEDUCTED FOR USING HINTS OR TOO MANY TURNS, OR FOR
- *  SAVING INTERMEDIATE POSITIONS. */
+ *  Points can also be deducted for using hints or too many turns, or for
+ *  saving intermediate positions. */
 
 L20000: SCORE=0;
 	MXSCOR=0;
 
-/*  FIRST TALLY UP THE TREASURES.  MUST BE IN BUILDING AND NOT BROKEN.
- *  GIVE THE POOR GUY 2 POINTS JUST FOR FINDING EACH TREASURE. */
+/*  First tally up the treasures.  must be in building and not broken.
+ *  Give the poor guy 2 points just for finding each treasure. */
 
 	/* 20010 */ for (I=50; I<=MAXTRS; I++) {
 	if(PTEXT[I] == 0) goto L20010;
@@ -46,12 +46,12 @@ L20000: SCORE=0;
 L20010: /*etc*/ ;
 	} /* end loop */
 
-/*  NOW LOOK AT HOW HE FINISHED AND HOW FAR HE GOT.  MAXDIE AND NUMDIE TELL US
- *  HOW WELL HE SURVIVED.  DFLAG WILL
- *  TELL US IF HE EVER GOT SUITABLY DEEP INTO THE CAVE.  CLOSNG STILL INDICATES
- *  WHETHER HE REACHED THE ENDGAME.  AND IF HE GOT AS FAR AS "CAVE CLOSED"
- *  (INDICATED BY "CLOSED"), THEN BONUS IS ZERO FOR MUNDANE EXITS OR 133, 134,
- *  135 IF HE BLEW IT (SO TO SPEAK). */
+/*  Now look at how he finished and how far he got.  MAXDIE and NUMDIE tell us
+ *  how well he survived.  DFLAG will
+ *  tell us if he ever got suitably deep into the cave.  CLOSNG still indicates
+ *  whether he reached the endgame.  And if he got as far as "cave closed"
+ *  (indicated by "CLOSED"), then bonus is zero for mundane exits or 133, 134,
+ *  135 if he blew it (so to speak). */
 
 	SCORE=SCORE+(MAXDIE-NUMDIE)*10;
 	MXSCOR=MXSCOR+MAXDIE*10;
@@ -68,17 +68,17 @@ L20010: /*etc*/ ;
 	if(BONUS == 133)SCORE=SCORE+45;
 L20020: MXSCOR=MXSCOR+45;
 
-/*  DID HE COME TO WITT'S END AS HE SHOULD? */
+/*  Did he come to Witt's End as he should? */
 
 	if(PLACE[MAGZIN] == 108)SCORE=SCORE+1;
 	MXSCOR=MXSCOR+1;
 
-/*  ROUND IT OFF. */
+/*  Round it off. */
 
 	SCORE=SCORE+2;
 	MXSCOR=MXSCOR+2;
 
-/*  DEDUCT FOR HINTS/TURNS/SAVES.  HINTS < 4 ARE SPECIAL; SEE DATABASE DESC. */
+/*  Deduct for hints/turns/saves.  Hints < 4 are special; see database desc. */
 
 	/* 20030 */ for (I=1; I<=HNTMAX; I++) {
 L20030: if(HINTED[I])SCORE=SCORE-HINTS[I][2];
@@ -87,11 +87,11 @@ L20030: if(HINTED[I])SCORE=SCORE-HINTS[I][2];
 	if(CLSHNT)SCORE=SCORE-10;
 	SCORE=SCORE-TRNLUZ-SAVED;
 
-/*  RETURN TO SCORE COMMAND IF THAT'S WHERE WE CAME FROM. */
+/*  Return to score command if that's where we came from. */
 
 	if(MODE < 0) return;
 
-/*  THAT SHOULD BE GOOD ENOUGH.  LET'S TELL HIM ALL ABOUT IT. */
+/*  that should be good enough.  Let's tell him all about it. */
 
 	if(SCORE+TRNLUZ+1 >= MXSCOR && TRNLUZ != 0)RSPEAK(242);
 	if(SCORE+SAVED+1 >= MXSCOR && SAVED != 0)RSPEAK(143);

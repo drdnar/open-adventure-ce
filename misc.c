@@ -7,14 +7,14 @@
 /* hack to ignore GCC Unused Result */
 #define IGNORE(r) do{if(r){}}while(0)
 
-/*  I/O ROUTINES (SPEAK, PSPEAK, RSPEAK, SETPRM, GETIN, YES) */
+/*  I/O routines (SPEAK, PSPEAK, RSPEAK, SETPRM, GETIN, YES) */
 
 #undef SPEAK
 void fSPEAK(long N) {
 long BLANK, CASE, I, K, L, NEG, NPARMS, PARM, PRMTYP, STATE;
 
-/*  PRINT THE MESSAGE WHICH STARTS AT LINES(N).  PRECEDE IT WITH A BLANK LINE
- *  UNLESS BLKLIN IS FALSE. */
+/*  Print the message which starts at LINES(N).  Precede it with a blank line
+ *  unless BLKLIN is false. */
 
 
 	if(N == 0)return;
@@ -34,13 +34,13 @@ L30:	LNPOSN=LNPOSN+1;
 L32:	if(LNPOSN > LNLENG) goto L40;
 	if(INLINE[LNPOSN] != 63) goto L30;
 	{long x = LNPOSN+1; PRMTYP=INLINE[x];}
-/*  63 IS A "%"; THE NEXT CHARACTER DETERMINE THE TYPE OF PARAMETER:  1 (!) =
- *  SUPPRESS MESSAGE COMPLETELY, 29 (S) = NULL IF PARM=1, ELSE 'S' (OPTIONAL
- *  PLURAL ENDING), 33 (W) = WORD (TWO 30-BIT VALUES) WITH TRAILING SPACES
- *  SUPPRESSED, 22 (L) OR 31 (U) = WORD BUT MAP TO LOWER/UPPER CASE, 13 (C) =
- *  WORD IN LOWER CASE WITH FIRST LETTER CAPITALISED, 30 (T) = TEXT ENDING
- *  WITH A WORD OF -1, 65-73 (1-9) = NUMBER USING THAT MANY CHARACTERS,
- *  12 (B) = VARIABLE NUMBER OF BLANKS. */
+/*  63 is a "%"; the next character determine the type of parameter:  1 (!) =
+ *  suppress message completely, 29 (S) = NULL If PARM=1, else 'S' (optional
+ *  plural ending), 33 (W) = word (two 30-bit values) with trailing spaces
+ *  suppressed, 22 (L) or 31 (U) = word but map to lower/upper case, 13 (C) =
+ *  word in lower case with first letter capitalised, 30 (T) = text ending
+ *  with a word of -1, 65-73 (1-9) = number using that many characters,
+ *  12 (B) = variable number of blanks. */
 	if(PRMTYP == 1)return;
 	if(PRMTYP == 29) goto L320;
 	if(PRMTYP == 30) goto L340;
@@ -117,8 +117,8 @@ L40:	if(BLANK)TYPE0();
 void fPSPEAK(long MSG,long SKIP) {
 long I, M;
 
-/*  FIND THE SKIP+1ST MESSAGE FROM MSG AND PRINT IT.  MSG SHOULD BE THE INDEX OF
- *  THE INVENTORY MESSAGE FOR OBJECT.  (INVEN+N+1 MESSAGE IS PROP=N MESSAGE). */
+/*  Find the skip+1st message from msg and print it.  MSG should be the index of
+ *  the inventory message for object.  (INVEN+N+1 message is PROP=N message). */
 
 
 	M=PTEXT[MSG];
@@ -139,7 +139,7 @@ L9:	SPEAK(M);
 void fRSPEAK(long I) {
 ;
 
-/*  PRINT THE I-TH "RANDOM" MESSAGE (SECTION 6 OF DATABASE). */
+/*  Print the I-TH "random" message (section 6 of database). */
 
 
 	if(I != 0)SPEAK(RTEXT[I]);
@@ -153,8 +153,8 @@ void fRSPEAK(long I) {
 void fSETPRM(long FIRST, long P1, long P2) {
 ;
 
-/*  STORES PARAMETERS INTO THE PRMCOM PARMS ARRAY FOR USE BY SPEAK.  P1 AND P2
- *  ARE STORED INTO PARMS(FIRST) AND PARMS(FIRST+1). */
+/*  Stores parameters into the PRMCOM parms array for use by speak.  P1 and P2
+ *  are stored into PARMS(FIRST) and PARMS(FIRST+1). */
 
 
 	if(FIRST >= 25)BUG(29);
@@ -174,11 +174,11 @@ void fSETPRM(long FIRST, long P1, long P2) {
 void fGETIN(long *wORD1, long *wORD1X, long *wORD2, long *wORD2X) {
 long JUNK;
 
-/*  GET A COMMAND FROM THE ADVENTURER.  SNARF OUT THE FIRST WORD, PAD IT WITH
- *  BLANKS, AND RETURN IT IN WORD1.  CHARS 6 THRU 10 ARE RETURNED IN WORD1X, IN
- *  CASE WE NEED TO PRINT OUT THE WHOLE WORD IN AN ERROR MESSAGE.  ANY NUMBER OF
- *  BLANKS MAY FOLLOW THE WORD.  IF A SECOND WORD APPEARS, IT IS RETURNED IN
- *  WORD2 (CHARS 6 THRU 10 IN WORD2X), ELSE WORD2 IS -1. */
+/*  Get a command from the adventurer.  snarf out the first word, pad it with
+ *  blanks, and return it in WORD1.  Chars 6 thru 10 are returned in WORD1X, in
+ *  case we need to print out the whole word in an error message.  Any number of
+ *  blanks may follow the word.  If a second word appears, it is returned in
+ *  WORD2 (chars 6 thru 10 in WORD2X), else WORD2 is -1. */
 
 
 L10:	if(BLKLIN)TYPE0();
@@ -209,8 +209,8 @@ long fYES(long X, long Y, long Z) {
 
 long YES, REPLY, JUNK1, JUNK2, JUNK3;
 
-/*  PRINT MESSAGE X, WAIT FOR YES/NO ANSWER.  IF YES, PRINT Y AND RETURN TRUE;
- *  IF NO, PRINT Z AND RETURN FALSE. */
+/*  Print message X, wait for yes/no answer.  If yes, print Y and return true;
+ *  if no, print Z and return false. */
 
 L1:	RSPEAK(X);
 	GETIN(REPLY,JUNK1,JUNK2,JUNK3);
@@ -230,25 +230,25 @@ L20:	YES=false;
 
 
 
-/*  LINE-PARSING ROUTINES (GETNUM, GETTXT, MAKEWD, PUTTXT, SHFTXT, TYPE0)
+/*  Line-parsing routines (GETNUM, GETTXT, MAKEWD, PUTTXT, SHFTXT, TYPE0)
 		*/
 
-/*  THE ROUTINES ON THIS PAGE HANDLE ALL THE STUFF THAT WOULD NORMALLY BE
- *  TAKEN CARE OF BY FORMAT STATEMENTS.  WE DO IT THIS WAY INSTEAD SO THAT
- *  WE CAN HANDLE TEXTUAL DATA IN A MACHINE INDEPENDENT FASHION.  ALL THE
- *  MACHINE DEPENDENT I/O STUFF IS ON THE FOLLOWING PAGE.  SEE THAT PAGE
- *  FOR A DESCRIPTION OF MAPCOM'S INLINE ARRAY. */
+/*  The routines on this page handle all the stuff that would normally be
+ *  taken care of by format statements.  We do it this way instead so that
+ *  we can handle textual data in a machine independent fashion.  All the
+ *  machine dependent i/o stuff is on the following page.  See that page
+ *  for a description of MAPCOM's inline array. */
 
 #define YES(X,Y,Z) fYES(X,Y,Z)
 #undef GETNUM
 long fGETNUM(long K) {
 long DIGIT, GETNUM, SIGN;
 
-/*  OBTAIN THE NEXT INTEGER FROM AN INPUT LINE.  IF K>0, WE FIRST READ A
- *  NEW INPUT LINE FROM A FILE; IF K<0, WE READ A LINE FROM THE KEYBOARD;
- *  IF K=0 WE USE A LINE THAT HAS ALREADY BEEN READ (AND PERHAPS PARTIALLY
- *  SCANNED).  IF WE'RE AT THE END OF THE LINE OR ENCOUNTER AN ILLEGAL
- *  CHARACTER (NOT A DIGIT, HYPHEN, OR BLANK), WE RETURN 0. */
+/*  Obtain the next integer from an input line.  If K>0, we first read a
+ *  new input line from a file; if K<0, we read a line from the keyboard;
+ *  if K=0 we use a line that has already been read (and perhaps partially
+ *  scanned).  If we're at the end of the line or encounter an illegal
+ *  character (not a digit, hyphen, or blank), we return 0. */
 
 
 	if(K != 0)MAPLIN(K > 0);
@@ -281,13 +281,13 @@ L42:	GETNUM=GETNUM*SIGN;
 long fGETTXT(long SKIP,long ONEWRD, long UPPER, long HASH) {
 long CHAR, GETTXT, I; static long SPLITTING = -1;
 
-/*  TAKE CHARACTERS FROM AN INPUT LINE AND PACK THEM INTO 30-BIT WORDS.
- *  SKIP SAYS TO SKIP LEADING BLANKS.  ONEWRD SAYS STOP IF WE COME TO A
- *  BLANK.  UPPER SAYS TO MAP ALL LETTERS TO UPPERCASE.  HASH MAY BE USED
- *  AS A PARAMETER FOR ENCRYPTING THE TEXT IF DESIRED; HOWEVER, A HASH OF 0
- *  SHOULD RESULT IN UNMODIFIED BYTES BEING PACKED.  IF WE REACH THE
- *  END OF THE LINE, THE WORD IS FILLED UP WITH BLANKS (WHICH ENCODE AS 0'S).
- *  IF WE'RE ALREADY AT END OF LINE WHEN GETTXT IS CALLED, WE RETURN -1. */
+/*  Take characters from an input line and pack them into 30-bit words.
+ *  Skip says to skip leading blanks.  ONEWRD says stop if we come to a
+ *  blank.  UPPER says to map all letters to uppercase.  HASH may be used
+ *  as a parameter for encrypting the text if desired; however, a hash of 0
+ *  should result in unmodified bytes being packed.  If we reach the
+ *  end of the line, the word is filled up with blanks (which encode as 0's).
+ *  If we're already at end of line when GETTXT is called, we return -1. */
 
 	if(LNPOSN != SPLITTING)SPLITTING = -1;
 	GETTXT= -1;
@@ -329,12 +329,12 @@ L15:	/*etc*/ ;
 long fMAKEWD(long LETTRS) {
 long I, L, MAKEWD;
 
-/*  COMBINE FIVE UPPERCASE LETTERS (REPRESENTED BY PAIRS OF DECIMAL DIGITS
- *  IN LETTRS) TO FORM A 30-BIT VALUE MATCHING THE ONE THAT GETTXT WOULD
- *  RETURN GIVEN THOSE CHARACTERS PLUS TRAILING BLANKS AND HASH=0.  CAUTION:
- *  LETTRS WILL OVERFLOW 31 BITS IF 5-LETTER WORD STARTS WITH V-Z.  AS A
- *  KLUDGEY WORKAROUND, YOU CAN INCREMENT A LETTER BY 5 BY ADDING 50 TO
- *  THE NEXT PAIR OF DIGITS. */
+/*  Combine five uppercase letters (represented by pairs of decimal digits
+ *  in lettrs) to form a 30-bit value matching the one that GETTXT would
+ *  return given those characters plus trailing blanks and HASH=0.  Caution:
+ *  lettrs will overflow 31 bits if 5-letter word starts with V-Z.  As a
+ *  kludgey workaround, you can increment a letter by 5 by adding 50 to
+ *  the next pair of digits. */
 
 
 	MAKEWD=0;
@@ -358,16 +358,16 @@ L10:	MAKEWD=MAKEWD+I*(MOD(L,50)+10);
 void fPUTTXT(long WORD, long *sTATE, long CASE, long HASH) {
 long ALPH1, ALPH2, BYTE, DIV, I, W;
 
-/*  UNPACK THE 30-BIT VALUE IN WORD TO OBTAIN UP TO 5 INTEGER-ENCODED CHARS,
- *  AND STORE THEM IN INLINE STARTING AT LNPOSN.  IF LNLENG>=LNPOSN, SHIFT
- *  EXISTING CHARACTERS TO THE RIGHT TO MAKE ROOM.  HASH MUST BE THE SAME
- *  AS IT WAS WHEN GETTXT CREATED THE 30-BIT WORD.  STATE WILL BE ZERO WHEN
- *  PUTTXT IS CALLED WITH THE FIRST OF A SEQUENCE OF WORDS, BUT IS THEREAFTER
- *  UNCHANGED BY THE CALLER, SO PUTTXT CAN USE IT TO MAINTAIN STATE ACROSS
- *  CALLS.  LNPOSN AND LNLENG ARE INCREMENTED BY THE NUMBER OF CHARS STORED.
- *  IF CASE=1, ALL LETTERS ARE MADE UPPERCASE; IF -1, LOWERCASE; IF 0, AS IS.
- *  ANY OTHER VALUE FOR CASE IS THE SAME AS 0 BUT ALSO CAUSES TRAILING BLANKS
- *  TO BE INCLUDED (IN ANTICIPATION OF SUBSEQUENT ADDITIONAL TEXT). */
+/*  Unpack the 30-bit value in word to obtain up to 5 integer-encoded chars,
+ *  and store them in inline starting at LNPOSN.  If LNLENG>=LNPOSN, shift
+ *  existing characters to the right to make room.  HASH must be the same
+ *  as it was when gettxt created the 30-bit word.  STATE will be zero when
+ *  puttxt is called with the first of a sequence of words, but is thereafter
+ *  unchanged by the caller, so PUTTXT can use it to maintain state across
+ *  calls.  LNPOSN and LNLENG are incremented by the number of chars stored.
+ *  If CASE=1, all letters are made uppercase; if -1, lowercase; if 0, as is.
+ *  any other value for case is the same as 0 but also causes trailing blanks
+ *  to be included (in anticipation of subsequent additional text). */
 
 
 	ALPH1=13*CASE+24;
@@ -403,8 +403,8 @@ L18:	W=(W-BYTE*DIV)*64;
 void fSHFTXT(long FROM, long DELTA) {
 long I, II, JJ;
 
-/*  MOVE INLINE(N) TO INLINE(N+DELTA) FOR N=FROM,LNLENG.  DELTA CAN BE
- *  NEGATIVE.  LNLENG IS UPDATED; LNPOSN IS NOT CHANGED. */
+/*  Move INLINE(N) to INLINE(N+DELTA) for N=FROM,LNLENG.  Delta can be
+ *  negative.  LNLENG is updated; LNPOSN is not changed. */
 
 
 	if(LNLENG < FROM || DELTA == 0) goto L2;
@@ -425,8 +425,8 @@ L2:	LNLENG=LNLENG+DELTA;
 void fTYPE0() {
 long TEMP;
 
-/*  TYPE A BLANK LINE.  THIS PROCEDURE IS PROVIDED AS A CONVENIENCE FOR CALLERS
- *  WHO OTHERWISE HAVE NO USE FOR MAPCOM. */
+/*  Type a blank line.  This procedure is provided as a convenience for callers
+ *  who otherwise have no use for MAPCOM. */
 
 
 	TEMP=LNLENG;
@@ -441,12 +441,12 @@ long TEMP;
 #define TYPE0() fTYPE0()
 
 
-/*  SUSPEND/RESUME I/O ROUTINES (SAVWDS, SAVARR, SAVWRD) */
+/*  Suspend/resume I/O routines (SAVWDS, SAVARR, SAVWRD) */
 
 #undef SAVWDS
 void fSAVWDS(long *W1, long *W2, long *W3, long *W4, long *W5, long *W6, long *W7) {
 
-/*  WRITE OR READ 7 VARIABLES.  SEE SAVWRD. */
+/*  Write or read 7 variables.  See SAVWRD. */
 
 
 	SAVWRD(0,(*W1));
@@ -465,7 +465,7 @@ void fSAVWDS(long *W1, long *W2, long *W3, long *W4, long *W5, long *W6, long *W
 void fSAVARR(long ARR[], long N) {
 long I;
 
-/*  WRITE OR READ AN ARRAY OF N WORDS.  SEE SAVWRD. */
+/*  Write or read an array of N words.  See SAVWRD. */
 
 
 	/* 1 */ for (I=1; I<=N; I++) {
@@ -482,14 +482,14 @@ L1:	SAVWRD(0,ARR[I]);
 void fSAVWRD(long OP, long *wORD) {
 static long BUF[250], CKSUM = 0, H1, HASH = 0, N = 0, STATE = 0;
 
-/*  IF OP<0, START WRITING A FILE, USING WORD TO INITIALISE ENCRYPTION; SAVE
- *  WORD IN THE FILE.  IF OP>0, START READING A FILE; READ THE FILE TO FIND
- *  THE VALUE WITH WHICH TO DECRYPT THE REST.  IN EITHER CASE, IF A FILE IS
- *  ALREADY OPEN, FINISH WRITING/READING IT AND DON'T START A NEW ONE.  IF OP=0,
- *  READ/WRITE A SINGLE WORD.  WORDS ARE BUFFERED IN CASE THAT MAKES FOR MORE
- *  EFFICIENT DISK USE.  WE ALSO COMPUTE A SIMPLE CHECKSUM TO CATCH ELEMENTARY
- *  POKING WITHIN THE SAVED FILE.  WHEN WE FINISH READING/WRITING THE FILE,
- *  WE STORE ZERO INTO WORD IF THERE'S NO CHECKSUM ERROR, ELSE NONZERO. */
+/*  If OP<0, start writing a file, using word to initialise encryption; save
+ *  word in the file.  If OP>0, start reading a file; read the file to find
+ *  the value with which to decrypt the rest.  In either case, if a file is
+ *  already open, finish writing/reading it and don't start a new one.  If OP=0,
+ *  read/write a single word.  Words are buffered in case that makes for more
+ *  efficient disk use.  We also compute a simple checksum to catch elementary
+ *  poking within the saved file.  When we finish reading/writing the file,
+ *  we store zero into WORD if there's no checksum error, else nonzero. */
 
 
 	if(OP != 0){long ifvar; ifvar=(STATE); switch (ifvar<0? -1 : ifvar>0? 1 :
@@ -535,7 +535,7 @@ L32:	N--; WORD=BUF[N]-CKSUM; N++;
 
 
 
-/*  DATA STRUC. ROUTINES (VOCAB, DSTROY, JUGGLE, MOVE, PUT, CARRY, DROP, ATDWRF)
+/*  Data struc. routines (VOCAB, DSTROY, JUGGLE, MOVE, PUT, CARRY, DROP, ATDWRF)
 		*/
 
 #undef WORD
@@ -544,12 +544,12 @@ L32:	N--; WORD=BUF[N]-CKSUM; N++;
 long fVOCAB(long ID, long INIT) {
 long HASH, I, VOCAB;
 
-/*  LOOK UP ID IN THE VOCABULARY (ATAB) AND RETURN ITS "DEFINITION" (KTAB), OR
- *  -1 IF NOT FOUND.  IF INIT IS POSITIVE, THIS IS AN INITIALISATION CALL SETTING
- *  UP A KEYWORD VARIABLE, AND NOT FINDING IT CONSTITUTES A BUG.  IT ALSO MEANS
- *  THAT ONLY KTAB VALUES WHICH TAKEN OVER 1000 EQUAL INIT MAY BE CONSIDERED.
- *  (THUS "STEPS", WHICH IS A MOTION VERB AS WELL AS AN OBJECT, MAY BE LOCATED
- *  AS AN OBJECT.)  AND IT ALSO MEANS THE KTAB VALUE IS TAKEN MOD 1000. */
+/*  Look up ID in the vocabulary (ATAB) and return its "definition" (KTAB), or
+ *  -1 if not found.  If INIT is positive, this is an initialisation call setting
+ *  up a keyword variable, and not finding it constitutes a bug.  It also means
+ *  that only KTAB values which taken over 1000 equal INIT may be considered.
+ *  (Thus "STEPS", which is a motion verb as well as an object, may be located
+ *  as an object.)  And it also means the KTAB value is taken modulo 1000. */
 
 	HASH=10000;
 	/* 1 */ for (I=1; I<=TABSIZ; I++) {
@@ -577,7 +577,7 @@ L3:	VOCAB=KTAB[I];
 void fDSTROY(long OBJECT) {
 ;
 
-/*  PERMANENTLY ELIMINATE "OBJECT" BY MOVING TO A NON-EXISTENT LOCATION. */
+/*  Permanently eliminate "OBJECT" by moving to a non-existent location. */
 
 
 	MOVE(OBJECT,0);
@@ -591,8 +591,8 @@ void fDSTROY(long OBJECT) {
 void fJUGGLE(OBJECT)long OBJECT; {
 long I, J;
 
-/*  JUGGLE AN OBJECT BY PICKING IT UP AND PUTTING IT DOWN AGAIN, THE PURPOSE
- *  BEING TO GET THE OBJECT TO THE FRONT OF THE CHAIN OF THINGS AT ITS LOC. */
+/*  Juggle an object by picking it up and putting it down again, the purpose
+ *  being to get the object to the front of the chain of things at its loc. */
 
 
 	I=PLACE[OBJECT];
@@ -609,9 +609,9 @@ long I, J;
 void fMOVE(OBJECT,WHERE)long OBJECT, WHERE; {
 long FROM;
 
-/*  PLACE ANY OBJECT ANYWHERE BY PICKING IT UP AND DROPPING IT.  MAY ALREADY BE
- *  TOTING, IN WHICH CASE THE CARRY IS A NO-OP.  MUSTN'T PICK UP OBJECTS WHICH
- *  ARE NOT AT ANY LOC, SINCE CARRY WANTS TO REMOVE OBJECTS FROM ATLOC CHAINS. */
+/*  Place any object anywhere by picking it up and dropping it.  May already be
+ *  toting, in which case the carry is a no-op.  Mustn't pick up objects which
+ *  are not at any loc, since carry wants to remove objects from ATLOC chains. */
 
 
 	if(OBJECT > 100) goto L1;
@@ -630,8 +630,8 @@ L2:	if(FROM > 0 && FROM <= 300)CARRY(OBJECT,FROM);
 long fPUT(OBJECT,WHERE,PVAL)long OBJECT, PVAL, WHERE; {
 long PUT;
 
-/*  PUT IS THE SAME AS MOVE, EXCEPT IT RETURNS A VALUE USED TO SET UP THE
- *  NEGATED PROP VALUES FOR THE REPOSITORY OBJECTS. */
+/*  PUT is the same as MOVE, except it returns a value used to set up the
+ *  negated PROP values for the repository objects. */
 
 
 	MOVE(OBJECT,WHERE);
@@ -646,9 +646,9 @@ long PUT;
 void fCARRY(OBJECT,WHERE)long OBJECT, WHERE; {
 long TEMP;
 
-/*  START TOTING AN OBJECT, REMOVING IT FROM THE LIST OF THINGS AT ITS FORMER
- *  LOCATION.  INCR HOLDNG UNLESS IT WAS ALREADY BEING TOTED.  IF OBJECT>100
- *  (MOVING "FIXED" SECOND LOC), DON'T CHANGE PLACE OR HOLDNG. */
+/*  Start toting an object, removing it from the list of things at its former
+ *  location.  Incr holdng unless it was already being toted.  If OBJECT>100
+ *  (moving "fixed" second loc), don't change PLACE or HOLDNG. */
 
 
 	if(OBJECT > 100) goto L5;
@@ -673,8 +673,8 @@ L8:	LINK[TEMP]=LINK[OBJECT];
 void fDROP(OBJECT,WHERE)long OBJECT, WHERE; {
 ;
 
-/*  PLACE AN OBJECT AT A GIVEN LOC, PREFIXING IT ONTO THE ATLOC LIST.  DECR
- *  HOLDNG IF THE OBJECT WAS BEING TOTED. */
+/*  Place an object at a given loc, prefixing it onto the ATLOC list.  Decr
+ *  HOLDNG if the object was being toted. */
 
 
 	if(OBJECT > 100) goto L1;
@@ -695,9 +695,9 @@ L2:	if(WHERE <= 0)return;
 long fATDWRF(WHERE)long WHERE; {
 long ATDWRF, I;
 
-/*  RETURN THE INDEX OF FIRST DWARF AT THE GIVEN LOCATION, ZERO IF NO DWARF IS
- *  THERE (OR IF DWARVES NOT ACTIVE YET), -1 IF ALL DWARVES ARE DEAD.  IGNORE
- *  THE PIRATE (6TH DWARF). */
+/*  Return the index of first dwarf at the given location, zero if no dwarf is
+ *  there (or if dwarves not active yet), -1 if all dwarves are dead.  Ignore
+ *  the pirate (6th dwarf). */
 
 
 	ATDWRF=0;
@@ -720,13 +720,13 @@ L2:	ATDWRF=I;
 
 
 
-/*  UTILITY ROUTINES (SETBIT, TSTBIT, RAN, RNDVOC, BUG) */
+/*  Utility routines (SETBIT, TSTBIT, RAN, RNDVOC, BUG) */
 
 #undef SETBIT
 long fSETBIT(BIT)long BIT; {
 long I, SETBIT;
 
-/*  RETURNS 2**BIT FOR USE IN CONSTRUCTING BIT-MASKS. */
+/*  Returns 2**bit for use in constructing bit-masks. */
 
 
 	SETBIT=1;
@@ -744,7 +744,7 @@ L1:	SETBIT=SETBIT+SETBIT;
 long fTSTBIT(MASK,BIT)long BIT, MASK; {
 long TSTBIT;
 
-/*  RETURNS TRUE IF THE SPECIFIED BIT IS SET IN THE MASK. */
+/*  Returns true if the specified bit is set in the mask. */
 
 
 	TSTBIT=MOD(MASK/SETBIT(BIT),2) != 0;
@@ -758,10 +758,10 @@ long TSTBIT;
 long fRAN(RANGE)long RANGE; {
 static long D, R = 0, RAN, T;
 
-/*  SINCE THE RAN FUNCTION IN LIB40 SEEMS TO BE A REAL LOSE, WE'LL USE ONE OF
- *  OUR OWN.  IT'S BEEN RUN THROUGH MANY OF THE TESTS IN KNUTH VOL. 2 AND
- *  SEEMS TO BE QUITE RELIABLE.  RAN RETURNS A VALUE UNIFORMLY SELECTED
- *  BETWEEN 0 AND RANGE-1. */
+/*  Since the ran function in LIB40 seems to be a real lose, we'll use one of
+ *  our own.  It's been run through many of the tests in Knuth vol. 2 and
+ *  seems to be quite reliable.  RAN returns a value uniformly selected
+ *  between 0 and range-1. */
 
 
 	D=1;
@@ -783,10 +783,10 @@ L2:	R=MOD(R*1093L+221587L,1048576L);
 long fRNDVOC(CHAR,FORCE)long CHAR, FORCE; {
 long DIV, I, J, RNDVOC;
 
-/*  SEARCHES THE VOCABULARY FOR A WORD WHOSE SECOND CHARACTER IS CHAR, AND
- *  CHANGES THAT WORD SUCH THAT EACH OF THE OTHER FOUR CHARACTERS IS A
- *  RANDOM LETTER.  IF FORCE IS NON-ZERO, IT IS USED AS THE NEW WORD.
- *  RETURNS THE NEW WORD. */
+/*  Searches the vocabulary for a word whose second character is char, and
+ *  changes that word such that each of the other four characters is a
+ *  random letter.  If force is non-zero, it is used as the new word.
+ *  Returns the new word. */
 
 
 	RNDVOC=FORCE;
@@ -815,30 +815,30 @@ L8:	ATAB[I]=RNDVOC+J*J;
 #undef BUG
 void fBUG(NUM)long NUM; {
 
-/*  THE FOLLOWING CONDITIONS ARE CURRENTLY CONSIDERED FATAL BUGS.  NUMBERS < 20
- *  ARE DETECTED WHILE READING THE DATABASE; THE OTHERS OCCUR AT "RUN TIME".
- *	0	MESSAGE LINE > 70 CHARACTERS
- *	1	NULL LINE IN MESSAGE
- *	2	TOO MANY WORDS OF MESSAGES
- *	3	TOO MANY TRAVEL OPTIONS
- *	4	TOO MANY VOCABULARY WORDS
- *	5	REQUIRED VOCABULARY WORD NOT FOUND
- *	6	TOO MANY RTEXT MESSAGES
- *	7	TOO MANY HINTS
- *	8	LOCATION HAS COND BIT BEING SET TWICE
- *	9	INVALID SECTION NUMBER IN DATABASE
- *	10	TOO MANY LOCATIONS
- *	11	TOO MANY CLASS OR TURN MESSAGES
- *	20	SPECIAL TRAVEL (500>L>300) EXCEEDS GOTO LIST
- *	21	RAN OFF END OF VOCABULARY TABLE
- *	22	VOCABULARY TYPE (N/1000) NOT BETWEEN 0 AND 3
- *	23	INTRANSITIVE ACTION VERB EXCEEDS GOTO LIST
- *	24	TRANSITIVE ACTION VERB EXCEEDS GOTO LIST
- *	25	CONDITIONAL TRAVEL ENTRY WITH NO ALTERNATIVE
- *	26	LOCATION HAS NO TRAVEL ENTRIES
- *	27	HINT NUMBER EXCEEDS GOTO LIST
- *	28	INVALID MONTH RETURNED BY DATE FUNCTION
- *	29	TOO MANY PARAMETERS GIVEN TO SETPRM */
+/*  The following conditions are currently considered fatal bugs.  Numbers < 20
+ *  are detected while reading the database; the others occur at "run time".
+ *	0	Message line > 70 characters
+ *	1	Null line in message
+ *	2	Too many words of messages
+ *	3	Too many travel options
+ *	4	Too many vocabulary words
+ *	5	Required vocabulary word not found
+ *	6	Too many RTEXT messages
+ *	7	Too many hints
+ *	8	Location has cond bit being set twice
+ *	9	Invalid section number in database
+ *	10	Too many locations
+ *	11	Too many class or turn messages
+ *	20	Special travel (500>L>300) exceeds goto list
+ *	21	Ran off end of vocabulary table
+ *	22	Vocabulary type (N/1000) not between 0 and 3
+ *	23	Intransitive action verb exceeds goto list
+ *	24	Transitive action verb exceeds goto list
+ *	25	Conditional travel entry with no alternative
+ *	26	Location has no travel entries
+ *	27	Hint number exceeds goto list
+ *	28	Invalid month returned by date function
+ *	29	Too many parameters given to SETPRM */
 
 	printf("Fatal error %ld.  See source code for interpretation.\n",
 	   NUM);
@@ -849,41 +849,41 @@ void fBUG(NUM)long NUM; {
 
 
 
-/*  MACHINE DEPENDENT ROUTINES (MAPLIN, TYPE, MPINIT, SAVEIO) */
+/*  Machine dependent routines (MAPLIN, TYPE, MPINIT, SAVEIO) */
 
 #define BUG(NUM) fBUG(NUM)
 #undef MAPLIN
 void fMAPLIN(FIL)long FIL; {
 long I, VAL; static FILE *OPENED = NULL;
 
-/*  READ A LINE OF INPUT, EITHER FROM A FILE (IF FIL=.TRUE.) OR FROM THE
- *  KEYBOARD, TRANSLATE THE CHARS TO INTEGERS IN THE RANGE 0-126 AND STORE
- *  THEM IN THE COMMON ARRAY "INLINE".  INTEGER VALUES ARE AS FOLLOWS:
- *     0   = SPACE [ASCII CODE 40 OCTAL, 32 DECIMAL]
- *    1-2  = !" [ASCII 41-42 OCTAL, 33-34 DECIMAL]
- *    3-10 = '()*+,-. [ASCII 47-56 OCTAL, 39-46 DECIMAL]
- *   11-36 = UPPER-CASE LETTERS
- *   37-62 = LOWER-CASE LETTERS
- *    63   = PERCENT (%) [ASCII 45 OCTAL, 37 DECIMAL]
- *   64-73 = DIGITS, 0 THROUGH 9
- *  REMAINING CHARACTERS CAN BE TRANSLATED ANY WAY THAT IS CONVENIENT;
- *  THE "TYPE" ROUTINE BELOW IS USED TO MAP THEM BACK TO CHARACTERS WHEN
- *  NECESSARY.  THE ABOVE MAPPINGS ARE REQUIRED SO THAT CERTAIN SPECIAL
- *  CHARACTERS ARE KNOWN TO FIT IN 6 BITS AND/OR CAN BE EASILY SPOTTED.
- *  ARRAY ELEMENTS BEYOND THE END OF THE LINE SHOULD BE FILLED WITH 0,
- *  AND LNLENG SHOULD BE SET TO THE INDEX OF THE LAST CHARACTER.
+/*  Read a line of input, either from a file (if FIL=true) or from the
+ *  keyboard, translate the chars to integers in the range 0-126 and store
+ *  them in the common array "INLINE".  Integer values are as follows:
+ *     0   = space [ASCII CODE 40 octal, 32 decimal]
+ *    1-2  = !" [ASCII 41-42 octal, 33-34 decimal]
+ *    3-10 = '()*+,-. [ASCII 47-56 octal, 39-46 decimal]
+ *   11-36 = upper-case letters
+ *   37-62 = lower-case letters
+ *    63   = percent (%) [ASCII 45 octal, 37 decimal]
+ *   64-73 = digits, 0 through 9
+ *  Remaining characters can be translated any way that is convenient;
+ *  The "TYPE" routine below is used to map them back to characters when
+ *  necessary.  The above mappings are required so that certain special
+ *  characters are known to fit in 6 bits and/or can be easily spotted.
+ *  Array elements beyond the end of the line should be filled with 0,
+ *  and LNLENG should be set to the index of the last character.
  *
- *  IF THE DATA FILE USES A CHARACTER OTHER THAN SPACE (E.G., TAB) TO
- *  SEPARATE NUMBERS, THAT CHARACTER SHOULD ALSO TRANSLATE TO 0.
+ *  If the data file uses a character other than space (e.g., tab) to
+ *  separate numbers, that character should also translate to 0.
  *
- *  THIS PROCEDURE MAY USE THE MAP1,MAP2 ARRAYS TO MAINTAIN STATIC DATA FOR
- *  THE MAPPING.  MAP2(1) IS SET TO 0 WHEN THE PROGRAM STARTS
- *  AND IS NOT CHANGED THEREAFTER UNLESS THE ROUTINES ON THIS PAGE CHOOSE
- *  TO DO SO.
+ *  This procedure may use the map1,map2 arrays to maintain static data for
+ *  the mapping.  MAP2(1) is set to 0 when the program starts
+ *  and is not changed thereafter unless the routines on this page choose
+ *  to do so.
  *
- *  NOTE THAT MAPLIN IS EXPECTED TO OPEN THE FILE THE FIRST TIME IT IS
- *  ASKED TO READ A LINE FROM IT.  THAT IS, THERE IS NO OTHER PLACE WHERE
- *  THE DATA FILE IS OPENED. */
+ *  Note that MAPLIN is expected to open the file the first time it is
+ *  asked to read a line from it.  that is, there is no other place where
+ *  the data file is opened. */
 
 
 	if(MAP2[1] == 0)MPINIT();
@@ -907,8 +907,8 @@ L25:	if(INLINE[I] != 0)LNLENG=I;
 	} /* end loop */
 	LNPOSN=1;
 	if(FIL && LNLENG == 0) goto L15;
-/*  ABOVE IS TO GET AROUND AN F40 COMPILER BUG WHEREIN IT READS A BLANK
- *  LINE WHENEVER A CRLF IS BROKEN ACROSS A RECORD BOUNDARY. */
+/*  Above is to get around an F40 compiler bug wherein it reads a blank
+ *  line whenever a crlf is broken across a record boundary. */
 	return;
 }
 
@@ -919,9 +919,9 @@ L25:	if(INLINE[I] != 0)LNLENG=I;
 void fTYPE() {
 long I, VAL;
 
-/*  TYPE THE FIRST "LNLENG" CHARACTERS STORED IN INLINE, MAPPING THEM
- *  FROM INTEGERS TO TEXT PER THE RULES DESCRIBED ABOVE.  INLINE(I),
- *  I=1,LNLENG MAY BE CHANGED BY THIS ROUTINE. */
+/*  Type the first "LNLENG" characters stored in inline, mapping them
+ *  from integers to text per the rules described above.  INLINE(I),
+ *  I=1,LNLENG may be changed by this routine. */
 
 
 	if(LNLENG != 0) goto L10;
@@ -963,7 +963,7 @@ L22:	J--;
 L20:	/*etc*/ ;
 	} /* end loop */
 	MAP1[128]=MAP1[10];
-/*  FOR THIS VERSION, TAB (9) MAPS TO SPACE (32), SO DEL (127) USES TAB'S VALUE */
+/*  For this version, tab (9) maps to space (32), so del (127) uses tab's value */
 	MAP1[10]=MAP1[33];
 	MAP1[11]=MAP1[33];
 
@@ -983,13 +983,13 @@ L30:	if(I >= 64)MAP2[VAL]=(I-64)*('B'-'A')+'@';
 void fSAVEIO(OP,IN,ARR)long ARR[], IN, OP; {
 static FILE *F; char NAME[50];
 
-/*  IF OP=0, ASK FOR A FILE NAME AND OPEN A FILE.  (IF IN=.TRUE., THE FILE IS FOR
- *  INPUT, ELSE OUTPUT.)  IF OP>0, READ/WRITE ARR FROM/INTO THE PREVIOUSLY-OPENED
- *  FILE.  (ARR IS A 250-INTEGER ARRAY.)  IF OP<0, FINISH READING/WRITING THE
- *  FILE.  (FINISHING WRITING CAN BE A NO-OP IF A "STOP" STATEMENT DOES IT
- *  AUTOMATICALLY.  FINISHING READING CAN BE A NO-OP AS LONG AS A SUBSEQUENT
- *  SAVEIO(0,.FALSE.,X) WILL STILL WORK.)  IF YOU CAN CATCH ERRORS (E.G., NO SUCH
- *  FILE) AND TRY AGAIN, GREAT.  DEC F40 CAN'T. */
+/*  If OP=0, ask for a file name and open a file.  (If IN=true, the file is for
+ *  input, else output.)  If OP>0, read/write ARR from/into the previously-opened
+ *  file.  (ARR is a 250-integer array.)  If OP<0, finish reading/writing the
+ *  file.  (Finishing writing can be a no-op if a "stop" statement does it
+ *  automatically.  Finishing reading can be a no-op as long as a subsequent
+ *  SAVEIO(0,false,X) will still work.)  If you can catch errors (e.g., no such
+ *  file) and try again, great.  DEC F40 can't. */
 
 
 	{long ifvar; ifvar=(OP); switch (ifvar<0? -1 : ifvar>0? 1 : 0) { case -1:
