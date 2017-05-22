@@ -588,7 +588,7 @@ void fDSTROY(long OBJECT) {
 
 #define DSTROY(OBJECT) fDSTROY(OBJECT)
 #undef JUGGLE
-void fJUGGLE(OBJECT)long OBJECT; {
+void fJUGGLE(long OBJECT) {
 long I, J;
 
 /*  Juggle an object by picking it up and putting it down again, the purpose
@@ -606,7 +606,7 @@ long I, J;
 
 #define JUGGLE(OBJECT) fJUGGLE(OBJECT)
 #undef MOVE
-void fMOVE(OBJECT,WHERE)long OBJECT, WHERE; {
+void fMOVE(long OBJECT, long WHERE) {
 long FROM;
 
 /*  Place any object anywhere by picking it up and dropping it.  May already be
@@ -627,7 +627,7 @@ L2:	if(FROM > 0 && FROM <= 300)CARRY(OBJECT,FROM);
 
 #define MOVE(OBJECT,WHERE) fMOVE(OBJECT,WHERE)
 #undef PUT
-long fPUT(OBJECT,WHERE,PVAL)long OBJECT, PVAL, WHERE; {
+long fPUT(long OBJECT, long WHERE, long PVAL) {
 long PUT;
 
 /*  PUT is the same as MOVE, except it returns a value used to set up the
@@ -643,7 +643,7 @@ long PUT;
 
 #define PUT(OBJECT,WHERE,PVAL) fPUT(OBJECT,WHERE,PVAL)
 #undef CARRY
-void fCARRY(OBJECT,WHERE)long OBJECT, WHERE; {
+void fCARRY(long OBJECT, long WHERE) {
 long TEMP;
 
 /*  Start toting an object, removing it from the list of things at its former
@@ -670,7 +670,7 @@ L8:	LINK[TEMP]=LINK[OBJECT];
 
 #define CARRY(OBJECT,WHERE) fCARRY(OBJECT,WHERE)
 #undef DROP
-void fDROP(OBJECT,WHERE)long OBJECT, WHERE; {
+void fDROP(long OBJECT, long WHERE) {
 ;
 
 /*  Place an object at a given loc, prefixing it onto the ATLOC list.  Decr
@@ -692,7 +692,7 @@ L2:	if(WHERE <= 0)return;
 
 #define DROP(OBJECT,WHERE) fDROP(OBJECT,WHERE)
 #undef ATDWRF
-long fATDWRF(WHERE)long WHERE; {
+long fATDWRF(long WHERE) {
 long ATDWRF, I;
 
 /*  Return the index of first dwarf at the given location, zero if no dwarf is
@@ -723,7 +723,7 @@ L2:	ATDWRF=I;
 /*  Utility routines (SETBIT, TSTBIT, RAN, RNDVOC, BUG) */
 
 #undef SETBIT
-long fSETBIT(BIT)long BIT; {
+long fSETBIT(long BIT) {
 long I, SETBIT;
 
 /*  Returns 2**bit for use in constructing bit-masks. */
@@ -741,7 +741,7 @@ L1:	SETBIT=SETBIT+SETBIT;
 
 #define SETBIT(BIT) fSETBIT(BIT)
 #undef TSTBIT
-long fTSTBIT(MASK,BIT)long BIT, MASK; {
+long fTSTBIT(long MASK, long BIT) {
 long TSTBIT;
 
 /*  Returns true if the specified bit is set in the mask. */
@@ -755,7 +755,7 @@ long TSTBIT;
 
 #define TSTBIT(MASK,BIT) fTSTBIT(MASK,BIT)
 #undef RAN
-long fRAN(RANGE)long RANGE; {
+long fRAN(long RANGE) {
 static long D, R = 0, RAN, T;
 
 /*  Since the ran function in LIB40 seems to be a real lose, we'll use one of
@@ -780,7 +780,7 @@ L2:	R=MOD(R*1093L+221587L,1048576L);
 
 #define RAN(RANGE) fRAN(RANGE)
 #undef RNDVOC
-long fRNDVOC(CHAR,FORCE)long CHAR, FORCE; {
+long fRNDVOC(long CHAR, long FORCE) {
 long DIV, I, J, RNDVOC;
 
 /*  Searches the vocabulary for a word whose second character is char, and
@@ -813,7 +813,7 @@ L8:	ATAB[I]=RNDVOC+J*J;
 
 #define RNDVOC(CHAR,FORCE) fRNDVOC(CHAR,FORCE)
 #undef BUG
-void fBUG(NUM)long NUM; {
+void fBUG(long NUM) {
 
 /*  The following conditions are currently considered fatal bugs.  Numbers < 20
  *  are detected while reading the database; the others occur at "run time".
@@ -853,7 +853,7 @@ void fBUG(NUM)long NUM; {
 
 #define BUG(NUM) fBUG(NUM)
 #undef MAPLIN
-void fMAPLIN(FIL)long FIL; {
+void fMAPLIN(long FIL) {
 long I, VAL; static FILE *OPENED = NULL;
 
 /*  Read a line of input, either from a file (if FIL=true) or from the
@@ -916,7 +916,7 @@ L25:	if(INLINE[I] != 0)LNLENG=I;
 
 #define MAPLIN(FIL) fMAPLIN(FIL)
 #undef TYPE
-void fTYPE() {
+void fTYPE(void) {
 long I, VAL;
 
 /*  Type the first "LNLENG" characters stored in inline, mapping them
@@ -942,7 +942,7 @@ L20:	{long x = VAL+1; INLINE[I]=MAP2[x];}
 
 #define TYPE() fTYPE()
 #undef MPINIT
-void fMPINIT() {
+void fMPINIT(void) {
 long FIRST, I, J, LAST, VAL;
 static long RUNS[7][2] = {32,34, 39,46, 65,90, 97,122, 37,37, 48,57, 0,126};
 
@@ -980,7 +980,7 @@ L30:	if(I >= 64)MAP2[VAL]=(I-64)*('B'-'A')+'@';
 
 #define MPINIT() fMPINIT()
 #undef SAVEIO
-void fSAVEIO(OP,IN,ARR)long ARR[], IN, OP; {
+void fSAVEIO(long OP, long IN, long ARR[]) {
 static FILE *F; char NAME[50];
 
 /*  If OP=0, ask for a file name and open a file.  (If IN=true, the file is for
