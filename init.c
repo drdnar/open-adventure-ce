@@ -647,7 +647,7 @@ static bool quick_init(void) {
 	init_reading = true;
 	init_cksum = 1;
 	quick_io();
-	if(fread(&K,4,1,f) == 1) init_cksum -= K; else init_cksum = 1;
+	if(fread(&K,sizeof(long),1,f) == 1) init_cksum -= K; else init_cksum = 1;
 	fclose(f);
 	if(init_cksum != 0)printf("Checksum error!\n");
 	return(init_cksum == 0);
@@ -660,7 +660,7 @@ static void quick_save(void) {
 	init_reading = false;
 	init_cksum = 1;
 	quick_io();
-	fwrite(&init_cksum,4,1,f);
+	fwrite(&init_cksum,sizeof(long),1,f);
 	fclose(f);
 }
 
@@ -695,13 +695,13 @@ static void quick_io(void) {
 }
 
 static void quick_item(W)long *W; {
-	if(init_reading && fread(W,4,1,f) != 1)return;
+    if(init_reading && fread(W,sizeof(long),1,f) != 1)return;
 	init_cksum = MOD(init_cksum*13+(*W),60000000);
-	if(!init_reading)fwrite(W,4,1,f);
+	if(!init_reading)fwrite(W,sizeof(long),1,f);
 }
 
 static void quick_array(A,N)long *A, N; { long I;
-	if(init_reading && fread(A,4,N+1,f) != N+1)printf("Read error!\n");
+	if(init_reading && fread(A,sizeof(long),N+1,f) != N+1)printf("Read error!\n");
 	for(I=1;I<=N;I++)init_cksum = MOD(init_cksum*13+A[I],60000000);
-	if(!init_reading && fwrite(A,4,N+1,f)!=N+1)printf("Write error!\n");
+	if(!init_reading && fwrite(A,sizeof(long),N+1,f)!=N+1)printf("Write error!\n");
 }

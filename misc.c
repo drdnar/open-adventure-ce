@@ -1004,8 +1004,8 @@ L20:	printf("\nFile name: ");
 	if(F == NULL) {printf("Can't open file, try again.\n"); goto L20;}
 	return;
 
-L30:	if(IN)IGNORE(fread(ARR,4,250,F));
-	if(!IN)fwrite(ARR,4,250,F);
+L30:	if(IN)IGNORE(fread(ARR,sizeof(long),250,F));
+	if(!IN)fwrite(ARR,sizeof(long),250,F);
 	return;
 
 }
