@@ -12,16 +12,16 @@ routers.) It was a maze game based on the Colossal Cave complex in
 Kentucy, lacking the D&D-like elements now associated with the game.
 
 Adventure as we now know it, the ancestor of all later versions, was
-was released on a PDP-10 at the Stanford AI Lab by Don Woods in 1976
-(some sources, apparently erroneously, say 1977). That version is
+was released on a PDP-10 at the Stanford AI Lab by Don Woods in 1977
+(some sources, apparently erroneously, say 1976). That version is
 sometimes known as 350-point Adventure.
 
-Between 1976 and 1995 Crowther and Woods themselves continued to work
+Between 1977 and 1995 Crowther and Woods themselves continued to work
 intermittently on the game. This main line of development culminated
 in the 1995 release of Adventure 2.5, also known as 430-point Adventure
 
 The earliest port to C was by Jim Gillogly under an early Unix running
-at the Rand Corporation in 1976; this version was later, and still is,
+at the Rand Corporation in 1977; this version was later, and still is,
 included in the BSD Games collection.  It was blessed by Crowther and
 Woods and briefly marketed in 1981 under the name "The Original
 Adventure".
@@ -39,11 +39,12 @@ ports of some versions existed - some in FORTRAN, some in C,
 some in other languages - so the maximum point score is not
 completely disambiguating.
 
+Same articles at <<DA>> are a narrative of the history of the
+game.  There is an in-depth study of its origins at <<SN>>.
 Many versions are collected at The Interactive Fiction Archive
-<<IFA>>. Same articles at <<DA>> are a narrative of the history of the
-game. There is some divergence of dates between these; pending
-correction from the authors, I have preferred <<IF>> because its
-chronology makes better internal sense.
+<<IFA>>; note however that its dates for the earliest releases
+don't match eother comments in the code or the careful reconstruction
+in <<SN>>.
 
 Future versions of this document may attempt to untangle some of the
 non-mainline history. For now, it will suffice to explain the chain of
@@ -66,7 +67,7 @@ he replied on 15 May giving both permission and encouragement.
 
 == Nomenclature ==
 
-This project is called "Open Advent" because it's not at all clear
+This project is called "Open Adventure" because it's not at all clear
 to number Adventure past 2.5 without misleading or causing
 collisions. Various of the non-mainline versions have claimed to be
 versions 3, 4, 5, 6, 7 and for all I know higher than that.  It seems
@@ -81,3 +82,5 @@ with the BSD Games version.
 - [[[IFA]]] http://rickadams.org/adventure/
 
 - [[[[DA]]] http://www.filfre.net/sitemap/
+
+- [[[SN]]] http://www.digitalhumanities.org/dhq/vol/1/2/000009/000009.html
