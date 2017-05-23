@@ -765,15 +765,15 @@ L41000: if(TALLY == 1 && PROP[JADE] < 0) goto L40010;
 /*  Cave closing and scoring */
 
 
-/*  These sections handle the closing of the cave.  The cave closes "game.clock1"
+/*  These sections handle the closing of the cave.  The cave closes "clock1"
  *  turns after the last treasure has been located (including the pirate's
  *  chest, which may of course never show up).  Note that the treasures need not
- *  have been taken yet, just located.  Hence game.clock1 must be large enough to get
+ *  have been taken yet, just located.  Hence clock1 must be large enough to get
  *  out of the cave (it only ticks while inside the cave).  When it hits zero,
  *  we branch to 10000 to start closing the cave, and then sit back and wait for
- *  him to try to get out.  If he doesn't within game.clock2 turns, we close the
+ *  him to try to get out.  If he doesn't within clock2 turns, we close the
  *  cave; if he does try, we assume he panics, and give him a few additional
- *  turns to get frantic before we close.  When game.clock2 hits zero, we branch to
+ *  turns to get frantic before we close.  When clock2 hits zero, we branch to
  *  11000 to transport him into the final puzzle.  Note that the puzzle depends
  *  upon all sorts of random things.  For instance, there must be no water or
  *  oil, since there are beanstalks which we don't want to be able to water,
@@ -785,7 +785,7 @@ L41000: if(TALLY == 1 && PROP[JADE] < 0) goto L40010;
 
 /*  When the first warning comes, we lock the grate, destroy the bridge, kill
  *  all the dwarves (and the pirate), remove the troll and bear (unless dead),
- *  and set "game.closng" to true.  Leave the dragon; too much trouble to move it.
+ *  and set "closng" to true.  Leave the dragon; too much trouble to move it.
  *  from now until clock2 runs out, he cannot unlock the grate, move to any
  *  location outside the cave, or create the bridge.  Nor can he be
  *  resurrected if he dies.  Note that the snake is already gone, since he got
@@ -820,7 +820,7 @@ L10000: PROP[GRATE]=0;
  *  At the ne end, we place empty bottles, a nursery of plants, a bed of
  *  oysters, a pile of lamps, rods with stars, sleeping dwarves, and him.  At
  *  the sw end we place grate over treasures, snake pit, covey of caged birds,
- *  more rods, and pillows.  A mirror stretches across one wall.  many of the
+ *  more rods, and pillows.  A mirror stretches across one wall.  Many of the
  *  objects come from known locations and/or states (e.g. the snake is known to
  *  have been destroyed and needn't be carried away from its old "place"),
  *  making the various objects be handled differently.  We also drop all other
