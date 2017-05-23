@@ -26,8 +26,8 @@ L10:	L=IABS(LINES[K])-1;
 	LNLENG=0;
 	LNPOSN=1;
 	STATE=0;
-	/* 20 */ for (I=K; I<=L; I++) {
-L20:	PUTTXT(LINES[I],STATE,2,I);
+	for (I=K; I<=L; I++) {
+	PUTTXT(LINES[I],STATE,2,I);
 	} /* end loop */
 	LNPOSN=0;
 L30:	LNPOSN=LNPOSN+1;
@@ -83,9 +83,9 @@ L345:	if(PARMS[NPARMS] < 0) goto L395;
 L360:	PRMTYP=PARMS[NPARMS];
 	SHFTXT(LNPOSN+2,PRMTYP-2);
 	if(PRMTYP == 0) goto L395;
-	/* 365 */ for (I=1; I<=PRMTYP; I++) {
+	for (I=1; I<=PRMTYP; I++) {
 	INLINE[LNPOSN]=0;
-L365:	LNPOSN=LNPOSN+1;
+	LNPOSN=LNPOSN+1;
 	} /* end loop */
 	 goto L395;
 
@@ -123,10 +123,10 @@ long I, M;
 
 	M=PTEXT[MSG];
 	if(SKIP < 0) goto L9;
-	/* 3 */ for (I=0; I<=SKIP; I++) {
+	for (I=0; I<=SKIP; I++) {
 L1:	M=IABS(LINES[M]);
 	if(LINES[M] >= 0) goto L1;
-L3:	/*etc*/ ;
+	/*etc*/ ;
 	} /* end loop */
 L9:	SPEAK(M);
 	return;
@@ -408,11 +408,11 @@ long I, II, JJ;
 
 
 	if(LNLENG < FROM || DELTA == 0) goto L2;
-	/* 1 */ for (I=FROM; I<=LNLENG; I++) {
+	for (I=FROM; I<=LNLENG; I++) {
 	II=I;
 	if(DELTA > 0)II=FROM+LNLENG-I;
 	JJ=II+DELTA;
-L1:	INLINE[JJ]=INLINE[II];
+	INLINE[JJ]=INLINE[II];
 	} /* end loop */
 L2:	LNLENG=LNLENG+DELTA;
 	return;
@@ -468,8 +468,8 @@ long I;
 /*  Write or read an array of N words.  See SAVWRD. */
 
 
-	/* 1 */ for (I=1; I<=N; I++) {
-L1:	SAVWRD(0,ARR[I]);
+	for (I=1; I<=N; I++) {
+	SAVWRD(0,ARR[I]);
 	} /* end loop */
 	return;
 }
@@ -703,9 +703,9 @@ long ATDWRF, I;
 	ATDWRF=0;
 	if(DFLAG < 2)return(ATDWRF);
 	ATDWRF= -1;
-	/* 1 */ for (I=1; I<=5; I++) {
+	for (I=1; I<=5; I++) {
 	if(DLOC[I] == WHERE) goto L2;
-L1:	if(DLOC[I] != 0)ATDWRF=0;
+	if(DLOC[I] != 0)ATDWRF=0;
 	} /* end loop */
 	return(ATDWRF);
 
@@ -731,8 +731,8 @@ long I, SETBIT;
 
 	SETBIT=1;
 	if(BIT <= 0)return(SETBIT);
-	/* 1 */ for (I=1; I<=BIT; I++) {
-L1:	SETBIT=SETBIT+SETBIT;
+	for (I=1; I<=BIT; I++) {
+	SETBIT=SETBIT+SETBIT;
 	} /* end loop */
 	return(SETBIT);
 }
@@ -769,8 +769,8 @@ static long D, R = 0, RAN, T;
 	DATIME(D,T);
 	R=MOD(T+5,1048576L);
 	D=1000+MOD(D,1000);
-L1:	/* 2 */ for (T=1; T<=D; T++) {
-L2:	R=MOD(R*1093L+221587L,1048576L);
+L1:	for (T=1; T<=D; T++) {
+	R=MOD(R*1093L+221587L,1048576L);
 	} /* end loop */
 	RAN=(RANGE*R)/1048576;
 	return(RAN);
@@ -791,17 +791,17 @@ long DIV, I, J, RNDVOC;
 
 	RNDVOC=FORCE;
 	if(RNDVOC != 0) goto L3;
-	/* 1 */ for (I=1; I<=5; I++) {
+	for (I=1; I<=5; I++) {
 	J=11+RAN(26);
 	if(I == 2)J=CHAR;
-L1:	RNDVOC=RNDVOC*64+J;
+	RNDVOC=RNDVOC*64+J;
 	} /* end loop */
 L3:	J=10000;
 	DIV=64L*64L*64L;
-	/* 5 */ for (I=1; I<=TABSIZ; I++) {
+	for (I=1; I<=TABSIZ; I++) {
 	J=J+7;
 	if(MOD((ATAB[I]-J*J)/DIV,64L) == CHAR) goto L8;
-L5:	/*etc*/ ;
+	/*etc*/ ;
 	} /* end loop */
 	BUG(5);
 
@@ -900,10 +900,10 @@ L15:	if(!OPENED){
 	 IGNORE(fgets(INLINE+1,sizeof(INLINE)-1,OPENED));
 
 L20:	LNLENG=0;
-	 /* 25 */ for (I=1; I<=sizeof(INLINE) && INLINE[I]!=0; I++) {
+	for (I=1; I<=sizeof(INLINE) && INLINE[I]!=0; I++) {
 	VAL=INLINE[I]+1;
 	INLINE[I]=MAP1[VAL];
-L25:	if(INLINE[I] != 0)LNLENG=I;
+	if(INLINE[I] != 0)LNLENG=I;
 	} /* end loop */
 	LNPOSN=1;
 	if(FIL && LNLENG == 0) goto L15;
@@ -929,9 +929,9 @@ long I, VAL;
 	return;
 
 L10:	if(MAP2[1] == 0)MPINIT();
-	/* 20 */ for (I=1; I<=LNLENG; I++) {
+	for (I=1; I<=LNLENG; I++) {
 	VAL=INLINE[I];
-L20:	{long x = VAL+1; INLINE[I]=MAP2[x];}
+	{long x = VAL+1; INLINE[I]=MAP2[x];}
 	} /* end loop */
 	{long x = LNLENG+1; INLINE[x]=0;}
 	printf("%s\n",INLINE+1);
@@ -947,11 +947,11 @@ long FIRST, I, J, LAST, VAL;
 static long RUNS[7][2] = {32,34, 39,46, 65,90, 97,122, 37,37, 48,57, 0,126};
 
 
-	/* 10 */ for (I=1; I<=128; I++) {
-L10:	MAP1[I]= -1;
+	for (I=1; I<=128; I++) {
+	MAP1[I]= -1;
 	} /* end loop */
 	VAL=0;
-	/* 20 */ for (I=0; I<7; I++) {
+	for (I=0; I<7; I++) {
 	FIRST=RUNS[I][0];
 	LAST=RUNS[I][1];
 	/* 22 */ for (J=FIRST; J<=LAST; J++) {
@@ -960,17 +960,17 @@ L10:	MAP1[I]= -1;
 	VAL=VAL+1;
 L22:	J--;
 	} /* end loop */
-L20:	/*etc*/ ;
+	/*etc*/ ;
 	} /* end loop */
 	MAP1[128]=MAP1[10];
 /*  For this version, tab (9) maps to space (32), so del (127) uses tab's value */
 	MAP1[10]=MAP1[33];
 	MAP1[11]=MAP1[33];
 
-	/* 30 */ for (I=0; I<=126; I++) {
+	for (I=0; I<=126; I++) {
 	I++; VAL=MAP1[I]+1; I--;
 	MAP2[VAL]=I*('B'-'A');
-L30:	if(I >= 64)MAP2[VAL]=(I-64)*('B'-'A')+'@';
+	if(I >= 64)MAP2[VAL]=(I-64)*('B'-'A')+'@';
 	} /* end loop */
 
 	return;
