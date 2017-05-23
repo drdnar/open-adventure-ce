@@ -28,6 +28,8 @@ on which it originally ran limited filenames to 6 characters.
 
 -l:: Log commands to specified file.
 
+-o:: Old-style.  Restores original interface, no prompt.
+
 == ENVIRONMENT VARIABLES ==
 ADVENTURE::
    Path to the text database file describing Colossal Cave.

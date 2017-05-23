@@ -173,7 +173,8 @@ static int finish_init(void);
 static void quick_io(void);
 
 void initialise(void) {
-	printf("Initialising...\n");
+	if (oldstyle)
+		printf("Initialising...\n");
 	if(!quick_init()){raw_init(); report(); quick_save();}
 	finish_init();
 }

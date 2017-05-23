@@ -41,6 +41,7 @@ long ABBNUM, ACTSPK[36], AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD, BO
 		VOLCAN, VRBSIZ = 35, VRSION = 25, WATER, WD1, WD1X, WD2, WD2X,
 		WZDARK = false, ZZWORD;
 FILE  *logfp;
+bool oldstyle = false;
 
 extern void initialise();
 extern void score(long);
@@ -63,7 +64,7 @@ int main(int argc, char *argv[]) {
 
 /*  Options. */
 
-	while ((ch = getopt(argc, argv, "l:")) != EOF) {
+	while ((ch = getopt(argc, argv, "l:o")) != EOF) {
 		switch (ch) {
 		case 'l':
 			logfp = fopen(optarg, "w+");
@@ -72,6 +73,9 @@ int main(int argc, char *argv[]) {
 					"advent: can't open logfile %s for write\n",
 					optarg);
 			break;
+		case 'o':
+		    oldstyle = true;
+		    break;
 		}
 	}
 

@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "main.h"
@@ -884,6 +885,8 @@ long I, VAL;
 
 	if(MAP2[1] == 0)MPINIT();
 
+	if (!oldstyle && isatty(0))
+	    fputs("> ", stdout);
 	IGNORE(fgets(INLINE+1,sizeof(INLINE)-1,OPENED));
 	if (feof(OPENED)) {
 		if (logfp)

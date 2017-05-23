@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #define LINESIZE	100
 
 extern long ABB[], ATAB[], ATLOC[], BLKLIN, DFLAG, DLOC[], FIXED[], HOLDNG,
@@ -5,3 +7,4 @@ extern long ABB[], ATAB[], ATLOC[], BLKLIN, DFLAG, DLOC[], FIXED[], HOLDNG,
 		PARMS[], PLACE[], PTEXT[], RTEXT[], TABSIZ;
 extern signed char INLINE[LINESIZE+1], MAP1[], MAP2[];
 extern FILE *logfp;
+extern bool oldstyle;
