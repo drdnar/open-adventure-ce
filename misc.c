@@ -172,7 +172,7 @@ void fSETPRM(long FIRST, long P1, long P2) {
 #define WORD1X (*wORD1X)
 #define WORD2 (*wORD2)
 #define WORD2X (*wORD2X)
-void fGETIN(long *wORD1, long *wORD1X, long *wORD2, long *wORD2X) {
+void fGETIN(FILE *input, long *wORD1, long *wORD1X, long *wORD2, long *wORD2X) {
 long JUNK;
 
 /*  Get a command from the adventurer.  Snarf out the first word, pad it with
@@ -183,8 +183,8 @@ long JUNK;
 
 
 L10:	if(BLKLIN)TYPE0();
-	MAPLIN(stdin);
-	if(feof(stdin)) score(1);
+	MAPLIN(input);
+	if(input == stdin && feof(stdin)) score(1);
 	WORD1=GETTXT(true,true,true,0);
 	if(BLKLIN && WORD1 < 0) goto L10;
 	WORD1X=GETTXT(false,true,true,0);
@@ -205,9 +205,9 @@ L22:	JUNK=GETTXT(false,true,true,0);
 #undef WORD1X
 #undef WORD2
 #undef WORD2X
-#define GETIN(WORD1,WORD1X,WORD2,WORD2X) fGETIN(&WORD1,&WORD1X,&WORD2,&WORD2X)
+#define GETIN(SRC,WORD1,WORD1X,WORD2,WORD2X) fGETIN(SRC,&WORD1,&WORD1X,&WORD2,&WORD2X)
 #undef YES
-long fYES(long X, long Y, long Z) {
+long fYES(FILE *input, long X, long Y, long Z) {
 
 long YES, REPLY, JUNK1, JUNK2, JUNK3;
 
@@ -215,7 +215,7 @@ long YES, REPLY, JUNK1, JUNK2, JUNK3;
  *  if no, print Z and return false. */
 
 L1:	RSPEAK(X);
-	GETIN(REPLY,JUNK1,JUNK2,JUNK3);
+	GETIN(input, REPLY,JUNK1,JUNK2,JUNK3);
 	if(REPLY == MAKEWD(250519) || REPLY == MAKEWD(25)) goto L10;
 	if(REPLY == MAKEWD(1415) || REPLY == MAKEWD(14)) goto L20;
 	RSPEAK(185);

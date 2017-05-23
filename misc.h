@@ -13,10 +13,10 @@ extern void fRSPEAK(long);
 #define RSPEAK(I) fRSPEAK(I)
 extern void fSETPRM(long,long,long);
 #define SETPRM(FIRST,P1,P2) fSETPRM(FIRST,P1,P2)
-extern void fGETIN(long*,long*,long*,long*);
-#define GETIN(WORD1,WORD1X,WORD2,WORD2X) fGETIN(&WORD1,&WORD1X,&WORD2,&WORD2X)
-extern long fYES(long,long,long);
-#define YES(X,Y,Z) fYES(X,Y,Z)
+extern void fGETIN(FILE *,long*,long*,long*,long*);
+#define GETIN(input,WORD1,WORD1X,WORD2,WORD2X) fGETIN(input,&WORD1,&WORD1X,&WORD2,&WORD2X)
+extern long fYES(FILE *,long,long,long);
+#define YES(input,X,Y,Z) fYES(input,X,Y,Z)
 extern long fGETNUM(FILE *);
 #define GETNUM(K) fGETNUM(K)
 extern long fGETTXT(long,long,long,long);

@@ -14,7 +14,7 @@
 /*  Analyse a verb.  Remember what it was, go back for object if second word
  *  unless verb is "say", which snarfs arbitrary second word. */
 
-int action(long STARTAT) {
+int action(FILE *input, long STARTAT) {
 	switch(STARTAT) {
 	   case 4000: goto L4000;
 	   case 4090: goto L4090;
@@ -269,7 +269,7 @@ L9094:	DROP(JADE,LOC);
 
 /*  Attack also moved into separate module. */
 
-L9120:	return(attack());
+L9120:	return(attack(input));
 
 /*  Pour.  If no object, or object is bottle, assume contents of bottle.
  *  special tests for pouring water or oil on plant or rusty door. */
@@ -349,11 +349,11 @@ L9160:	if(OBJ != LAMP)SPK=76;
 
 /*  Throw moved into separate module. */
 
-L9170:	return(throw());
+L9170:	return(throw(input));
 
 /*  Quit.  Intransitive only.  Verify intent and exit if that's what he wants. */
 
-L8180:	if(YES(22,54,54)) score(1);
+L8180:	if(YES(input,22,54,54)) score(1);
 	 return(2012);
 
 /*  Find.  Might be carrying it, or it might be here.  Else give caveat. */
@@ -446,7 +446,7 @@ L9270:	if(DARK(0)) goto L5190;
 	PSPEAK(OBJ,OBJTXT[OBJ]+PROP[OBJ]);
 	 return(2012);
 
-L9275:	CLSHNT=YES(192,193,54);
+L9275:	CLSHNT=YES(input,192,193,54);
 	 return(2012);
 
 /*  Break.  Only works for mirror in repository and, of course, the vase. */
@@ -475,7 +475,7 @@ L9290:	if(OBJ != DWARF || !CLOSED) return(2011);
 
 L8300:	SPK=201;
 	RSPEAK(260);
-	if(!YES(200,54,54)) return(2012);
+	if(!YES(input,200,54,54)) return(2012);
 	SAVED=SAVED+5;
 	KK= -1;
 
@@ -525,7 +525,7 @@ L8305:	DATIME(I,K);
 L8310:	KK=1;
 	if(LOC == 1 && ABB[1] == 1) goto L8305;
 	RSPEAK(268);
-	if(!YES(200,54,54)) return(2012);
+	if(!YES(input,200,54,54)) return(2012);
 	 goto L8305;
 
 L8312:	SETPRM(1,K/10,MOD(K,10));

@@ -45,13 +45,13 @@ bool oldstyle = false;
 
 extern void initialise();
 extern void score(long);
-extern int action(long);
+extern int action(FILE *, long);
 
 /*
  * MAIN PROGRAM
  */
 
-static void do_command(void);
+static void do_command(FILE *);
 
 int main(int argc, char *argv[]) {
 	int ch;
@@ -118,18 +118,18 @@ int main(int argc, char *argv[]) {
 L1:	SETUP= -1;
 	I=RAN(-1);
 	ZZWORD=RNDVOC(3,0)+MESH*2;
-	NOVICE=YES(65,1,0);
+	NOVICE=YES(stdin, 65,1,0);
 	NEWLOC=1;
 	LOC=1;
 	LIMIT=330;
 	if(NOVICE)LIMIT=1000;
 
 	for (;;) {
-	    do_command();
+	    do_command(stdin);
 	}
 }
 
-static void do_command(void) {
+static void do_command(FILE *cmdin) {
 
 /*  Can't leave cave once it's closing (except by main office). */
 
@@ -381,7 +381,7 @@ L2603:	if(!CLOSED) goto L2605;
 L2605:	WZDARK=DARK(0);
 	if(KNFLOC > 0 && KNFLOC != LOC)KNFLOC=0;
 	I=RAN(1);
-	GETIN(WD1,WD1X,WD2,WD2X);
+	GETIN(cmdin, WD1,WD1X,WD2,WD2X);
 
 /*  Every input, check "FOOBAR" flag.  If zero, nothing's going on.  If pos,
  *  make neg.  If neg, he skipped a word, so make it zero. */
@@ -449,7 +449,7 @@ L4000:	I=4000; goto Laction;
 L4090:	I=4090; goto Laction;
 L5000:	I=5000;
 Laction:
-	switch (action(I)) {
+	 switch (action(cmdin, I)) {
 	   case 2: return;
 	   case 8: goto L8;
 	   case 2000: goto L2000;
@@ -670,7 +670,7 @@ L90:	RSPEAK(23);
 
 L99:	if(CLOSNG) goto L95;
 	NUMDIE=NUMDIE+1;
-	if(!YES(79+NUMDIE*2,80+NUMDIE*2,54)) score(0);
+	if(!YES(cmdin,79+NUMDIE*2,80+NUMDIE*2,54)) score(0);
 	if(NUMDIE == MAXDIE) score(0);
 	PLACE[WATER]=0;
 	PLACE[OIL]=0;
@@ -713,10 +713,10 @@ L40000:    switch (HINT-1) { case 0: goto L40100; case 1: goto L40200; case 2: g
 	BUG(27);
 
 L40010: HINTLC[HINT]=0;
-	if(!YES(HINTS[HINT][3],0,54)) goto L2602;
+	if(!YES(cmdin,HINTS[HINT][3],0,54)) goto L2602;
 	SETPRM(1,HINTS[HINT][2],HINTS[HINT][2]);
 	RSPEAK(261);
-	HINTED[HINT]=YES(175,HINTS[HINT][4],54);
+	HINTED[HINT]=YES(cmdin,175,HINTS[HINT][4],54);
 	if(HINTED[HINT] && LIMIT > 30)LIMIT=LIMIT+30*HINTS[HINT][2];
 L40020: HINTLC[HINT]=0;
 L40030:  goto L2602;

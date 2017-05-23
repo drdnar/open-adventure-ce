@@ -131,7 +131,7 @@ L9028:	PROP[VASE]=2;
  *  objects fall into two categories: enemies (snake, dwarf, etc.)  and others
  *  (bird, clam, machine).  Ambiguous if 2 enemies, or no enemies but 2 others. */
 
-int attack() {
+int attack(FILE *input) {
 	I=ATDWRF(LOC);
 	if(OBJ != 0) goto L9124;
 	if(I > 0)OBJ=DWARF;
@@ -176,7 +176,7 @@ L9126:	if(OBJ == 0)SPK=44;
 	RSPEAK(49);
 	VERB=0;
 	OBJ=0;
-	GETIN(WD1,WD1X,WD2,WD2X);
+	GETIN(input,WD1,WD1X,WD2,WD2X);
 	if(WD1 != MAKEWD(25) && WD1 != MAKEWD(250519)) return(2607);
 	PSPEAK(DRAGON,3);
 	PROP[DRAGON]=1;
@@ -214,7 +214,7 @@ L9129:	/*etc*/ ;
  *  and if dwarf is present then one might be killed.  (Only way to do so!)
  *  Axe also special for dragon, bear, and troll.  Treasures special for troll. */
 
-int throw() {
+int throw(FILE *cmdin) {
 	if(TOTING(ROD2) && OBJ == ROD && !TOTING(ROD))OBJ=ROD2;
 	if(!TOTING(OBJ)) return(2011);
 	if(OBJ >= 50 && OBJ <= MAXTRS && AT(TROLL)) goto L9178;
@@ -230,7 +230,7 @@ int throw() {
 	if(AT(OGRE)) goto L9175;
 	if(HERE(BEAR) && PROP[BEAR] == 0) goto L9176;
 	OBJ=0;
-	return(attack());
+	return(attack(cmdin));
 
 L9172:	SPK=48;
 	if(RAN(7) < DFLAG) goto L9175;
