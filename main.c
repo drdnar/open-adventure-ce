@@ -815,17 +815,17 @@ L10000: PROP[GRATE]=0;
 	game.closng=true;
 	 goto L19999;
 
-/*  ONCE HE'S PANICKED, AND CLOCK2 HAS RUN OUT, WE COME HERE TO SET UP THE
- *  STORAGE ROOM.  THE ROOM HAS TWO LOCS, HARDWIRED AS 115 (NE) AND 116 (SW).
- *  AT THE NE END, WE PLACE EMPTY BOTTLES, A NURSERY OF PLANTS, A BED OF
- *  OYSTERS, A PILE OF LAMPS, RODS WITH STARS, SLEEPING DWARVES, AND HIM.  AT
- *  THE SW END WE PLACE GRATE OVER TREASURES, SNAKE PIT, COVEY OF CAGED BIRDS,
- *  MORE RODS, AND PILLOWS.  A MIRROR STRETCHES ACROSS ONE WALL.  MANY OF THE
- *  OBJECTS COME FROM KNOWN LOCATIONS AND/OR STATES (E.G. THE SNAKE IS KNOWN TO
- *  HAVE BEEN DESTROYED AND NEEDN'T BE CARRIED AWAY FROM ITS OLD "PLACE"),
- *  MAKING THE VARIOUS OBJECTS BE HANDLED DIFFERENTLY.  WE ALSO DROP ALL OTHER
- *  OBJECTS HE MIGHT BE CARRYING (LEST HE HAVE SOME WHICH COULD CAUSE TROUBLE,
- *  SUCH AS THE KEYS).  WE DESCRIBE THE FLASH OF LIGHT AND TRUNDLE BACK. */
+/*  Once he's panicked, and clock2 has run out, we come here to set up the
+ *  storage room.  The room has two locs, hardwired as 115 (ne) and 116 (sw).
+ *  At the ne end, we place empty bottles, a nursery of plants, a bed of
+ *  oysters, a pile of lamps, rods with stars, sleeping dwarves, and him.  At
+ *  the sw end we place grate over treasures, snake pit, covey of caged birds,
+ *  more rods, and pillows.  A mirror stretches across one wall.  many of the
+ *  objects come from known locations and/or states (e.g. the snake is known to
+ *  have been destroyed and needn't be carried away from its old "place"),
+ *  making the various objects be handled differently.  We also drop all other
+ *  objects he might be carrying (lest he have some which could cause trouble,
+ *  such as the keys).  We describe the flash of light and trundle back. */
 
 L11000: PROP[BOTTLE]=PUT(BOTTLE,115,1);
 	PROP[PLANT]=PUT(PLANT,115,0);
