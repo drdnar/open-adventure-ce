@@ -32,8 +32,16 @@ struct game_t	{
     long lmwarn;
     /* LOC will go here */
     long newloc;
+    /* OBJ will go here */
     long numdie;
+    long oldlc2;
+    long oldloc;
+    long oldobj;
+    long panic;
+    long saved;
     /* more state will go here */
     long wzdark;
+    /* more state will go here */
+    long novice;
 };
 extern struct game_t game;

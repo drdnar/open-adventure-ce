@@ -83,9 +83,9 @@ L20020: MXSCOR=MXSCOR+45;
 	for (I=1; I<=HNTMAX; I++) {
 	if(HINTED[I])SCORE=SCORE-HINTS[I][2];
 	} /* end loop */
-	if(NOVICE)SCORE=SCORE-5;
+	if(game.novice)SCORE=SCORE-5;
 	if(CLSHNT)SCORE=SCORE-10;
-	SCORE=SCORE-TRNLUZ-SAVED;
+	SCORE=SCORE-TRNLUZ-game.saved;
 
 /*  Return to score command if that's where we came from. */
 
@@ -94,7 +94,7 @@ L20020: MXSCOR=MXSCOR+45;
 /*  that should be good enough.  Let's tell him all about it. */
 
 	if(SCORE+TRNLUZ+1 >= MXSCOR && TRNLUZ != 0)RSPEAK(242);
-	if(SCORE+SAVED+1 >= MXSCOR && SAVED != 0)RSPEAK(143);
+	if(SCORE+game.saved+1 >= MXSCOR && game.saved != 0)RSPEAK(143);
 	SETPRM(1,SCORE,MXSCOR);
 	SETPRM(3,TURNS,TURNS);
 	RSPEAK(262);

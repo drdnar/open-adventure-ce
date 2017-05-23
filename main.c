@@ -29,11 +29,10 @@ long ACTSPK[36], AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
 		KNIFE, KQ, L, LAMP, LINSIZ = 12500, LINUSE, LL,
 		LOC, LOCK, LOCSIZ = 185, LOCSND[186], LOOK, LTEXT[186],
 		MAGZIN, MAXDIE, MAXTRS, MESH = 123456789,
-		MESSAG, MIRROR, MXSCOR,
-		NOVICE, NUGGET, NUL, OBJ, OBJSND[101],
-		OBJTXT[101], ODLOC[7], OGRE, OIL, OLDLC2, OLDLOC, OLDOBJ, OYSTER,
-		PANIC, PEARL, PILLOW, PLAC[101], PLANT, PLANT2, PROP[101], PYRAM,
-		RESER, ROD, ROD2, RTXSIZ = 277, RUBY, RUG, SAPPH, SAVED, SAY,
+		MESSAG, MIRROR, MXSCOR, NUGGET, NUL, OBJ, OBJSND[101],
+		OBJTXT[101], ODLOC[7], OGRE, OIL, OYSTER,
+	        PEARL, PILLOW, PLAC[101], PLANT, PLANT2, PROP[101], PYRAM,
+		RESER, ROD, ROD2, RTXSIZ = 277, RUBY, RUG, SAPPH, SAY,
 		SCORE, SECT, SIGN, SNAKE, SPK, STEPS, STEXT[186], STICK,
 		STREAM, TABNDX, TALLY, THRESH, THROW, TK[21], TRAVEL[886], TRIDNT,
 		TRNDEX, TRNLUZ, TRNSIZ = 5, TRNVAL[6], TRNVLS, TROLL, TROLL2, TRVS,
@@ -88,8 +87,8 @@ int main(int argc, char *argv[]) {
  *  game.closng says whether it's closing time yet
  *  CLSHNT says whether he's read the clue in the endgame
  *  game.lmwarn says whether he's been warned about lamp going dim
- *  NOVICE says whether he asked for instructions at start-up
- *  PANIC says whether he's found out he's trapped in the cave
+ *  game.novice says whether he asked for instructions at start-up
+ *  game.panic says whether he's found out he's trapped in the cave
  *  game.wzdark says whether the loc he's leaving was dark */
 
 #include "funcs.h"
@@ -119,11 +118,11 @@ int main(int argc, char *argv[]) {
 L1:	SETUP= -1;
 	I=RAN(-1);
 	ZZWORD=RNDVOC(3,0)+MESH*2;
-	NOVICE=YES(stdin, 65,1,0);
+	game.novice=YES(stdin, 65,1,0);
 	game.newloc=1;
 	LOC=1;
 	game.limit=330;
-	if(NOVICE)game.limit=1000;
+	if(game.novice)game.limit=1000;
 
 	for (;;) {
 	    do_command(stdin);
@@ -137,8 +136,8 @@ static void do_command(FILE *cmdin) {
 L2:	if(!OUTSID(game.newloc) || game.newloc == 0 || !game.closng) goto L71;
 	RSPEAK(130);
 	game.newloc=LOC;
-	if(!PANIC)game.clock2=15;
-	PANIC=true;
+	if(!game.panic)game.clock2=15;
+	game.panic=true;
 
 /*  See if a dwarf has seen him and has come from where he wants to go.  If so,
  *  the dwarf's blocking his way.  If coming from place forbidden to pirate
@@ -287,7 +286,7 @@ L6030:	/*etc*/ ;
 	SETPRM(1,STICK,0);
 	RSPEAK(K+1+2/(1+STICK));
 	if(STICK == 0) goto L2000;
-	OLDLC2=LOC;
+	game.oldlc2=LOC;
 	 goto L99;
 
 
@@ -351,7 +350,7 @@ L2010:	SPK=K;
 L2011:	RSPEAK(SPK);
 
 L2012:	VERB=0;
-	OLDOBJ=OBJ;
+	game.oldobj=OBJ;
 	OBJ=0;
 
 /*  Check if this loc is eligible for any hints.  If been here long enough,
@@ -478,11 +477,13 @@ L8000:	SETPRM(1,WD1,WD1X);
 
 /*  Figure out the new location
  *
- *  Given the current location in "LOC", and a motion verb number in "K", put
- *  the new location in "game.newloc".  The current loc is saved in "OLDLOC" in case
- *  he wants to retreat.  The current OLDLOC is saved in OLDLC2, in case he
- *  dies.  (if he does, game.newloc will be limbo, and OLDLOC will be what killed
- *  him, so we need OLDLC2, which is the last place he was safe.) */
+ *  Given the current location in "LOC", and a motion verb number in
+ *  "K", put the new location in "game.newloc".  The current loc is
+ *  saved in "game.oldloc" in case he wants to retreat.  The current
+ *  game.oldloc is saved in game.oldlc2, in case he dies.  (if he
+ *  does, game.newloc will be limbo, and game.oldloc will be what
+ *  killed him, so we need game.oldlc2, which is the last place he was
+ *  safe.) */
 
 L8:	KK=KEY[LOC];
 	game.newloc=LOC;
@@ -491,8 +492,8 @@ L8:	KK=KEY[LOC];
 	if(K == BACK) goto L20;
 	if(K == LOOK) goto L30;
 	if(K == CAVE) goto L40;
-	OLDLC2=OLDLOC;
-	OLDLOC=LOC;
+	game.oldlc2=game.oldloc;
+	game.oldloc=LOC;
 
 L9:	LL=IABS(TRAVEL[KK]);
 	if(MOD(LL,1000) == 1 || MOD(LL,1000) == K) goto L10;
@@ -575,18 +576,18 @@ L30310: game.newloc=PLAC[TROLL]+FIXD[TROLL]-LOC;
 	DROP(BEAR,game.newloc);
 	FIXED[BEAR]= -1;
 	PROP[BEAR]=3;
-	OLDLC2=game.newloc;
+	game.oldlc2=game.newloc;
 	 goto L99;
 
 /*  End of specials. */
 
-/*  Handle "go back".  Look for verb which goes from LOC to OLDLOC, or to OLDLC2
- *  If OLDLOC has forced-motion.  K2 saves entry -> forced loc -> previous loc. */
+/*  Handle "go back".  Look for verb which goes from LOC to game.oldloc, or to game.oldlc2
+ *  If game.oldloc has forced-motion.  K2 saves entry -> forced loc -> previous loc. */
 
-L20:	K=OLDLOC;
-	if(FORCED(K))K=OLDLC2;
-	OLDLC2=OLDLOC;
-	OLDLOC=LOC;
+L20:	K=game.oldloc;
+	if(FORCED(K))K=game.oldlc2;
+	game.oldlc2=game.oldloc;
+	game.oldloc=LOC;
 	K2=0;
 	if(K == LOC)K2=91;
 	if(CNDBIT(LOC,4))K2=274;
@@ -652,7 +653,7 @@ L50:	SPK=12;
  *  snide messages available.  Each death results in a message (81, 83, etc.)
  *  which offers reincarnation; if accepted, this results in message 82, 84,
  *  etc.  The last time, if he wants another chance, he gets a snide remark as
- *  we exit.  When reincarnated, all objects being carried get dropped at OLDLC2
+ *  we exit.  When reincarnated, all objects being carried get dropped at game.oldlc2
  *  (presumably the last place prior to being killed) without change of props.
  *  the loop runs backwards to assure that the bird is dropped before the cage.
  *  (this kluge could be changed once we're sure all references to bird and cage
@@ -660,12 +661,12 @@ L50:	SPK=12;
  *  it in the cave).  It is turned off and left outside the building (only if he
  *  was carrying it, of course).  He himself is left inside the building (and
  *  heaven help him if he tries to xyzzy back into the cave without the lamp!).
- *  OLDLOC is zapped so he can't just "retreat". */
+ *  game.oldloc is zapped so he can't just "retreat". */
 
 /*  The easiest way to get killed is to fall into a pit in pitch darkness. */
 
 L90:	RSPEAK(23);
-	OLDLC2=LOC;
+	game.oldlc2=LOC;
 
 /*  Okay, he's dead.  Let's get on with it. */
 
@@ -679,13 +680,13 @@ L99:	if(game.closng) goto L95;
 	/* 98 */ for (J=1; J<=100; J++) {
 	I=101-J;
 	if(!TOTING(I)) goto L98;
-	K=OLDLC2;
+	K=game.oldlc2;
 	if(I == LAMP)K=1;
 	DROP(I,K);
 L98:	/*etc*/ ;
 	} /* end loop */
 	LOC=3;
-	OLDLOC=LOC;
+	game.oldloc=LOC;
 	 goto L2000;
 
 /*  He died during closing time.  No resurrection.  Tally up a death and exit. */
@@ -727,13 +728,13 @@ L40030:  goto L2602;
 L40100: if(PROP[GRATE] == 0 && !HERE(KEYS)) goto L40010;
 	 goto L40020;
 
-L40200: if(PLACE[BIRD] == LOC && TOTING(ROD) && OLDOBJ == BIRD) goto L40010;
+L40200: if(PLACE[BIRD] == LOC && TOTING(ROD) && game.oldobj == BIRD) goto L40010;
 	 goto L40030;
 
 L40300: if(HERE(SNAKE) && !HERE(BIRD)) goto L40010;
 	 goto L40020;
 
-L40400: if(ATLOC[LOC] == 0 && ATLOC[OLDLOC] == 0 && ATLOC[OLDLC2] == 0 && game.holdng >
+L40400: if(ATLOC[LOC] == 0 && ATLOC[game.oldloc] == 0 && ATLOC[game.oldlc2] == 0 && game.holdng >
 		1) goto L40010;
 	 goto L40020;
 
@@ -745,7 +746,7 @@ L40600:  goto L40010;
 L40700: if(game.dflag == 0) goto L40010;
 	 goto L40020;
 
-L40800: if(ATLOC[LOC] == 0 && ATLOC[OLDLOC] == 0 && ATLOC[OLDLC2] == 0) goto
+L40800: if(ATLOC[LOC] == 0 && ATLOC[game.oldloc] == 0 && ATLOC[game.oldlc2] == 0) goto
 		L40010;
 	 goto L40030;
 
@@ -785,7 +786,7 @@ L41000: if(TALLY == 1 && PROP[JADE] < 0) goto L40010;
 /*  When the first warning comes, we lock the grate, destroy the bridge, kill
  *  all the dwarves (and the pirate), remove the troll and bear (unless dead),
  *  and set "game.closng" to true.  Leave the dragon; too much trouble to move it.
- *  from now until game.clock2 runs out, he cannot unlock the grate, move to any
+ *  from now until clock2 runs out, he cannot unlock the grate, move to any
  *  location outside the cave, or create the bridge.  Nor can he be
  *  resurrected if he dies.  Note that the snake is already gone, since he got
  *  to the treasure accessible only via the hall of the mountain king. Also, he's
@@ -814,7 +815,7 @@ L10000: PROP[GRATE]=0;
 	game.closng=true;
 	 goto L19999;
 
-/*  ONCE HE'S PANICKED, AND game.clock2 HAS RUN OUT, WE COME HERE TO SET UP THE
+/*  ONCE HE'S PANICKED, AND CLOCK2 HAS RUN OUT, WE COME HERE TO SET UP THE
  *  STORAGE ROOM.  THE ROOM HAS TWO LOCS, HARDWIRED AS 115 (NE) AND 116 (SW).
  *  AT THE NE END, WE PLACE EMPTY BOTTLES, A NURSERY OF PLANTS, A BED OF
  *  OYSTERS, A PILE OF LAMPS, RODS WITH STARS, SLEEPING DWARVES, AND HIM.  AT
@@ -834,7 +835,7 @@ L11000: PROP[BOTTLE]=PUT(BOTTLE,115,1);
 	PROP[ROD]=PUT(ROD,115,0);
 	PROP[DWARF]=PUT(DWARF,115,0);
 	LOC=115;
-	OLDLOC=115;
+	game.oldloc=115;
 	game.newloc=115;
 
 /*  Leave the grate with normal (non-negative) property.  Reuse sign. */

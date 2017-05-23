@@ -218,7 +218,7 @@ L1001:	/*etc*/ ;
 /*  Start new data section.  Sect is the section number. */
 
 L1002:	SECT=GETNUM(OPENED);
-	OLDLOC= -1;
+	game.oldloc= -1;
 	switch (SECT) { case 0: return(0); case 1: goto L1004; case 2: goto
 		L1004; case 3: goto L1030; case 4: goto L1040; case 5: goto L1004;
 		case 6: goto L1004; case 7: goto L1050; case 8: goto L1060; case
@@ -241,8 +241,8 @@ L1006:	KK=KK+1;
 	LINES[KK]=GETTXT(false,false,false,KK);
 	if(LINES[KK] != -1) goto L1006;
 	LINES[LINUSE]=KK;
-	if(LOC == OLDLOC) goto L1005;
-	OLDLOC=LOC;
+	if(LOC == game.oldloc) goto L1005;
+	game.oldloc=LOC;
 	LINES[LINUSE]= -KK;
 	if(SECT == 14) goto L1014;
 	if(SECT == 10) goto L1012;
@@ -587,12 +587,12 @@ L1106:	/*etc*/ ;
 	game.clock1=30;
 	game.clock2=50;
 	CONDS=SETBIT(11);
-	SAVED=0;
+	game.saved=0;
 	game.closng=false;
-	PANIC=false;
+	game.panic=false;
 	game.closed=false;
 	CLSHNT=false;
-	NOVICE=false;
+	game.novice=false;
 	SETUP=1;
 
 	/* if we can ever think of how, we should save it at this point */
