@@ -897,10 +897,10 @@ L15:	if(!OPENED){
 		OPENED=fopen("adventure.text","r" /* NOT binary */);
 		if(!OPENED){printf("Can't read adventure.text!\n"); exit(0);}
 		}
-	 IGNORE(fgets(INLINE+1,100,OPENED));
+	 IGNORE(fgets(INLINE+1,sizeof(INLINE)-1,OPENED));
 
 L20:	LNLENG=0;
-	/* 25 */ for (I=1; I<=100 && INLINE[I]!=0; I++) {
+	 /* 25 */ for (I=1; I<=sizeof(INLINE) && INLINE[I]!=0; I++) {
 	VAL=INLINE[I]+1;
 	INLINE[I]=MAP1[VAL];
 L25:	if(INLINE[I] != 0)LNLENG=I;
