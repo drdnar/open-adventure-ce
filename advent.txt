@@ -24,6 +24,10 @@ port of the 1976 ancestor of this game.  To avoid a name collision,
 this game builds as 'advent', reflecting the fact that the PDP-10
 on which it originally ran limited filenames to 6 characters.
 
+== OPTIONS ==
+
+-l:: Log commands to specified file.
+
 == ENVIRONMENT VARIABLES ==
 ADVENTURE::
    Path to the text database file describing Colossal Cave.

@@ -885,7 +885,12 @@ long I, VAL;
 	if(MAP2[1] == 0)MPINIT();
 
 	IGNORE(fgets(INLINE+1,sizeof(INLINE)-1,OPENED));
-	if (!feof(OPENED)) {
+	if (feof(OPENED)) {
+		if (logfp)
+			fclose(logfp);
+	} else {
+		if (logfp)
+			IGNORE(fputs(INLINE+1, logfp));
 		LNLENG=0;
 		for (I=1; I<=sizeof(INLINE) && INLINE[I]!=0; I++) {
 		VAL=INLINE[I]+1;

@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <getopt.h>
 #include "main.h"
 
 #include "misc.h"
@@ -39,6 +40,7 @@ long ABBNUM, ACTSPK[36], AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD, BO
 		 TRVSIZ = 885, TTEXT[6], TURNS, URN, V1, V2, VASE, VEND, VERB,
 		VOLCAN, VRBSIZ = 35, VRSION = 25, WATER, WD1, WD1X, WD2, WD2X,
 		WZDARK = false, ZZWORD;
+FILE  *logfp;
 
 extern void initialise();
 extern void score(long);
@@ -49,6 +51,7 @@ extern int action(long);
  */
 
 int main(int argc, char *argv[]) {
+	int ch;
 
 /*  Adventure (rev 2: 20 treasures) */
 
@@ -57,6 +60,20 @@ int main(int argc, char *argv[]) {
  *           20-treasure version (rev 2) by Don Woods, August 1978
  *		Errata fixed: 78/12/25 */
 
+
+/*  Options. */
+
+	while ((ch = getopt(argc, argv, "l:")) != EOF) {
+		switch (ch) {
+		case 'l':
+			logfp = fopen(optarg, "w+");
+			if (logfp == NULL)
+				fprintf(stderr,
+					"advent: can't open logfile %s for write\n",
+					optarg);
+			break;
+		}
+	}
 
 /* Logical variables:
  *
@@ -89,8 +106,6 @@ int main(int argc, char *argv[]) {
 
 	RSPEAK(201);
 	exit(0);
-
-
 
 /*  Start-up, dwarf stuff */
 
