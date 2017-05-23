@@ -18,7 +18,7 @@ void score(long MODE) {
  *  Each treasure > chest    16                   224
  *  Surviving             (MAX-NUM)*10             30
  *  Not quitting              4                     4
- *  Reaching "CLOSNG"        25                    25
+ *  Reaching "game.closng"        25                    25
  *  "Closed": Quit/Killed    10
  *            Klutzed        25
  *            Wrong way      30
@@ -46,26 +46,26 @@ void score(long MODE) {
 L20010: /*etc*/ ;
 	} /* end loop */
 
-/*  Now look at how he finished and how far he got.  MAXDIE and NUMDIE tell us
- *  how well he survived.  DFLAG will
- *  tell us if he ever got suitably deep into the cave.  CLOSNG still indicates
+/*  Now look at how he finished and how far he got.  MAXDIE and game.numdie tell us
+ *  how well he survived.  game.dflag will
+ *  tell us if he ever got suitably deep into the cave.  game.closng still indicates
  *  whether he reached the endgame.  And if he got as far as "cave closed"
- *  (indicated by "CLOSED"), then bonus is zero for mundane exits or 133, 134,
+ *  (indicated by "game.closed"), then game.bonus is zero for mundane exits or 133, 134,
  *  135 if he blew it (so to speak). */
 
-	SCORE=SCORE+(MAXDIE-NUMDIE)*10;
+	SCORE=SCORE+(MAXDIE-game.numdie)*10;
 	MXSCOR=MXSCOR+MAXDIE*10;
 	if(MODE == 0)SCORE=SCORE+4;
 	MXSCOR=MXSCOR+4;
-	if(DFLAG != 0)SCORE=SCORE+25;
+	if(game.dflag != 0)SCORE=SCORE+25;
 	MXSCOR=MXSCOR+25;
-	if(CLOSNG)SCORE=SCORE+25;
+	if(game.closng)SCORE=SCORE+25;
 	MXSCOR=MXSCOR+25;
-	if(!CLOSED) goto L20020;
-	if(BONUS == 0)SCORE=SCORE+10;
-	if(BONUS == 135)SCORE=SCORE+25;
-	if(BONUS == 134)SCORE=SCORE+30;
-	if(BONUS == 133)SCORE=SCORE+45;
+	if(!game.closed) goto L20020;
+	if(game.bonus == 0)SCORE=SCORE+10;
+	if(game.bonus == 135)SCORE=SCORE+25;
+	if(game.bonus == 134)SCORE=SCORE+30;
+	if(game.bonus == 133)SCORE=SCORE+45;
 L20020: MXSCOR=MXSCOR+45;
 
 /*  Did he come to Witt's End as he should? */

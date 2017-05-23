@@ -278,20 +278,20 @@ L1014:	TRNVLS=TRNVLS+1;
 
 /*  The stuff for section 3 is encoded here.  Each "from-location" gets a
  *  contiguous section of the "TRAVEL" array.  Each entry in travel is
- *  NEWLOC*1000 + KEYWORD (from section 4, motion verbs), and is negated if
+ *  game.newloc*1000 + KEYWORD (from section 4, motion verbs), and is negated if
  *  this is the last entry for this location.  KEY(N) is the index in travel
  *  of the first option at location N. */
 
 L1030:	LOC=GETNUM(OPENED);
 	if(LOC == -1) goto L1002;
-	NEWLOC=GETNUM(NULL);
+	game.newloc=GETNUM(NULL);
 	if(KEY[LOC] != 0) goto L1033;
 	KEY[LOC]=TRVS;
 	 goto L1035;
 L1033:	TRVS--; TRAVEL[TRVS]= -TRAVEL[TRVS]; TRVS++;
 L1035:	L=GETNUM(NULL);
 	if(L == 0) goto L1039;
-	TRAVEL[TRVS]=NEWLOC*1000+L;
+	TRAVEL[TRVS]=game.newloc*1000+L;
 	TRVS=TRVS+1;
 	if(TRVS == TRVSIZ)BUG(3);
 	 goto L1035;
@@ -519,7 +519,7 @@ L1106:	/*etc*/ ;
  *  prior loc of each dwarf, initially garbage.  DALTLC is alternate initial loc
  *  for dwarf, in case one of them starts out on top of the adventurer.  (No 2
  *  of the 5 initial locs are adjacent.)  DSEEN is true if dwarf has seen him.
- *  DFLAG controls the level of activation of all this:
+ *  game.dflag controls the level of activation of all this:
  *	0	No dwarf stuff yet (wait until reaches Hall Of Mists)
  *	1	Reached Hall Of Mists, but hasn't met first dwarf
  *	2	Met first dwarf, others start moving, no knives thrown yet
@@ -534,7 +534,7 @@ L1106:	/*etc*/ ;
 	for (I=1; I<=6; I++) {
 	DSEEN[I]=false;
 	} /* end loop */
-	DFLAG=0;
+	game.dflag=0;
 	DLOC[1]=19;
 	DLOC[2]=27;
 	DLOC[3]=33;
@@ -544,21 +544,21 @@ L1106:	/*etc*/ ;
 	DALTLC=18;
 
 /*  Other random flags and counters, as follows:
- *	ABBNUM	How often we should print non-abbreviated descriptions
- *	BONUS	Used to determine amount of bonus if he reaches closing
- *	CLOCK1	Number of turns from finding last treasure till closing
- *	CLOCK2	Number of turns from first warning till blinding flash
+ *	game.abbnum	How often we should print non-abbreviated descriptions
+ *	game.bonus	Used to determine amount of bonus if he reaches closing
+ *	game.clock1	Number of turns from finding last treasure till closing
+ *	game.clock2	Number of turns from first warning till blinding flash
  *	CONDS	Min value for cond(loc) if loc has any hints
- *	DETAIL	How often we've said "not allowed to give more detail"
- *	DKILL	Number of dwarves killed (unused in scoring, needed for msg)
- *	FOOBAR	Current progress in saying "FEE FIE FOE FOO".
- *	HOLDNG	Number of objects being carried
+ *	game.detail	How often we've said "not allowed to give more detail"
+ *	game.dkill	Number of dwarves killed (unused in scoring, needed for msg)
+ *	game.foobar	Current progress in saying "FEE FIE FOE FOO".
+ *	game.holdng	Number of objects being carried
  *	IGO	How many times he's said "go XXX" instead of "XXX"
- *	IWEST	How many times he's said "west" instead of "w"
- *	KNFLOC	0 if no knife here, loc if knife here, -1 after caveat
- *	LIMIT	Lifetime of lamp (not set here)
+ *	game.iwest	How many times he's said "west" instead of "w"
+ *	game.knfloc	0 if no knife here, loc if knife here, -1 after caveat
+ *	game.limit	Lifetime of lamp (not set here)
  *	MAXDIE	Number of reincarnation messages available (up to 5)
- *	NUMDIE	Number of times killed so far
+ *	game.numdie	Number of times killed so far
  *	THRESH	Next #turns threshhold (-1 if none)
  *	TRNDEX	Index in TRNVAL of next threshhold (section 14 of database)
  *	TRNLUZ	# points lost so far due to number of turns used
@@ -570,27 +570,27 @@ L1106:	/*etc*/ ;
 	THRESH= -1;
 	if(TRNVLS > 0)THRESH=MOD(TRNVAL[1],100000)+1;
 	TRNLUZ=0;
-	LMWARN=false;
+	game.lmwarn=false;
 	IGO=0;
-	IWEST=0;
-	KNFLOC=0;
-	DETAIL=0;
-	ABBNUM=5;
+	game.iwest=0;
+	game.knfloc=0;
+	game.detail=0;
+	game.abbnum=5;
 	for (I=0; I<=4; I++) {
 	{long x = 2*I+81; if(RTEXT[x] != 0)MAXDIE=I+1;}
 	} /* end loop */
-	NUMDIE=0;
-	HOLDNG=0;
-	DKILL=0;
-	FOOBAR=0;
-	BONUS=0;
-	CLOCK1=30;
-	CLOCK2=50;
+	game.numdie=0;
+	game.holdng=0;
+	game.dkill=0;
+	game.foobar=0;
+	game.bonus=0;
+	game.clock1=30;
+	game.clock2=50;
 	CONDS=SETBIT(11);
 	SAVED=0;
-	CLOSNG=false;
+	game.closng=false;
 	PANIC=false;
-	CLOSED=false;
+	game.closed=false;
 	CLSHNT=false;
 	NOVICE=false;
 	SETUP=1;

@@ -11,26 +11,26 @@
 
 #include "misc.h"
 
-long ABB[186], ATAB[331], ATLOC[186], BLKLIN = true, DFLAG,
-		DLOC[7], FIXED[101], HOLDNG,
+long ABB[186], ATAB[331], ATLOC[186],
+		DLOC[7], FIXED[101],
 		KTAB[331], *LINES, LINK[201], LNLENG, LNPOSN,
 		PARMS[26], PLACE[101], PTEXT[101], RTEXT[278],
 		SETUP = 0, TABSIZ = 330;
 signed char INLINE[LINESIZE+1], MAP1[129], MAP2[129];
 
-long ABBNUM, ACTSPK[36], AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD, BONUS,
+long ACTSPK[36], AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
 		 BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST, CHLOC, CHLOC2,
-		CLAM, CLOCK1, CLOCK2, CLOSED, CLOSNG, CLSHNT, CLSMAX = 12, CLSSES,
-		COINS, COND[186], CONDS, CTEXT[13], CVAL[13], DALTLC, DETAIL,
-		 DKILL, DOOR, DPRSSN, DRAGON, DSEEN[7], DTOTAL, DWARF, EGGS,
-		EMRALD, ENTER, ENTRNC, FIND, FISSUR, FIXD[101], FOOBAR, FOOD,
+		CLAM, CLSHNT, CLSMAX = 12, CLSSES,
+		COINS, COND[186], CONDS, CTEXT[13], CVAL[13], DALTLC,
+		DOOR, DPRSSN, DRAGON, DSEEN[7], DWARF, EGGS,
+		EMRALD, ENTER, ENTRNC, FIND, FISSUR, FIXD[101], FOOD,
 		GRATE, HINT, HINTED[21], HINTLC[21], HINTS[21][5], HNTMAX,
-		HNTSIZ = 20, I, INVENT, IGO, IWEST, J, JADE, K, K2, KEY[186], KEYS, KK,
-		KNFLOC, KNIFE, KQ, L, LAMP, LIMIT, LINSIZ = 12500, LINUSE, LL,
-		LMWARN, LOC, LOCK, LOCSIZ = 185, LOCSND[186], LOOK, LTEXT[186],
+		HNTSIZ = 20, I, INVENT, IGO, J, JADE, K, K2, KEY[186], KEYS, KK,
+		KNIFE, KQ, L, LAMP, LINSIZ = 12500, LINUSE, LL,
+		LOC, LOCK, LOCSIZ = 185, LOCSND[186], LOOK, LTEXT[186],
 		MAGZIN, MAXDIE, MAXTRS, MESH = 123456789,
 		MESSAG, MIRROR, MXSCOR,
-		NEWLOC, NOVICE, NUGGET, NUL, NUMDIE, OBJ, OBJSND[101],
+		NOVICE, NUGGET, NUL, OBJ, OBJSND[101],
 		OBJTXT[101], ODLOC[7], OGRE, OIL, OLDLC2, OLDLOC, OLDOBJ, OYSTER,
 		PANIC, PEARL, PILLOW, PLAC[101], PLANT, PLANT2, PROP[101], PYRAM,
 		RESER, ROD, ROD2, RTXSIZ = 277, RUBY, RUG, SAPPH, SAVED, SAY,
@@ -39,7 +39,8 @@ long ABBNUM, ACTSPK[36], AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD, BO
 		TRNDEX, TRNLUZ, TRNSIZ = 5, TRNVAL[6], TRNVLS, TROLL, TROLL2, TRVS,
 		 TRVSIZ = 885, TTEXT[6], TURNS, URN, V1, V2, VASE, VEND, VERB,
 		VOLCAN, VRBSIZ = 35, VRSION = 25, WATER, WD1, WD1X, WD2, WD2X,
-		WZDARK = false, ZZWORD;
+		ZZWORD;
+struct game_t game = {.blklin = true};
 FILE  *logfp;
 bool oldstyle = false;
 
@@ -83,13 +84,13 @@ int main(int argc, char *argv[]) {
 
 /* Logical variables:
  *
- *  CLOSED says whether we're all the way closed
- *  CLOSNG says whether it's closing time yet
+ *  game.closed says whether we're all the way closed
+ *  game.closng says whether it's closing time yet
  *  CLSHNT says whether he's read the clue in the endgame
- *  LMWARN says whether he's been warned about lamp going dim
+ *  game.lmwarn says whether he's been warned about lamp going dim
  *  NOVICE says whether he asked for instructions at start-up
  *  PANIC says whether he's found out he's trapped in the cave
- *  WZDARK says whether the loc he's leaving was dark */
+ *  game.wzdark says whether the loc he's leaving was dark */
 
 #include "funcs.h"
 
@@ -119,10 +120,10 @@ L1:	SETUP= -1;
 	I=RAN(-1);
 	ZZWORD=RNDVOC(3,0)+MESH*2;
 	NOVICE=YES(stdin, 65,1,0);
-	NEWLOC=1;
+	game.newloc=1;
 	LOC=1;
-	LIMIT=330;
-	if(NOVICE)LIMIT=1000;
+	game.limit=330;
+	if(NOVICE)game.limit=1000;
 
 	for (;;) {
 	    do_command(stdin);
@@ -133,47 +134,47 @@ static void do_command(FILE *cmdin) {
 
 /*  Can't leave cave once it's closing (except by main office). */
 
-L2:	if(!OUTSID(NEWLOC) || NEWLOC == 0 || !CLOSNG) goto L71;
+L2:	if(!OUTSID(game.newloc) || game.newloc == 0 || !game.closng) goto L71;
 	RSPEAK(130);
-	NEWLOC=LOC;
-	if(!PANIC)CLOCK2=15;
+	game.newloc=LOC;
+	if(!PANIC)game.clock2=15;
 	PANIC=true;
 
 /*  See if a dwarf has seen him and has come from where he wants to go.  If so,
  *  the dwarf's blocking his way.  If coming from place forbidden to pirate
  *  (dwarves rooted in place) let him get out (and attacked). */
 
-L71:	if(NEWLOC == LOC || FORCED(LOC) || CNDBIT(LOC,3)) goto L74;
+L71:	if(game.newloc == LOC || FORCED(LOC) || CNDBIT(LOC,3)) goto L74;
 	/* 73 */ for (I=1; I<=5; I++) {
-	if(ODLOC[I] != NEWLOC || !DSEEN[I]) goto L73;
-	NEWLOC=LOC;
+	if(ODLOC[I] != game.newloc || !DSEEN[I]) goto L73;
+	game.newloc=LOC;
 	RSPEAK(2);
 	 goto L74;
 L73:	/*etc*/ ;
 	} /* end loop */
-L74:	LOC=NEWLOC;
+L74:	LOC=game.newloc;
 
 /*  Dwarf stuff.  See earlier comments for description of variables.  Remember
  *  sixth dwarf is pirate and is thus very different except for motion rules. */
 
 /*  First off, don't let the dwarves follow him into a pit or a wall.  Activate
  *  the whole mess the first time he gets as far as the hall of mists (loc 15).
- *  If NEWLOC is forbidden to pirate (in particular, if it's beyond the troll
+ *  If game.newloc is forbidden to pirate (in particular, if it's beyond the troll
  *  bridge), bypass dwarf stuff.  That way pirate can't steal return toll, and
  *  dwarves can't meet the bear.  Also means dwarves won't follow him into dead
  *  end in maze, but c'est la vie.  They'll wait for him outside the dead end. */
 
-	if(LOC == 0 || FORCED(LOC) || CNDBIT(NEWLOC,3)) goto L2000;
-	if(DFLAG != 0) goto L6000;
-	if(INDEEP(LOC))DFLAG=1;
+	if(LOC == 0 || FORCED(LOC) || CNDBIT(game.newloc,3)) goto L2000;
+	if(game.dflag != 0) goto L6000;
+	if(INDEEP(LOC))game.dflag=1;
 	 goto L2000;
 
 /*  When we encounter the first dwarf, we kill 0, 1, or 2 of the 5 dwarves.  If
  *  any of the survivors is at loc, replace him with the alternate. */
 
-L6000:	if(DFLAG != 1) goto L6010;
+L6000:	if(game.dflag != 1) goto L6010;
 	if(!INDEEP(LOC) || (PCT(95) && (!CNDBIT(LOC,4) || PCT(85)))) goto L2000;
-	DFLAG=2;
+	game.dflag=2;
 	for (I=1; I<=2; I++) {
 	J=1+RAN(5);
 	if(PCT(50))DLOC[J]=0;
@@ -191,7 +192,7 @@ L6000:	if(DFLAG != 1) goto L6010;
  *  they don't back up unless there's no alternative.  If they don't have to
  *  move, they attack.  And, of course, dead dwarves don't do much of anything. */
 
-L6010:	DTOTAL=0;
+L6010:	game.dtotal=0;
 	ATTACK=0;
 	STICK=0;
 	/* 6030 */ for (I=1; I<=6; I++) {
@@ -201,13 +202,13 @@ L6010:	DTOTAL=0;
 	KK=DLOC[I];
 	KK=KEY[KK];
 	if(KK == 0) goto L6016;
-L6012:	NEWLOC=MOD(IABS(TRAVEL[KK])/1000,1000);
+L6012:	game.newloc=MOD(IABS(TRAVEL[KK])/1000,1000);
 	{long x = J-1;
-	if(NEWLOC > 300 || !INDEEP(NEWLOC) || NEWLOC == ODLOC[I] || (J > 1 &&
-		NEWLOC == TK[x]) || J >= 20 || NEWLOC == DLOC[I] ||
-		FORCED(NEWLOC) || (I == 6 && CNDBIT(NEWLOC,3)) ||
+	if(game.newloc > 300 || !INDEEP(game.newloc) || game.newloc == ODLOC[I] || (J > 1 &&
+		game.newloc == TK[x]) || J >= 20 || game.newloc == DLOC[I] ||
+		FORCED(game.newloc) || (I == 6 && CNDBIT(game.newloc,3)) ||
 		IABS(TRAVEL[KK])/1000000 == 100) goto L6014;}
-	TK[J]=NEWLOC;
+	TK[J]=game.newloc;
 	J=J+1;
 L6014:	KK=KK+1;
 	{long x = KK-1; if(TRAVEL[x] >= 0) goto L6012;}
@@ -262,11 +263,11 @@ L6025:	RSPEAK(186);
 
 /*  This threatening little dwarf is in the room with him! */
 
-L6027:	DTOTAL=DTOTAL+1;
+L6027:	game.dtotal=game.dtotal+1;
 	if(ODLOC[I] != DLOC[I]) goto L6030;
 	ATTACK=ATTACK+1;
-	if(KNFLOC >= 0)KNFLOC=LOC;
-	if(RAN(1000) < 95*(DFLAG-2))STICK=STICK+1;
+	if(game.knfloc >= 0)game.knfloc=LOC;
+	if(RAN(1000) < 95*(game.dflag-2))STICK=STICK+1;
 L6030:	/*etc*/ ;
 	} /* end loop */
 
@@ -274,11 +275,11 @@ L6030:	/*etc*/ ;
  *  Note that various of the "knife" messages must have specific relative
  *  positions in the RSPEAK database. */
 
-	if(DTOTAL == 0) goto L2000;
-	SETPRM(1,DTOTAL,0);
-	RSPEAK(4+1/DTOTAL);
+	if(game.dtotal == 0) goto L2000;
+	SETPRM(1,game.dtotal,0);
+	RSPEAK(4+1/game.dtotal);
 	if(ATTACK == 0) goto L2000;
-	if(DFLAG == 2)DFLAG=3;
+	if(game.dflag == 2)game.dflag=3;
 	SETPRM(1,ATTACK,0);
 	K=6;
 	if(ATTACK > 1)K=250;
@@ -300,15 +301,15 @@ L6030:	/*etc*/ ;
 
 L2000:	if(LOC == 0) goto L99;
 	KK=STEXT[LOC];
-	if(MOD(ABB[LOC],ABBNUM) == 0 || KK == 0)KK=LTEXT[LOC];
+	if(MOD(ABB[LOC],game.abbnum) == 0 || KK == 0)KK=LTEXT[LOC];
 	if(FORCED(LOC) || !DARK(0)) goto L2001;
-	if(WZDARK && PCT(35)) goto L90;
+	if(game.wzdark && PCT(35)) goto L90;
 	KK=RTEXT[16];
 L2001:	if(TOTING(BEAR))RSPEAK(141);
 	SPEAK(KK);
 	K=1;
 	if(FORCED(LOC)) goto L8;
-	if(LOC == 33 && PCT(25) && !CLOSNG)RSPEAK(7);
+	if(LOC == 33 && PCT(25) && !game.closng)RSPEAK(7);
 
 /*  Print out descriptions of objects at this location.  If not closing and
  *  property value is negative, tally off another treasure.  Rug is special
@@ -324,7 +325,7 @@ L2004:	if(I == 0) goto L2012;
 	if(OBJ > 100)OBJ=OBJ-100;
 	if(OBJ == STEPS && TOTING(NUGGET)) goto L2008;
 	if(PROP[OBJ] >= 0) goto L2006;
-	if(CLOSED) goto L2008;
+	if(game.closed) goto L2008;
 	PROP[OBJ]=0;
 	if(OBJ == RUG || OBJ == CHAIN)PROP[OBJ]=1;
 	TALLY=TALLY-1;
@@ -371,22 +372,22 @@ L2602:	/*etc*/ ;
  *  if closing time, check for any objects being toted with PROP < 0 and set
  *  the prop to -1-PROP.  This way objects won't be described until they've
  *  been picked up and put down separate from their respective piles.  Don't
- *  tick CLOCK1 unless well into cave (and not at Y2). */
+ *  tick game.clock1 unless well into cave (and not at Y2). */
 
-L2603:	if(!CLOSED) goto L2605;
+L2603:	if(!game.closed) goto L2605;
 	if(PROP[OYSTER] < 0 && TOTING(OYSTER))PSPEAK(OYSTER,1);
 	for (I=1; I<=100; I++) {
 	if(TOTING(I) && PROP[I] < 0)PROP[I]= -1-PROP[I];
 	} /* end loop */
-L2605:	WZDARK=DARK(0);
-	if(KNFLOC > 0 && KNFLOC != LOC)KNFLOC=0;
+L2605:	game.wzdark=DARK(0);
+	if(game.knfloc > 0 && game.knfloc != LOC)game.knfloc=0;
 	I=RAN(1);
 	GETIN(cmdin, WD1,WD1X,WD2,WD2X);
 
-/*  Every input, check "FOOBAR" flag.  If zero, nothing's going on.  If pos,
+/*  Every input, check "game.foobar" flag.  If zero, nothing's going on.  If pos,
  *  make neg.  If neg, he skipped a word, so make it zero. */
 
-L2607:	FOOBAR=(FOOBAR>0 ? -FOOBAR : 0);
+L2607:	game.foobar=(game.foobar>0 ? -game.foobar : 0);
 	TURNS=TURNS+1;
 	if(TURNS != THRESH) goto L2608;
 	SPEAK(TTEXT[TRNDEX]);
@@ -396,15 +397,15 @@ L2607:	FOOBAR=(FOOBAR>0 ? -FOOBAR : 0);
 	if(TRNDEX <= TRNVLS)THRESH=MOD(TRNVAL[TRNDEX],100000)+1;
 L2608:	if(VERB == SAY && WD2 > 0)VERB=0;
 	if(VERB == SAY) goto L4090;
-	if(TALLY == 0 && INDEEP(LOC) && LOC != 33)CLOCK1=CLOCK1-1;
-	if(CLOCK1 == 0) goto L10000;
-	if(CLOCK1 < 0)CLOCK2=CLOCK2-1;
-	if(CLOCK2 == 0) goto L11000;
-	if(PROP[LAMP] == 1)LIMIT=LIMIT-1;
-	if(LIMIT <= 30 && HERE(BATTER) && PROP[BATTER] == 0 && HERE(LAMP)) goto
+	if(TALLY == 0 && INDEEP(LOC) && LOC != 33)game.clock1=game.clock1-1;
+	if(game.clock1 == 0) goto L10000;
+	if(game.clock1 < 0)game.clock2=game.clock2-1;
+	if(game.clock2 == 0) goto L11000;
+	if(PROP[LAMP] == 1)game.limit=game.limit-1;
+	if(game.limit <= 30 && HERE(BATTER) && PROP[BATTER] == 0 && HERE(LAMP)) goto
 		L12000;
-	if(LIMIT == 0) goto L12400;
-	if(LIMIT <= 30) goto L12200;
+	if(game.limit == 0) goto L12400;
+	if(game.limit <= 30) goto L12200;
 L19999: K=43;
 	if(LIQLOC(LOC) == WATER)K=70;
 	V1=VOCAB(WD1,-1);
@@ -417,8 +418,8 @@ L19999: K=43;
 L2610:	if(V1 == 1000+CAGE && V2 == 1000+BIRD && HERE(CAGE) &&
 		HERE(BIRD))WD1=MAKEWD(301200308);
 L2620:	if(WD1 != MAKEWD(23051920)) goto L2625;
-	IWEST=IWEST+1;
-	if(IWEST == 10)RSPEAK(17);
+	game.iwest=game.iwest+1;
+	if(game.iwest == 10)RSPEAK(17);
 L2625:	if(WD1 != MAKEWD( 715) || WD2 == 0) goto L2630;
 	IGO=IGO+1;
 	if(IGO == 10)RSPEAK(276);
@@ -478,13 +479,13 @@ L8000:	SETPRM(1,WD1,WD1X);
 /*  Figure out the new location
  *
  *  Given the current location in "LOC", and a motion verb number in "K", put
- *  the new location in "NEWLOC".  The current loc is saved in "OLDLOC" in case
+ *  the new location in "game.newloc".  The current loc is saved in "OLDLOC" in case
  *  he wants to retreat.  The current OLDLOC is saved in OLDLC2, in case he
- *  dies.  (if he does, NEWLOC will be limbo, and OLDLOC will be what killed
+ *  dies.  (if he does, game.newloc will be limbo, and OLDLOC will be what killed
  *  him, so we need OLDLC2, which is the last place he was safe.) */
 
 L8:	KK=KEY[LOC];
-	NEWLOC=LOC;
+	game.newloc=LOC;
 	if(KK == 0)BUG(26);
 	if(K == NUL) return;
 	if(K == BACK) goto L20;
@@ -500,34 +501,34 @@ L9:	LL=IABS(TRAVEL[KK]);
 	 goto L9;
 
 L10:	LL=LL/1000;
-L11:	NEWLOC=LL/1000;
-	K=MOD(NEWLOC,100);
-	if(NEWLOC <= 300) goto L13;
-	if(PROP[K] != NEWLOC/100-3) goto L16;
+L11:	game.newloc=LL/1000;
+	K=MOD(game.newloc,100);
+	if(game.newloc <= 300) goto L13;
+	if(PROP[K] != game.newloc/100-3) goto L16;
 L12:	if(TRAVEL[KK] < 0)BUG(25);
 	KK=KK+1;
-	NEWLOC=IABS(TRAVEL[KK])/1000;
-	if(NEWLOC == LL) goto L12;
-	LL=NEWLOC;
+	game.newloc=IABS(TRAVEL[KK])/1000;
+	if(game.newloc == LL) goto L12;
+	LL=game.newloc;
 	 goto L11;
 
-L13:	if(NEWLOC <= 100) goto L14;
-	if(TOTING(K) || (NEWLOC > 200 && AT(K))) goto L16;
+L13:	if(game.newloc <= 100) goto L14;
+	if(TOTING(K) || (game.newloc > 200 && AT(K))) goto L16;
 	 goto L12;
 
-L14:	if(NEWLOC != 0 && !PCT(NEWLOC)) goto L12;
-L16:	NEWLOC=MOD(LL,1000);
-	if(NEWLOC <= 300) return;
-	if(NEWLOC <= 500) goto L30000;
-	RSPEAK(NEWLOC-500);
-	NEWLOC=LOC;
+L14:	if(game.newloc != 0 && !PCT(game.newloc)) goto L12;
+L16:	game.newloc=MOD(LL,1000);
+	if(game.newloc <= 300) return;
+	if(game.newloc <= 500) goto L30000;
+	RSPEAK(game.newloc-500);
+	game.newloc=LOC;
 	 return;
 
 /*  Special motions come here.  Labelling convention: statement numbers NNNXX
  *  (XX=00-99) are used for special case number NNN (NNN=301-500). */
 
-L30000: NEWLOC=NEWLOC-300;
-	 switch (NEWLOC) { case 1: goto L30100; case 2: goto L30200; case 3: goto
+L30000: game.newloc=game.newloc-300;
+	 switch (game.newloc) { case 1: goto L30100; case 2: goto L30200; case 3: goto
 		L30300; }
 	BUG(20);
 
@@ -535,9 +536,9 @@ L30000: NEWLOC=NEWLOC-300;
  *  table must include "useless" entries going through passage, which can never
  *  be used for actual motion, but can be spotted by "go back". */
 
-L30100: NEWLOC=99+100-LOC;
-	if(HOLDNG == 0 || (HOLDNG == 1 && TOTING(EMRALD))) return;
-	NEWLOC=LOC;
+L30100: game.newloc=99+100-LOC;
+	if(game.holdng == 0 || (game.holdng == 1 && TOTING(EMRALD))) return;
+	game.newloc=LOC;
 	RSPEAK(117);
 	 return;
 
@@ -562,19 +563,19 @@ L30300: if(PROP[TROLL] != 1) goto L30310;
 	MOVE(TROLL,PLAC[TROLL]);
 	MOVE(TROLL+100,FIXD[TROLL]);
 	JUGGLE(CHASM);
-	NEWLOC=LOC;
+	game.newloc=LOC;
 	 return;
 
-L30310: NEWLOC=PLAC[TROLL]+FIXD[TROLL]-LOC;
+L30310: game.newloc=PLAC[TROLL]+FIXD[TROLL]-LOC;
 	if(PROP[TROLL] == 0)PROP[TROLL]=1;
 	if(!TOTING(BEAR)) return;
 	RSPEAK(162);
 	PROP[CHASM]=1;
 	PROP[TROLL]=2;
-	DROP(BEAR,NEWLOC);
+	DROP(BEAR,game.newloc);
 	FIXED[BEAR]= -1;
 	PROP[BEAR]=3;
-	OLDLC2=NEWLOC;
+	OLDLC2=game.newloc;
 	 goto L99;
 
 /*  End of specials. */
@@ -614,9 +615,9 @@ L25:	K=MOD(IABS(TRAVEL[KK]),1000);
 /*  Look.  Can't give more detail.  Pretend it wasn't dark (though it may "now"
  *  be dark) so he won't fall into a pit while staring into the gloom. */
 
-L30:	if(DETAIL < 3)RSPEAK(15);
-	DETAIL=DETAIL+1;
-	WZDARK=false;
+L30:	if(game.detail < 3)RSPEAK(15);
+	game.detail=game.detail+1;
+	game.wzdark=false;
 	ABB[LOC]=0;
 	 return;
 
@@ -668,10 +669,10 @@ L90:	RSPEAK(23);
 
 /*  Okay, he's dead.  Let's get on with it. */
 
-L99:	if(CLOSNG) goto L95;
-	NUMDIE=NUMDIE+1;
-	if(!YES(cmdin,79+NUMDIE*2,80+NUMDIE*2,54)) score(0);
-	if(NUMDIE == MAXDIE) score(0);
+L99:	if(game.closng) goto L95;
+	game.numdie=game.numdie+1;
+	if(!YES(cmdin,79+game.numdie*2,80+game.numdie*2,54)) score(0);
+	if(game.numdie == MAXDIE) score(0);
 	PLACE[WATER]=0;
 	PLACE[OIL]=0;
 	if(TOTING(LAMP))PROP[LAMP]=0;
@@ -690,7 +691,7 @@ L98:	/*etc*/ ;
 /*  He died during closing time.  No resurrection.  Tally up a death and exit. */
 
 L95:	RSPEAK(131);
-	NUMDIE=NUMDIE+1;
+	game.numdie=game.numdie+1;
 	 score(0);
 
 
@@ -717,7 +718,7 @@ L40010: HINTLC[HINT]=0;
 	SETPRM(1,HINTS[HINT][2],HINTS[HINT][2]);
 	RSPEAK(261);
 	HINTED[HINT]=YES(cmdin,175,HINTS[HINT][4],54);
-	if(HINTED[HINT] && LIMIT > 30)LIMIT=LIMIT+30*HINTS[HINT][2];
+	if(HINTED[HINT] && game.limit > 30)game.limit=game.limit+30*HINTS[HINT][2];
 L40020: HINTLC[HINT]=0;
 L40030:  goto L2602;
 
@@ -732,7 +733,7 @@ L40200: if(PLACE[BIRD] == LOC && TOTING(ROD) && OLDOBJ == BIRD) goto L40010;
 L40300: if(HERE(SNAKE) && !HERE(BIRD)) goto L40010;
 	 goto L40020;
 
-L40400: if(ATLOC[LOC] == 0 && ATLOC[OLDLOC] == 0 && ATLOC[OLDLC2] == 0 && HOLDNG >
+L40400: if(ATLOC[LOC] == 0 && ATLOC[OLDLOC] == 0 && ATLOC[OLDLC2] == 0 && game.holdng >
 		1) goto L40010;
 	 goto L40020;
 
@@ -741,7 +742,7 @@ L40500: if(PROP[EMRALD] != -1 && PROP[PYRAM] == -1) goto L40010;
 
 L40600:  goto L40010;
 
-L40700: if(DFLAG == 0) goto L40010;
+L40700: if(game.dflag == 0) goto L40010;
 	 goto L40020;
 
 L40800: if(ATLOC[LOC] == 0 && ATLOC[OLDLOC] == 0 && ATLOC[OLDLC2] == 0) goto
@@ -763,15 +764,15 @@ L41000: if(TALLY == 1 && PROP[JADE] < 0) goto L40010;
 /*  Cave closing and scoring */
 
 
-/*  These sections handle the closing of the cave.  The cave closes "CLOCK1"
+/*  These sections handle the closing of the cave.  The cave closes "game.clock1"
  *  turns after the last treasure has been located (including the pirate's
  *  chest, which may of course never show up).  Note that the treasures need not
- *  have been taken yet, just located.  Hence CLOCK1 must be large enough to get
+ *  have been taken yet, just located.  Hence game.clock1 must be large enough to get
  *  out of the cave (it only ticks while inside the cave).  When it hits zero,
  *  we branch to 10000 to start closing the cave, and then sit back and wait for
- *  him to try to get out.  If he doesn't within CLOCK2 turns, we close the
+ *  him to try to get out.  If he doesn't within game.clock2 turns, we close the
  *  cave; if he does try, we assume he panics, and give him a few additional
- *  turns to get frantic before we close.  When CLOCK2 hits zero, we branch to
+ *  turns to get frantic before we close.  When game.clock2 hits zero, we branch to
  *  11000 to transport him into the final puzzle.  Note that the puzzle depends
  *  upon all sorts of random things.  For instance, there must be no water or
  *  oil, since there are beanstalks which we don't want to be able to water,
@@ -783,8 +784,8 @@ L41000: if(TALLY == 1 && PROP[JADE] < 0) goto L40010;
 
 /*  When the first warning comes, we lock the grate, destroy the bridge, kill
  *  all the dwarves (and the pirate), remove the troll and bear (unless dead),
- *  and set "CLOSNG" to true.  Leave the dragon; too much trouble to move it.
- *  from now until CLOCK2 runs out, he cannot unlock the grate, move to any
+ *  and set "game.closng" to true.  Leave the dragon; too much trouble to move it.
+ *  from now until game.clock2 runs out, he cannot unlock the grate, move to any
  *  location outside the cave, or create the bridge.  Nor can he be
  *  resurrected if he dies.  Note that the snake is already gone, since he got
  *  to the treasure accessible only via the hall of the mountain king. Also, he's
@@ -809,11 +810,11 @@ L10000: PROP[GRATE]=0;
 	PROP[AXE]=0;
 	FIXED[AXE]=0;
 	RSPEAK(129);
-	CLOCK1= -1;
-	CLOSNG=true;
+	game.clock1= -1;
+	game.closng=true;
 	 goto L19999;
 
-/*  ONCE HE'S PANICKED, AND CLOCK2 HAS RUN OUT, WE COME HERE TO SET UP THE
+/*  ONCE HE'S PANICKED, AND game.clock2 HAS RUN OUT, WE COME HERE TO SET UP THE
  *  STORAGE ROOM.  THE ROOM HAS TWO LOCS, HARDWIRED AS 115 (NE) AND 116 (SW).
  *  AT THE NE END, WE PLACE EMPTY BOTTLES, A NURSERY OF PLANTS, A BED OF
  *  OYSTERS, A PILE OF LAMPS, RODS WITH STARS, SLEEPING DWARVES, AND HIM.  AT
@@ -834,7 +835,7 @@ L11000: PROP[BOTTLE]=PUT(BOTTLE,115,1);
 	PROP[DWARF]=PUT(DWARF,115,0);
 	LOC=115;
 	OLDLOC=115;
-	NEWLOC=115;
+	game.newloc=115;
 
 /*  Leave the grate with normal (non-negative) property.  Reuse sign. */
 
@@ -855,7 +856,7 @@ L11000: PROP[BOTTLE]=PUT(BOTTLE,115,1);
 	} /* end loop */
 
 	RSPEAK(132);
-	CLOSED=true;
+	game.closed=true;
 	 return;
 
 /*  Another way we can force an end to things is by having the lamp give out.
@@ -867,19 +868,19 @@ L11000: PROP[BOTTLE]=PUT(BOTTLE,115,1);
 L12000: RSPEAK(188);
 	PROP[BATTER]=1;
 	if(TOTING(BATTER))DROP(BATTER,LOC);
-	LIMIT=LIMIT+2500;
-	LMWARN=false;
+	game.limit=game.limit+2500;
+	game.lmwarn=false;
 	 goto L19999;
 
-L12200: if(LMWARN || !HERE(LAMP)) goto L19999;
-	LMWARN=true;
+L12200: if(game.lmwarn || !HERE(LAMP)) goto L19999;
+	game.lmwarn=true;
 	SPK=187;
 	if(PLACE[BATTER] == 0)SPK=183;
 	if(PROP[BATTER] == 1)SPK=189;
 	RSPEAK(SPK);
 	 goto L19999;
 
-L12400: LIMIT= -1;
+L12400: game.limit= -1;
 	PROP[LAMP]=0;
 	if(HERE(LAMP))RSPEAK(184);
 	 goto L19999;
