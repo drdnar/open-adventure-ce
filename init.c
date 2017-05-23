@@ -35,7 +35,7 @@
 /*  Description of the database format
  *
  *
- *  The data file contains several sections.  each begins with a line containing
+ *  The data file contains several sections.  Each begins with a line containing
  *  a number identifying the section, and ends with a line containing "-1".
  *
  *  Section 1: Long form descriptions.  Each line contains a location number,
@@ -150,7 +150,7 @@
 
 /*  The various messages (sections 1, 2, 5, 6, etc.) may include certain
  *  special character sequences to denote that the program must provide
- *  parameters to insert into a message when the message is printed.  these
+ *  parameters to insert into a message when the message is printed.  These
  *  sequences are:
  *	%S = The letter 'S' or nothing (if a given value is exactly 1)
  *	%W = A word (up to 10 characters)
@@ -214,7 +214,7 @@ L1001:	/*etc*/ ;
 	CLSSES=0;
 	TRNVLS=0;
 
-/*  Start new data section.  sect is the section number. */
+/*  Start new data section.  Sect is the section number. */
 
 L1002:	SECT=GETNUM(OPENED);
 	OLDLOC= -1;
@@ -276,7 +276,7 @@ L1014:	TRNVLS=TRNVLS+1;
 	 goto L1005;
 
 /*  The stuff for section 3 is encoded here.  Each "from-location" gets a
- *  contiguous section of the "TRAVEL" array.  each entry in travel is
+ *  contiguous section of the "TRAVEL" array.  Each entry in travel is
  *  NEWLOC*1000 + KEYWORD (from section 4, motion verbs), and is negated if
  *  this is the last entry for this location.  KEY(N) is the index in travel
  *  of the first option at location N. */
@@ -434,7 +434,7 @@ L1106:	/*etc*/ ;
 	HINTLC[I]=0;
 	} /* end loop */
 
-/*  Define some handy mnemonics.  these correspond to object numbers. */
+/*  Define some handy mnemonics.  These correspond to object numbers. */
 
 	AXE=VOCWRD(12405,1);
 	BATTER=VOCWRD(201202005,1);

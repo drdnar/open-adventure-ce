@@ -32,7 +32,7 @@ void score(long MODE) {
 	SCORE=0;
 	MXSCOR=0;
 
-/*  First tally up the treasures.  must be in building and not broken.
+/*  First tally up the treasures.  Must be in building and not broken.
  *  Give the poor guy 2 points just for finding each treasure. */
 
 	/* 20010 */ for (I=50; I<=MAXTRS; I++) {

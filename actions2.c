@@ -172,7 +172,7 @@ L9126:	if(OBJ == 0)SPK=44;
 	if(OBJ != DRAGON || PROP[DRAGON] != 0) return(2011);
 /*  Fun stuff for dragon.  If he insists on attacking it, win!  Set PROP to dead,
  *  move dragon to central loc (still fixed), move rug there (not fixed), and
- *  move him there, too.  then do a null motion to get new description. */
+ *  move him there, too.  Then do a null motion to get new description. */
 	RSPEAK(49);
 	VERB=0;
 	OBJ=0;
@@ -267,7 +267,7 @@ L9178:	SPK=159;
 	 return(2011);
 }
 
-/*  Feed.  If bird, no seed.  snake, dragon, troll: quip.  If dwarf, make him
+/*  Feed.  If bird, no seed.  Snake, dragon, troll: quip.  If dwarf, make him
  *  mad.  Bear, special. */
 
 int feed() {

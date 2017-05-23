@@ -174,7 +174,7 @@ void fSETPRM(long FIRST, long P1, long P2) {
 void fGETIN(long *wORD1, long *wORD1X, long *wORD2, long *wORD2X) {
 long JUNK;
 
-/*  Get a command from the adventurer.  snarf out the first word, pad it with
+/*  Get a command from the adventurer.  Snarf out the first word, pad it with
  *  blanks, and return it in WORD1.  Chars 6 thru 10 are returned in WORD1X, in
  *  case we need to print out the whole word in an error message.  Any number of
  *  blanks may follow the word.  If a second word appears, it is returned in

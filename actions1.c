@@ -11,7 +11,7 @@
  * similar label number for the caller to "goto".
  */
 
-/*  Analyse a verb.  remember what it was, go back for object if second word
+/*  Analyse a verb.  Remember what it was, go back for object if second word
  *  unless verb is "say", which snarfs arbitrary second word. */
 
 int action(long STARTAT) {
@@ -112,7 +112,7 @@ L5190:	if((VERB == FIND || VERB == INVENT) && WD2 <= 0) goto L5010;
 /*  Routines for performing the various action verbs */
 
 /*  Statement numbers in this section are 8000 for intransitive verbs, 9000 for
- *  transitive, plus ten times the verb number.  many intransitive verbs use the
+ *  transitive, plus ten times the verb number.  Many intransitive verbs use the
  *  transitive code, and some verbs use code for other verbs, as noted below. */
 
 /*  Carry, no object given yet.  OK if only one object present. */
@@ -302,7 +302,7 @@ L9132:	PROP[DOOR]=0;
 L9134:	OBJ=URN;
 	 goto L9220;
 
-/*  Eat.  Intransitive: assume food if present, else ask what.  transitive: food
+/*  Eat.  Intransitive: assume food if present, else ask what.  Transitive: food
  *  ok, some things lose appetite, rest are ridiculous. */
 
 L8140:	if(!HERE(FOOD)) return(8000);
@@ -316,7 +316,7 @@ L9140:	if(OBJ == FOOD) goto L8142;
 		OGRE)SPK=71;
 	 return(2011);
 
-/*  Drink.  If no object, assume water and look for it here.  if water is in
+/*  Drink.  If no object, assume water and look for it here.  If water is in
  *  the bottle, drink that, else must be at a water loc, so drink stream. */
 
 L9150:	if(OBJ == 0 && LIQLOC(LOC) != WATER && (LIQ(0) != WATER || !HERE(BOTTLE)))
@@ -351,7 +351,7 @@ L9160:	if(OBJ != LAMP)SPK=76;
 
 L9170:	return(throw());
 
-/*  Quit.  Intransitive only.  verify intent and exit if that's what he wants. */
+/*  Quit.  Intransitive only.  Verify intent and exit if that's what he wants. */
 
 L8180:	if(YES(22,54,54)) score(1);
 	 return(2012);
@@ -479,7 +479,7 @@ L8300:	SPK=201;
 	SAVED=SAVED+5;
 	KK= -1;
 
-/*  This next part is shared with the "resume" code.  the two cases are
+/*  This next part is shared with the "resume" code.  The two cases are
  *  distinguished by the value of kk (-1 for suspend, +1 for resume). */
 
 L8305:	DATIME(I,K);
@@ -491,8 +491,8 @@ L8305:	DATIME(I,K);
 /*  Herewith are all the variables whose values can change during a game,
  *  omitting a few (such as I, J, ATTACK) whose values between turns are
  *  irrelevant and some whose values when a game is
- *  suspended or resumed are guaranteed to match.  if unsure whether a value
- *  needs to be saved, include it.  overkill can't hurt.  pad the last savwds
+ *  suspended or resumed are guaranteed to match.  If unsure whether a value
+ *  needs to be saved, include it.  Overkill can't hurt.  Pad the last savwds
  *  with junk variables to bring it up to 7 values. */
 	SAVWDS(ABBNUM,BLKLIN,BONUS,CLOCK1,CLOCK2,CLOSED,CLOSNG);
 	SAVWDS(DETAIL,DFLAG,DKILL,DTOTAL,FOOBAR,HOLDNG,IWEST);

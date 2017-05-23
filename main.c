@@ -127,7 +127,7 @@ L2:	if(!OUTSID(NEWLOC) || NEWLOC == 0 || !CLOSNG) goto L71;
 	PANIC=true;
 
 /*  See if a dwarf has seen him and has come from where he wants to go.  If so,
- *  the dwarf's blocking his way.  if coming from place forbidden to pirate
+ *  the dwarf's blocking his way.  If coming from place forbidden to pirate
  *  (dwarves rooted in place) let him get out (and attacked). */
 
 L71:	if(NEWLOC == LOC || FORCED(LOC) || CNDBIT(LOC,3)) goto L74;
@@ -173,7 +173,7 @@ L6000:	if(DFLAG != 1) goto L6010;
 	DROP(AXE,LOC);
 	 goto L2000;
 
-/*  Things are in full swing.  move each dwarf at random, except if he's seen us
+/*  Things are in full swing.  Move each dwarf at random, except if he's seen us
  *  he sticks with us.  Dwarves stay deep inside.  If wandering at random,
  *  they don't back up unless there's no alternative.  If they don't have to
  *  move, they attack.  And, of course, dead dwarves don't do much of anything. */
@@ -465,8 +465,8 @@ L8000:	SETPRM(1,WD1,WD1X);
 /*  Figure out the new location
  *
  *  Given the current location in "LOC", and a motion verb number in "K", put
- *  the new location in "NEWLOC".  the current loc is saved in "OLDLOC" in case
- *  he wants to retreat.  the current OLDLOC is saved in OLDLC2, in case he
+ *  the new location in "NEWLOC".  The current loc is saved in "OLDLOC" in case
+ *  he wants to retreat.  The current OLDLOC is saved in OLDLC2, in case he
  *  dies.  (if he does, NEWLOC will be limbo, and OLDLOC will be what killed
  *  him, so we need OLDLC2, which is the last place he was safe.) */
 
@@ -510,7 +510,7 @@ L16:	NEWLOC=MOD(LL,1000);
 	NEWLOC=LOC;
 	 goto L2;
 
-/*  Special motions come here.  labelling convention: statement numbers NNNXX
+/*  Special motions come here.  Labelling convention: statement numbers NNNXX
  *  (XX=00-99) are used for special case number NNN (NNN=301-500). */
 
 L30000: NEWLOC=NEWLOC-300;
@@ -633,8 +633,8 @@ L50:	SPK=12;
 
 /*  "You're dead, Jim."
  *
- *  If the current loc is zero, it means the clown got himself killed.  we'll
- *  allow this maxdie times.  maxdie is automatically set based on the number of
+ *  If the current loc is zero, it means the clown got himself killed.  We'll
+ *  allow this maxdie times.  MAXDIE is automatically set based on the number of
  *  snide messages available.  Each death results in a message (81, 83, etc.)
  *  which offers reincarnation; if accepted, this results in message 82, 84,
  *  etc.  The last time, if he wants another chance, he gets a snide remark as
@@ -764,7 +764,7 @@ L41000: if(TALLY == 1 && PROP[JADE] < 0) goto L40010;
  *  oil, since there are beanstalks which we don't want to be able to water,
  *  since the code can't handle it.  Also, we can have no keys, since there is a
  *  grate (having moved the fixed object!) there separating him from all the
- *  treasures.  most of these problems arise from the use of negative prop
+ *  treasures.  Most of these problems arise from the use of negative prop
  *  numbers to suppress the object descriptions until he's actually moved the
  *  objects. */
 
@@ -774,7 +774,7 @@ L41000: if(TALLY == 1 && PROP[JADE] < 0) goto L40010;
  *  from now until CLOCK2 runs out, he cannot unlock the grate, move to any
  *  location outside the cave, or create the bridge.  Nor can he be
  *  resurrected if he dies.  Note that the snake is already gone, since he got
- *  to the treasure accessible only via the hall of the mt. king.  Also, he's
+ *  to the treasure accessible only via the hall of the mountain king. Also, he's
  *  been in giant room (to get eggs), so we can refer to it.  Also also, he's
  *  gotten the pearl, so we know the bivalve is an oyster.  *And*, the dwarves
  *  must have been activated, since we've found chest. */
@@ -823,7 +823,7 @@ L11000: PROP[BOTTLE]=PUT(BOTTLE,115,1);
 	OLDLOC=115;
 	NEWLOC=115;
 
-/*  Leave the grate with normal (non-negative) property.  reuse sign. */
+/*  Leave the grate with normal (non-negative) property.  Reuse sign. */
 
 	I=PUT(GRATE,116,0);
 	I=PUT(SIGN,116,0);
