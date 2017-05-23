@@ -187,9 +187,9 @@ L9126:	if(OBJ == 0)SPK=44;
 	MOVE(DRAGON,K);
 	MOVE(RUG,K);
 	DROP(BLOOD,K);
-	/* 9127 */ for (OBJ=1; OBJ<=100; OBJ++) {
+	for (OBJ=1; OBJ<=100; OBJ++) {
 	if(PLACE[OBJ] == PLAC[DRAGON] || PLACE[OBJ] == FIXD[DRAGON])MOVE(OBJ,K);
-L9127:	/*etc*/ ;
+	/*etc*/ ;
 	} /* end loop */
 	LOC=K;
 	K=NUL;

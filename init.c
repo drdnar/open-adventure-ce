@@ -1,9 +1,12 @@
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
+
 #include "misc.h"
 #include "main.h"
 #include "share.h"
 #include "funcs.h"
-#include <stdio.h>
-#include <stdbool.h>
 
 /*
  * Initialisation
@@ -178,6 +181,9 @@ void initialise(void) {
 static int raw_init(void) {
 	printf("Couldn't find adventure.data, using adventure.text...\n");
 
+	FILE *OPENED=fopen("adventure.text","r" /* NOT binary */);
+	if(!OPENED){printf("Can't read adventure.text!\n"); exit(0);}
+	
 /*  Clear out the various text-pointer arrays.  All text is stored in array
  *  lines; each line is preceded by a word pointing to the next pointer (i.e.
  *  the word following the end of the line).  The pointer is negative if this is
@@ -210,7 +216,7 @@ L1001:	/*etc*/ ;
 
 /*  Start new data section.  sect is the section number. */
 
-L1002:	SECT=GETNUM(1);
+L1002:	SECT=GETNUM(OPENED);
 	OLDLOC= -1;
 	switch (SECT) { case 0: return(0); case 1: goto L1004; case 2: goto
 		L1004; case 3: goto L1030; case 4: goto L1040; case 5: goto L1004;
@@ -225,7 +231,7 @@ L1002:	SECT=GETNUM(1);
 
 L1004:	KK=LINUSE;
 L1005:	LINUSE=KK;
-	LOC=GETNUM(1);
+	LOC=GETNUM(OPENED);
 	if(LNLENG >= LNPOSN+70)BUG(0);
 	if(LOC == -1) goto L1002;
 	if(LNLENG < LNPOSN)BUG(1);
@@ -275,14 +281,14 @@ L1014:	TRNVLS=TRNVLS+1;
  *  this is the last entry for this location.  KEY(N) is the index in travel
  *  of the first option at location N. */
 
-L1030:	LOC=GETNUM(1);
+L1030:	LOC=GETNUM(OPENED);
 	if(LOC == -1) goto L1002;
-	NEWLOC=GETNUM(0);
+	NEWLOC=GETNUM(NULL);
 	if(KEY[LOC] != 0) goto L1033;
 	KEY[LOC]=TRVS;
 	 goto L1035;
 L1033:	TRVS--; TRAVEL[TRVS]= -TRAVEL[TRVS]; TRVS++;
-L1035:	L=GETNUM(0);
+L1035:	L=GETNUM(NULL);
 	if(L == 0) goto L1039;
 	TRAVEL[TRVS]=NEWLOC*1000+L;
 	TRVS=TRVS+1;
@@ -299,11 +305,11 @@ L1039:	TRVS--; TRAVEL[TRVS]= -TRAVEL[TRVS]; TRVS++;
  *  would make it harder to detect particular input words.) */
 
 L1040:	J=10000;
-	/* 1042 */ for (TABNDX=1; TABNDX<=TABSIZ; TABNDX++) {
-L1043:	KTAB[TABNDX]=GETNUM(1);
+	for (TABNDX=1; TABNDX<=TABSIZ; TABNDX++) {
+	KTAB[TABNDX]=GETNUM(OPENED);
 	if(KTAB[TABNDX] == -1) goto L1002;
 	J=J+7;
-L1042:	ATAB[TABNDX]=GETTXT(true,true,true,0)+J*J;
+	ATAB[TABNDX]=GETTXT(true,true,true,0)+J*J;
 	} /* end loop */
 	BUG(4);
 
@@ -311,24 +317,24 @@ L1042:	ATAB[TABNDX]=GETTXT(true,true,true,0)+J*J;
  *  plac contains initial locations of objects.  FIXD is -1 for immovable
  *  objects (including the snake), or = second loc for two-placed objects. */
 
-L1050:	OBJ=GETNUM(1);
+L1050:	OBJ=GETNUM(OPENED);
 	if(OBJ == -1) goto L1002;
-	PLAC[OBJ]=GETNUM(0);
-	FIXD[OBJ]=GETNUM(0);
+	PLAC[OBJ]=GETNUM(NULL);
+	FIXD[OBJ]=GETNUM(NULL);
 	 goto L1050;
 
 /*  Read default message numbers for action verbs, store in ACTSPK. */
 
-L1060:	VERB=GETNUM(1);
+L1060:	VERB=GETNUM(OPENED);
 	if(VERB == -1) goto L1002;
-	ACTSPK[VERB]=GETNUM(0);
+	ACTSPK[VERB]=GETNUM(NULL);
 	 goto L1060;
 
 /*  Read info about available liquids and other conditions, store in COND. */
 
-L1070:	K=GETNUM(1);
+L1070:	K=GETNUM(OPENED);
 	if(K == -1) goto L1002;
-L1071:	LOC=GETNUM(0);
+L1071:	LOC=GETNUM(NULL);
 	if(LOC == 0) goto L1070;
 	if(CNDBIT(LOC,K)) BUG(8);
 	COND[LOC]=COND[LOC]+SETBIT(K);
@@ -337,21 +343,21 @@ L1071:	LOC=GETNUM(0);
 /*  Read data for hints. */
 
 L1080:	HNTMAX=0;
-L1081:	K=GETNUM(1);
+L1081:	K=GETNUM(OPENED);
 	if(K == -1) goto L1002;
 	if(K <= 0 || K > HNTSIZ)BUG(7);
-	/* 1083 */ for (I=1; I<=4; I++) {
-L1083:	HINTS[K][I] =GETNUM(0);
+	for (I=1; I<=4; I++) {
+	HINTS[K][I] =GETNUM(NULL);
 	} /* end loop */
 	HNTMAX=(HNTMAX>K ? HNTMAX : K);
 	 goto L1081;
 
 /*  Read the sound/text info, store in OBJSND, OBJTXT, LOCSND. */
 
-L1090:	K=GETNUM(1);
+L1090:	K=GETNUM(OPENED);
 	if(K == -1) goto L1002;
-	KK=GETNUM(0);
-	I=GETNUM(0);
+	KK=GETNUM(NULL);
+	I=GETNUM(NULL);
 	if(I == 0) goto L1092;
 	OBJSND[K]=(KK>0 ? KK : 0);
 	OBJTXT[K]=(I>0 ? I : 0);
@@ -372,11 +378,11 @@ L1092:	LOCSND[K]=KK;
  *  description is printed.  Counts modulo 5 unless "LOOK" is used. */
 
 static int finish_init(void) {
-	/* 1101 */ for (I=1; I<=100; I++) {
+	for (I=1; I<=100; I++) {
 	PLACE[I]=0;
 	PROP[I]=0;
 	LINK[I]=0;
-L1101:	{long x = I+100; LINK[x]=0;}
+	{long x = I+100; LINK[x]=0;}
 	} /* end loop */
 
 	/* 1102 */ for (I=1; I<=LOCSIZ; I++) {
@@ -402,10 +408,10 @@ L1102:	ATLOC[I]=0;
 L1106:	/*etc*/ ;
 	} /* end loop */
 
-	/* 1107 */ for (I=1; I<=100; I++) {
+	for (I=1; I<=100; I++) {
 	K=101-I;
 	FIXED[K]=FIXD[K];
-L1107:	if(PLAC[K] != 0 && FIXD[K] <= 0)DROP(K,PLAC[K]);
+	if(PLAC[K] != 0 && FIXD[K] <= 0)DROP(K,PLAC[K]);
 	} /* end loop */
 
 /*  Treasures, as noted earlier, are objects 50 through MAXTRS (CURRENTLY 79).
@@ -415,17 +421,17 @@ L1107:	if(PLAC[K] != 0 && FIXD[K] <= 0)DROP(K,PLAC[K]);
 
 	MAXTRS=79;
 	TALLY=0;
-	/* 1200 */ for (I=50; I<=MAXTRS; I++) {
+	for (I=50; I<=MAXTRS; I++) {
 	if(PTEXT[I] != 0)PROP[I]= -1;
-L1200:	TALLY=TALLY-PROP[I];
+	TALLY=TALLY-PROP[I];
 	} /* end loop */
 
 /*  Clear the hint stuff.  HINTLC(I) is how long he's been at LOC with cond bit
  *  I.  HINTED(I) is true iff hint I has been used. */
 
-	/* 1300 */ for (I=1; I<=HNTMAX; I++) {
+	for (I=1; I<=HNTMAX; I++) {
 	HINTED[I]=false;
-L1300:	HINTLC[I]=0;
+	HINTLC[I]=0;
 	} /* end loop */
 
 /*  Define some handy mnemonics.  these correspond to object numbers. */
@@ -524,8 +530,8 @@ L1300:	HINTLC[I]=0;
 
 	CHLOC=114;
 	CHLOC2=140;
-	/* 1700 */ for (I=1; I<=6; I++) {
-L1700:	DSEEN[I]=false;
+	for (I=1; I<=6; I++) {
+	DSEEN[I]=false;
 	} /* end loop */
 	DFLAG=0;
 	DLOC[1]=19;
@@ -569,8 +575,8 @@ L1700:	DSEEN[I]=false;
 	KNFLOC=0;
 	DETAIL=0;
 	ABBNUM=5;
-	/* 1800 */ for (I=0; I<=4; I++) {
-L1800:	{long x = 2*I+81; if(RTEXT[x] != 0)MAXDIE=I+1;}
+	for (I=0; I<=4; I++) {
+	{long x = 2*I+81; if(RTEXT[x] != 0)MAXDIE=I+1;}
 	} /* end loop */
 	NUMDIE=0;
 	HOLDNG=0;
@@ -596,25 +602,25 @@ L1800:	{long x = 2*I+81; if(RTEXT[x] != 0)MAXDIE=I+1;}
 /*  Report on amount of arrays actually used, to permit reductions. */
 
 static void report(void) {
-	/* 1998 */ for (K=1; K<=LOCSIZ; K++) {
+	for (K=1; K<=LOCSIZ; K++) {
 	KK=LOCSIZ+1-K;
 	if(LTEXT[KK] != 0) goto L1997;
-L1998:	/*etc*/ ;
+	/*etc*/ ;
 	} /* end loop */
 
 	OBJ=0;
-L1997:	/* 1996 */ for (K=1; K<=100; K++) {
-L1996:	if(PTEXT[K] != 0)OBJ=OBJ+1;
+L1997:	for (K=1; K<=100; K++) {
+	if(PTEXT[K] != 0)OBJ=OBJ+1;
 	} /* end loop */
 
-	/* 1995 */ for (K=1; K<=TABNDX; K++) {
-L1995:	if(KTAB[K]/1000 == 2)VERB=KTAB[K]-2000;
+	for (K=1; K<=TABNDX; K++) {
+	if(KTAB[K]/1000 == 2)VERB=KTAB[K]-2000;
 	} /* end loop */
 
-	/* 1994 */ for (K=1; K<=RTXSIZ; K++) {
+	for (K=1; K<=RTXSIZ; K++) {
 	J=RTXSIZ+1-K;
 	if(RTEXT[J] != 0) goto L1993;
-L1994:	/*etc*/ ;
+	/*etc*/ ;
 	} /* end loop */
 
 L1993:	SETPRM(1,LINUSE,LINSIZ);
@@ -695,7 +701,7 @@ static void quick_io(void) {
 }
 
 static void quick_item(W)long *W; {
-    if(init_reading && fread(W,sizeof(long),1,f) != 1)return;
+	if(init_reading && fread(W,sizeof(long),1,f) != 1)return;
 	init_cksum = MOD(init_cksum*13+(*W),60000000);
 	if(!init_reading)fwrite(W,sizeof(long),1,f);
 }

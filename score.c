@@ -29,7 +29,7 @@ void score(long MODE) {
  *  Points can also be deducted for using hints or too many turns, or for
  *  saving intermediate positions. */
 
-L20000: SCORE=0;
+	SCORE=0;
 	MXSCOR=0;
 
 /*  First tally up the treasures.  must be in building and not broken.
@@ -80,8 +80,8 @@ L20020: MXSCOR=MXSCOR+45;
 
 /*  Deduct for hints/turns/saves.  Hints < 4 are special; see database desc. */
 
-	/* 20030 */ for (I=1; I<=HNTMAX; I++) {
-L20030: if(HINTED[I])SCORE=SCORE-HINTS[I][2];
+	for (I=1; I<=HNTMAX; I++) {
+	if(HINTED[I])SCORE=SCORE-HINTS[I][2];
 	} /* end loop */
 	if(NOVICE)SCORE=SCORE-5;
 	if(CLSHNT)SCORE=SCORE-10;
@@ -98,9 +98,9 @@ L20030: if(HINTED[I])SCORE=SCORE-HINTS[I][2];
 	SETPRM(1,SCORE,MXSCOR);
 	SETPRM(3,TURNS,TURNS);
 	RSPEAK(262);
-	/* 20200 */ for (I=1; I<=CLSSES; I++) {
+	for (I=1; I<=CLSSES; I++) {
 	if(CVAL[I] >= SCORE) goto L20210;
-L20200: /*etc*/ ;
+	/*etc*/ ;
 	} /* end loop */
 	SPK=265;
 	 goto L25000;

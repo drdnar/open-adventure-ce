@@ -182,7 +182,8 @@ long JUNK;
 
 
 L10:	if(BLKLIN)TYPE0();
-	MAPLIN(false);
+	MAPLIN(stdin);
+	if(feof(stdin)) score(1);
 	WORD1=GETTXT(true,true,true,0);
 	if(BLKLIN && WORD1 < 0) goto L10;
 	WORD1X=GETTXT(false,true,true,0);
@@ -241,7 +242,7 @@ L20:	YES=false;
 
 #define YES(X,Y,Z) fYES(X,Y,Z)
 #undef GETNUM
-long fGETNUM(long K) {
+long fGETNUM(FILE *source) {
 long DIGIT, GETNUM, SIGN;
 
 /*  Obtain the next integer from an input line.  If K>0, we first read a
@@ -251,7 +252,7 @@ long DIGIT, GETNUM, SIGN;
  *  character (not a digit, hyphen, or blank), we return 0. */
 
 
-	if(K != 0)MAPLIN(K > 0);
+	if(source != NULL)MAPLIN(source);
 	GETNUM=0;
 L10:	if(LNPOSN > LNLENG)return(GETNUM);
 	if(INLINE[LNPOSN] != 0) goto L20;
@@ -853,11 +854,11 @@ void fBUG(long NUM) {
 
 #define BUG(NUM) fBUG(NUM)
 #undef MAPLIN
-void fMAPLIN(long FIL) {
-long I, VAL; static FILE *OPENED = NULL;
+void fMAPLIN(FILE *OPENED) {
+long I, VAL;
 
-/*  Read a line of input, either from a file (if FIL=true) or from the
- *  keyboard, translate the chars to integers in the range 0-126 and store
+/*  Read a line of input, from the specified input source,
+ *  translate the chars to integers in the range 0-126 and store
  *  them in the common array "INLINE".  Integer values are as follows:
  *     0   = space [ASCII CODE 40 octal, 32 decimal]
  *    1-2  = !" [ASCII 41-42 octal, 33-34 decimal]
@@ -879,42 +880,23 @@ long I, VAL; static FILE *OPENED = NULL;
  *  This procedure may use the map1,map2 arrays to maintain static data for
  *  the mapping.  MAP2(1) is set to 0 when the program starts
  *  and is not changed thereafter unless the routines on this page choose
- *  to do so.
- *
- *  Note that MAPLIN is expected to open the file the first time it is
- *  asked to read a line from it.  that is, there is no other place where
- *  the data file is opened. */
-
+ *  to do so. */
 
 	if(MAP2[1] == 0)MPINIT();
 
-	if(FIL) goto L15;
-	IGNORE(fgets(INLINE+1, sizeof(INLINE)-1, stdin));
-	if(feof(stdin)) score(1);
-	 goto L20;
-
-L15:	if(!OPENED){
-		OPENED=fopen("adventure.text","r" /* NOT binary */);
-		if(!OPENED){printf("Can't read adventure.text!\n"); exit(0);}
-		}
-	 IGNORE(fgets(INLINE+1,sizeof(INLINE)-1,OPENED));
-
-L20:	LNLENG=0;
-	for (I=1; I<=sizeof(INLINE) && INLINE[I]!=0; I++) {
-	VAL=INLINE[I]+1;
-	INLINE[I]=MAP1[VAL];
-	if(INLINE[I] != 0)LNLENG=I;
-	} /* end loop */
-	LNPOSN=1;
-	if(FIL && LNLENG == 0) goto L15;
-/*  Above is to get around an F40 compiler bug wherein it reads a blank
- *  line whenever a crlf is broken across a record boundary. */
-	return;
+	IGNORE(fgets(INLINE+1,sizeof(INLINE)-1,OPENED));
+	if (!feof(OPENED)) {
+		LNLENG=0;
+		for (I=1; I<=sizeof(INLINE) && INLINE[I]!=0; I++) {
+		VAL=INLINE[I]+1;
+		INLINE[I]=MAP1[VAL];
+		if(INLINE[I] != 0)LNLENG=I;
+		} /* end loop */
+		LNPOSN=1;
+	}
 }
-
-
-
 #define MAPLIN(FIL) fMAPLIN(FIL)
+
 #undef TYPE
 void fTYPE(void) {
 long I, VAL;

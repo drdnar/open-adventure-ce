@@ -30,7 +30,7 @@ L4000:	VERB=K;
 
 /*  Analyse an intransitive verb (ie, no object given yet). */
 
-L4080:	switch (VERB-1) { case 0: goto L8010; case 1: return(8000); case 2:
+	switch (VERB-1) { case 0: goto L8010; case 1: return(8000); case 2:
 		return(8000); case 3: goto L8040; case 4: return(2009); case 5: goto L8040;
 		case 6: goto L8070; case 7: goto L8080; case 8: return(8000); case
 		9: return(8000); case 10: return(2011); case 11: goto L9120; case 12:
@@ -435,8 +435,8 @@ L8260:	SPK=156;
 
 /*  Read.  Print stuff based on objtxt.  Oyster (?) is special case. */
 
-L8270:	/* 8275 */ for (I=1; I<=100; I++) {
-L8275:	if(HERE(I) && OBJTXT[I] != 0 && PROP[I] >= 0)OBJ=OBJ*100+I;
+L8270:	for (I=1; I<=100; I++) {
+	if(HERE(I) && OBJTXT[I] != 0 && PROP[I] >= 0)OBJ=OBJ*100+I;
 	} /* end loop */
 	if(OBJ > 100 || OBJ == 0 || DARK(0)) return(8000);
 

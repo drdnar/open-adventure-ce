@@ -146,13 +146,13 @@ L74:	LOC=NEWLOC;
 L6000:	if(DFLAG != 1) goto L6010;
 	if(!INDEEP(LOC) || (PCT(95) && (!CNDBIT(LOC,4) || PCT(85)))) goto L2000;
 	DFLAG=2;
-	/* 6001 */ for (I=1; I<=2; I++) {
+	for (I=1; I<=2; I++) {
 	J=1+RAN(5);
-L6001:	if(PCT(50))DLOC[J]=0;
+	if(PCT(50))DLOC[J]=0;
 	} /* end loop */
-	/* 6002 */ for (I=1; I<=5; I++) {
+	for (I=1; I<=5; I++) {
 	if(DLOC[I] == LOC)DLOC[I]=DALTLC;
-L6002:	ODLOC[I]=DLOC[I];
+	ODLOC[I]=DLOC[I];
 	} /* end loop */
 	RSPEAK(3);
 	DROP(AXE,LOC);
@@ -347,8 +347,8 @@ L2602:	/*etc*/ ;
 
 L2603:	if(!CLOSED) goto L2605;
 	if(PROP[OYSTER] < 0 && TOTING(OYSTER))PSPEAK(OYSTER,1);
-	/* 2604 */ for (I=1; I<=100; I++) {
-L2604:	if(TOTING(I) && PROP[I] < 0)PROP[I]= -1-PROP[I];
+	for (I=1; I<=100; I++) {
+	if(TOTING(I) && PROP[I] < 0)PROP[I]= -1-PROP[I];
 	} /* end loop */
 L2605:	WZDARK=DARK(0);
 	if(KNFLOC > 0 && KNFLOC != LOC)KNFLOC=0;
@@ -766,9 +766,9 @@ L41000: if(TALLY == 1 && PROP[JADE] < 0) goto L40010;
 
 L10000: PROP[GRATE]=0;
 	PROP[FISSUR]=0;
-	/* 10010 */ for (I=1; I<=6; I++) {
+	for (I=1; I<=6; I++) {
 	DSEEN[I]=false;
-L10010: DLOC[I]=0;
+	DLOC[I]=0;
 	} /* end loop */
 	MOVE(TROLL,0);
 	MOVE(TROLL+100,0);
@@ -822,8 +822,8 @@ L11000: PROP[BOTTLE]=PUT(BOTTLE,115,1);
 	PROP[MIRROR]=PUT(MIRROR,115,0);
 	FIXED[MIRROR]=116;
 
-	/* 11010 */ for (I=1; I<=100; I++) {
-L11010: if(TOTING(I))DSTROY(I);
+	for (I=1; I<=100; I++) {
+	if(TOTING(I))DSTROY(I);
 	} /* end loop */
 
 	RSPEAK(132);

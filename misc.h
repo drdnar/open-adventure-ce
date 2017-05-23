@@ -1,4 +1,5 @@
 #include <time.h>
+#include <stdio.h>
 
 /* b is not needed for POSIX but harmless */
 #define READ_MODE "rb"
@@ -16,7 +17,7 @@ extern void fGETIN(long*,long*,long*,long*);
 #define GETIN(WORD1,WORD1X,WORD2,WORD2X) fGETIN(&WORD1,&WORD1X,&WORD2,&WORD2X)
 extern long fYES(long,long,long);
 #define YES(X,Y,Z) fYES(X,Y,Z)
-extern long fGETNUM(long);
+extern long fGETNUM(FILE *);
 #define GETNUM(K) fGETNUM(K)
 extern long fGETTXT(long,long,long,long);
 #define GETTXT(SKIP,ONEWRD,UPPER,HASH) fGETTXT(SKIP,ONEWRD,UPPER,HASH)
@@ -60,7 +61,7 @@ extern long fRNDVOC(long,long);
 #define RNDVOC(CHAR,FORCE) fRNDVOC(CHAR,FORCE)
 extern void fBUG(long);
 #define BUG(NUM) fBUG(NUM)
-extern void fMAPLIN(long);
+extern void fMAPLIN(FILE *);
 #define MAPLIN(FIL) fMAPLIN(FIL)
 extern void fTYPE();
 #define TYPE() fTYPE()
