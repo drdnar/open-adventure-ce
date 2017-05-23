@@ -51,6 +51,8 @@ extern int action(long);
  * MAIN PROGRAM
  */
 
+static void do_command(void);
+
 int main(int argc, char *argv[]) {
 	int ch;
 
@@ -121,6 +123,13 @@ L1:	SETUP= -1;
 	LOC=1;
 	LIMIT=330;
 	if(NOVICE)LIMIT=1000;
+
+	for (;;) {
+	    do_command();
+	}
+}
+
+static void do_command(void) {
 
 /*  Can't leave cave once it's closing (except by main office). */
 
@@ -441,7 +450,7 @@ L4090:	I=4090; goto Laction;
 L5000:	I=5000;
 Laction:
 	switch (action(I)) {
-	   case 2: goto L2;
+	   case 2: return;
 	   case 8: goto L8;
 	   case 2000: goto L2000;
 	   case 2009: goto L2009;
@@ -477,7 +486,7 @@ L8000:	SETPRM(1,WD1,WD1X);
 L8:	KK=KEY[LOC];
 	NEWLOC=LOC;
 	if(KK == 0)BUG(26);
-	if(K == NUL) goto L2;
+	if(K == NUL) return;
 	if(K == BACK) goto L20;
 	if(K == LOOK) goto L30;
 	if(K == CAVE) goto L40;
@@ -508,11 +517,11 @@ L13:	if(NEWLOC <= 100) goto L14;
 
 L14:	if(NEWLOC != 0 && !PCT(NEWLOC)) goto L12;
 L16:	NEWLOC=MOD(LL,1000);
-	if(NEWLOC <= 300) goto L2;
+	if(NEWLOC <= 300) return;
 	if(NEWLOC <= 500) goto L30000;
 	RSPEAK(NEWLOC-500);
 	NEWLOC=LOC;
-	 goto L2;
+	 return;
 
 /*  Special motions come here.  Labelling convention: statement numbers NNNXX
  *  (XX=00-99) are used for special case number NNN (NNN=301-500). */
@@ -527,10 +536,10 @@ L30000: NEWLOC=NEWLOC-300;
  *  be used for actual motion, but can be spotted by "go back". */
 
 L30100: NEWLOC=99+100-LOC;
-	if(HOLDNG == 0 || (HOLDNG == 1 && TOTING(EMRALD))) goto L2;
+	if(HOLDNG == 0 || (HOLDNG == 1 && TOTING(EMRALD))) return;
 	NEWLOC=LOC;
 	RSPEAK(117);
-	 goto L2;
+	 return;
 
 /*  Travel 302.  Plover transport.  Drop the emerald (only use special travel if
  *  toting it), so he's forced to use the plover-passage to get it out.  Having
@@ -554,11 +563,11 @@ L30300: if(PROP[TROLL] != 1) goto L30310;
 	MOVE(TROLL+100,FIXD[TROLL]);
 	JUGGLE(CHASM);
 	NEWLOC=LOC;
-	 goto L2;
+	 return;
 
 L30310: NEWLOC=PLAC[TROLL]+FIXD[TROLL]-LOC;
 	if(PROP[TROLL] == 0)PROP[TROLL]=1;
-	if(!TOTING(BEAR)) goto L2;
+	if(!TOTING(BEAR)) return;
 	RSPEAK(162);
 	PROP[CHASM]=1;
 	PROP[TROLL]=2;
@@ -582,7 +591,7 @@ L20:	K=OLDLOC;
 	if(CNDBIT(LOC,4))K2=274;
 	if(K2 == 0) goto L21;
 	RSPEAK(K2);
-	 goto L2;
+	 return;
 
 L21:	LL=MOD((IABS(TRAVEL[KK])/1000),1000);
 	if(LL == K) goto L25;
@@ -596,7 +605,7 @@ L22:	if(TRAVEL[KK] < 0) goto L23;
 L23:	KK=K2;
 	if(KK != 0) goto L25;
 	RSPEAK(140);
-	 goto L2;
+	 return;
 
 L25:	K=MOD(IABS(TRAVEL[KK]),1000);
 	KK=KEY[LOC];
@@ -609,14 +618,14 @@ L30:	if(DETAIL < 3)RSPEAK(15);
 	DETAIL=DETAIL+1;
 	WZDARK=false;
 	ABB[LOC]=0;
-	 goto L2;
+	 return;
 
 /*  Cave.  Different messages depending on whether above ground. */
 
 L40:	K=58;
 	if(OUTSID(LOC) && LOC != 8)K=57;
 	RSPEAK(K);
-	 goto L2;
+	 return;
 
 /*  Non-applicable motion.  Various messages depending on word given. */
 
@@ -629,7 +638,7 @@ L50:	SPK=12;
 	if(K == 62 || K == 65)SPK=42;
 	if(K == 17)SPK=80;
 	RSPEAK(SPK);
-	 goto L2;
+	 return;
 
 
 
@@ -847,7 +856,7 @@ L11000: PROP[BOTTLE]=PUT(BOTTLE,115,1);
 
 	RSPEAK(132);
 	CLOSED=true;
-	 goto L2;
+	 return;
 
 /*  Another way we can force an end to things is by having the lamp give out.
  *  When it gets close, we come here to warn him.  We go to 12000 if the lamp
