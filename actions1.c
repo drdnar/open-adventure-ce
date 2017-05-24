@@ -70,22 +70,42 @@ L4000:	VERB=K;
 
 /*  Analyse a transitive verb. */
 
-L4090:	switch (VERB-1) { case 0: goto L9010; case 1: goto L9020; case 2: goto
-		L9030; case 3: goto L9040; case 4: return(2009); case 5: goto L9040;
-		case 6: goto L9070; case 7: goto L9080; case 8: goto L9090; case
-		9: return(2011); case 10: return(2011); case 11: goto L9120; case 12:
-		goto L9130; case 13: goto L9140; case 14: goto L9150; case 15:
-		goto L9160; case 16: goto L9170; case 17: return(2011); case 18:
-		goto L9190; case 19: goto L9190; case 20: goto L9210; case 21:
-		goto L9220; case 22: goto L9230; case 23: return(2011); case 24:
-		return(2011); case 25: return(2011); case 26: goto L9270; case 27:
-		goto L9280; case 28: goto L9290; case 29: return(2011); case 30:
-		return(2011); case 31: goto L9320; case 32: return(2011); case 33:
-		goto L8340; }
-/*	     TAKE DROP  SAY OPEN NOTH LOCK   ON  OFF WAVE CALM
- *	     WALK KILL POUR  EAT DRNK  RUB TOSS QUIT FIND INVN
- *	     FEED FILL BLST SCOR  FOO  BRF READ BREK WAKE SUSP
- *	     RESU FLY  LSTN ZZZZ */
+L4090:	switch (VERB-1) {
+		case 0: goto L9010;	/* CARRY */
+		case 1: goto L9020;	/* DROP */
+		case 2: goto L9030;	/* SAY */
+		case 3: goto L9040;	/* UNLOC */
+		case 4: return(2009);	/* NOTHI */
+		case 5: goto L9040;	/* LOCK */
+		case 6: goto L9070;	/* LIGHT */
+		case 7: goto L9080;	/* EXTI */
+		case 8: goto L9090;	/* WAVE */
+		case 9: return(2011);	/* CALM */
+		case 10: return(2011);	/* WALK */
+		case 11: goto L9120;	/* ATTAC */
+		case 12: goto L9130;	/* POUR */
+		case 13: goto L9140;	/* EAT */
+		case 14: goto L9150;	/* DRINK */
+		case 15: goto L9160;	/* RUB */
+		case 16: goto L9170;	/* TOSS */
+		case 17: return(2011);	/* QUIT */
+		case 18: goto L9190;	/* FIND */
+		case 19: goto L9190;	/* INVEN */
+		case 20: goto L9210;	/* FEED */
+		case 21: goto L9220;	/* FILL */
+		case 22: goto L9230;	/* BLAST */
+		case 23: return(2011);	/* SCOR */
+		case 24: return(2011);	/* FOO */
+		case 25: return(2011);	/* BRIEF */
+		case 26: goto L9270;	/* READ */
+		case 27: goto L9280;	/* BREAK */
+		case 28: goto L9290;	/* WAKE */
+		case 29: return(2011);	/* SUSP */
+		case 30: return(2011);	/* RESU */
+		case 31: goto L9320;	/* FLY */
+		case 32: return(2011);	/* LISTEN */
+		case 33: goto L8340;	/* ZZZZ */
+	}
 	BUG(24);
 
 /*  Analyse an object word.  See if the thing is here, whether we've got a verb
