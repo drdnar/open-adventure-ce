@@ -757,7 +757,6 @@ long TSTBIT;
 
 
 #define TSTBIT(MASK,BIT) fTSTBIT(MASK,BIT)
-#undef RNDVOC
 
 void set_seed_from_time(void)
 {
@@ -783,6 +782,7 @@ long randrange(long range)
   return(result);
 }
 
+#undef RNDVOC
 long fRNDVOC(long CHAR, long FORCE) {
 long DIV, I, J, RNDVOC;
 
