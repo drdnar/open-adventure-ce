@@ -761,8 +761,7 @@ long TSTBIT;
 
 void set_seed(long seedval)
 {
-	srand(seedval);
-	lcgstate.x = (unsigned long) rand() % lcgstate.m;
+	lcgstate.x = (unsigned long) seedval % lcgstate.m;
 }
 
 unsigned long get_next_lcg_value(void)
