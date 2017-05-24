@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "main.h"
+#include "share.h"	/* for SETUP */
 #include "misc.h"
 #include "funcs.h"
 
@@ -15,11 +16,11 @@ void fSPEAK(long N) {
 long BLANK, CASE, I, K, L, NEG, NPARMS, PARM, PRMTYP, STATE;
 
 /*  Print the message which starts at LINES(N).  Precede it with a blank line
- *  unless game.blklin is false. */
+ *  unless BLKLIN is false. */
 
 
 	if(N == 0)return;
-	BLANK=game.blklin;
+	BLANK=BLKLIN;
 	K=N;
 	NPARMS=1;
 L10:	L=IABS(LINES[K])-1;
@@ -182,11 +183,11 @@ long JUNK;
  *  WORD2 (chars 6 thru 10 in WORD2X), else WORD2 is -1. */
 
 
-L10:	if(game.blklin)TYPE0();
+L10:	if(BLKLIN)TYPE0();
 	MAPLIN(input);
 	if(input == stdin && feof(stdin)) score(1);
 	WORD1=GETTXT(true,true,true,0);
-	if(game.blklin && WORD1 < 0) goto L10;
+	if(BLKLIN && WORD1 < 0) goto L10;
 	WORD1X=GETTXT(false,true,true,0);
 L12:	JUNK=GETTXT(false,true,true,0);
 	if(JUNK > 0) goto L12;
@@ -650,13 +651,13 @@ long TEMP;
 
 /*  Start toting an object, removing it from the list of things at its former
  *  location.  Incr holdng unless it was already being toted.  If OBJECT>100
- *  (moving "fixed" second loc), don't change PLACE or game.holdng. */
+ *  (moving "fixed" second loc), don't change PLACE or HOLDNG. */
 
 
 	if(OBJECT > 100) goto L5;
 	if(PLACE[OBJECT] == -1)return;
 	PLACE[OBJECT]= -1;
-	game.holdng=game.holdng+1;
+	HOLDNG=HOLDNG+1;
 L5:	if(ATLOC[WHERE] != OBJECT) goto L6;
 	ATLOC[WHERE]=LINK[OBJECT];
 	return;
@@ -676,11 +677,11 @@ void fDROP(long OBJECT, long WHERE) {
 ;
 
 /*  Place an object at a given loc, prefixing it onto the ATLOC list.  Decr
- *  game.holdng if the object was being toted. */
+ *  HOLDNG if the object was being toted. */
 
 
 	if(OBJECT > 100) goto L1;
-	if(PLACE[OBJECT] == -1)game.holdng=game.holdng-1;
+	if(PLACE[OBJECT] == -1)HOLDNG=HOLDNG-1;
 	PLACE[OBJECT]=WHERE;
 	 goto L2;
 L1:	{long x = OBJECT-100; FIXED[x]=WHERE;}
@@ -703,7 +704,7 @@ long ATDWRF, I;
 
 
 	ATDWRF=0;
-	if(game.dflag < 2)return(ATDWRF);
+	if(DFLAG < 2)return(ATDWRF);
 	ATDWRF= -1;
 	for (I=1; I<=5; I++) {
 	if(DLOC[I] == WHERE) goto L2;
@@ -885,7 +886,7 @@ long I, VAL;
 
 	if(MAP2[1] == 0)MPINIT();
 
-	if (!oldstyle && isatty(0))
+	if (!oldstyle && isatty(0) && !SETUP)
 	    fputs("> ", stdout);
 	IGNORE(fgets(INLINE+1,sizeof(INLINE)-1,OPENED));
 	if (feof(OPENED)) {
@@ -894,10 +895,8 @@ long I, VAL;
 	} else {
 		if (logfp)
 			IGNORE(fputs(INLINE+1, logfp));
-		else if (!isatty(0)) {
-			IGNORE(fputs("> ", stdout));
+		else if (!isatty(0))
 			IGNORE(fputs(INLINE+1, stdout));
-		}
 		LNLENG=0;
 		for (I=1; I<=sizeof(INLINE) && INLINE[I]!=0; I++) {
 		VAL=INLINE[I]+1;

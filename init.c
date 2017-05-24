@@ -218,7 +218,7 @@ L1001:	/*etc*/ ;
 /*  Start new data section.  Sect is the section number. */
 
 L1002:	SECT=GETNUM(OPENED);
-	game.oldloc= -1;
+	OLDLOC= -1;
 	switch (SECT) { case 0: return(0); case 1: goto L1004; case 2: goto
 		L1004; case 3: goto L1030; case 4: goto L1040; case 5: goto L1004;
 		case 6: goto L1004; case 7: goto L1050; case 8: goto L1060; case
@@ -241,8 +241,8 @@ L1006:	KK=KK+1;
 	LINES[KK]=GETTXT(false,false,false,KK);
 	if(LINES[KK] != -1) goto L1006;
 	LINES[LINUSE]=KK;
-	if(LOC == game.oldloc) goto L1005;
-	game.oldloc=LOC;
+	if(LOC == OLDLOC) goto L1005;
+	OLDLOC=LOC;
 	LINES[LINUSE]= -KK;
 	if(SECT == 14) goto L1014;
 	if(SECT == 10) goto L1012;
@@ -278,20 +278,20 @@ L1014:	TRNVLS=TRNVLS+1;
 
 /*  The stuff for section 3 is encoded here.  Each "from-location" gets a
  *  contiguous section of the "TRAVEL" array.  Each entry in travel is
- *  game.newloc*1000 + KEYWORD (from section 4, motion verbs), and is negated if
+ *  NEWLOC*1000 + KEYWORD (from section 4, motion verbs), and is negated if
  *  this is the last entry for this location.  KEY(N) is the index in travel
  *  of the first option at location N. */
 
 L1030:	LOC=GETNUM(OPENED);
 	if(LOC == -1) goto L1002;
-	game.newloc=GETNUM(NULL);
+	NEWLOC=GETNUM(NULL);
 	if(KEY[LOC] != 0) goto L1033;
 	KEY[LOC]=TRVS;
 	 goto L1035;
 L1033:	TRVS--; TRAVEL[TRVS]= -TRAVEL[TRVS]; TRVS++;
 L1035:	L=GETNUM(NULL);
 	if(L == 0) goto L1039;
-	TRAVEL[TRVS]=game.newloc*1000+L;
+	TRAVEL[TRVS]=NEWLOC*1000+L;
 	TRVS=TRVS+1;
 	if(TRVS == TRVSIZ)BUG(3);
 	 goto L1035;
@@ -417,14 +417,14 @@ L1106:	/*etc*/ ;
 
 /*  Treasures, as noted earlier, are objects 50 through MAXTRS (CURRENTLY 79).
  *  Their props are initially -1, and are set to 0 the first time they are
- *  described.  game.tally keeps track of how many are not yet found, so we know
+ *  described.  TALLY keeps track of how many are not yet found, so we know
  *  when to close the cave. */
 
 	MAXTRS=79;
-	game.tally=0;
+	TALLY=0;
 	for (I=50; I<=MAXTRS; I++) {
 	if(PTEXT[I] != 0)PROP[I]= -1;
-	game.tally=game.tally-PROP[I];
+	TALLY=TALLY-PROP[I];
 	} /* end loop */
 
 /*  Clear the hint stuff.  HINTLC(I) is how long he's been at LOC with cond bit
@@ -519,7 +519,7 @@ L1106:	/*etc*/ ;
  *  prior loc of each dwarf, initially garbage.  DALTLC is alternate initial loc
  *  for dwarf, in case one of them starts out on top of the adventurer.  (No 2
  *  of the 5 initial locs are adjacent.)  DSEEN is true if dwarf has seen him.
- *  game.dflag controls the level of activation of all this:
+ *  DFLAG controls the level of activation of all this:
  *	0	No dwarf stuff yet (wait until reaches Hall Of Mists)
  *	1	Reached Hall Of Mists, but hasn't met first dwarf
  *	2	Met first dwarf, others start moving, no knives thrown yet
@@ -532,9 +532,9 @@ L1106:	/*etc*/ ;
 	CHLOC=114;
 	CHLOC2=140;
 	for (I=1; I<=6; I++) {
-	game.dseen[I]=false;
+	DSEEN[I]=false;
 	} /* end loop */
-	game.dflag=0;
+	DFLAG=0;
 	DLOC[1]=19;
 	DLOC[2]=27;
 	DLOC[3]=33;
@@ -544,56 +544,56 @@ L1106:	/*etc*/ ;
 	DALTLC=18;
 
 /*  Other random flags and counters, as follows:
- *	game.abbnum	How often we should print non-abbreviated descriptions
- *	game.bonus	Used to determine amount of bonus if he reaches closing
- *	game.clock1	Number of turns from finding last treasure till closing
- *	game.clock2	Number of turns from first warning till blinding flash
+ *	ABBNUM	How often we should print non-abbreviated descriptions
+ *	BONUS	Used to determine amount of bonus if he reaches closing
+ *	CLOCK1	Number of turns from finding last treasure till closing
+ *	CLOCK2	Number of turns from first warning till blinding flash
  *	CONDS	Min value for cond(loc) if loc has any hints
- *	game.detail	How often we've said "not allowed to give more detail"
- *	game.dkill	Number of dwarves killed (unused in scoring, needed for msg)
- *	game.foobar	Current progress in saying "FEE FIE FOE FOO".
- *	game.holdng	Number of objects being carried
+ *	DETAIL	How often we've said "not allowed to give more detail"
+ *	DKILL	Number of dwarves killed (unused in scoring, needed for msg)
+ *	FOOBAR	Current progress in saying "FEE FIE FOE FOO".
+ *	HOLDNG	Number of objects being carried
  *	IGO	How many times he's said "go XXX" instead of "XXX"
- *	game.iwest	How many times he's said "west" instead of "w"
- *	game.knfloc	0 if no knife here, loc if knife here, -1 after caveat
- *	game.limit	Lifetime of lamp (not set here)
+ *	IWEST	How many times he's said "west" instead of "w"
+ *	KNFLOC	0 if no knife here, loc if knife here, -1 after caveat
+ *	LIMIT	Lifetime of lamp (not set here)
  *	MAXDIE	Number of reincarnation messages available (up to 5)
- *	game.numdie	Number of times killed so far
- *	game.thresh	Next #turns threshhold (-1 if none)
- *	game.trndex	Index in TRNVAL of next threshhold (section 14 of database)
- *	game.trnluz	# points lost so far due to number of turns used
- *	game.turns	Tallies how many commands he's given (ignores yes/no)
+ *	NUMDIE	Number of times killed so far
+ *	THRESH	Next #turns threshhold (-1 if none)
+ *	TRNDEX	Index in TRNVAL of next threshhold (section 14 of database)
+ *	TRNLUZ	# points lost so far due to number of turns used
+ *	TURNS	Tallies how many commands he's given (ignores yes/no)
  *	Logicals were explained earlier */
 
-	game.turns=0;
-	game.trndex=1;
-	game.thresh= -1;
-	if(TRNVLS > 0)game.thresh=MOD(TRNVAL[1],100000)+1;
-	game.trnluz=0;
-	game.lmwarn=false;
+	TURNS=0;
+	TRNDEX=1;
+	THRESH= -1;
+	if(TRNVLS > 0)THRESH=MOD(TRNVAL[1],100000)+1;
+	TRNLUZ=0;
+	LMWARN=false;
 	IGO=0;
-	game.iwest=0;
-	game.knfloc=0;
-	game.detail=0;
-	game.abbnum=5;
+	IWEST=0;
+	KNFLOC=0;
+	DETAIL=0;
+	ABBNUM=5;
 	for (I=0; I<=4; I++) {
 	{long x = 2*I+81; if(RTEXT[x] != 0)MAXDIE=I+1;}
 	} /* end loop */
-	game.numdie=0;
-	game.holdng=0;
-	game.dkill=0;
-	game.foobar=0;
-	game.bonus=0;
-	game.clock1=30;
-	game.clock2=50;
+	NUMDIE=0;
+	HOLDNG=0;
+	DKILL=0;
+	FOOBAR=0;
+	BONUS=0;
+	CLOCK1=30;
+	CLOCK2=50;
 	CONDS=SETBIT(11);
-	game.saved=0;
-	game.closng=false;
-	game.panic=false;
-	game.closed=false;
-	game.clshint=false;
-	game.novice=false;
-	game.setup=1;
+	SAVED=0;
+	CLOSNG=false;
+	PANIC=false;
+	CLOSED=false;
+	CLSHNT=false;
+	NOVICE=false;
+	SETUP=1;
 
 	/* if we can ever think of how, we should save it at this point */
 
