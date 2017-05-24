@@ -886,7 +886,7 @@ long I, VAL;
 
 	if(MAP2[1] == 0)MPINIT();
 
-	if (!oldstyle && isatty(0) && !SETUP)
+	if (!oldstyle && SETUP)
 	    fputs("> ", stdout);
 	IGNORE(fgets(INLINE+1,sizeof(INLINE)-1,OPENED));
 	if (feof(OPENED)) {
