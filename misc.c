@@ -884,8 +884,12 @@ void fMAPLIN(FILE *OPENED) {
 	if(MAP2[1] == 0)MPINIT();
 
 	if (!oldstyle && SETUP)
-	    fputs("> ", stdout);
-	IGNORE(fgets(raw_input,sizeof(INLINE)-1,OPENED));
+		fputs("> ", stdout);
+	do {
+		IGNORE(fgets(raw_input,sizeof(INLINE)-1,OPENED));
+	} while
+		/* allow comments in logfiles */
+		(!feof(OPENED) && raw_input[0] == '#');
 	if (feof(OPENED)) {
 		if (logfp)
 			fclose(logfp);
