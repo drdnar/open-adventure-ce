@@ -173,7 +173,7 @@ void fSETPRM(long FIRST, long P1, long P2) {
 #define WORD1X (*wORD1X)
 #define WORD2 (*wORD2)
 #define WORD2X (*wORD2X)
-bool fGETIN(FILE *input, long *wORD1, long *wORD1X, long *wORD2, long *wORD2X) {
+void fGETIN(FILE *input, long *wORD1, long *wORD1X, long *wORD2, long *wORD2X) {
 long JUNK;
 
 /*  Get a command from the adventurer.  Snarf out the first word, pad it with
@@ -185,8 +185,7 @@ long JUNK;
 
 L10:	if(BLKLIN)TYPE0();
 	MAPLIN(input);
-	if (feof(input))
-	    return false;
+	if(input == stdin && feof(stdin)) score(1);
 	WORD1=GETTXT(true,true,true,0);
 	if(BLKLIN && WORD1 < 0) goto L10;
 	WORD1X=GETTXT(false,true,true,0);
@@ -196,7 +195,7 @@ L12:	JUNK=GETTXT(false,true,true,0);
 	WORD2X=GETTXT(false,true,true,0);
 L22:	JUNK=GETTXT(false,true,true,0);
 	if(JUNK > 0) goto L22;
-	if(GETTXT(true,true,true,0) <= 0)return true;
+	if(GETTXT(true,true,true,0) <= 0)return;
 	RSPEAK(53);
 	 goto L10;
 }
@@ -724,7 +723,7 @@ L2:	ATDWRF=I;
 
 
 
-/*  Utility routines (SETBIT, TSTBIT, set_seed, get_next_lcg_value, randrange, RNDVOC, BUG) */
+/*  Utility routines (SETBIT, TSTBIT, set_seed_from_time, get_next_lcg_value, randrange, RNDVOC, BUG) */
 
 #undef SETBIT
 long fSETBIT(long BIT) {
@@ -759,9 +758,11 @@ long TSTBIT;
 
 #define TSTBIT(MASK,BIT) fTSTBIT(MASK,BIT)
 
-void set_seed(long seedval)
+void set_seed_from_time(void)
 {
-	lcgstate.x = (unsigned long) seedval % lcgstate.m;
+  /* Use the current system time to get seed the ISO rand() function, from which we get a seed for the LCG. */
+  srand(time(NULL));
+  lcgstate.x = (unsigned long) rand() % lcgstate.m;
 }
 
 unsigned long get_next_lcg_value(void)
@@ -854,8 +855,8 @@ void fBUG(long NUM) {
 #define BUG(NUM) fBUG(NUM)
 #undef MAPLIN
 void fMAPLIN(FILE *OPENED) {
-	signed char *cp;
-    
+long I, VAL;
+
 /*  Read a line of input, from the specified input source,
  *  translate the chars to integers in the range 0-126 and store
  *  them in the common array "INLINE".  Integer values are as follows:
@@ -883,24 +884,23 @@ void fMAPLIN(FILE *OPENED) {
 
 	if(MAP2[1] == 0)MPINIT();
 
-	if (!oldstyle && SETUP && OPENED == stdin)
-		fputs("> ", stdout);
-	do {
-		IGNORE(fgets(raw_input,sizeof(INLINE)-1,OPENED));
-	} while
-		/* allow comments in logfiles */
-		(!feof(OPENED) && raw_input[0] == '#');
+	if (!oldstyle && SETUP)
+	    fputs("> ", stdout);
+	IGNORE(fgets(INLINE+1,sizeof(INLINE)-1,OPENED));
 	if (feof(OPENED)) {
-		if (logfp && OPENED == stdin)
+		if (logfp)
 			fclose(logfp);
 	} else {
 		if (logfp)
-			IGNORE(fputs(raw_input, logfp));
+			IGNORE(fputs(INLINE+1, logfp));
 		else if (!isatty(0))
-			IGNORE(fputs(raw_input, stdout));
-		for (cp = raw_input; *cp; cp++)
-			INLINE[cp - raw_input + 1]=MAP1[*cp + 1];
-		LNLENG = (cp - raw_input);
+			IGNORE(fputs(INLINE+1, stdout));
+		LNLENG=0;
+		for (I=1; I<=sizeof(INLINE) && INLINE[I]!=0; I++) {
+		VAL=INLINE[I]+1;
+		INLINE[I]=MAP1[VAL];
+		if(INLINE[I] != 0)LNLENG=I;
+		} /* end loop */
 		LNPOSN=1;
 	}
 }

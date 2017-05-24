@@ -1,6 +1,5 @@
 #include <time.h>
 #include <stdio.h>
-#include <stdbool.h>
 
 /* b is not needed for POSIX but harmless */
 #define READ_MODE "rb"
@@ -14,7 +13,7 @@ extern void fRSPEAK(long);
 #define RSPEAK(I) fRSPEAK(I)
 extern void fSETPRM(long,long,long);
 #define SETPRM(FIRST,P1,P2) fSETPRM(FIRST,P1,P2)
-extern bool fGETIN(FILE *,long*,long*,long*,long*);
+extern void fGETIN(FILE *,long*,long*,long*,long*);
 #define GETIN(input,WORD1,WORD1X,WORD2,WORD2X) fGETIN(input,&WORD1,&WORD1X,&WORD2,&WORD2X)
 extern long fYES(FILE *,long,long,long);
 #define YES(input,X,Y,Z) fYES(input,X,Y,Z)
@@ -73,6 +72,6 @@ extern long fIABS(long);
 #define IABS(N) fIABS(N)
 extern long fMOD(long,long);
 #define MOD(N,M) fMOD(N,M)
-extern void set_seed(long);
+extern void set_seed_from_time(void);
 extern unsigned long get_next_lcg_value(void);
 extern long randrange(long);

@@ -65,7 +65,6 @@ L4000:	VERB=K;
 		case 31: goto L8320;	/* FLY */
 		case 32: goto L8330;	/* LISTEN */
 		case 33: goto L8340;	/* ZZZZ */
-		case 34: goto L8350;	/* SEED */
 	}
 	BUG(23);
 
@@ -106,7 +105,6 @@ L4090:	switch (VERB-1) {
 		case 31: goto L9320;	/* FLY */
 		case 32: return(2011);	/* LISTEN */
 		case 33: goto L8340;	/* ZZZZ */
-		case 34: goto L8350;	/* SEED */
 	}
 	BUG(24);
 
@@ -625,14 +623,4 @@ L8340:	if(!AT(RESER) && LOC != FIXED[RESER]-1) return(2011);
 	RSPEAK(241);
 	 return(2);
 
-/* Seed.  Expected in game logs to replicate the LCG state */
-
-L8350:	{
-	     long sv;
-	     int n;
-	     n = sscanf(raw_input, "seed %ld\n", &sv);
-	     if (n >= 1)
-		 set_seed(sv);
-	     return(2);
-	 }
 }

@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <getopt.h>
-#include <string.h>
 #include "main.h"
 
 #include "misc.h"
@@ -18,7 +17,6 @@ long ABB[186], ATAB[331], ATLOC[186], BLKLIN = true, DFLAG,
 		PARMS[26], PLACE[101], PTEXT[101], RTEXT[278],
 		SETUP = 0, TABSIZ = 330;
 signed char INLINE[LINESIZE+1], MAP1[129], MAP2[129];
-signed char raw_input[LINESIZE+1];
 
 long ABBNUM, ACTSPK[36], AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD, BONUS,
 		 BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST, CHLOC, CHLOC2,
@@ -54,11 +52,10 @@ extern int action(FILE *, long);
  * MAIN PROGRAM
  */
 
-static bool do_command(FILE *);
+static void do_command(FILE *);
 
 int main(int argc, char *argv[]) {
 	int ch;
-	time_t starttime = time(NULL);
 
 /*  Adventure (rev 2: 20 treasures) */
 
@@ -73,7 +70,7 @@ int main(int argc, char *argv[]) {
 	while ((ch = getopt(argc, argv, "l:o")) != EOF) {
 		switch (ch) {
 		case 'l':
-			logfp = fopen(optarg, "w");
+			logfp = fopen(optarg, "w+");
 			if (logfp == NULL)
 				fprintf(stderr,
 					"advent: can't open logfile %s for write\n",
@@ -102,7 +99,7 @@ int main(int argc, char *argv[]) {
 	lcgstate.a = 1093;
 	lcgstate.c = 221587;
 	lcgstate.m = 1048576;
-	set_seed((long)starttime);
+	set_seed_from_time();
 
 /*  Read the database if we have not yet done so */
 
@@ -135,16 +132,12 @@ L1:	SETUP= -1;
 	LIMIT=330;
 	if(NOVICE)LIMIT=1000;
 
-	if (logfp)
-	    fprintf(logfp, "seed %ld\n", starttime);
 	for (;;) {
-	    if (!do_command(stdin))
-		break;
+	    do_command(stdin);
 	}
-	score(1);
 }
 
-static bool do_command(FILE *cmdin) {
+static void do_command(FILE *cmdin) {
 
 /*  Can't leave cave once it's closing (except by main office). */
 
@@ -396,8 +389,7 @@ L2603:	if(!CLOSED) goto L2605;
 L2605:	WZDARK=DARK(0);
 	if(KNFLOC > 0 && KNFLOC != LOC)KNFLOC=0;
 	I=0;
-	if (!GETIN(cmdin, WD1,WD1X,WD2,WD2X))
-	    return false;
+	GETIN(cmdin, WD1,WD1X,WD2,WD2X);
 
 /*  Every input, check "FOOBAR" flag.  If zero, nothing's going on.  If pos,
  *  make neg.  If neg, he skipped a word, so make it zero. */
@@ -456,19 +448,8 @@ L2800:	WD1=WD2;
 /*  Gee, I don't understand. */
 
 L3000:	SETPRM(1,WD1,WD1X);
-	 /* This is a kludge. The command parser we inherited from the base 2.5
-	  * barfs on numeric tokens. It will fall through to here when it sees
-	  * seed NNNN. Instead of barfing, go straight to the action processor
-	  * where it will examine the raw input. This will fo away when we get
-	  * rid of the obfuscated FORTRANoid input processing.
-	  */
-	 if (strncmp(raw_input, "seed", 4) == 0) {
-	     I=4090; K=34;
-	     goto Laction;
-	 } else {
-	     RSPEAK(254);
-	     goto L2600;
-	 }
+	RSPEAK(254);
+	 goto L2600;
 
 /* Verb and object analysis moved to separate module. */
 
@@ -477,7 +458,7 @@ L4090:	I=4090; goto Laction;
 L5000:	I=5000;
 Laction:
 	 switch (action(cmdin, I)) {
-	   case 2: return true;
+	   case 2: return;
 	   case 8: goto L8;
 	   case 2000: goto L2000;
 	   case 2009: goto L2009;
@@ -513,7 +494,7 @@ L8000:	SETPRM(1,WD1,WD1X);
 L8:	KK=KEY[LOC];
 	NEWLOC=LOC;
 	if(KK == 0)BUG(26);
-	if(K == NUL) return true;
+	if(K == NUL) return;
 	if(K == BACK) goto L20;
 	if(K == LOOK) goto L30;
 	if(K == CAVE) goto L40;
@@ -544,11 +525,11 @@ L13:	if(NEWLOC <= 100) goto L14;
 
 L14:	if(NEWLOC != 0 && !PCT(NEWLOC)) goto L12;
 L16:	NEWLOC=MOD(LL,1000);
-	if(NEWLOC <= 300) return true;
+	if(NEWLOC <= 300) return;
 	if(NEWLOC <= 500) goto L30000;
 	RSPEAK(NEWLOC-500);
 	NEWLOC=LOC;
-	 return true;
+	 return;
 
 /*  Special motions come here.  Labelling convention: statement numbers NNNXX
  *  (XX=00-99) are used for special case number NNN (NNN=301-500). */
@@ -563,10 +544,10 @@ L30000: NEWLOC=NEWLOC-300;
  *  be used for actual motion, but can be spotted by "go back". */
 
 L30100: NEWLOC=99+100-LOC;
-	if(HOLDNG == 0 || (HOLDNG == 1 && TOTING(EMRALD))) return true;
+	if(HOLDNG == 0 || (HOLDNG == 1 && TOTING(EMRALD))) return;
 	NEWLOC=LOC;
 	RSPEAK(117);
-	return true;
+	 return;
 
 /*  Travel 302.  Plover transport.  Drop the emerald (only use special travel if
  *  toting it), so he's forced to use the plover-passage to get it out.  Having
@@ -590,11 +571,11 @@ L30300: if(PROP[TROLL] != 1) goto L30310;
 	MOVE(TROLL+100,FIXD[TROLL]);
 	JUGGLE(CHASM);
 	NEWLOC=LOC;
-	return true;
+	 return;
 
 L30310: NEWLOC=PLAC[TROLL]+FIXD[TROLL]-LOC;
 	if(PROP[TROLL] == 0)PROP[TROLL]=1;
-	if(!TOTING(BEAR)) return true;
+	if(!TOTING(BEAR)) return;
 	RSPEAK(162);
 	PROP[CHASM]=1;
 	PROP[TROLL]=2;
@@ -618,7 +599,7 @@ L20:	K=OLDLOC;
 	if(CNDBIT(LOC,4))K2=274;
 	if(K2 == 0) goto L21;
 	RSPEAK(K2);
-	return true;
+	 return;
 
 L21:	LL=MOD((IABS(TRAVEL[KK])/1000),1000);
 	if(LL == K) goto L25;
@@ -632,7 +613,7 @@ L22:	if(TRAVEL[KK] < 0) goto L23;
 L23:	KK=K2;
 	if(KK != 0) goto L25;
 	RSPEAK(140);
-	return true;
+	 return;
 
 L25:	K=MOD(IABS(TRAVEL[KK]),1000);
 	KK=KEY[LOC];
@@ -645,14 +626,14 @@ L30:	if(DETAIL < 3)RSPEAK(15);
 	DETAIL=DETAIL+1;
 	WZDARK=false;
 	ABB[LOC]=0;
-	return true;
+	 return;
 
 /*  Cave.  Different messages depending on whether above ground. */
 
 L40:	K=58;
 	if(OUTSID(LOC) && LOC != 8)K=57;
 	RSPEAK(K);
-	return true;
+	 return;
 
 /*  Non-applicable motion.  Various messages depending on word given. */
 
@@ -665,7 +646,11 @@ L50:	SPK=12;
 	if(K == 62 || K == 65)SPK=42;
 	if(K == 17)SPK=80;
 	RSPEAK(SPK);
-	return true;
+	 return;
+
+
+
+
 
 /*  "You're dead, Jim."
  *
@@ -879,7 +864,7 @@ L11000: PROP[BOTTLE]=PUT(BOTTLE,115,1);
 
 	RSPEAK(132);
 	CLOSED=true;
-	return true;
+	 return;
 
 /*  Another way we can force an end to things is by having the lamp give out.
  *  When it gets close, we come here to warn him.  We go to 12000 if the lamp
