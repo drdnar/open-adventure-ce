@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <getopt.h>
+#include <string.h>
 #include "main.h"
 
 #include "misc.h"
@@ -17,6 +18,7 @@ long ABB[186], ATAB[331], ATLOC[186], BLKLIN = true, DFLAG,
 		PARMS[26], PLACE[101], PTEXT[101], RTEXT[278],
 		SETUP = 0, TABSIZ = 330;
 signed char INLINE[LINESIZE+1], MAP1[129], MAP2[129];
+signed char raw_input[LINESIZE+1];
 
 long ABBNUM, ACTSPK[36], AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD, BONUS,
 		 BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST, CHLOC, CHLOC2,
@@ -448,8 +450,19 @@ L2800:	WD1=WD2;
 /*  Gee, I don't understand. */
 
 L3000:	SETPRM(1,WD1,WD1X);
-	RSPEAK(254);
-	 goto L2600;
+	 /* This is a kludge. The command parser we inherited from the base 2.5
+	  * barfs on numeric tokens. It will fall through to here when it sees
+	  * seed NNNN. Instead of barfing, go straight to the action processor
+	  * where it will examine the raw input. This will fo away when we get
+	  * rid of the obfuscated FORTRANoid input processing.
+	  */
+	 if (strncmp(raw_input, "seed", 4) == 0) {
+	     I=4090; K=34;
+	     goto Laction;
+	 } else {
+	     RSPEAK(254);
+	     goto L2600;
+	 }
 
 /* Verb and object analysis moved to separate module. */
 

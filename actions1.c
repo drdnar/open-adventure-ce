@@ -65,6 +65,7 @@ L4000:	VERB=K;
 		case 31: goto L8320;	/* FLY */
 		case 32: goto L8330;	/* LISTEN */
 		case 33: goto L8340;	/* ZZZZ */
+		case 34: goto L8350;	/* SEED */
 	}
 	BUG(23);
 
@@ -105,6 +106,7 @@ L4090:	switch (VERB-1) {
 		case 31: goto L9320;	/* FLY */
 		case 32: return(2011);	/* LISTEN */
 		case 33: goto L8340;	/* ZZZZ */
+		case 34: goto L8350;	/* SEED */
 	}
 	BUG(24);
 
@@ -623,4 +625,6 @@ L8340:	if(!AT(RESER) && LOC != FIXED[RESER]-1) return(2011);
 	RSPEAK(241);
 	 return(2);
 
+L8350:	printf("I see a SEED command. %s\n", raw_input);
+	 return(2);
 }

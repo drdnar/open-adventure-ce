@@ -855,8 +855,8 @@ void fBUG(long NUM) {
 #define BUG(NUM) fBUG(NUM)
 #undef MAPLIN
 void fMAPLIN(FILE *OPENED) {
-long I, VAL;
-
+	signed char *cp;
+    
 /*  Read a line of input, from the specified input source,
  *  translate the chars to integers in the range 0-126 and store
  *  them in the common array "INLINE".  Integer values are as follows:
@@ -886,21 +886,18 @@ long I, VAL;
 
 	if (!oldstyle && SETUP)
 	    fputs("> ", stdout);
-	IGNORE(fgets(INLINE+1,sizeof(INLINE)-1,OPENED));
+	IGNORE(fgets(raw_input,sizeof(INLINE)-1,OPENED));
 	if (feof(OPENED)) {
 		if (logfp)
 			fclose(logfp);
 	} else {
 		if (logfp)
-			IGNORE(fputs(INLINE+1, logfp));
+			IGNORE(fputs(raw_input, logfp));
 		else if (!isatty(0))
-			IGNORE(fputs(INLINE+1, stdout));
-		LNLENG=0;
-		for (I=1; I<=sizeof(INLINE) && INLINE[I]!=0; I++) {
-		VAL=INLINE[I]+1;
-		INLINE[I]=MAP1[VAL];
-		if(INLINE[I] != 0)LNLENG=I;
-		} /* end loop */
+			IGNORE(fputs(raw_input, stdout));
+		for (cp = raw_input; *cp; cp++)
+			INLINE[cp - raw_input + 1]=MAP1[*cp + 1];
+		LNLENG = (cp - raw_input);
 		LNPOSN=1;
 	}
 }
