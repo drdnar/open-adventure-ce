@@ -55,8 +55,6 @@ extern long fSETBIT(long);
 #define SETBIT(BIT) fSETBIT(BIT)
 extern long fTSTBIT(long,long);
 #define TSTBIT(MASK,BIT) fTSTBIT(MASK,BIT)
-extern long fRAN(long);
-#define RAN(RANGE) fRAN(RANGE)
 extern long fRNDVOC(long,long);
 #define RNDVOC(CHAR,FORCE) fRNDVOC(CHAR,FORCE)
 extern void fBUG(long);
@@ -74,3 +72,6 @@ extern long fIABS(long);
 #define IABS(N) fIABS(N)
 extern long fMOD(long,long);
 #define MOD(N,M) fMOD(N,M)
+extern void set_seed_from_time(void);
+extern unsigned long get_next_lcg_value(void);
+extern long randrange(long);

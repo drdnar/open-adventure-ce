@@ -1,7 +1,6 @@
 = Open Adventure TODO =
 
-* Use a real pseudorandom-number generator with a seed rather than just
-  time-sampling.
+* Update the command parser to accept a PRNG seed value.
 
 * Add command log replay.  Note that the replay log needs to begin
   with the random-number seed.

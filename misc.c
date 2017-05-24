@@ -723,7 +723,7 @@ L2:	ATDWRF=I;
 
 
 
-/*  Utility routines (SETBIT, TSTBIT, RAN, RNDVOC, BUG) */
+/*  Utility routines (SETBIT, TSTBIT, set_seed_from_time, get_next_lcg_value, randrange, RNDVOC, BUG) */
 
 #undef SETBIT
 long fSETBIT(long BIT) {
@@ -757,32 +757,32 @@ long TSTBIT;
 
 
 #define TSTBIT(MASK,BIT) fTSTBIT(MASK,BIT)
-#undef RAN
-long fRAN(long RANGE) {
-static long D, R = 0, RAN, T;
+#undef RNDVOC
 
-/*  Since the ran function in LIB40 seems to be a real lose, we'll use one of
- *  our own.  It's been run through many of the tests in Knuth vol. 2 and
- *  seems to be quite reliable.  RAN returns a value uniformly selected
- *  between 0 and range-1. */
-
-
-	D=1;
-	if(R != 0 && RANGE >= 0) goto L1;
-	DATIME(D,T);
-	R=MOD(T+5,1048576L);
-	D=1000+MOD(D,1000);
-L1:	for (T=1; T<=D; T++) {
-	R=MOD(R*1093L+221587L,1048576L);
-	} /* end loop */
-	RAN=(RANGE*R)/1048576;
-	return(RAN);
+void set_seed_from_time(void)
+{
+  /* Use the current system time to get seed the ISO rand() function, from which we get a seed for the LCG. */
+  struct timespec ts;
+  clock_gettime(CLOCK_REALTIME, &ts);
+  srand(ts.tv_nsec);
+  lcgstate.x = (unsigned long) rand() % lcgstate.m;
 }
 
+unsigned long get_next_lcg_value(void)
+{
+  /* Return the LCG's current value, and then iterate it. */
+  unsigned long old_x = lcgstate.x;
+  lcgstate.x = (lcgstate.a * lcgstate.x + lcgstate.c) % lcgstate.m;
+  return(old_x);
+}
 
+long randrange(long range)
+{
+  /* Return a random integer from [0, range). */
+  long result = range * get_next_lcg_value() / lcgstate.m;
+  return(result);
+}
 
-#define RAN(RANGE) fRAN(RANGE)
-#undef RNDVOC
 long fRNDVOC(long CHAR, long FORCE) {
 long DIV, I, J, RNDVOC;
 
@@ -795,7 +795,7 @@ long DIV, I, J, RNDVOC;
 	RNDVOC=FORCE;
 	if(RNDVOC != 0) goto L3;
 	for (I=1; I<=5; I++) {
-	J=11+RAN(26);
+	J=11+randrange(26);
 	if(I == 2)J=CHAR;
 	RNDVOC=RNDVOC*64+J;
 	} /* end loop */

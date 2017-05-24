@@ -23,7 +23,7 @@
 #define CNDBIT(L,N)	(TSTBIT(COND[L],N))
 #define FORCED(LOC)	(COND[LOC] == 2)
 #define DARK(DUMMY)	((!CNDBIT(LOC,0)) && (PROP[LAMP] == 0 || !HERE(LAMP)))
-#define PCT(N)	(RAN(100) < (N))
+#define PCT(N)	(randrange(100) < (N))
 #define GSTONE(OBJ)	((OBJ) == EMRALD || (OBJ) == RUBY || (OBJ) == AMBER || (OBJ) == SAPPH)
 #define FOREST(LOC)	((LOC) >= 145 && (LOC) <= 166)
 #define VOCWRD(LETTRS,SECT)	(VOCAB(MAKEWD(LETTRS),SECT))

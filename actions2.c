@@ -233,7 +233,7 @@ int throw(FILE *cmdin) {
 	return(attack(cmdin));
 
 L9172:	SPK=48;
-	if(RAN(7) < DFLAG) goto L9175;
+	if(randrange(7) < DFLAG) goto L9175;
 	DSEEN[I]=false;
 	DLOC[I]=0;
 	SPK=47;

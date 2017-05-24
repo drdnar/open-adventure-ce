@@ -42,6 +42,7 @@ long ABBNUM, ACTSPK[36], AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD, BO
 		WZDARK = false, ZZWORD;
 FILE  *logfp;
 bool oldstyle = false;
+lcg_state lcgstate;
 
 extern void initialise();
 extern void score(long);
@@ -93,6 +94,13 @@ int main(int argc, char *argv[]) {
 
 #include "funcs.h"
 
+/* Initialize our LCG PRNG with parameters tested against Knuth vol. 2. by the original authors */
+
+	lcgstate.a = 1093;
+	lcgstate.c = 221587;
+	lcgstate.m = 1048576;
+	set_seed_from_time();
+
 /*  Read the database if we have not yet done so */
 
 	LINES = (long *)calloc(LINSIZ+1,sizeof(long));
@@ -116,7 +124,7 @@ int main(int argc, char *argv[]) {
 /*  Start-up, dwarf stuff */
 
 L1:	SETUP= -1;
-	I=RAN(-1);
+	I=0;
 	ZZWORD=RNDVOC(3,0)+MESH*2;
 	NOVICE=YES(stdin, 65,1,0);
 	NEWLOC=1;
@@ -175,7 +183,7 @@ L6000:	if(DFLAG != 1) goto L6010;
 	if(!INDEEP(LOC) || (PCT(95) && (!CNDBIT(LOC,4) || PCT(85)))) goto L2000;
 	DFLAG=2;
 	for (I=1; I<=2; I++) {
-	J=1+RAN(5);
+	J=1+randrange(5);
 	if(PCT(50))DLOC[J]=0;
 	} /* end loop */
 	for (I=1; I<=5; I++) {
@@ -213,7 +221,7 @@ L6014:	KK=KK+1;
 	{long x = KK-1; if(TRAVEL[x] >= 0) goto L6012;}
 L6016:	TK[J]=ODLOC[I];
 	if(J >= 2)J=J-1;
-	J=1+RAN(J);
+	J=1+randrange(J);
 	ODLOC[I]=DLOC[I];
 	DLOC[I]=TK[J];
 	DSEEN[I]=(DSEEN[I] && INDEEP(LOC)) || (DLOC[I] == LOC || ODLOC[I] == LOC);
@@ -266,7 +274,7 @@ L6027:	DTOTAL=DTOTAL+1;
 	if(ODLOC[I] != DLOC[I]) goto L6030;
 	ATTACK=ATTACK+1;
 	if(KNFLOC >= 0)KNFLOC=LOC;
-	if(RAN(1000) < 95*(DFLAG-2))STICK=STICK+1;
+	if(randrange(1000) < 95*(DFLAG-2))STICK=STICK+1;
 L6030:	/*etc*/ ;
 	} /* end loop */
 
@@ -380,7 +388,7 @@ L2603:	if(!CLOSED) goto L2605;
 	} /* end loop */
 L2605:	WZDARK=DARK(0);
 	if(KNFLOC > 0 && KNFLOC != LOC)KNFLOC=0;
-	I=RAN(1);
+	I=0;
 	GETIN(cmdin, WD1,WD1X,WD2,WD2X);
 
 /*  Every input, check "FOOBAR" flag.  If zero, nothing's going on.  If pos,
