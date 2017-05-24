@@ -48,6 +48,7 @@ struct game_t	{
     long turns;
     /* more state will go here */
     long wzdark;
+    long zzword;
     /* more state will go here */
     long novice;
 };

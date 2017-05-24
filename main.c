@@ -37,8 +37,7 @@ long ACTVERB[36], AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
 		STREAM, TABNDX, THROW, TK[21], TRAVEL[886], TRIDNT,
 		TRNSIZ = 5, TRNVAL[6], TRNVLS, TROLL, TROLL2, TRVS,
 		TRVSIZ = 885, TTEXT[6], URN, V1, V2, VASE, VEND, VERB,
-		VOLCAN, VRBSIZ = 35, VRSION = 25, WATER, WD1, WD1X, WD2, WD2X,
-		ZZWORD;
+		VOLCAN, VRBSIZ = 35, VRSION = 25, WATER, WD1, WD1X, WD2, WD2X;
 struct game_t game = {.blklin = true};
 FILE  *logfp;
 bool oldstyle = false;
@@ -117,7 +116,7 @@ int main(int argc, char *argv[]) {
 
 L1:	game.setup= -1;
 	I=RAN(-1);
-	ZZWORD=RNDVOC(3,0)+MESH*2;
+	game.zzword=RNDVOC(3,0)+MESH*2;
 	game.novice=YES(stdin, 65,1,0);
 	game.newloc=1;
 	LOC=1;
