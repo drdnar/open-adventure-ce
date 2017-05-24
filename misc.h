@@ -72,6 +72,6 @@ extern long fIABS(long);
 #define IABS(N) fIABS(N)
 extern long fMOD(long,long);
 #define MOD(N,M) fMOD(N,M)
-extern void set_seed_from_time(void);
+extern void set_seed(long);
 extern unsigned long get_next_lcg_value(void);
 extern long randrange(long);

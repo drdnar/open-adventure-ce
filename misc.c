@@ -723,7 +723,7 @@ L2:	ATDWRF=I;
 
 
 
-/*  Utility routines (SETBIT, TSTBIT, set_seed_from_time, get_next_lcg_value, randrange, RNDVOC, BUG) */
+/*  Utility routines (SETBIT, TSTBIT, set_seed, get_next_lcg_value, randrange, RNDVOC, BUG) */
 
 #undef SETBIT
 long fSETBIT(long BIT) {
@@ -758,11 +758,10 @@ long TSTBIT;
 
 #define TSTBIT(MASK,BIT) fTSTBIT(MASK,BIT)
 
-void set_seed_from_time(void)
+void set_seed(long seedval)
 {
-  /* Use the current system time to get seed the ISO rand() function, from which we get a seed for the LCG. */
-  srand(time(NULL));
-  lcgstate.x = (unsigned long) rand() % lcgstate.m;
+	srand(seedval);
+	lcgstate.x = (unsigned long) rand() % lcgstate.m;
 }
 
 unsigned long get_next_lcg_value(void)

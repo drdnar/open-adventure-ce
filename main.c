@@ -58,6 +58,7 @@ static void do_command(FILE *);
 
 int main(int argc, char *argv[]) {
 	int ch;
+	time_t starttime = time(NULL);
 
 /*  Adventure (rev 2: 20 treasures) */
 
@@ -101,7 +102,7 @@ int main(int argc, char *argv[]) {
 	lcgstate.a = 1093;
 	lcgstate.c = 221587;
 	lcgstate.m = 1048576;
-	set_seed_from_time();
+	set_seed((long)starttime);
 
 /*  Read the database if we have not yet done so */
 
@@ -134,6 +135,8 @@ L1:	SETUP= -1;
 	LIMIT=330;
 	if(NOVICE)LIMIT=1000;
 
+	if (logfp)
+	    fprintf(logfp, "seed %ld\n", starttime);
 	for (;;) {
 	    do_command(stdin);
 	}

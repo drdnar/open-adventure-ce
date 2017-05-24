@@ -625,6 +625,14 @@ L8340:	if(!AT(RESER) && LOC != FIXED[RESER]-1) return(2011);
 	RSPEAK(241);
 	 return(2);
 
-L8350:	printf("I see a SEED command. %s\n", raw_input);
-	 return(2);
+/* Seed.  Expected in game logs to replicate the LCG state */
+
+L8350:	{
+	     long sv;
+	     int n;
+	     n = sscanf(raw_input, "seed %ld\n", &sv);
+	     if (n >= 1)
+		 set_seed(sv);
+	     return(2);
+	 }
 }
