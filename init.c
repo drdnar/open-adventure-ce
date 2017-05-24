@@ -532,7 +532,7 @@ L1106:	/*etc*/ ;
 	CHLOC=114;
 	CHLOC2=140;
 	for (I=1; I<=6; I++) {
-	DSEEN[I]=false;
+	game.dseen[I]=false;
 	} /* end loop */
 	game.dflag=0;
 	DLOC[1]=19;
@@ -591,7 +591,7 @@ L1106:	/*etc*/ ;
 	game.closng=false;
 	game.panic=false;
 	game.closed=false;
-	CLSHNT=false;
+	game.clshint=false;
 	game.novice=false;
 	game.setup=1;
 

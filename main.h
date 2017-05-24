@@ -50,6 +50,9 @@ struct game_t	{
     long wzdark;
     long zzword;
     /* more state will go here */
+    long clshint;
     long novice;
+    /* more state will go here */
+    long dseen[7];
 };
 extern struct game_t game;

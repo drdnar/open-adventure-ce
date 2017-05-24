@@ -203,7 +203,7 @@ L9128:	RSPEAK(game.spk);
 	if(DLOC[I] != LOC) goto L9129;
 	K=K+1;
 	DLOC[I]=61;
-	DSEEN[I]=false;
+	game.dseen[I]=false;
 L9129:	/*etc*/ ;
 	} /* end loop */
 	game.spk=game.spk+1+1/K;
@@ -234,7 +234,7 @@ int throw(FILE *cmdin) {
 
 L9172:	game.spk=48;
 	if(RAN(7) < game.dflag) goto L9175;
-	DSEEN[I]=false;
+	game.dseen[I]=false;
 	DLOC[I]=0;
 	game.spk=47;
 	game.dkill=game.dkill+1;

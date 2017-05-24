@@ -84,7 +84,7 @@ L20020: MXSCOR=MXSCOR+45;
 	if(HINTED[I])SCORE=SCORE-HINTS[I][2];
 	} /* end loop */
 	if(game.novice)SCORE=SCORE-5;
-	if(CLSHNT)SCORE=SCORE-10;
+	if(game.clshint)SCORE=SCORE-10;
 	SCORE=SCORE-game.trnluz-game.saved;
 
 /*  Return to score command if that's where we came from. */

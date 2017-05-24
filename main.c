@@ -20,9 +20,9 @@ signed char INLINE[LINESIZE+1], MAP1[129], MAP2[129];
 
 long ACTVERB[36], AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
 		 BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST, CHLOC, CHLOC2,
-		CLAM, CLSHNT, CLSMAX = 12, CLSSES,
+		CLAM, CLSMAX = 12, CLSSES,
 		COINS, COND[186], CONDS, CTEXT[13], CVAL[13], DALTLC,
-		DOOR, DPRSSN, DRAGON, DSEEN[7], DWARF, EGGS,
+		DOOR, DPRSSN, DRAGON, DWARF, EGGS,
 		EMRALD, ENTER, ENTRNC, FIND, FISSUR, FIXD[101], FOOD,
 		GRATE, HINT, HINTED[21], HINTLC[21], HINTS[21][5], HNTMAX,
 		HNTSIZ = 20, I, INVENT, IGO, J, JADE, K, K2, KEY[186], KEYS, KK,
@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
  *
  *  game.closed says whether we're all the way closed
  *  game.closng says whether it's closing time yet
- *  CLSHNT says whether he's read the clue in the endgame
+ *  game.clshint says whether he's read the clue in the endgame
  *  game.lmwarn says whether he's been warned about lamp going dim
  *  game.novice says whether he asked for instructions at start-up
  *  game.panic says whether he's found out he's trapped in the cave
@@ -144,7 +144,7 @@ L2:	if(!OUTSID(game.newloc) || game.newloc == 0 || !game.closng) goto L71;
 
 L71:	if(game.newloc == LOC || FORCED(LOC) || CNDBIT(LOC,3)) goto L74;
 	/* 73 */ for (I=1; I<=5; I++) {
-	if(ODLOC[I] != game.newloc || !DSEEN[I]) goto L73;
+	    if(ODLOC[I] != game.newloc || !game.dseen[I]) goto L73;
 	game.newloc=LOC;
 	RSPEAK(2);
 	 goto L74;
@@ -215,8 +215,8 @@ L6016:	TK[J]=ODLOC[I];
 	J=1+RAN(J);
 	ODLOC[I]=DLOC[I];
 	DLOC[I]=TK[J];
-	DSEEN[I]=(DSEEN[I] && INDEEP(LOC)) || (DLOC[I] == LOC || ODLOC[I] == LOC);
-	if(!DSEEN[I]) goto L6030;
+	game.dseen[I]=(game.dseen[I] && INDEEP(LOC)) || (DLOC[I] == LOC || ODLOC[I] == LOC);
+	if(!game.dseen[I]) goto L6030;
 	DLOC[I]=LOC;
 	if(I != 6) goto L6027;
 
@@ -251,7 +251,7 @@ L6023:	/*etc*/ ;
 	} /* end loop */
 L6024:	DLOC[6]=CHLOC;
 	ODLOC[6]=CHLOC;
-	DSEEN[6]=false;
+	game.dseen[6]=false;
 	 goto L6030;
 
 L6025:	RSPEAK(186);
@@ -797,7 +797,7 @@ L41000: if(game.tally == 1 && PROP[JADE] < 0) goto L40010;
 L10000: PROP[GRATE]=0;
 	PROP[FISSUR]=0;
 	for (I=1; I<=6; I++) {
-	DSEEN[I]=false;
+	game.dseen[I]=false;
 	DLOC[I]=0;
 	} /* end loop */
 	MOVE(TROLL,0);

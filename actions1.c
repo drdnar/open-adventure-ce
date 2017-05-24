@@ -442,11 +442,11 @@ L8270:	for (I=1; I<=100; I++) {
 
 L9270:	if(DARK(0)) goto L5190;
 	if(OBJTXT[OBJ] == 0 || PROP[OBJ] < 0) return(2011);
-	if(OBJ == OYSTER && !CLSHNT) goto L9275;
+	if(OBJ == OYSTER && !game.clshint) goto L9275;
 	PSPEAK(OBJ,OBJTXT[OBJ]+PROP[OBJ]);
 	 return(2012);
 
-L9275:	CLSHNT=YES(input,192,193,54);
+L9275:	game.clshint=YES(input,192,193,54);
 	 return(2012);
 
 /*  Break.  Only works for mirror in repository and, of course, the vase. */
@@ -500,11 +500,11 @@ L8305:	DATIME(I,K);
 	SAVWDS(OBJ,game.oldlc2,game.oldloc,game.oldobj,game.panic,game.saved,game.setup);
 	SAVWDS(game.spk,game.tally,game.thresh,game.trndex,game.trnluz,game.turns,OBJTXT[OYSTER]);
 	SAVWDS(VERB,WD1,WD1X,WD2,game.wzdark,game.zzword,OBJSND[BIRD]);
-	SAVWDS(OBJTXT[SIGN],CLSHNT,game.novice,K,K,K,K);
+	SAVWDS(OBJTXT[SIGN],game.clshint,game.novice,K,K,K,K);
 	SAVARR(ABB,LOCSIZ);
 	SAVARR(ATLOC,LOCSIZ);
 	SAVARR(DLOC,6);
-	SAVARR(DSEEN,6);
+	SAVARR(game.dseen,6);
 	SAVARR(FIXED,100);
 	SAVARR(HINTED,HNTSIZ);
 	SAVARR(HINTLC,HNTSIZ);
