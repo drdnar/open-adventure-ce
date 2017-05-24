@@ -15,10 +15,10 @@ long ABB[186], ATAB[331], ATLOC[186],
 		DLOC[7], FIXED[101],
 		KTAB[331], *LINES, LINK[201], LNLENG, LNPOSN,
 		PARMS[26], PLACE[101], PTEXT[101], RTEXT[278],
-		SETUP = 0, TABSIZ = 330;
+		TABSIZ = 330;
 signed char INLINE[LINESIZE+1], MAP1[129], MAP2[129];
 
-long ACTSPK[36], AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
+long ACTVERB[36], AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
 		 BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST, CHLOC, CHLOC2,
 		CLAM, CLSHNT, CLSMAX = 12, CLSSES,
 		COINS, COND[186], CONDS, CTEXT[13], CVAL[13], DALTLC,
@@ -33,10 +33,10 @@ long ACTSPK[36], AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
 		OBJTXT[101], ODLOC[7], OGRE, OIL, OYSTER,
 	        PEARL, PILLOW, PLAC[101], PLANT, PLANT2, PROP[101], PYRAM,
 		RESER, ROD, ROD2, RTXSIZ = 277, RUBY, RUG, SAPPH, SAY,
-		SCORE, SECT, SIGN, SNAKE, SPK, STEPS, STEXT[186], STICK,
-		STREAM, TABNDX, TALLY, THRESH, THROW, TK[21], TRAVEL[886], TRIDNT,
-		TRNDEX, TRNLUZ, TRNSIZ = 5, TRNVAL[6], TRNVLS, TROLL, TROLL2, TRVS,
-		 TRVSIZ = 885, TTEXT[6], TURNS, URN, V1, V2, VASE, VEND, VERB,
+		SCORE, SECT, SIGN, SNAKE, STEPS, STEXT[186], STICK,
+		STREAM, TABNDX, THROW, TK[21], TRAVEL[886], TRIDNT,
+		TRNSIZ = 5, TRNVAL[6], TRNVLS, TROLL, TROLL2, TRVS,
+		TRVSIZ = 885, TTEXT[6], URN, V1, V2, VASE, VEND, VERB,
 		VOLCAN, VRBSIZ = 35, VRSION = 25, WATER, WD1, WD1X, WD2, WD2X,
 		ZZWORD;
 struct game_t game = {.blklin = true};
@@ -102,8 +102,8 @@ int main(int argc, char *argv[]) {
 	}
 
 	MAP2[1] = 0;
-	if(!SETUP)initialise();
-	if(SETUP > 0) goto L1;
+	if(!game.setup)initialise();
+	if(game.setup > 0) goto L1;
 
 /*  Unlike earlier versions, adventure is no longer restartable.  (This
  *  lets us get away with modifying things such as OBJSND(BIRD) without
@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
 
 /*  Start-up, dwarf stuff */
 
-L1:	SETUP= -1;
+L1:	game.setup= -1;
 	I=RAN(-1);
 	ZZWORD=RNDVOC(3,0)+MESH*2;
 	game.novice=YES(stdin, 65,1,0);
@@ -234,7 +234,7 @@ L6016:	TK[J]=ODLOC[I];
 	if(TOTING(J)) goto L6021;
 L6020:	if(HERE(J))K=1;
 	} /* end loop */
-	if(TALLY == 1 && K == 0 && PLACE[CHEST] == 0 && HERE(LAMP) && PROP[LAMP]
+	if(game.tally == 1 && K == 0 && PLACE[CHEST] == 0 && HERE(LAMP) && PROP[LAMP]
 		== 1) goto L6025;
 	if(ODLOC[6] != DLOC[6] && PCT(20))RSPEAK(127);
 	 goto L6030;
@@ -327,7 +327,7 @@ L2004:	if(I == 0) goto L2012;
 	if(game.closed) goto L2008;
 	PROP[OBJ]=0;
 	if(OBJ == RUG || OBJ == CHAIN)PROP[OBJ]=1;
-	TALLY=TALLY-1;
+	game.tally=game.tally-1;
 /*  Note: There used to be a test here to see whether the player had blown it
  *  so badly that he could never ever see the remaining treasures, and if so
  *  the lamp was zapped to 35 turns.  But the tests were too simple-minded;
@@ -346,8 +346,8 @@ L2008:	I=LINK[I];
 	 goto L2004;
 
 L2009:	K=54;
-L2010:	SPK=K;
-L2011:	RSPEAK(SPK);
+L2010:	game.spk=K;
+L2011:	RSPEAK(game.spk);
 
 L2012:	VERB=0;
 	game.oldobj=OBJ;
@@ -387,16 +387,16 @@ L2605:	game.wzdark=DARK(0);
  *  make neg.  If neg, he skipped a word, so make it zero. */
 
 L2607:	game.foobar=(game.foobar>0 ? -game.foobar : 0);
-	TURNS=TURNS+1;
-	if(TURNS != THRESH) goto L2608;
-	SPEAK(TTEXT[TRNDEX]);
-	TRNLUZ=TRNLUZ+TRNVAL[TRNDEX]/100000;
-	TRNDEX=TRNDEX+1;
-	THRESH= -1;
-	if(TRNDEX <= TRNVLS)THRESH=MOD(TRNVAL[TRNDEX],100000)+1;
+	game.turns=game.turns+1;
+	if(game.turns != game.thresh) goto L2608;
+	SPEAK(TTEXT[game.trndex]);
+	game.trnluz=game.trnluz+TRNVAL[game.trndex]/100000;
+	game.trndex=game.trndex+1;
+	game.thresh= -1;
+	if(game.trndex <= TRNVLS)game.thresh=MOD(TRNVAL[game.trndex],100000)+1;
 L2608:	if(VERB == SAY && WD2 > 0)VERB=0;
 	if(VERB == SAY) goto L4090;
-	if(TALLY == 0 && INDEEP(LOC) && LOC != 33)game.clock1=game.clock1-1;
+	if(game.tally == 0 && INDEEP(LOC) && LOC != 33)game.clock1=game.clock1-1;
 	if(game.clock1 == 0) goto L10000;
 	if(game.clock1 < 0)game.clock2=game.clock2-1;
 	if(game.clock2 == 0) goto L11000;
@@ -581,8 +581,9 @@ L30310: game.newloc=PLAC[TROLL]+FIXD[TROLL]-LOC;
 
 /*  End of specials. */
 
-/*  Handle "go back".  Look for verb which goes from LOC to game.oldloc, or to game.oldlc2
- *  If game.oldloc has forced-motion.  K2 saves entry -> forced loc -> previous loc. */
+/*  Handle "go back".  Look for verb which goes from LOC to
+ *  game.oldloc, or to game.oldlc2 If game.oldloc has forced-motion.
+ *  K2 saves entry -> forced loc -> previous loc. */
 
 L20:	K=game.oldloc;
 	if(FORCED(K))K=game.oldlc2;
@@ -631,15 +632,15 @@ L40:	K=58;
 
 /*  Non-applicable motion.  Various messages depending on word given. */
 
-L50:	SPK=12;
-	if(K >= 43 && K <= 50)SPK=52;
-	if(K == 29 || K == 30)SPK=52;
-	if(K == 7 || K == 36 || K == 37)SPK=10;
-	if(K == 11 || K == 19)SPK=11;
-	if(VERB == FIND || VERB == INVENT)SPK=59;
-	if(K == 62 || K == 65)SPK=42;
-	if(K == 17)SPK=80;
-	RSPEAK(SPK);
+L50:	game.spk=12;
+	if(K >= 43 && K <= 50)game.spk=52;
+	if(K == 29 || K == 30)game.spk=52;
+	if(K == 7 || K == 36 || K == 37)game.spk=10;
+	if(K == 11 || K == 19)game.spk=11;
+	if(VERB == FIND || VERB == INVENT)game.spk=59;
+	if(K == 62 || K == 65)game.spk=42;
+	if(K == 17)game.spk=80;
+	RSPEAK(game.spk);
 	 return;
 
 
@@ -755,7 +756,7 @@ L40900: I=ATDWRF(LOC);
 	if(HERE(OGRE) && I == 0) goto L40010;
 	 goto L40030;
 
-L41000: if(TALLY == 1 && PROP[JADE] < 0) goto L40010;
+L41000: if(game.tally == 1 && PROP[JADE] < 0) goto L40010;
 	 goto L40020;
 
 
@@ -875,10 +876,10 @@ L12000: RSPEAK(188);
 
 L12200: if(game.lmwarn || !HERE(LAMP)) goto L19999;
 	game.lmwarn=true;
-	SPK=187;
-	if(PLACE[BATTER] == 0)SPK=183;
-	if(PROP[BATTER] == 1)SPK=189;
-	RSPEAK(SPK);
+	game.spk=187;
+	if(PLACE[BATTER] == 0)game.spk=183;
+	if(PROP[BATTER] == 1)game.spk=189;
+	RSPEAK(game.spk);
 	 goto L19999;
 
 L12400: game.limit= -1;
@@ -888,7 +889,7 @@ L12400: game.limit= -1;
 
 /*  Oh dear, he's disturbed the dwarves. */
 
-L18999: RSPEAK(SPK);
+L18999: RSPEAK(game.spk);
 L19000: RSPEAK(136);
 	score(0);
 }

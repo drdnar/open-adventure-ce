@@ -23,7 +23,7 @@ int action(FILE *input, long STARTAT) {
 	BUG(99);
 
 L4000:	VERB=K;
-	SPK=ACTSPK[VERB];
+	game.spk=ACTVERB[VERB];
 	if(WD2 > 0 && VERB != SAY) return(2800);
 	if(VERB == SAY)OBJ=WD2;
 	if(OBJ > 0) goto L4090;
@@ -96,7 +96,7 @@ L5120:	if(OBJ != PLANT || !AT(PLANT2) || PROP[PLANT2] == 0) goto L5130;
 	 goto L5010;
 L5130:	if(OBJ != KNIFE || game.knfloc != LOC) goto L5140;
 	game.knfloc= -1;
-	SPK=116;
+	game.spk=116;
 	 return(2011);
 L5140:	if(OBJ != ROD || !HERE(ROD2)) goto L5190;
 	OBJ=ROD2;
@@ -141,7 +141,7 @@ L9035:	WD2=0;
 
 /*  Lock, unlock, no object given.  Assume various things if present. */
 
-L8040:	SPK=28;
+L8040:	game.spk=28;
 	if(HERE(CLAM))OBJ=CLAM;
 	if(HERE(OYSTER))OBJ=OYSTER;
 	if(AT(DOOR))OBJ=DOOR;
@@ -153,12 +153,12 @@ L8040:	SPK=28;
 /*  Lock, unlock object.  Special stuff for opening clam/oyster and for chain. */
 
 L9040:	if(OBJ == CLAM || OBJ == OYSTER) goto L9046;
-	if(OBJ == DOOR)SPK=111;
-	if(OBJ == DOOR && PROP[DOOR] == 1)SPK=54;
-	if(OBJ == CAGE)SPK=32;
-	if(OBJ == KEYS)SPK=55;
-	if(OBJ == GRATE || OBJ == CHAIN)SPK=31;
-	if(SPK != 31 || !HERE(KEYS)) return(2011);
+	if(OBJ == DOOR)game.spk=111;
+	if(OBJ == DOOR && PROP[DOOR] == 1)game.spk=54;
+	if(OBJ == CAGE)game.spk=32;
+	if(OBJ == KEYS)game.spk=55;
+	if(OBJ == GRATE || OBJ == CHAIN)game.spk=31;
+	if(game.spk != 31 || !HERE(KEYS)) return(2011);
 	if(OBJ == CHAIN) goto L9048;
 	if(!game.closng) goto L9043;
 	K=130;
@@ -175,11 +175,11 @@ L9043:	K=34+PROP[GRATE];
 /*  Clam/Oyster. */
 L9046:	K=0;
 	if(OBJ == OYSTER)K=1;
-	SPK=124+K;
-	if(TOTING(OBJ))SPK=120+K;
-	if(!TOTING(TRIDNT))SPK=122+K;
-	if(VERB == LOCK)SPK=61;
-	if(SPK != 124) return(2011);
+	game.spk=124+K;
+	if(TOTING(OBJ))game.spk=120+K;
+	if(!TOTING(TRIDNT))game.spk=122+K;
+	if(VERB == LOCK)game.spk=61;
+	if(game.spk != 124) return(2011);
 	DSTROY(CLAM);
 	DROP(OYSTER,LOC);
 	DROP(PEARL,105);
@@ -187,20 +187,20 @@ L9046:	K=0;
 
 /*  Chain. */
 L9048:	if(VERB == LOCK) goto L9049;
-	SPK=171;
-	if(PROP[BEAR] == 0)SPK=41;
-	if(PROP[CHAIN] == 0)SPK=37;
-	if(SPK != 171) return(2011);
+	game.spk=171;
+	if(PROP[BEAR] == 0)game.spk=41;
+	if(PROP[CHAIN] == 0)game.spk=37;
+	if(game.spk != 171) return(2011);
 	PROP[CHAIN]=0;
 	FIXED[CHAIN]=0;
 	if(PROP[BEAR] != 3)PROP[BEAR]=2;
 	FIXED[BEAR]=2-PROP[BEAR];
 	 return(2011);
 
-L9049:	SPK=172;
-	if(PROP[CHAIN] != 0)SPK=34;
-	if(LOC != PLAC[CHAIN])SPK=173;
-	if(SPK != 172) return(2011);
+L9049:	game.spk=172;
+	if(PROP[CHAIN] != 0)game.spk=34;
+	if(LOC != PLAC[CHAIN])game.spk=173;
+	if(game.spk != 172) return(2011);
 	PROP[CHAIN]=2;
 	if(TOTING(CHAIN))DROP(CHAIN,LOC);
 	FIXED[CHAIN]= -1;
@@ -214,16 +214,16 @@ L8070:	if(HERE(LAMP) && PROP[LAMP] == 0 && game.limit >= 0)OBJ=LAMP;
 
 L9070:	if(OBJ == URN) goto L9073;
 	if(OBJ != LAMP) return(2011);
-	SPK=184;
+	game.spk=184;
 	if(game.limit < 0) return(2011);
 	PROP[LAMP]=1;
 	RSPEAK(39);
 	if(game.wzdark) return(2000);
 	 return(2012);
 
-L9073:	SPK=38;
+L9073:	game.spk=38;
 	if(PROP[URN] == 0) return(2011);
-	SPK=209;
+	game.spk=209;
 	PROP[URN]=2;
 	 return(2011);
 
@@ -235,11 +235,11 @@ L8080:	if(HERE(LAMP) && PROP[LAMP] == 1)OBJ=LAMP;
 
 L9080:	if(OBJ == URN) goto L9083;
 	if(OBJ == LAMP) goto L9086;
-	if(OBJ == DRAGON || OBJ == VOLCAN)SPK=146;
+	if(OBJ == DRAGON || OBJ == VOLCAN)game.spk=146;
 	 return(2011);
 
 L9083:	PROP[URN]=PROP[URN]/2;
-	SPK=210;
+	game.spk=210;
 	 return(2011);
 
 L9086:	PROP[LAMP]=0;
@@ -249,22 +249,22 @@ L9086:	PROP[LAMP]=0;
 
 /*  Wave.  No effect unless waving rod at fissure or at bird. */
 
-L9090:	if((!TOTING(OBJ)) && (OBJ != ROD || !TOTING(ROD2)))SPK=29;
+L9090:	if((!TOTING(OBJ)) && (OBJ != ROD || !TOTING(ROD2)))game.spk=29;
 	if(OBJ != ROD || !TOTING(OBJ) || (!HERE(BIRD) && (game.closng || !AT(FISSUR))))
 		return(2011);
-	if(HERE(BIRD))SPK=206+MOD(PROP[BIRD],2);
-	if(SPK == 206 && LOC == PLACE[STEPS] && PROP[JADE] < 0) goto L9094;
+	if(HERE(BIRD))game.spk=206+MOD(PROP[BIRD],2);
+	if(game.spk == 206 && LOC == PLACE[STEPS] && PROP[JADE] < 0) goto L9094;
 	if(game.closed) return(18999);
 	if(game.closng || !AT(FISSUR)) return(2011);
-	if(HERE(BIRD))RSPEAK(SPK);
+	if(HERE(BIRD))RSPEAK(game.spk);
 	PROP[FISSUR]=1-PROP[FISSUR];
 	PSPEAK(FISSUR,2-PROP[FISSUR]);
 	 return(2012);
 
 L9094:	DROP(JADE,LOC);
 	PROP[JADE]=0;
-	TALLY=TALLY-1;
-	SPK=208;
+	game.tally=game.tally-1;
+	game.spk=208;
 	 return(2011);
 
 /*  Attack also moved into separate module. */
@@ -277,16 +277,16 @@ L9120:	return(attack(input));
 L9130:	if(OBJ == BOTTLE || OBJ == 0)OBJ=LIQ(0);
 	if(OBJ == 0) return(8000);
 	if(!TOTING(OBJ)) return(2011);
-	SPK=78;
+	game.spk=78;
 	if(OBJ != OIL && OBJ != WATER) return(2011);
 	if(HERE(URN) && PROP[URN] == 0) goto L9134;
 	PROP[BOTTLE]=1;
 	PLACE[OBJ]=0;
-	SPK=77;
+	game.spk=77;
 	if(!(AT(PLANT) || AT(DOOR))) return(2011);
 
 	if(AT(DOOR)) goto L9132;
-	SPK=112;
+	game.spk=112;
 	if(OBJ != WATER) return(2011);
 	PSPEAK(PLANT,PROP[PLANT]+3);
 	PROP[PLANT]=MOD(PROP[PLANT]+1,3);
@@ -296,7 +296,7 @@ L9130:	if(OBJ == BOTTLE || OBJ == 0)OBJ=LIQ(0);
 
 L9132:	PROP[DOOR]=0;
 	if(OBJ == OIL)PROP[DOOR]=1;
-	SPK=113+PROP[DOOR];
+	game.spk=113+PROP[DOOR];
 	 return(2011);
 
 L9134:	OBJ=URN;
@@ -307,13 +307,13 @@ L9134:	OBJ=URN;
 
 L8140:	if(!HERE(FOOD)) return(8000);
 L8142:	DSTROY(FOOD);
-	SPK=72;
+	game.spk=72;
 	 return(2011);
 
 L9140:	if(OBJ == FOOD) goto L8142;
 	if(OBJ == BIRD || OBJ == SNAKE || OBJ == CLAM || OBJ == OYSTER || OBJ ==
 		DWARF || OBJ == DRAGON || OBJ == TROLL || OBJ == BEAR || OBJ ==
-		OGRE)SPK=71;
+		OGRE)game.spk=71;
 	 return(2011);
 
 /*  Drink.  If no object, assume water and look for it here.  If water is in
@@ -322,29 +322,29 @@ L9140:	if(OBJ == FOOD) goto L8142;
 L9150:	if(OBJ == 0 && LIQLOC(LOC) != WATER && (LIQ(0) != WATER || !HERE(BOTTLE)))
 		return(8000);
 	if(OBJ == BLOOD) goto L9153;
-	if(OBJ != 0 && OBJ != WATER)SPK=110;
-	if(SPK == 110 || LIQ(0) != WATER || !HERE(BOTTLE)) return(2011);
+	if(OBJ != 0 && OBJ != WATER)game.spk=110;
+	if(game.spk == 110 || LIQ(0) != WATER || !HERE(BOTTLE)) return(2011);
 	PROP[BOTTLE]=1;
 	PLACE[WATER]=0;
-	SPK=74;
+	game.spk=74;
 	 return(2011);
 
 L9153:	DSTROY(BLOOD);
 	PROP[DRAGON]=2;
 	OBJSND[BIRD]=OBJSND[BIRD]+3;
-	SPK=240;
+	game.spk=240;
 	 return(2011);
 
 /*  Rub.  Yields various snide remarks except for lit urn. */
 
-L9160:	if(OBJ != LAMP)SPK=76;
+L9160:	if(OBJ != LAMP)game.spk=76;
 	if(OBJ != URN || PROP[URN] != 2) return(2011);
 	DSTROY(URN);
 	DROP(AMBER,LOC);
 	PROP[AMBER]=1;
-	TALLY=TALLY-1;
+	game.tally=game.tally-1;
 	DROP(CAVITY,LOC);
-	SPK=216;
+	game.spk=216;
 	 return(2011);
 
 /*  Throw moved into separate module. */
@@ -359,24 +359,24 @@ L8180:	if(YES(input,22,54,54)) score(1);
 /*  Find.  Might be carrying it, or it might be here.  Else give caveat. */
 
 L9190:	if(AT(OBJ) || (LIQ(0) == OBJ && AT(BOTTLE)) || K == LIQLOC(LOC) || (OBJ ==
-		DWARF && ATDWRF(LOC) > 0))SPK=94;
-	if(game.closed)SPK=138;
-	if(TOTING(OBJ))SPK=24;
+		DWARF && ATDWRF(LOC) > 0))game.spk=94;
+	if(game.closed)game.spk=138;
+	if(TOTING(OBJ))game.spk=24;
 	 return(2011);
 
 /*  Inventory.  If object, treat same as find.  Else report on current burden. */
 
-L8200:	SPK=98;
+L8200:	game.spk=98;
 	/* 8201 */ for (I=1; I<=100; I++) {
 	if(I == BEAR || !TOTING(I)) goto L8201;
-	if(SPK == 98)RSPEAK(99);
+	if(game.spk == 98)RSPEAK(99);
 	game.blklin=false;
 	PSPEAK(I,-1);
 	game.blklin=true;
-	SPK=0;
+	game.spk=0;
 L8201:	/*etc*/ ;
 	} /* end loop */
-	if(TOTING(BEAR))SPK=141;
+	if(TOTING(BEAR))game.spk=141;
 	 return(2011);
 
 /* Feed/fill are in the other module. */
@@ -397,7 +397,7 @@ L9230:	if(PROP[ROD2] < 0 || !game.closed) return(2011);
 
 L8240:	score(-1);
 	SETPRM(1,SCORE,MXSCOR);
-	SETPRM(3,TURNS,TURNS);
+	SETPRM(3,game.turns,game.turns);
 	RSPEAK(259);
 	 return(2012);
 
@@ -406,9 +406,9 @@ L8240:	score(-1);
  *  WORD ZIPS THE EGGS BACK TO THE GIANT ROOM (UNLESS ALREADY THERE). */
 
 L8250:	K=VOCAB(WD1,3);
-	SPK=42;
+	game.spk=42;
 	if(game.foobar == 1-K) goto L8252;
-	if(game.foobar != 0)SPK=151;
+	if(game.foobar != 0)game.spk=151;
 	 return(2011);
 
 L8252:	game.foobar=K;
@@ -428,7 +428,7 @@ L8252:	game.foobar=K;
 
 /*  Brief.  Intransitive only.  Suppress long descriptions after first time. */
 
-L8260:	SPK=156;
+L8260:	game.spk=156;
 	game.abbnum=10000;
 	game.detail=3;
 	 return(2011);
@@ -451,13 +451,13 @@ L9275:	CLSHNT=YES(input,192,193,54);
 
 /*  Break.  Only works for mirror in repository and, of course, the vase. */
 
-L9280:	if(OBJ == MIRROR)SPK=148;
+L9280:	if(OBJ == MIRROR)game.spk=148;
 	if(OBJ == VASE && PROP[VASE] == 0) goto L9282;
 	if(OBJ != MIRROR || !game.closed) return(2011);
-	SPK=197;
+	game.spk=197;
 	 return(18999);
 
-L9282:	SPK=198;
+L9282:	game.spk=198;
 	if(TOTING(VASE))DROP(VASE,LOC);
 	PROP[VASE]=2;
 	FIXED[VASE]= -1;
@@ -466,14 +466,14 @@ L9282:	SPK=198;
 /*  Wake.  Only use is to disturb the dwarves. */
 
 L9290:	if(OBJ != DWARF || !game.closed) return(2011);
-	SPK=199;
+	game.spk=199;
 	 return(18999);
 
 /*  Suspend.  Offer to save things in a file, but charging some points (so
  *  can't win by using saved games to retry battles or to start over after
  *  learning zzword). */
 
-L8300:	SPK=201;
+L8300:	game.spk=201;
 	RSPEAK(260);
 	if(!YES(input,200,54,54)) return(2012);
 	game.saved=game.saved+5;
@@ -497,8 +497,8 @@ L8305:	DATIME(I,K);
 	SAVWDS(game.abbnum,game.blklin,game.bonus,game.clock1,game.clock2,game.closed,game.closng);
 	SAVWDS(game.detail,game.dflag,game.dkill,game.dtotal,game.foobar,game.holdng,game.iwest);
 	SAVWDS(game.knfloc,game.limit,LL,game.lmwarn,LOC,game.newloc,game.numdie);
-	SAVWDS(OBJ,game.oldlc2,game.oldloc,game.oldobj,game.panic,game.saved,SETUP);
-	SAVWDS(SPK,TALLY,THRESH,TRNDEX,TRNLUZ,TURNS,OBJTXT[OYSTER]);
+	SAVWDS(OBJ,game.oldlc2,game.oldloc,game.oldobj,game.panic,game.saved,game.setup);
+	SAVWDS(game.spk,game.tally,game.thresh,game.trndex,game.trnluz,game.turns,OBJTXT[OYSTER]);
 	SAVWDS(VERB,WD1,WD1X,WD2,game.wzdark,ZZWORD,OBJSND[BIRD]);
 	SAVWDS(OBJTXT[SIGN],CLSHNT,game.novice,K,K,K,K);
 	SAVARR(ABB,LOCSIZ);
@@ -538,35 +538,35 @@ L8318:	RSPEAK(270);
 
 /*  Fly.  Snide remarks unless hovering rug is here. */
 
-L8320:	if(PROP[RUG] != 2)SPK=224;
-	if(!HERE(RUG))SPK=225;
-	if(SPK/2 == 112) return(2011);
+L8320:	if(PROP[RUG] != 2)game.spk=224;
+	if(!HERE(RUG))game.spk=225;
+	if(game.spk/2 == 112) return(2011);
 	OBJ=RUG;
 
 L9320:	if(OBJ != RUG) return(2011);
-	SPK=223;
+	game.spk=223;
 	if(PROP[RUG] != 2) return(2011);
 	game.oldlc2=game.oldloc;
 	game.oldloc=LOC;
 	game.newloc=PLACE[RUG]+FIXED[RUG]-LOC;
-	SPK=226;
-	if(PROP[SAPPH] >= 0)SPK=227;
-	RSPEAK(SPK);
+	game.spk=226;
+	if(PROP[SAPPH] >= 0)game.spk=227;
+	RSPEAK(game.spk);
 	 return(2);
 
 /*  Listen.  Intransitive only.  Print stuff based on objsnd/locsnd. */
 
-L8330:	SPK=228;
+L8330:	game.spk=228;
 	K=LOCSND[LOC];
 	if(K == 0) goto L8332;
 	RSPEAK(IABS(K));
 	if(K < 0) return(2012);
-	SPK=0;
+	game.spk=0;
 L8332:	SETPRM(1,ZZWORD-MESH*2,0);
 	/* 8335 */ for (I=1; I<=100; I++) {
 	if(!HERE(I) || OBJSND[I] == 0 || PROP[I] < 0) goto L8335;
 	PSPEAK(I,OBJSND[I]+PROP[I]);
-	SPK=0;
+	game.spk=0;
 	if(I == BIRD && OBJSND[I]+PROP[I] == 8)DSTROY(BIRD);
 L8335:	/*etc*/ ;
 	} /* end loop */

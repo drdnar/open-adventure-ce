@@ -85,7 +85,7 @@ L20020: MXSCOR=MXSCOR+45;
 	} /* end loop */
 	if(game.novice)SCORE=SCORE-5;
 	if(CLSHNT)SCORE=SCORE-10;
-	SCORE=SCORE-TRNLUZ-game.saved;
+	SCORE=SCORE-game.trnluz-game.saved;
 
 /*  Return to score command if that's where we came from. */
 
@@ -93,25 +93,25 @@ L20020: MXSCOR=MXSCOR+45;
 
 /*  that should be good enough.  Let's tell him all about it. */
 
-	if(SCORE+TRNLUZ+1 >= MXSCOR && TRNLUZ != 0)RSPEAK(242);
+	if(SCORE+game.trnluz+1 >= MXSCOR && game.trnluz != 0)RSPEAK(242);
 	if(SCORE+game.saved+1 >= MXSCOR && game.saved != 0)RSPEAK(143);
 	SETPRM(1,SCORE,MXSCOR);
-	SETPRM(3,TURNS,TURNS);
+	SETPRM(3,game.turns,game.turns);
 	RSPEAK(262);
 	for (I=1; I<=CLSSES; I++) {
 	if(CVAL[I] >= SCORE) goto L20210;
 	/*etc*/ ;
 	} /* end loop */
-	SPK=265;
+	game.spk=265;
 	 goto L25000;
 
 L20210: SPEAK(CTEXT[I]);
-	SPK=264;
+	game.spk=264;
 	if(I >= CLSSES) goto L25000;
 	I=CVAL[I]+1-SCORE;
 	SETPRM(1,I,I);
-	SPK=263;
-L25000: RSPEAK(SPK);
+	game.spk=263;
+L25000: RSPEAK(game.spk);
 	exit(0);
 
 }

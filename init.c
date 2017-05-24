@@ -19,7 +19,7 @@
  *	185 locations (LTEXT, STEXT, KEY, COND, ABB, ATLOC, LOCSND, LOCSIZ).
  *	100 objects (PLAC, PLACE, FIXD, FIXED, LINK (TWICE), PTEXT, PROP,
  *                    OBJSND, OBJTXT).
- *	 35 "action" verbs (ACTSPK, VRBSIZ).
+ *	 35 "action" verbs (ACTVERB, VRBSIZ).
  *	277 random messages (RTEXT, RTXSIZ).
  *	 12 different player classifications (CTEXT, CVAL, CLSMAX).
  *	 20 hints (HINTLC, HINTED, HINTS, HNTSIZ).
@@ -324,11 +324,11 @@ L1050:	OBJ=GETNUM(OPENED);
 	FIXD[OBJ]=GETNUM(NULL);
 	 goto L1050;
 
-/*  Read default message numbers for action verbs, store in ACTSPK. */
+/*  Read default message numbers for action verbs, store in ACTVERB. */
 
 L1060:	VERB=GETNUM(OPENED);
 	if(VERB == -1) goto L1002;
-	ACTSPK[VERB]=GETNUM(NULL);
+	ACTVERB[VERB]=GETNUM(NULL);
 	 goto L1060;
 
 /*  Read info about available liquids and other conditions, store in COND. */
@@ -417,14 +417,14 @@ L1106:	/*etc*/ ;
 
 /*  Treasures, as noted earlier, are objects 50 through MAXTRS (CURRENTLY 79).
  *  Their props are initially -1, and are set to 0 the first time they are
- *  described.  TALLY keeps track of how many are not yet found, so we know
+ *  described.  game.tally keeps track of how many are not yet found, so we know
  *  when to close the cave. */
 
 	MAXTRS=79;
-	TALLY=0;
+	game.tally=0;
 	for (I=50; I<=MAXTRS; I++) {
 	if(PTEXT[I] != 0)PROP[I]= -1;
-	TALLY=TALLY-PROP[I];
+	game.tally=game.tally-PROP[I];
 	} /* end loop */
 
 /*  Clear the hint stuff.  HINTLC(I) is how long he's been at LOC with cond bit
@@ -559,17 +559,17 @@ L1106:	/*etc*/ ;
  *	game.limit	Lifetime of lamp (not set here)
  *	MAXDIE	Number of reincarnation messages available (up to 5)
  *	game.numdie	Number of times killed so far
- *	THRESH	Next #turns threshhold (-1 if none)
- *	TRNDEX	Index in TRNVAL of next threshhold (section 14 of database)
- *	TRNLUZ	# points lost so far due to number of turns used
- *	TURNS	Tallies how many commands he's given (ignores yes/no)
+ *	game.thresh	Next #turns threshhold (-1 if none)
+ *	game.trndex	Index in TRNVAL of next threshhold (section 14 of database)
+ *	game.trnluz	# points lost so far due to number of turns used
+ *	game.turns	Tallies how many commands he's given (ignores yes/no)
  *	Logicals were explained earlier */
 
-	TURNS=0;
-	TRNDEX=1;
-	THRESH= -1;
-	if(TRNVLS > 0)THRESH=MOD(TRNVAL[1],100000)+1;
-	TRNLUZ=0;
+	game.turns=0;
+	game.trndex=1;
+	game.thresh= -1;
+	if(TRNVLS > 0)game.thresh=MOD(TRNVAL[1],100000)+1;
+	game.trnluz=0;
 	game.lmwarn=false;
 	IGO=0;
 	game.iwest=0;
@@ -593,7 +593,7 @@ L1106:	/*etc*/ ;
 	game.closed=false;
 	CLSHNT=false;
 	game.novice=false;
-	SETUP=1;
+	game.setup=1;
 
 	/* if we can ever think of how, we should save it at this point */
 
@@ -697,7 +697,7 @@ static void quick_io(void) {
 	quick_array(ATAB,TABSIZ);
 	quick_array(PLAC,100);
 	quick_array(FIXD,100);
-	quick_array(ACTSPK,VRBSIZ);
+	quick_array(ACTVERB,VRBSIZ);
 	quick_array((long *)HINTS,(HNTMAX+1)*5-1);
 }
 

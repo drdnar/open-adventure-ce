@@ -39,6 +39,13 @@ struct game_t	{
     long oldobj;
     long panic;
     long saved;
+    long setup;
+    long spk;
+    long tally;
+    long thresh;
+    long trndex;
+    long trnluz;
+    long turns;
     /* more state will go here */
     long wzdark;
     /* more state will go here */
