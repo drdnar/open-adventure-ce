@@ -54,7 +54,7 @@ extern int action(FILE *, long);
  * MAIN PROGRAM
  */
 
-static void do_command(FILE *);
+static bool do_command(FILE *);
 
 int main(int argc, char *argv[]) {
 	int ch;
@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
 	while ((ch = getopt(argc, argv, "l:o")) != EOF) {
 		switch (ch) {
 		case 'l':
-			logfp = fopen(optarg, "w+");
+			logfp = fopen(optarg, "w");
 			if (logfp == NULL)
 				fprintf(stderr,
 					"advent: can't open logfile %s for write\n",
@@ -138,11 +138,13 @@ L1:	SETUP= -1;
 	if (logfp)
 	    fprintf(logfp, "seed %ld\n", starttime);
 	for (;;) {
-	    do_command(stdin);
+	    if (!do_command(stdin))
+		break;
 	}
+	score(1);
 }
 
-static void do_command(FILE *cmdin) {
+static bool do_command(FILE *cmdin) {
 
 /*  Can't leave cave once it's closing (except by main office). */
 
@@ -394,7 +396,8 @@ L2603:	if(!CLOSED) goto L2605;
 L2605:	WZDARK=DARK(0);
 	if(KNFLOC > 0 && KNFLOC != LOC)KNFLOC=0;
 	I=0;
-	GETIN(cmdin, WD1,WD1X,WD2,WD2X);
+	if (!GETIN(cmdin, WD1,WD1X,WD2,WD2X))
+	    return false;
 
 /*  Every input, check "FOOBAR" flag.  If zero, nothing's going on.  If pos,
  *  make neg.  If neg, he skipped a word, so make it zero. */
@@ -474,7 +477,7 @@ L4090:	I=4090; goto Laction;
 L5000:	I=5000;
 Laction:
 	 switch (action(cmdin, I)) {
-	   case 2: return;
+	   case 2: return true;
 	   case 8: goto L8;
 	   case 2000: goto L2000;
 	   case 2009: goto L2009;
@@ -510,7 +513,7 @@ L8000:	SETPRM(1,WD1,WD1X);
 L8:	KK=KEY[LOC];
 	NEWLOC=LOC;
 	if(KK == 0)BUG(26);
-	if(K == NUL) return;
+	if(K == NUL) return true;
 	if(K == BACK) goto L20;
 	if(K == LOOK) goto L30;
 	if(K == CAVE) goto L40;
@@ -541,11 +544,11 @@ L13:	if(NEWLOC <= 100) goto L14;
 
 L14:	if(NEWLOC != 0 && !PCT(NEWLOC)) goto L12;
 L16:	NEWLOC=MOD(LL,1000);
-	if(NEWLOC <= 300) return;
+	if(NEWLOC <= 300) return true;
 	if(NEWLOC <= 500) goto L30000;
 	RSPEAK(NEWLOC-500);
 	NEWLOC=LOC;
-	 return;
+	 return true;
 
 /*  Special motions come here.  Labelling convention: statement numbers NNNXX
  *  (XX=00-99) are used for special case number NNN (NNN=301-500). */
@@ -560,10 +563,10 @@ L30000: NEWLOC=NEWLOC-300;
  *  be used for actual motion, but can be spotted by "go back". */
 
 L30100: NEWLOC=99+100-LOC;
-	if(HOLDNG == 0 || (HOLDNG == 1 && TOTING(EMRALD))) return;
+	if(HOLDNG == 0 || (HOLDNG == 1 && TOTING(EMRALD))) return true;
 	NEWLOC=LOC;
 	RSPEAK(117);
-	 return;
+	return true;
 
 /*  Travel 302.  Plover transport.  Drop the emerald (only use special travel if
  *  toting it), so he's forced to use the plover-passage to get it out.  Having
@@ -587,11 +590,11 @@ L30300: if(PROP[TROLL] != 1) goto L30310;
 	MOVE(TROLL+100,FIXD[TROLL]);
 	JUGGLE(CHASM);
 	NEWLOC=LOC;
-	 return;
+	return true;
 
 L30310: NEWLOC=PLAC[TROLL]+FIXD[TROLL]-LOC;
 	if(PROP[TROLL] == 0)PROP[TROLL]=1;
-	if(!TOTING(BEAR)) return;
+	if(!TOTING(BEAR)) return true;
 	RSPEAK(162);
 	PROP[CHASM]=1;
 	PROP[TROLL]=2;
@@ -615,7 +618,7 @@ L20:	K=OLDLOC;
 	if(CNDBIT(LOC,4))K2=274;
 	if(K2 == 0) goto L21;
 	RSPEAK(K2);
-	 return;
+	return true;
 
 L21:	LL=MOD((IABS(TRAVEL[KK])/1000),1000);
 	if(LL == K) goto L25;
@@ -629,7 +632,7 @@ L22:	if(TRAVEL[KK] < 0) goto L23;
 L23:	KK=K2;
 	if(KK != 0) goto L25;
 	RSPEAK(140);
-	 return;
+	return true;
 
 L25:	K=MOD(IABS(TRAVEL[KK]),1000);
 	KK=KEY[LOC];
@@ -642,14 +645,14 @@ L30:	if(DETAIL < 3)RSPEAK(15);
 	DETAIL=DETAIL+1;
 	WZDARK=false;
 	ABB[LOC]=0;
-	 return;
+	return true;
 
 /*  Cave.  Different messages depending on whether above ground. */
 
 L40:	K=58;
 	if(OUTSID(LOC) && LOC != 8)K=57;
 	RSPEAK(K);
-	 return;
+	return true;
 
 /*  Non-applicable motion.  Various messages depending on word given. */
 
@@ -662,11 +665,7 @@ L50:	SPK=12;
 	if(K == 62 || K == 65)SPK=42;
 	if(K == 17)SPK=80;
 	RSPEAK(SPK);
-	 return;
-
-
-
-
+	return true;
 
 /*  "You're dead, Jim."
  *
@@ -880,7 +879,7 @@ L11000: PROP[BOTTLE]=PUT(BOTTLE,115,1);
 
 	RSPEAK(132);
 	CLOSED=true;
-	 return;
+	return true;
 
 /*  Another way we can force an end to things is by having the lamp give out.
  *  When it gets close, we come here to warn him.  We go to 12000 if the lamp
