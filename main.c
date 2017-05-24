@@ -141,7 +141,7 @@ static void do_command(FILE *cmdin) {
 
 /*  Can't leave cave once it's closing (except by main office). */
 
-L2:	if(!OUTSID(NEWLOC) || NEWLOC == 0 || !CLOSNG) goto L71;
+	if(!OUTSID(NEWLOC) || NEWLOC == 0 || !CLOSNG) goto L71;
 	RSPEAK(130);
 	NEWLOC=LOC;
 	if(!PANIC)CLOCK2=15;
