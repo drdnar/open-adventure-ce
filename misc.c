@@ -894,6 +894,8 @@ long I, VAL;
 	} else {
 		if (logfp)
 			IGNORE(fputs(INLINE+1, logfp));
+		else if (!isatty(0))
+			IGNORE(fputs(INLINE+1, stdout));
 		LNLENG=0;
 		for (I=1; I<=sizeof(INLINE) && INLINE[I]!=0; I++) {
 		VAL=INLINE[I]+1;
