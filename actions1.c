@@ -23,7 +23,7 @@ int action(FILE *input, long STARTAT) {
 	BUG(99);
 
 L4000:	VERB=K;
-	game.spk=ACTVERB[VERB];
+	game.spk=ACTSPK[VERB];
 	if(WD2 > 0 && VERB != SAY) return(2800);
 	if(VERB == SAY)OBJ=WD2;
 	if(OBJ > 0) goto L4090;

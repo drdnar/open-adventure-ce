@@ -19,7 +19,7 @@
  *	185 locations (LTEXT, STEXT, KEY, COND, ABB, ATLOC, LOCSND, LOCSIZ).
  *	100 objects (PLAC, PLACE, FIXD, FIXED, LINK (TWICE), PTEXT, PROP,
  *                    OBJSND, OBJTXT).
- *	 35 "action" verbs (ACTVERB, VRBSIZ).
+ *	 35 "action" verbs (ACTSPK, VRBSIZ).
  *	277 random messages (RTEXT, RTXSIZ).
  *	 12 different player classifications (CTEXT, CVAL, CLSMAX).
  *	 20 hints (HINTLC, HINTED, HINTS, HNTSIZ).
@@ -324,11 +324,11 @@ L1050:	OBJ=GETNUM(OPENED);
 	FIXD[OBJ]=GETNUM(NULL);
 	 goto L1050;
 
-/*  Read default message numbers for action verbs, store in ACTVERB. */
+/*  Read default message numbers for action verbs, store in ACTSPK. */
 
 L1060:	VERB=GETNUM(OPENED);
 	if(VERB == -1) goto L1002;
-	ACTVERB[VERB]=GETNUM(NULL);
+	ACTSPK[VERB]=GETNUM(NULL);
 	 goto L1060;
 
 /*  Read info about available liquids and other conditions, store in COND. */
@@ -697,7 +697,7 @@ static void quick_io(void) {
 	quick_array(ATAB,TABSIZ);
 	quick_array(PLAC,100);
 	quick_array(FIXD,100);
-	quick_array(ACTVERB,VRBSIZ);
+	quick_array(ACTSPK,VRBSIZ);
 	quick_array((long *)HINTS,(HNTMAX+1)*5-1);
 }
 
