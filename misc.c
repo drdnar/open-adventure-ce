@@ -761,9 +761,7 @@ long TSTBIT;
 void set_seed_from_time(void)
 {
   /* Use the current system time to get seed the ISO rand() function, from which we get a seed for the LCG. */
-  struct timespec ts;
-  clock_gettime(CLOCK_REALTIME, &ts);
-  srand(ts.tv_nsec);
+  srand(time(NULL));
   lcgstate.x = (unsigned long) rand() % lcgstate.m;
 }
 
