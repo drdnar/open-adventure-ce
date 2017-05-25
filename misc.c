@@ -173,7 +173,7 @@ void fSETPRM(long FIRST, long P1, long P2) {
 #define WORD1X (*wORD1X)
 #define WORD2 (*wORD2)
 #define WORD2X (*wORD2X)
-void fGETIN(FILE *input, long *wORD1, long *wORD1X, long *wORD2, long *wORD2X) {
+bool fGETIN(FILE *input, long *wORD1, long *wORD1X, long *wORD2, long *wORD2X) {
 long JUNK;
 
 /*  Get a command from the adventurer.  Snarf out the first word, pad it with
@@ -185,7 +185,8 @@ long JUNK;
 
 L10:	if(BLKLIN)TYPE0();
 	MAPLIN(input);
-	if(input == stdin && feof(stdin)) score(1);
+	if (feof(input))
+	    return false;
 	WORD1=GETTXT(true,true,true,0);
 	if(BLKLIN && WORD1 < 0) goto L10;
 	WORD1X=GETTXT(false,true,true,0);
@@ -195,7 +196,7 @@ L12:	JUNK=GETTXT(false,true,true,0);
 	WORD2X=GETTXT(false,true,true,0);
 L22:	JUNK=GETTXT(false,true,true,0);
 	if(JUNK > 0) goto L22;
-	if(GETTXT(true,true,true,0) <= 0)return;
+	if(GETTXT(true,true,true,0) <= 0)return true;
 	RSPEAK(53);
 	 goto L10;
 }
@@ -884,11 +885,11 @@ long I, VAL;
 
 	if(MAP2[1] == 0)MPINIT();
 
-	if (!oldstyle && SETUP)
+	if (!oldstyle && SETUP && OPENED == stdin)
 	    fputs("> ", stdout);
 	IGNORE(fgets(INLINE+1,sizeof(INLINE)-1,OPENED));
 	if (feof(OPENED)) {
-		if (logfp)
+		if (logfp && OPENED == stdin)
 			fclose(logfp);
 	} else {
 		if (logfp)
