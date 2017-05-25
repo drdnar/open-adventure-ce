@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
 	lcgstate.a = 1093;
 	lcgstate.c = 221587;
 	lcgstate.m = 1048576;
-	set_seed_from_time();
+	set_seed((long)time(NULL));
 
 /*  Read the database if we have not yet done so */
 
