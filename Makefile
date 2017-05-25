@@ -1,5 +1,6 @@
 # Makefile for the open-source release of adventure 2.5
 
+LIBS=-lrt
 OBJS=main.o init.o actions1.o actions2.o score.o misc.o
 SOURCES=$(OBJS:.o=.c) COPYING NEWS README TODO advent.text control
 
@@ -7,7 +8,7 @@ SOURCES=$(OBJS:.o=.c) COPYING NEWS README TODO advent.text control
 	gcc -O $(DBX) -c $<
 
 advent:	$(OBJS)
-	gcc -O $(DBX) -o advent $(OBJS)
+	gcc -O $(DBX) -o advent $(OBJS) $(LIBS)
 
 main.o:		misc.h funcs.h
 
