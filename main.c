@@ -99,7 +99,8 @@ int main(int argc, char *argv[]) {
 	lcgstate.a = 1093;
 	lcgstate.c = 221587;
 	lcgstate.m = 1048576;
-	set_seed((long)time(NULL));
+	long seedval = (long)time(NULL);
+	set_seed(seedval);
 
 /*  Read the database if we have not yet done so */
 
@@ -132,6 +133,9 @@ L1:	SETUP= -1;
 	LIMIT=330;
 	if(NOVICE)LIMIT=1000;
 
+	if (logfp)
+	    fprintf(logfp, "seed %ld\n", seedval);
+	
 	for (;;) {
 	    if (!do_command(stdin))
 		break;
@@ -142,7 +146,12 @@ L1:	SETUP= -1;
 static bool fallback_handler(signed char *buf)
 /* fallback handler for commands not handled by FORTRANish parser */
 {
-    printf("Fallback handler sees: %s\n", buf);
+    long sv;
+    if (sscanf(buf, "seed %ld", &sv) == 1) {
+	set_seed(sv);
+	printf("Seed set to %ld\n", sv);
+	return true;
+    }
     return false;
 }
 
