@@ -16,7 +16,7 @@ long ABB[186], ATAB[331], ATLOC[186], BLKLIN = true, DFLAG,
 		KTAB[331], *LINES, LINK[201], LNLENG, LNPOSN,
 		PARMS[26], PLACE[101], PTEXT[101], RTEXT[278],
 		SETUP = 0, TABSIZ = 330;
-signed char INLINE[LINESIZE+1], MAP1[129], MAP2[129];
+signed char rawbuf[LINESIZE], INLINE[LINESIZE+1], MAP1[129], MAP2[129];
 
 long ABBNUM, ACTSPK[36], AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD, BONUS,
 		 BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST, CHLOC, CHLOC2,
@@ -137,6 +137,13 @@ L1:	SETUP= -1;
 		break;
 	}
 	score(1);
+}
+
+static bool fallback_handler(signed char *buf)
+/* fallback handler for commands not handled by FORTRANish parser */
+{
+    printf("Fallback handler sees: %s\n", buf);
+    return false;
 }
 
 static bool do_command(FILE *cmdin) {
@@ -451,6 +458,8 @@ L2800:	WD1=WD2;
 /*  Gee, I don't understand. */
 
 L3000:	SETPRM(1,WD1,WD1X);
+	 if (fallback_handler(rawbuf))
+	     return true;
 	RSPEAK(254);
 	 goto L2600;
 
