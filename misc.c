@@ -886,8 +886,11 @@ long I, VAL;
 	if(MAP2[1] == 0)MPINIT();
 
 	if (!oldstyle && SETUP && OPENED == stdin)
-	    fputs("> ", stdout);
-	IGNORE(fgets(INLINE+1,sizeof(INLINE)-1,OPENED));
+		fputs("> ", stdout);
+	do {
+		IGNORE(fgets(INLINE+1,sizeof(INLINE)-1,OPENED));
+	} while
+		(!feof(OPENED) && INLINE[1] == '#');
 	if (feof(OPENED)) {
 		if (logfp && OPENED == stdin)
 			fclose(logfp);
