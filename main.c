@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <getopt.h>
+#include <signal.h>
 #include "main.h"
 
 #include "misc.h"
@@ -48,6 +49,14 @@ extern void initialise();
 extern void score(long);
 extern int action(FILE *, long);
 
+void sig_handler(int signo)
+{
+    if (signo == SIGINT)
+	if (logfp != NULL)
+	    fflush(logfp);
+    exit(0);
+}
+
 /*
  * MAIN PROGRAM
  */
@@ -75,6 +84,7 @@ int main(int argc, char *argv[]) {
 				fprintf(stderr,
 					"advent: can't open logfile %s for write\n",
 					optarg);
+			signal(SIGINT, sig_handler);
 			break;
 		case 'o':
 		    oldstyle = true;
