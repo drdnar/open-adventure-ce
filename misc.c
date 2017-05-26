@@ -888,9 +888,9 @@ long I, VAL;
 	if (!oldstyle && SETUP && OPENED == stdin)
 		fputs("> ", stdout);
 	do {
-		IGNORE(fgets(rawbuf,sizeof(INLINE)-1,OPENED));
+		IGNORE(fgets(rawbuf,sizeof(rawbuf)-1,OPENED));
 	} while
-		(!feof(OPENED) && INLINE[1] == '#');
+		(!feof(OPENED) && rawbuf[0] == '#');
 	if (feof(OPENED)) {
 		if (logfp && OPENED == stdin)
 			fclose(logfp);
