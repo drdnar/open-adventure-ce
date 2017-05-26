@@ -1,0 +1,22 @@
+##First death by jump into fissure
+n
+seed 1495774850
+in
+take keys
+take lamp
+out
+s
+s
+s
+open grate
+d
+w
+w
+light lamp
+w
+w
+w
+down
+w
+jump
+n

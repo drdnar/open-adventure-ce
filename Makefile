@@ -24,8 +24,9 @@ misc.o:		misc.h main.h
 
 clean:
 	rm -f *.o advent advent.html advent.6 adventure.data
+	cd tests; $(MAKE) --quiet clean
 
-check:
+check: advent
 	cd tests; $(MAKE) --quiet
 
 # Requires asciidoc and xsltproc/docbook stylesheets.
