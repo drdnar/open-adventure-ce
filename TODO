@@ -1,11 +1,8 @@
 = Open Adventure TODO =
 
-* Update the command parser to accept a PRNG seed value.
+* Find the extra 5 treasures.
 
-* Add command log replay.  Note that the replay log needs to begin
-  with the random-number seed.
-
-* Use that feature to make regression tests from walkthroughs.
+* Make more regression tests from walkthroughs.
 
 * Translate the FORTRANish mess to actual C.
 

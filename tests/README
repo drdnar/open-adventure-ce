@@ -1,0 +1,16 @@
+= Notes on the test machinery = 
+
+A .tst extension means it's a game log
+A .chk extension means it's expected output from a test
+
+In general, a file named foo.chk is the expected output from theb game log
+foo.log.  To add new tests, just drop log files in this directory.
+
+To see summary lines from all tests, 'make testlist'.  
+
+To run the tests, "make regress".
+
+To remake the check files, "make buildregress".
+
+// end
+

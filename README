@@ -15,3 +15,5 @@ original 6-character name on the PDP-10 has been reverted to for the
 executable in order to avoid a collision with the BSD games port of
 the ancestral 1977 version.
 
+You can run a regression test on the code with 'make check'.
+
