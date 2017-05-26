@@ -25,6 +25,9 @@ misc.o:		misc.h main.h
 clean:
 	rm -f *.o advent advent.html advent.6 adventure.data
 
+check:
+	cd tests; $(MAKE) --quiet
+
 # Requires asciidoc and xsltproc/docbook stylesheets.
 .asc.6:
 	a2x --doctype manpage --format manpage $<
