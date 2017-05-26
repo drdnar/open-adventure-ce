@@ -1,6 +1,5 @@
-## Dwarf appears in soutth side chamber, where the coins are.
+## Death by dwarf.
 n
-seed 1495763690
 seed 1495752222
 in
 take keys
@@ -36,23 +35,19 @@ west
 take coins
 e
 s
-take jewelry
-n
-n
-take silver
 drop cage
-take silver
+take jewelry
+take axe
+n
+n
 n
 plugh
 inven
 drop jewelry
 drop gold
-drop silver
 inven
 drop keys
 plugh
-take knife
-throw axe
 s
 s
 up
@@ -60,3 +55,5 @@ w
 wave rod
 w
 take diamonds
+e
+n

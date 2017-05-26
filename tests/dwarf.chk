@@ -7,11 +7,6 @@ You are standing at the end of a road before a small brick building.
 Around you is a forest.  A small stream flows out of the building and 
 down a gully.  
 
-> seed 1495763690
-Seed set to 1495763690
-
-You're in front of building.  
-
 > seed 1495752222
 Seed set to 1495752222
 
@@ -222,7 +217,15 @@ There is a little axe here.
 
 There is precious jewelry here!    
 
+> drop cage
+
+OK   
+
 > take jewelry
+
+OK   
+
+> take axe
 
 OK   
 
@@ -246,18 +249,6 @@ You are in a low n/s passage at a hole in the floor.  The hole goes
 down to an e/w passage. 
 
 There are bars of silver here!
-
-> take silver
-
-You can't carry anything more.  You'll have to drop something first.  
-
-> drop cage
-
-OK   
-
-> take silver
-
-OK   
 
 > n
 
@@ -283,8 +274,8 @@ You are currently holding the following:
 Set of keys    
 Brass lantern  
 Black rod 
+Dwarf's axe    
 Large gold nugget   
-Bars of silver 
 Precious jewelry    
 Rare coins
 
@@ -296,16 +287,13 @@ OK
 
 OK   
 
-> drop silver
-
-OK   
-
 > inven
 
 You are currently holding the following:    
 Set of keys    
 Brass lantern  
 Black rod 
+Dwarf's axe    
 Rare coins
 
 > drop keys
@@ -324,21 +312,13 @@ It misses!
 
 You're at "Y2".    
 
-> take knife
-
-The dwarves' knives vanish as they strike the walls of the cave. 
-
-> throw axe
-
-I see no axe here.  
-
 > s
 
 There are 2 threatening little dwarves in the room with you.  
 
 You're in n/s passage above e/w passage.   
 
-There is a small wicker cage discarded nearby.    
+There are bars of silver here!
 
 > s
 
@@ -381,9 +361,26 @@ A crystal bridge now spans the fissure.
 
 OK   
 
-> 
-You scored  97 out of a possible 430, using   60 turns.  
+> e
+
+A little dwarf with a big knife blocks your way.  
+
+There are 2 threatening little dwarves in the room with you.  
+
+2 of them throw knives at you!  
+
+One of them gets you!    
+
+Oh dear, you seem to have gotten yourself killed.  I might be able to 
+help you out, but I've never really done this before.  Do you want me 
+to try to reincarnate you?   
+
+> n
+
+OK   
+
+You scored  81 out of a possible 430, using   56 turns.  
 
 Your score qualifies you as a novice class adventurer. 
 
-To achieve the next higher rating, you need 24 more points.  
+To achieve the next higher rating, you need 40 more points.  
