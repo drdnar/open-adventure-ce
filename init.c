@@ -238,7 +238,7 @@ L1005:	LINUSE=KK;
 	if(LNLENG < LNPOSN)BUG(1);
 L1006:	KK=KK+1;
 	if(KK >= LINSIZ)BUG(2);
-	LINES[KK]=GETTXT(false,false,false,KK);
+	LINES[KK]=GETTXT(false,false,false);
 	if(LINES[KK] != -1) goto L1006;
 	LINES[LINUSE]=KK;
 	if(LOC == OLDLOC) goto L1005;
@@ -300,17 +300,14 @@ L1039:	TRVS--; TRAVEL[TRVS]= -TRAVEL[TRVS]; TRVS++;
 
 /*  Here we read in the vocabulary.  KTAB(N) is the word number, ATAB(N) is
  *  the corresponding word.  The -1 at the end of section 4 is left in KTAB
- *  as an end-marker.  The words are given a minimal hash to make deciphering
- *  the core-image harder.  (We don't use gettxt's hash since that would force
- *  us to hash each input line to make comparisons work, and that in turn
- *  would make it harder to detect particular input words.) */
+ *  as an end-marker. */
 
 L1040:	J=10000;
 	for (TABNDX=1; TABNDX<=TABSIZ; TABNDX++) {
 	KTAB[TABNDX]=GETNUM(OPENED);
 	if(KTAB[TABNDX] == -1) goto L1002;
 	J=J+7;
-	ATAB[TABNDX]=GETTXT(true,true,true,0)+J*J;
+	ATAB[TABNDX]=GETTXT(true,true,true);
 	} /* end loop */
 	BUG(4);
 

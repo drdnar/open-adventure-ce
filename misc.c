@@ -30,7 +30,7 @@ L10:	L=IABS(LINES[K])-1;
 	LNPOSN=1;
 	STATE=0;
 	for (I=K; I<=L; I++) {
-	PUTTXT(LINES[I],STATE,2,I);
+	PUTTXT(LINES[I],STATE,2);
 	} /* end loop */
 	LNPOSN=0;
 L30:	LNPOSN=LNPOSN+1;
@@ -79,7 +79,7 @@ L340:	SHFTXT(LNPOSN+2,-2);
 	CASE=2;
 L345:	if(PARMS[NPARMS] < 0) goto L395;
 	{long x = NPARMS+1; if(PARMS[x] < 0)CASE=0;}
-	PUTTXT(PARMS[NPARMS],STATE,CASE,0);
+	PUTTXT(PARMS[NPARMS],STATE,CASE);
 	NPARMS=NPARMS+1;
 	 goto L345;
 
@@ -98,8 +98,8 @@ L380:	SHFTXT(LNPOSN+2,-2);
 	if(PRMTYP == 31)CASE=1;
 	if(PRMTYP == 33)CASE=0;
 	I=LNPOSN;
-	PUTTXT(PARMS[NPARMS],STATE,CASE,0);
-	{long x = NPARMS+1; PUTTXT(PARMS[x],STATE,CASE,0);}
+	PUTTXT(PARMS[NPARMS],STATE,CASE);
+	{long x = NPARMS+1; PUTTXT(PARMS[x],STATE,CASE);}
 	if(PRMTYP == 13 && INLINE[I] >= 37 && INLINE[I] <=
 		62)INLINE[I]=INLINE[I]-26;
 	NPARMS=NPARMS+2;
@@ -188,16 +188,16 @@ L10:	if(BLKLIN)TYPE0();
 	MAPLIN(input);
 	if (feof(input))
 	    return false;
-	WORD1=GETTXT(true,true,true,0);
+	WORD1=GETTXT(true,true,true);
 	if(BLKLIN && WORD1 < 0) goto L10;
-	WORD1X=GETTXT(false,true,true,0);
-L12:	JUNK=GETTXT(false,true,true,0);
+	WORD1X=GETTXT(false,true,true);
+L12:	JUNK=GETTXT(false,true,true);
 	if(JUNK > 0) goto L12;
-	WORD2=GETTXT(true,true,true,0);
-	WORD2X=GETTXT(false,true,true,0);
-L22:	JUNK=GETTXT(false,true,true,0);
+	WORD2=GETTXT(true,true,true);
+	WORD2X=GETTXT(false,true,true);
+L22:	JUNK=GETTXT(false,true,true);
 	if(JUNK > 0) goto L22;
-	if(GETTXT(true,true,true,0) <= 0)return true;
+	if(GETTXT(true,true,true) <= 0)return true;
 	RSPEAK(53);
 	 goto L10;
 }
@@ -283,14 +283,12 @@ L42:	GETNUM=GETNUM*SIGN;
 
 #define GETNUM(K) fGETNUM(K)
 #undef GETTXT
-long fGETTXT(long SKIP,long ONEWRD, long UPPER, long HASH) {
+long fGETTXT(long SKIP,long ONEWRD, long UPPER) {
 long CHAR, GETTXT, I; static long SPLITTING = -1;
 
 /*  Take characters from an input line and pack them into 30-bit words.
  *  Skip says to skip leading blanks.  ONEWRD says stop if we come to a
- *  blank.  UPPER says to map all letters to uppercase.  HASH may be used
- *  as a parameter for encrypting the text if desired; however, a hash of 0
- *  should result in unmodified bytes being packed.  If we reach the
+ *  blank.  UPPER says to map all letters to uppercase.  If we reach the
  *  end of the line, the word is filled up with blanks (which encode as 0's).
  *  If we're already at end of line when GETTXT is called, we return -1. */
 
@@ -323,20 +321,19 @@ L14:	LNPOSN=LNPOSN+1;
 L15:	/*etc*/ ;
 	} /* end loop */
 
-	if(HASH)GETTXT=GETTXT+MOD(HASH*13579L+5432L,97531L)*12345L+HASH;
 	return(GETTXT);
 }
 
 
 
-#define GETTXT(SKIP,ONEWRD,UPPER,HASH) fGETTXT(SKIP,ONEWRD,UPPER,HASH)
+#define GETTXT(SKIP,ONEWRD,UPPER) fGETTXT(SKIP,ONEWRD,UPPER)
 #undef MAKEWD
 long fMAKEWD(long LETTRS) {
 long I, L, MAKEWD;
 
 /*  Combine five uppercase letters (represented by pairs of decimal digits
  *  in lettrs) to form a 30-bit value matching the one that GETTXT would
- *  return given those characters plus trailing blanks and HASH=0.  Caution:
+ *  return given those characters plus trailing blanks.  Caution:
  *  lettrs will overflow 31 bits if 5-letter word starts with V-Z.  As a
  *  kludgey workaround, you can increment a letter by 5 by adding 50 to
  *  the next pair of digits. */
@@ -360,13 +357,12 @@ L10:	MAKEWD=MAKEWD+I*(MOD(L,50)+10);
 #define MAKEWD(LETTRS) fMAKEWD(LETTRS)
 #undef PUTTXT
 #define STATE (*sTATE)
-void fPUTTXT(long WORD, long *sTATE, long CASE, long HASH) {
+void fPUTTXT(long WORD, long *sTATE, long CASE) {
 long ALPH1, ALPH2, BYTE, DIV, I, W;
 
 /*  Unpack the 30-bit value in word to obtain up to 5 integer-encoded chars,
  *  and store them in inline starting at LNPOSN.  If LNLENG>=LNPOSN, shift
- *  existing characters to the right to make room.  HASH must be the same
- *  as it was when gettxt created the 30-bit word.  STATE will be zero when
+ *  existing characters to the right to make room.  STATE will be zero when
  *  puttxt is called with the first of a sequence of words, but is thereafter
  *  unchanged by the caller, so PUTTXT can use it to maintain state across
  *  calls.  LNPOSN and LNLENG are incremented by the number of chars stored.
@@ -381,7 +377,6 @@ long ALPH1, ALPH2, BYTE, DIV, I, W;
 /*  ALPH1&2 DEFINE RANGE OF WRONG-CASE CHARS, 11-36 OR 37-62 OR EMPTY. */
 	DIV=64L*64L*64L*64L;
 	W=WORD;
-	if(HASH)W=W-MOD(HASH*13579L+5432L,97531L)*12345L-HASH;
 	/* 18 */ for (I=1; I<=5; I++) {
 	if(W <= 0 && STATE == 0 && IABS(CASE) <= 1)return;
 	BYTE=W/DIV;
@@ -403,7 +398,7 @@ L18:	W=(W-BYTE*DIV)*64;
 
 
 #undef STATE
-#define PUTTXT(WORD,STATE,CASE,HASH) fPUTTXT(WORD,&STATE,CASE,HASH)
+#define PUTTXT(WORD,STATE,CASE) fPUTTXT(WORD,&STATE,CASE)
 #undef SHFTXT
 void fSHFTXT(long FROM, long DELTA) {
 long I, II, JJ;
@@ -547,7 +542,7 @@ L32:	N--; WORD=BUF[N]-CKSUM; N++;
 #define SAVWRD(OP,WORD) fSAVWRD(OP,&WORD)
 #undef VOCAB
 long fVOCAB(long ID, long INIT) {
-long HASH, I, VOCAB;
+long I, VOCAB;
 
 /*  Look up ID in the vocabulary (ATAB) and return its "definition" (KTAB), or
  *  -1 if not found.  If INIT is positive, this is an initialisation call setting
@@ -556,12 +551,10 @@ long HASH, I, VOCAB;
  *  (Thus "STEPS", which is a motion verb as well as an object, may be located
  *  as an object.)  And it also means the KTAB value is taken modulo 1000. */
 
-	HASH=10000;
 	/* 1 */ for (I=1; I<=TABSIZ; I++) {
 	if(KTAB[I] == -1) goto L2;
-	HASH=HASH+7;
 	if(INIT >= 0 && KTAB[I]/1000 != INIT) goto L1;
-	if(ATAB[I] == ID+HASH*HASH) goto L3;
+	if(ATAB[I] == ID) goto L3;
 L1:	/*etc*/ ;
 	} /* end loop */
 	BUG(21);

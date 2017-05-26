@@ -20,12 +20,12 @@ extern long fYES(FILE *,long,long,long);
 #define YES(input,X,Y,Z) fYES(input,X,Y,Z)
 extern long fGETNUM(FILE *);
 #define GETNUM(K) fGETNUM(K)
-extern long fGETTXT(long,long,long,long);
-#define GETTXT(SKIP,ONEWRD,UPPER,HASH) fGETTXT(SKIP,ONEWRD,UPPER,HASH)
+extern long fGETTXT(long,long,long);
+#define GETTXT(SKIP,ONEWRD,UPPER) fGETTXT(SKIP,ONEWRD,UPPER)
 extern long fMAKEWD(long);
 #define MAKEWD(LETTRS) fMAKEWD(LETTRS)
-extern void fPUTTXT(long,long*,long,long);
-#define PUTTXT(WORD,STATE,CASE,HASH) fPUTTXT(WORD,&STATE,CASE,HASH)
+extern void fPUTTXT(long,long*,long);
+#define PUTTXT(WORD,STATE,CASE) fPUTTXT(WORD,&STATE,CASE)
 extern void fSHFTXT(long,long);
 #define SHFTXT(FROM,DELTA) fSHFTXT(FROM,DELTA)
 extern void fTYPE0();
