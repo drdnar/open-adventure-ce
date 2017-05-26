@@ -6,7 +6,9 @@ A .chk extension means it's expected output from a test
 In general, a file named foo.chk is the expected output from theb game log
 foo.log.  To add new tests, just drop log files in this directory.
 
-To see summary lines from all tests, 'make testlist'.  
+To see summary lines from all tests, 'make testlist'.  The summary lines
+are those led with ##; you should have one such descriptive line at the
+head of the file.
 
 To run the tests, "make regress".
 
