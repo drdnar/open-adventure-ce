@@ -160,6 +160,8 @@ static bool fallback_handler(signed char *buf)
     if (sscanf(buf, "seed %ld", &sv) == 1) {
 	set_seed(sv);
 	printf("Seed set to %ld\n", sv);
+	// here we reconfigure any global game state that uses random numbers
+	ZZWORD=RNDVOC(3,0)+MESH*2;
 	return true;
     }
     return false;
