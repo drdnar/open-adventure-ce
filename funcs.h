@@ -32,7 +32,7 @@
  *  while in forest).  They should probably be replaced by using another
  *  "cond" bit.  For now, however, a quick fix...  OUTSID(LOC) is true if
  *  LOC is outside, INDEEP(LOC) is true if LOC is "deep" in the cave (hall
- *  of mists or deeper).  Note special kludges for "FOOF" locs. */
+ *  of mists or deeper).  Note special kludges for "Foof!" locs. */
 
 #define OUTSID(LOC)	((LOC) <= 8 || FOREST(LOC) || (LOC) == PLAC[SAPPH] || (LOC) == 180 || (LOC) == 182)
 #define INDEEP(LOC)	((LOC) >= 15 && !OUTSID(LOC) && (LOC) != 179)
