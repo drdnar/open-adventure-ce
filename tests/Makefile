@@ -36,8 +36,7 @@ TESTLOADS := $(shell ls -1 *.log | sed '/.log/s///')
 buildregress: adventure.data
 	@for file in $(TESTLOADS); do \
 	    echo "Remaking $${file}.chk"; \
-	    $(REPOSURGEON) advent <$${file}.log >$${file}.chk \
-		2>&1 || exit 1; \
+	    advent <$${file}.log >$${file}.chk 2>&1 || exit 1; \
 	done
 regress: adventure.data
 	@for file in $(TESTLOADS); do \
