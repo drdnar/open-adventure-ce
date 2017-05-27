@@ -10,7 +10,7 @@ SOURCES=$(OBJS:.o=.c) COPYING NEWS README TODO advent.text control
 advent:	$(OBJS)
 	gcc -std=c99 -O $(DBX) -o advent $(OBJS) $(LIBS)
 
-main.o:		misc.h funcs.h
+main.o:		main.h misc.h funcs.h
 
 init.o:		misc.h main.h share.h funcs.h
 
