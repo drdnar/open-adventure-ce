@@ -3,5 +3,7 @@
 Repository head::
   Forward port of Crowther & Woods's 430-point Adventure 2.5.
   Added -l option for logging.
-  Added command prompt; -o suppresses this.
+  Game logs are now fully reproducible via the "seed" command.
+  Added regression-test suite using seed.
+  Added command prompt; -o suppresses this. Otherwise no gameplay changes.
 
