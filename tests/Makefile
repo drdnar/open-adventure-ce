@@ -11,10 +11,7 @@ PATH := $(realpath ..):$(realpath .):${PATH}
 # Defeat annoying behavior under Mac OS X - builtin echo doesn't do -n
 ECHO := /bin/echo
 
-default:
-	make -e --quiet all
-
-all: listcheck regress
+all: regress
 	@echo "=== No diff output is good news."
 
 .SUFFIXES: .chk
