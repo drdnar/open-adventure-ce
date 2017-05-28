@@ -1,8 +1,5 @@
 # Test-suite makefile for reposurgeon
 
-# By setting the REPOSURGEON environment variable and using -e
-# a different implementation can be plugged in to the tests.
-
 # Use absolute path so tests that change working directory still use 
 # scripts from parent directory.  Note that using $PWD seems to fail
 # here under Gitlab's CI environment.
