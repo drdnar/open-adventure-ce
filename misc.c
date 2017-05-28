@@ -6,6 +6,7 @@
 #include "share.h"	/* for SETUP */
 #include "misc.h"
 #include "funcs.h"
+#include "database.h"
 
 /* hack to ignore GCC Unused Result */
 #define IGNORE(r) do{if(r){}}while(0)

@@ -4,6 +4,7 @@
 #include "main.h"
 #include "share.h"
 #include "funcs.h"
+#include "database.h"
 
 /* This stuff was broken off as part of an effort to get the main program
  * to compile without running out of memory.  We're called with a number

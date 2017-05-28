@@ -7,6 +7,7 @@
 #include "main.h"
 #include "share.h"
 #include "funcs.h"
+#include "database.h"
 
 /*
  * Initialisation
@@ -175,7 +176,7 @@ static void quick_io(void);
 void initialise(void) {
 	if (oldstyle)
 		printf("Initialising...\n");
-	if(!quick_init()){raw_init(); report(); quick_save();}
+        if(!quick_init()){raw_init(); report(); quick_save();}
 	finish_init();
 }
 

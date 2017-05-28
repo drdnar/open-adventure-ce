@@ -1,0 +1,36 @@
+#include "database.h"
+
+const long RTXSIZ = 277;
+const long CLSMAX = 12;
+const long LOCSIZ = 185;
+const long LINSIZ = 12500;
+const long TRNSIZ = 5;
+const long TABSIZ = 330;
+const long VRBSIZ = 35;
+long LINUSE;
+long TRVS;
+long CLSSES;
+long TRNVLS;
+long TABNDX;
+long HNTMAX;
+long PTEXT[101];
+long RTEXT[278];
+long CTEXT[13];
+long OBJSND[101];
+long OBJTXT[101];
+long STEXT[186];
+long LTEXT[186];
+long COND[186];
+long KEY[186];
+long LOCSND[186];
+long LINES[12500];
+long CVAL[13];
+long TTEXT[6];
+long TRNVAL[6];
+long TRAVEL[886];
+long KTAB[331];
+long ATAB[331];
+long PLAC[101];
+long FIXD[101];
+long ACTSPK[36];
+long HINTS[21][5];

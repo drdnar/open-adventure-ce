@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include "database.h"
 
 /*  Statement functions
  *
