@@ -10,10 +10,10 @@ OBJS=main.o init.o actions1.o actions2.o score.o misc.o database.o
 SOURCES=$(OBJS:.o=.c) COPYING NEWS README TODO advent.text control
 
 .c.o:
-	gcc -O $(DBX) -c $<
+	$(CC) -O $(DBX) -c $<
 
 advent:	$(OBJS)
-	gcc -Wall -std=c99 -O $(DBX) -o advent $(OBJS) $(LIBS)
+	$(CC) -Wall -std=c99 -O $(DBX) -o advent $(OBJS) $(LIBS)
 
 main.o:		main.h misc.h funcs.h database.h
 
@@ -29,7 +29,7 @@ misc.o:		misc.h main.h database.h
 
 database.c database.h: compile
 	./compile
-	gcc $(OPTIONS) -O $(DBX) -c database.c
+	$(CC) $(OPTIONS) -O $(DBX) -c database.c
 
 clean:
 	rm -f *.o advent advent.html advent.6 database.[ch] compile
