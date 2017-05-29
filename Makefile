@@ -9,14 +9,14 @@ else ifeq "$(GCCVERSIONGTEQ4)" "1"
 	CC=c99 --std=gnu99
 endif
 
-OBJS=main.o init.o actions1.o actions2.o score.o misc.o database.o
-SOURCES=$(OBJS:.o=.c) COPYING NEWS README TODO advent.text control
+OBJS=main.o init.o actions1.o actions2.o score.o misc.o
+SOURCES=$(OBJS:.o=.c) COPYING NEWS README TODO adventure.text advent.text control misc.h main.h share.h funcs.h
 
 .c.o:
 	$(CC) -O $(DBX) -c $<
 
-advent:	$(OBJS)
-	$(CC) -Wall -std=c99 -O $(DBX) -o advent $(OBJS) $(LIBS)
+advent:	$(OBJS) database.o
+	$(CC) -Wall -std=c99 -O $(DBX) -o advent $(OBJS) database.o $(LIBS)
 
 main.o:		main.h misc.h funcs.h database.h
 
