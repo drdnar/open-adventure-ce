@@ -75,6 +75,23 @@ best just to start a new numbering series while acknowledging the
 links back.  I have reverted to "Advent" to avoid a name collision
 with the BSD Games version.
 
+== Functional changes in Open Adventure ==
+
+A "seed" command has been added.  This is not intended for human use
+but as a way for game logs to set the PRNG (pseudorandom-number generator) so
+that random events (dwarf & pirate appearances, the bird's magic word)
+will be reproducible.
+
+A -l command-line option has been added. When this is given (with a
+file path argument) each command entered will be logged to the
+specified file.  Additionally, a generated "seed" command will be put
+early in the file capturing the randomized start state of the PRNG
+so that replays of the log will be reproducible.
+
+Using "seed" and -l, the distribution now includes a regression-test
+suite for the game.  Any log captured with -l (and thus containing
+a "seed" command) will replay relibly, including random events.
+
 == Sources ==
 
 [bibliography]
