@@ -7,7 +7,7 @@
 #include "main.h"
 #include "share.h"
 #include "funcs.h"
-#include "database/database.h"
+#include "database.h"
 
 /*
  * Initialisation
