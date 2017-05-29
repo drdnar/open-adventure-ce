@@ -1,4 +1,3 @@
-#include <time.h>
 #include <stdio.h>
 #include <stdbool.h>
 
@@ -68,7 +67,7 @@ extern void fMPINIT();
 #define MPINIT() fMPINIT()
 extern void fSAVEIO(long,long,long*);
 #define SAVEIO(OP,IN,ARR) fSAVEIO(OP,IN,ARR)
-#define DATIME(D,T) do {struct timespec ts; clock_gettime(CLOCK_REALTIME, &ts); D=ts.tv_sec, T=ts.tv_nsec;} while (0)
+extern void DATIME(long*, long*);
 extern long fIABS(long);
 #define IABS(N) fIABS(N)
 extern long fMOD(long,long);

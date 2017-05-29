@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include <getopt.h>
 #include <signal.h>
+#include <time.h>
 #include "main.h"
 #include "database.h"
 #include "misc.h"
@@ -920,4 +921,5 @@ L12400: LIMIT= -1;
 L18999: RSPEAK(SPK);
 L19000: RSPEAK(136);
 	score(0);
+	return true;
 }

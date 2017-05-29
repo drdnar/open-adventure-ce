@@ -1,5 +1,6 @@
 # Makefile for the open-source release of adventure 2.5
 
+CCFLAGS=-std=c99
 LIBS=-lrt
 UNAME_S := $(shell uname -s)
 GCCVERSIONGTEQ4 := $(shell expr `gcc -dumpversion | cut -f1 -d.` \>= 4)
@@ -13,10 +14,10 @@ OBJS=main.o init.o actions1.o actions2.o score.o misc.o
 SOURCES=$(OBJS:.o=.c) COPYING NEWS README TODO adventure.text advent.text control misc.h main.h share.h funcs.h
 
 .c.o:
-	$(CC) -O $(DBX) -c $<
+	$(CC) $(CCFLAGS) -O $(DBX) -c $<
 
 advent:	$(OBJS) database.o
-	$(CC) -Wall -std=c99 -O $(DBX) -o advent $(OBJS) database.o $(LIBS)
+	$(CC) $(CCFLAGS) -O $(DBX) -o advent $(OBJS) database.o $(LIBS)
 
 main.o:		main.h misc.h funcs.h database.h
 
@@ -32,7 +33,7 @@ misc.o:		misc.h main.h database.h
 
 database.c database.h: compile
 	./compile
-	$(CC) $(OPTIONS) -O $(DBX) -c database.c
+	$(CC) $(CCFLAGS) -O $(DBX) -c database.c
 
 clean:
 	rm -f *.o advent advent.html advent.6 database.[ch] compile

@@ -523,7 +523,7 @@ L8300:	SPK=201;
 /*  This next part is shared with the "resume" code.  The two cases are
  *  distinguished by the value of kk (-1 for suspend, +1 for resume). */
 
-L8305:	DATIME(I,K);
+L8305:	DATIME(&I,&K);
 	K=I+650*K;
 	SAVWRD(KK,K);
 	K=VRSION;
