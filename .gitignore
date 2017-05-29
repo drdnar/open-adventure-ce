@@ -1,6 +1,6 @@
 advent
 *.o
-database/compile
-database/database.h
-database/database.c
+compile
+database.h
+database.c
 
