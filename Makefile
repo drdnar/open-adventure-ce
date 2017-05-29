@@ -2,11 +2,10 @@
 
 LIBS=-lrt
 UNAME_S := $(shell uname -s)
+GCCVERSIONGTEQ4 := $(shell expr `gcc -dumpversion | cut -f1 -d.` \>= 4)
 ifeq ($(UNAME_S),Darwin)
 	LIBS=
-endif
-GCCVERSIONGTEQ4 := $(shell expr `gcc -dumpversion | cut -f1 -d.` \>= 4)
-ifeq "$(GCCVERSIONGTEQ4)" "1"
+else ifeq "$(GCCVERSIONGTEQ4)" "1"
 	CC=c99 --std=gnu99
 endif
 
