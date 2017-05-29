@@ -92,6 +92,10 @@ Using "seed" and -l, the distribution now includes a regression-test
 suite for the game.  Any log captured with -l (and thus containing
 a "seed" command) will replay relibly, including random events.
 
+The adventure.text file is no longer required at runtime.  Instead, it
+is compiled at build time to a source module containing C structures,
+which is then linked to the advent binary.
+
 == Sources ==
 
 [bibliography]
