@@ -778,35 +778,33 @@ long randrange(long range)
 
 #undef RNDVOC
 long fRNDVOC(long CHAR, long FORCE) {
-long DIV, J, RNDVOC;
-
 /*  Searches the vocabulary for a word whose second character is char, and
  *  changes that word such that each of the other four characters is a
  *  random letter.  If force is non-zero, it is used as the new word.
  *  Returns the new word. */
 
+	long RNDVOC;
 
 	RNDVOC=FORCE;
 
 	if (RNDVOC == 0) {
 	  for (int I = 1; I <= 5; I++) {
-	    J = 11 + randrange(26);
+	    long J = 11 + randrange(26);
 	    if (I == 2)
 	      J = CHAR;
 	    RNDVOC = RNDVOC * 64 + J;
 	  }
 	}
 
-	J = 10000;
-	DIV = 64L * 64L * 64L;
-
+	long DIV = 64L * 64L * 64L;
 	for (int I = 1; I <= TABSIZ; I++) {
-	  J = J + 7;
-	  if (MOD((ATAB[I]-J*J)/DIV, 64L) == CHAR)
-	    break;
+	  if (MOD(ATAB[I]/DIV, 64L) == CHAR)
+	    {
+	      ATAB[I] = RNDVOC;
+	      break;
+	    }
 	}
 
-	ATAB[I] = RNDVOC + J * J;
 	return(RNDVOC);
 }
 
