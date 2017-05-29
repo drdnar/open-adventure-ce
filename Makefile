@@ -27,7 +27,7 @@ database.c database.h: compile
 	gcc $(OPTIONS) -O $(DBX) -c database.c
 
 clean:
-	rm -f *.o advent advent.html advent.6 database.[ch]
+	rm -f *.o advent advent.html advent.6 database.[ch] compile
 	cd tests; $(MAKE) --quiet clean
 
 check: advent
@@ -50,6 +50,3 @@ release: advent-$(VERS).tar.gz advent.html
 
 refresh: advent.html
 	shipper -N -w version=$(VERS) | sh -e -x
-
-database:
-	cd database; $(MAKE)
