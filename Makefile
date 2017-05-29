@@ -1,6 +1,11 @@
 # Makefile for the open-source release of adventure 2.5
 
 LIBS=-lrt
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+	LIBS=
+endif
+
 OBJS=main.o init.o actions1.o actions2.o score.o misc.o database.o
 SOURCES=$(OBJS:.o=.c) COPYING NEWS README TODO advent.text control
 
