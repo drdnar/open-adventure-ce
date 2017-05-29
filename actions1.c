@@ -556,7 +556,7 @@ L8305:	DATIME(&I,&K);
 	SAVWRD(KK,K);
 	if(K != 0) goto L8318;
 	K=NUL;
-	ZZWORD=RNDVOC(3,ZZWORD-MESH*2)+MESH*2;
+	ZZWORD=RNDVOC(3,ZZWORD);
 	if(KK > 0) return(8);
 	RSPEAK(266);
 	exit(0);
@@ -603,7 +603,7 @@ L8330:	SPK=228;
 	RSPEAK(IABS(K));
 	if(K < 0) return(2012);
 	SPK=0;
-L8332:	SETPRM(1,ZZWORD-MESH*2,0);
+L8332:	SETPRM(1,ZZWORD,0);
 	/* 8335 */ for (I=1; I<=100; I++) {
 	if(!HERE(I) || OBJSND[I] == 0 || PROP[I] < 0) goto L8335;
 	PSPEAK(I,OBJSND[I]+PROP[I]);

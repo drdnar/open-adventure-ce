@@ -30,7 +30,7 @@ long ABBNUM, AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD, BONUS,
 		I, INVENT, IGO, IWEST, J, JADE, K, K2, KEYS, KK,
 		KNFLOC, KNIFE, KQ, L, LAMP, LIMIT, LL,
 		LMWARN, LOC, LOCK, LOOK,
-		MAGZIN, MAXDIE, MAXTRS, MESH = 123456789,
+		MAGZIN, MAXDIE, MAXTRS,
 		MESSAG, MIRROR, MXSCOR,
 		NEWLOC, NOVICE, NUGGET, NUL, NUMDIE, OBJ,
 		ODLOC[7], OGRE, OIL, OLDLC2, OLDLOC, OLDOBJ, OYSTER,
@@ -131,7 +131,7 @@ int main(int argc, char *argv[]) {
 
 L1:	SETUP= -1;
 	I=0;
-	ZZWORD=RNDVOC(3,0)+MESH*2;
+	ZZWORD=RNDVOC(3,0);
 	NOVICE=YES(stdin, 65,1,0);
 	NEWLOC=1;
 	LOC=1;
@@ -156,7 +156,7 @@ static bool fallback_handler(signed char *buf)
 	set_seed(sv);
 	printf("Seed set to %ld\n", sv);
 	// here we reconfigure any global game state that uses random numbers
-	ZZWORD=RNDVOC(3,0)+MESH*2;
+	ZZWORD=RNDVOC(3,0);
 	return true;
     }
     return false;
