@@ -778,7 +778,7 @@ long randrange(long range)
 
 #undef RNDVOC
 long fRNDVOC(long CHAR, long FORCE) {
-long DIV, I, J, RNDVOC;
+long DIV, J, RNDVOC;
 
 /*  Searches the vocabulary for a word whose second character is char, and
  *  changes that word such that each of the other four characters is a
@@ -787,22 +787,26 @@ long DIV, I, J, RNDVOC;
 
 
 	RNDVOC=FORCE;
-	if(RNDVOC != 0) goto L3;
-	for (I=1; I<=5; I++) {
-	J=11+randrange(26);
-	if(I == 2)J=CHAR;
-	RNDVOC=RNDVOC*64+J;
-	} /* end loop */
-L3:	J=10000;
-	DIV=64L*64L*64L;
-	for (I=1; I<=TABSIZ; I++) {
-	J=J+7;
-	if(MOD((ATAB[I]-J*J)/DIV,64L) == CHAR) goto L8;
-	/*etc*/ ;
-	} /* end loop */
-	BUG(5);
 
-L8:	ATAB[I]=RNDVOC+J*J;
+	if (RNDVOC == 0) {
+	  for (int I = 1; I <= 5; I++) {
+	    J = 11 + randrange(26);
+	    if (I == 2)
+	      J = CHAR;
+	    RNDVOC = RNDVOC * 64 + J;
+	  }
+	}
+
+	J = 10000;
+	DIV = 64L * 64L * 64L;
+
+	for (int I = 1; I <= TABSIZ; I++) {
+	  J = J + 7;
+	  if (MOD((ATAB[I]-J*J)/DIV, 64L) == CHAR)
+	    break;
+	}
+
+	ATAB[I] = RNDVOC + J * J;
 	return(RNDVOC);
 }
 
