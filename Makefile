@@ -7,7 +7,7 @@ GCCVERSIONGTEQ4 := $(shell expr `gcc -dumpversion | cut -f1 -d.` \>= 4)
 ifeq ($(UNAME_S),Darwin)
 	LIBS=
 else ifeq "$(GCCVERSIONGTEQ4)" "1"
-	CC=c99 --std=gnu99
+	CC=c99
 endif
 
 OBJS=main.o init.o actions1.o actions2.o score.o misc.o
