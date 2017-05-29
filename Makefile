@@ -1,32 +1,31 @@
 # Makefile for the open-source release of adventure 2.5
 
 LIBS=-lrt
-OBJS=main.o init.o actions1.o actions2.o score.o misc.o database.o
+OBJS=main.o init.o actions1.o actions2.o score.o misc.o database/database.o
 SOURCES=$(OBJS:.o=.c) COPYING NEWS README TODO advent.text control
 
 .c.o:
 	gcc -O $(DBX) -c $<
 
-advent:	$(OBJS)
+advent:	$(OBJS) database
 	gcc -Wall -std=c99 -O $(DBX) -o advent $(OBJS) $(LIBS)
 
-main.o:		main.h misc.h funcs.h database.h
+main.o:		main.h misc.h funcs.h database/database.h
 
-init.o:		misc.h main.h share.h funcs.h database.h
+init.o:		misc.h main.h share.h funcs.h database/database.h
 
-actions1.o:	misc.h main.h share.h funcs.h database.h
+actions1.o:	misc.h main.h share.h funcs.h database/database.h
 
 actions2.o:	misc.h main.h share.h funcs.h
 
-score.o:	misc.h main.h share.h database.h
+score.o:	misc.h main.h share.h database/database.h
 
-misc.o:		misc.h main.h database.h
-
-database.o:	database.h
+misc.o:		misc.h main.h database/database.h
 
 clean:
 	rm -f *.o advent advent.html advent.6 adventure.data
 	cd tests; $(MAKE) --quiet clean
+	cd database; $(MAKE) clean
 
 check: advent
 	cd tests; $(MAKE) --quiet
@@ -48,3 +47,6 @@ release: advent-$(VERS).tar.gz advent.html
 
 refresh: advent.html
 	shipper -N -w version=$(VERS) | sh -e -x
+
+database:
+	cd database; $(MAKE)

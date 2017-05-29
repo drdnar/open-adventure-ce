@@ -14,7 +14,7 @@ all: regress
 .SUFFIXES: .chk
 
 clean:
-	rm -fr *~ adventure.text adventure.data
+	rm -fr *~ adventure.text
 
 # Show summary lines for all tests.
 testlist:
@@ -27,12 +27,12 @@ listcheck:
 # General regression testing of commands and output; look at the *.log and
 # corresponding *.chk files to see which tests this runs.
 TESTLOADS := $(shell ls -1 *.log | sed '/.log/s///')
-buildregress: adventure.data
+buildregress:
 	@for file in $(TESTLOADS); do \
 	    echo "Remaking $${file}.chk"; \
 	    advent <$${file}.log >$${file}.chk 2>&1 || exit 1; \
 	done
-regress: adventure.data
+regress:
 	@for file in $(TESTLOADS); do \
 	    $(ECHO) -n "  $${file} "; grep --text '##' $${file}.log  || echo ' ## (no description)'; \
 	    if advent < $${file}.log >/tmp/regress$$$$ 2>&1; \
@@ -40,9 +40,5 @@ regress: adventure.data
 	    else echo "*** Nonzero return status on $${file}!"; exit 1; fi \
 	done
 	@rm -f /tmp/regress$$$$
-
-adventure.data: 
-	cp "$(realpath ..)"/adventure.text .
-	timeout 1 advent >/dev/null 2>&1; true
 
 # end

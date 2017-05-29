@@ -1,3 +1,6 @@
 advent
 *.o
-adventure.data
+database/compile
+database/database.h
+database/database.c
+

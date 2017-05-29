@@ -9,7 +9,7 @@
 #include <getopt.h>
 #include <signal.h>
 #include "main.h"
-#include "database.h"
+#include "database/database.h"
 #include "misc.h"
 
 long ABB[186], ATLOC[186], BLKLIN = true, DFLAG,

@@ -2,7 +2,7 @@
 #include "misc.h"
 #include "main.h"
 #include "share.h"
-#include "database.h"
+#include "database/database.h"
 
 /*
  * scoring and wrap-up
