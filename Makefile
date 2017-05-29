@@ -5,6 +5,10 @@ UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
 	LIBS=
 endif
+GCCVERSIONGTEQ4 := $(shell expr `gcc -dumpversion | cut -f1 -d.` \>= 4)
+ifeq "$(GCCVERSIONGTEQ4)" "1"
+	CC=c99 --std=gnu99
+endif
 
 OBJS=main.o init.o actions1.o actions2.o score.o misc.o database.o
 SOURCES=$(OBJS:.o=.c) COPYING NEWS README TODO advent.text control
