@@ -66,6 +66,46 @@ contained a rights reservation by Don Woods and that was it.
 I wrote to Don asking permission to release 2.5 under 2-clause BSD;
 he replied on 15 May giving both permission and encouragement.
 
+Here is what Don said about differences between the original Adventure
+and 2.5:
+
+> The bulk of the points come from five new 16-point treasures.  (I say "bulk"
+> because I think at least one of the scores included some padding and I may
+> have tweaked those.)  Each of the new treasures requires solving a puzzle
+> that's definitely at the tricky end of the scale for Adventure.  Much of the
+> new stuff involves trying new directions and/or finding new uses for stuff
+> that already existed; e.g. the forest outside is no longer a small number of
+> locations with partially random movement, but is a full-fledged maze, one
+> that I hope has a character different from either of the previous two.
+> 
+> As the text itself says, V2.5 is essentially the same as V2, with a few more
+> hints.  (I think I came up with a better one for the endgame, too.)  I don't
+> seem to have a copy of the similar text from V2, so I don't know whether/how
+> it described itself to new and seasoned players.
+> 
+> The other big change, as I mentioned above, was I added a way of docking
+> points at a certain number of turns.  This was my second attempt to do what
+> the batteries had been for: require being efficient to achieve top score.
+> Alas, the batteries led to players deliberately turning the lamp off/on
+> whenever they weren't moving or were in a lit area, making the game take
+> even longer!  I set the requirement at what felt like a hard but fair
+> number of turns, then applied several sneaky tricks to shave off another
+> twenty.
+>
+> I hacked up a wrapper around the game (still in Fortran, most likely, but
+> I forget) that would try each initializing the RNG using each second of a
+> given day, while feeding in a script that either worked or aborted early
+> if anything went wrong (such as a dwarf blocking my path).  As I recall,
+> it took less than a day's worth of RNG seeds to find one that worked.
+>
+> I verified my script could work given a favorable RNG, and stuck
+> that number in the message.
+> 
+> I like how that final puzzle, unlike the game itself, does not readily
+> succumb even given access to the game source.  You really need to fit
+> together not only the goals and the map and use of inventory space, but
+> also details like just what _can_ you do in the dark...?
+
 == Nomenclature ==
 
 This project is called "Open Adventure" because it's not at all clear
