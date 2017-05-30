@@ -110,7 +110,8 @@ int main(int argc, char *argv[]) {
 	lcgstate.a = 1093;
 	lcgstate.c = 221587;
 	lcgstate.m = 1048576;
-	long seedval = (long)time(NULL);
+	srand(time(NULL));
+	long seedval = (long)rand();
 	set_seed(seedval);
 
 /*  Read the database if we have not yet done so */
