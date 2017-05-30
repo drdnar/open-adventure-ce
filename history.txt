@@ -73,7 +73,9 @@ to number Adventure past 2.5 without misleading or causing
 collisions. Various of the non-mainline versions have claimed to be
 versions 3, 4, 5, 6, 7 and for all I know higher than that.  It seems
 best just to start a new numbering series while acknowledging the
-links back.  I have reverted to "Advent" to avoid a name collision
+links back.
+
+I have reverted to "Advent" for the binary to avoid a name collision
 with the BSD Games version.
 
 == Functional changes in Open Adventure ==
