@@ -1,0 +1,22 @@
+image: gcc
+
+# build using Makefile
+build:
+  stage: build
+  before_script: 
+    - apt update && apt -y install make autoconf 
+  script: 
+    - make advent
+  artifacts:
+    paths:
+      - advent
+  # cache outputs to reduce the build time
+  cache:
+    paths:
+      - "*.o"
+
+# run tests using the binary built before
+test:
+  stage: test
+  script:
+    - make check
