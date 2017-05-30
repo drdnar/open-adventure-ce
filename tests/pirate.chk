@@ -703,18 +703,6 @@ There is a large sparkling nugget of gold here!
 
 You can't carry anything more.  You'll have to drop something first.  
 
-> inven
-
-You are currently holding the following:    
-Brass lantern  
-Small bottle   
-Water in the bottle 
-Dwarf's axe    
-Leporine appendage  
-Several diamonds    
-Platinum pyramid    
-Giant ruby
-
 > n
 
 You're in Hall of Mists. 
@@ -794,15 +782,6 @@ There is food here.
 > drop coins
 
 I see no coins here.  
-
-> inven
-
-You are currently holding the following:    
-Brass lantern  
-Small bottle   
-Water in the bottle 
-Dwarf's axe    
-Leporine appendage  
 
 > plugh
 
@@ -1338,15 +1317,6 @@ OK
 
 OK   
 
-> inven
-
-You are currently holding the following:    
-Set of keys    
-Brass lantern  
-Tasty food
-Small bottle   
-Dwarf's axe    
-
 > plugh
 
 >>Foof!<<  
@@ -1488,18 +1458,6 @@ You're in east pit.
 
 Your bottle is now full of oil.    
 
-> inven
-
-You are currently holding the following:    
-Set of keys    
-Brass lantern  
-Tasty food
-Small bottle   
-Oil in the bottle   
-Dwarf's axe    
-Rare coins
-Glistening pearl    
-
 > u
 
 You're at east end of Twopit Room. 
@@ -1535,18 +1493,6 @@ There is a large nest here, full of golden eggs!
 > get eggs
 
 You can't carry anything more.  You'll have to drop something first.  
-
-> inven
-
-You are currently holding the following:    
-Set of keys    
-Brass lantern  
-Tasty food
-Small bottle   
-Oil in the bottle   
-Dwarf's axe    
-Rare coins
-Glistening pearl    
 
 > drop coins
 
@@ -1853,10 +1799,6 @@ You're in Slab Room.
 
 > u
 
-Your lamp is getting dim.  You'd best start wrapping this up, unless  
-you can find some fresh batteries.  I seem to recall there's a vending
-machine in the maze.  Bring some coins with you.  
-
 You are in a secret n/s canyon above a large room.    
 
 > s
@@ -1888,6 +1830,10 @@ staircase.  There is a passage at the top of a dome behind you.
 Rough stone steps lead up the dome.
 
 > w
+
+Your lamp is getting dim.  You'd best start wrapping this up, unless  
+you can find some fresh batteries.  I seem to recall there's a vending
+machine in the maze.  Bring some coins with you.  
 
 There is a threatening little dwarf in the room with you!   
 
@@ -1956,7 +1902,7 @@ There is a massive vending machine here, swung back to reveal a
 southward passage.  
 
 > 
-You scored 219 out of a possible 430, using  319 turns.  
+You scored 219 out of a possible 430, using  314 turns.  
 
 You may now consider yourself a "Seasoned Adventurer". 
 
