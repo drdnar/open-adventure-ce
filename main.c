@@ -403,8 +403,7 @@ L2600:	if(COND[LOC] < CONDS) goto L2603;
 L2602:	/*etc*/ ;
 	} /* end loop */
 
-/*  Kick the random number generator just to add variety to the chase.  Also,
- *  if closing time, check for any objects being toted with PROP < 0 and set
+/*  If closing time, check for any objects being toted with PROP < 0 and set
  *  the prop to -1-PROP.  This way objects won't be described until they've
  *  been picked up and put down separate from their respective piles.  Don't
  *  tick CLOCK1 unless well into cave (and not at Y2). */
