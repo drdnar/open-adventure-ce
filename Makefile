@@ -31,7 +31,7 @@ score.o:	misc.h main.h share.h database.h
 
 misc.o:		misc.h main.h database.h
 
-database.c database.h: compile
+database.c database.h: compile adventure.text
 	./compile
 	$(CC) $(CCFLAGS) -O $(DBX) -c database.c
 
