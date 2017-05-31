@@ -1,13 +1,11 @@
 # Makefile for the open-source release of adventure 2.5
 
+CC?=gcc
 CCFLAGS=-std=c99
-LIBS=-lrt
+LIBS=
 UNAME_S := $(shell uname -s)
-GCCVERSIONGTEQ4 := $(shell expr `gcc -dumpversion | cut -f1 -d.` \>= 4)
-ifeq ($(UNAME_S),Darwin)
-	LIBS=
-else ifeq "$(GCCVERSIONGTEQ4)" "1"
-	CC=c99
+ifeq ($(UNAME_S),Linux)
+	LIBS=-lrt
 endif
 
 OBJS=main.o init.o actions1.o actions2.o score.o misc.o database.o
