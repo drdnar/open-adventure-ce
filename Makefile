@@ -10,14 +10,14 @@ else ifeq "$(GCCVERSIONGTEQ4)" "1"
 	CC=c99
 endif
 
-OBJS=main.o init.o actions1.o actions2.o score.o misc.o
+OBJS=main.o init.o actions1.o actions2.o score.o misc.o database.o
 SOURCES=$(OBJS:.o=.c) COPYING NEWS README TODO adventure.text advent.text control misc.h main.h share.h funcs.h
 
 .c.o:
 	$(CC) $(CCFLAGS) -O $(DBX) -c $<
 
 advent:	$(OBJS) database.o
-	$(CC) $(CCFLAGS) -O $(DBX) -o advent $(OBJS) database.o $(LIBS)
+	$(CC) $(CCFLAGS) -O $(DBX) -o advent $(OBJS) $(LIBS)
 
 main.o:		main.h misc.h funcs.h database.h
 
@@ -30,6 +30,10 @@ actions2.o:	misc.h main.h share.h funcs.h
 score.o:	misc.h main.h share.h database.h
 
 misc.o:		misc.h main.h database.h
+
+database.o:	database.h
+
+funcs.h:	database.h
 
 database.c database.h: compile adventure.text
 	./compile
