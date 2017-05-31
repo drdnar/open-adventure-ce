@@ -1,4 +1,4 @@
-= OpenAdventure project news =
+= Open Adventure project news =
 
 Repository head::
   Forward port of Crowther & Woods's 430-point Adventure 2.5.
@@ -6,4 +6,5 @@ Repository head::
   Game logs are now fully reproducible via the "seed" command.
   Added regression-test suite using seed.
   Added command prompt; -o suppresses this. Otherwise no gameplay changes.
-
+  Fixed bug that caused reservoir word not to be randomized.
+  Makefile does parallel builds.

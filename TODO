@@ -1,9 +1,7 @@
 = Open Adventure TODO =
 
-* Find the extra 5 treasures.
-
-* Make more regression tests from walkthroughs.
+* Make a full walkthrough.
 
 * Translate the FORTRANish mess to actual C.
 
-* Inline the database so the code doesn't need an external file.
+
