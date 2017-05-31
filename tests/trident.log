@@ -1,15 +1,15 @@
-## 219-point run to pirate appearance and theft
+## 161-point run to pirate appearance and death by dwarf
 # Based on walkthrough at http://www.ecsoftwareconsulting.com/node/56
 n
-seed 1495951709
+seed 1071883378
 in
 take lamp
-on
 xyzzy
 take rod
 e
 take cage
 w
+on
 w
 w
 drop rod
@@ -18,9 +18,20 @@ take rod
 w
 free bird
 wave rod
-take jade
 drop rod
 take bird
+take jade
+e
+e
+e
+off
+xyzzy
+drop jade
+xyzzy
+on
+w
+w
+w
 take rod
 d
 w
@@ -38,23 +49,23 @@ w
 kill dragon
 yes
 drink blood
-take rug
 e
 e
 n
 take silver
 n
+off
 plugh
-drop silver
 drop jewelry
-drop jade
 drop rug
+drop silver
 out
 s
 w
 n
 take appendage
 free bird
+drop cage
 listen
 s
 s
@@ -62,28 +73,19 @@ n
 in
 take water
 plugh
+on
 plover
 ne
-take axe
 take pyramid
+take axe
 s
 plover
 s
 d
 u
-u
-throw axe
-take axe
-throw axe
-take axe
-throw axe
-take axe
-throw axe
-take axe
 s
-e
+up
 w
-drop cage
 w
 w
 w
@@ -97,14 +99,13 @@ s
 s
 kill ogre
 n
-take ruby
 s
 w
 n
 n
 n
 nw
-d
+down
 e
 e
 e
@@ -116,14 +117,21 @@ take gold
 n
 y2
 d
+s
+s
+w
+take coins
+e
+e
+n
+n
+off
 plugh
-drop diamonds
-drop pyramid
-drop ruby
-plugh
-plugh
+drop gold
 drop coins
+drop diamonds
 plugh
+on
 s
 d
 bedquilt
@@ -135,7 +143,7 @@ u
 w
 u
 reservoir
-Q'IBJ
+F'JBV
 n
 n
 nw
@@ -152,18 +160,21 @@ d
 d
 se
 s
-s
 take water
+s
+s
 s
 s
 d
 s
 d
 water plant
+throw axe
+take axe
 u
 e
 d
-take oil
+get oil
 u
 w
 d
@@ -179,23 +190,29 @@ se
 n
 w
 drop trident
-drop axe
-drop ebony
 drop bottle
+drop axe
 drop appendage
-drop lamp
+drop pyramid
+drop ebony
+drop lantern
 e
 take emerald
 w
 take lamp
-take bottle
 take ebony
+take pyramid
+take appendage
 take axe
+# Don't take trident now or pirate will snatch it on next move.
+nw
+look
+w
+take bottle
 take trident
 nw
 s
 take vase
-e
 se
 e
 take pillow
@@ -209,90 +226,11 @@ u
 e
 u
 n
+off
 plugh
 drop pillow
 drop vase
 drop trident
-drop ebony
-drop emerald
-take food
-take keys
+drop bottle
 plugh
-s
-s
-w
-take coins
-e
-n
-d
-w
-d
-n
-d
-d
-take pearl
-up
-u
-s
-w
-throw axe
-take axe
-w
-throw axe
-take axe
-w
-d
-get oil
-u
-w
-d
-climb
-w
-get eggs
-drop coins
-get eggs
-n
-n
-d
-w
-d
-sw
-up
-toss eggs
-ne
-ne
-barren
-in
-feed bear
-unlock chain
-take bear
-w
-fork
-ne
-e
-drop keys
-take spices
-fork
-w
-w
-sw
-free bear
-sw
-sw
-d
-se
-se
-w
-d
-climb
-up
-w
-d
-climb
-w
-take coins
-fee
-fie
-foe
-foo
-take eggs
+on
