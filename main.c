@@ -18,7 +18,7 @@ long ABB[186], ATLOC[186], BLKLIN = true, DFLAG,
 		LINK[201], LNLENG, LNPOSN,
 		PARMS[26], PLACE[101],
 		SETUP = 0;
-signed char rawbuf[LINESIZE], INLINE[LINESIZE+1], MAP1[129], MAP2[129];
+char rawbuf[LINESIZE], INLINE[LINESIZE+1], MAP1[129], MAP2[129];
 
 long ABBNUM, AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD, BONUS,
 		 BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST, CHLOC, CHLOC2,
@@ -141,7 +141,7 @@ L1:	SETUP= -1;
 
 	if (logfp)
 	    fprintf(logfp, "seed %ld\n", seedval);
-	
+
 	for (;;) {
 	    if (!do_command(stdin))
 		break;
@@ -149,7 +149,7 @@ L1:	SETUP= -1;
 	score(1);
 }
 
-static bool fallback_handler(signed char *buf)
+static bool fallback_handler(char *buf)
 /* fallback handler for commands not handled by FORTRANish parser */
 {
     long sv;

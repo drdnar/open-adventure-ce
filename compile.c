@@ -21,7 +21,7 @@ const char ascii_to_advent[] = {0, 74, 75, 76, 77, 78, 79, 80, 81, 82, 0, 0, 85,
 // Global variables for use in functions below that can gradually disappear as code is cleaned up
 long LNLENG;
 long LNPOSN;
-signed char INLINE[LINESIZE+1];
+char INLINE[LINESIZE+1];
 long I;
 long K;
 long KK;
@@ -195,12 +195,12 @@ void MAPLIN(FILE *OPENED) {
     fgets(INLINE + 1, sizeof(INLINE) - 1, OPENED);
   }
   while (!feof(OPENED) && INLINE[1] == '#');
-  
+
   LNLENG = 0;
-  for (int i = 1; i <= sizeof(INLINE) && INLINE[i] != 0; ++i)
+  for (size_t i = 1; i <= sizeof(INLINE) && INLINE[i] != 0; ++i)
     {
       char val = INLINE[i] + 1;
-      INLINE[i] = ascii_to_advent[val];
+      INLINE[i] = ascii_to_advent[(unsigned)val];
       if (INLINE[i] != 0)
 	LNLENG = i;
     }
@@ -213,7 +213,7 @@ long GETNUM(FILE *source) {
  *  if K=0 we use a line that has already been read (and perhaps partially
  *  scanned).  If we're at the end of the line or encounter an illegal
  *  character (not a digit, hyphen, or blank), we return 0. */
-  
+
   long DIGIT, GETNUM, SIGN;
 
   if(source != NULL) MAPLIN(source);
@@ -242,7 +242,7 @@ L42:	GETNUM=GETNUM*SIGN;
 }
 
 int read_database(FILE* database) {
-	
+
 /*  Clear out the various text-pointer arrays.  All text is stored in array
  *  lines; each line is preceded by a word pointing to the next pointer (i.e.
  *  the word following the end of the line).  The pointer is negative if this is
@@ -497,7 +497,7 @@ void write_files(FILE* c_file, FILE* header_file)
   // include the header in the C file
   fprintf(c_file, "#include \"database.h\"\n");
   fprintf(c_file, "\n");
-  
+
   // content variables
   write_0d(c_file, header_file, LINUSE, "LINUSE");
   write_0d(c_file, header_file, TRVS, "TRVS");
@@ -528,11 +528,8 @@ void write_files(FILE* c_file, FILE* header_file)
   write_hints(c_file, header_file, HINTS, HNTSIZ + 1, 5, "HINTS");
 }
 
-int main(int argc, char** argv)
+int main()
 {
-  argc = argc;
-  argv = argv;
-
   FILE* database = fopen("adventure.text", "r");
   read_database(database);
   fclose(database);
@@ -542,6 +539,6 @@ int main(int argc, char** argv)
   write_files(c_file, header_file);
   fclose(c_file);
   fclose(header_file);
-  
+
   return(EXIT_SUCCESS);
 }
