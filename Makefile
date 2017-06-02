@@ -1,7 +1,7 @@
 # Makefile for the open-source release of adventure 2.5
 
-CC?=gcc
-CCFLAGS=-std=c99
+CC=clang
+CCFLAGS=-O2 -std=c99 -Wall -Wextra -Wpedantic -fstack-protector -fstack-protector-all -pipe -mtune=native
 LIBS=
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
@@ -32,6 +32,9 @@ misc.o:		misc.h main.h database.h
 database.o:	database.h
 
 funcs.h:	database.h
+
+compile: compile.c
+	$(CC) $(CCFLAGS) -o $@ $<
 
 database.c database.h: compile adventure.text
 	./compile
