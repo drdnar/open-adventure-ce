@@ -12,13 +12,11 @@
 
 /*  I/O routines (SPEAK, PSPEAK, RSPEAK, SETPRM, GETIN, YES) */
 
-#undef SPEAK
-void fSPEAK(long N) {
+void SPEAK(long N) {
 long BLANK, CASE, I, K, L, NEG, NPARMS, PARM, PRMTYP, STATE;
 
 /*  Print the message which starts at LINES(N).  Precede it with a blank line
  *  unless BLKLIN is false. */
-
 
 	if(N == 0)return;
 	BLANK=BLKLIN;
@@ -113,11 +111,7 @@ L40:	if(BLANK)TYPE0();
 	return;
 }
 
-
-
-#define SPEAK(N) fSPEAK(N)
-#undef PSPEAK
-void fPSPEAK(long MSG,long SKIP) {
+void PSPEAK(long MSG,long SKIP) {
 long I, M;
 
 /*  Find the skip+1st message from msg and print it.  MSG should be the index of
@@ -135,12 +129,7 @@ L9:	SPEAK(M);
 	return;
 }
 
-
-
-#define PSPEAK(MSG,SKIP) fPSPEAK(MSG,SKIP)
-#undef RSPEAK
-void fRSPEAK(long I) {
-;
+void RSPEAK(long I) {
 
 /*  Print the I-TH "random" message (section 6 of database). */
 
@@ -150,10 +139,7 @@ void fRSPEAK(long I) {
 }
 
 
-
-#define RSPEAK(I) fRSPEAK(I)
-#undef SETPRM
-void fSETPRM(long FIRST, long P1, long P2) {
+void SETPRM(long FIRST, long P1, long P2) {
 ;
 
 /*  Stores parameters into the PRMCOM parms array for use by speak.  P1 and P2
@@ -167,8 +153,6 @@ void fSETPRM(long FIRST, long P1, long P2) {
 }
 
 
-
-#define SETPRM(FIRST,P1,P2) fSETPRM(FIRST,P1,P2)
 #undef GETIN
 #define WORD1 (*wORD1)
 #define WORD1X (*wORD1X)
@@ -209,10 +193,9 @@ L22:	JUNK=GETTXT(false,true,true);
 #undef WORD2
 #undef WORD2X
 #define GETIN(SRC,WORD1,WORD1X,WORD2,WORD2X) fGETIN(SRC,&WORD1,&WORD1X,&WORD2,&WORD2X)
-#undef YES
-long fYES(FILE *input, long X, long Y, long Z) {
 
-long YES, REPLY, JUNK1, JUNK2, JUNK3;
+long YES(FILE *input, long X, long Y, long Z) {
+long YEAH, REPLY, JUNK1, JUNK2, JUNK3;
 
 /*  Print message X, wait for yes/no answer.  If yes, print Y and return true;
  *  if no, print Z and return false. */
@@ -223,31 +206,25 @@ L1:	RSPEAK(X);
 	if(REPLY == MAKEWD(1415) || REPLY == MAKEWD(14)) goto L20;
 	RSPEAK(185);
 	 goto L1;
-L10:	YES=true;
+L10:	YEAH=true;
 	RSPEAK(Y);
-	return(YES);
-L20:	YES=false;
+	return(YEAH);
+L20:	YEAH=false;
 	RSPEAK(Z);
-	return(YES);
+	return(YEAH);
 }
-
-
-
 
 
 /*  Line-parsing routines (GETNUM, GETTXT, MAKEWD, PUTTXT, SHFTXT, TYPE0)
 		*/
-
 /*  The routines on this page handle all the stuff that would normally be
  *  taken care of by format statements.  We do it this way instead so that
  *  we can handle textual data in a machine independent fashion.  All the
  *  machine dependent i/o stuff is on the following page.  See that page
  *  for a description of MAPCOM's inline array. */
 
-#define YES(X,Y,Z) fYES(X,Y,Z)
-#undef GETNUM
-long fGETNUM(FILE *source) {
-long DIGIT, GETNUM, SIGN;
+long GETNUM(FILE *source) {
+long DIGIT, NUMBER, SIGN;
 
 /*  Obtain the next integer from an input line.  If K>0, we first read a
  *  new input line from a file; if K<0, we read a line from the keyboard;
@@ -257,8 +234,8 @@ long DIGIT, GETNUM, SIGN;
 
 
 	if(source != NULL)MAPLIN(source);
-	GETNUM=0;
-L10:	if(LNPOSN > LNLENG)return(GETNUM);
+	NUMBER=0;
+L10:	if(LNPOSN > LNLENG)return(NUMBER);
 	if(INLINE[LNPOSN] != 0) goto L20;
 	LNPOSN=LNPOSN+1;
 	 goto L10;
@@ -270,66 +247,58 @@ L30:	LNPOSN=LNPOSN+1;
 L32:	if(LNPOSN > LNLENG || INLINE[LNPOSN] == 0) goto L42;
 	DIGIT=INLINE[LNPOSN]-64;
 	if(DIGIT < 0 || DIGIT > 9) goto L40;
-	GETNUM=GETNUM*10+DIGIT;
+	NUMBER=NUMBER*10+DIGIT;
 	 goto L30;
 
-L40:	GETNUM=0;
-L42:	GETNUM=GETNUM*SIGN;
+L40:	NUMBER=0;
+L42:	NUMBER=NUMBER*SIGN;
 	LNPOSN=LNPOSN+1;
-	return(GETNUM);
+	return(NUMBER);
 }
 
-
-
-#define GETNUM(K) fGETNUM(K)
-#undef GETTXT
-long fGETTXT(long SKIP,long ONEWRD, long UPPER) {
-long CHAR, GETTXT, I; static long SPLITTING = -1;
+long GETTXT(long SKIP,long ONEWRD, long UPPER) {
+long CHAR, TEXT, I; static long SPLITTING = -1;
 
 /*  Take characters from an input line and pack them into 30-bit words.
  *  Skip says to skip leading blanks.  ONEWRD says stop if we come to a
  *  blank.  UPPER says to map all letters to uppercase.  If we reach the
  *  end of the line, the word is filled up with blanks (which encode as 0's).
- *  If we're already at end of line when GETTXT is called, we return -1. */
+ *  If we're already at end of line when TEXT is called, we return -1. */
 
 	if(LNPOSN != SPLITTING)SPLITTING = -1;
-	GETTXT= -1;
-L10:	if(LNPOSN > LNLENG)return(GETTXT);
+	TEXT= -1;
+L10:	if(LNPOSN > LNLENG)return(TEXT);
 	if((!SKIP) || INLINE[LNPOSN] != 0) goto L11;
 	LNPOSN=LNPOSN+1;
 	 goto L10;
 
-L11:	GETTXT=0;
+L11:	TEXT=0;
 	/* 15 */ for (I=1; I<=5; I++) {
-	GETTXT=GETTXT*64;
+	TEXT=TEXT*64;
 	if(LNPOSN > LNLENG || (ONEWRD && INLINE[LNPOSN] == 0)) goto L15;
 	CHAR=INLINE[LNPOSN];
 	if(CHAR >= 63) goto L12;
 	SPLITTING = -1;
 	if(UPPER && CHAR >= 37)CHAR=CHAR-26;
-	GETTXT=GETTXT+CHAR;
+	TEXT=TEXT+CHAR;
 	 goto L14;
 
 L12:	if(SPLITTING == LNPOSN) goto L13;
-	GETTXT=GETTXT+63;
+	TEXT=TEXT+63;
 	SPLITTING = LNPOSN;
 	 goto L15;
 
-L13:	GETTXT=GETTXT+CHAR-63;
+L13:	TEXT=TEXT+CHAR-63;
 	SPLITTING = -1;
 L14:	LNPOSN=LNPOSN+1;
 L15:	/*etc*/ ;
 	} /* end loop */
 
-	return(GETTXT);
+	return(TEXT);
 }
 
-
-
-#define GETTXT(SKIP,ONEWRD,UPPER) fGETTXT(SKIP,ONEWRD,UPPER)
-#undef MAKEWD
-long fMAKEWD(long LETTRS) {
-long I, L, MAKEWD;
+long MAKEWD(long LETTRS) {
+long I, L, WORD;
 
 /*  Combine five uppercase letters (represented by pairs of decimal digits
  *  in lettrs) to form a 30-bit value matching the one that GETTXT would
@@ -339,23 +308,20 @@ long I, L, MAKEWD;
  *  the next pair of digits. */
 
 
-	MAKEWD=0;
+	WORD=0;
 	I=1;
 	L=LETTRS;
-L10:	MAKEWD=MAKEWD+I*(MOD(L,50)+10);
+L10:	WORD=WORD+I*(MOD(L,50)+10);
 	I=I*64;
-	if(MOD(L,100) > 50)MAKEWD=MAKEWD+I*5;
+	if(MOD(L,100) > 50)WORD=WORD+I*5;
 	L=L/100;
 	if(L != 0) goto L10;
 	I=64L*64L*64L*64L*64L/I;
-	MAKEWD=MAKEWD*I;
-	return(MAKEWD);
+	WORD=WORD*I;
+	return(WORD);
 }
 
 
-
-#define MAKEWD(LETTRS) fMAKEWD(LETTRS)
-#undef PUTTXT
 #define STATE (*sTATE)
 void fPUTTXT(long WORD, long *sTATE, long CASE) {
 long ALPH1, ALPH2, BYTE, DIV, I, W;
@@ -395,12 +361,10 @@ L18:	W=(W-BYTE*DIV)*64;
 	return;
 }
 
-
-
 #undef STATE
 #define PUTTXT(WORD,STATE,CASE) fPUTTXT(WORD,&STATE,CASE)
-#undef SHFTXT
-void fSHFTXT(long FROM, long DELTA) {
+
+void SHFTXT(long FROM, long DELTA) {
 long I, II, JJ;
 
 /*  Move INLINE(N) to INLINE(N+DELTA) for N=FROM,LNLENG.  Delta can be
@@ -419,15 +383,10 @@ L2:	LNLENG=LNLENG+DELTA;
 }
 
 
-
-#define SHFTXT(FROM,DELTA) fSHFTXT(FROM,DELTA)
-#undef TYPE0
-void fTYPE0() {
+void TYPE0() {
 long TEMP;
-
 /*  Type a blank line.  This procedure is provided as a convenience for callers
  *  who otherwise have no use for MAPCOM. */
-
 
 	TEMP=LNLENG;
 	LNLENG=0;
@@ -436,18 +395,12 @@ long TEMP;
 	return;
 }
 
-
-
-#define TYPE0() fTYPE0()
-
-
 /*  Suspend/resume I/O routines (SAVWDS, SAVARR, SAVWRD) */
 
 #undef SAVWDS
 void fSAVWDS(long *W1, long *W2, long *W3, long *W4, long *W5, long *W6, long *W7) {
 
 /*  Write or read 7 variables.  See SAVWRD. */
-
 
 	SAVWRD(0,(*W1));
 	SAVWRD(0,(*W2));
@@ -490,7 +443,6 @@ static long BUF[250], CKSUM = 0, H1, HASH = 0, N = 0, STATE = 0;
  *  efficient disk use.  We also compute a simple checksum to catch elementary
  *  poking within the saved file.  When we finish reading/writing the file,
  *  we store zero into WORD if there's no checksum error, else nonzero. */
-
 
 	if(OP != 0){long ifvar; ifvar=(STATE); switch (ifvar<0? -1 : ifvar>0? 1 :
 		0) { case -1: goto L30; case 0: goto L10; case 1: goto L30; }}
@@ -540,9 +492,9 @@ L32:	N--; WORD=BUF[N]-CKSUM; N++;
 
 #undef WORD
 #define SAVWRD(OP,WORD) fSAVWRD(OP,&WORD)
-#undef VOCAB
-long fVOCAB(long ID, long INIT) {
-long I, VOCAB;
+
+long VOCAB(long ID, long INIT) {
+long I, LEXEME;
 
 /*  Look up ID in the vocabulary (ATAB) and return its "definition" (KTAB), or
  *  -1 if not found.  If INIT is positive, this is an initialisation call setting
@@ -559,39 +511,27 @@ L1:	/*etc*/ ;
 	} /* end loop */
 	BUG(21);
 
-L2:	VOCAB= -1;
-	if(INIT < 0)return(VOCAB);
+L2:	LEXEME= -1;
+	if(INIT < 0)return(LEXEME);
 	BUG(5);
 
-L3:	VOCAB=KTAB[I];
-	if(INIT >= 0)VOCAB=MOD(VOCAB,1000);
-	return(VOCAB);
+L3:	LEXEME=KTAB[I];
+	if(INIT >= 0)LEXEME=MOD(LEXEME,1000);
+	return(LEXEME);
 }
 
-
-
-#define VOCAB(ID,INIT) fVOCAB(ID,INIT)
-#undef DSTROY
-void fDSTROY(long OBJECT) {
-;
-
+void DSTROY(long OBJECT) {
 /*  Permanently eliminate "OBJECT" by moving to a non-existent location. */
-
 
 	MOVE(OBJECT,0);
 	return;
 }
 
-
-
-#define DSTROY(OBJECT) fDSTROY(OBJECT)
-#undef JUGGLE
-void fJUGGLE(long OBJECT) {
+void JUGGLE(long OBJECT) {
 long I, J;
 
 /*  Juggle an object by picking it up and putting it down again, the purpose
  *  being to get the object to the front of the chain of things at its loc. */
-
 
 	I=PLACE[OBJECT];
 	J=FIXED[OBJECT];
@@ -600,11 +540,7 @@ long I, J;
 	return;
 }
 
-
-
-#define JUGGLE(OBJECT) fJUGGLE(OBJECT)
-#undef MOVE
-void fMOVE(long OBJECT, long WHERE) {
+void MOVE(long OBJECT, long WHERE) {
 long FROM;
 
 /*  Place any object anywhere by picking it up and dropping it.  May already be
@@ -621,33 +557,23 @@ L2:	if(FROM > 0 && FROM <= 300)CARRY(OBJECT,FROM);
 	return;
 }
 
-
-
-#define MOVE(OBJECT,WHERE) fMOVE(OBJECT,WHERE)
-#undef PUT
-long fPUT(long OBJECT, long WHERE, long PVAL) {
-long PUT;
+long PUT(long OBJECT, long WHERE, long PVAL) {
+long X;
 
 /*  PUT is the same as MOVE, except it returns a value used to set up the
  *  negated PROP values for the repository objects. */
 
-
 	MOVE(OBJECT,WHERE);
-	PUT=(-1)-PVAL;
-	return(PUT);
+	X=(-1)-PVAL;
+	return(X);
 }
 
-
-
-#define PUT(OBJECT,WHERE,PVAL) fPUT(OBJECT,WHERE,PVAL)
-#undef CARRY
-void fCARRY(long OBJECT, long WHERE) {
+void CARRY(long OBJECT, long WHERE) {
 long TEMP;
 
 /*  Start toting an object, removing it from the list of things at its former
  *  location.  Incr holdng unless it was already being toted.  If OBJECT>100
  *  (moving "fixed" second loc), don't change PLACE or HOLDNG. */
-
 
 	if(OBJECT > 100) goto L5;
 	if(PLACE[OBJECT] == -1)return;
@@ -664,16 +590,9 @@ L8:	LINK[TEMP]=LINK[OBJECT];
 	return;
 }
 
-
-
-#define CARRY(OBJECT,WHERE) fCARRY(OBJECT,WHERE)
-#undef DROP
-void fDROP(long OBJECT, long WHERE) {
-;
-
+void DROP(long OBJECT, long WHERE) {
 /*  Place an object at a given loc, prefixing it onto the ATLOC list.  Decr
  *  HOLDNG if the object was being toted. */
-
 
 	if(OBJECT > 100) goto L1;
 	if(PLACE[OBJECT] == -1)HOLDNG=HOLDNG-1;
@@ -688,71 +607,51 @@ L2:	if(WHERE <= 0)return;
 
 
 
-#define DROP(OBJECT,WHERE) fDROP(OBJECT,WHERE)
-#undef ATDWRF
-long fATDWRF(long WHERE) {
-long ATDWRF, I;
+long ATDWRF(long WHERE) {
+long AT, I;
 
 /*  Return the index of first dwarf at the given location, zero if no dwarf is
  *  there (or if dwarves not active yet), -1 if all dwarves are dead.  Ignore
  *  the pirate (6th dwarf). */
 
 
-	ATDWRF=0;
-	if(DFLAG < 2)return(ATDWRF);
-	ATDWRF= -1;
+	AT=0;
+	if(DFLAG < 2)return(AT);
+	AT= -1;
 	for (I=1; I<=5; I++) {
 	if(DLOC[I] == WHERE) goto L2;
-	if(DLOC[I] != 0)ATDWRF=0;
+	if(DLOC[I] != 0)AT=0;
 	} /* end loop */
-	return(ATDWRF);
+	return(AT);
 
-L2:	ATDWRF=I;
-	return(ATDWRF);
+L2:	AT=I;
+	return(AT);
 }
-
-
-
-
-#define ATDWRF(WHERE) fATDWRF(WHERE)
-
-
 
 /*  Utility routines (SETBIT, TSTBIT, set_seed, get_next_lcg_value,
  *  randrange, RNDVOC, BUG) */
 
-#undef SETBIT
-long fSETBIT(long BIT) {
-long I, SETBIT;
+long SETBIT(long BIT) {
+long I, IND;
 
 /*  Returns 2**bit for use in constructing bit-masks. */
 
-
-	SETBIT=1;
-	if(BIT <= 0)return(SETBIT);
+	IND=1;
+	if(BIT <= 0)return(IND);
 	for (I=1; I<=BIT; I++) {
-	SETBIT=SETBIT+SETBIT;
+	IND=IND+IND;
 	} /* end loop */
-	return(SETBIT);
+	return(IND);
 }
 
 
 
-#define SETBIT(BIT) fSETBIT(BIT)
-#undef TSTBIT
-long fTSTBIT(long MASK, long BIT) {
-long TSTBIT;
+long TSTBIT(long MASK, long BIT) {
 
 /*  Returns true if the specified bit is set in the mask. */
 
-
-	TSTBIT=MOD(MASK/SETBIT(BIT),2) != 0;
-	return(TSTBIT);
+	return(MOD(MASK/SETBIT(BIT),2) != 0);
 }
-
-
-
-#define TSTBIT(MASK,BIT) fTSTBIT(MASK,BIT)
 
 void set_seed(long seedval)
 {
@@ -774,23 +673,22 @@ long randrange(long range)
   return(result);
 }
 
-#undef RNDVOC
-long fRNDVOC(long CHAR, long FORCE) {
+long RNDVOC(long CHAR, long FORCE) {
 /*  Searches the vocabulary for a word whose second character is char, and
  *  changes that word such that each of the other four characters is a
  *  random letter.  If force is non-zero, it is used as the new word.
  *  Returns the new word. */
 
-	long RNDVOC;
+	long RND;
 
-	RNDVOC=FORCE;
+	RND=FORCE;
 
-	if (RNDVOC == 0) {
+	if (RND == 0) {
 	  for (int I = 1; I <= 5; I++) {
 	    long J = 11 + randrange(26);
 	    if (I == 2)
 	      J = CHAR;
-	    RNDVOC = RNDVOC * 64 + J;
+	    RND = RND * 64 + J;
 	  }
 	}
 
@@ -798,19 +696,15 @@ long fRNDVOC(long CHAR, long FORCE) {
 	for (int I = 1; I <= TABSIZ; I++) {
 	  if (MOD(ATAB[I]/DIV, 64L) == CHAR)
 	    {
-	      ATAB[I] = RNDVOC;
+	      ATAB[I] = RND;
 	      break;
 	    }
 	}
 
-	return(RNDVOC);
+	return(RND);
 }
 
-
-
-#define RNDVOC(CHAR,FORCE) fRNDVOC(CHAR,FORCE)
-#undef BUG
-void fBUG(long NUM) {
+void BUG(long NUM) {
 
 /*  The following conditions are currently considered fatal bugs.  Numbers < 20
  *  are detected while reading the database; the others occur at "run time".
@@ -848,9 +742,7 @@ void fBUG(long NUM) {
 
 /*  Machine dependent routines (MAPLIN, TYPE, MPINIT, SAVEIO) */
 
-#define BUG(NUM) fBUG(NUM)
-#undef MAPLIN
-void fMAPLIN(FILE *OPENED) {
+void MAPLIN(FILE *OPENED) {
 long I, VAL;
 
 /*  Read a line of input, from the specified input source,
@@ -904,16 +796,13 @@ long I, VAL;
 		LNPOSN=1;
 	}
 }
-#define MAPLIN(FIL) fMAPLIN(FIL)
 
-#undef TYPE
-void fTYPE(void) {
+void TYPE(void) {
 long I, VAL;
 
 /*  Type the first "LNLENG" characters stored in inline, mapping them
  *  from integers to text per the rules described above.  INLINE(I),
  *  I=1,LNLENG may be changed by this routine. */
-
 
 	if(LNLENG != 0) goto L10;
 	printf("\n");
@@ -929,14 +818,9 @@ L10:	if(MAP2[1] == 0)MPINIT();
 	return;
 }
 
-
-
-#define TYPE() fTYPE()
-#undef MPINIT
-void fMPINIT(void) {
+void MPINIT(void) {
 long FIRST, I, J, LAST, VAL;
 static long RUNS[7][2] = { {32,34}, {39,46}, {65,90}, {97,122}, {37,37}, {48,57}, {0,126} };
-
 
 	for (I=1; I<=128; I++) {
 	MAP1[I]= -1;
@@ -967,9 +851,6 @@ L22:	J--;
 	return;
 }
 
-
-
-#define MPINIT() fMPINIT()
 #undef SAVEIO
 void fSAVEIO(long OP, long IN, long ARR[]) {
 static FILE *F; char NAME[50];
@@ -1001,13 +882,12 @@ L30:	if(IN)IGNORE(fread(ARR,sizeof(long),250,F));
 
 }
 
-
-
 void DATIME(long* D, long* T) {
   struct timeval tv;
   gettimeofday(&tv, NULL);
   *D = (long) tv.tv_sec;
   *T = (long) tv.tv_usec;
 }
-long fIABS(N)long N; {return(N<0? -N : N);}
-long fMOD(N,M)long N, M; {return(N%M);}
+
+long IABS(N)long N; {return(N<0? -N : N);}
+long MOD(N,M)long N, M; {return(N%M);}
