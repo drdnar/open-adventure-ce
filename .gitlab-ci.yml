@@ -3,6 +3,7 @@ image: alpine
 stages:
   - build
   - test
+  - deploy
 
 # build advent itself
 binary:
@@ -15,6 +16,8 @@ binary:
   artifacts:
     paths:
       - advent
+      - "*.gcda"
+      - "*.gcno"
   # cache outputs to reduce the build time
   cache:
     paths:
@@ -47,7 +50,24 @@ test:
   stage: test
   before_script:
     - apk update
-    - apk add make
+    - apk add make gcc
+    - apk add lcov --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted
   script:
     - cd tests
     - make
+    - cd ..
+    - lcov -t "advent" -o advent.info -c -d .
+    - genhtml -o coverage advent.info
+  artifacts:
+    paths:
+      - coverage
+
+pages:
+  stage: deploy
+  script:
+    - mv coverage public
+  artifacts:
+    paths:
+      - public
+  only:
+    - master

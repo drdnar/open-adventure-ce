@@ -18,10 +18,10 @@ clean:
 
 # Show summary lines for all tests.
 testlist:
-	@grep --text '^##' *.log
+	@grep '^##' *.log
 listcheck:
 	@for f in *.log; do \
-	    if ( head -3 $$f | grep --text -q '^ *##' ); then :; else echo "$$f needs a description"; fi; \
+	    if ( head -3 $$f | grep -q '^ *##' ); then :; else echo "$$f needs a description"; fi; \
 	done
 
 # General regression testing of commands and output; look at the *.log and
@@ -34,7 +34,7 @@ buildregress:
 	done
 regress:
 	@for file in $(TESTLOADS); do \
-	    $(ECHO) -n "  $${file} "; grep --text '##' $${file}.log  || echo ' ## (no description)'; \
+	    $(ECHO) -n "  $${file} "; grep '##' $${file}.log  || echo ' ## (no description)'; \
 	    if advent < $${file}.log >/tmp/regress$$$$ 2>&1; \
 	    then diff --text -u $${file}.chk /tmp/regress$$$$ || exit 1; \
 	    else echo "*** Nonzero return status on $${file}!"; exit 1; fi \
