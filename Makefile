@@ -33,6 +33,9 @@ database.o:	database.h
 
 funcs.h:	database.h
 
+compile: compile.c
+	$(CC) $(CCFLAGS) -o $@ $<
+
 database.c database.h: compile adventure.text
 	./compile
 	$(CC) $(CCFLAGS) -O $(DBX) -c database.c
