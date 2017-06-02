@@ -1,10 +1,15 @@
-image: gcc
+image: alpine
 
-# build using Makefile
-build:
+stages:
+  - build
+  - test
+
+# build advent itself
+binary:
   stage: build
-  before_script: 
-    - apt update && apt -y install make 
+  before_script:
+    - apk update
+    - apk add make gcc musl-dev
   script: 
     - make advent
   artifacts:
@@ -15,8 +20,34 @@ build:
     paths:
       - "*.o"
 
+manpage:
+  stage: build
+  before_script:
+    - apk update
+    - apk add make asciidoc
+  script:
+    - make .asc.6
+  artifacts:
+    paths:
+      - advent.6
+
+html:
+  stage: build
+  before_script:
+    - apk update
+    - apk add make asciidoc libxslt
+  script:
+    - make .asc.html
+  artifacts:
+    paths:
+      - advent.html
+
 # run tests using the binary built before
 test:
   stage: test
+  before_script:
+    - apk update
+    - apk add make
   script:
-    - make check
+    - cd tests
+    - make

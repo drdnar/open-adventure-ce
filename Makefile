@@ -45,9 +45,9 @@ check: advent
 	cd tests; $(MAKE) --quiet
 
 # Requires asciidoc and xsltproc/docbook stylesheets.
-.asc.6:
+.asc.6: advent.txt
 	a2x --doctype manpage --format manpage $<
-.asc.html:
+.asc.html: advent.txt
 	a2x --doctype manpage --format xhtml -D . $<
 	rm -f docbook-xsl.css
 
