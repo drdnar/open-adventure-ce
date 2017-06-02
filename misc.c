@@ -937,7 +937,7 @@ L10:	if(MAP2[1] == 0)MPINIT();
 #undef MPINIT
 void fMPINIT(void) {
 long FIRST, I, J, LAST, VAL;
-static long RUNS[7][2] = {32,34, 39,46, 65,90, 97,122, 37,37, 48,57, 0,126};
+static long RUNS[7][2] = { {32,34}, {39,46}, {65,90}, {97,122}, {37,37}, {48,57}, {0,126} };
 
 
 	for (I=1; I<=128; I++) {
