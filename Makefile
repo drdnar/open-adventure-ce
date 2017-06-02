@@ -9,7 +9,7 @@ ifeq ($(UNAME_S),Linux)
 endif
 
 OBJS=main.o init.o actions1.o actions2.o score.o misc.o database.o
-SOURCES=$(OBJS:.o=.c) COPYING NEWS README TODO adventure.text advent.text control misc.h main.h share.h funcs.h
+SOURCES=$(OBJS:.o=.c) COPYING NEWS README TODO adventure.text advent.text control advent.h funcs.h
 
 .c.o:
 	$(CC) $(CCFLAGS) -O $(DBX) -c $<
@@ -17,17 +17,17 @@ SOURCES=$(OBJS:.o=.c) COPYING NEWS README TODO adventure.text advent.text contro
 advent:	$(OBJS) database.o
 	$(CC) $(CCFLAGS) -O $(DBX) -o advent $(OBJS) $(LIBS)
 
-main.o:		main.h misc.h funcs.h database.h
+main.o:		advent.h funcs.h database.h
 
-init.o:		misc.h main.h share.h funcs.h database.h
+init.o:		advent.h funcs.h database.h
 
-actions1.o:	misc.h main.h share.h funcs.h database.h
+actions1.o:	advent.h funcs.h database.h
 
-actions2.o:	misc.h main.h share.h funcs.h
+actions2.o:	advent.h funcs.h
 
-score.o:	misc.h main.h share.h database.h
+score.o:	advent.h database.h
 
-misc.o:		misc.h main.h database.h
+misc.o:		advent.h database.h
 
 database.o:	database.h
 

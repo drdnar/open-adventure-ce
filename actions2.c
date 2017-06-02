@@ -1,6 +1,4 @@
-#include "misc.h"
-#include "main.h"
-#include "share.h"
+#include "advent.h"
 #include "funcs.h"
 
 /*  Carry an object.  Special cases for bird and cage (if bird in cage, can't

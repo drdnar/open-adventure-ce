@@ -9,9 +9,8 @@
 #include <getopt.h>
 #include <signal.h>
 #include <time.h>
-#include "main.h"
+#include "advent.h"
 #include "database.h"
-#include "misc.h"
 
 long ABB[186], ATLOC[186], BLKLIN = true, DFLAG,
 		DLOC[7], FIXED[101], HOLDNG,

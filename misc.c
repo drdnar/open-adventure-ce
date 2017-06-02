@@ -3,9 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
-#include "main.h"
-#include "share.h"	/* for SETUP */
-#include "misc.h"
+#include "advent.h"
 #include "funcs.h"
 #include "database.h"
 

@@ -1,8 +1,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
-#include "misc.h"
-#include "main.h"
-#include "share.h"
+#include "advent.h"
 #include "funcs.h"
 #include "database.h"
 
