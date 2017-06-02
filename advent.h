@@ -55,7 +55,7 @@ extern void CARRY(long,long);
 extern void DROP(long,long);
 extern long ATDWRF(long);
 extern long SETBIT(long);
-extern long TSTBIT(long,long);
+extern bool TSTBIT(long,int);
 extern long RNDVOC(long,long);
 extern void BUG(long);
 extern void MAPLIN(FILE *);

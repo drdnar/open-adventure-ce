@@ -631,26 +631,14 @@ L2:	AT=I;
 /*  Utility routines (SETBIT, TSTBIT, set_seed, get_next_lcg_value,
  *  randrange, RNDVOC, BUG) */
 
-long SETBIT(long BIT) {
-long I, IND;
-
+long SETBIT(long bit) {
 /*  Returns 2**bit for use in constructing bit-masks. */
-
-	IND=1;
-	if(BIT <= 0)return(IND);
-	for (I=1; I<=BIT; I++) {
-	IND=IND+IND;
-	} /* end loop */
-	return(IND);
+    2 << bit;
 }
 
-
-
-long TSTBIT(long MASK, long BIT) {
-
+bool TSTBIT(long mask, int bit) {
 /*  Returns true if the specified bit is set in the mask. */
-
-	return(MOD(MASK/SETBIT(BIT),2) != 0);
+    return((mask & (1 << bit)) != 0);
 }
 
 void set_seed(long seedval)
