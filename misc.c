@@ -898,7 +898,7 @@ long I, VAL;
 			IGNORE(fputs(rawbuf, stdout));
 		strcpy(INLINE+1, rawbuf);
 		LNLENG=0;
-		for (I=1; I<=sizeof(INLINE) && INLINE[I]!=0; I++) {
+		for (I=1; I<=(long)sizeof(INLINE) && INLINE[I]!=0; I++) {
 		VAL=INLINE[I]+1;
 		INLINE[I]=MAP1[VAL];
 		if(INLINE[I] != 0)LNLENG=I;
