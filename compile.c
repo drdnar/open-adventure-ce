@@ -22,16 +22,8 @@ const char ascii_to_advent[] = {0, 74, 75, 76, 77, 78, 79, 80, 81, 82, 0, 0, 85,
 long LNLENG;
 long LNPOSN;
 char INLINE[LINESIZE+1];
-long I;
-long K;
-long KK;
-long L;
-long LOC;
 long NEWLOC;
-long OBJ;
 long OLDLOC;
-long SECT;
-long VERB;
 
 // Storage for what comes out of the database
 long LINUSE;
@@ -68,6 +60,14 @@ void BUG(long);
 void MAPLIN(FILE*);
 long GETNUM(FILE*);
 int read_database(FILE*);
+void read_messages(FILE*, long);
+void read_section3_stuff(FILE*);
+void read_vocabulary(FILE*);
+void read_initial_locations(FILE*);
+void read_action_verb_message_nr(FILE*);
+void read_conditions(FILE*);
+void read_hints(FILE*);
+void read_sound_text(FILE*);
 void write_0d(FILE*, FILE*, long, char*);
 void write_1d(FILE*, FILE*, long[], long, char*);
 void write_hints(FILE*, FILE*, long[][5], long, long, char*);
@@ -94,40 +94,36 @@ long GETTXT(long SKIP,long ONEWRD, long UPPER) {
   if(LNPOSN != SPLITTING)
     SPLITTING = -1;
   GETTXT= -1;
- L10:
-  if(LNPOSN > LNLENG)
-    return(GETTXT);
-  if((!SKIP) || INLINE[LNPOSN] != 0)
-    goto L11;
-  LNPOSN=LNPOSN+1;
-  goto L10;
+  while (true) {
+    if(LNPOSN > LNLENG)
+      return(GETTXT);
+    if((!SKIP) || INLINE[LNPOSN] != 0)
+      break;
+    LNPOSN=LNPOSN+1;
+  }
 
- L11:
   GETTXT=0;
   for (int I=1; I<=5; I++) {
     GETTXT=GETTXT*64;
     if(LNPOSN > LNLENG || (ONEWRD && INLINE[LNPOSN] == 0))
       continue;
     CHAR=INLINE[LNPOSN];
-    if(CHAR >= 63)
-      goto L12;
-    SPLITTING = -1;
-    if(UPPER && CHAR >= 37)
-      CHAR=CHAR-26;
-    GETTXT=GETTXT+CHAR;
-    goto L14;
+    if(CHAR < 63) {
+      SPLITTING = -1;
+      if(UPPER && CHAR >= 37)
+        CHAR=CHAR-26;
+      GETTXT=GETTXT+CHAR;
+      LNPOSN=LNPOSN+1;
+      continue;
+    }
+    if(SPLITTING != LNPOSN) {
+      GETTXT=GETTXT+63;
+      SPLITTING = LNPOSN;
+      continue;
+    }
 
-  L12:
-    if(SPLITTING == LNPOSN)
-      goto L13;
-    GETTXT=GETTXT+63;
-    SPLITTING = LNPOSN;
-    continue;
-
-  L13:
     GETTXT=GETTXT+CHAR-63;
     SPLITTING = -1;
-  L14:
     LNPOSN=LNPOSN+1;
   }
 
@@ -219,26 +215,35 @@ long GETNUM(FILE *source) {
   if(source != NULL) MAPLIN(source);
   GETNUM = 0;
 
-  while (INLINE[LNPOSN] == 0)
+  while (INLINE[LNPOSN] == 0) {
+    if (LNPOSN > LNLENG) return(GETNUM);
+    ++LNPOSN;
+  }
+
+  if(INLINE[LNPOSN] != 9)
     {
-      if (LNPOSN > LNLENG) return(GETNUM);
-      ++LNPOSN;
+      SIGN=1;
+    }
+  else
+    {
+      SIGN= -1;
+      LNPOSN=LNPOSN+1;
+    }
+  while (!(LNPOSN > LNLENG || INLINE[LNPOSN] == 0))
+    {
+      DIGIT=INLINE[LNPOSN]-64;
+      if(DIGIT < 0 || DIGIT > 9)
+        {
+          GETNUM=0;
+          break;
+        }
+      GETNUM=GETNUM*10+DIGIT;
+      LNPOSN=LNPOSN+1;
     }
 
-	SIGN=1;
-	if(INLINE[LNPOSN] != 9) goto L32;
-	SIGN= -1;
-L30:	LNPOSN=LNPOSN+1;
-L32:	if(LNPOSN > LNLENG || INLINE[LNPOSN] == 0) goto L42;
-	DIGIT=INLINE[LNPOSN]-64;
-	if(DIGIT < 0 || DIGIT > 9) goto L40;
-	GETNUM=GETNUM*10+DIGIT;
-	 goto L30;
-
-L40:	GETNUM=0;
-L42:	GETNUM=GETNUM*SIGN;
-	LNPOSN=LNPOSN+1;
-	return(GETNUM);
+  GETNUM=GETNUM*SIGN;
+  LNPOSN=LNPOSN+1;
+  return(GETNUM);
 }
 
 int read_database(FILE* database) {
@@ -274,162 +279,216 @@ int read_database(FILE* database) {
 
 /*  Start new data section.  Sect is the section number. */
 
- L1002: SECT=GETNUM(database);
-  OLDLOC= -1;
-  switch (SECT) {
-  case 0: return(0);
-  case 1: goto L1004;
-  case 2: goto L1004;
-  case 3: goto L1030;
-  case 4: goto L1040;
-  case 5: goto L1004;
-  case 6: goto L1004;
-  case 7: goto L1050;
-  case 8: goto L1060;
-  case 9: goto L1070;
-  case 10: goto L1004;
-  case 11: goto L1080;
-  case 12: break;
-  case 13: goto L1090;
-  case 14: goto L1004;
-  default: BUG(9);
-  }
+  while(true)
+    {
+      long SECT=GETNUM(database);
+      OLDLOC= -1;
+      switch (SECT)
+        {
+          case 0: return(0);
+          case 1: read_messages(database, SECT); break;
+          case 2: read_messages(database, SECT); break;
+          case 3: read_section3_stuff(database); break;
+          case 4: read_vocabulary(database); break;
+          case 5: read_messages(database, SECT); break;
+          case 6: read_messages(database, SECT); break;
+          case 7: read_initial_locations(database); break;
+          case 8: read_action_verb_message_nr(database); break;
+          case 9: read_conditions(database); break;
+          case 10: read_messages(database, SECT); break;
+          case 11: read_hints(database); break;
+          case 12: break;
+          case 13: read_sound_text(database); break;
+          case 14: read_messages(database, SECT); break;
+          default: BUG(9);
+        }
+    }
+}
+
 
 /*  Sections 1, 2, 5, 6, 10, 14.  Read messages and set up pointers. */
+void read_messages(FILE* database, long SECT)
+  {
+    long KK=LINUSE;
+    while(true)
+      {
+        long LOC;
+        LINUSE=KK;
+        LOC=GETNUM(database);
+        if(LNLENG >= LNPOSN+70)BUG(0);
+        if(LOC == -1) return;
+        if(LNLENG < LNPOSN)BUG(1);
+        do {
+            KK=KK+1;
+            if(KK >= LINSIZ)BUG(2);
+            LINES[KK]=GETTXT(false,false,false);
+          }
+        while(LINES[KK] != -1);
+        LINES[LINUSE]=KK;
+        if(LOC == OLDLOC) continue;
+        OLDLOC=LOC;
+        LINES[LINUSE]= -KK;
+        if(SECT == 14)
+          {
+            TRNVLS=TRNVLS+1;
+            if(TRNVLS > TRNSIZ)BUG(11);
+            TTEXT[TRNVLS]=LINUSE;
+            TRNVAL[TRNVLS]=LOC;
+            continue;
+          }
+        if(SECT == 10)
+          {
+            CLSSES=CLSSES+1;
+            if(CLSSES > CLSMAX)BUG(11);
+            CTEXT[CLSSES]=LINUSE;
+            CVAL[CLSSES]=LOC;
+            continue;
+          }
+        if(SECT == 6)
+          {
+            if(LOC > RTXSIZ)BUG(6);
+            RTEXT[LOC]=LINUSE;
+            continue;
+          }
+        if(SECT == 5)
+          {
+            if(LOC > 0 && LOC <= 100)PTEXT[LOC]=LINUSE;
+            continue;
+          }
+        if(LOC > LOCSIZ)BUG(10);
+        if(SECT == 1)
+          {
+            LTEXT[LOC]=LINUSE;
+            continue;
+          }
 
-L1004:	KK=LINUSE;
-L1005:	LINUSE=KK;
-	LOC=GETNUM(database);
-	if(LNLENG >= LNPOSN+70)BUG(0);
-	if(LOC == -1) goto L1002;
-	if(LNLENG < LNPOSN)BUG(1);
-L1006:	KK=KK+1;
-	if(KK >= LINSIZ)BUG(2);
-	LINES[KK]=GETTXT(false,false,false);
-	if(LINES[KK] != -1) goto L1006;
-	LINES[LINUSE]=KK;
-	if(LOC == OLDLOC) goto L1005;
-	OLDLOC=LOC;
-	LINES[LINUSE]= -KK;
-	if(SECT == 14) goto L1014;
-	if(SECT == 10) goto L1012;
-	if(SECT == 6) goto L1011;
-	if(SECT == 5) goto L1010;
-	if(LOC > LOCSIZ)BUG(10);
-	if(SECT == 1) goto L1008;
+        STEXT[LOC]=LINUSE;
+      }
+  }
 
-	STEXT[LOC]=LINUSE;
-	 goto L1005;
-
-L1008:	LTEXT[LOC]=LINUSE;
-	 goto L1005;
-
-L1010:	if(LOC > 0 && LOC <= 100)PTEXT[LOC]=LINUSE;
-	 goto L1005;
-
-L1011:	if(LOC > RTXSIZ)BUG(6);
-	RTEXT[LOC]=LINUSE;
-	 goto L1005;
-
-L1012:	CLSSES=CLSSES+1;
-	if(CLSSES > CLSMAX)BUG(11);
-	CTEXT[CLSSES]=LINUSE;
-	CVAL[CLSSES]=LOC;
-	 goto L1005;
-
-L1014:	TRNVLS=TRNVLS+1;
-	if(TRNVLS > TRNSIZ)BUG(11);
-	TTEXT[TRNVLS]=LINUSE;
-	TRNVAL[TRNVLS]=LOC;
-	 goto L1005;
 
 /*  The stuff for section 3 is encoded here.  Each "from-location" gets a
  *  contiguous section of the "TRAVEL" array.  Each entry in travel is
  *  NEWLOC*1000 + KEYWORD (from section 4, motion verbs), and is negated if
  *  this is the last entry for this location.  KEY(N) is the index in travel
  *  of the first option at location N. */
+void read_section3_stuff(FILE* database)
+  {
+    long LOC;
+    while((LOC=GETNUM(database)) != -1)
+      {
+        long NEWLOC=GETNUM(NULL);
+        long L;
+        if(KEY[LOC] == 0)
+          {
+            KEY[LOC]=TRVS;
+          }
+        else
+          {
+            TRAVEL[TRVS-1]= -TRAVEL[TRVS-1];
+          }
+        while((L=GETNUM(NULL)) != 0)
+          {
+            TRAVEL[TRVS]=NEWLOC*1000+L;
+            TRVS=TRVS+1;
+            if(TRVS == TRVSIZ)BUG(3);
+          }
+        TRAVEL[TRVS-1]= -TRAVEL[TRVS-1];
+      }
+  }
 
-L1030:	LOC=GETNUM(database);
-	if(LOC == -1) goto L1002;
-	NEWLOC=GETNUM(NULL);
-	if(KEY[LOC] != 0) goto L1033;
-	KEY[LOC]=TRVS;
-	 goto L1035;
-L1033:	TRVS--; TRAVEL[TRVS]= -TRAVEL[TRVS]; TRVS++;
-L1035:	L=GETNUM(NULL);
-	if(L == 0) goto L1039;
-	TRAVEL[TRVS]=NEWLOC*1000+L;
-	TRVS=TRVS+1;
-	if(TRVS == TRVSIZ)BUG(3);
-	 goto L1035;
-L1039:	TRVS--; TRAVEL[TRVS]= -TRAVEL[TRVS]; TRVS++;
-	 goto L1030;
 
 /*  Here we read in the vocabulary.  KTAB(N) is the word number, ATAB(N) is
  *  the corresponding word.  The -1 at the end of section 4 is left in KTAB
  *  as an end-marker. */
+void read_vocabulary(FILE* database)
+  {
+    for (TABNDX=1; TABNDX<=TABSIZ; TABNDX++)
+      {
+        KTAB[TABNDX]=GETNUM(database);
+        if(KTAB[TABNDX] == -1) return;
+        ATAB[TABNDX]=GETTXT(true,true,true);
+      } /* end loop */
+    BUG(4);
+  }
 
-L1040:
-	for (TABNDX=1; TABNDX<=TABSIZ; TABNDX++) {
-	KTAB[TABNDX]=GETNUM(database);
-	if(KTAB[TABNDX] == -1) goto L1002;
-	ATAB[TABNDX]=GETTXT(true,true,true);
-	} /* end loop */
-	BUG(4);
 
 /*  Read in the initial locations for each object.  Also the immovability info.
  *  plac contains initial locations of objects.  FIXD is -1 for immovable
  *  objects (including the snake), or = second loc for two-placed objects. */
+void read_initial_locations(FILE* database)
+  {
+    long OBJ;
+    while((OBJ=GETNUM(database)) != -1)
+      {
+        PLAC[OBJ]=GETNUM(NULL);
+        FIXD[OBJ]=GETNUM(NULL);
+      }
+  }
 
-L1050:	OBJ=GETNUM(database);
-	if(OBJ == -1) goto L1002;
-	PLAC[OBJ]=GETNUM(NULL);
-	FIXD[OBJ]=GETNUM(NULL);
-	 goto L1050;
 
 /*  Read default message numbers for action verbs, store in ACTSPK. */
+void read_action_verb_message_nr(FILE* database)
+  {
+    long VERB;
+    while((VERB=GETNUM(database)) != -1)
+      {
+        ACTSPK[VERB]=GETNUM(NULL);
+      }
+  }
 
-L1060:	VERB=GETNUM(database);
-	if(VERB == -1) goto L1002;
-	ACTSPK[VERB]=GETNUM(NULL);
-	 goto L1060;
 
 /*  Read info about available liquids and other conditions, store in COND. */
+void read_conditions(FILE* database)
+  {
+    long K;
+    while((K=GETNUM(database)) != -1)
+      {
+        long LOC;
+        while((LOC=GETNUM(NULL)) != 0)
+          {
+            if(is_set(COND[LOC],K)) BUG(8);
+            COND[LOC]=COND[LOC] + (1l << K);
+          }
+      }
+  }
 
-L1070:	K=GETNUM(database);
-	if(K == -1) goto L1002;
-L1071:	LOC=GETNUM(NULL);
-	if(LOC == 0) goto L1070;
-	if(is_set(COND[LOC],K)) BUG(8);
-	COND[LOC]=COND[LOC] + (1l << K);
-	 goto L1071;
 
 /*  Read data for hints. */
-
-L1080:	HNTMAX=0;
-L1081:	K=GETNUM(database);
-	if(K == -1) goto L1002;
-	if(K <= 0 || K > HNTSIZ)BUG(7);
-	for (int I=1; I<=4; I++) {
-	HINTS[K][I] =GETNUM(NULL);
-	} /* end loop */
+void read_hints(FILE* database)
+  {
+    long K;
+    HNTMAX=0;
+    while((K=GETNUM(database)) != -1)
+      {
+        if(K <= 0 || K > HNTSIZ)BUG(7);
+        for (int I=1; I<=4; I++)
+          {
+            HINTS[K][I] =GETNUM(NULL);
+          } /* end loop */
 	HNTMAX=(HNTMAX>K ? HNTMAX : K);
-	 goto L1081;
+      }
+  }
+
 
 /*  Read the sound/text info, store in OBJSND, OBJTXT, LOCSND. */
+void read_sound_text(FILE* database)
+  {
+    long K;
+    while((K=GETNUM(database)) != -1)
+      {
+        long KK=GETNUM(NULL);
+        long I=GETNUM(NULL);
+        if(I != 0)
+          {
+            OBJSND[K]=(KK>0 ? KK : 0);
+            OBJTXT[K]=(I>0 ? I : 0);
+            continue;
+          }
 
-L1090:	K=GETNUM(database);
-	if(K == -1) goto L1002;
-	KK=GETNUM(NULL);
-	I=GETNUM(NULL);
-	if(I == 0) goto L1092;
-	OBJSND[K]=(KK>0 ? KK : 0);
-	OBJTXT[K]=(I>0 ? I : 0);
-	 goto L1090;
-
-L1092:	LOCSND[K]=KK;
-	 goto L1090;
-}
+        LOCSND[K]=KK;
+      }
+  }
 
 /*  Finish constructing internal data format */
 
