@@ -1,4 +1,6 @@
 advent
+*.gcda
+*.gcno
 *.o
 compile
 database.h
