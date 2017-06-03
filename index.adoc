@@ -1,0 +1,17 @@
+= Open Adventure =
+
+Open Adventure is an open-source port of Colossal Cave Adventure
+approved by its original authors, Will Crowther and Don Woods. It is
+based not on the original 350-point version from 1977 with 15
+treasures, but on the 430-point version with 20 treasures that was the
+last one Don Woods released in 1995.
+
+You can read:
+
+* a web rendering of its link:advent.html[manual page].
+
+* a link:history.html[a more detailed history] of the game.
+
+* a file of link:hints.html[hints].  And these are hints, not spoilers.
+
+// end

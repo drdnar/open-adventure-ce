@@ -9,7 +9,8 @@ ifeq ($(UNAME_S),Linux)
 endif
 
 OBJS=main.o init.o actions1.o actions2.o score.o misc.o database.o
-SOURCES=$(OBJS:.o=.c) COPYING NEWS README TODO adventure.text advent.adoc control advent.h funcs.h
+DOCS=COPYING NEWS README TODO advent.adoc history.adoc index.adoc hints.adoc
+SOURCES=$(OBJS:.o=.c) advent.h funcs.h adventure.text $(DOCS) control
 
 .c.o:
 	$(CC) $(CCFLAGS) $(DBX) -c $<
@@ -41,7 +42,7 @@ database.c database.h: compile adventure.text
 	$(CC) $(CCFLAGS) $(DBX) -c database.c
 
 clean:
-	rm -f *.o advent advent.html advent.6 database.[ch] compile
+	rm -f *.o advent *.html advent.6 database.[ch] compile *.gcno *.gcda
 	cd tests; $(MAKE) --quiet clean
 
 check: advent
