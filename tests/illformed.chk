@@ -1,6 +1,12 @@
 
 Welcome to Adventure!!  Would you like instructions?  
 
+> foo
+
+Please answer the question.   
+
+Welcome to Adventure!!  Would you like instructions?  
+
 > n
 
 You are standing at the end of a road before a small brick building.  
@@ -11,6 +17,20 @@ down a gully.
 Seed set to 1801426495
 
 You're in front of building.  
+
+> eat
+
+Eat what?
+
+> drink
+
+You have taken a drink from the stream.  The water tastes strongly of 
+minerals, but is not unpleasant.  It is extremely cold.
+
+> find keys
+
+I can only tell you what you see as you move about and manipulate
+things.  I cannot tell you where remote things are.    
 
 > in
 
@@ -23,6 +43,18 @@ There is a shiny brass lamp nearby.
 There is food here. 
 
 There is a bottle of water here.   
+
+> find keys
+
+I believe what you want is right here with you.   
+
+> find foo
+
+Nothing happens.    
+
+> find bar
+
+Sorry, I don't know the word "BAR".
 
 > carry
 
@@ -68,6 +100,11 @@ Don't be ridiculous!
 
 I see no blood here.  
 
+> brief
+
+Okay, from now on I'll only describe a place in full the first time   
+you come to it.  To get the full description, say "look".   
+
 > quit
 
 Do you really want to quit now?   
@@ -78,7 +115,7 @@ OK
 
 > score
 
-You have garnered  32 out of a possible 430 points, using    14 turns.  
+You have garnered  32 out of a possible 430 points, using    21 turns.  
 
 > quit
 
@@ -88,7 +125,7 @@ Do you really want to quit now?
 
 OK   
 
-You scored  32 out of a possible 430, using   15 turns.  
+You scored  32 out of a possible 430, using   22 turns.  
 
 You are obviously a rank amateur.  Better luck next time.   
 

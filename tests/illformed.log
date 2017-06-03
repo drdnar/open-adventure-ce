@@ -1,7 +1,14 @@
 ## Test for various cases not found in walkthroughs.
+foo
 n
 seed 1801426495
+eat
+drink
+find keys
 in
+find keys
+find foo
+find bar
 carry
 blast
 throw axe
@@ -13,6 +20,7 @@ unlock chain
 fill urn
 eat keys
 drink blood
+brief
 quit
 n
 score
