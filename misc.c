@@ -257,44 +257,53 @@ L42:	NUMBER=NUMBER*SIGN;
 }
 
 long GETTXT(long SKIP,long ONEWRD, long UPPER) {
-long CHAR, TEXT, I; static long SPLITTING = -1;
-
 /*  Take characters from an input line and pack them into 30-bit words.
  *  Skip says to skip leading blanks.  ONEWRD says stop if we come to a
  *  blank.  UPPER says to map all letters to uppercase.  If we reach the
  *  end of the line, the word is filled up with blanks (which encode as 0's).
  *  If we're already at end of line when TEXT is called, we return -1. */
 
-	if(LNPOSN != SPLITTING)SPLITTING = -1;
-	TEXT= -1;
-L10:	if(LNPOSN > LNLENG)return(TEXT);
-	if((!SKIP) || INLINE[LNPOSN] != 0) goto L11;
-	LNPOSN=LNPOSN+1;
-	 goto L10;
+  long CHAR;
+  long TEXT;
+  static long SPLITTING = -1;
 
-L11:	TEXT=0;
-	/* 15 */ for (I=1; I<=5; I++) {
-	TEXT=TEXT*64;
-	if(LNPOSN > LNLENG || (ONEWRD && INLINE[LNPOSN] == 0)) goto L15;
-	CHAR=INLINE[LNPOSN];
-	if(CHAR >= 63) goto L12;
-	SPLITTING = -1;
-	if(UPPER && CHAR >= 37)CHAR=CHAR-26;
-	TEXT=TEXT+CHAR;
-	 goto L14;
+  if(LNPOSN != SPLITTING)
+    SPLITTING = -1;
+  TEXT= -1;
+  while (true) {
+    if(LNPOSN > LNLENG)
+      return(TEXT);
+    if((!SKIP) || INLINE[LNPOSN] != 0)
+      break;
+    LNPOSN=LNPOSN+1;
+  }
 
-L12:	if(SPLITTING == LNPOSN) goto L13;
-	TEXT=TEXT+63;
-	SPLITTING = LNPOSN;
-	 goto L15;
+  TEXT=0;
+  for (int I=1; I<=5; I++) {
+    TEXT=TEXT*64;
+    if(LNPOSN > LNLENG || (ONEWRD && INLINE[LNPOSN] == 0))
+      continue;
+    CHAR=INLINE[LNPOSN];
+    if(CHAR < 63) {
+      SPLITTING = -1;
+      if(UPPER && CHAR >= 37)
+        CHAR=CHAR-26;
+      TEXT=TEXT+CHAR;
+      LNPOSN=LNPOSN+1;
+      continue;
+    }
+    if(SPLITTING != LNPOSN) {
+      TEXT=TEXT+63;
+      SPLITTING = LNPOSN;
+      continue;
+    }
 
-L13:	TEXT=TEXT+CHAR-63;
-	SPLITTING = -1;
-L14:	LNPOSN=LNPOSN+1;
-L15:	/*etc*/ ;
-	} /* end loop */
+    TEXT=TEXT+CHAR-63;
+    SPLITTING = -1;
+    LNPOSN=LNPOSN+1;
+  }
 
-	return(TEXT);
+  return(TEXT);
 }
 
 long MAKEWD(long LETTRS) {
