@@ -87,47 +87,46 @@ long GETTXT(long SKIP,long ONEWRD, long UPPER) {
  *  end of the line, the word is filled up with blanks (which encode as 0's).
  *  If we're already at end of line when GETTXT is called, we return -1. */
 
-  long CHAR;
-  long GETTXT;
+  long TEXT;
   static long SPLITTING = -1;
 
   if(LNPOSN != SPLITTING)
     SPLITTING = -1;
-  GETTXT= -1;
+  TEXT= -1;
   while (true) {
     if(LNPOSN > LNLENG)
-      return(GETTXT);
+      return(TEXT);
     if((!SKIP) || INLINE[LNPOSN] != 0)
       break;
     LNPOSN=LNPOSN+1;
   }
 
-  GETTXT=0;
+  TEXT=0;
   for (int I=1; I<=5; I++) {
-    GETTXT=GETTXT*64;
+    TEXT=TEXT*64;
     if(LNPOSN > LNLENG || (ONEWRD && INLINE[LNPOSN] == 0))
       continue;
-    CHAR=INLINE[LNPOSN];
-    if(CHAR < 63) {
+    char current=INLINE[LNPOSN];
+    if(current < 63) {
       SPLITTING = -1;
-      if(UPPER && CHAR >= 37)
-        CHAR=CHAR-26;
-      GETTXT=GETTXT+CHAR;
+      if(UPPER && current >= 37)
+        current=current-26;
+      TEXT=TEXT+current;
       LNPOSN=LNPOSN+1;
       continue;
     }
     if(SPLITTING != LNPOSN) {
-      GETTXT=GETTXT+63;
+      TEXT=TEXT+63;
       SPLITTING = LNPOSN;
       continue;
     }
 
-    GETTXT=GETTXT+CHAR-63;
+    TEXT=TEXT+current-63;
     SPLITTING = -1;
     LNPOSN=LNPOSN+1;
   }
 
-  return(GETTXT);
+  return(TEXT);
 }
 
 void BUG(long NUM) {
