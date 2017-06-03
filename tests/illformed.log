@@ -1,0 +1,20 @@
+## Test for various cases not found in walkthroughs.
+n
+seed 1801426495
+in
+carry
+blast
+throw axe
+throw knife
+lock
+unlock
+throw
+unlock chain
+fill urn
+eat keys
+drink blood
+quit
+n
+score
+quit
+yes

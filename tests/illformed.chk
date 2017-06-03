@@ -1,0 +1,95 @@
+
+Welcome to Adventure!!  Would you like instructions?  
+
+> n
+
+You are standing at the end of a road before a small brick building.  
+Around you is a forest.  A small stream flows out of the building and 
+down a gully.  
+
+> seed 1801426495
+Seed set to 1801426495
+
+You're in front of building.  
+
+> in
+
+You are inside a building, a well house for a large spring. 
+
+There are some keys on the ground here. 
+
+There is a shiny brass lamp nearby.
+
+There is food here. 
+
+There is a bottle of water here.   
+
+> carry
+
+Carry what?
+
+> blast
+
+Blasting requires dynamite.   
+
+> throw axe
+
+I see no axe here.  
+
+> throw knife
+
+I see no knife here.  
+
+> lock
+
+There is nothing here with a lock! 
+
+> unlock
+
+There is nothing here with a lock! 
+
+> throw
+
+Throw what?
+
+> unlock chain
+
+I see no chain here.  
+
+> fill urn
+
+I see no urn here.  
+
+> eat keys
+
+Don't be ridiculous!
+
+> drink blood
+
+I see no blood here.  
+
+> quit
+
+Do you really want to quit now?   
+
+> n
+
+OK   
+
+> score
+
+You have garnered  32 out of a possible 430 points, using    14 turns.  
+
+> quit
+
+Do you really want to quit now?   
+
+> yes
+
+OK   
+
+You scored  32 out of a possible 430, using   15 turns.  
+
+You are obviously a rank amateur.  Better luck next time.   
+
+To achieve the next higher rating, you need 14 more points.  
