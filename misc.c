@@ -263,7 +263,6 @@ long GETTXT(long SKIP,long ONEWRD, long UPPER) {
  *  end of the line, the word is filled up with blanks (which encode as 0's).
  *  If we're already at end of line when TEXT is called, we return -1. */
 
-  long CHAR;
   long TEXT;
   static long SPLITTING = -1;
 
@@ -283,12 +282,12 @@ long GETTXT(long SKIP,long ONEWRD, long UPPER) {
     TEXT=TEXT*64;
     if(LNPOSN > LNLENG || (ONEWRD && INLINE[LNPOSN] == 0))
       continue;
-    CHAR=INLINE[LNPOSN];
-    if(CHAR < 63) {
+    char current=INLINE[LNPOSN];
+    if(current < 63) {
       SPLITTING = -1;
-      if(UPPER && CHAR >= 37)
-        CHAR=CHAR-26;
-      TEXT=TEXT+CHAR;
+      if(UPPER && current >= 37)
+        current=current-26;
+      TEXT=TEXT+current;
       LNPOSN=LNPOSN+1;
       continue;
     }
@@ -298,7 +297,7 @@ long GETTXT(long SKIP,long ONEWRD, long UPPER) {
       continue;
     }
 
-    TEXT=TEXT+CHAR-63;
+    TEXT=TEXT+current-63;
     SPLITTING = -1;
     LNPOSN=LNPOSN+1;
   }
