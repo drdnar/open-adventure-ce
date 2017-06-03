@@ -1,9 +1,9 @@
 advent
+compile
 *.gcda
 *.gcno
 *.o
-compile
+*.html
 database.h
 database.c
 advent.6
-advent.html
