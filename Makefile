@@ -9,7 +9,7 @@ ifeq ($(UNAME_S),Linux)
 endif
 
 OBJS=main.o init.o actions1.o actions2.o score.o misc.o database.o
-SOURCES=$(OBJS:.o=.c) COPYING NEWS README TODO adventure.text advent.text control advent.h funcs.h
+SOURCES=$(OBJS:.o=.c) COPYING NEWS README TODO adventure.text advent.adoc control advent.h funcs.h
 
 .c.o:
 	$(CC) $(CCFLAGS) $(DBX) -c $<
@@ -48,9 +48,9 @@ check: advent
 	cd tests; $(MAKE) --quiet
 
 # Requires asciidoc and xsltproc/docbook stylesheets.
-.asc.6: advent.txt
+.asc.6: advent.adoc
 	a2x --doctype manpage --format manpage $<
-.asc.html: advent.txt
+.asc.html: advent.adoc
 	a2x --doctype manpage --format xhtml -D . $<
 	rm -f docbook-xsl.css
 

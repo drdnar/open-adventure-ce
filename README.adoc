@@ -5,7 +5,7 @@ This code is a forward-port of the Crowther/Woods Adventure 2.5 from
 development written by the original authors.  The authors have given
 permission and encouragement for this release.
 
-The file history.txt contains a more detailed history of this game
+The file history.adoc contains a more detailed history of this game
 and its ancestors.
 
 This project is called "Open Adventure" because it's not at all clear
