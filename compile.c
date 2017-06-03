@@ -2,7 +2,7 @@
 #define RTXSIZ 277
 #define CLSMAX 12
 #define LOCSIZ 185
-#define LINSIZ 12500
+#define LINSIZ 12600
 #define TRNSIZ 5
 #define TABSIZ 330
 #define VRBSIZ 35

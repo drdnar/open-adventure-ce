@@ -14,7 +14,8 @@ roleplaying games.
 
 This is the last version released by Crowther & Woods, its original
 authors, in 1995.  It has been known as "adventure 2.5" and "430-point
-adventure".
+adventure".  To learn more about the changes since the 350-point
+original, type 'news' at the command prompt.
 
 There is an 'adventure' in the BSD games package that is a C port by
 Jim Gillogly of the 1976 ancestor of this game.  To avoid a name

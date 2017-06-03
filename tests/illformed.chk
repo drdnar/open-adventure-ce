@@ -113,9 +113,37 @@ Do you really want to quit now?
 
 OK   
 
+> read
+
+Read what?
+
+> look
+
+You are inside a building, a well house for a large spring. 
+
+There are some keys on the ground here. 
+
+There is a shiny brass lamp nearby.
+
+There is food here. 
+
+There is a bottle of water here.   
+
+> news
+
+Open Adventure is an author-approved open-source release of 
+Version 2.5 with, as yet, no gameplay changes.  
+Version 2.5 was essentially the same as Version II; the cave and the    
+hazards therein are unchanged, and top score is still 430 points.  
+There are a few more hints, especially for some of the more obscure   
+puzzles.  There are a few minor bugfixes and cosmetic changes.  You   
+can now save a game and resume it at once (formerly you had to wait a 
+while first), but it now costs you a few points each time you save the
+game.  Saved games are now stored in much smaller files than before.  
+
 > score
 
-You have garnered  32 out of a possible 430 points, using    21 turns.  
+You have garnered  32 out of a possible 430 points, using    24 turns.  
 
 > quit
 
@@ -125,7 +153,7 @@ Do you really want to quit now?
 
 OK   
 
-You scored  32 out of a possible 430, using   22 turns.  
+You scored  32 out of a possible 430, using   25 turns.  
 
 You are obviously a rank amateur.  Better luck next time.   
 
