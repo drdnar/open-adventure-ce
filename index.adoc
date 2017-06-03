@@ -14,4 +14,6 @@ You can read:
 
 * a file of link:hints.html[hints].  And these are hints, not spoilers.
 
+* the latest link:coverage[code coverage analysis].
+
 // end

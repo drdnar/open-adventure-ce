@@ -6,7 +6,24 @@ stages:
   - deploy
 
 # build advent itself
-binary:
+binary:debug:
+  stage: build
+  before_script:
+    - apk update
+    - apk add make gcc musl-dev
+  script: 
+    - make debug
+  artifacts:
+    paths:
+      - advent
+      - "*.gcda"
+      - "*.gcno"
+  # cache outputs to reduce the build time
+  cache:
+    paths:
+      - "*.o"
+
+binary:release:
   stage: build
   before_script:
     - apk update
@@ -16,8 +33,6 @@ binary:
   artifacts:
     paths:
       - advent
-      - "*.gcda"
-      - "*.gcno"
   # cache outputs to reduce the build time
   cache:
     paths:
@@ -29,7 +44,7 @@ manpage:
     - apk update
     - apk add make asciidoc
   script:
-    - make .asc.6
+    - make .adoc.6
   artifacts:
     paths:
       - advent.6
@@ -40,13 +55,13 @@ html:
     - apk update
     - apk add make asciidoc libxslt
   script:
-    - make .asc.html
+    - make html
   artifacts:
     paths:
-      - advent.html
+      - "*.html"
 
 # run tests using the binary built before
-test:
+test:debug:
   stage: test
   before_script:
     - apk update
@@ -61,13 +76,32 @@ test:
   artifacts:
     paths:
       - coverage
+  dependencies:
+    - binary:debug
+
+test:release:
+  stage: test
+  before_script:
+    - apk update
+    - apk add make
+  script:
+    - cd tests
+    - make
+    - cd ..
+  dependencies:
+    - binary:release
 
 pages:
   stage: deploy
   script:
+    - mkdir public
     - mv coverage public
+    - "mv *.html public"
   artifacts:
     paths:
       - public
   only:
     - master
+  dependencies:
+    - html
+    - test:debug

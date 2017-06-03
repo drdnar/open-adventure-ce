@@ -1,7 +1,7 @@
 # Makefile for the open-source release of adventure 2.5
 
 CC?=gcc
-CCFLAGS=-std=c99 -O0 --coverage
+CCFLAGS=-std=c99
 LIBS=
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
@@ -68,3 +68,6 @@ release: advent-$(VERS).tar.gz advent.html
 
 refresh: advent.html
 	shipper -N -w version=$(VERS) | sh -e -x
+
+debug: CCFLAGS += -O0 --coverage
+debug: advent
