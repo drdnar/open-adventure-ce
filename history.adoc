@@ -117,10 +117,15 @@ versions 3, 4, 5, 6, 7 and for all I know higher than that.  It seems
 best just to start a new numbering series while acknowledging the
 links back.
 
-We have reverted to "Advent" for the binary to avoid a name collision
+We have reverted to "advent" for the binary to avoid a name collision
 with the BSD Games version.
 
 == Functional changes in Open Adventure ==
+
+By default, advent issues "> " as a command prompt.  This feature
+became common in many variants after the original 350-point version,
+but was never backported into Crowther & Wood's main line before now.
+The "-o" (oldstyle) version reverts the behavior.
 
 A "seed" command has been added.  This is not intended for human use
 but as a way for game logs to set the PRNG (pseudorandom-number generator) so
