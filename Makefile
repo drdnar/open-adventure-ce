@@ -41,6 +41,8 @@ database.c database.h: compile adventure.text
 	./compile
 	$(CC) $(CCFLAGS) $(DBX) -c database.c
 
+html: index.html advent.html history.html hints.html
+
 clean:
 	rm -f *.o advent *.html advent.6 database.[ch] compile *.gcno *.gcda
 	cd tests; $(MAKE) --quiet clean
