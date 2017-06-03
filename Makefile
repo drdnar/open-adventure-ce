@@ -48,12 +48,13 @@ clean:
 check: advent
 	cd tests; $(MAKE) --quiet
 
+.SUFFIXES: .adoc .html
+
 # Requires asciidoc and xsltproc/docbook stylesheets.
-.asc.6: advent.adoc
+.adoc.6: advent.adoc
 	a2x --doctype manpage --format manpage $<
-.asc.html: advent.adoc
-	a2x --doctype manpage --format xhtml -D . $<
-	rm -f docbook-xsl.css
+.adoc.html: advent.adoc
+	asciidoc $<
 
 advent-$(VERS).tar.gz: $(SOURCES) advent.6
 	tar --transform='s:^:advent-$(VERS)/:' --show-transformed-names -cvzf advent-$(VERS).tar.gz $(SOURCES) advent.6

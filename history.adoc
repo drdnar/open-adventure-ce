@@ -69,6 +69,7 @@ he replied on 15 May giving both permission and encouragement.
 Here is what Don said about differences between the original Adventure
 and 2.5:
 
+............................................................................
 > The bulk of the points come from five new 16-point treasures.  (I say "bulk"
 > because I think at least one of the scores included some padding and I may
 > have tweaked those.)  Each of the new treasures requires solving a puzzle
@@ -105,6 +106,7 @@ and 2.5:
 > succumb even given access to the game source.  You really need to fit
 > together not only the goals and the map and use of inventory space, but
 > also details like just what _can_ you do in the dark...?
+............................................................................
 
 == Nomenclature ==
 
@@ -145,6 +147,6 @@ which is then linked to the advent binary.
 
 - [[[IFA]]] http://rickadams.org/adventure/
 
-- [[[[DA]]] http://www.filfre.net/sitemap/
+- [[[DA]]] http://www.filfre.net/sitemap/
 
 - [[[SN]]] http://www.digitalhumanities.org/dhq/vol/1/2/000009/000009.html
