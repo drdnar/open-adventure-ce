@@ -9,7 +9,7 @@ The very first version was released by Crowther in 1976, in FORTRAN on
 the PDP-10 at Bolt, Beranek, and Newman. (Crowther was at the time
 writing what we could now call firmware for the earliest ARPANET
 routers.) It was a maze game based on the Colossal Cave complex in
-Kentucky, lacking most of the D&D-like elements now associated with
+Kentucky, including fewer of the D&D-like elements now associated with
 the game.
 
 Adventure as we now know it, the ancestor of all later versions, was
@@ -115,7 +115,7 @@ versions 3, 4, 5, 6, 7 and for all I know higher than that.  It seems
 best just to start a new numbering series while acknowledging the
 links back.
 
-I have reverted to "Advent" for the binary to avoid a name collision
+We have reverted to "Advent" for the binary to avoid a name collision
 with the BSD Games version.
 
 == Functional changes in Open Adventure ==
