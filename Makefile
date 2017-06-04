@@ -1,5 +1,7 @@
 # Makefile for the open-source release of adventure 2.5
 
+VERS=1.0
+
 CC?=gcc
 CCFLAGS+=-std=c99
 LIBS=
@@ -9,8 +11,7 @@ ifeq ($(UNAME_S),Linux)
 endif
 
 OBJS=main.o init.o actions1.o actions2.o score.o misc.o database.o
-DOCS=COPYING NEWS README.adoc TODO advent.adoc history.adoc index.adoc hints.adoc
-SOURCES=$(OBJS:.o=.c) compile.c advent.h database.h funcs.h adventure.text $(DOCS) Makefile control
+SOURCES=$(OBJS:.o=.c) compile.c advent.h database.h funcs.h adventure.text Makefile control
 
 .c.o:
 	$(CC) $(CCFLAGS) $(DBX) -c $<
@@ -44,30 +45,31 @@ database.c database.h: compile adventure.text
 html: index.html advent.html history.html hints.html
 
 clean:
-	rm -f *.o advent *.html advent.6 database.[ch] compile *.gcno *.gcda
+	rm -f *.o advent *.html database.[ch] compile *.gcno *.gcda
+	rm -f README advent.6
 	cd tests; $(MAKE) --quiet clean
 
 check: advent
 	cd tests; $(MAKE) --quiet
 
-.SUFFIXES: .adoc .html
+.SUFFIXES: .adoc .html .6
 
 # Requires asciidoc and xsltproc/docbook stylesheets.
-.adoc.6: advent.adoc
+.adoc.6:
 	a2x --doctype manpage --format manpage $<
-.adoc.html: advent.adoc
+.adoc.html:
+	asciidoc $<
+.adoc:
 	asciidoc $<
 
-advent-$(VERS).tar.gz: $(SOURCES) advent.6
-	tar --transform='s:^:advent-$(VERS)/:' --show-transformed-names -cvzf advent-$(VERS).tar.gz $(SOURCES) advent.6
+# README.adoc exists because that filename is magic on GitLab.
+DOCS=COPYING NEWS README.adoc TODO \
+	advent.adoc history.adoc index.adoc hints.adoc advent.6
+
+advent-$(VERS).tar.gz: $(SOURCES) $(DOCS)
+	tar --transform='s:^:advent-$(VERS)/:' --show-transformed-names -cvzf advent-$(VERS).tar.gz $(SOURCES) $(DOCS)
 
 dist: advent-$(VERS).tar.gz
-
-release: advent-$(VERS).tar.gz advent.html
-	shipper version=$(VERS) | sh -e -x
-
-refresh: advent.html
-	shipper -N -w version=$(VERS) | sh -e -x
 
 debug: CCFLAGS += -O0 --coverage
 debug: advent

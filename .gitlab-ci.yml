@@ -44,7 +44,7 @@ manpage:
     - apk update
     - apk add make asciidoc
   script:
-    - make .adoc.6
+    - make advent.6
   artifacts:
     paths:
       - advent.6
@@ -108,8 +108,6 @@ pages:
 
 package:
   stage: deploy
-  script:
-    - mv README.adoc README
   artifacts:
     paths:
       - advent
