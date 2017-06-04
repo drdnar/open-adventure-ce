@@ -1,0 +1,5 @@
+## Simple quit
+#options: -o
+n
+quit
+yes

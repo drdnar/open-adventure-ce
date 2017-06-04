@@ -30,12 +30,14 @@ TESTLOADS := $(shell ls -1 *.log | sed '/.log/s///')
 buildregress:
 	@for file in $(TESTLOADS); do \
 	    echo "Remaking $${file}.chk"; \
-	    advent <$${file}.log >$${file}.chk 2>&1 || exit 1; \
+	    OPTS=`sed -n /#options:/s///p <$${file}.log`; \
+	    advent $$OPTS <$${file}.log >$${file}.chk 2>&1 || exit 1; \
 	done
 regress:
 	@for file in $(TESTLOADS); do \
 	    $(ECHO) -n "  $${file} "; grep '##' $${file}.log  || echo ' ## (no description)'; \
-	    if advent < $${file}.log >/tmp/regress$$$$ 2>&1; \
+	    OPTS=`sed -n /#options:/s///p <$${file}.log`; \
+	    if advent $$OPTS < $${file}.log >/tmp/regress$$$$ 2>&1; \
 	    then diff --text -u $${file}.chk /tmp/regress$$$$ || exit 1; \
 	    else echo "*** Nonzero return status on $${file}!"; exit 1; fi \
 	done
