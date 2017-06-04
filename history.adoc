@@ -124,7 +124,7 @@ with the BSD Games version.
 
 By default, advent issues "> " as a command prompt.  This feature
 became common in many variants after the original 350-point version,
-but was never backported into Crowther & Wood's main line before now.
+but was never backported into Crowther & Woods's main line before now.
 The "-o" (oldstyle) version reverts the behavior.
 
 A "seed" command has been added.  This is not intended for human use
