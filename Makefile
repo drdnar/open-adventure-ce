@@ -1,7 +1,7 @@
 # Makefile for the open-source release of adventure 2.5
 
 CC?=gcc
-CCFLAGS=-std=c99
+CCFLAGS+=-std=c99
 LIBS=
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
@@ -16,7 +16,7 @@ SOURCES=$(OBJS:.o=.c) compile.c advent.h database.h funcs.h adventure.text $(DOC
 	$(CC) $(CCFLAGS) $(DBX) -c $<
 
 advent:	$(OBJS) database.o
-	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) $(LIBS)
+	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) $(LDFLAGS) $(LIBS)
 
 main.o:		advent.h funcs.h database.h
 
