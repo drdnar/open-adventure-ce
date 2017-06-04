@@ -105,3 +105,18 @@ pages:
   dependencies:
     - html
     - test:debug
+
+package:
+  stage: deploy
+  script:
+    - mv README.adoc README
+  artifacts:
+    paths:
+      - advent
+      - NEWS
+      - COPYING
+      - README
+      - advent.6
+  dependencies:
+    - binary:release
+    - manpage
