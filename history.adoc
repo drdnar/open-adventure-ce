@@ -1,9 +1,9 @@
 = A brief history of Colossal Cave Adventure =
 by Eric S. Raymond
 
-Adventure is the fons et origo of all later dungeon-crawling games,
-the grandaddy of interactive fiction, and one of the hallowed artifacts
-of hacker folklore.
+Adventure is the fons et origo of all later dungeon-crawling computer
+games, the grandaddy of interactive fiction, and one of the hallowed
+artifacts of hacker folklore.
 
 The very first version was released by Crowther in 1976, in FORTRAN on
 the PDP-10 at Bolt, Beranek, and Newman. (Crowther was at the time
@@ -114,17 +114,21 @@ There is record of one earlier dungeon-crawling game called "dnd",
 written in 1974-75 on the PLATO system at University of Illinois
 <<DND>>.  This was in some ways similar to later roguelike games but
 not to Adventure.  The designers of later roguelikes frequently site
-Adventure as an explanation, but not dnd; like PLATO itself, dnd seems
-not to have become known outside of its home university until
+Adventure as an influence, but not dnd; like PLATO itself, dnd seems
+not to have become known outside of its own user community until
 rediscovered by computer historians many years after Adventure
 shipped.
 
 There was also Hunt The Wumpus <<WUMPUS>>, written by Gregory Yob in
-1972. Though the wumpus was later included as a monster in the Nethack
-roguelike game, there is no evidence that Yob's original (circulated
-in BASIC among microcomputer enthusiasts) was known to the ARPANET- and
-minicomputer-centered culture Crowther and Woods were part of until well
-after Adventure was written.
+1972. Though the wumpus was (much) later included as a monster in the
+Nethack roguelike game, this was done in a spirit of conscious
+museumization well after early roguelikes. There is no evidence that
+Yob's original (circulated in BASIC among microcomputer enthusiasts)
+was known to the ARPANET- and minicomputer-centered culture Crowther
+and Woods were part of until well after Adventure was written.
+
+Neither of these games used an attempt at a natural-language parser
+even as primitive as Adventure's.
 
 == Nomenclature ==
 
