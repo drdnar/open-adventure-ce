@@ -18,6 +18,16 @@ Seed set to 1801426495
 
 You're in front of building.  
 
+> listen
+
+The stream is gurgling placidly.   
+
+> forward
+
+I am unsure how you are facing.  Use compass points or nearby objects.
+
+You're in front of building.  
+
 > eat
 
 Eat what?
@@ -44,9 +54,17 @@ There is food here.
 
 There is a bottle of water here.   
 
+> listen
+
+The stream is gurgling placidly.   
+
 > find keys
 
 I believe what you want is right here with you.   
+
+> unlock keys
+
+You can't unlock the keys.    
 
 > find foo
 
@@ -105,6 +123,20 @@ I see no blood here.
 Okay, from now on I'll only describe a place in full the first time   
 you come to it.  To get the full description, say "look".   
 
+> on
+
+Your lamp is now on.
+
+> xyzzy
+
+>>Foof!<<  
+
+It is now pitch dark.  If you proceed you will likely fall into a pit.
+
+> listen
+
+All is silent. 
+
 > quit
 
 Do you really want to quit now?   
@@ -119,15 +151,7 @@ Read what?
 
 > look
 
-You are inside a building, a well house for a large spring. 
-
-There are some keys on the ground here. 
-
-There is a shiny brass lamp nearby.
-
-There is food here. 
-
-There is a bottle of water here.   
+It is now pitch dark.  If you proceed you will likely fall into a pit.
 
 > news
 
@@ -143,7 +167,7 @@ game.  Saved games are now stored in much smaller files than before.
 
 > score
 
-You have garnered  32 out of a possible 430 points, using    24 turns.  
+You have garnered  32 out of a possible 430 points, using    31 turns.  
 
 > quit
 
@@ -153,7 +177,7 @@ Do you really want to quit now?
 
 OK   
 
-You scored  32 out of a possible 430, using   25 turns.  
+You scored  32 out of a possible 430, using   32 turns.  
 
 You are obviously a rank amateur.  Better luck next time.   
 

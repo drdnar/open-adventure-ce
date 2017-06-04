@@ -2,11 +2,15 @@
 foo
 n
 seed 1801426495
+listen
+forward
 eat
 drink
 find keys
 in
+listen
 find keys
+unlock keys
 find foo
 find bar
 carry
@@ -21,6 +25,9 @@ fill urn
 eat keys
 drink blood
 brief
+on
+xyzzy
+listen
 quit
 n
 read
