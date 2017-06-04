@@ -120,12 +120,17 @@ rediscovered by computer historians many years after Adventure
 shipped.
 
 There was also Hunt The Wumpus <<WUMPUS>>, written by Gregory Yob in
-1972. Though the wumpus was (much) later included as a monster in the
-Nethack roguelike game, this was done in a spirit of conscious
-museumization well after early roguelikes. There is no evidence that
-Yob's original (circulated in BASIC among microcomputer enthusiasts)
-was known to the ARPANET- and minicomputer-centered culture Crowther
-and Woods were part of until well after Adventure was written.
+1972. There is no evidence that Yob's original (circulated
+in BASIC among microcomputer enthusiasts) was known to the ARPANET-
+and minicomputer-centered culture Crowther and Woods were part of
+until well after Adventure was written.
+
+(I was a developer of the Nethack roguelike early in that game's
+history; we knew of Hunt The Wumpus then from its early Unix port, but
+it didn't influence us either, nor in any apparent way the designers
+of other early roguelikes. After my time the wumpus was included as a
+monster in Nethack, but this was done in a spirit of conscious
+museumization after historians rediscovered Yob's game.)
 
 Neither of these games used an attempt at a natural-language parser
 even as primitive as Adventure's.
