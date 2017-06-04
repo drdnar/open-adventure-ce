@@ -58,7 +58,7 @@ check: advent
 .adoc.html: advent.adoc
 	asciidoc $<
 
-advent-$(VERS).tar.gz: $(SOURCES) .adoc.6
+advent-$(VERS).tar.gz: $(SOURCES) advent.6
 	tar --transform='s:^:advent-$(VERS)/:' --show-transformed-names -cvzf advent-$(VERS).tar.gz $(SOURCES) advent.6
 
 dist: advent-$(VERS).tar.gz
