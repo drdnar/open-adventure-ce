@@ -108,6 +108,24 @@ and 2.5:
 > also details like just what _can_ you do in the dark...?
 ............................................................................
 
+== Earlier non-influences ==
+
+There is record of one earlier dungeon-crawling game called "dnd",
+written in 1974-75 on the PLATO system at University of Illinois
+<<DND>>.  This was in some ways similar to later roguelike games but
+not to Adventure.  The designers of later roguelikes frequently site
+Adventure as an explanation, but not dnd; like PLATO itself, dnd seems
+not to have become known outside of its home university until
+rediscovered by computer historians many years after Adventure
+shipped.
+
+There was also Hunt The Wumpus <<WUMPUS>>, written by Gregory Yob in
+1972. Though the wumpus was later included as a monster in the Nethack
+roguelike game, there is no evidence that Yob's original (circulated
+in BASIC among microcomputer enthusiasts) was known to the ARPANET- and
+minicomputer-centered culture Crowther and Woods were part of until well
+after Adventure was written.
+
 == Nomenclature ==
 
 This project is called "Open Adventure" because it's not at all clear
@@ -155,3 +173,7 @@ which is then linked to the advent binary.
 - [[[DA]]] http://www.filfre.net/sitemap/
 
 - [[[SN]]] http://www.digitalhumanities.org/dhq/vol/1/2/000009/000009.html
+
+- [[[DND]]] https://en.wikipedia.org/wiki/Dnd_(video_game)
+
+- [[[WUMPUS]]] https://en.wikipedia.org/wiki/Hunt_the_Wumpus
