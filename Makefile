@@ -9,8 +9,8 @@ ifeq ($(UNAME_S),Linux)
 endif
 
 OBJS=main.o init.o actions1.o actions2.o score.o misc.o database.o
-DOCS=COPYING NEWS README TODO advent.adoc history.adoc index.adoc hints.adoc
-SOURCES=$(OBJS:.o=.c) advent.h funcs.h adventure.text $(DOCS) control
+DOCS=COPYING NEWS README.adoc TODO advent.adoc history.adoc index.adoc hints.adoc
+SOURCES=$(OBJS:.o=.c) compile.c advent.h database.h funcs.h adventure.text $(DOCS) Makefile control
 
 .c.o:
 	$(CC) $(CCFLAGS) $(DBX) -c $<
@@ -58,7 +58,7 @@ check: advent
 .adoc.html: advent.adoc
 	asciidoc $<
 
-advent-$(VERS).tar.gz: $(SOURCES) advent.6
+advent-$(VERS).tar.gz: $(SOURCES) .adoc.6
 	tar --transform='s:^:advent-$(VERS)/:' --show-transformed-names -cvzf advent-$(VERS).tar.gz $(SOURCES) advent.6
 
 dist: advent-$(VERS).tar.gz
