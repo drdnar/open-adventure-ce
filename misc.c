@@ -608,7 +608,7 @@ L2:	AT=I;
 
 long SETBIT(long bit) {
 /*  Returns 2**bit for use in constructing bit-masks. */
-    2 << bit;
+    return(2 << bit);
 }
 
 bool TSTBIT(long mask, int bit) {
