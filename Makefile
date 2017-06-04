@@ -44,7 +44,7 @@ html: index.html advent.html history.html hints.html
 
 clean:
 	rm -f *.o advent *.html database.[ch] compile *.gcno *.gcda
-	rm -f README advent.6
+	rm -f README advent.6 MANIFEST
 	cd tests; $(MAKE) --quiet clean
 
 check: advent
@@ -64,8 +64,12 @@ check: advent
 DOCS=COPYING NEWS README.adoc TODO \
 	advent.adoc history.adoc index.adoc hints.adoc advent.6
 
-advent-$(VERS).tar.gz: $(SOURCES) $(DOCS)
-	tar --transform='s:^:advent-$(VERS)/:' --show-transformed-names -cvzf advent-$(VERS).tar.gz $(SOURCES) $(DOCS)
+# Can't use GNU tar's --transform, needs to build under Alpine Linux
+advent-$(VERS).tar.gz: $(SOURCES) $(DOCS) advent.6
+	@ls $(SOURCES) $(DOCS) advent.1 | sed s:^:advent-$(VERS)/: >MANIFEST
+	@(cd ..; ln -s advent advent-$(VERS))
+	(cd ..; tar -czvf advent/advent-$(VERS).tar.gz `cat advent/MANIFEST`)
+	@(cd ..; rm advent-$(VERS))
 
 dist: advent-$(VERS).tar.gz
 
