@@ -108,6 +108,8 @@ pages:
 
 package:
   stage: deploy
+  script:
+    - cp README.adoc README
   artifacts:
     paths:
       - advent
