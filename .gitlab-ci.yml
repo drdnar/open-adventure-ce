@@ -60,6 +60,18 @@ html:
     paths:
       - "*.html"
 
+dist:
+  stage: build
+  before_script:
+    - apk update
+    - apk add make asciidoc
+  script:
+    - export VERS=${CI_COMMIT_REF_NAME}
+    - make dist -e
+  artifacts:
+    paths:
+      - "*.tar.gz"
+
 # run tests using the binary built before
 test:debug:
   stage: test
@@ -94,9 +106,10 @@ test:release:
 pages:
   stage: deploy
   script:
-    - mkdir public
+    - mkdir -p public/releases
     - mv coverage public
     - "mv *.html public"
+    - "mv *.tar.gz public/releases"
   artifacts:
     paths:
       - public
@@ -105,18 +118,5 @@ pages:
   dependencies:
     - html
     - test:debug
+    - dist
 
-package:
-  stage: deploy
-  script:
-    - cp README.adoc README
-  artifacts:
-    paths:
-      - advent
-      - NEWS
-      - COPYING
-      - README
-      - advent.6
-  dependencies:
-    - binary:release
-    - manpage

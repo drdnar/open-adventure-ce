@@ -67,9 +67,9 @@ DOCS=COPYING NEWS README.adoc TODO \
 # Can't use GNU tar's --transform, needs to build under Alpine Linux
 advent-$(VERS).tar.gz: $(SOURCES) $(DOCS)
 	@ls $(SOURCES) $(DOCS) | sed s:^:advent-$(VERS)/: >MANIFEST
-	@(cd ..; ln -s advent advent-$(VERS))
-	(cd ..; tar -czvf advent/advent-$(VERS).tar.gz `cat advent/MANIFEST`)
-	@(cd ..; rm advent-$(VERS))
+	@(ln -s . advent-$(VERS))
+	(tar -T MANIFEST -czvf advent-$(VERS).tar.gz)
+	@(rm advent-$(VERS))
 
 dist: advent-$(VERS).tar.gz
 
