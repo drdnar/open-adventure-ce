@@ -29,7 +29,6 @@ extern bool fGETIN(FILE *,long*,long*,long*,long*);
 #define GETIN(input,WORD1,WORD1X,WORD2,WORD2X) fGETIN(input,&WORD1,&WORD1X,&WORD2,&WORD2X)
 
 extern long YES(FILE *,long,long,long);
-extern long GETNUM(FILE *);
 extern long GETTXT(long,long,long);
 extern long MAKEWD(long);
 

@@ -215,46 +215,13 @@ L20:	YEAH=false;
 }
 
 
-/*  Line-parsing routines (GETNUM, GETTXT, MAKEWD, PUTTXT, SHFTXT, TYPE0)
+/*  Line-parsing routines (GETTXT, MAKEWD, PUTTXT, SHFTXT, TYPE0)
 		*/
 /*  The routines on this page handle all the stuff that would normally be
  *  taken care of by format statements.  We do it this way instead so that
  *  we can handle textual data in a machine independent fashion.  All the
  *  machine dependent i/o stuff is on the following page.  See that page
  *  for a description of MAPCOM's inline array. */
-
-long GETNUM(FILE *source) {
-long DIGIT, NUMBER, SIGN;
-
-/*  Obtain the next integer from an input line.  If K>0, we first read a
- *  new input line from a file; if K<0, we read a line from the keyboard;
- *  if K=0 we use a line that has already been read (and perhaps partially
- *  scanned).  If we're at the end of the line or encounter an illegal
- *  character (not a digit, hyphen, or blank), we return 0. */
-
-
-	if(source != NULL)MAPLIN(source);
-	NUMBER=0;
-L10:	if(LNPOSN > LNLENG)return(NUMBER);
-	if(INLINE[LNPOSN] != 0) goto L20;
-	LNPOSN=LNPOSN+1;
-	 goto L10;
-
-L20:	SIGN=1;
-	if(INLINE[LNPOSN] != 9) goto L32;
-	SIGN= -1;
-L30:	LNPOSN=LNPOSN+1;
-L32:	if(LNPOSN > LNLENG || INLINE[LNPOSN] == 0) goto L42;
-	DIGIT=INLINE[LNPOSN]-64;
-	if(DIGIT < 0 || DIGIT > 9) goto L40;
-	NUMBER=NUMBER*10+DIGIT;
-	 goto L30;
-
-L40:	NUMBER=0;
-L42:	NUMBER=NUMBER*SIGN;
-	LNPOSN=LNPOSN+1;
-	return(NUMBER);
-}
 
 long GETTXT(long SKIP,long ONEWRD, long UPPER) {
 /*  Take characters from an input line and pack them into 30-bit words.
