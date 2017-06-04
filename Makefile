@@ -10,14 +10,14 @@ ifeq ($(UNAME_S),Linux)
 	LIBS=-lrt
 endif
 
-OBJS=main.o init.o actions1.o actions2.o score.o misc.o database.o
+OBJS=main.o init.o actions1.o actions2.o score.o misc.o
 SOURCES=$(OBJS:.o=.c) compile.c advent.h funcs.h adventure.text Makefile control
 
 .c.o:
 	$(CC) $(CCFLAGS) $(DBX) -c $<
 
 advent:	$(OBJS) database.o
-	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) $(LDFLAGS) $(LIBS)
+	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) database.o $(LDFLAGS) $(LIBS)
 
 main.o:		advent.h funcs.h database.h
 
