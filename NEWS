@@ -4,7 +4,7 @@
   Forward port of Crowther & Woods's 430-point Adventure 2.5.
   Added -l option for logging.
   Game logs are now fully reproducible via the "seed" command.
-  Added regression-test suite using seed.
+  Added regression-test suite using seed, with coverage checking.
   Added command prompt; -o suppresses this. Otherwise no gameplay changes.
   Fixed bug that caused reservoir word not to be randomized.
   Makefile does parallel builds.
