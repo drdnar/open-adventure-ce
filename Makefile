@@ -40,8 +40,6 @@ database.c database.h: compile adventure.text
 	./compile
 	$(CC) $(CCFLAGS) $(DBX) -c database.c
 
-html: index.html advent.html history.html hints.html
-
 clean:
 	rm -f *.o advent *.html database.[ch] compile *.gcno *.gcda
 	rm -f README advent.6 MANIFEST
@@ -61,15 +59,16 @@ check: advent
 	asciidoc $<
 
 # README.adoc exists because that filename is magic on GitLab.
-DOCS=COPYING NEWS README.adoc TODO \
-	advent.adoc history.adoc index.adoc hints.adoc advent.6
+DOCS=COPYING NEWS README.adoc TODO advent.adoc history.adoc hints.adoc advent.6
 
-# Can't use GNU tar's --transform, needs to build under Alpine Linux
 advent-$(VERS).tar.gz: $(SOURCES) $(DOCS)
-	@ls $(SOURCES) $(DOCS) | sed s:^:advent-$(VERS)/: >MANIFEST
-	@(ln -s . advent-$(VERS))
-	(tar -T MANIFEST -czvf advent-$(VERS).tar.gz)
-	@(rm advent-$(VERS))
+	tar --transform='s:^:advent-$(VERS)/:' --show-transformed-names -cvzf advent-$(VERS).tar.gz $(SOURCES) $(DOCS)
+
+release: advent-$(VERS).tar.gz advent.html history.html hints.html
+	shipper version=$(VERS) | sh -e -x
+
+refresh: advent.html
+	shipper -N -w version=$(VERS) | sh -e -x
 
 dist: advent-$(VERS).tar.gz
 

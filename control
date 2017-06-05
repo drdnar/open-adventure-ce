@@ -17,6 +17,10 @@ XBS-HTML-Target: index.html
 
 XBS-Repository-URL: https://gitlab.com/esr/open-adventure
 
-#XBS-Project-Tags: Games/Entertainment
+XBS-IRC-Channel: irc://chat.freenode.net/#open-adventure
+
+XBS-Project-Tags: Games/Entertainment
 
 XBS-VC-Tag-Template: %(version)s
+
+XBS-Validate: make check
