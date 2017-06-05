@@ -42,7 +42,7 @@ database.c database.h: compile adventure.text
 
 clean:
 	rm -f *.o advent *.html database.[ch] compile *.gcno *.gcda
-	rm -f README advent.6 MANIFEST
+	rm -f README advent.6 MANIFEST *.tar.gz
 	cd tests; $(MAKE) --quiet clean
 
 check: advent
