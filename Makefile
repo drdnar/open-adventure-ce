@@ -58,7 +58,7 @@ check: advent
 .adoc:
 	asciidoc $<
 
-html: index.html advent.html history.html hints.html
+html: advent.html history.html hints.html
 
 # README.adoc exists because that filename is magic on GitLab.
 DOCS=COPYING NEWS README.adoc TODO advent.adoc history.adoc hints.adoc advent.6
