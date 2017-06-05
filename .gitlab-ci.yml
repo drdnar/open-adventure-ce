@@ -106,6 +106,7 @@ test:release:
 pages:
   stage: deploy
   script:
+    - mkdir public
     - mv coverage public
   artifacts:
     paths:
