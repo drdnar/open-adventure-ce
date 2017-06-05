@@ -106,17 +106,12 @@ test:release:
 pages:
   stage: deploy
   script:
-    - mkdir -p public/releases
     - mv coverage public
-    - "mv *.html public"
-    - "mv *.tar.gz public/releases"
   artifacts:
     paths:
       - public
   only:
     - master
   dependencies:
-    - html
     - test:debug
-    - dist
 
