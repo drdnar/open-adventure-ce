@@ -1,7 +1,7 @@
 # This is not a real Debian control file
 # It's project metadata for the shipper tool
 
-Package: advent
+Package: open-adventure
 
 Description: Colossal Cave Adventure, the 1995 430-point version.
  This is the last descendent of the original 1976 Colossal Cave Adventure
@@ -11,7 +11,7 @@ Description: Colossal Cave Adventure, the 1995 430-point version.
 
 #XBS-Destinations: freshcode
 
-Homepage: http://www.catb.org/~esr/advent
+Homepage: http://www.catb.org/~esr/open-adventure
 
 XBS-HTML-Target: index.html
 
