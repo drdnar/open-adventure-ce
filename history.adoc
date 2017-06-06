@@ -13,7 +13,7 @@ Kentucky, including fewer of the D&D-like elements now associated with
 the game.
 
 Adventure as we now know it, the ancestor of all later versions, was
-was released on a PDP-10 at the Stanford AI Lab by Don Woods in 1977
+released on a PDP-10 at the Stanford AI Lab by Don Woods in 1977
 (some sources, apparently erroneously, say 1976). That version is
 sometimes known as 350-point Adventure.
 
