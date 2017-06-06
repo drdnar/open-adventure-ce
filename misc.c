@@ -12,7 +12,7 @@
 
 /*  I/O routines (SPEAK, PSPEAK, RSPEAK, SETPRM, GETIN, YES) */
 
-void SPEAK(long N) {
+void SPEAK(vocab_t N) {
 long BLANK, CASE, I, K, L, NEG, NPARMS, PARM, PRMTYP, STATE;
 
 /*  Print the message which starts at LINES(N).  Precede it with a blank line
@@ -111,7 +111,7 @@ L40:	if(BLANK)TYPE0();
 	return;
 }
 
-void PSPEAK(long MSG,long SKIP) {
+void PSPEAK(vocab_t MSG,int SKIP) {
 long I, M;
 
 /*  Find the skip+1st message from msg and print it.  MSG should be the index of
@@ -129,7 +129,7 @@ L9:	SPEAK(M);
 	return;
 }
 
-void RSPEAK(long I) {
+void RSPEAK(vocab_t I) {
 
 /*  Print the I-TH "random" message (section 6 of database). */
 
@@ -194,8 +194,8 @@ L22:	JUNK=GETTXT(false,true,true);
 #undef WORD2X
 #define GETIN(SRC,WORD1,WORD1X,WORD2,WORD2X) fGETIN(SRC,&WORD1,&WORD1X,&WORD2,&WORD2X)
 
-long YES(FILE *input, long X, long Y, long Z) {
-long YEAH, REPLY, JUNK1, JUNK2, JUNK3;
+long YES(FILE *input, vocab_t X, vocab_t Y, vocab_t Z) {
+token_t YEAH, REPLY, JUNK1, JUNK2, JUNK3;
 
 /*  Print message X, wait for yes/no answer.  If yes, print Y and return true;
  *  if no, print Z and return false. */
@@ -223,7 +223,7 @@ L20:	YEAH=false;
  *  machine dependent i/o stuff is on the following page.  See that page
  *  for a description of MAPCOM's inline array. */
 
-long GETTXT(long SKIP,long ONEWRD, long UPPER) {
+long GETTXT(bool SKIP,bool ONEWRD, bool UPPER) {
 /*  Take characters from an input line and pack them into 30-bit words.
  *  Skip says to skip leading blanks.  ONEWRD says stop if we come to a
  *  blank.  UPPER says to map all letters to uppercase.  If we reach the

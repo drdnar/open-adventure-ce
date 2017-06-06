@@ -9,6 +9,9 @@ typedef struct lcg_state
   unsigned long a, c, m, x;
 } lcg_state;
 
+typedef long token_t;	/* word token - someday this will be a character array */
+typedef long vocab_t;	/* index into a vocabulary array */
+
 extern long ABB[], ATLOC[], BLKLIN, DFLAG, DLOC[], FIXED[], HOLDNG,
 		LINK[], LNLENG, LNPOSN,
 		PARMS[], PLACE[];
@@ -21,17 +24,17 @@ extern lcg_state lcgstate;
 #define READ_MODE "rb"
 #define WRITE_MODE "wb"
 
-extern void SPEAK(long);
-extern void PSPEAK(long,long);
-extern void RSPEAK(long);
+extern void SPEAK(vocab_t);
+extern void PSPEAK(vocab_t,int);
+extern void RSPEAK(vocab_t);
 extern void SETPRM(long,long,long);
 
-extern bool fGETIN(FILE *,long*,long*,long*,long*);
+extern bool fGETIN(FILE *,token_t*,token_t*,token_t*,token_t*);
 #define GETIN(input,WORD1,WORD1X,WORD2,WORD2X) fGETIN(input,&WORD1,&WORD1X,&WORD2,&WORD2X)
 
-extern long YES(FILE *,long,long,long);
-extern long GETTXT(long,long,long);
-extern long MAKEWD(long);
+extern long YES(FILE *,vocab_t,vocab_t,vocab_t);
+extern long GETTXT(bool,bool,bool);
+extern token_t MAKEWD(long);
 
 extern void fPUTTXT(long,long*,long);
 #define PUTTXT(WORD,STATE,CASE) fPUTTXT(WORD,&STATE,CASE)
