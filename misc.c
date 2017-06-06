@@ -282,15 +282,13 @@ long I, L, WORD;
  *  kludgey workaround, you can increment a letter by 5 by adding 50 to
  *  the next pair of digits. */
 
-
 	WORD=0;
 	I=1;
-	L=LETTRS;
-L10:	WORD=WORD+I*(MOD(L,50)+10);
-	I=I*64;
-	if(MOD(L,100) > 50)WORD=WORD+I*5;
-	L=L/100;
-	if(L != 0) goto L10;
+	for (L=LETTRS; L != 0; L=L/100) {
+		WORD=WORD+I*(MOD(L,50)+10);
+		I=I*64;
+		if(MOD(L,100) > 50)WORD=WORD+I*5;
+	}
 	I=64L*64L*64L*64L*64L/I;
 	WORD=WORD*I;
 	return(WORD);
