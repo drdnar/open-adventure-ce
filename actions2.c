@@ -146,12 +146,13 @@ int attack(FILE *input) {
 /*  CLAM AND OYSTER BOTH TREATED AS CLAM FOR INTRANSITIVE CASE; NO HARM DONE. */
 	if(HERE(CLAM) || HERE(OYSTER))OBJ=100*OBJ+CLAM;
 	if(OBJ > 100) return(8000);
-L9124:	if(OBJ != BIRD) goto L9125;
-	SPK=137;
-	if(CLOSED) return(2011);
-	DSTROY(BIRD);
-	PROP[BIRD]=0;
-	SPK=45;
+L9124:	if(OBJ == BIRD) {
+		SPK=137;
+		if(CLOSED) return(2011);
+		DSTROY(BIRD);
+		PROP[BIRD]=0;
+		SPK=45;
+	}
 L9125:	if(OBJ != VEND) goto L9126;
 	PSPEAK(VEND,PROP[VEND]+2);
 	PROP[VEND]=3-PROP[VEND];
@@ -197,15 +198,15 @@ L9128:	RSPEAK(SPK);
 	RSPEAK(6);
 	DSTROY(OGRE);
 	K=0;
-	/* 9129 */ for (I=1; I<=5; I++) {
-	if(DLOC[I] != LOC) goto L9129;
-	K=K+1;
-	DLOC[I]=61;
-	DSEEN[I]=false;
-L9129:	/*etc*/ ;
-	} /* end loop */
+	for (I=1; I<=5; I++) {
+		if(DLOC[I] == LOC) {
+			K=K+1;
+			DLOC[I]=61;
+			DSEEN[I]=false;
+		}
+	}
 	SPK=SPK+1+1/K;
-	 return(2011);
+	return(2011);
 }
 
 /*  Throw.  Same as discard unless axe.  Then same as attack except ignore bird,
