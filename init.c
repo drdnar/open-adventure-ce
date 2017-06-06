@@ -30,7 +30,10 @@
  *	300 locations
  *	100 objects */
 
-/* Note: the object count limit has been abstracted as NOBJECTS */
+/* Note: 
+ *  - the object count limit has been abstracted as NOBJECTS
+ *  - the random message limit has been abstracted as RTXSIZE
+ */
 
 /*  Description of the database format
  *

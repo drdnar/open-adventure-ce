@@ -14,7 +14,7 @@
 
 long ABB[186], ATLOC[186], BLKLIN = true, DFLAG,
 		DLOC[7], FIXED[NOBJECTS+1], HOLDNG,
-		LINK[201], LNLENG, LNPOSN,
+		LINK[NOBJECTS*2 + 1], LNLENG, LNPOSN,
 		PARMS[26], PLACE[NOBJECTS+1],
 		SETUP = 0;
 char rawbuf[LINESIZE], INLINE[LINESIZE+1], MAP1[129], MAP2[129];
@@ -23,7 +23,7 @@ long ABBNUM, AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD, BONUS,
 		 BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST, CHLOC, CHLOC2,
 		CLAM, CLOCK1, CLOCK2, CLOSED, CLOSNG, CLSHNT,
 		COINS, CONDS, DALTLC, DETAIL,
-		 DKILL, DOOR, DPRSSN, DRAGON, DSEEN[7], DTOTAL, DWARF, EGGS,
+		DKILL, DOOR, DPRSSN, DRAGON, DSEEN[NDWARVES+1], DTOTAL, DWARF, EGGS,
 		EMRALD, ENTER, ENTRNC, FIND, FISSUR, FOOBAR, FOOD,
 		GRATE, HINT, HINTED[21], HINTLC[21],
 		I, INVENT, IGO, IWEST, J, JADE, K, K2, KEYS, KK,
@@ -32,7 +32,7 @@ long ABBNUM, AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD, BONUS,
 		MAGZIN, MAXDIE, MAXTRS,
 		MESSAG, MIRROR, MXSCOR,
 		NEWLOC, NOVICE, NUGGET, NUL, NUMDIE, OBJ,
-		ODLOC[7], OGRE, OIL, OLDLC2, OLDLOC, OLDOBJ, OYSTER,
+		ODLOC[NDWARVES+1], OGRE, OIL, OLDLC2, OLDLOC, OLDOBJ, OYSTER,
 		PANIC, PEARL, PILLOW, PLANT, PLANT2, PROP[NOBJECTS+1], PYRAM,
 		RESER, ROD, ROD2, RUBY, RUG, SAPPH, SAVED, SAY,
 		SCORE, SECT, SIGN, SNAKE, SPK, STEPS, STICK,
@@ -179,7 +179,7 @@ static bool do_command(FILE *cmdin) {
  *  (dwarves rooted in place) let him get out (and attacked). */
 
 L71:	if(NEWLOC == LOC || FORCED(LOC) || CNDBIT(LOC,3)) goto L74;
-	/* 73 */ for (I=1; I<=5; I++) {
+	/* 73 */ for (I=1; I<=NDWARVES-1; I++) {
 	if(ODLOC[I] != NEWLOC || !DSEEN[I]) goto L73;
 	NEWLOC=LOC;
 	RSPEAK(2);
@@ -210,10 +210,10 @@ L6000:	if(DFLAG != 1) goto L6010;
 	if(!INDEEP(LOC) || (PCT(95) && (!CNDBIT(LOC,4) || PCT(85)))) goto L2000;
 	DFLAG=2;
 	for (I=1; I<=2; I++) {
-	J=1+randrange(5);
+	J=1+randrange(NDWARVES-1);
 	if(PCT(50))DLOC[J]=0;
 	} /* end loop */
-	for (I=1; I<=5; I++) {
+	for (I=1; I<=NDWARVES-1; I++) {
 	if(DLOC[I] == LOC)DLOC[I]=DALTLC;
 	ODLOC[I]=DLOC[I];
 	} /* end loop */
@@ -229,7 +229,7 @@ L6000:	if(DFLAG != 1) goto L6010;
 L6010:	DTOTAL=0;
 	ATTACK=0;
 	STICK=0;
-	/* 6030 */ for (I=1; I<=6; I++) {
+	/* 6030 */ for (I=1; I<=NDWARVES; I++) {
 	if(DLOC[I] == 0) goto L6030;
 /*  Fill TK array with all the places this dwarf might go. */
 	J=1;
@@ -827,7 +827,7 @@ L41000: if(TALLY == 1 && PROP[JADE] < 0) goto L40010;
 
 L10000: PROP[GRATE]=0;
 	PROP[FISSUR]=0;
-	for (I=1; I<=6; I++) {
+	for (I=1; I<=NDWARVES; I++) {
 	DSEEN[I]=false;
 	DLOC[I]=0;
 	} /* end loop */

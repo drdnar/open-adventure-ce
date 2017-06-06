@@ -593,7 +593,7 @@ long AT, I;
 	AT=0;
 	if(DFLAG < 2)return(AT);
 	AT= -1;
-	for (I=1; I<=5; I++) {
+	for (I=1; I<=NDWARVES-1; I++) {
 	if(DLOC[I] == WHERE) goto L2;
 	if(DLOC[I] != 0)AT=0;
 	} /* end loop */

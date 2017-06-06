@@ -2,6 +2,7 @@
 #include <stdbool.h>
 
 #define LINESIZE	100
+#define NDWARVES	6
 
 typedef struct lcg_state
 {

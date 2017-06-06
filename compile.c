@@ -550,7 +550,7 @@ void write_files(FILE* c_file, FILE* header_file)
   fprintf(header_file, "#define RTXSIZ 277\n");
   fprintf(header_file, "#define CLSMAX 12\n");
   fprintf(header_file, "#define LOCSIZ 185\n");
-  fprintf(header_file, "#define LINSIZ 12500\n");
+  fprintf(header_file, "#define LINSIZ %d\n", LINSIZ);
   fprintf(header_file, "#define TRNSIZ 5\n");
   fprintf(header_file, "#define TABSIZ 330\n");
   fprintf(header_file, "#define VRBSIZ 35\n");
