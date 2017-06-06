@@ -3,6 +3,8 @@
 A .tst extension means it's a game log
 A .chk extension means it's expected output from a test
 
+The test files are run in alphabetical order. This allows you to ensure certain tests are run in a particular order merely by giving them appropriate names, e.g.: test.1.log, test.2.log, test.3.log. This is useful for testing save and resume.
+
 In general, a file named foo.chk is the expected output from theb game log
 foo.log.  To add new tests, just drop log files in this directory.
 
