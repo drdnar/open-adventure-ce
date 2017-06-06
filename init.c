@@ -184,7 +184,7 @@ static int finish_init(void) {
 	ABB[I]=0;
 	if(LTEXT[I] == 0 || KEY[I] == 0) goto L1102;
 	K=KEY[I];
-	if(MOD(IABS(TRAVEL[K]),1000) == 1)COND[I]=2;
+	if(MOD(labs(TRAVEL[K]),1000) == 1)COND[I]=2;
 L1102:	ATLOC[I]=0;
 	} /* end loop */
 

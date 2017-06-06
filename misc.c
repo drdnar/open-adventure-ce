@@ -22,7 +22,7 @@ long BLANK, CASE, I, K, L, NEG, NPARMS, PARM, PRMTYP, STATE;
 	BLANK=BLKLIN;
 	K=N;
 	NPARMS=1;
-L10:	L=IABS(LINES[K])-1;
+L10:	L=labs(LINES[K])-1;
 	K=K+1;
 	LNLENG=0;
 	LNPOSN=1;
@@ -52,7 +52,7 @@ L32:	if(LNPOSN > LNLENG) goto L40;
 	if(PRMTYP < 1 || PRMTYP > 9) goto L30;
 	SHFTXT(LNPOSN+2,PRMTYP-2);
 	LNPOSN=LNPOSN+PRMTYP;
-	PARM=IABS(PARMS[NPARMS]);
+	PARM=labs(PARMS[NPARMS]);
 	NEG=0;
 	if(PARMS[NPARMS] < 0)NEG=9;
 	/* 390 */ for (I=1; I<=PRMTYP; I++) {
@@ -121,7 +121,7 @@ long I, M;
 	M=PTEXT[MSG];
 	if(SKIP < 0) goto L9;
 	for (I=0; I<=SKIP; I++) {
-L1:	M=IABS(LINES[M]);
+L1:	M=labs(LINES[M]);
 	if(LINES[M] >= 0) goto L1;
 	/*etc*/ ;
 	} /* end loop */
@@ -313,13 +313,13 @@ long ALPH1, ALPH2, BYTE, DIV, I, W;
 
 
 	ALPH1=13*CASE+24;
-	ALPH2=26*IABS(CASE)+ALPH1;
-	if(IABS(CASE) > 1)ALPH1=ALPH2;
+	ALPH2=26*labs(CASE)+ALPH1;
+	if(labs(CASE) > 1)ALPH1=ALPH2;
 /*  ALPH1&2 DEFINE RANGE OF WRONG-CASE CHARS, 11-36 OR 37-62 OR EMPTY. */
 	DIV=64L*64L*64L*64L;
 	W=WORD;
 	/* 18 */ for (I=1; I<=5; I++) {
-	if(W <= 0 && STATE == 0 && IABS(CASE) <= 1)return;
+	if(W <= 0 && STATE == 0 && labs(CASE) <= 1)return;
 	BYTE=W/DIV;
 	if(STATE != 0 || BYTE != 63) goto L12;
 	STATE=63;
@@ -852,5 +852,4 @@ void DATIME(long* D, long* T) {
   *T = (long) tv.tv_usec;
 }
 
-long IABS(N)long N; {return(N<0? -N : N);}
 long MOD(N,M)long N, M; {return(N%M);}

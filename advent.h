@@ -65,7 +65,6 @@ extern void fSAVEIO(long,long,long*);
 #define SAVEIO(OP,IN,ARR) fSAVEIO(OP,IN,ARR)
 extern void DATIME(long*, long*);
 
-extern long IABS(long);
 extern long MOD(long,long);
 
 extern void set_seed(long);

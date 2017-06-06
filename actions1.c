@@ -598,7 +598,7 @@ L9320:	if(OBJ != RUG) return(2011);
 L8330:	SPK=228;
 	K=LOCSND[LOC];
 	if(K == 0) goto L8332;
-	RSPEAK(IABS(K));
+	RSPEAK(labs(K));
 	if(K < 0) return(2012);
 	SPK=0;
 L8332:	SETPRM(1,ZZWORD,0);
