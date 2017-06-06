@@ -165,9 +165,23 @@ can now save a game and resume it at once (formerly you had to wait a
 while first), but it now costs you a few points each time you save the
 game.  Saved games are now stored in much smaller files than before.  
 
+> go back
+
+>>Foof!<<  
+
+You're inside building.  
+
+There are some keys on the ground here. 
+
+There is a lamp shining nearby.    
+
+There is food here. 
+
+There is a bottle of water here.   
+
 > score
 
-You have garnered  32 out of a possible 430 points, using    31 turns.  
+You have garnered  32 out of a possible 430 points, using    32 turns.  
 
 > quit
 
@@ -177,7 +191,7 @@ Do you really want to quit now?
 
 OK   
 
-You scored  32 out of a possible 430, using   32 turns.  
+You scored  32 out of a possible 430, using   33 turns.  
 
 You are obviously a rank amateur.  Better luck next time.   
 
