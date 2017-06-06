@@ -1,5 +1,8 @@
 = Open Adventure project news =
 
+Repository head::
+  Include tests directory in generated tarball.
+
 1.0: 2016-06-05::
   Forward port of Crowther & Woods's 430-point Adventure 2.5.
   Added -l option for logging.
