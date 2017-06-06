@@ -9,6 +9,7 @@ drink
 find keys
 in
 listen
+keys
 find keys
 unlock keys
 find foo
@@ -34,6 +35,9 @@ read
 look
 news
 go back
+fuck
+fly
+say boo
 score
 quit
 yes
