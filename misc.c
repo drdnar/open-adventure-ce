@@ -272,7 +272,7 @@ long GETTXT(bool SKIP,bool ONEWRD, bool UPPER) {
   return(TEXT);
 }
 
-long MAKEWD(long LETTRS) {
+token_t MAKEWD(long LETTRS) {
 long I, L, WORD;
 
 /*  Combine five uppercase letters (represented by pairs of decimal digits
@@ -296,7 +296,7 @@ long I, L, WORD;
 
 
 #define STATE (*sTATE)
-void fPUTTXT(long WORD, long *sTATE, long CASE) {
+void fPUTTXT(token_t WORD, long *sTATE, long CASE) {
 long ALPH1, ALPH2, BYTE, DIV, I, W;
 
 /*  Unpack the 30-bit value in word to obtain up to 5 integer-encoded chars,

@@ -36,11 +36,11 @@ extern long YES(FILE *,vocab_t,vocab_t,vocab_t);
 extern long GETTXT(bool,bool,bool);
 extern token_t MAKEWD(long);
 
-extern void fPUTTXT(long,long*,long);
+extern void fPUTTXT(token_t,long*,long);
 #define PUTTXT(WORD,STATE,CASE) fPUTTXT(WORD,&STATE,CASE)
 
 extern void SHFTXT(long,long);
-extern void TYPE0();
+extern void TYPE0(void);
 
 extern void fSAVWDS(long*,long*,long*,long*,long*,long*,long*);
 #define SAVWDS(W1,W2,W3,W4,W5,W6,W7) fSAVWDS(&W1,&W2,&W3,&W4,&W5,&W6,&W7)
@@ -62,8 +62,8 @@ extern bool TSTBIT(long,int);
 extern long RNDVOC(long,long);
 extern void BUG(long);
 extern void MAPLIN(FILE *);
-extern void TYPE();
-extern void MPINIT();
+extern void TYPE(void);
+extern void MPINIT(void);
 
 extern void fSAVEIO(long,long,long*);
 #define SAVEIO(OP,IN,ARR) fSAVEIO(OP,IN,ARR)
