@@ -18,6 +18,13 @@ Seed set to 1801426495
 
 You're in front of building.  
 
+> cave
+
+I don't know where the cave is, but hereabouts no stream can run on   
+the surface for long.  I would try the stream.    
+
+You're in front of building.  
+
 > listen
 
 The stream is gurgling placidly.   
@@ -137,6 +144,14 @@ Your lamp is now on.
 
 It is now pitch dark.  If you proceed you will likely fall into a pit.
 
+> take rod
+
+OK   
+
+> wave rod
+
+Nothing happens.    
+
 > listen
 
 All is silent. 
@@ -197,7 +212,7 @@ Okay, "BOO".
 
 > score
 
-You have garnered  32 out of a possible 430 points, using    36 turns.  
+You have garnered  32 out of a possible 430 points, using    39 turns.  
 
 > quit
 
@@ -207,7 +222,7 @@ Do you really want to quit now?
 
 OK   
 
-You scored  32 out of a possible 430, using   37 turns.  
+You scored  32 out of a possible 430, using   40 turns.  
 
 You are obviously a rank amateur.  Better luck next time.   
 

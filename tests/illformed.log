@@ -2,6 +2,7 @@
 foo
 n
 seed 1801426495
+cave
 listen
 forward
 eat
@@ -28,6 +29,8 @@ drink blood
 brief
 on
 xyzzy
+take rod
+wave rod
 listen
 quit
 n
