@@ -735,7 +735,7 @@ long I, VAL;
 
 	if(MAP2[1] == 0)MPINIT();
 
-	if (!oldstyle && SETUP && OPENED == stdin)
+	if (!oldstyle && OPENED == stdin)
 		fputs("> ", stdout);
 	do {
 		IGNORE(fgets(rawbuf,sizeof(rawbuf)-1,OPENED));
