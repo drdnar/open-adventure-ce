@@ -25,7 +25,7 @@ init.o:		advent.h funcs.h database.h
 
 actions1.o:	advent.h funcs.h database.h
 
-actions2.o:	advent.h funcs.h
+actions2.o:	advent.h funcs.h database.h
 
 score.o:	advent.h database.h
 
