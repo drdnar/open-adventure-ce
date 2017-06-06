@@ -66,7 +66,7 @@ DOCS=COPYING NEWS README.adoc TODO advent.adoc history.adoc hints.adoc advent.6
 # Can't use GNU tar's --transform, needs to build under Alpine Linux.
 # This is a requirement for testing dist in GitLab's CI pipeline
 advent-$(VERS).tar.gz: $(SOURCES) $(DOCS)
-	@ls $(SOURCES) $(DOCS) | sed s:^:advent-$(VERS)/: >MANIFEST
+	@ls $(SOURCES) $(DOCS) tests | sed s:^:advent-$(VERS)/: >MANIFEST
 	@(ln -s . advent-$(VERS))
 	(tar -T MANIFEST -czvf advent-$(VERS).tar.gz)
 	@(rm advent-$(VERS))
