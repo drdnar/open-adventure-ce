@@ -248,8 +248,8 @@ L9049:	SPK=172;
 /*  Light.  Applicable only to lamp and urn. */
 
 L8070:	if(HERE(LAMP) && PROP[LAMP] == 0 && LIMIT >= 0)OBJ=LAMP;
-	if(HERE(URN) && PROP[URN] == 1)OBJ=OBJ*100+URN;
-	if(OBJ == 0 || OBJ > 100) return(8000);
+	if(HERE(URN) && PROP[URN] == 1)OBJ=OBJ*NOBJECTS+URN;
+	if(OBJ == 0 || OBJ > NOBJECTS) return(8000);
 
 L9070:	if(OBJ == URN) goto L9073;
 	if(OBJ != LAMP) return(2011);
@@ -269,8 +269,8 @@ L9073:	SPK=38;
 /*  Extinguish.  Lamp, urn, dragon/volcano (nice try). */
 
 L8080:	if(HERE(LAMP) && PROP[LAMP] == 1)OBJ=LAMP;
-	if(HERE(URN) && PROP[URN] == 2)OBJ=OBJ*100+URN;
-	if(OBJ == 0 || OBJ > 100) return(8000);
+	if(HERE(URN) && PROP[URN] == 2)OBJ=OBJ*NOBJECTS+URN;
+	if(OBJ == 0 || OBJ > NOBJECTS) return(8000);
 
 L9080:	if(OBJ == URN) goto L9083;
 	if(OBJ == LAMP) goto L9086;
@@ -406,7 +406,7 @@ L9190:	if(AT(OBJ) || (LIQ(0) == OBJ && AT(BOTTLE)) || K == LIQLOC(LOC) || (OBJ =
 /*  Inventory.  If object, treat same as find.  Else report on current burden. */
 
 L8200:	SPK=98;
-	/* 8201 */ for (I=1; I<=100; I++) {
+	/* 8201 */ for (I=1; I<=NOBJECTS; I++) {
 	if(I == BEAR || !TOTING(I)) goto L8201;
 	if(SPK == 98)RSPEAK(99);
 	BLKLIN=false;
@@ -474,10 +474,10 @@ L8260:	SPK=156;
 
 /*  Read.  Print stuff based on objtxt.  Oyster (?) is special case. */
 
-L8270:	for (I=1; I<=100; I++) {
-	if(HERE(I) && OBJTXT[I] != 0 && PROP[I] >= 0)OBJ=OBJ*100+I;
+L8270:	for (I=1; I<=NOBJECTS; I++) {
+	if(HERE(I) && OBJTXT[I] != 0 && PROP[I] >= 0)OBJ=OBJ*NOBJECTS+I;
 	} /* end loop */
-	if(OBJ > 100 || OBJ == 0 || DARK(0)) return(8000);
+	if(OBJ > NOBJECTS || OBJ == 0 || DARK(0)) return(8000);
 
 L9270:	if(DARK(0)) goto L5190;
 	if(OBJTXT[OBJ] == 0 || PROP[OBJ] < 0) return(2011);
@@ -544,13 +544,13 @@ L8305:	DATIME(&I,&K);
 	SAVARR(ATLOC,LOCSIZ);
 	SAVARR(DLOC,6);
 	SAVARR(DSEEN,6);
-	SAVARR(FIXED,100);
+	SAVARR(FIXED,NOBJECTS);
 	SAVARR(HINTED,HNTSIZ);
 	SAVARR(HINTLC,HNTSIZ);
 	SAVARR(LINK,200);
 	SAVARR(ODLOC,6);
-	SAVARR(PLACE,100);
-	SAVARR(PROP,100);
+	SAVARR(PLACE,NOBJECTS);
+	SAVARR(PROP,NOBJECTS);
 	SAVWRD(KK,K);
 	if(K != 0) goto L8318;
 	K=NUL;
@@ -602,7 +602,7 @@ L8330:	SPK=228;
 	if(K < 0) return(2012);
 	SPK=0;
 L8332:	SETPRM(1,ZZWORD,0);
-	/* 8335 */ for (I=1; I<=100; I++) {
+	/* 8335 */ for (I=1; I<=NOBJECTS; I++) {
 	if(!HERE(I) || OBJSND[I] == 0 || PROP[I] < 0) goto L8335;
 	PSPEAK(I,OBJSND[I]+PROP[I]);
 	SPK=0;

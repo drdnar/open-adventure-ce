@@ -14,6 +14,9 @@
 #include <stdbool.h>
 #include <unistd.h>
 
+/* hard limit, will be propagated to database.h */
+#define NOBJECTS	100
+
 const char advent_to_ascii[] = {0, 32, 33, 34, 39, 40, 41, 42, 43, 44, 45, 46, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 37, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 35, 36, 38, 47, 58, 59, 60, 61, 62, 63, 64, 91, 92, 93, 94, 95, 96, 123, 124, 125, 126, 0};
 /* Rendered from the now-gone MPINIT() function */
 const char ascii_to_advent[] = {0, 74, 75, 76, 77, 78, 79, 80, 81, 82, 0, 0, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 0, 1, 2, 106, 107, 63, 108, 3, 4, 5, 6, 7, 8, 9, 10, 109, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 110, 111, 112, 113, 114, 115, 116, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 117, 118, 119, 120, 121, 122, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 123, 124, 125, 126, 83};
@@ -32,11 +35,11 @@ long CLSSES;
 long TRNVLS;
 long TABNDX;
 long HNTMAX;
-long PTEXT[101];
+long PTEXT[NOBJECTS+1];
 long RTEXT[RTXSIZ + 1];
 long CTEXT[CLSMAX + 1];
-long OBJSND[101];
-long OBJTXT[101];
+long OBJSND[NOBJECTS+1];
+long OBJTXT[NOBJECTS+1];
 long STEXT[LOCSIZ + 1];
 long LTEXT[LOCSIZ + 1];
 long COND[LOCSIZ + 1];
@@ -49,8 +52,8 @@ long TRNVAL[TRNSIZ + 1];
 long TRAVEL[TRVSIZ + 1];
 long KTAB[TABSIZ + 1];
 long ATAB[TABSIZ + 1];
-long PLAC[101];
-long FIXD[101];
+long PLAC[NOBJECTS+1];
+long FIXD[NOBJECTS+1];
 long ACTSPK[VRBSIZ + 1];
 long HINTS[HNTSIZ + 1][5];
 
@@ -258,11 +261,11 @@ int read_database(FILE* database) {
  *  section 14.  We also clear COND (see description of section 9 for details). */
 
   for (int I=1; I<=300; I++) {
-    if(I <= 100) PTEXT[I] = 0;
+    if(I <= NOBJECTS) PTEXT[I] = 0;
     if(I <= RTXSIZ) RTEXT[I] = 0;
     if(I <= CLSMAX) CTEXT[I] = 0;
-    if(I <= 100) OBJSND[I] = 0;
-    if(I <= 100) OBJTXT[I] = 0;
+    if(I <= NOBJECTS) OBJSND[I] = 0;
+    if(I <= NOBJECTS) OBJTXT[I] = 0;
     if(I > LOCSIZ) break;
     STEXT[I] = 0;
     LTEXT[I] = 0;
@@ -351,7 +354,7 @@ void read_messages(FILE* database, long SECT)
           }
         if(SECT == 5)
           {
-            if(LOC > 0 && LOC <= 100)PTEXT[LOC]=LINUSE;
+            if(LOC > 0 && LOC <= NOBJECTS)PTEXT[LOC]=LINUSE;
             continue;
           }
         if(LOC > LOCSIZ)BUG(10);
@@ -491,13 +494,15 @@ void read_sound_text(FILE* database)
 
 /*  Finish constructing internal data format */
 
-/*  Having read in the database, certain things are now constructed.  PROPS are
- *  set to zero.  We finish setting up COND by checking for forced-motion travel
- *  entries.  The PLAC and FIXD arrays are used to set up ATLOC(N) as the first
- *  object at location N, and LINK(OBJ) as the next object at the same location
- *  as OBJ.  (OBJ>100 indicates that FIXED(OBJ-100)=LOC; LINK(OBJ) is still the
- *  correct link to use.)  ABB is zeroed; it controls whether the abbreviated
- *  description is printed.  Counts modulo 5 unless "LOOK" is used. */
+/*  Having read in the database, certain things are now constructed.
+ *  PROPS are set to zero.  We finish setting up COND by checking for
+ *  forced-motion travel entries.  The PLAC and FIXD arrays are used
+ *  to set up ATLOC(N) as the first object at location N, and
+ *  LINK(OBJ) as the next object at the same location as OBJ.
+ *  (OBJ>NOBJECTS indicates that FIXED(OBJ-NOBJECTS)=LOC; LINK(OBJ) is
+ *  still the correct link to use.)  ABB is zeroed; it controls
+ *  whether the abbreviated description is printed.  Counts modulo 5
+ *  unless "LOOK" is used. */
 
 void write_0d(FILE* c_file, FILE* header_file, long single, char* varname)
 {
@@ -541,6 +546,7 @@ void write_hints(FILE* c_file, FILE* header_file, long matrix[][5], long dim1, l
 void write_files(FILE* c_file, FILE* header_file)
 {
   // preprocessor defines for the header
+  fprintf(header_file, "#define NOBJECTS %d\n", NOBJECTS);
   fprintf(header_file, "#define RTXSIZ 277\n");
   fprintf(header_file, "#define CLSMAX 12\n");
   fprintf(header_file, "#define LOCSIZ 185\n");
@@ -563,11 +569,11 @@ void write_files(FILE* c_file, FILE* header_file)
   write_0d(c_file, header_file, TRNVLS, "TRNVLS");
   write_0d(c_file, header_file, TABNDX, "TABNDX");
   write_0d(c_file, header_file, HNTMAX, "HNTMAX");
-  write_1d(c_file, header_file, PTEXT, 100 + 1, "PTEXT");
+  write_1d(c_file, header_file, PTEXT, NOBJECTS + 1, "PTEXT");
   write_1d(c_file, header_file, RTEXT, RTXSIZ + 1, "RTEXT");
   write_1d(c_file, header_file, CTEXT, CLSMAX + 1, "CTEXT");
-  write_1d(c_file, header_file, OBJSND, 100 + 1, "OBJSND");
-  write_1d(c_file, header_file, OBJTXT, 100 + 1, "OBJTXT");
+  write_1d(c_file, header_file, OBJSND, NOBJECTS + 1, "OBJSND");
+  write_1d(c_file, header_file, OBJTXT, NOBJECTS + 1, "OBJTXT");
   write_1d(c_file, header_file, STEXT, LOCSIZ + 1, "STEXT");
   write_1d(c_file, header_file, LTEXT, LOCSIZ + 1, "LTEXT");
   write_1d(c_file, header_file, COND, LOCSIZ + 1, "COND");
@@ -580,8 +586,8 @@ void write_files(FILE* c_file, FILE* header_file)
   write_1d(c_file, header_file, TRAVEL, TRVSIZ + 1, "TRAVEL");
   write_1d(c_file, header_file, KTAB, TABSIZ + 1, "KTAB");
   write_1d(c_file, header_file, ATAB, TABSIZ + 1, "ATAB");
-  write_1d(c_file, header_file, PLAC, 100 + 1, "PLAC");
-  write_1d(c_file, header_file, FIXD, 100 + 1, "FIXD");
+  write_1d(c_file, header_file, PLAC, NOBJECTS + 1, "PLAC");
+  write_1d(c_file, header_file, FIXD, NOBJECTS + 1, "FIXD");
   write_1d(c_file, header_file, ACTSPK, VRBSIZ + 1, "ACTSPK");
   write_hints(c_file, header_file, HINTS, HNTSIZ + 1, 5, "HINTS");
 }

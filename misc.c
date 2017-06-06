@@ -511,7 +511,7 @@ long I, J;
 	I=PLACE[OBJECT];
 	J=FIXED[OBJECT];
 	MOVE(OBJECT,I);
-	MOVE(OBJECT+100,J);
+	MOVE(OBJECT+NOBJECTS,J);
 	return;
 }
 
@@ -523,10 +523,10 @@ long FROM;
  *  are not at any loc, since carry wants to remove objects from ATLOC chains. */
 
 
-	if(OBJECT > 100) goto L1;
+	if(OBJECT > NOBJECTS) goto L1;
 	FROM=PLACE[OBJECT];
 	 goto L2;
-L1:	{long x = OBJECT-100; FROM=FIXED[x];}
+L1:	{long x = OBJECT-NOBJECTS; FROM=FIXED[x];}
 L2:	if(FROM > 0 && FROM <= 300)CARRY(OBJECT,FROM);
 	DROP(OBJECT,WHERE);
 	return;
@@ -547,10 +547,10 @@ void CARRY(long OBJECT, long WHERE) {
 long TEMP;
 
 /*  Start toting an object, removing it from the list of things at its former
- *  location.  Incr holdng unless it was already being toted.  If OBJECT>100
+ *  location.  Incr holdng unless it was already being toted.  If OBJECT>NOBJECTS
  *  (moving "fixed" second loc), don't change PLACE or HOLDNG. */
 
-	if(OBJECT > 100) goto L5;
+	if(OBJECT > NOBJECTS) goto L5;
 	if(PLACE[OBJECT] == -1)return;
 	PLACE[OBJECT]= -1;
 	HOLDNG=HOLDNG+1;
@@ -569,11 +569,11 @@ void DROP(long OBJECT, long WHERE) {
 /*  Place an object at a given loc, prefixing it onto the ATLOC list.  Decr
  *  HOLDNG if the object was being toted. */
 
-	if(OBJECT > 100) goto L1;
+	if(OBJECT > NOBJECTS) goto L1;
 	if(PLACE[OBJECT] == -1)HOLDNG=HOLDNG-1;
 	PLACE[OBJECT]=WHERE;
 	 goto L2;
-L1:	{long x = OBJECT-100; FIXED[x]=WHERE;}
+L1:	{long x = OBJECT-NOBJECTS; FIXED[x]=WHERE;}
 L2:	if(WHERE <= 0)return;
 	LINK[OBJECT]=ATLOC[WHERE];
 	ATLOC[WHERE]=OBJECT;

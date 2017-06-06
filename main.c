@@ -13,9 +13,9 @@
 #include "database.h"
 
 long ABB[186], ATLOC[186], BLKLIN = true, DFLAG,
-		DLOC[7], FIXED[101], HOLDNG,
+		DLOC[7], FIXED[NOBJECTS+1], HOLDNG,
 		LINK[201], LNLENG, LNPOSN,
-		PARMS[26], PLACE[101],
+		PARMS[26], PLACE[NOBJECTS+1],
 		SETUP = 0;
 char rawbuf[LINESIZE], INLINE[LINESIZE+1], MAP1[129], MAP2[129];
 
@@ -33,7 +33,7 @@ long ABBNUM, AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD, BONUS,
 		MESSAG, MIRROR, MXSCOR,
 		NEWLOC, NOVICE, NUGGET, NUL, NUMDIE, OBJ,
 		ODLOC[7], OGRE, OIL, OLDLC2, OLDLOC, OLDOBJ, OYSTER,
-		PANIC, PEARL, PILLOW, PLANT, PLANT2, PROP[101], PYRAM,
+		PANIC, PEARL, PILLOW, PLANT, PLANT2, PROP[NOBJECTS+1], PYRAM,
 		RESER, ROD, ROD2, RUBY, RUG, SAPPH, SAVED, SAY,
 		SCORE, SECT, SIGN, SNAKE, SPK, STEPS, STICK,
 		STREAM, TALLY, THRESH, THROW, TK[21], TRIDNT,
@@ -356,7 +356,7 @@ L2001:	if(TOTING(BEAR))RSPEAK(141);
 	I=ATLOC[LOC];
 L2004:	if(I == 0) goto L2012;
 	OBJ=I;
-	if(OBJ > 100)OBJ=OBJ-100;
+	if(OBJ > NOBJECTS)OBJ=OBJ-NOBJECTS;
 	if(OBJ == STEPS && TOTING(NUGGET)) goto L2008;
 	if(PROP[OBJ] >= 0) goto L2006;
 	if(CLOSED) goto L2008;
@@ -409,7 +409,7 @@ L2602:	/*etc*/ ;
 
 L2603:	if(!CLOSED) goto L2605;
 	if(PROP[OYSTER] < 0 && TOTING(OYSTER))PSPEAK(OYSTER,1);
-	for (I=1; I<=100; I++) {
+	for (I=1; I<=NOBJECTS; I++) {
 	if(TOTING(I) && PROP[I] < 0)PROP[I]= -1-PROP[I];
 	} /* end loop */
 L2605:	WZDARK=DARK(0);
@@ -538,7 +538,7 @@ L9:	LL=labs(TRAVEL[KK]);
 
 L10:	LL=LL/1000;
 L11:	NEWLOC=LL/1000;
-	K=MOD(NEWLOC,100);
+	 K=MOD(NEWLOC,100);	/* ESR: an instance of NOBJECTS? */
 	if(NEWLOC <= 300) goto L13;
 	if(PROP[K] != NEWLOC/100-3) goto L16;
 L12:	if(TRAVEL[KK] < 0)BUG(25);
@@ -548,7 +548,7 @@ L12:	if(TRAVEL[KK] < 0)BUG(25);
 	LL=NEWLOC;
 	 goto L11;
 
-L13:	if(NEWLOC <= 100) goto L14;
+L13:	if(NEWLOC <= 100) goto L14;	/* ESR: an instance of NOBJECTS? */
 	if(TOTING(K) || (NEWLOC > 200 && AT(K))) goto L16;
 	 goto L12;
 
@@ -572,7 +572,7 @@ L30000: NEWLOC=NEWLOC-300;
  *  table must include "useless" entries going through passage, which can never
  *  be used for actual motion, but can be spotted by "go back". */
 
-L30100: NEWLOC=99+100-LOC;
+L30100: NEWLOC=99+100-LOC;	/* ESR: an instance of NOBJECTS? */
 	if(HOLDNG == 0 || (HOLDNG == 1 && TOTING(EMRALD))) return true;
 	NEWLOC=LOC;
 	RSPEAK(117);
@@ -595,9 +595,9 @@ L30300: if(PROP[TROLL] != 1) goto L30310;
 	PSPEAK(TROLL,1);
 	PROP[TROLL]=0;
 	MOVE(TROLL2,0);
-	MOVE(TROLL2+100,0);
+	MOVE(TROLL2+NOBJECTS,0);
 	MOVE(TROLL,PLAC[TROLL]);
-	MOVE(TROLL+100,FIXD[TROLL]);
+	MOVE(TROLL+NOBJECTS,FIXD[TROLL]);
 	JUGGLE(CHASM);
 	NEWLOC=LOC;
 	return true;
@@ -708,8 +708,8 @@ L99:	if(CLOSNG) goto L95;
 	PLACE[WATER]=0;
 	PLACE[OIL]=0;
 	if(TOTING(LAMP))PROP[LAMP]=0;
-	/* 98 */ for (J=1; J<=100; J++) {
-	I=101-J;
+	/* 98 */ for (J=1; J<=NOBJECTS; J++) {
+	I=NOBJECTS + 1 - J;
 	if(!TOTING(I)) goto L98;
 	K=OLDLC2;
 	if(I == LAMP)K=1;
@@ -832,9 +832,9 @@ L10000: PROP[GRATE]=0;
 	DLOC[I]=0;
 	} /* end loop */
 	MOVE(TROLL,0);
-	MOVE(TROLL+100,0);
+	MOVE(TROLL+NOBJECTS,0);
 	MOVE(TROLL2,PLAC[TROLL]);
-	MOVE(TROLL2+100,FIXD[TROLL]);
+	MOVE(TROLL2+NOBJECTS,FIXD[TROLL]);
 	JUGGLE(CHASM);
 	if(PROP[BEAR] != 3)DSTROY(BEAR);
 	PROP[CHAIN]=0;
@@ -883,7 +883,7 @@ L11000: PROP[BOTTLE]=PUT(BOTTLE,115,1);
 	PROP[MIRROR]=PUT(MIRROR,115,0);
 	FIXED[MIRROR]=116;
 
-	for (I=1; I<=100; I++) {
+	for (I=1; I<=NOBJECTS; I++) {
 	if(TOTING(I))DSTROY(I);
 	} /* end loop */
 

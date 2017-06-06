@@ -12,7 +12,7 @@
  */
 
 /*  Current limits:
- *     12500 words of message text (LINES, LINSIZ).
+ *     12600 words of message text (LINES, LINSIZ).
  *	885 travel options (TRAVEL, TRVSIZ).
  *	330 vocabulary words (KTAB, ATAB, TABSIZ).
  *	185 locations (LTEXT, STEXT, KEY, COND, ABB, ATLOC, LOCSND, LOCSIZ).
@@ -30,6 +30,7 @@
  *	300 locations
  *	100 objects */
 
+/* Note: the object count limit has been abstracted as NOBJECTS */
 
 /*  Description of the database format
  *
@@ -87,7 +88,8 @@
  *	prop value is N/100.  The N/100 is used only to distinguish multiple
  *	messages from multi-line messages; the prop info actually requires all
  *	messages for an object to be present and consecutive.  Properties which
- *	produce no message should be given the message ">$<".
+ *	produce no message should be given the message ">$<". (The magic value
+ *	100 is now mostly abstracted out as NOBJECTS.)
  *  Section 6: Arbitrary messages.  Same format as sections 1, 2, and 5, except
  *	the numbers bear no relation to anything (except for special verbs
  *	in section 4).
@@ -177,7 +179,7 @@ static int finish_init(void) {
 	PLACE[I]=0;
 	PROP[I]=0;
 	LINK[I]=0;
-	{long x = I+100; LINK[x]=0;}
+	{long x = I+NOBJECTS; LINK[x]=0;}
 	} /* end loop */
 
 	/* 1102 */ for (I=1; I<=LOCSIZ; I++) {
@@ -195,16 +197,16 @@ L1102:	ATLOC[I]=0;
  *  "PLAC" and "FIXD".  Also, since two-placed objects are typically best
  *  described last, we'll drop them first. */
 
-	/* 1106 */ for (I=1; I<=100; I++) {
-	K=101-I;
+	/* 1106 */ for (I=1; I<=NOBJECTS; I++) {
+	K=NOBJECTS + 1 - I;
 	if(FIXD[K] <= 0) goto L1106;
-	DROP(K+100,FIXD[K]);
+	DROP(K+NOBJECTS,FIXD[K]);
 	DROP(K,PLAC[K]);
 L1106:	/*etc*/ ;
 	} /* end loop */
 
-	for (I=1; I<=100; I++) {
-	K=101-I;
+	for (I=1; I<=NOBJECTS; I++) {
+	K=NOBJECTS + 1 - I;
 	FIXED[K]=FIXD[K];
 	if(PLAC[K] != 0 && FIXD[K] <= 0)DROP(K,PLAC[K]);
 	} /* end loop */
