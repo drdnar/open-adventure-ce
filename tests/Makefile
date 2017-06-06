@@ -26,7 +26,7 @@ listcheck:
 
 # General regression testing of commands and output; look at the *.log and
 # corresponding *.chk files to see which tests this runs.
-TESTLOADS := $(shell ls -1 *.log | sed '/.log/s///')
+TESTLOADS := $(shell ls -1 *.log | sed '/.log/s///' | sort)
 buildregress:
 	@for file in $(TESTLOADS); do \
 	    echo "Remaking $${file}.chk"; \
