@@ -2,3 +2,4 @@
 
 #define LOCSIZ		185
 #define NOBJECTS	100
+#define HNTSIZ		 20

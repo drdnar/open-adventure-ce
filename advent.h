@@ -54,14 +54,19 @@ struct game_t {
     long wzdark;
     long zzword;
     long abbrev[LOCSIZ+1];
+    long atloc[LOCSIZ+1];
     long dseen[NDWARVES+1];
     long dloc[NDWARVES+1];
     long odloc[NDWARVES+1];
+    long fixed[NOBJECTS+1];
+    long link[NOBJECTS*2 + 1];
+    long place[NOBJECTS+1];
+    long hinted[HNTSIZ+1];
 };
 
 extern struct game_t game;
 
-extern long ATLOC[], FIXED[], LINK[], LNLENG, LNPOSN, PARMS[], PLACE[];
+extern long LNLENG, LNPOSN, PARMS[];
 extern char rawbuf[LINESIZE], INLINE[LINESIZE+1], MAP1[], MAP2[];
 extern FILE *logfp;
 extern bool oldstyle;
@@ -127,7 +132,7 @@ extern long AMBER, ATTACK, AXE, BACK, BATTER, BEAR,
    BIRD, BLOOD, BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST,
    CLAM, COINS, DALTLC, DOOR, DPRSSN, DRAGON, DWARF, EGGS,
    EMRALD, ENTER, ENTRNC, FIND, FISSUR, FOOD,
-   GRATE, HINT, HINTED[], HINTLC[],
+   GRATE, HINT, HINTLC[],
    I, INVENT, IGO, J, JADE, K, K2, KEYS, KK,
    KNIFE, KQ, L, LAMP, LL, LOC, LOCK, LOOK,
    MAGZIN, MAXDIE, MAXTRS, MESSAG, MIRROR, MXSCOR, NUGGET, NUL, OBJ,

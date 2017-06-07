@@ -509,8 +509,8 @@ long I, J;
 /*  Juggle an object by picking it up and putting it down again, the purpose
  *  being to get the object to the front of the chain of things at its loc. */
 
-	I=PLACE[OBJECT];
-	J=FIXED[OBJECT];
+	I=game.place[OBJECT];
+	J=game.fixed[OBJECT];
 	MOVE(OBJECT,I);
 	MOVE(OBJECT+NOBJECTS,J);
 	return;
@@ -521,13 +521,13 @@ long FROM;
 
 /*  Place any object anywhere by picking it up and dropping it.  May already be
  *  toting, in which case the carry is a no-op.  Mustn't pick up objects which
- *  are not at any loc, since carry wants to remove objects from ATLOC chains. */
+ *  are not at any loc, since carry wants to remove objects from game.atloc chains. */
 
 
 	if(OBJECT > NOBJECTS) goto L1;
-	FROM=PLACE[OBJECT];
+	FROM=game.place[OBJECT];
 	 goto L2;
-L1:	{long x = OBJECT-NOBJECTS; FROM=FIXED[x];}
+L1:	{long x = OBJECT-NOBJECTS; FROM=game.fixed[x];}
 L2:	if(FROM > 0 && FROM <= 300)CARRY(OBJECT,FROM);
 	DROP(OBJECT,WHERE);
 	return;
@@ -549,35 +549,35 @@ long TEMP;
 
 /*  Start toting an object, removing it from the list of things at its former
  *  location.  Incr holdng unless it was already being toted.  If OBJECT>NOBJECTS
- *  (moving "fixed" second loc), don't change PLACE or game.holdng. */
+ *  (moving "fixed" second loc), don't change game.place or game.holdng. */
 
 	if(OBJECT > NOBJECTS) goto L5;
-	if(PLACE[OBJECT] == -1)return;
-	PLACE[OBJECT]= -1;
+	if(game.place[OBJECT] == -1)return;
+	game.place[OBJECT]= -1;
 	game.holdng=game.holdng+1;
-L5:	if(ATLOC[WHERE] != OBJECT) goto L6;
-	ATLOC[WHERE]=LINK[OBJECT];
+L5:	if(game.atloc[WHERE] != OBJECT) goto L6;
+	game.atloc[WHERE]=game.link[OBJECT];
 	return;
-L6:	TEMP=ATLOC[WHERE];
-L7:	if(LINK[TEMP] == OBJECT) goto L8;
-	TEMP=LINK[TEMP];
+L6:	TEMP=game.atloc[WHERE];
+L7:	if(game.link[TEMP] == OBJECT) goto L8;
+	TEMP=game.link[TEMP];
 	 goto L7;
-L8:	LINK[TEMP]=LINK[OBJECT];
+L8:	game.link[TEMP]=game.link[OBJECT];
 	return;
 }
 
 void DROP(long OBJECT, long WHERE) {
-/*  Place an object at a given loc, prefixing it onto the ATLOC list.  Decr
+/*  Place an object at a given loc, prefixing it onto the game.atloc list.  Decr
  *  game.holdng if the object was being toted. */
 
 	if(OBJECT > NOBJECTS) goto L1;
-	if(PLACE[OBJECT] == -1)game.holdng=game.holdng-1;
-	PLACE[OBJECT]=WHERE;
+	if(game.place[OBJECT] == -1)game.holdng=game.holdng-1;
+	game.place[OBJECT]=WHERE;
 	 goto L2;
-L1:	{long x = OBJECT-NOBJECTS; FIXED[x]=WHERE;}
+L1:	{long x = OBJECT-NOBJECTS; game.fixed[x]=WHERE;}
 L2:	if(WHERE <= 0)return;
-	LINK[OBJECT]=ATLOC[WHERE];
-	ATLOC[WHERE]=OBJECT;
+	game.link[OBJECT]=game.atloc[WHERE];
+	game.atloc[WHERE]=OBJECT;
 	return;
 }
 

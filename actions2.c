@@ -19,7 +19,7 @@ int carry(void) {
 	if(OBJ != MESSAG) goto L9011;
 	SPK=190;
 	DSTROY(MESSAG);
-L9011:	if(FIXED[OBJ] != 0) return(2011);
+L9011:	if(game.fixed[OBJ] != 0) return(2011);
 	if(OBJ != WATER && OBJ != OIL) goto L9017;
 	K=OBJ;
 	OBJ=BOTTLE;
@@ -40,7 +40,7 @@ L9014:	if((OBJ == BIRD || OBJ == CAGE) && (PROP[BIRD] == 1 || -1-PROP[BIRD] ==
 		1))CARRY(BIRD+CAGE-OBJ,LOC);
 	CARRY(OBJ,LOC);
 	K=LIQ(0);
-	if(OBJ == BOTTLE && K != 0)PLACE[K]= -1;
+	if(OBJ == BOTTLE && K != 0)game.place[K]= -1;
 	if(!GSTONE(OBJ) || PROP[OBJ] == 0) return(2009);
 	PROP[OBJ]=0;
 	PROP[CAVITY]=1;
@@ -67,7 +67,7 @@ int discard(bool just_do_it) {
 	PROP[SNAKE]=1;
 L9021:	K=LIQ(0);
 	if(K == OBJ)OBJ=BOTTLE;
-	if(OBJ == BOTTLE && K != 0)PLACE[K]=0;
+	if(OBJ == BOTTLE && K != 0)game.place[K]=0;
 	if(OBJ == CAGE && PROP[BIRD] == 1)DROP(BIRD,LOC);
 	DROP(OBJ,LOC);
 	if(OBJ != BIRD) return(2012);
@@ -121,7 +121,7 @@ L9027:	if(OBJ == VASE && LOC != PLAC[PILLOW]) goto L9028;
 L9028:	PROP[VASE]=2;
 	if(AT(PILLOW))PROP[VASE]=0;
 	PSPEAK(VASE,PROP[VASE]+1);
-	if(PROP[VASE] != 0)FIXED[VASE]= -1;
+	if(PROP[VASE] != 0)game.fixed[VASE]= -1;
 	 goto L9021;
 }
 
@@ -187,7 +187,7 @@ L9126:	if(OBJ == 0)SPK=44;
 	MOVE(RUG,K);
 	DROP(BLOOD,K);
 	for (OBJ=1; OBJ<=NOBJECTS; OBJ++) {
-	if(PLACE[OBJ] == PLAC[DRAGON] || PLACE[OBJ] == FIXD[DRAGON])MOVE(OBJ,K);
+	if(game.place[OBJ] == PLAC[DRAGON] || game.place[OBJ] == FIXD[DRAGON])MOVE(OBJ,K);
 	/*etc*/ ;
 	} /* end loop */
 	LOC=K;
@@ -246,7 +246,7 @@ L9175:	RSPEAK(SPK);
 /*  This'll teach him to throw the axe at the bear! */
 L9176:	SPK=164;
 	DROP(AXE,LOC);
-	FIXED[AXE]= -1;
+	game.fixed[AXE]= -1;
 	PROP[AXE]=1;
 	JUGGLE(BEAR);
 	 return(2011);
@@ -296,7 +296,7 @@ L9214:	if(OBJ != BEAR) goto L9215;
 	if(!HERE(FOOD)) return(2011);
 	DSTROY(FOOD);
 	PROP[BEAR]=1;
-	FIXED[AXE]=0;
+	game.fixed[AXE]=0;
 	PROP[AXE]=0;
 	SPK=168;
 	 return(2011);
@@ -323,7 +323,7 @@ int fill() {
 	if(SPK != 107) return(2011);
 	PROP[BOTTLE]=MOD(COND[LOC],4)/2*2;
 	K=LIQ(0);
-	if(TOTING(BOTTLE))PLACE[K]= -1;
+	if(TOTING(BOTTLE))game.place[K]= -1;
 	if(K == OIL)SPK=108;
 	 return(2011);
 
@@ -332,7 +332,7 @@ L9222:	SPK=29;
 	if(LIQLOC(LOC) == 0 || !TOTING(VASE)) return(2011);
 	RSPEAK(145);
 	PROP[VASE]=2;
-	FIXED[VASE]= -1;
+	game.fixed[VASE]= -1;
 	 return(discard(true));
 
 L9224:	SPK=213;
@@ -340,7 +340,7 @@ L9224:	SPK=213;
 	SPK=144;
 	K=LIQ(0);
 	if(K == 0 || !HERE(BOTTLE)) return(2011);
-	PLACE[K]=0;
+	game.place[K]=0;
 	PROP[BOTTLE]=1;
 	if(K == OIL)PROP[URN]=1;
 	SPK=211+PROP[URN];

@@ -156,8 +156,8 @@ L5190:	if((VERB == FIND || VERB == INVENT) && WD2 <= 0) goto L5010;
 
 /*  Carry, no object given yet.  OK if only one object present. */
 
-L8010:	if(ATLOC[LOC] == 0 || LINK[ATLOC[LOC]] != 0 || ATDWRF(LOC) > 0) return(8000);
-	OBJ=ATLOC[LOC];
+L8010:	if(game.atloc[LOC] == 0 || game.link[game.atloc[LOC]] != 0 || ATDWRF(LOC) > 0) return(8000);
+	OBJ=game.atloc[LOC];
 
 /*  Transitive carry/drop are in separate file. */
 
@@ -231,9 +231,9 @@ L9048:	if(VERB == LOCK) goto L9049;
 	if(PROP[CHAIN] == 0)SPK=37;
 	if(SPK != 171) return(2011);
 	PROP[CHAIN]=0;
-	FIXED[CHAIN]=0;
+	game.fixed[CHAIN]=0;
 	if(PROP[BEAR] != 3)PROP[BEAR]=2;
-	FIXED[BEAR]=2-PROP[BEAR];
+	game.fixed[BEAR]=2-PROP[BEAR];
 	 return(2011);
 
 L9049:	SPK=172;
@@ -242,7 +242,7 @@ L9049:	SPK=172;
 	if(SPK != 172) return(2011);
 	PROP[CHAIN]=2;
 	if(TOTING(CHAIN))DROP(CHAIN,LOC);
-	FIXED[CHAIN]= -1;
+	game.fixed[CHAIN]= -1;
 	 return(2011);
 
 /*  Light.  Applicable only to lamp and urn. */
@@ -292,7 +292,7 @@ L9090:	if((!TOTING(OBJ)) && (OBJ != ROD || !TOTING(ROD2)))SPK=29;
 	if(OBJ != ROD || !TOTING(OBJ) || (!HERE(BIRD) && (game.closng || !AT(FISSUR))))
 		return(2011);
 	if(HERE(BIRD))SPK=206+MOD(PROP[BIRD],2);
-	if(SPK == 206 && LOC == PLACE[STEPS] && PROP[JADE] < 0) goto L9094;
+	if(SPK == 206 && LOC == game.place[STEPS] && PROP[JADE] < 0) goto L9094;
 	if(game.closed) return(18999);
 	if(game.closng || !AT(FISSUR)) return(2011);
 	if(HERE(BIRD))RSPEAK(SPK);
@@ -320,7 +320,7 @@ L9130:	if(OBJ == BOTTLE || OBJ == 0)OBJ=LIQ(0);
 	if(OBJ != OIL && OBJ != WATER) return(2011);
 	if(HERE(URN) && PROP[URN] == 0) goto L9134;
 	PROP[BOTTLE]=1;
-	PLACE[OBJ]=0;
+	game.place[OBJ]=0;
 	SPK=77;
 	if(!(AT(PLANT) || AT(DOOR))) return(2011);
 
@@ -364,7 +364,7 @@ L9150:	if(OBJ == 0 && LIQLOC(LOC) != WATER && (LIQ(0) != WATER || !HERE(BOTTLE))
 	if(OBJ != 0 && OBJ != WATER)SPK=110;
 	if(SPK == 110 || LIQ(0) != WATER || !HERE(BOTTLE)) return(2011);
 	PROP[BOTTLE]=1;
-	PLACE[WATER]=0;
+	game.place[WATER]=0;
 	SPK=74;
 	 return(2011);
 
@@ -453,10 +453,10 @@ L8250:	K=VOCAB(WD1,3);
 L8252:	game.foobar=K;
 	if(K != 4) return(2009);
 	game.foobar=0;
-	if(PLACE[EGGS] == PLAC[EGGS] || (TOTING(EGGS) && LOC == PLAC[EGGS])) 
+	if(game.place[EGGS] == PLAC[EGGS] || (TOTING(EGGS) && LOC == PLAC[EGGS])) 
 		return(2011);
 /*  Bring back troll if we steal the eggs back from him before crossing. */
-	if(PLACE[EGGS] == 0 && PLACE[TROLL] == 0 && PROP[TROLL] ==
+	if(game.place[EGGS] == 0 && game.place[TROLL] == 0 && PROP[TROLL] ==
 		0)PROP[TROLL]=1;
 	K=2;
 	if(HERE(EGGS))K=1;
@@ -499,7 +499,7 @@ L9280:	if(OBJ == MIRROR)SPK=148;
 L9282:	SPK=198;
 	if(TOTING(VASE))DROP(VASE,LOC);
 	PROP[VASE]=2;
-	FIXED[VASE]= -1;
+	game.fixed[VASE]= -1;
 	 return(2011);
 
 /*  Wake.  Only use is to disturb the dwarves. */
@@ -541,15 +541,15 @@ L8305:	DATIME(&I,&K);
 	SAVWDS(VERB,WD1,WD1X,WD2,game.wzdark,game.zzword,OBJSND[BIRD]);
 	SAVWDS(OBJTXT[SIGN],game.clshnt,game.novice,K,K,K,K);
 	SAVARR(game.abbrev,LOCSIZ);
-	SAVARR(ATLOC,LOCSIZ);
+	SAVARR(game.atloc,LOCSIZ);
 	SAVARR(game.dloc,NDWARVES);
 	SAVARR(game.dseen,NDWARVES);
-	SAVARR(FIXED,NOBJECTS);
-	SAVARR(HINTED,HNTSIZ);
+	SAVARR(game.fixed,NOBJECTS);
+	SAVARR(game.hinted,HNTSIZ);
 	SAVARR(HINTLC,HNTSIZ);
-	SAVARR(LINK,NOBJECTS*2);
+	SAVARR(game.link,NOBJECTS*2);
 	SAVARR(game.odloc,NDWARVES);
-	SAVARR(PLACE,NOBJECTS);
+	SAVARR(game.place,NOBJECTS);
 	SAVARR(PROP,NOBJECTS);
 	SAVWRD(KK,K);
 	if(K != 0) goto L8318;
@@ -587,7 +587,7 @@ L9320:	if(OBJ != RUG) return(2011);
 	if(PROP[RUG] != 2) return(2011);
 	game.oldlc2=game.oldloc;
 	game.oldloc=LOC;
-	game.newloc=PLACE[RUG]+FIXED[RUG]-LOC;
+	game.newloc=game.place[RUG]+game.fixed[RUG]-LOC;
 	SPK=226;
 	if(PROP[SAPPH] >= 0)SPK=227;
 	RSPEAK(SPK);
@@ -613,7 +613,7 @@ L8335:	/*etc*/ ;
 
 /*  Z'ZZZ (word gets recomputed at startup; different each game). */
 
-L8340:	if(!AT(RESER) && LOC != FIXED[RESER]-1) return(2011);
+L8340:	if(!AT(RESER) && LOC != game.fixed[RESER]-1) return(2011);
 	PSPEAK(RESER,PROP[RESER]+1);
 	PROP[RESER]=1-PROP[RESER];
 	if(AT(RESER)) return(2012);

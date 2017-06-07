@@ -14,16 +14,14 @@
 
 struct game_t game;
 
-long ATLOC[LOCSIZ+1], FIXED[NOBJECTS+1],
-		LINK[NOBJECTS*2 + 1], LNLENG, LNPOSN,
-		PARMS[26], PLACE[NOBJECTS+1];
+long LNLENG, LNPOSN, PARMS[26];
 char rawbuf[LINESIZE], INLINE[LINESIZE+1], MAP1[129], MAP2[129];
 
 long AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
 		BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST,
 		CLAM, COINS, DALTLC, DOOR, DPRSSN, DRAGON, DWARF, EGGS,
 		EMRALD, ENTER, ENTRNC, FIND, FISSUR, FOOD,
-		GRATE, HINT, HINTED[21], HINTLC[21],
+		GRATE, HINT, HINTLC[21],
 		I, INVENT, IGO, J, JADE, K, K2, KEYS, KK,
 		KNIFE, KQ, L, LAMP, LL, LOC, LOCK, LOOK,
 		MAGZIN, MAXDIE, MAXTRS, MESSAG, MIRROR, MXSCOR,
@@ -251,7 +249,7 @@ L6016:	TK[J]=game.odloc[I];
 
 /*  The pirate's spotted him.  He leaves him alone once we've found chest.  K
  *  counts if a treasure is here.  If not, and tally=1 for an unseen chest, let
- *  the pirate be spotted.  Note that PLACE(CHEST)=0 might mean that he's
+ *  the pirate be spotted.  Note that game.place(CHEST)=0 might mean that he's
  *  thrown it to the troll, but in that case he's seen the chest (PROP=0). */
 
 	if(LOC == game.chloc || PROP[CHEST] >= 0) goto L6030;
@@ -262,19 +260,19 @@ L6016:	TK[J]=game.odloc[I];
 	if(TOTING(J)) goto L6021;
 L6020:	if(HERE(J))K=1;
 	} /* end loop */
-	if(game.tally == 1 && K == 0 && PLACE[CHEST] == 0 && HERE(LAMP) && PROP[LAMP]
+	if(game.tally == 1 && K == 0 && game.place[CHEST] == 0 && HERE(LAMP) && PROP[LAMP]
 		== 1) goto L6025;
 	if(game.odloc[6] != game.dloc[6] && PCT(20))RSPEAK(127);
 	 goto L6030;
 
-L6021:	if(PLACE[CHEST] != 0) goto L6022;
+L6021:	if(game.place[CHEST] != 0) goto L6022;
 /*  Install chest only once, to insure it is the last treasure in the list. */
 	MOVE(CHEST,game.chloc);
 	MOVE(MESSAG,game.chloc2);
 L6022:	RSPEAK(128);
 	/* 6023 */ for (J=50; J<=MAXTRS; J++) {
 	if(J == PYRAM && (LOC == PLAC[PYRAM] || LOC == PLAC[EMRALD])) goto L6023;
-	if(AT(J) && FIXED[J] == 0)CARRY(J,LOC);
+	if(AT(J) && game.fixed[J] == 0)CARRY(J,LOC);
 	if(TOTING(J))DROP(J,game.chloc);
 L6023:	/*etc*/ ;
 	} /* end loop */
@@ -346,7 +344,7 @@ L2001:	if(TOTING(BEAR))RSPEAK(141);
 
 	if(DARK(0)) goto L2012;
 	game.abbrev[LOC]=game.abbrev[LOC]+1;
-	I=ATLOC[LOC];
+	I=game.atloc[LOC];
 L2004:	if(I == 0) goto L2012;
 	OBJ=I;
 	if(OBJ > NOBJECTS)OBJ=OBJ-NOBJECTS;
@@ -368,9 +366,9 @@ L2004:	if(I == 0) goto L2012;
  *  anyone who makes such a gross blunder isn't likely to find everything
  *  else anyway (so goes the rationalisation). */
 L2006:	KK=PROP[OBJ];
-	if(OBJ == STEPS && LOC == FIXED[STEPS])KK=1;
+	if(OBJ == STEPS && LOC == game.fixed[STEPS])KK=1;
 	PSPEAK(OBJ,KK);
-L2008:	I=LINK[I];
+L2008:	I=game.link[I];
 	 goto L2004;
 
 L2009:	K=54;
@@ -388,7 +386,7 @@ L2012:	VERB=0;
 
 L2600:	if(COND[LOC] < game.conds) goto L2603;
 	/* 2602 */ for (HINT=1; HINT<=HNTMAX; HINT++) {
-	if(HINTED[HINT]) goto L2602;
+	if(game.hinted[HINT]) goto L2602;
 	if(!CNDBIT(LOC,HINT+10))HINTLC[HINT]= -1;
 	HINTLC[HINT]=HINTLC[HINT]+1;
 	if(HINTLC[HINT] >= HINTS[HINT][1]) goto L40000;
@@ -607,7 +605,7 @@ L30310: game.newloc=PLAC[TROLL]+FIXD[TROLL]-LOC;
 	PROP[CHASM]=1;
 	PROP[TROLL]=2;
 	DROP(BEAR,game.newloc);
-	FIXED[BEAR]= -1;
+	game.fixed[BEAR]= -1;
 	PROP[BEAR]=3;
 	game.oldlc2=game.newloc;
 	 goto L99;
@@ -707,8 +705,8 @@ L99:	if(game.closng) goto L95;
 	game.numdie=game.numdie+1;
 	if(!YES(cmdin,79+game.numdie*2,80+game.numdie*2,54)) score(0);
 	if(game.numdie == MAXDIE) score(0);
-	PLACE[WATER]=0;
-	PLACE[OIL]=0;
+	game.place[WATER]=0;
+	game.place[OIL]=0;
 	if(TOTING(LAMP))PROP[LAMP]=0;
 	/* 98 */ for (J=1; J<=NOBJECTS; J++) {
 	I=NOBJECTS + 1 - J;
@@ -751,8 +749,8 @@ L40010: HINTLC[HINT]=0;
 	if(!YES(cmdin,HINTS[HINT][3],0,54)) goto L2602;
 	SETPRM(1,HINTS[HINT][2],HINTS[HINT][2]);
 	RSPEAK(261);
-	HINTED[HINT]=YES(cmdin,175,HINTS[HINT][4],54);
-	if(HINTED[HINT] && game.limit > 30)game.limit=game.limit+30*HINTS[HINT][2];
+	game.hinted[HINT]=YES(cmdin,175,HINTS[HINT][4],54);
+	if(game.hinted[HINT] && game.limit > 30)game.limit=game.limit+30*HINTS[HINT][2];
 L40020: HINTLC[HINT]=0;
 L40030:  goto L2602;
 
@@ -761,13 +759,13 @@ L40030:  goto L2602;
 L40100: if(PROP[GRATE] == 0 && !HERE(KEYS)) goto L40010;
 	 goto L40020;
 
-L40200: if(PLACE[BIRD] == LOC && TOTING(ROD) && game.oldobj == BIRD) goto L40010;
+L40200: if(game.place[BIRD] == LOC && TOTING(ROD) && game.oldobj == BIRD) goto L40010;
 	 goto L40030;
 
 L40300: if(HERE(SNAKE) && !HERE(BIRD)) goto L40010;
 	 goto L40020;
 
-L40400: if(ATLOC[LOC] == 0 && ATLOC[game.oldloc] == 0 && ATLOC[game.oldlc2] == 0 && game.holdng >
+L40400: if(game.atloc[LOC] == 0 && game.atloc[game.oldloc] == 0 && game.atloc[game.oldlc2] == 0 && game.holdng >
 		1) goto L40010;
 	 goto L40020;
 
@@ -779,7 +777,7 @@ L40600:  goto L40010;
 L40700: if(game.dflag == 0) goto L40010;
 	 goto L40020;
 
-L40800: if(ATLOC[LOC] == 0 && ATLOC[game.oldloc] == 0 && ATLOC[game.oldlc2] == 0) goto
+L40800: if(game.atloc[LOC] == 0 && game.atloc[game.oldloc] == 0 && game.atloc[game.oldlc2] == 0) goto
 		L40010;
 	 goto L40030;
 
@@ -840,9 +838,9 @@ L10000: PROP[GRATE]=0;
 	JUGGLE(CHASM);
 	if(PROP[BEAR] != 3)DSTROY(BEAR);
 	PROP[CHAIN]=0;
-	FIXED[CHAIN]=0;
+	game.fixed[CHAIN]=0;
 	PROP[AXE]=0;
-	FIXED[AXE]=0;
+	game.fixed[AXE]=0;
 	RSPEAK(129);
 	game.clock1= -1;
 	game.closng=true;
@@ -883,7 +881,7 @@ L11000: PROP[BOTTLE]=PUT(BOTTLE,115,1);
 	PROP[PILLOW]=PUT(PILLOW,116,0);
 
 	PROP[MIRROR]=PUT(MIRROR,115,0);
-	FIXED[MIRROR]=116;
+	game.fixed[MIRROR]=116;
 
 	for (I=1; I<=NOBJECTS; I++) {
 		if(TOTING(I))
@@ -910,7 +908,7 @@ L12000: RSPEAK(188);
 L12200: if(game.lmwarn || !HERE(LAMP)) goto L19999;
 	game.lmwarn=true;
 	SPK=187;
-	if(PLACE[BATTER] == 0)SPK=183;
+	if(game.place[BATTER] == 0)SPK=183;
 	if(PROP[BATTER] == 1)SPK=189;
 	RSPEAK(SPK);
 	 goto L19999;

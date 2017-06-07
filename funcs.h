@@ -15,8 +15,8 @@
  *  PCT(N)       = true N% of the time (N integer from 0 to 100)
  *  TOTING(OBJ) = true if the OBJ is being carried */
 
-#define TOTING(OBJ)	(PLACE[OBJ] == -1)
-#define AT(OBJ) (PLACE[OBJ] == LOC || FIXED[OBJ] == LOC)
+#define TOTING(OBJ)	(game.place[OBJ] == -1)
+#define AT(OBJ) (game.place[OBJ] == LOC || game.fixed[OBJ] == LOC)
 #define HERE(OBJ)	(AT(OBJ) || TOTING(OBJ))
 #define LIQ2(PBOTL)	((1-(PBOTL))*WATER+((PBOTL)/2)*(WATER+OIL))
 #define LIQ(DUMMY)	(LIQ2(PROP[BOTTLE]<0 ? -1-PROP[BOTTLE] : PROP[BOTTLE]))

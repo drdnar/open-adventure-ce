@@ -40,7 +40,7 @@ void score(long MODE) {
 	if(I == CHEST)K=14;
 	if(I > CHEST)K=16;
 	if(PROP[I] >= 0)SCORE=SCORE+2;
-	if(PLACE[I] == 3 && PROP[I] == 0)SCORE=SCORE+K-2;
+	if(game.place[I] == 3 && PROP[I] == 0)SCORE=SCORE+K-2;
 	MXSCOR=MXSCOR+K;
 L20010: /*etc*/ ;
 	} /* end loop */
@@ -69,7 +69,7 @@ L20020: MXSCOR=MXSCOR+45;
 
 /*  Did he come to Witt's End as he should? */
 
-	if(PLACE[MAGZIN] == 108)SCORE=SCORE+1;
+	if(game.place[MAGZIN] == 108)SCORE=SCORE+1;
 	MXSCOR=MXSCOR+1;
 
 /*  Round it off. */
@@ -80,7 +80,7 @@ L20020: MXSCOR=MXSCOR+45;
 /*  Deduct for hints/turns/saves.  Hints < 4 are special; see database desc. */
 
 	for (I=1; I<=HNTMAX; I++) {
-	if(HINTED[I])SCORE=SCORE-HINTS[I][2];
+	if(game.hinted[I])SCORE=SCORE-HINTS[I][2];
 	} /* end loop */
 	if(game.novice)SCORE=SCORE-5;
 	if(game.clshnt)SCORE=SCORE-10;

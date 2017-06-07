@@ -15,13 +15,13 @@
  *     12600 words of message text (LINES, LINSIZ).
  *	885 travel options (TRAVEL, TRVSIZ).
  *	330 vocabulary words (KTAB, ATAB, TABSIZ).
- *	185 locations (LTEXT, STEXT, KEY, COND, abbrev, ATLOC, LOCSND, LOCSIZ).
- *	100 objects (PLAC, PLACE, FIXD, FIXED, LINK (TWICE), PTEXT, PROP,
+ *	185 locations (LTEXT, STEXT, KEY, COND, abbrev, game.atloc, LOCSND, LOCSIZ).
+ *	100 objects (PLAC, game.place, FIXD, game.fixed, game.link (TWICE), PTEXT, PROP,
  *                    OBJSND, OBJTXT).
  *	 35 "action" verbs (ACTSPK, VRBSIZ).
  *	277 random messages (RTEXT, RTXSIZ).
  *	 12 different player classifications (CTEXT, CVAL, CLSMAX).
- *	 20 hints (HINTLC, HINTED, HINTS, HNTSIZ).
+ *	 20 hints (HINTLC, game.hinted, HINTS, HNTSIZ).
  *         5 "# of turns" threshholds (TTEXT, TRNVAL, TRNSIZ).
  *  There are also limits which cannot be exceeded due to the structure of
  *  the database.  (E.G., The vocabulary uses n/1000 to determine word type,
@@ -180,10 +180,10 @@ void initialise(void) {
 
 static int finish_init(void) {
 	for (I=1; I<=100; I++) {
-	PLACE[I]=0;
+	game.place[I]=0;
 	PROP[I]=0;
-	LINK[I]=0;
-	{long x = I+NOBJECTS; LINK[x]=0;}
+	game.link[I]=0;
+	{long x = I+NOBJECTS; game.link[x]=0;}
 	} /* end loop */
 
 	/* 1102 */ for (I=1; I<=LOCSIZ; I++) {
@@ -191,13 +191,13 @@ static int finish_init(void) {
 	if(LTEXT[I] == 0 || KEY[I] == 0) goto L1102;
 	K=KEY[I];
 	if(MOD(labs(TRAVEL[K]),1000) == 1)COND[I]=2;
-L1102:	ATLOC[I]=0;
+L1102:	game.atloc[I]=0;
 	} /* end loop */
 
-/*  Set up the ATLOC and LINK arrays as described above.  We'll use the DROP
+/*  Set up the game.atloc and game.link arrays as described above.  We'll use the DROP
  *  subroutine, which prefaces new objects on the lists.  Since we want things
  *  in the other order, we'll run the loop backwards.  If the object is in two
- *  locs, we drop it twice.  This also sets up "PLACE" and "fixed" as copies of
+ *  locs, we drop it twice.  This also sets up "game.place" and "fixed" as copies of
  *  "PLAC" and "FIXD".  Also, since two-placed objects are typically best
  *  described last, we'll drop them first. */
 
@@ -211,7 +211,7 @@ L1106:	/*etc*/ ;
 
 	for (I=1; I<=NOBJECTS; I++) {
 	K=NOBJECTS + 1 - I;
-	FIXED[K]=FIXD[K];
+	game.fixed[K]=FIXD[K];
 	if(PLAC[K] != 0 && FIXD[K] <= 0)DROP(K,PLAC[K]);
 	} /* end loop */
 
@@ -227,11 +227,11 @@ L1106:	/*etc*/ ;
 	game.tally=game.tally-PROP[I];
 	} /* end loop */
 
-/*  Clear the hint stuff.  HINTLC(I) is how long he's been at LOC with cond bit
- *  I.  HINTED(I) is true iff hint I has been used. */
+/*  Clear the hint stuff.  HINTLC[I] is how long he's been at LOC with cond bit
+ *  I.  game.hinted[I] is true iff hint I has been used. */
 
 	for (I=1; I<=HNTMAX; I++) {
-	HINTED[I]=false;
+	game.hinted[I]=false;
 	HINTLC[I]=0;
 	} /* end loop */
 

@@ -12,7 +12,6 @@
 #define TRNSIZ 5
 #define TABSIZ 330
 #define VRBSIZ 35
-#define HNTSIZ 20
 #define TRVSIZ 885
 #define TOKLEN 5
 #define HINTLEN 5
@@ -510,9 +509,9 @@ void read_sound_text(FILE* database)
 /*  Having read in the database, certain things are now constructed.
  *  PROPS are set to zero.  We finish setting up COND by checking for
  *  forced-motion travel entries.  The PLAC and FIXD arrays are used
- *  to set up ATLOC(N) as the first object at location N, and
- *  LINK(OBJ) as the next object at the same location as OBJ.
- *  (OBJ>NOBJECTS indicates that FIXED(OBJ-NOBJECTS)=LOC; LINK(OBJ) is
+ *  to set up game.atloc(N) as the first object at location N, and
+ *  game.link(OBJ) as the next object at the same location as OBJ.
+ *  (OBJ>NOBJECTS indicates that game.fixed(OBJ-NOBJECTS)=LOC; game.link(OBJ) is
  *  still the correct link to use.)  game.abbrev is zeroed; it controls
  *  whether the abbreviated description is printed.  Counts modulo 5
  *  unless "LOOK" is used. */
