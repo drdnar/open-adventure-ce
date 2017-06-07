@@ -330,8 +330,8 @@ L1106:	/*etc*/ ;
 
 	CHLOC=114;
 	CHLOC2=140;
-	for (I=1; I<=6; I++) {
-	DSEEN[I]=false;
+	for (I=1; I<=NDWARVES; I++) {
+		DSEEN[I]=false;
 	} /* end loop */
 	DFLAG=0;
 	DLOC[1]=19;

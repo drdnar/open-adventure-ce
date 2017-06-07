@@ -198,7 +198,7 @@ L9128:	RSPEAK(SPK);
 	RSPEAK(6);
 	DSTROY(OGRE);
 	K=0;
-	for (I=1; I<=5; I++) {
+	for (I=1; I < PIRATE; I++) {
 		if(DLOC[I] == LOC) {
 			K=K+1;
 			DLOC[I]=61;

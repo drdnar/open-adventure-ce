@@ -3,6 +3,7 @@
 
 #define LINESIZE	100
 #define NDWARVES	6
+#define PIRATE		NDWARVES	/* must be NDWARVES-1 when zero-origin */
 
 typedef struct lcg_state
 {
