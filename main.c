@@ -24,7 +24,7 @@ long AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
 		GRATE, HINT, I, INVENT, IGO, J, JADE, K, K2, KEYS, KK,
 		KNIFE, KQ, L, LAMP, LOCK, LOOK,
 		MAGZIN, MAXDIE, MAXTRS, MESSAG, MIRROR, MXSCOR,
-		NUGGET, NUL, OBJ, OGRE, OIL, OYSTER, PEARL, PILLOW,
+		NUGGET, NUL, OGRE, OIL, OYSTER, PEARL, PILLOW,
 		PLANT, PLANT2, PYRAM, RESER, ROD, ROD2, RUBY, RUG, SAPPH, SAY,
 		SCORE, SECT, SIGN, SNAKE, SPK, STEPS, STICK,
 		STREAM, THROW, TK[21], TRIDNT, TROLL, TROLL2,
@@ -155,6 +155,7 @@ static bool fallback_handler(char *buf)
 
 static bool do_command(FILE *cmdin) {
 	long LL;
+	long obj;
 
 /*  Can't leave cave once it's closing (except by main office). */
 
@@ -340,13 +341,13 @@ L2001:	if(TOTING(BEAR))RSPEAK(141);
 	game.abbrev[game.loc]=game.abbrev[game.loc]+1;
 	I=game.atloc[game.loc];
 L2004:	if(I == 0) goto L2012;
-	OBJ=I;
-	if(OBJ > NOBJECTS)OBJ=OBJ-NOBJECTS;
-	if(OBJ == STEPS && TOTING(NUGGET)) goto L2008;
-	if(game.prop[OBJ] >= 0) goto L2006;
+	obj=I;
+	if(obj > NOBJECTS)obj=obj-NOBJECTS;
+	if(obj == STEPS && TOTING(NUGGET)) goto L2008;
+	if(game.prop[obj] >= 0) goto L2006;
 	if(game.closed) goto L2008;
-	game.prop[OBJ]=0;
-	if(OBJ == RUG || OBJ == CHAIN)game.prop[OBJ]=1;
+	game.prop[obj]=0;
+	if(obj == RUG || obj == CHAIN)game.prop[obj]=1;
 	game.tally=game.tally-1;
 /*  Note: There used to be a test here to see whether the player had blown it
  *  so badly that he could never ever see the remaining treasures, and if so
@@ -359,9 +360,9 @@ L2004:	if(I == 0) goto L2012;
  *  or trident, and the effects propagate.  So the whole thing was flushed.
  *  anyone who makes such a gross blunder isn't likely to find everything
  *  else anyway (so goes the rationalisation). */
-L2006:	KK=game.prop[OBJ];
-	if(OBJ == STEPS && game.loc == game.fixed[STEPS])KK=1;
-	PSPEAK(OBJ,KK);
+L2006:	KK=game.prop[obj];
+	if(obj == STEPS && game.loc == game.fixed[STEPS])KK=1;
+	PSPEAK(obj,KK);
 L2008:	I=game.link[I];
 	 goto L2004;
 
@@ -370,8 +371,8 @@ L2010:	SPK=K;
 L2011:	RSPEAK(SPK);
 
 L2012:	VERB=0;
-	game.oldobj=OBJ;
-	OBJ=0;
+	game.oldobj=obj;
+	obj=0;
 
 /*  Check if this loc is eligible for any hints.  If been here long enough,
  *  branch to help section (on later page).  Hints all come back here eventually
@@ -474,7 +475,7 @@ L4000:	I=4000; goto Laction;
 L4090:	I=4090; goto Laction;
 L5000:	I=5000;
 Laction:
-	 switch (action(cmdin, I, OBJ)) {
+	 switch (action(cmdin, I, obj)) {
 	   case 2: return true;
 	   case 8: goto L8;
 	   case 2000: goto L2000;
@@ -497,7 +498,7 @@ Laction:
 
 L8000:	SETPRM(1,WD1,WD1X);
 	RSPEAK(257);
-	OBJ=0;
+	obj=0;
 	goto L2600;
 
 /*  Figure out the new location
