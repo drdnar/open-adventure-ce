@@ -502,7 +502,7 @@ void read_sound_text(FILE* database)
  *  to set up ATLOC(N) as the first object at location N, and
  *  LINK(OBJ) as the next object at the same location as OBJ.
  *  (OBJ>NOBJECTS indicates that FIXED(OBJ-NOBJECTS)=LOC; LINK(OBJ) is
- *  still the correct link to use.)  ABB is zeroed; it controls
+ *  still the correct link to use.)  game.abbrev is zeroed; it controls
  *  whether the abbreviated description is printed.  Counts modulo 5
  *  unless "LOOK" is used. */
 

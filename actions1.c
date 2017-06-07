@@ -201,8 +201,8 @@ L9040:	if(OBJ == CLAM || OBJ == OYSTER) goto L9046;
 	if(OBJ == CHAIN) goto L9048;
 	if(!game.closng) goto L9043;
 	K=130;
-	if(!PANIC)game.clock2=15;
-	PANIC=true;
+	if(!game.panic)game.clock2=15;
+	game.panic=true;
 	 return(2010);
 
 L9043:	K=34+PROP[GRATE];
@@ -302,7 +302,7 @@ L9090:	if((!TOTING(OBJ)) && (OBJ != ROD || !TOTING(ROD2)))SPK=29;
 
 L9094:	DROP(JADE,LOC);
 	PROP[JADE]=0;
-	TALLY=TALLY-1;
+	game.tally=game.tally-1;
 	SPK=208;
 	 return(2011);
 
@@ -381,7 +381,7 @@ L9160:	if(OBJ != LAMP)SPK=76;
 	DSTROY(URN);
 	DROP(AMBER,LOC);
 	PROP[AMBER]=1;
-	TALLY=TALLY-1;
+	game.tally=game.tally-1;
 	DROP(CAVITY,LOC);
 	SPK=216;
 	 return(2011);
@@ -436,7 +436,7 @@ L9230:	if(PROP[ROD2] < 0 || !game.closed) return(2011);
 
 L8240:	score(-1);
 	SETPRM(1,SCORE,MXSCOR);
-	SETPRM(3,TURNS,TURNS);
+	SETPRM(3,game.turns,game.turns);
 	RSPEAK(259);
 	 return(2012);
 
@@ -481,11 +481,11 @@ L8270:	for (I=1; I<=NOBJECTS; I++) {
 
 L9270:	if(DARK(0)) goto L5190;
 	if(OBJTXT[OBJ] == 0 || PROP[OBJ] < 0) return(2011);
-	if(OBJ == OYSTER && !CLSHNT) goto L9275;
+	if(OBJ == OYSTER && !game.clshnt) goto L9275;
 	PSPEAK(OBJ,OBJTXT[OBJ]+PROP[OBJ]);
 	 return(2012);
 
-L9275:	CLSHNT=YES(input,192,193,54);
+L9275:	game.clshnt=YES(input,192,193,54);
 	 return(2012);
 
 /*  Break.  Only works for mirror in repository and, of course, the vase. */
@@ -515,7 +515,7 @@ L9290:	if(OBJ != DWARF || !game.closed) return(2011);
 L8300:	SPK=201;
 	RSPEAK(260);
 	if(!YES(input,200,54,54)) return(2012);
-	SAVED=SAVED+5;
+	game.saved=game.saved+5;
 	KK= -1;
 
 /*  This next part is shared with the "resume" code.  The two cases are
@@ -535,12 +535,12 @@ L8305:	DATIME(&I,&K);
  *  with junk variables to bring it up to 7 values. */
 	SAVWDS(game.abbnum,game.blklin,game.bonus,game.clock1,game.clock2,game.closed,game.closng);
 	SAVWDS(game.detail,game.dflag,game.dkill,game.dtotal,game.foobar,game.holdng,game.iwest);
-	SAVWDS(game.knfloc,game.limit,LL,game.lmwarn,LOC,NEWLOC,NUMDIE);
-	SAVWDS(OBJ,game.oldlc2,game.oldloc,OLDOBJ,PANIC,SAVED,SETUP);
-	SAVWDS(SPK,TALLY,THRESH,TRNDEX,TRNLUZ,TURNS,OBJTXT[OYSTER]);
+	SAVWDS(game.knfloc,game.limit,LL,game.lmwarn,LOC,game.newloc,game.numdie);
+	SAVWDS(OBJ,game.oldlc2,game.oldloc,game.oldobj,game.panic,game.saved,SETUP);
+	SAVWDS(SPK,game.tally,game.thresh,game.trndex,game.trnluz,game.turns,OBJTXT[OYSTER]);
 	SAVWDS(VERB,WD1,WD1X,WD2,game.wzdark,game.zzword,OBJSND[BIRD]);
-	SAVWDS(OBJTXT[SIGN],CLSHNT,NOVICE,K,K,K,K);
-	SAVARR(ABB,LOCSIZ);
+	SAVWDS(OBJTXT[SIGN],game.clshnt,game.novice,K,K,K,K);
+	SAVARR(game.abbrev,LOCSIZ);
 	SAVARR(ATLOC,LOCSIZ);
 	SAVARR(game.dloc,NDWARVES);
 	SAVARR(game.dseen,NDWARVES);
@@ -562,7 +562,7 @@ L8305:	DATIME(&I,&K);
 /*  Resume.  Read a suspended game back from a file. */
 
 L8310:	KK=1;
-	if(LOC == 1 && ABB[1] == 1) goto L8305;
+	if(LOC == 1 && game.abbrev[1] == 1) goto L8305;
 	RSPEAK(268);
 	if(!YES(input,200,54,54)) return(2012);
 	 goto L8305;
@@ -587,7 +587,7 @@ L9320:	if(OBJ != RUG) return(2011);
 	if(PROP[RUG] != 2) return(2011);
 	game.oldlc2=game.oldloc;
 	game.oldloc=LOC;
-	NEWLOC=PLACE[RUG]+FIXED[RUG]-LOC;
+	game.newloc=PLACE[RUG]+FIXED[RUG]-LOC;
 	SPK=226;
 	if(PROP[SAPPH] >= 0)SPK=227;
 	RSPEAK(SPK);
@@ -618,7 +618,7 @@ L8340:	if(!AT(RESER) && LOC != FIXED[RESER]-1) return(2011);
 	PROP[RESER]=1-PROP[RESER];
 	if(AT(RESER)) return(2012);
 	game.oldlc2=LOC;
-	NEWLOC=0;
+	game.newloc=0;
 	RSPEAK(241);
 	 return(2);
 

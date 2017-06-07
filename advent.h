@@ -21,6 +21,7 @@ struct game_t {
     long chloc2;
     long clock1;
     long clock2;
+    long clshnt;
     long closed;
     long closng;
     long conds;
@@ -34,10 +35,22 @@ struct game_t {
     long knfloc;
     long limit;
     long lmwarn;
+    long newloc;
+    long novice;
+    long numdie;
     long oldloc;
     long oldlc2;
+    long oldobj;
+    long panic;
+    long saved;
+    long tally;
+    long thresh;
+    long trndex;
+    long trnluz;
+    long turns;
     long wzdark;
     long zzword;
+    long abbrev[185+1];		/* FIXME: LOCSIZE in the compiler */
     long dseen[NDWARVES+1];
     long dloc[NDWARVES+1];
     long odloc[NDWARVES+1];
@@ -45,7 +58,7 @@ struct game_t {
 
 extern struct game_t game;
 
-extern long ABB[], ATLOC[], FIXED[],
+extern long ATLOC[], FIXED[],
 		LINK[], LNLENG, LNPOSN,
 		PARMS[], PLACE[];
 extern char rawbuf[LINESIZE], INLINE[LINESIZE+1], MAP1[], MAP2[];
@@ -111,19 +124,17 @@ extern long randrange(long);
 extern void score(long);
 extern long AMBER, ATTACK, AXE, BACK, BATTER, BEAR,
    BIRD, BLOOD, BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST,
-   CLAM, CLSHNT, COINS, DALTLC, DOOR, DPRSSN, DRAGON, DWARF, EGGS,
+   CLAM, COINS, DALTLC, DOOR, DPRSSN, DRAGON, DWARF, EGGS,
    EMRALD, ENTER, ENTRNC, FIND, FISSUR, FOOD,
    GRATE, HINT, HINTED[], HINTLC[],
    I, INVENT, IGO, J, JADE, K, K2, KEYS, KK,
    KNIFE, KQ, L, LAMP, LL, LOC, LOCK, LOOK,
-   MAGZIN, MAXDIE, MAXTRS, MESSAG, MIRROR, MXSCOR,
-   NEWLOC, NOVICE, NUGGET, NUL, NUMDIE, OBJ,
+   MAGZIN, MAXDIE, MAXTRS, MESSAG, MIRROR, MXSCOR, NUGGET, NUL, OBJ,
    OGRE, OIL, OLDOBJ, OYSTER,
    PANIC, PEARL, PILLOW, PLANT, PLANT2, PROP[], PYRAM,
-   RESER, ROD, ROD2, RUBY, RUG, SAPPH, SAVED, SAY,
+   RESER, ROD, ROD2, RUBY, RUG, SAPPH, SAY,
    SCORE, SECT, SETUP, SIGN, SNAKE, SPK, STEPS, STICK,
-   STREAM, TALLY, THRESH, THROW, TK[], TRIDNT,
-   TRNDEX, TRNLUZ, TROLL, TROLL2,
-   TURNS, URN, V1, V2, VASE, VEND, VERB,
+   STREAM, THROW, TK[], TRIDNT, TROLL, TROLL2,
+   URN, V1, V2, VASE, VEND, VERB,
    VOLCAN, VRSION, WATER, WD1, WD1X, WD2, WD2X;
 

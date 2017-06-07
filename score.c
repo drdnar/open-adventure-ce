@@ -45,14 +45,14 @@ void score(long MODE) {
 L20010: /*etc*/ ;
 	} /* end loop */
 
-/*  Now look at how he finished and how far he got.  MAXDIE and NUMDIE tell us
+/*  Now look at how he finished and how far he got.  MAXDIE and game.numdie tell us
  *  how well he survived.  game.dflag will
  *  tell us if he ever got suitably deep into the cave.  game.closng still indicates
  *  whether he reached the endgame.  And if he got as far as "cave closed"
  *  (indicated by "game.closed"), then bonus is zero for mundane exits or 133, 134,
  *  135 if he blew it (so to speak). */
 
-	SCORE=SCORE+(MAXDIE-NUMDIE)*10;
+	SCORE=SCORE+(MAXDIE-game.numdie)*10;
 	MXSCOR=MXSCOR+MAXDIE*10;
 	if(MODE == 0)SCORE=SCORE+4;
 	MXSCOR=MXSCOR+4;
@@ -82,9 +82,9 @@ L20020: MXSCOR=MXSCOR+45;
 	for (I=1; I<=HNTMAX; I++) {
 	if(HINTED[I])SCORE=SCORE-HINTS[I][2];
 	} /* end loop */
-	if(NOVICE)SCORE=SCORE-5;
-	if(CLSHNT)SCORE=SCORE-10;
-	SCORE=SCORE-TRNLUZ-SAVED;
+	if(game.novice)SCORE=SCORE-5;
+	if(game.clshnt)SCORE=SCORE-10;
+	SCORE=SCORE-game.trnluz-game.saved;
 
 /*  Return to score command if that's where we came from. */
 
@@ -92,10 +92,10 @@ L20020: MXSCOR=MXSCOR+45;
 
 /*  that should be good enough.  Let's tell him all about it. */
 
-	if(SCORE+TRNLUZ+1 >= MXSCOR && TRNLUZ != 0)RSPEAK(242);
-	if(SCORE+SAVED+1 >= MXSCOR && SAVED != 0)RSPEAK(143);
+	if(SCORE+game.trnluz+1 >= MXSCOR && game.trnluz != 0)RSPEAK(242);
+	if(SCORE+game.saved+1 >= MXSCOR && game.saved != 0)RSPEAK(143);
 	SETPRM(1,SCORE,MXSCOR);
-	SETPRM(3,TURNS,TURNS);
+	SETPRM(3,game.turns,game.turns);
 	RSPEAK(262);
 	for (I=1; I<=CLSSES; I++) {
 	if(CVAL[I] >= SCORE) goto L20210;

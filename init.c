@@ -15,7 +15,7 @@
  *     12600 words of message text (LINES, LINSIZ).
  *	885 travel options (TRAVEL, TRVSIZ).
  *	330 vocabulary words (KTAB, ATAB, TABSIZ).
- *	185 locations (LTEXT, STEXT, KEY, COND, ABB, ATLOC, LOCSND, LOCSIZ).
+ *	185 locations (LTEXT, STEXT, KEY, COND, abbrev, ATLOC, LOCSND, LOCSIZ).
  *	100 objects (PLAC, PLACE, FIXD, FIXED, LINK (TWICE), PTEXT, PROP,
  *                    OBJSND, OBJTXT).
  *	 35 "action" verbs (ACTSPK, VRBSIZ).
@@ -186,7 +186,7 @@ static int finish_init(void) {
 	} /* end loop */
 
 	/* 1102 */ for (I=1; I<=LOCSIZ; I++) {
-	ABB[I]=0;
+	game.abbrev[I]=0;
 	if(LTEXT[I] == 0 || KEY[I] == 0) goto L1102;
 	K=KEY[I];
 	if(MOD(labs(TRAVEL[K]),1000) == 1)COND[I]=2;
@@ -216,14 +216,14 @@ L1106:	/*etc*/ ;
 
 /*  Treasures, as noted earlier, are objects 50 through MAXTRS (CURRENTLY 79).
  *  Their props are initially -1, and are set to 0 the first time they are
- *  described.  TALLY keeps track of how many are not yet found, so we know
+ *  described.  game.tally keeps track of how many are not yet found, so we know
  *  when to close the cave. */
 
 	MAXTRS=79;
-	TALLY=0;
+	game.tally=0;
 	for (I=50; I<=MAXTRS; I++) {
 	if(PTEXT[I] != 0)PROP[I]= -1;
-	TALLY=TALLY-PROP[I];
+	game.tally=game.tally-PROP[I];
 	} /* end loop */
 
 /*  Clear the hint stuff.  HINTLC(I) is how long he's been at LOC with cond bit
@@ -357,18 +357,18 @@ L1106:	/*etc*/ ;
  *	game.knfloc	0 if no knife here, loc if knife here, -1 after caveat
  *	game.limit	Lifetime of lamp (not set here)
  *	MAXDIE	Number of reincarnation messages available (up to 5)
- *	NUMDIE	Number of times killed so far
- *	THRESH	Next #turns threshhold (-1 if none)
- *	TRNDEX	Index in TRNVAL of next threshhold (section 14 of database)
- *	TRNLUZ	# points lost so far due to number of turns used
- *	TURNS	Tallies how many commands he's given (ignores yes/no)
+ *	game.numdie	Number of times killed so far
+ *	game.thresh	Next #turns threshhold (-1 if none)
+ *	game.trndex	Index in TRNVAL of next threshhold (section 14 of database)
+ *	game.trnluz	# points lost so far due to number of turns used
+ *	game.turns	Tallies how many commands he's given (ignores yes/no)
  *	Logicals were explained earlier */
 
-	TURNS=0;
-	TRNDEX=1;
-	THRESH= -1;
-	if(TRNVLS > 0)THRESH=MOD(TRNVAL[1],100000)+1;
-	TRNLUZ=0;
+	game.turns=0;
+	game.trndex=1;
+	game.thresh= -1;
+	if(TRNVLS > 0)game.thresh=MOD(TRNVAL[1],100000)+1;
+	game.trnluz=0;
 	game.lmwarn=false;
 	IGO=0;
 	game.iwest=0;
@@ -378,7 +378,7 @@ L1106:	/*etc*/ ;
 	for (I=0; I<=4; I++) {
 	{long x = 2*I+81; if(RTEXT[x] != 0)MAXDIE=I+1;}
 	} /* end loop */
-	NUMDIE=0;
+	game.numdie=0;
 	game.holdng=0;
 	game.dkill=0;
 	game.foobar=0;
@@ -386,12 +386,12 @@ L1106:	/*etc*/ ;
 	game.clock1=30;
 	game.clock2=50;
 	game.conds=SETBIT(11);
-	SAVED=0;
+	game.saved=0;
 	game.closng=false;
-	PANIC=false;
+	game.panic=false;
 	game.closed=false;
-	CLSHNT=false;
-	NOVICE=false;
+	game.clshnt=false;
+	game.novice=false;
 	SETUP=1;
 	game.blklin=true;
 
