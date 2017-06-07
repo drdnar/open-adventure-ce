@@ -26,7 +26,7 @@ long AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
 		MESSAG, MIRROR, MXSCOR, NUGGET, NUL, OGRE, OIL, OYSTER,
 		PEARL, PILLOW, PLANT, PLANT2, PYRAM, RESER, ROD, ROD2,
 		RUBY, RUG, SAPPH, SAY, SCORE, SECT, SIGN, SNAKE, SPK,
-    		STEPS, STICK, STREAM, THROW, TK[21], TRIDNT, TROLL, TROLL2,
+    		STEPS, STICK, STREAM, THROW, TRIDNT, TROLL, TROLL2,
 		URN, V1, V2, VASE, VEND,
 		VOLCAN, VRSION = 25, WATER, WD1, WD1X, WD2, WD2X;
 FILE  *logfp;
@@ -155,6 +155,7 @@ static bool fallback_handler(char *buf)
 static bool do_command(FILE *cmdin) {
 	long LL, KQ, VERB, KK, K2;
 	long obj;
+	long TK[21];
 	static long IGO = 0;
 
 /*  Can't leave cave once it's closing (except by main office). */
