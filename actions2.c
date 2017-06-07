@@ -8,13 +8,13 @@
 int carry(void) {
 	if(TOTING(OBJ)) return(2011);
 	SPK=25;
-	if(OBJ == PLANT && PROP[PLANT] <= 0)SPK=115;
-	if(OBJ == BEAR && PROP[BEAR] == 1)SPK=169;
-	if(OBJ == CHAIN && PROP[BEAR] != 0)SPK=170;
+	if(OBJ == PLANT && game.prop[PLANT] <= 0)SPK=115;
+	if(OBJ == BEAR && game.prop[BEAR] == 1)SPK=169;
+	if(OBJ == CHAIN && game.prop[BEAR] != 0)SPK=170;
 	if(OBJ == URN)SPK=215;
 	if(OBJ == CAVITY)SPK=217;
 	if(OBJ == BLOOD)SPK=239;
-	if(OBJ == RUG && PROP[RUG] == 2)SPK=222;
+	if(OBJ == RUG && game.prop[RUG] == 2)SPK=222;
 	if(OBJ == SIGN)SPK=196;
 	if(OBJ != MESSAG) goto L9011;
 	SPK=190;
@@ -24,26 +24,26 @@ L9011:	if(game.fixed[OBJ] != 0) return(2011);
 	K=OBJ;
 	OBJ=BOTTLE;
 	if(HERE(BOTTLE) && LIQ(0) == K) goto L9017;
-	if(TOTING(BOTTLE) && PROP[BOTTLE] == 1) return(fill());
-	if(PROP[BOTTLE] != 1)SPK=105;
+	if(TOTING(BOTTLE) && game.prop[BOTTLE] == 1) return(fill());
+	if(game.prop[BOTTLE] != 1)SPK=105;
 	if(!TOTING(BOTTLE))SPK=104;
 	 return(2011);
 L9017:	SPK=92;
 	if(game.holdng >= 7) return(2011);
-	if(OBJ != BIRD || PROP[BIRD] == 1 || -1-PROP[BIRD] == 1) goto L9014;
-	if(PROP[BIRD] == 2) goto L9015;
+	if(OBJ != BIRD || game.prop[BIRD] == 1 || -1-game.prop[BIRD] == 1) goto L9014;
+	if(game.prop[BIRD] == 2) goto L9015;
 	if(!TOTING(CAGE))SPK=27;
 	if(TOTING(ROD))SPK=26;
 	if(SPK/2 == 13) return(2011);
-	PROP[BIRD]=1;
-L9014:	if((OBJ == BIRD || OBJ == CAGE) && (PROP[BIRD] == 1 || -1-PROP[BIRD] ==
+	game.prop[BIRD]=1;
+L9014:	if((OBJ == BIRD || OBJ == CAGE) && (game.prop[BIRD] == 1 || -1-game.prop[BIRD] ==
 		1))CARRY(BIRD+CAGE-OBJ,LOC);
 	CARRY(OBJ,LOC);
 	K=LIQ(0);
 	if(OBJ == BOTTLE && K != 0)game.place[K]= -1;
-	if(!GSTONE(OBJ) || PROP[OBJ] == 0) return(2009);
-	PROP[OBJ]=0;
-	PROP[CAVITY]=1;
+	if(!GSTONE(OBJ) || game.prop[OBJ] == 0) return(2009);
+	game.prop[OBJ]=0;
+	game.prop[CAVITY]=1;
 	 return(2009);
 
 L9015:	SPK=238;
@@ -63,31 +63,31 @@ int discard(bool just_do_it) {
 	RSPEAK(30);
 	if(game.closed) return(19000);
 	DSTROY(SNAKE);
-/*  SET PROP FOR USE BY TRAVEL OPTIONS */
-	PROP[SNAKE]=1;
+/*  SET game.prop FOR USE BY TRAVEL OPTIONS */
+	game.prop[SNAKE]=1;
 L9021:	K=LIQ(0);
 	if(K == OBJ)OBJ=BOTTLE;
 	if(OBJ == BOTTLE && K != 0)game.place[K]=0;
-	if(OBJ == CAGE && PROP[BIRD] == 1)DROP(BIRD,LOC);
+	if(OBJ == CAGE && game.prop[BIRD] == 1)DROP(BIRD,LOC);
 	DROP(OBJ,LOC);
 	if(OBJ != BIRD) return(2012);
-	PROP[BIRD]=0;
-	if(FOREST(LOC))PROP[BIRD]=2;
+	game.prop[BIRD]=0;
+	if(FOREST(LOC))game.prop[BIRD]=2;
 	 return(2012);
 
-L9023:	if(!(GSTONE(OBJ) && AT(CAVITY) && PROP[CAVITY] != 0)) goto L9024;
+L9023:	if(!(GSTONE(OBJ) && AT(CAVITY) && game.prop[CAVITY] != 0)) goto L9024;
 	RSPEAK(218);
-	PROP[OBJ]=1;
-	PROP[CAVITY]=0;
-	if(!HERE(RUG) || !((OBJ == EMRALD && PROP[RUG] != 2) || (OBJ == RUBY &&
-		PROP[RUG] == 2))) goto L9021;
+	game.prop[OBJ]=1;
+	game.prop[CAVITY]=0;
+	if(!HERE(RUG) || !((OBJ == EMRALD && game.prop[RUG] != 2) || (OBJ == RUBY &&
+		game.prop[RUG] == 2))) goto L9021;
 	SPK=219;
 	if(TOTING(RUG))SPK=220;
 	if(OBJ == RUBY)SPK=221;
 	RSPEAK(SPK);
 	if(SPK == 220) goto L9021;
-	K=2-PROP[RUG];
-	PROP[RUG]=K;
+	K=2-game.prop[RUG];
+	game.prop[RUG]=K;
 	if(K == 2)K=PLAC[SAPPH];
 	MOVE(RUG+NOBJECTS,K);
 	 goto L9021;
@@ -98,10 +98,10 @@ L9024:	if(OBJ != COINS || !HERE(VEND)) goto L9025;
 	PSPEAK(BATTER,0);
 	 return(2012);
 
-L9025:	if(OBJ != BIRD || !AT(DRAGON) || PROP[DRAGON] != 0) goto L9026;
+L9025:	if(OBJ != BIRD || !AT(DRAGON) || game.prop[DRAGON] != 0) goto L9026;
 	RSPEAK(154);
 	DSTROY(BIRD);
-	PROP[BIRD]=0;
+	game.prop[BIRD]=0;
 	 return(2012);
 
 L9026:	if(OBJ != BEAR || !AT(TROLL)) goto L9027;
@@ -111,17 +111,17 @@ L9026:	if(OBJ != BEAR || !AT(TROLL)) goto L9027;
 	MOVE(TROLL2,PLAC[TROLL]);
 	MOVE(TROLL2+NOBJECTS,FIXD[TROLL]);
 	JUGGLE(CHASM);
-	PROP[TROLL]=2;
+	game.prop[TROLL]=2;
 	 goto L9021;
 
 L9027:	if(OBJ == VASE && LOC != PLAC[PILLOW]) goto L9028;
 	RSPEAK(54);
 	 goto L9021;
 
-L9028:	PROP[VASE]=2;
-	if(AT(PILLOW))PROP[VASE]=0;
-	PSPEAK(VASE,PROP[VASE]+1);
-	if(PROP[VASE] != 0)game.fixed[VASE]= -1;
+L9028:	game.prop[VASE]=2;
+	if(AT(PILLOW))game.prop[VASE]=0;
+	PSPEAK(VASE,game.prop[VASE]+1);
+	if(game.prop[VASE] != 0)game.fixed[VASE]= -1;
 	 goto L9021;
 }
 
@@ -134,10 +134,10 @@ int attack(FILE *input) {
 	if(OBJ != 0) goto L9124;
 	if(I > 0)OBJ=DWARF;
 	if(HERE(SNAKE))OBJ=OBJ*NOBJECTS+SNAKE;
-	if(AT(DRAGON) && PROP[DRAGON] == 0)OBJ=OBJ*NOBJECTS+DRAGON;
+	if(AT(DRAGON) && game.prop[DRAGON] == 0)OBJ=OBJ*NOBJECTS+DRAGON;
 	if(AT(TROLL))OBJ=OBJ*NOBJECTS+TROLL;
 	if(AT(OGRE))OBJ=OBJ*NOBJECTS+OGRE;
-	if(HERE(BEAR) && PROP[BEAR] == 0)OBJ=OBJ*NOBJECTS+BEAR;
+	if(HERE(BEAR) && game.prop[BEAR] == 0)OBJ=OBJ*NOBJECTS+BEAR;
 	if(OBJ > NOBJECTS) return(8000);
 	if(OBJ != 0) goto L9124;
 /*  CAN'T ATTACK BIRD OR MACHINE BY THROWING AXE. */
@@ -150,12 +150,12 @@ L9124:	if(OBJ == BIRD) {
 		SPK=137;
 		if(game.closed) return(2011);
 		DSTROY(BIRD);
-		PROP[BIRD]=0;
+		game.prop[BIRD]=0;
 		SPK=45;
 	}
 L9125:	if(OBJ != VEND) goto L9126;
-	PSPEAK(VEND,PROP[VEND]+2);
-	PROP[VEND]=3-PROP[VEND];
+	PSPEAK(VEND,game.prop[VEND]+2);
+	game.prop[VEND]=3-game.prop[VEND];
 	 return(2012);
 
 L9126:	if(OBJ == 0)SPK=44;
@@ -167,9 +167,9 @@ L9126:	if(OBJ == 0)SPK=44;
 	if(OBJ == TROLL)SPK=157;
 	if(OBJ == OGRE)SPK=203;
 	if(OBJ == OGRE && I > 0) goto L9128;
-	if(OBJ == BEAR)SPK=165+(PROP[BEAR]+1)/2;
-	if(OBJ != DRAGON || PROP[DRAGON] != 0) return(2011);
-/*  Fun stuff for dragon.  If he insists on attacking it, win!  Set PROP to dead,
+	if(OBJ == BEAR)SPK=165+(game.prop[BEAR]+1)/2;
+	if(OBJ != DRAGON || game.prop[DRAGON] != 0) return(2011);
+/*  Fun stuff for dragon.  If he insists on attacking it, win!  Set game.prop to dead,
  *  move dragon to central loc (still fixed), move rug there (not fixed), and
  *  move him there, too.  Then do a null motion to get new description. */
 	RSPEAK(49);
@@ -178,8 +178,8 @@ L9126:	if(OBJ == 0)SPK=44;
 	GETIN(input,WD1,WD1X,WD2,WD2X);
 	if(WD1 != MAKEWD(25) && WD1 != MAKEWD(250519)) return(2607);
 	PSPEAK(DRAGON,3);
-	PROP[DRAGON]=1;
-	PROP[RUG]=0;
+	game.prop[DRAGON]=1;
+	game.prop[RUG]=0;
 	K=(PLAC[DRAGON]+FIXD[DRAGON])/2;
 	MOVE(DRAGON+NOBJECTS,-1);
 	MOVE(RUG+NOBJECTS,0);
@@ -222,12 +222,12 @@ int throw(FILE *cmdin) {
 	I=ATDWRF(LOC);
 	if(I > 0) goto L9172;
 	SPK=152;
-	if(AT(DRAGON) && PROP[DRAGON] == 0) goto L9175;
+	if(AT(DRAGON) && game.prop[DRAGON] == 0) goto L9175;
 	SPK=158;
 	if(AT(TROLL)) goto L9175;
 	SPK=203;
 	if(AT(OGRE)) goto L9175;
-	if(HERE(BEAR) && PROP[BEAR] == 0) goto L9176;
+	if(HERE(BEAR) && game.prop[BEAR] == 0) goto L9176;
 	OBJ=0;
 	return(attack(cmdin));
 
@@ -247,7 +247,7 @@ L9175:	RSPEAK(SPK);
 L9176:	SPK=164;
 	DROP(AXE,LOC);
 	game.fixed[AXE]= -1;
-	PROP[AXE]=1;
+	game.prop[AXE]=1;
 	JUGGLE(BEAR);
 	 return(2011);
 
@@ -276,12 +276,12 @@ int feed() {
 
 L9212:	if(OBJ != SNAKE && OBJ != DRAGON && OBJ != TROLL) goto L9213;
 	SPK=102;
-	if(OBJ == DRAGON && PROP[DRAGON] != 0)SPK=110;
+	if(OBJ == DRAGON && game.prop[DRAGON] != 0)SPK=110;
 	if(OBJ == TROLL)SPK=182;
 	if(OBJ != SNAKE || game.closed || !HERE(BIRD)) return(2011);
 	SPK=101;
 	DSTROY(BIRD);
-	PROP[BIRD]=0;
+	game.prop[BIRD]=0;
 	 return(2011);
 
 L9213:	if(OBJ != DWARF) goto L9214;
@@ -291,13 +291,13 @@ L9213:	if(OBJ != DWARF) goto L9214;
 	 return(2011);
 
 L9214:	if(OBJ != BEAR) goto L9215;
-	if(PROP[BEAR] == 0)SPK=102;
-	if(PROP[BEAR] == 3)SPK=110;
+	if(game.prop[BEAR] == 0)SPK=102;
+	if(game.prop[BEAR] == 3)SPK=110;
 	if(!HERE(FOOD)) return(2011);
 	DSTROY(FOOD);
-	PROP[BEAR]=1;
+	game.prop[BEAR]=1;
 	game.fixed[AXE]=0;
-	PROP[AXE]=0;
+	game.prop[AXE]=0;
 	SPK=168;
 	 return(2011);
 
@@ -318,10 +318,10 @@ int fill() {
 	if(OBJ == 0 && !HERE(BOTTLE)) return(8000);
 	SPK=107;
 	if(LIQLOC(LOC) == 0)SPK=106;
-	if(HERE(URN) && PROP[URN] != 0)SPK=214;
+	if(HERE(URN) && game.prop[URN] != 0)SPK=214;
 	if(LIQ(0) != 0)SPK=105;
 	if(SPK != 107) return(2011);
-	PROP[BOTTLE]=MOD(COND[LOC],4)/2*2;
+	game.prop[BOTTLE]=MOD(COND[LOC],4)/2*2;
 	K=LIQ(0);
 	if(TOTING(BOTTLE))game.place[K]= -1;
 	if(K == OIL)SPK=108;
@@ -331,18 +331,18 @@ L9222:	SPK=29;
 	if(LIQLOC(LOC) == 0)SPK=144;
 	if(LIQLOC(LOC) == 0 || !TOTING(VASE)) return(2011);
 	RSPEAK(145);
-	PROP[VASE]=2;
+	game.prop[VASE]=2;
 	game.fixed[VASE]= -1;
 	 return(discard(true));
 
 L9224:	SPK=213;
-	if(PROP[URN] != 0) return(2011);
+	if(game.prop[URN] != 0) return(2011);
 	SPK=144;
 	K=LIQ(0);
 	if(K == 0 || !HERE(BOTTLE)) return(2011);
 	game.place[K]=0;
-	PROP[BOTTLE]=1;
-	if(K == OIL)PROP[URN]=1;
-	SPK=211+PROP[URN];
+	game.prop[BOTTLE]=1;
+	if(K == OIL)game.prop[URN]=1;
+	SPK=211+game.prop[URN];
 	 return(2011);
 }

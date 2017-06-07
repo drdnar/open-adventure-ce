@@ -21,13 +21,11 @@ long AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
 		BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST,
 		CLAM, COINS, DALTLC, DOOR, DPRSSN, DRAGON, DWARF, EGGS,
 		EMRALD, ENTER, ENTRNC, FIND, FISSUR, FOOD,
-		GRATE, HINT, HINTLC[21],
-		I, INVENT, IGO, J, JADE, K, K2, KEYS, KK,
+		GRATE, HINT, I, INVENT, IGO, J, JADE, K, K2, KEYS, KK,
 		KNIFE, KQ, L, LAMP, LL, LOC, LOCK, LOOK,
 		MAGZIN, MAXDIE, MAXTRS, MESSAG, MIRROR, MXSCOR,
 		NUGGET, NUL, OBJ, OGRE, OIL, OYSTER, PEARL, PILLOW,
-		PLANT, PLANT2, PROP[NOBJECTS+1], PYRAM,
-		RESER, ROD, ROD2, RUBY, RUG, SAPPH, SAY,
+		PLANT, PLANT2, PYRAM, RESER, ROD, ROD2, RUBY, RUG, SAPPH, SAY,
 		SCORE, SECT, SIGN, SNAKE, SPK, STEPS, STICK,
 		STREAM, THROW, TK[21], TRIDNT, TROLL, TROLL2,
 		URN, V1, V2, VASE, VEND, VERB,
@@ -250,9 +248,9 @@ L6016:	TK[J]=game.odloc[I];
 /*  The pirate's spotted him.  He leaves him alone once we've found chest.  K
  *  counts if a treasure is here.  If not, and tally=1 for an unseen chest, let
  *  the pirate be spotted.  Note that game.place(CHEST)=0 might mean that he's
- *  thrown it to the troll, but in that case he's seen the chest (PROP=0). */
+ *  thrown it to the troll, but in that case he's seen the chest (game.prop=0). */
 
-	if(LOC == game.chloc || PROP[CHEST] >= 0) goto L6030;
+	if(LOC == game.chloc || game.prop[CHEST] >= 0) goto L6030;
 	K=0;
 	/* 6020 */ for (J=50; J<=MAXTRS; J++) {
 /*  Pirate won't take pyramid from plover room or dark room (too easy!). */
@@ -260,7 +258,7 @@ L6016:	TK[J]=game.odloc[I];
 	if(TOTING(J)) goto L6021;
 L6020:	if(HERE(J))K=1;
 	} /* end loop */
-	if(game.tally == 1 && K == 0 && game.place[CHEST] == 0 && HERE(LAMP) && PROP[LAMP]
+	if(game.tally == 1 && K == 0 && game.place[CHEST] == 0 && HERE(LAMP) && game.prop[LAMP]
 		== 1) goto L6025;
 	if(game.odloc[6] != game.dloc[6] && PCT(20))RSPEAK(127);
 	 goto L6030;
@@ -338,9 +336,9 @@ L2001:	if(TOTING(BEAR))RSPEAK(141);
 
 /*  Print out descriptions of objects at this location.  If not closing and
  *  property value is negative, tally off another treasure.  Rug is special
- *  case; once seen, its PROP is 1 (dragon on it) till dragon is killed.
- *  Similarly for chain; PROP is initially 1 (locked to bear).  These hacks
- *  are because PROP=0 is needed to get full score. */
+ *  case; once seen, its game.prop is 1 (dragon on it) till dragon is killed.
+ *  Similarly for chain; game.prop is initially 1 (locked to bear).  These hacks
+ *  are because game.prop=0 is needed to get full score. */
 
 	if(DARK(0)) goto L2012;
 	game.abbrev[LOC]=game.abbrev[LOC]+1;
@@ -349,10 +347,10 @@ L2004:	if(I == 0) goto L2012;
 	OBJ=I;
 	if(OBJ > NOBJECTS)OBJ=OBJ-NOBJECTS;
 	if(OBJ == STEPS && TOTING(NUGGET)) goto L2008;
-	if(PROP[OBJ] >= 0) goto L2006;
+	if(game.prop[OBJ] >= 0) goto L2006;
 	if(game.closed) goto L2008;
-	PROP[OBJ]=0;
-	if(OBJ == RUG || OBJ == CHAIN)PROP[OBJ]=1;
+	game.prop[OBJ]=0;
+	if(OBJ == RUG || OBJ == CHAIN)game.prop[OBJ]=1;
 	game.tally=game.tally-1;
 /*  Note: There used to be a test here to see whether the player had blown it
  *  so badly that he could never ever see the remaining treasures, and if so
@@ -365,7 +363,7 @@ L2004:	if(I == 0) goto L2012;
  *  or trident, and the effects propagate.  So the whole thing was flushed.
  *  anyone who makes such a gross blunder isn't likely to find everything
  *  else anyway (so goes the rationalisation). */
-L2006:	KK=PROP[OBJ];
+L2006:	KK=game.prop[OBJ];
 	if(OBJ == STEPS && LOC == game.fixed[STEPS])KK=1;
 	PSPEAK(OBJ,KK);
 L2008:	I=game.link[I];
@@ -387,21 +385,21 @@ L2012:	VERB=0;
 L2600:	if(COND[LOC] < game.conds) goto L2603;
 	/* 2602 */ for (HINT=1; HINT<=HNTMAX; HINT++) {
 	if(game.hinted[HINT]) goto L2602;
-	if(!CNDBIT(LOC,HINT+10))HINTLC[HINT]= -1;
-	HINTLC[HINT]=HINTLC[HINT]+1;
-	if(HINTLC[HINT] >= HINTS[HINT][1]) goto L40000;
+	if(!CNDBIT(LOC,HINT+10))game.hintlc[HINT]= -1;
+	game.hintlc[HINT]=game.hintlc[HINT]+1;
+	if(game.hintlc[HINT] >= HINTS[HINT][1]) goto L40000;
 L2602:	/*etc*/ ;
 	} /* end loop */
 
-/*  If closing time, check for any objects being toted with PROP < 0 and set
- *  the prop to -1-PROP.  This way objects won't be described until they've
+/*  If closing time, check for any objects being toted with game.prop < 0 and set
+ *  the prop to -1-game.prop.  This way objects won't be described until they've
  *  been picked up and put down separate from their respective piles.  Don't
  *  tick game.clock1 unless well into cave (and not at Y2). */
 
 L2603:	if(!game.closed) goto L2605;
-	if(PROP[OYSTER] < 0 && TOTING(OYSTER))PSPEAK(OYSTER,1);
+	if(game.prop[OYSTER] < 0 && TOTING(OYSTER))PSPEAK(OYSTER,1);
 	for (I=1; I<=NOBJECTS; I++) {
-	if(TOTING(I) && PROP[I] < 0)PROP[I]= -1-PROP[I];
+	if(TOTING(I) && game.prop[I] < 0)game.prop[I]= -1-game.prop[I];
 	} /* end loop */
 L2605:	game.wzdark=DARK(0);
 	if(game.knfloc > 0 && game.knfloc != LOC)game.knfloc=0;
@@ -428,8 +426,8 @@ L2607:	game.foobar=(game.foobar>0 ? -game.foobar : 0);
 	if(game.clock1 == 0) goto L10000;
 	if(game.clock1 < 0)game.clock2=game.clock2-1;
 	if(game.clock2 == 0) goto L11000;
-	if(PROP[LAMP] == 1)game.limit=game.limit-1;
-	if(game.limit <= 30 && HERE(BATTER) && PROP[BATTER] == 0 && HERE(LAMP)) goto
+	if(game.prop[LAMP] == 1)game.limit=game.limit-1;
+	if(game.limit <= 30 && HERE(BATTER) && game.prop[BATTER] == 0 && HERE(LAMP)) goto
 		L12000;
 	if(game.limit == 0) goto L12400;
 	if(game.limit <= 30) goto L12200;
@@ -536,7 +534,7 @@ L10:	LL=LL/1000;
 L11:	game.newloc=LL/1000;
 	 K=MOD(game.newloc,100);	/* ESR: an instance of NOBJECTS? */
 	if(game.newloc <= 300) goto L13;
-	if(PROP[K] != game.newloc/100-3) goto L16;
+	if(game.prop[K] != game.newloc/100-3) goto L16;
 L12:	if(TRAVEL[KK] < 0)BUG(25);
 	KK=KK+1;
 	game.newloc=labs(TRAVEL[KK])/1000;
@@ -584,12 +582,12 @@ L30200: DROP(EMRALD,LOC);
 /*  Travel 303.  Troll bridge.  Must be done only as special motion so that
  *  dwarves won't wander across and encounter the bear.  (They won't follow the
  *  player there because that region is forbidden to the pirate.)  If
- *  PROP(TROLL)=1, he's crossed since paying, so step out and block him.
- *  (standard travel entries check for PROP(TROLL)=0.)  Special stuff for bear. */
+ *  game.prop(TROLL)=1, he's crossed since paying, so step out and block him.
+ *  (standard travel entries check for game.prop(TROLL)=0.)  Special stuff for bear. */
 
-L30300: if(PROP[TROLL] != 1) goto L30310;
+L30300: if(game.prop[TROLL] != 1) goto L30310;
 	PSPEAK(TROLL,1);
-	PROP[TROLL]=0;
+	game.prop[TROLL]=0;
 	MOVE(TROLL2,0);
 	MOVE(TROLL2+NOBJECTS,0);
 	MOVE(TROLL,PLAC[TROLL]);
@@ -599,14 +597,14 @@ L30300: if(PROP[TROLL] != 1) goto L30310;
 	return true;
 
 L30310: game.newloc=PLAC[TROLL]+FIXD[TROLL]-LOC;
-	if(PROP[TROLL] == 0)PROP[TROLL]=1;
+	if(game.prop[TROLL] == 0)game.prop[TROLL]=1;
 	if(!TOTING(BEAR)) return true;
 	RSPEAK(162);
-	PROP[CHASM]=1;
-	PROP[TROLL]=2;
+	game.prop[CHASM]=1;
+	game.prop[TROLL]=2;
 	DROP(BEAR,game.newloc);
 	game.fixed[BEAR]= -1;
-	PROP[BEAR]=3;
+	game.prop[BEAR]=3;
 	game.oldlc2=game.newloc;
 	 goto L99;
 
@@ -707,7 +705,7 @@ L99:	if(game.closng) goto L95;
 	if(game.numdie == MAXDIE) score(0);
 	game.place[WATER]=0;
 	game.place[OIL]=0;
-	if(TOTING(LAMP))PROP[LAMP]=0;
+	if(TOTING(LAMP))game.prop[LAMP]=0;
 	/* 98 */ for (J=1; J<=NOBJECTS; J++) {
 	I=NOBJECTS + 1 - J;
 	if(!TOTING(I)) goto L98;
@@ -734,7 +732,7 @@ L95:	RSPEAK(131);
 /*  Come here if he's been long enough at required loc(s) for some unused hint.
  *  hint number is in variable "hint".  Branch to quick test for additional
  *  conditions, then come back to do neat stuff.  Goto 40010 if conditions are
- *  met and we want to offer the hint.  Goto 40020 to clear HINTLC back to zero,
+ *  met and we want to offer the hint.  Goto 40020 to clear game.hintlc back to zero,
  *  40030 to take no action yet. */
 
 L40000:    switch (HINT-1) { case 0: goto L40100; case 1: goto L40200; case 2: goto
@@ -745,18 +743,18 @@ L40000:    switch (HINT-1) { case 0: goto L40100; case 1: goto L40200; case 2: g
  *		JADE */
 	BUG(27);
 
-L40010: HINTLC[HINT]=0;
+L40010: game.hintlc[HINT]=0;
 	if(!YES(cmdin,HINTS[HINT][3],0,54)) goto L2602;
 	SETPRM(1,HINTS[HINT][2],HINTS[HINT][2]);
 	RSPEAK(261);
 	game.hinted[HINT]=YES(cmdin,175,HINTS[HINT][4],54);
 	if(game.hinted[HINT] && game.limit > 30)game.limit=game.limit+30*HINTS[HINT][2];
-L40020: HINTLC[HINT]=0;
+L40020: game.hintlc[HINT]=0;
 L40030:  goto L2602;
 
 /*  Now for the quick tests.  See database description for one-line notes. */
 
-L40100: if(PROP[GRATE] == 0 && !HERE(KEYS)) goto L40010;
+L40100: if(game.prop[GRATE] == 0 && !HERE(KEYS)) goto L40010;
 	 goto L40020;
 
 L40200: if(game.place[BIRD] == LOC && TOTING(ROD) && game.oldobj == BIRD) goto L40010;
@@ -769,7 +767,7 @@ L40400: if(game.atloc[LOC] == 0 && game.atloc[game.oldloc] == 0 && game.atloc[ga
 		1) goto L40010;
 	 goto L40020;
 
-L40500: if(PROP[EMRALD] != -1 && PROP[PYRAM] == -1) goto L40010;
+L40500: if(game.prop[EMRALD] != -1 && game.prop[PYRAM] == -1) goto L40010;
 	 goto L40020;
 
 L40600:  goto L40010;
@@ -786,7 +784,7 @@ L40900: I=ATDWRF(LOC);
 	if(HERE(OGRE) && I == 0) goto L40010;
 	 goto L40030;
 
-L41000: if(game.tally == 1 && PROP[JADE] < 0) goto L40010;
+L41000: if(game.tally == 1 && game.prop[JADE] < 0) goto L40010;
 	 goto L40020;
 
 
@@ -825,8 +823,8 @@ L41000: if(game.tally == 1 && PROP[JADE] < 0) goto L40010;
  *  gotten the pearl, so we know the bivalve is an oyster.  *And*, the dwarves
  *  must have been activated, since we've found chest. */
 
-L10000: PROP[GRATE]=0;
-	PROP[FISSUR]=0;
+L10000: game.prop[GRATE]=0;
+	game.prop[FISSUR]=0;
 	for (I=1; I<=NDWARVES; I++) {
 	game.dseen[I]=false;
 	game.dloc[I]=0;
@@ -836,10 +834,10 @@ L10000: PROP[GRATE]=0;
 	MOVE(TROLL2,PLAC[TROLL]);
 	MOVE(TROLL2+NOBJECTS,FIXD[TROLL]);
 	JUGGLE(CHASM);
-	if(PROP[BEAR] != 3)DSTROY(BEAR);
-	PROP[CHAIN]=0;
+	if(game.prop[BEAR] != 3)DSTROY(BEAR);
+	game.prop[CHAIN]=0;
 	game.fixed[CHAIN]=0;
-	PROP[AXE]=0;
+	game.prop[AXE]=0;
 	game.fixed[AXE]=0;
 	RSPEAK(129);
 	game.clock1= -1;
@@ -858,13 +856,13 @@ L10000: PROP[GRATE]=0;
  *  objects he might be carrying (lest he have some which could cause trouble,
  *  such as the keys).  We describe the flash of light and trundle back. */
 
-L11000: PROP[BOTTLE]=PUT(BOTTLE,115,1);
-	PROP[PLANT]=PUT(PLANT,115,0);
-	PROP[OYSTER]=PUT(OYSTER,115,0);
+L11000: game.prop[BOTTLE]=PUT(BOTTLE,115,1);
+	game.prop[PLANT]=PUT(PLANT,115,0);
+	game.prop[OYSTER]=PUT(OYSTER,115,0);
 	OBJTXT[OYSTER]=3;
-	PROP[LAMP]=PUT(LAMP,115,0);
-	PROP[ROD]=PUT(ROD,115,0);
-	PROP[DWARF]=PUT(DWARF,115,0);
+	game.prop[LAMP]=PUT(LAMP,115,0);
+	game.prop[ROD]=PUT(ROD,115,0);
+	game.prop[DWARF]=PUT(DWARF,115,0);
 	LOC=115;
 	game.oldloc=115;
 	game.newloc=115;
@@ -874,13 +872,13 @@ L11000: PROP[BOTTLE]=PUT(BOTTLE,115,1);
 	I=PUT(GRATE,116,0);
 	I=PUT(SIGN,116,0);
 	OBJTXT[SIGN]=OBJTXT[SIGN]+1;
-	PROP[SNAKE]=PUT(SNAKE,116,1);
-	PROP[BIRD]=PUT(BIRD,116,1);
-	PROP[CAGE]=PUT(CAGE,116,0);
-	PROP[ROD2]=PUT(ROD2,116,0);
-	PROP[PILLOW]=PUT(PILLOW,116,0);
+	game.prop[SNAKE]=PUT(SNAKE,116,1);
+	game.prop[BIRD]=PUT(BIRD,116,1);
+	game.prop[CAGE]=PUT(CAGE,116,0);
+	game.prop[ROD2]=PUT(ROD2,116,0);
+	game.prop[PILLOW]=PUT(PILLOW,116,0);
 
-	PROP[MIRROR]=PUT(MIRROR,115,0);
+	game.prop[MIRROR]=PUT(MIRROR,115,0);
 	game.fixed[MIRROR]=116;
 
 	for (I=1; I<=NOBJECTS; I++) {
@@ -899,7 +897,7 @@ L11000: PROP[BOTTLE]=PUT(BOTTLE,115,1);
  *  out.  Even then, he can explore outside for a while if desired. */
 
 L12000: RSPEAK(188);
-	PROP[BATTER]=1;
+	game.prop[BATTER]=1;
 	if(TOTING(BATTER))DROP(BATTER,LOC);
 	game.limit=game.limit+2500;
 	game.lmwarn=false;
@@ -909,12 +907,12 @@ L12200: if(game.lmwarn || !HERE(LAMP)) goto L19999;
 	game.lmwarn=true;
 	SPK=187;
 	if(game.place[BATTER] == 0)SPK=183;
-	if(PROP[BATTER] == 1)SPK=189;
+	if(game.prop[BATTER] == 1)SPK=189;
 	RSPEAK(SPK);
 	 goto L19999;
 
 L12400: game.limit= -1;
-	PROP[LAMP]=0;
+	game.prop[LAMP]=0;
 	if(HERE(LAMP))RSPEAK(184);
 	 goto L19999;
 

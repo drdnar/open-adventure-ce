@@ -39,8 +39,8 @@ void score(long MODE) {
 	K=12;
 	if(I == CHEST)K=14;
 	if(I > CHEST)K=16;
-	if(PROP[I] >= 0)SCORE=SCORE+2;
-	if(game.place[I] == 3 && PROP[I] == 0)SCORE=SCORE+K-2;
+	if(game.prop[I] >= 0)SCORE=SCORE+2;
+	if(game.place[I] == 3 && game.prop[I] == 0)SCORE=SCORE+K-2;
 	MXSCOR=MXSCOR+K;
 L20010: /*etc*/ ;
 	} /* end loop */

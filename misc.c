@@ -115,7 +115,7 @@ void PSPEAK(vocab_t MSG,int SKIP) {
 long I, M;
 
 /*  Find the skip+1st message from msg and print it.  MSG should be the index of
- *  the inventory message for object.  (INVEN+N+1 message is PROP=N message). */
+ *  the inventory message for object.  (INVEN+N+1 message is game.prop=N message). */
 
 
 	M=PTEXT[MSG];
@@ -537,7 +537,7 @@ long PUT(long OBJECT, long WHERE, long PVAL) {
 long X;
 
 /*  PUT is the same as MOVE, except it returns a value used to set up the
- *  negated PROP values for the repository objects. */
+ *  negated game.prop values for the repository objects. */
 
 	MOVE(OBJECT,WHERE);
 	X=(-1)-PVAL;

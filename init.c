@@ -16,12 +16,12 @@
  *	885 travel options (TRAVEL, TRVSIZ).
  *	330 vocabulary words (KTAB, ATAB, TABSIZ).
  *	185 locations (LTEXT, STEXT, KEY, COND, abbrev, game.atloc, LOCSND, LOCSIZ).
- *	100 objects (PLAC, game.place, FIXD, game.fixed, game.link (TWICE), PTEXT, PROP,
+ *	100 objects (PLAC, game.place, FIXD, game.fixed, game.link (TWICE), PTEXT, game.prop,
  *                    OBJSND, OBJTXT).
  *	 35 "action" verbs (ACTSPK, VRBSIZ).
  *	277 random messages (RTEXT, RTXSIZ).
  *	 12 different player classifications (CTEXT, CVAL, CLSMAX).
- *	 20 hints (HINTLC, game.hinted, HINTS, HNTSIZ).
+ *	 20 hints (game.hintlc, game.hinted, HINTS, HNTSIZ).
  *         5 "# of turns" threshholds (TTEXT, TRNVAL, TRNSIZ).
  *  There are also limits which cannot be exceeded due to the structure of
  *  the database.  (E.G., The vocabulary uses n/1000 to determine word type,
@@ -62,9 +62,9 @@
  *		If M=100	unconditional, but forbidden to dwarves.
  *		If 100<M<=200	he must be carrying object M-100.
  *		If 200<M<=300	must be carrying or in same room as M-200.
- *		If 300<M<=400	PROP(M % 100) must *not* be 0.
- *		If 400<M<=500	PROP(M % 100) must *not* be 1.
- *		If 500<M<=600	PROP(M % 100) must *not* be 2, etc.
+ *		If 300<M<=400	game.prop(M % 100) must *not* be 0.
+ *		If 400<M<=500	game.prop(M % 100) must *not* be 1.
+ *		If 500<M<=600	game.prop(M % 100) must *not* be 2, etc.
  *	If the condition (if any) is not met, then the next *different*
  *	"destination" value is used (unless it fails to meet *its* conditions,
  *	in which case the next is found, etc.).  Typically, the next dest will
@@ -76,8 +76,8 @@
  *	him to 22 if he's carrying object 10, and otherwise will go to 14.
  *		11	303008	49
  *		11	9	50
- *	This says that, from 11, 49 takes him to 8 unless PROP(3)=0, in which
- *	case he goes to 9.  Verb 50 takes him to 9 regardless of PROP(3).
+ *	This says that, from 11, 49 takes him to 8 unless game.prop(3)=0, in which
+ *	case he goes to 9.  Verb 50 takes him to 9 regardless of game.prop(3).
  *  Section 4: Vocabulary.  Each line contains a number (n), a tab, and a
  *	five-letter word.  Call M=N/1000.  If M=0, then the word is a motion
  *	verb for use in travelling (see section 3).  Else, if M=1, the word is
@@ -142,8 +142,8 @@
  *	2 (call them N and S), N is a location and message ABS(S) from section
  *	6 is the sound heard there.  If S<0, the sound there drowns out all
  *	other noises.  If 3 numbers (call them N, S, and T), N is an object
- *	number and S+PROP(N) is the property message (from section 5) if he
- *	listens to the object, and T+PROP(N) is the text if he reads it.  If
+ *	number and S+game.prop(N) is the property message (from section 5) if he
+ *	listens to the object, and T+game.prop(N) is the text if he reads it.  If
  *	S or T is -1, the object has no sound or text, respectively.  Neither
  *	S nor T is allowed to be 0.
  *  Section 14: Turn threshholds.  Each line contains a number (N), a tab, and
@@ -181,7 +181,7 @@ void initialise(void) {
 static int finish_init(void) {
 	for (I=1; I<=100; I++) {
 	game.place[I]=0;
-	PROP[I]=0;
+	game.prop[I]=0;
 	game.link[I]=0;
 	{long x = I+NOBJECTS; game.link[x]=0;}
 	} /* end loop */
@@ -223,16 +223,16 @@ L1106:	/*etc*/ ;
 	MAXTRS=79;
 	game.tally=0;
 	for (I=50; I<=MAXTRS; I++) {
-	if(PTEXT[I] != 0)PROP[I]= -1;
-	game.tally=game.tally-PROP[I];
+	if(PTEXT[I] != 0)game.prop[I]= -1;
+	game.tally=game.tally-game.prop[I];
 	} /* end loop */
 
-/*  Clear the hint stuff.  HINTLC[I] is how long he's been at LOC with cond bit
+/*  Clear the hint stuff.  game.hintlc[I] is how long he's been at LOC with cond bit
  *  I.  game.hinted[I] is true iff hint I has been used. */
 
 	for (I=1; I<=HNTMAX; I++) {
 	game.hinted[I]=false;
-	HINTLC[I]=0;
+	game.hintlc[I]=0;
 	} /* end loop */
 
 /*  Define some handy mnemonics.  These correspond to object numbers. */

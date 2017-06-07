@@ -262,7 +262,7 @@ int read_database(FILE* database) {
  *  the word following the end of the line).  The pointer is negative if this is
  *  first line of a message.  The text-pointer arrays contain indices of
  *  pointer-words in lines.  STEXT(N) is short description of location N.
- *  LTEXT(N) is long description.  PTEXT(N) points to message for PROP(N)=0.
+ *  LTEXT(N) is long description.  PTEXT(N) points to message for game.prop(N)=0.
  *  Successive prop messages are found by chasing pointers.  RTEXT contains
  *  section 6's stuff.  CTEXT(N) points to a player-class message.  TTEXT is for
  *  section 14.  We also clear COND (see description of section 9 for details). */
@@ -507,7 +507,7 @@ void read_sound_text(FILE* database)
 /*  Finish constructing internal data format */
 
 /*  Having read in the database, certain things are now constructed.
- *  PROPS are set to zero.  We finish setting up COND by checking for
+ *  game.propS are set to zero.  We finish setting up COND by checking for
  *  forced-motion travel entries.  The PLAC and FIXD arrays are used
  *  to set up game.atloc(N) as the first object at location N, and
  *  game.link(OBJ) as the next object at the same location as OBJ.
