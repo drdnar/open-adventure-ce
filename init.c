@@ -32,7 +32,7 @@
 
 /* Note: 
  *  - the object count limit has been abstracted as NOBJECTS
- *  - the random message limit has been abstracted as RTXSIZE
+ *  - the random message limit has been abstracted as RTXSIZ
  *  - maximum locations limit has been abstracted as LOCSIZ
  */
 

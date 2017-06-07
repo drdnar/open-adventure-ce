@@ -61,9 +61,7 @@ struct game_t {
 
 extern struct game_t game;
 
-extern long ATLOC[], FIXED[],
-		LINK[], LNLENG, LNPOSN,
-		PARMS[], PLACE[];
+extern long ATLOC[], FIXED[], LINK[], LNLENG, LNPOSN, PARMS[], PLACE[];
 extern char rawbuf[LINESIZE], INLINE[LINESIZE+1], MAP1[], MAP2[];
 extern FILE *logfp;
 extern bool oldstyle;
