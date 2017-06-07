@@ -388,7 +388,7 @@ L9160:	if(OBJ != LAMP)SPK=76;
 
 /*  Throw moved into separate module. */
 
-L9170:	return(throw(input));
+L9170:	return(throw(input, OBJ));
 
 /*  Quit.  Intransitive only.  Verify intent and exit if that's what he wants. */
 

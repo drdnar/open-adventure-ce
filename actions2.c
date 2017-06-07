@@ -213,12 +213,12 @@ L9128:	RSPEAK(SPK);
  *  and if dwarf is present then one might be killed.  (Only way to do so!)
  *  Axe also special for dragon, bear, and troll.  Treasures special for troll. */
 
-int throw(FILE *cmdin) {
-	if(TOTING(ROD2) && OBJ == ROD && !TOTING(ROD))OBJ=ROD2;
-	if(!TOTING(OBJ)) return(2011);
-	if(OBJ >= 50 && OBJ <= MAXTRS && AT(TROLL)) goto L9178;
-	if(OBJ == FOOD && HERE(BEAR)) goto L9177;
-	if(OBJ != AXE) return(discard(false));
+int throw(FILE *cmdin, long obj) {
+	if(TOTING(ROD2) && obj == ROD && !TOTING(ROD))obj=ROD2;
+	if(!TOTING(obj)) return(2011);
+	if(obj >= 50 && obj <= MAXTRS && AT(TROLL)) goto L9178;
+	if(obj == FOOD && HERE(BEAR)) goto L9177;
+	if(obj != AXE) return(discard(false));
 	I=ATDWRF(game.loc);
 	if(I > 0) goto L9172;
 	SPK=152;
@@ -228,8 +228,8 @@ int throw(FILE *cmdin) {
 	SPK=203;
 	if(AT(OGRE)) goto L9175;
 	if(HERE(BEAR) && game.prop[BEAR] == 0) goto L9176;
-	OBJ=0;
-	return(attack(cmdin, OBJ));
+	obj=0;
+	return(attack(cmdin, obj));
 
 L9172:	SPK=48;
 	if(randrange(NDWARVES+1) < game.dflag) goto L9175;
@@ -252,12 +252,12 @@ L9176:	SPK=164;
 	 return(2011);
 
 /*  But throwing food is another story. */
-L9177:	OBJ=BEAR;
+L9177:	obj=BEAR;
 	return(feed());
 
 L9178:	SPK=159;
 /*  Snarf a treasure for the troll. */
-	DROP(OBJ,0);
+	DROP(obj,0);
 	MOVE(TROLL,0);
 	MOVE(TROLL+NOBJECTS,0);
 	DROP(TROLL2,PLAC[TROLL]);
