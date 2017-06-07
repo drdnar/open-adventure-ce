@@ -6,9 +6,9 @@
  * scoring and wrap-up
  */
 
-void score(long MODE) {
+void score(long mode) {
 /* arg is <0 if scoring, >0 if quitting, =0 if died or won */
-	long MXSCOR = 0;
+	long mxscor = 0;
 
 /*  The present scoring algorithm is as follows:
  *     Objective:          Points:        Present total possible:
@@ -18,7 +18,7 @@ void score(long MODE) {
  *  Each treasure > chest    16                   224
  *  Surviving             (MAX-NUM)*10             30
  *  Not quitting              4                     4
- *  Reaching "game.closng"        25                    25
+ *  Reaching "game.closng"   25                    25
  *  "Closed": Quit/Killed    10
  *            Klutzed        25
  *            Wrong way      30
@@ -30,67 +30,73 @@ void score(long MODE) {
  *  saving intermediate positions. */
 
 	SCORE=0;
-	MXSCOR=0;
+	mxscor=0;
 
 /*  First tally up the treasures.  Must be in building and not broken.
  *  Give the poor guy 2 points just for finding each treasure. */
 
-	/* 20010 */ for (I=50; I<=MAXTRS; I++) {
-	if(PTEXT[I] == 0) goto L20010;
-	K=12;
-	if(I == CHEST)K=14;
-	if(I > CHEST)K=16;
-	if(game.prop[I] >= 0)SCORE=SCORE+2;
-	if(game.place[I] == 3 && game.prop[I] == 0)SCORE=SCORE+K-2;
-	MXSCOR=MXSCOR+K;
-L20010: /*etc*/ ;
+	for (I=50; I<=MAXTRS; I++) {
+		if(PTEXT[I] != 0) {
+			K=12;
+			if(I == CHEST)K=14;
+			if(I > CHEST)K=16;
+			if(game.prop[I] >= 0)
+				SCORE=SCORE+2;
+			if(game.place[I] == 3 && game.prop[I] == 0)
+				SCORE=SCORE+K-2;
+			mxscor=mxscor+K;
+		}
 	} /* end loop */
 
-/*  Now look at how he finished and how far he got.  MAXDIE and game.numdie tell us
- *  how well he survived.  game.dflag will
- *  tell us if he ever got suitably deep into the cave.  game.closng still indicates
- *  whether he reached the endgame.  And if he got as far as "cave closed"
- *  (indicated by "game.closed"), then bonus is zero for mundane exits or 133, 134,
- *  135 if he blew it (so to speak). */
+/*  Now look at how he finished and how far he got.  MAXDIE and
+ *  game.numdie tell us how well he survived.  game.dflag will tell us
+ *  if he ever got suitably deep into the cave.  game.closng still
+ *  indicates whether he reached the endgame.  And if he got as far as
+ *  "cave closed" (indicated by "game.closed"), then bonus is zero for
+ *  mundane exits or 133, 134, 135 if he blew it (so to speak). */
 
 	SCORE=SCORE+(MAXDIE-game.numdie)*10;
-	MXSCOR=MXSCOR+MAXDIE*10;
-	if(MODE == 0)SCORE=SCORE+4;
-	MXSCOR=MXSCOR+4;
+	mxscor=mxscor+MAXDIE*10;
+	if(mode == 0)SCORE=SCORE+4;
+	mxscor=mxscor+4;
 	if(game.dflag != 0)SCORE=SCORE+25;
-	MXSCOR=MXSCOR+25;
+	mxscor=mxscor+25;
 	if(game.closng)SCORE=SCORE+25;
-	MXSCOR=MXSCOR+25;
-	if(!game.closed) goto L20020;
-	if(game.bonus == 0)SCORE=SCORE+10;
-	if(game.bonus == 135)SCORE=SCORE+25;
-	if(game.bonus == 134)SCORE=SCORE+30;
-	if(game.bonus == 133)SCORE=SCORE+45;
-L20020: MXSCOR=MXSCOR+45;
+	mxscor=mxscor+25;
+	if(game.closed) {
+		if(game.bonus == 0)SCORE=SCORE+10;
+		if(game.bonus == 135)SCORE=SCORE+25;
+		if(game.bonus == 134)SCORE=SCORE+30;
+		if(game.bonus == 133)SCORE=SCORE+45;
+	}
+	mxscor=mxscor+45;
 
 /*  Did he come to Witt's End as he should? */
 
-	if(game.place[MAGZIN] == 108)SCORE=SCORE+1;
-	MXSCOR=MXSCOR+1;
+	if(game.place[MAGZIN] == 108)
+		SCORE=SCORE+1;
+	mxscor=mxscor+1;
 
 /*  Round it off. */
 
 	SCORE=SCORE+2;
-	MXSCOR=MXSCOR+2;
+	mxscor=mxscor+2;
 
 /*  Deduct for hints/turns/saves.  Hints < 4 are special; see database desc. */
 
 	for (I=1; I<=HNTMAX; I++) {
-	if(game.hinted[I])SCORE=SCORE-HINTS[I][2];
+		if(game.hinted[I])SCORE=SCORE-HINTS[I][2];
 	} /* end loop */
-	if(game.novice)SCORE=SCORE-5;
-	if(game.clshnt)SCORE=SCORE-10;
+	if(game.novice)
+		SCORE=SCORE-5;
+	if(game.clshnt)
+		SCORE=SCORE-10;
 	SCORE=SCORE-game.trnluz-game.saved;
 
 /*  Return to score command if that's where we came from. */
 
-	if(MODE < 0) {
-		SETPRM(1,SCORE,MXSCOR);
+	if(mode < 0) {
+		SETPRM(1,SCORE,mxscor);
 		SETPRM(3,game.turns,game.turns);
 		RSPEAK(259);
 		return;
@@ -98,17 +104,16 @@ L20020: MXSCOR=MXSCOR+45;
 
 /*  that should be good enough.  Let's tell him all about it. */
 
-	if(SCORE+game.trnluz+1 >= MXSCOR && game.trnluz != 0)RSPEAK(242);
-	if(SCORE+game.saved+1 >= MXSCOR && game.saved != 0)RSPEAK(143);
-	SETPRM(1,SCORE,MXSCOR);
+	if(SCORE+game.trnluz+1 >= mxscor && game.trnluz != 0)RSPEAK(242);
+	if(SCORE+game.saved+1 >= mxscor && game.saved != 0)RSPEAK(143);
+	SETPRM(1,SCORE,mxscor);
 	SETPRM(3,game.turns,game.turns);
 	RSPEAK(262);
 	for (I=1; I<=CLSSES; I++) {
-	if(CVAL[I] >= SCORE) goto L20210;
-	/*etc*/ ;
+		if(CVAL[I] >= SCORE) goto L20210;
 	} /* end loop */
 	SPK=265;
-	 goto L25000;
+	goto L25000;
 
 L20210: SPEAK(CTEXT[I]);
 	SPK=264;
