@@ -201,7 +201,7 @@ L9040:	if(OBJ == CLAM || OBJ == OYSTER) goto L9046;
 	if(OBJ == CHAIN) goto L9048;
 	if(!CLOSNG) goto L9043;
 	K=130;
-	if(!PANIC)CLOCK2=15;
+	if(!PANIC)game.clock2=15;
 	PANIC=true;
 	 return(2010);
 
@@ -533,7 +533,7 @@ L8305:	DATIME(&I,&K);
  *  suspended or resumed are guaranteed to match.  If unsure whether a value
  *  needs to be saved, include it.  Overkill can't hurt.  Pad the last savwds
  *  with junk variables to bring it up to 7 values. */
-	SAVWDS(ABBNUM,BLKLIN,BONUS,CLOCK1,CLOCK2,CLOSED,CLOSNG);
+	SAVWDS(ABBNUM,BLKLIN,BONUS,game.clock1,game.clock2,CLOSED,CLOSNG);
 	SAVWDS(DETAIL,DFLAG,DKILL,DTOTAL,FOOBAR,HOLDNG,IWEST);
 	SAVWDS(KNFLOC,LIMIT,LL,LMWARN,LOC,NEWLOC,NUMDIE);
 	SAVWDS(OBJ,game.oldlc2,game.oldloc,OLDOBJ,PANIC,SAVED,SETUP);

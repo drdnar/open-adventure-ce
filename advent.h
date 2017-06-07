@@ -14,6 +14,8 @@ typedef long token_t;	/* word token - someday this will be char[TOKLEN+1] */
 typedef long vocab_t;	/* index into a vocabulary array */
 
 struct game_t {
+    long clock1;
+    long clock2;
     long oldloc;
     long oldlc2;
     long zzword;
@@ -91,7 +93,7 @@ extern void score(long);
 extern long ABBNUM, AMBER, ATTACK, AXE, BACK, BATTER, BEAR,
    BIRD, BLOOD, BONUS,
    BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST, CHLOC, CHLOC2,
-   CLAM, CLOCK1, CLOCK2, CLOSED, CLOSNG, CLSHNT,
+   CLAM, CLOSED, CLOSNG, CLSHNT,
    COINS, CONDS, DALTLC, DETAIL,
    DKILL, DOOR, DPRSSN, DRAGON, DTOTAL, DWARF, EGGS,
    EMRALD, ENTER, ENTRNC, FIND, FISSUR, FOOBAR, FOOD,

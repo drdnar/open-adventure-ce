@@ -345,8 +345,8 @@ L1106:	/*etc*/ ;
 /*  Other random flags and counters, as follows:
  *	ABBNUM	How often we should print non-abbreviated descriptions
  *	BONUS	Used to determine amount of bonus if he reaches closing
- *	CLOCK1	Number of turns from finding last treasure till closing
- *	CLOCK2	Number of turns from first warning till blinding flash
+ *	game.clock1	Number of turns from finding last treasure till closing
+ *	game.clock2	Number of turns from first warning till blinding flash
  *	CONDS	Min value for cond(loc) if loc has any hints
  *	DETAIL	How often we've said "not allowed to give more detail"
  *	DKILL	Number of dwarves killed (unused in scoring, needed for msg)
@@ -383,8 +383,8 @@ L1106:	/*etc*/ ;
 	DKILL=0;
 	FOOBAR=0;
 	BONUS=0;
-	CLOCK1=30;
-	CLOCK2=50;
+	game.clock1=30;
+	game.clock2=50;
 	CONDS=SETBIT(11);
 	SAVED=0;
 	CLOSNG=false;

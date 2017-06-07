@@ -29,7 +29,7 @@
 #define FOREST(LOC)	((LOC) >= 145 && (LOC) <= 166)
 #define VOCWRD(LETTRS,SECT)	(VOCAB(MAKEWD(LETTRS),SECT))
 
-/*  The following two functions were added to fix a bug (CLOCK1 decremented
+/*  The following two functions were added to fix a bug (game.clock1 decremented
  *  while in forest).  They should probably be replaced by using another
  *  "cond" bit.  For now, however, a quick fix...  OUTSID(LOC) is true if
  *  LOC is outside, INDEEP(LOC) is true if LOC is "deep" in the cave (hall

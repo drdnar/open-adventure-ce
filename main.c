@@ -22,9 +22,8 @@ long ABB[186], ATLOC[186], BLKLIN = true, DFLAG,
 char rawbuf[LINESIZE], INLINE[LINESIZE+1], MAP1[129], MAP2[129];
 
 long ABBNUM, AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD, BONUS,
-		 BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST, CHLOC, CHLOC2,
-		CLAM, CLOCK1, CLOCK2, CLOSED, CLOSNG, CLSHNT,
-		COINS, CONDS, DALTLC, DETAIL,
+		BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST, CHLOC, CHLOC2,
+		CLAM, CLOSED, CLOSNG, CLSHNT, COINS, CONDS, DALTLC, DETAIL,
 		DKILL, DOOR, DPRSSN, DRAGON, DTOTAL, DWARF, EGGS,
 		EMRALD, ENTER, ENTRNC, FIND, FISSUR, FOOBAR, FOOD,
 		GRATE, HINT, HINTED[21], HINTLC[21],
@@ -173,7 +172,7 @@ static bool do_command(FILE *cmdin) {
 	if(!OUTSID(NEWLOC) || NEWLOC == 0 || !CLOSNG) goto L71;
 	RSPEAK(130);
 	NEWLOC=LOC;
-	if(!PANIC)CLOCK2=15;
+	if(!PANIC)game.clock2=15;
 	PANIC=true;
 
 /*  See if a dwarf has seen him and has come from where he wants to go.  If so,
@@ -407,7 +406,7 @@ L2602:	/*etc*/ ;
 /*  If closing time, check for any objects being toted with PROP < 0 and set
  *  the prop to -1-PROP.  This way objects won't be described until they've
  *  been picked up and put down separate from their respective piles.  Don't
- *  tick CLOCK1 unless well into cave (and not at Y2). */
+ *  tick game.clock1 unless well into cave (and not at Y2). */
 
 L2603:	if(!CLOSED) goto L2605;
 	if(PROP[OYSTER] < 0 && TOTING(OYSTER))PSPEAK(OYSTER,1);
@@ -435,10 +434,10 @@ L2607:	FOOBAR=(FOOBAR>0 ? -FOOBAR : 0);
 	}
 	if(VERB == SAY && WD2 > 0)VERB=0;
 	if(VERB == SAY) goto L4090;
-	if(TALLY == 0 && INDEEP(LOC) && LOC != 33)CLOCK1=CLOCK1-1;
-	if(CLOCK1 == 0) goto L10000;
-	if(CLOCK1 < 0)CLOCK2=CLOCK2-1;
-	if(CLOCK2 == 0) goto L11000;
+	if(TALLY == 0 && INDEEP(LOC) && LOC != 33)game.clock1=game.clock1-1;
+	if(game.clock1 == 0) goto L10000;
+	if(game.clock1 < 0)game.clock2=game.clock2-1;
+	if(game.clock2 == 0) goto L11000;
 	if(PROP[LAMP] == 1)LIMIT=LIMIT-1;
 	if(LIMIT <= 30 && HERE(BATTER) && PROP[BATTER] == 0 && HERE(LAMP)) goto
 		L12000;
@@ -519,11 +518,13 @@ L8000:	SETPRM(1,WD1,WD1X);
 
 /*  Figure out the new location
  *
- *  Given the current location in "LOC", and a motion verb number in "K", put
- *  the new location in "NEWLOC".  The current loc is saved in "OLgame.dloc" in case
- *  he wants to retreat.  The current OLgame.dloc is saved in game.oldlc2, in case he
- *  dies.  (if he does, NEWLOC will be limbo, and OLgame.dloc will be what killed
- *  him, so we need game.oldlc2, which is the last place he was safe.) */
+ *  Given the current location in "LOC", and a motion verb number in
+ *  "K", put the new location in "NEWLOC".  The current loc is saved
+ *  in "game.olddloc" in case he wants to retreat.  The current
+ *  game.oldloc is saved in game.oldlc2, in case he dies.  (if he
+ *  does, NEWLOC will be limbo, and OLgame.dloc will be what killed
+ *  him, so we need game.oldlc2, which is the last place he was
+ *  safe.) */
 
 L8:	KK=KEY[LOC];
 	NEWLOC=LOC;
@@ -851,7 +852,7 @@ L10000: PROP[GRATE]=0;
 	PROP[AXE]=0;
 	FIXED[AXE]=0;
 	RSPEAK(129);
-	CLOCK1= -1;
+	game.clock1= -1;
 	CLOSNG=true;
 	 goto L19999;
 
