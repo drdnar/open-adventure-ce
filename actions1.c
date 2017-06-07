@@ -539,7 +539,7 @@ L8305:	DATIME(&I,&K);
 	SAVWDS(game.knfloc,game.limit,K,game.lmwarn,game.loc,game.newloc,game.numdie);
 	SAVWDS(K,game.oldlc2,game.oldloc,game.oldobj,game.panic,game.saved,game.setup);
 	SAVWDS(SPK,game.tally,game.thresh,game.trndex,game.trnluz,game.turns,OBJTXT[OYSTER]);
-	SAVWDS(VERB,WD1,WD1X,WD2,game.wzdark,game.zzword,OBJSND[BIRD]);
+	SAVWDS(K,WD1,WD1X,WD2,game.wzdark,game.zzword,OBJSND[BIRD]);
 	SAVWDS(OBJTXT[SIGN],game.clshnt,game.novice,K,K,K,K);
 	SAVARR(game.abbrev,LOCSIZ);
 	SAVARR(game.atloc,LOCSIZ);
