@@ -12,122 +12,147 @@
 
 /*  I/O routines (SPEAK, PSPEAK, RSPEAK, SETPRM, GETIN, YES) */
 
-void SPEAK(vocab_t N) {
-long BLANK, CASE, I, K, L, NEG, NPARMS, PARM, PRMTYP, STATE;
-
+void SPEAK(vocab_t N)
 /*  Print the message which starts at LINES(N).  Precede it with a blank line
  *  unless game.blklin is false. */
+{
+    long blank, casemake, I, K, L, NEG, NPARMS, PARM, PRMTYP, state;
 
-	if(N == 0)return;
-	BLANK=game.blklin;
-	K=N;
-	NPARMS=1;
-L10:	L=labs(LINES[K])-1;
-	K=K+1;
-	LNLENG=0;
-	LNPOSN=1;
-	STATE=0;
-	for (I=K; I<=L; I++) {
-		PUTTXT(LINES[I],STATE,2);
-	} /* end loop */
-	LNPOSN=0;
-L30:	LNPOSN=LNPOSN+1;
-L32:	if(LNPOSN > LNLENG) goto L40;
-	if(INLINE[LNPOSN] != 63) goto L30;
-	{long x = LNPOSN+1; PRMTYP=INLINE[x];}
-/*  63 is a "%"; the next character determine the type of parameter:  1 (!) =
- *  suppress message completely, 29 (S) = NULL If PARM=1, else 'S' (optional
- *  plural ending), 33 (W) = word (two 30-bit values) with trailing spaces
- *  suppressed, 22 (L) or 31 (U) = word but map to lower/upper case, 13 (C) =
- *  word in lower case with first letter capitalised, 30 (T) = text ending
- *  with a word of -1, 65-73 (1-9) = number using that many characters,
- *  12 (B) = variable number of blanks. */
-	if(PRMTYP == 1)return;
-	if(PRMTYP == 29) goto L320;
-	if(PRMTYP == 30) goto L340;
-	if(PRMTYP == 12) goto L360;
-	if(PRMTYP == 33 || PRMTYP == 22 || PRMTYP == 31 || PRMTYP == 13) goto
-		L380;
-	PRMTYP=PRMTYP-64;
-	if(PRMTYP < 1 || PRMTYP > 9) goto L30;
-	SHFTXT(LNPOSN+2,PRMTYP-2);
-	LNPOSN=LNPOSN+PRMTYP;
-	PARM=labs(PARMS[NPARMS]);
-	NEG=0;
-	if(PARMS[NPARMS] < 0)NEG=9;
-	/* 390 */ for (I=1; I<=PRMTYP; I++) {
+    if (N == 0)
+	return;
+    blank=game.blklin;
+    K=N;
+    NPARMS=1;
+L10:
+    L=labs(LINES[K])-1;
+    K=K+1;
+    LNLENG=0;
+    LNPOSN=1;
+    state=0;
+    for (I=K; I<=L; I++) {
+	PUTTXT(LINES[I],state,2);
+    } /* end loop */
+    LNPOSN=0;
+L30:
+    LNPOSN=LNPOSN+1;
+L32:
+    if(LNPOSN > LNLENG) 
+	goto L40;
+    if(INLINE[LNPOSN] != 63) 
+	goto L30;
+    {long x = LNPOSN+1; PRMTYP=INLINE[x];}
+    /*  63 is a "%"; the next character determine the type of
+     *  parameter: 1 (!) = suppress message completely, 29 (S) = NULL
+     *  If PARM=1, else 'S' (optional plural ending), 33 (W) = word
+     *  (two 30-bit values) with trailing spaces suppressed, 22 (L) or
+     *  31 (U) = word but map to lower/upper case, 13 (C) = word in
+     *  lower case with first letter capitalised, 30 (T) = text ending
+     *  with a word of -1, 65-73 (1-9) = number using that many
+     *  characters, 12 (B) = variable number of blanks. */
+    if(PRMTYP == 1)
+	return;
+    if(PRMTYP == 29)
+	goto L320;
+    if(PRMTYP == 30)
+	goto L340;
+    if(PRMTYP == 12)
+	goto L360;
+    if(PRMTYP == 33 || PRMTYP == 22 || PRMTYP == 31 || PRMTYP == 13)
+	goto L380;
+    PRMTYP=PRMTYP-64;
+    if(PRMTYP < 1 || PRMTYP > 9) goto L30;
+    SHFTXT(LNPOSN+2,PRMTYP-2);
+    LNPOSN=LNPOSN+PRMTYP;
+    PARM=labs(PARMS[NPARMS]);
+    NEG=0;
+    if(PARMS[NPARMS] < 0)
+	NEG=9;
+    /* 390 */ for (I=1; I<=PRMTYP; I++) {
 	LNPOSN=LNPOSN-1;
 	INLINE[LNPOSN]=MOD(PARM,10)+64;
-	if(I == 1 || PARM != 0) goto L390;
+	if(I == 1 || PARM != 0)
+	    goto L390;
 	INLINE[LNPOSN]=NEG;
 	NEG=0;
-L390:	PARM=PARM/10;
-	} /* end loop */
-	LNPOSN=LNPOSN+PRMTYP;
-L395:	NPARMS=NPARMS+1;
-	 goto L32;
+L390:
+	PARM=PARM/10;
+    }
+    LNPOSN=LNPOSN+PRMTYP;
+L395:
+    NPARMS=NPARMS+1;
+    goto L32;
 
-L320:	SHFTXT(LNPOSN+2,-1);
-	INLINE[LNPOSN]=55;
-	if(PARMS[NPARMS] == 1)SHFTXT(LNPOSN+1,-1);
-	 goto L395;
+L320:
+    SHFTXT(LNPOSN+2,-1);
+    INLINE[LNPOSN]=55;
+    if(PARMS[NPARMS] == 1)
+	SHFTXT(LNPOSN+1,-1);
+    goto L395;
 
-L340:	SHFTXT(LNPOSN+2,-2);
-	STATE=0;
-	CASE=2;
-L345:	if(PARMS[NPARMS] < 0) goto L395;
-	{long x = NPARMS+1; if(PARMS[x] < 0)CASE=0;}
-	PUTTXT(PARMS[NPARMS],STATE,CASE);
-	NPARMS=NPARMS+1;
-	 goto L345;
+L340:
+    SHFTXT(LNPOSN+2,-2);
+    state=0;
+    casemake=2;
+L345: 
+    if(PARMS[NPARMS] < 0) goto L395;
+    {long x = NPARMS+1; if(PARMS[x] < 0)
+			    casemake=0;}
+    PUTTXT(PARMS[NPARMS],state,casemake);
+    NPARMS=NPARMS+1;
+    goto L345;
 
-L360:	PRMTYP=PARMS[NPARMS];
-	SHFTXT(LNPOSN+2,PRMTYP-2);
-	if(PRMTYP == 0) goto L395;
-	for (I=1; I<=PRMTYP; I++) {
+L360:
+    PRMTYP=PARMS[NPARMS];
+    SHFTXT(LNPOSN+2,PRMTYP-2);
+    if(PRMTYP == 0) goto L395;
+    for (I=1; I<=PRMTYP; I++) {
 	INLINE[LNPOSN]=0;
 	LNPOSN=LNPOSN+1;
-	} /* end loop */
-	 goto L395;
+    }
+    goto L395;
 
-L380:	SHFTXT(LNPOSN+2,-2);
-	STATE=0;
-	CASE= -1;
-	if(PRMTYP == 31)CASE=1;
-	if(PRMTYP == 33)CASE=0;
-	I=LNPOSN;
-	PUTTXT(PARMS[NPARMS],STATE,CASE);
-	{long x = NPARMS+1; PUTTXT(PARMS[x],STATE,CASE);}
-	if(PRMTYP == 13 && INLINE[I] >= 37 && INLINE[I] <=
-		62)INLINE[I]=INLINE[I]-26;
-	NPARMS=NPARMS+2;
-	 goto L32;
+L380:
+    SHFTXT(LNPOSN+2,-2);
+    state=0;
+    casemake= -1;
+    if(PRMTYP == 31)
+	casemake=1;
+    if(PRMTYP == 33)
+	casemake=0;
+    I=LNPOSN;
+    PUTTXT(PARMS[NPARMS],state,casemake);
+    {long x = NPARMS+1; PUTTXT(PARMS[x],state,casemake);}
+    if(PRMTYP == 13 && INLINE[I] >= 37 && INLINE[I] <=
+       62)INLINE[I]=INLINE[I]-26;
+    NPARMS=NPARMS+2;
+    goto L32;
 
-L40:	if(BLANK)TYPE0();
-	BLANK=false;
-	TYPE();
-	K=L+1;
-	if(LINES[K] >= 0) goto L10;
-	return;
+L40:	
+    if (blank)
+	TYPE0();
+    blank=false;
+    TYPE();
+    K=L+1;
+    if(LINES[K] >= 0)
+	goto L10;
 }
 
-void PSPEAK(vocab_t MSG,int SKIP)
-/*  Find the skip+1st message from msg and print it.  MSG should be
+void PSPEAK(vocab_t msg,int skip)
+/*  Find the skip+1st message from msg and print it.  msg should be
  *  the index of the inventory message for object.  (INVEN+N+1 message
  *  is game.prop=N message). */
 {
-	long I, M;
+    long I, M;
 
-	M=PTEXT[MSG];
-	if(SKIP < 0)
-	    goto L9;
-	for (I=0; I<=SKIP; I++) {
-L1:	M=labs(LINES[M]);
-	if(LINES[M] >= 0)
-	    goto L1;
+    M=PTEXT[msg];
+    if(skip >= 0) {
+	for (I=0; I<=skip; I++) {
+L1:	    M=labs(LINES[M]);
+	    if (LINES[M] >= 0)
+		goto L1;
 	}
-L9:	SPEAK(M);
-	return;
+    }
+    SPEAK(M);
 }
 void RSPEAK(vocab_t i)
 /* Print the i-th "random" message (section 6 of database). */
@@ -153,22 +178,24 @@ void SETPRM(long first, long p1, long p2)
 #define WORD1X (*wORD1X)
 #define WORD2 (*wORD2)
 #define WORD2X (*wORD2X)
-bool fGETIN(FILE *input, long *wORD1, long *wORD1X, long *wORD2, long *wORD2X) {
-long JUNK;
-
+bool fGETIN(FILE *input, long *wORD1, long *wORD1X, long *wORD2, long *wORD2X) 
 /*  Get a command from the adventurer.  Snarf out the first word, pad it with
  *  blanks, and return it in WORD1.  Chars 6 thru 10 are returned in WORD1X, in
  *  case we need to print out the whole word in an error message.  Any number of
  *  blanks may follow the word.  If a second word appears, it is returned in
  *  WORD2 (chars 6 thru 10 in WORD2X), else WORD2 is -1. */
+{
+    long JUNK;
 
-
-L10:	if(game.blklin)TYPE0();
+    for (;;) {
+	if(game.blklin)
+	    TYPE0();
 	MAPLIN(input);
 	if (feof(input))
 	    return false;
 	WORD1=GETTXT(true,true,true);
-	if(game.blklin && WORD1 < 0) goto L10;
+	if (game.blklin && WORD1 < 0)
+	    continue;
 	WORD1X=GETTXT(false,true,true);
 L12:	JUNK=GETTXT(false,true,true);
 	if(JUNK > 0) goto L12;
@@ -176,100 +203,85 @@ L12:	JUNK=GETTXT(false,true,true);
 	WORD2X=GETTXT(false,true,true);
 L22:	JUNK=GETTXT(false,true,true);
 	if(JUNK > 0) goto L22;
-	if(GETTXT(true,true,true) <= 0)return true;
+	if(GETTXT(true,true,true) <= 0)
+	    return true;
 	RSPEAK(53);
-	 goto L10;
+    }
 }
-
-
-
-#undef WORD1
-#undef WORD1X
-#undef WORD2
-#undef WORD2X
 #define GETIN(SRC,WORD1,WORD1X,WORD2,WORD2X) fGETIN(SRC,&WORD1,&WORD1X,&WORD2,&WORD2X)
 
-long YES(FILE *input, vocab_t X, vocab_t Y, vocab_t Z) {
-token_t YEAH, REPLY, JUNK1, JUNK2, JUNK3;
-
+long YES(FILE *input, vocab_t x, vocab_t y, vocab_t z)
 /*  Print message X, wait for yes/no answer.  If yes, print Y and return true;
  *  if no, print Z and return false. */
+{
+    token_t yeah, reply, junk1, junk2, junk3;
 
-L1:	RSPEAK(X);
-	GETIN(input, REPLY,JUNK1,JUNK2,JUNK3);
-	if(REPLY == MAKEWD(250519) || REPLY == MAKEWD(25)) goto L10;
-	if(REPLY == MAKEWD(1415) || REPLY == MAKEWD(14)) goto L20;
-	RSPEAK(185);
-	 goto L1;
-L10:	YEAH=true;
-	RSPEAK(Y);
-	return(YEAH);
-L20:	YEAH=false;
-	RSPEAK(Z);
-	return(YEAH);
+L1:	RSPEAK(x);
+    GETIN(input, reply,junk1,junk2,junk3);
+    if(reply == MAKEWD(250519) || reply == MAKEWD(25)) goto L10;
+    if(reply == MAKEWD(1415) || reply == MAKEWD(14)) goto L20;
+    RSPEAK(185);
+    goto L1;
+L10:	yeah=true;
+    RSPEAK(y);
+    return(yeah);
+L20:	yeah=false;
+    RSPEAK(z);
+    return(yeah);
 }
 
+/*  Line-parsing routines (GETTXT, MAKEWD, PUTTXT, SHFTXT, TYPE0) */
 
-/*  Line-parsing routines (GETTXT, MAKEWD, PUTTXT, SHFTXT, TYPE0)
-		*/
-/*  The routines on this page handle all the stuff that would normally be
- *  taken care of by format statements.  We do it this way instead so that
- *  we can handle textual data in a machine independent fashion.  All the
- *  machine dependent i/o stuff is on the following page.  See that page
- *  for a description of MAPCOM's inline array. */
-
-long GETTXT(bool SKIP,bool ONEWRD, bool UPPER) {
+long GETTXT(bool skip, bool onewrd, bool upper)
 /*  Take characters from an input line and pack them into 30-bit words.
  *  Skip says to skip leading blanks.  ONEWRD says stop if we come to a
  *  blank.  UPPER says to map all letters to uppercase.  If we reach the
  *  end of the line, the word is filled up with blanks (which encode as 0's).
  *  If we're already at end of line when TEXT is called, we return -1. */
+{
+    long text;
+    static long splitting = -1;
 
-  long TEXT;
-  static long SPLITTING = -1;
-
-  if(LNPOSN != SPLITTING)
-    SPLITTING = -1;
-  TEXT= -1;
-  while (true) {
-    if(LNPOSN > LNLENG)
-      return(TEXT);
-    if((!SKIP) || INLINE[LNPOSN] != 0)
-      break;
-    LNPOSN=LNPOSN+1;
-  }
-
-  TEXT=0;
-  for (int I=1; I<=TOKLEN; I++) {
-    TEXT=TEXT*64;
-    if(LNPOSN > LNLENG || (ONEWRD && INLINE[LNPOSN] == 0))
-      continue;
-    char current=INLINE[LNPOSN];
-    if(current < 63) {
-      SPLITTING = -1;
-      if(UPPER && current >= 37)
-        current=current-26;
-      TEXT=TEXT+current;
-      LNPOSN=LNPOSN+1;
-      continue;
-    }
-    if(SPLITTING != LNPOSN) {
-      TEXT=TEXT+63;
-      SPLITTING = LNPOSN;
-      continue;
+    if(LNPOSN != splitting)
+	splitting = -1;
+    text= -1;
+    while (true) {
+	if(LNPOSN > LNLENG)
+	    return(text);
+	if((!skip) || INLINE[LNPOSN] != 0)
+	    break;
+	LNPOSN=LNPOSN+1;
     }
 
-    TEXT=TEXT+current-63;
-    SPLITTING = -1;
-    LNPOSN=LNPOSN+1;
-  }
+    text=0;
+    for (int I=1; I<=TOKLEN; I++) {
+	text=text*64;
+	if(LNPOSN > LNLENG || (onewrd && INLINE[LNPOSN] == 0))
+	    continue;
+	char current=INLINE[LNPOSN];
+	if(current < 63) {
+	    splitting = -1;
+	    if(upper && current >= 37)
+		current=current-26;
+	    text=text+current;
+	    LNPOSN=LNPOSN+1;
+	    continue;
+	}
+	if(splitting != LNPOSN) {
+	    text=text+63;
+	    splitting = LNPOSN;
+	    continue;
+	}
 
-  return(TEXT);
+	text=text+current-63;
+	splitting = -1;
+	LNPOSN=LNPOSN+1;
+    }
+
+    return text;
 }
 
-token_t MAKEWD(long LETTRS) {
-long I, L, WORD;
-
+token_t MAKEWD(long letters)
 /*  Combine TOKLEN (currently 5) uppercase letters (represented by
  *  pairs of decimal digits in lettrs) to form a 30-bit value matching
  *  the one that GETTXT would return given those characters plus
@@ -277,24 +289,20 @@ long I, L, WORD;
  *  5-letter word starts with V-Z.  As a kludgey workaround, you can
  *  increment a letter by 5 by adding 50 to the next pair of
  *  digits. */
+{
+    long i = 1, word = 0;
 
-	WORD=0;
-	I=1;
-	for (L=LETTRS; L != 0; L=L/100) {
-		WORD=WORD+I*(MOD(L,50)+10);
-		I=I*64;
-		if(MOD(L,100) > 50)WORD=WORD+I*5;
-	}
-	I=64L*64L*64L*64L*64L/I;
-	WORD=WORD*I;
-	return(WORD);
+    for (long k=letters; k != 0; k=k/100) {
+	word=word+i*(MOD(k,50)+10);
+	i=i*64;
+	if(MOD(k,100) > 50)word=word+i*5;
+    }
+    i=64L*64L*64L*64L*64L/i;
+    word=word*i;
+    return word;
 }
 
-
-#define STATE (*sTATE)
-void fPUTTXT(token_t WORD, long *sTATE, long CASE) {
-long ALPH1, ALPH2, BYTE, DIV, I, W;
-
+void fPUTTXT(token_t word, long *state, long casemake)
 /*  Unpack the 30-bit value in word to obtain up to TOKLEN (currently
  *  5) integer-encoded chars, and store them in inline starting at
  *  LNPOSN.  If LNLENG>=LNPOSN, shift existing characters to the right
@@ -302,53 +310,57 @@ long ALPH1, ALPH2, BYTE, DIV, I, W;
  *  first of a sequence of words, but is thereafter unchanged by the
  *  caller, so PUTTXT can use it to maintain state across calls.
  *  LNPOSN and LNLENG are incremented by the number of chars stored.
- *  If CASE=1, all letters are made uppercase; if -1, lowercase; if 0,
+ *  If CASEMAKE=1, all letters are made uppercase; if -1, lowercase; if 0,
  *  as is.  any other value for case is the same as 0 but also causes
  *  trailing blanks to be included (in anticipation of subsequent
  *  additional text). */
-	ALPH1=13*CASE+24;
-	ALPH2=26*labs(CASE)+ALPH1;
-	if(labs(CASE) > 1)ALPH1=ALPH2;
-/*  ALPH1&2 DEFINE RANGE OF WRONG-CASE CHARS, 11-36 OR 37-62 OR EMPTY. */
-	DIV=64L*64L*64L*64L;
-	W=WORD;
-	/* 18 */ for (I=1; I<=TOKLEN; I++) {
-	if(W <= 0 && STATE == 0 && labs(CASE) <= 1)return;
-	BYTE=W/DIV;
-	if(STATE != 0 || BYTE != 63) goto L12;
-	STATE=63;
-	 goto L18;
+{
+    long alph1, alph2, byte, div, i, w;
+
+    alph1=13*casemake+24;
+    alph2=26*labs(casemake)+alph1;
+    if(labs(casemake) > 1)
+	alph1=alph2;
+    /*  alph1&2 define range of wrong-case chars, 11-36 or 37-62 or empty. */
+    div=64L*64L*64L*64L;
+    w=word;
+    for (i=1; i<=TOKLEN; i++) 
+    {
+	if(w <= 0 && *state == 0 && labs(casemake) <= 1)
+	    return;
+	byte=w/div;
+	if(*state != 0 || byte != 63) goto L12;
+	*state=63;
+	goto L18;
 
 L12:	SHFTXT(LNPOSN,1);
-	STATE=STATE+BYTE;
-	if(STATE < ALPH2 && STATE >= ALPH1)STATE=STATE-26*CASE;
-	INLINE[LNPOSN]=STATE;
+	*state=*state+byte;
+	if(*state < alph2 && *state >= alph1)*state=*state-26*casemake;
+	INLINE[LNPOSN]=*state;
 	LNPOSN=LNPOSN+1;
-	STATE=0;
-L18:	W=(W-BYTE*DIV)*64;
-	} /* end loop */
-	return;
+	*state=0;
+L18:	w=(w-byte*div)*64;
+    }
 }
-
-#undef STATE
 #define PUTTXT(WORD,STATE,CASE) fPUTTXT(WORD,&STATE,CASE)
 
-void SHFTXT(long FROM, long DELTA) {
-long I, II, JJ;
-
+void SHFTXT(long from, long delta) 
 /*  Move INLINE(N) to INLINE(N+DELTA) for N=FROM,LNLENG.  Delta can be
  *  negative.  LNLENG is updated; LNPOSN is not changed. */
+{
+    long I, k, j;
 
-
-	if(LNLENG < FROM || DELTA == 0) goto L2;
-	for (I=FROM; I<=LNLENG; I++) {
-	II=I;
-	if(DELTA > 0)II=FROM+LNLENG-I;
-	JJ=II+DELTA;
-	INLINE[JJ]=INLINE[II];
+    if (!(LNLENG < from || delta == 0)) {
+	for (I=from; I<=LNLENG; I++) {
+	    k=I;
+	    if(delta > 0)
+		k=from+LNLENG-I;
+	    j=k+delta;
+	    INLINE[j]=INLINE[k];
 	} /* end loop */
-L2:	LNLENG=LNLENG+DELTA;
-	return;
+    }
+    LNLENG=LNLENG+delta;
+    return;
 }
 
 
@@ -448,42 +460,40 @@ L32:	N--; WORD=BUF[N]-CKSUM; N++;
 	STATE=0;
 	return;
 }
-
-
-
-
-
-/*  Data struc. routines (VOCAB, DSTROY, JUGGLE, MOVE, PUT, CARRY, DROP, ATDWRF)
-		*/
-
 #undef WORD
 #define SAVWRD(OP,WORD) fSAVWRD(OP,&WORD)
 
-long VOCAB(long ID, long INIT) {
-long I, LEXEME;
+/*  Data structure  routines */
 
+long VOCAB(long id, long init) 
 /*  Look up ID in the vocabulary (ATAB) and return its "definition" (KTAB), or
  *  -1 if not found.  If INIT is positive, this is an initialisation call setting
  *  up a keyword variable, and not finding it constitutes a bug.  It also means
  *  that only KTAB values which taken over 1000 equal INIT may be considered.
  *  (Thus "STEPS", which is a motion verb as well as an object, may be located
  *  as an object.)  And it also means the KTAB value is taken modulo 1000. */
+{
+    long i, lexeme;
 
-	/* 1 */ for (I=1; I<=TABSIZ; I++) {
-	if(KTAB[I] == -1) goto L2;
-	if(INIT >= 0 && KTAB[I]/1000 != INIT) goto L1;
-	if(ATAB[I] == ID) goto L3;
-L1:	/*etc*/ ;
-	} /* end loop */
-	BUG(21);
+    for (i=1; i<=TABSIZ; i++) {
+	if(KTAB[i] == -1) 
+	    goto L2;
+	if(init >= 0 && KTAB[i]/1000 != init) 
+	    goto L1;
+	if(ATAB[i] == id)
+	    goto L3;
+L1:;
+    }
+    BUG(21);
 
-L2:	LEXEME= -1;
-	if(INIT < 0)return(LEXEME);
-	BUG(5);
+L2: lexeme= -1;
+    if(init < 0)
+	return(lexeme);
+    BUG(5);
 
-L3:	LEXEME=KTAB[I];
-	if(INIT >= 0)LEXEME=MOD(LEXEME,1000);
-	return(LEXEME);
+L3: lexeme=KTAB[i];
+    if(init >= 0)lexeme=MOD(lexeme,1000);
+    return(lexeme);
 }
 
 void DSTROY(long object)
@@ -512,11 +522,14 @@ void MOVE(long object, long where)
 {
     long from;
 
-    if(object > NOBJECTS) goto L1;
+    if(object > NOBJECTS) 
+	goto L1;
     from=game.place[object];
     goto L2;
-L1:	from=game.fixed[object-NOBJECTS];
-L2:	if(from > 0 && from <= 300)
+L1:
+    from=game.fixed[object-NOBJECTS];
+L2:
+    if(from > 0 && from <= 300)
 	CARRY(object,from);
     DROP(object,where);
 }
@@ -529,33 +542,37 @@ long PUT(long object, long where, long pval)
     return (-1)-pval;;
 }
 
-void CARRY(long object, long where) {
-long TEMP;
-
+void CARRY(long object, long where) 
 /*  Start toting an object, removing it from the list of things at its former
  *  location.  Incr holdng unless it was already being toted.  If object>NOBJECTS
  *  (moving "fixed" second loc), don't change game.place or game.holdng. */
+{
+    long temp;
 
-	if(object > NOBJECTS) goto L5;
-	if(game.place[object] == -1)return;
+    if(object <= NOBJECTS) {
+	if(game.place[object] == -1)
+	    return;
 	game.place[object]= -1;
 	game.holdng=game.holdng+1;
-L5:	if(game.atloc[where] != object) goto L6;
+    }
+    if(game.atloc[where] == object) {
 	game.atloc[where]=game.link[object];
 	return;
-L6:	TEMP=game.atloc[where];
-L7:	if(game.link[TEMP] == object) goto L8;
-	TEMP=game.link[TEMP];
-	 goto L7;
-L8:	game.link[TEMP]=game.link[object];
-	return;
+    }
+    temp=game.atloc[where];
+L7: if(game.link[temp] == object)
+	goto L8;
+    temp=game.link[temp];
+    goto L7;
+L8: game.link[temp]=game.link[object];
 }
 
 void DROP(long object, long where)
 /*  Place an object at a given loc, prefixing it onto the game.atloc list.  Decr
  *  game.holdng if the object was being toted. */
 {
-    if(object > NOBJECTS) goto L1;
+    if(object > NOBJECTS)
+	goto L1;
     if(game.place[object] == -1)
 	game.holdng=game.holdng-1;
     game.place[object]=where;
@@ -574,16 +591,16 @@ long ATDWRF(long where)
 {
     long at, i;
 
-    at=0;
+    at =0;
     if(game.dflag < 2)
 	return(at);
-    at= -1;
+    at = -1;
     for (i=1; i<=NDWARVES-1; i++) {
 	if(game.dloc[i] == where)
 	    return i;
 	if(game.dloc[i] != 0)
 	    at=0;
-    } /* end loop */
+    }
     return(at);
 }
 
@@ -684,7 +701,7 @@ void BUG(long num)
 
 /*  Machine dependent routines (MAPLIN, TYPE, MPINIT, SAVEIO) */
 
-void MAPLIN(FILE *OPENED)
+void MAPLIN(FILE *fp)
 {
     long I, VAL;
 
@@ -715,17 +732,17 @@ void MAPLIN(FILE *OPENED)
 
     if(MAP2[1] == 0)MPINIT();
 
-    if (!oldstyle && OPENED == stdin)
+    if (!oldstyle && fp == stdin)
 	fputs("> ", stdout);
     do {
-	IGNORE(fgets(rawbuf,sizeof(rawbuf)-1,OPENED));
+	IGNORE(fgets(rawbuf,sizeof(rawbuf)-1,fp));
     } while
-	    (!feof(OPENED) && rawbuf[0] == '#');
-    if (feof(OPENED)) {
-	if (logfp && OPENED == stdin)
+	    (!feof(fp) && rawbuf[0] == '#');
+    if (feof(fp)) {
+	if (logfp && fp == stdin)
 	    fclose(logfp);
     } else {
-	if (logfp && OPENED == stdin)
+	if (logfp && fp == stdin)
 	    IGNORE(fputs(rawbuf, logfp));
 	else if (!isatty(0))
 	    IGNORE(fputs(rawbuf, stdout));
@@ -762,75 +779,84 @@ void TYPE(void)
     return;
 }
 
-void MPINIT(void) {
-long FIRST, I, J, LAST, VAL;
-static long RUNS[7][2] = { {32,34}, {39,46}, {65,90}, {97,122}, {37,37}, {48,57}, {0,126} };
+void MPINIT(void) 
+{
+    long first, i, j, last, val;
+    static long RUNS[7][2] = { {32,34}, {39,46}, {65,90}, {97,122}, 
+			       {37,37}, {48,57}, {0,126} };
+    for (i=1; i<=128; i++) {
+	MAP1[i]= -1;
+    }
+    val=0;
+    for (i=0; i<7; i++) {
+	first =RUNS[i][0];
+	last = RUNS[i][1];
+	for (j=first; j<=last; j++) {
+	    j++; 
+	    if (MAP1[j] < 0) {
+		MAP1[j]=val;
+		++val;
+	    }	    
+	    j--;
+	}
+    }
+    MAP1[128]=MAP1[10];
+    /*  For this version, tab (9) maps to space (32), so del (127)
+     *  uses tab's value */
+    MAP1[10]=MAP1[33];
+    MAP1[11]=MAP1[33];
 
-	for (I=1; I<=128; I++) {
-	MAP1[I]= -1;
-	} /* end loop */
-	VAL=0;
-	for (I=0; I<7; I++) {
-	FIRST=RUNS[I][0];
-	LAST=RUNS[I][1];
-	/* 22 */ for (J=FIRST; J<=LAST; J++) {
-	J++; if(MAP1[J] >= 0) goto L22;
-	MAP1[J]=VAL;
-	VAL=VAL+1;
-L22:	J--;
-	} /* end loop */
-	/*etc*/ ;
-	} /* end loop */
-	MAP1[128]=MAP1[10];
-/*  For this version, tab (9) maps to space (32), so del (127) uses tab's value */
-	MAP1[10]=MAP1[33];
-	MAP1[11]=MAP1[33];
-
-	for (I=0; I<=126; I++) {
-	I++; VAL=MAP1[I]+1; I--;
-	MAP2[VAL]=I*('B'-'A');
-	if(I >= 64)MAP2[VAL]=(I-64)*('B'-'A')+'@';
-	} /* end loop */
-
-	return;
+    for (i=0; i<=126; i++) {
+	i++; val=MAP1[i]+1; i--;
+	MAP2[val] = i*('B'-'A');
+	if(i >= 64)
+	    MAP2[val]=(i-64)*('B'-'A')+'@';
+    }
 }
 
-#undef SAVEIO
-void fSAVEIO(long OP, long IN, long ARR[]) {
-static FILE *F; char NAME[50];
-
+void fSAVEIO(long op, long in, long arr[]) 
 /*  If OP=0, ask for a file name and open a file.  (If IN=true, the file is for
  *  input, else output.)  If OP>0, read/write ARR from/into the previously-opened
  *  file.  (ARR is a 250-integer array.)  If OP<0, finish reading/writing the
  *  file.  (Finishing writing can be a no-op if a "stop" statement does it
  *  automatically.  Finishing reading can be a no-op as long as a subsequent
- *  SAVEIO(0,false,X) will still work.)  If you can catch errors (e.g., no such
- *  file) and try again, great.  DEC F40 can't. */
+ *  SAVEIO(0,false,X) will still work.) */
+{
+    static FILE *fp = NULL; 
+    char name[50];
 
-
-	{long ifvar; ifvar=(OP); switch (ifvar<0? -1 : ifvar>0? 1 : 0) { case -1:
-		goto L10; case 0: goto L20; case 1: goto L30; }}
-
-L10:	fclose(F);
-	return;
-
-L20:	printf("\nFile name: ");
-	IGNORE(fgets(NAME, sizeof(NAME), stdin));
-	F=fopen(NAME,(IN ? READ_MODE : WRITE_MODE));
-	if(F == NULL) {printf("Can't open file, try again.\n"); goto L20;}
-	return;
-
-L30:	if(IN)IGNORE(fread(ARR,sizeof(long),250,F));
-	if(!IN)fwrite(ARR,sizeof(long),250,F);
-	return;
+    switch (op < 0 ? -1 : (op > 0 ? 1 : 0)) 
+    { 
+    case -1:
+	fclose(fp);
+	break;
+    case 0:
+	while (fp == NULL) {
+	    printf("\nFile name: ");
+	    IGNORE(fgets(name, sizeof(name), stdin));
+	    fp = fopen(name,(in ? READ_MODE : WRITE_MODE));
+	    if(fp == NULL)
+		printf("Can't open file %s, try again.\n", name); 
+	}
+	break;
+    case 1: 
+	if (in)
+	    IGNORE(fread(arr,sizeof(long),250,fp));
+	else
+	    IGNORE(fwrite(arr,sizeof(long),250,fp));
+	break;
+    }
 }
 
-void DATIME(long* D, long* T)
+void DATIME(long* d, long* t)
 {
     struct timeval tv;
     gettimeofday(&tv, NULL);
-    *D = (long) tv.tv_sec;
-    *T = (long) tv.tv_usec;
+    *d = (long) tv.tv_sec;
+    *t = (long) tv.tv_usec;
 }
 
-long MOD(N,M)long N, M; {return(N%M);}
+long MOD(long n, long m) 
+{
+    return(n%m);
+}
