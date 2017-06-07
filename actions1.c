@@ -440,9 +440,9 @@ L8240:	score(-1);
 	RSPEAK(259);
 	 return(2012);
 
-/*  FEE FIE FOE FOO (AND FUM).  ADVANCE TO NEXT STATE IF GIVEN IN game.propER ORDER.
- *  LOOK UP WD1 IN SECTION 3 OF VOCAB TO DETERMINE WHICH WORD WE'VE GOT.  LAST
- *  WORD ZIPS THE EGGS BACK TO THE GIANT ROOM (UNLESS ALREADY THERE). */
+/*  FEE FIE FOE FOO (AND FUM).  Advance to next state if given in proper order.
+ *  Look up WD1 in section 3 of vocab to determine which word we've got.  Last
+ *  word zips the eggs back to the giant room (unless already there). */
 
 L8250:	K=VOCAB(WD1,3);
 	SPK=42;
