@@ -353,7 +353,7 @@ L1106:	/*etc*/ ;
  *	game.dkill	# of dwarves killed (unused in scoring, needed for msg)
  *	game.foobar	Current progress in saying "FEE FIE FOE FOO".
  *	game.holdng	Number of objects being carried
- *	IGO	How many times he's said "go XXX" instead of "XXX"
+ *	igo	How many times he's said "go XXX" instead of "XXX"
  *	game.iwest	How many times he's said "west" instead of "w"
  *	game.knfloc	0 if no knife here, loc if knife here, -1 after caveat
  *	game.limit	Lifetime of lamp (not set here)
@@ -371,7 +371,6 @@ L1106:	/*etc*/ ;
 	if(TRNVLS > 0)game.thresh=MOD(TRNVAL[1],100000)+1;
 	game.trnluz=0;
 	game.lmwarn=false;
-	IGO=0;
 	game.iwest=0;
 	game.knfloc=0;
 	game.detail=0;

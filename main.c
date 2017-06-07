@@ -21,7 +21,7 @@ long AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
 		BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST,
 		CLAM, COINS, DALTLC, DOOR, DPRSSN, DRAGON, DWARF, EGGS,
 		EMRALD, ENTER, ENTRNC, FIND, FISSUR, FOOD,
-		GRATE, HINT, I, INVENT, IGO, J, JADE, K, KEYS,
+		GRATE, HINT, I, INVENT, J, JADE, K, KEYS,
 		KNIFE, L, LAMP, LOCK, LOOK, MAGZIN, MAXDIE, MAXTRS,
 		MESSAG, MIRROR, MXSCOR, NUGGET, NUL, OGRE, OIL, OYSTER,
 		PEARL, PILLOW, PLANT, PLANT2, PYRAM, RESER, ROD, ROD2,
@@ -155,6 +155,7 @@ static bool fallback_handler(char *buf)
 static bool do_command(FILE *cmdin) {
 	long LL, KQ, VERB, KK, K2;
 	long obj;
+	static long IGO = 0;
 
 /*  Can't leave cave once it's closing (except by main office). */
 
