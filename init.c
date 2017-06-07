@@ -392,7 +392,7 @@ L1106:	/*etc*/ ;
 	game.closed=false;
 	game.clshnt=false;
 	game.novice=false;
-	SETUP=1;
+	game.setup=1;
 	game.blklin=true;
 
 	/* if we can ever think of how, we should save it at this point */

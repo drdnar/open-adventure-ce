@@ -16,8 +16,7 @@ struct game_t game;
 
 long ATLOC[186], FIXED[NOBJECTS+1],
 		LINK[NOBJECTS*2 + 1], LNLENG, LNPOSN,
-		PARMS[26], PLACE[NOBJECTS+1],
-		SETUP = 0;
+		PARMS[26], PLACE[NOBJECTS+1];
 char rawbuf[LINESIZE], INLINE[LINESIZE+1], MAP1[129], MAP2[129];
 
 long AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
@@ -110,8 +109,8 @@ int main(int argc, char *argv[]) {
 /*  Read the database if we have not yet done so */
 
 	MAP2[1] = 0;
-	if(!SETUP)initialise();
-	if(SETUP > 0) goto L1;
+	if (!game.setup)initialise();
+	if(game.setup > 0) goto L1;
 
 /*  Unlike earlier versions, adventure is no longer restartable.  (This
  *  lets us get away with modifying things such as OBJSND(BIRD) without
@@ -123,7 +122,7 @@ int main(int argc, char *argv[]) {
 
 /*  Start-up, dwarf stuff */
 
-L1:	SETUP= -1;
+L1:	game.setup= -1;
 	I=0;
 	game.zzword=RNDVOC(3,0);
 	game.novice=YES(stdin, 65,1,0);

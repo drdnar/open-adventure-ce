@@ -43,6 +43,7 @@ struct game_t {
     long oldobj;
     long panic;
     long saved;
+    long setup;
     long tally;
     long thresh;
     long trndex;
@@ -133,7 +134,7 @@ extern long AMBER, ATTACK, AXE, BACK, BATTER, BEAR,
    OGRE, OIL, OLDOBJ, OYSTER,
    PANIC, PEARL, PILLOW, PLANT, PLANT2, PROP[], PYRAM,
    RESER, ROD, ROD2, RUBY, RUG, SAPPH, SAY,
-   SCORE, SECT, SETUP, SIGN, SNAKE, SPK, STEPS, STICK,
+   SCORE, SECT, SIGN, SNAKE, SPK, STEPS, STICK,
    STREAM, THROW, TK[], TRIDNT, TROLL, TROLL2,
    URN, V1, V2, VASE, VEND, VERB,
    VOLCAN, VRSION, WATER, WD1, WD1X, WD2, WD2X;
