@@ -423,13 +423,15 @@ L2605:	WZDARK=DARK(0);
 
 L2607:	FOOBAR=(FOOBAR>0 ? -FOOBAR : 0);
 	TURNS=TURNS+1;
-	if(TURNS != THRESH) goto L2608;
+	if(TURNS == THRESH) {
 	SPEAK(TTEXT[TRNDEX]);
 	TRNLUZ=TRNLUZ+TRNVAL[TRNDEX]/100000;
 	TRNDEX=TRNDEX+1;
 	THRESH= -1;
-	if(TRNDEX <= TRNVLS)THRESH=MOD(TRNVAL[TRNDEX],100000)+1;
-L2608:	if(VERB == SAY && WD2 > 0)VERB=0;
+	if(TRNDEX <= TRNVLS)
+	    THRESH=MOD(TRNVAL[TRNDEX],100000)+1;
+	}
+	if(VERB == SAY && WD2 > 0)VERB=0;
 	if(VERB == SAY) goto L4090;
 	if(TALLY == 0 && INDEEP(LOC) && LOC != 33)CLOCK1=CLOCK1-1;
 	if(CLOCK1 == 0) goto L10000;
@@ -632,22 +634,24 @@ L20:	K=OLDLOC;
 	return true;
 
 L21:	LL=MOD((labs(TRAVEL[KK])/1000),1000);
-	if(LL == K) goto L25;
-	if(LL <= 300) {
-		J=KEY[LL];
-		if(FORCED(LL) && MOD((labs(TRAVEL[J])/1000),1000) == K)
-			K2=KK;
+	if(LL != K) {
+		if(LL <= 300) {
+			J=KEY[LL];
+			if(FORCED(LL) && MOD((labs(TRAVEL[J])/1000),1000) == K)
+				K2=KK;
+		}
+		if(TRAVEL[KK] < 0) goto L23;
+		KK=KK+1;
+		goto L21;
+
+L23:		KK=K2;
+		if(KK == 0) {
+			RSPEAK(140);
+			return true;
+		}
 	}
-	if(TRAVEL[KK] < 0) goto L23;
-	KK=KK+1;
-	 goto L21;
 
-L23:	KK=K2;
-	if(KK != 0) goto L25;
-	RSPEAK(140);
-	return true;
-
-L25:	K=MOD(labs(TRAVEL[KK]),1000);
+	K=MOD(labs(TRAVEL[KK]),1000);
 	KK=KEY[LOC];
 	 goto L9;
 
@@ -887,7 +891,8 @@ L11000: PROP[BOTTLE]=PUT(BOTTLE,115,1);
 	FIXED[MIRROR]=116;
 
 	for (I=1; I<=NOBJECTS; I++) {
-	if(TOTING(I))DSTROY(I);
+		if(TOTING(I))
+			DSTROY(I);
 	} /* end loop */
 
 	RSPEAK(132);
