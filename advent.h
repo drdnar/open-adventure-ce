@@ -6,6 +6,9 @@
 #define LINESIZE	100
 #define NDWARVES	6
 #define PIRATE		NDWARVES	/* must be NDWARVES-1 when zero-origin */
+#define DALTLC		18		/* alternate dwarf location; low room */
+#define MINTRS		50
+#define MAXTRS		79
 
 typedef struct lcg_state
 {
@@ -129,18 +132,18 @@ extern long MOD(long,long);
 extern void set_seed(long);
 extern unsigned long get_next_lcg_value(void);
 extern long randrange(long);
-
 extern void score(long);
+
+/* vocabulary items */ 
 extern long AMBER, ATTACK, AXE, BACK, BATTER, BEAR,
    BIRD, BLOOD, BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST,
-   CLAM, COINS, DALTLC, DOOR, DPRSSN, DRAGON, DWARF, EGGS,
-   EMRALD, ENTER, ENTRNC, FIND, FISSUR, FOOD, GRATE, HINT, I, INVENT,
-   J, JADE, K, KEYS, KNIFE, L, LAMP, LOCK, LOOK,
-   MAGZIN, MAXDIE, MAXTRS, MESSAG, MIRROR, MXSCOR, NUGGET, NUL,
-   OGRE, OIL, OLDOBJ, OYSTER, PANIC, PEARL, PILLOW, PLANT, PLANT2, PYRAM,
-   RESER, ROD, ROD2, RUBY, RUG, SAPPH, SAY,
-   SCORE, SECT, SIGN, SNAKE, SPK, STEPS, STICK,
-   STREAM, THROW, TRIDNT, TROLL, TROLL2,
-   URN, V1, V2, VASE, VEND,
-   VOLCAN, VRSION, WATER, WD1, WD1X, WD2, WD2X;
+   CLAM, COINS, DOOR, DPRSSN, DRAGON, DWARF, EGGS,
+   EMRALD, ENTER, ENTRNC, FIND, FISSUR, FOOD, GRATE, HINT, INVENT,
+   JADE, KEYS, KNIFE, LAMP, LOCK, LOOK, MAGZIN, MESSAG, MIRROR, NUGGET, NUL,
+   OGRE, OIL, OYSTER, PANIC, PEARL, PILLOW, PLANT, PLANT2, PYRAM,
+   RESER, ROD, ROD2, RUBY, RUG, SAPPH, SAY, SCORE, SECT, SIGN, SNAKE,
+   STEPS, STICK, STREAM, THROW, TRIDNT, TROLL, TROLL2,
+   URN, VASE, VEND, VOLCAN, WATER;
+/* evrything else */
+extern long I, J, K, L, MAXDIE, SPK, V1, V2, VRSION, WD1, WD1X, WD2, WD2X;
 

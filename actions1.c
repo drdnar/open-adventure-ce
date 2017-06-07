@@ -437,10 +437,7 @@ L9230:	if(game.prop[ROD2] < 0 || !game.closed) return(2011);
 /*  Score.  Call scoring routine but tell it to return. */
 
 L8240:	score(-1);
-	SETPRM(1,SCORE,MXSCOR);
-	SETPRM(3,game.turns,game.turns);
-	RSPEAK(259);
-	 return(2012);
+	return(2012);
 
 /*  FEE FIE FOE FOO (AND FUM).  Advance to next state if given in proper order.
  *  Look up WD1 in section 3 of vocab to determine which word we've got.  Last

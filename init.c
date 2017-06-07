@@ -215,14 +215,13 @@ L1106:	/*etc*/ ;
 	if(PLAC[K] != 0 && FIXD[K] <= 0)DROP(K,PLAC[K]);
 	} /* end loop */
 
-/*  Treasures, as noted earlier, are objects 50 through MAXTRS (CURRENTLY 79).
+/*  Treasures, as noted earlier, are objects MINTRS through MAXTRS
  *  Their props are initially -1, and are set to 0 the first time they are
  *  described.  game.tally keeps track of how many are not yet found, so we know
  *  when to close the cave. */
 
-	MAXTRS=79;
 	game.tally=0;
-	for (I=50; I<=MAXTRS; I++) {
+	for (I=MINTRS; I<=MAXTRS; I++) {
 	if(PTEXT[I] != 0)game.prop[I]= -1;
 	game.tally=game.tally-game.prop[I];
 	} /* end loop */
@@ -341,7 +340,6 @@ L1106:	/*etc*/ ;
 	game.dloc[4]=44;
 	game.dloc[5]=64;
 	game.dloc[6]=game.chloc;
-	DALTLC=18;
 
 /*  Other random flags and counters, as follows:
  *	game.abbnum	How often we should print non-abbreviated descriptions

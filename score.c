@@ -7,7 +7,8 @@
  */
 
 void score(long MODE) {
-	/* <0 if scoring, >0 if quitting, =0 if died or won */
+/* arg is <0 if scoring, >0 if quitting, =0 if died or won */
+	long MXSCOR = 0;
 
 /*  The present scoring algorithm is as follows:
  *     Objective:          Points:        Present total possible:
@@ -88,7 +89,12 @@ L20020: MXSCOR=MXSCOR+45;
 
 /*  Return to score command if that's where we came from. */
 
-	if(MODE < 0) return;
+	if(MODE < 0) {
+		SETPRM(1,SCORE,MXSCOR);
+		SETPRM(3,game.turns,game.turns);
+		RSPEAK(259);
+		return;
+	}
 
 /*  that should be good enough.  Let's tell him all about it. */
 
