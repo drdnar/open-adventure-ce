@@ -28,7 +28,7 @@ L10:	L=labs(LINES[K])-1;
 	LNPOSN=1;
 	STATE=0;
 	for (I=K; I<=L; I++) {
-	PUTTXT(LINES[I],STATE,2);
+		PUTTXT(LINES[I],STATE,2);
 	} /* end loop */
 	LNPOSN=0;
 L30:	LNPOSN=LNPOSN+1;
@@ -111,47 +111,42 @@ L40:	if(BLANK)TYPE0();
 	return;
 }
 
-void PSPEAK(vocab_t MSG,int SKIP) {
-long I, M;
-
-/*  Find the skip+1st message from msg and print it.  MSG should be the index of
- *  the inventory message for object.  (INVEN+N+1 message is game.prop=N message). */
-
+void PSPEAK(vocab_t MSG,int SKIP)
+/*  Find the skip+1st message from msg and print it.  MSG should be
+ *  the index of the inventory message for object.  (INVEN+N+1 message
+ *  is game.prop=N message). */
+{
+	long I, M;
 
 	M=PTEXT[MSG];
-	if(SKIP < 0) goto L9;
+	if(SKIP < 0)
+	    goto L9;
 	for (I=0; I<=SKIP; I++) {
 L1:	M=labs(LINES[M]);
-	if(LINES[M] >= 0) goto L1;
-	/*etc*/ ;
-	} /* end loop */
+	if(LINES[M] >= 0)
+	    goto L1;
+	}
 L9:	SPEAK(M);
 	return;
 }
-
-void RSPEAK(vocab_t I) {
-
-/*  Print the I-TH "random" message (section 6 of database). */
-
-
-	if(I != 0)SPEAK(RTEXT[I]);
-	return;
+void RSPEAK(vocab_t i)
+/* Print the i-th "random" message (section 6 of database). */
+{
+    if (i != 0)
+	SPEAK(RTEXT[i]);
 }
 
-
-void SETPRM(long FIRST, long P1, long P2) {
-;
-
+void SETPRM(long first, long p1, long p2)
 /*  Stores parameters into the PRMCOM parms array for use by speak.  P1 and P2
- *  are stored into PARMS(FIRST) and PARMS(FIRST+1). */
-
-
-	if(FIRST >= 25)BUG(29);
-	PARMS[FIRST]=P1;
-	{long x = FIRST+1; PARMS[x]=P2;}
-	return;
+ *  are stored into PARMS(first) and PARMS(first+1). */
+{
+    if(first >= MAXPARMS)
+	BUG(29);
+    else {
+	PARMS[first] = p1;
+	PARMS[first+1] = p2;
+    }
 }
-
 
 #undef GETIN
 #define WORD1 (*wORD1)
@@ -359,53 +354,50 @@ L2:	LNLENG=LNLENG+DELTA;
 }
 
 
-void TYPE0() {
-long TEMP;
+void TYPE0(void)
 /*  Type a blank line.  This procedure is provided as a convenience for callers
  *  who otherwise have no use for MAPCOM. */
+{
+    long temp;
 
-	TEMP=LNLENG;
-	LNLENG=0;
-	TYPE();
-	LNLENG=TEMP;
-	return;
+    temp=LNLENG;
+    LNLENG=0;
+    TYPE();
+    LNLENG=temp;
+    return;
 }
 
 /*  Suspend/resume I/O routines (SAVWDS, SAVARR, SAVWRD) */
 
 #undef SAVWDS
-void fSAVWDS(long *W1, long *W2, long *W3, long *W4, long *W5, long *W6, long *W7) {
-
-/*  Write or read 7 variables.  See SAVWRD. */
-
-	SAVWRD(0,(*W1));
-	SAVWRD(0,(*W2));
-	SAVWRD(0,(*W3));
-	SAVWRD(0,(*W4));
-	SAVWRD(0,(*W5));
-	SAVWRD(0,(*W6));
-	SAVWRD(0,(*W7));
-	return;
+void fSAVWDS(long *W1, long *W2, long *W3, long *W4,
+	     long *W5, long *W6, long *W7)
+/* Write or read 7 variables.  See SAVWRD. */
+{
+    SAVWRD(0,(*W1));
+    SAVWRD(0,(*W2));
+    SAVWRD(0,(*W3));
+    SAVWRD(0,(*W4));
+    SAVWRD(0,(*W5));
+    SAVWRD(0,(*W6));
+    SAVWRD(0,(*W7));
+    return;
 }
-
-
 #define SAVWDS(W1,W2,W3,W4,W5,W6,W7) fSAVWDS(&W1,&W2,&W3,&W4,&W5,&W6,&W7)
+
 #undef SAVARR
-void fSAVARR(long ARR[], long N) {
-long I;
+void fSAVARR(long arr[], long n)
+/* Write or read an array of n words.  See SAVWRD. */
+{
+    long i;
 
-/*  Write or read an array of N words.  See SAVWRD. */
-
-
-	for (I=1; I<=N; I++) {
-	SAVWRD(0,ARR[I]);
-	} /* end loop */
-	return;
+    for (i=1; i<=n; i++) {
+	SAVWRD(0,arr[i]);
+    }
+    return;
 }
-
-
-
 #define SAVARR(ARR,N) fSAVARR(ARR,N)
+
 #undef SAVWRD
 #define WORD (*wORD)
 void fSAVWRD(long OP, long *wORD) {
@@ -566,110 +558,107 @@ L8:	game.link[TEMP]=game.link[OBJECT];
 	return;
 }
 
-void DROP(long OBJECT, long WHERE) {
+void DROP(long object, long where)
 /*  Place an object at a given loc, prefixing it onto the game.atloc list.  Decr
  *  game.holdng if the object was being toted. */
-
-	if(OBJECT > NOBJECTS) goto L1;
-	if(game.place[OBJECT] == -1)game.holdng=game.holdng-1;
-	game.place[OBJECT]=WHERE;
-	 goto L2;
-L1:	{long x = OBJECT-NOBJECTS; game.fixed[x]=WHERE;}
-L2:	if(WHERE <= 0)return;
-	game.link[OBJECT]=game.atloc[WHERE];
-	game.atloc[WHERE]=OBJECT;
+{
+    if(object > NOBJECTS) goto L1;
+    if(game.place[object] == -1)
+	game.holdng=game.holdng-1;
+    game.place[object]=where;
+    goto L2;
+L1: game.fixed[object-NOBJECTS]=where;
+L2: if(where <= 0)
 	return;
+    game.link[object]=game.atloc[where];
+    game.atloc[where]=object;
 }
 
-
-
-long ATDWRF(long WHERE) {
-long AT, I;
-
+long ATDWRF(long where)
 /*  Return the index of first dwarf at the given location, zero if no dwarf is
  *  there (or if dwarves not active yet), -1 if all dwarves are dead.  Ignore
  *  the pirate (6th dwarf). */
+{
+    long at, i;
 
-
-	AT=0;
-	if(game.dflag < 2)return(AT);
-	AT= -1;
-	for (I=1; I<=NDWARVES-1; I++) {
-	if(game.dloc[I] == WHERE) goto L2;
-	if(game.dloc[I] != 0)AT=0;
-	} /* end loop */
-	return(AT);
-
-L2:	AT=I;
-	return(AT);
+    at=0;
+    if(game.dflag < 2)
+	return(at);
+    at= -1;
+    for (i=1; i<=NDWARVES-1; i++) {
+	if(game.dloc[i] == where)
+	    return i;
+	if(game.dloc[i] != 0)
+	    at=0;
+    } /* end loop */
+    return(at);
 }
 
 /*  Utility routines (SETBIT, TSTBIT, set_seed, get_next_lcg_value,
  *  randrange, RNDVOC, BUG) */
 
-long SETBIT(long bit) {
+long SETBIT(long bit)
 /*  Returns 2**bit for use in constructing bit-masks. */
+{
     return(2 << bit);
 }
 
-bool TSTBIT(long mask, int bit) {
+bool TSTBIT(long mask, int bit)
 /*  Returns true if the specified bit is set in the mask. */
-    return((mask & (1 << bit)) != 0);
+{
+    return (mask & (1 << bit)) != 0;
 }
 
 void set_seed(long seedval)
+/* Set the LCG seed */
 {
-  lcgstate.x = (unsigned long) seedval % lcgstate.m;
+    lcgstate.x = (unsigned long) seedval % lcgstate.m;
 }
 
 unsigned long get_next_lcg_value(void)
+/* Return the LCG's current value, and then iterate it. */
 {
-  /* Return the LCG's current value, and then iterate it. */
-  unsigned long old_x = lcgstate.x;
-  lcgstate.x = (lcgstate.a * lcgstate.x + lcgstate.c) % lcgstate.m;
-  return(old_x);
+    unsigned long old_x = lcgstate.x;
+    lcgstate.x = (lcgstate.a * lcgstate.x + lcgstate.c) % lcgstate.m;
+    return old_x;
 }
 
 long randrange(long range)
+/* Return a random integer from [0, range). */
 {
-  /* Return a random integer from [0, range). */
-  long result = range * get_next_lcg_value() / lcgstate.m;
-  return(result);
+    return range * get_next_lcg_value() / lcgstate.m;
 }
 
-long RNDVOC(long CHAR, long FORCE) {
-/*  Searches the vocabulary for a word whose second character is char, and
- *  changes that word such that each of the other four characters is a
- *  random letter.  If force is non-zero, it is used as the new word.
- *  Returns the new word. */
+long RNDVOC(long second, long force)
+/*  Searches the vocabulary ATAB for a word whose second character is
+ *  char, and changes that word such that each of the other four
+ *  characters is a random letter.  If force is non-zero, it is used
+ *  as the new word.  Returns the new word. */
+{
+    long rnd = force;
 
-	long RND;
-
-	RND=FORCE;
-
-	if (RND == 0) {
-	  for (int I = 1; I <= 5; I++) {
-	    long J = 11 + randrange(26);
-	    if (I == 2)
-	      J = CHAR;
-	    RND = RND * 64 + J;
-	  }
+    if (rnd == 0) {
+	for (int i = 1; i <= 5; i++) {
+	    long j = 11 + randrange(26);
+	    if (i == 2)
+		j = second;
+	    rnd = rnd * 64 + j;
 	}
+    }
 
-	long DIV = 64L * 64L * 64L;
-	for (int I = 1; I <= TABSIZ; I++) {
-	  if (MOD(ATAB[I]/DIV, 64L) == CHAR)
-	    {
-	      ATAB[I] = RND;
-	      break;
-	    }
+    long div = 64L * 64L * 64L;
+    for (int i = 1; i <= TABSIZ; i++) {
+	if (MOD(ATAB[i]/div, 64L) == second)
+	{
+	    ATAB[i] = rnd;
+	    break;
 	}
+    }
 
-	return(RND);
+    return rnd;
 }
 
-void BUG(long NUM) {
-
+void BUG(long num)
 /*  The following conditions are currently considered fatal bugs.  Numbers < 20
  *  are detected while reading the database; the others occur at "run time".
  *	0	Message line > 70 characters
@@ -694,92 +683,90 @@ void BUG(long NUM) {
  *	27	Hint number exceeds goto list
  *	28	Invalid month returned by date function
  *	29	Too many parameters given to SETPRM */
+{
 
-	printf("Fatal error %ld.  See source code for interpretation.\n",
-	   NUM);
-	exit(0);
+    printf("Fatal error %ld.  See source code for interpretation.\n", num);
+    exit(0);
 }
-
-
-
-
 
 /*  Machine dependent routines (MAPLIN, TYPE, MPINIT, SAVEIO) */
 
-void MAPLIN(FILE *OPENED) {
-long I, VAL;
+void MAPLIN(FILE *OPENED)
+{
+    long I, VAL;
 
-/*  Read a line of input, from the specified input source,
- *  translate the chars to integers in the range 0-126 and store
- *  them in the common array "INLINE".  Integer values are as follows:
- *     0   = space [ASCII CODE 40 octal, 32 decimal]
- *    1-2  = !" [ASCII 41-42 octal, 33-34 decimal]
- *    3-10 = '()*+,-. [ASCII 47-56 octal, 39-46 decimal]
- *   11-36 = upper-case letters
- *   37-62 = lower-case letters
- *    63   = percent (%) [ASCII 45 octal, 37 decimal]
- *   64-73 = digits, 0 through 9
- *  Remaining characters can be translated any way that is convenient;
- *  The "TYPE" routine below is used to map them back to characters when
- *  necessary.  The above mappings are required so that certain special
- *  characters are known to fit in 6 bits and/or can be easily spotted.
- *  Array elements beyond the end of the line should be filled with 0,
- *  and LNLENG should be set to the index of the last character.
- *
- *  If the data file uses a character other than space (e.g., tab) to
- *  separate numbers, that character should also translate to 0.
- *
- *  This procedure may use the map1,map2 arrays to maintain static data for
- *  the mapping.  MAP2(1) is set to 0 when the program starts
- *  and is not changed thereafter unless the routines on this page choose
- *  to do so. */
+    /*  Read a line of input, from the specified input source,
+     *  translate the chars to integers in the range 0-126 and store
+     *  them in the common array "INLINE".  Integer values are as follows:
+     *     0   = space [ASCII CODE 40 octal, 32 decimal]
+     *    1-2  = !" [ASCII 41-42 octal, 33-34 decimal]
+     *    3-10 = '()*+,-. [ASCII 47-56 octal, 39-46 decimal]
+     *   11-36 = upper-case letters
+     *   37-62 = lower-case letters
+     *    63   = percent (%) [ASCII 45 octal, 37 decimal]
+     *   64-73 = digits, 0 through 9
+     *  Remaining characters can be translated any way that is convenient;
+     *  The "TYPE" routine below is used to map them back to characters when
+     *  necessary.  The above mappings are required so that certain special
+     *  characters are known to fit in 6 bits and/or can be easily spotted.
+     *  Array elements beyond the end of the line should be filled with 0,
+     *  and LNLENG should be set to the index of the last character.
+     *
+     *  If the data file uses a character other than space (e.g., tab) to
+     *  separate numbers, that character should also translate to 0.
+     *
+     *  This procedure may use the map1,map2 arrays to maintain static data for
+     *  the mapping.  MAP2(1) is set to 0 when the program starts
+     *  and is not changed thereafter unless the routines on this page choose
+     *  to do so. */
 
-	if(MAP2[1] == 0)MPINIT();
+    if(MAP2[1] == 0)MPINIT();
 
-	if (!oldstyle && OPENED == stdin)
-		fputs("> ", stdout);
-	do {
-		IGNORE(fgets(rawbuf,sizeof(rawbuf)-1,OPENED));
-	} while
-		(!feof(OPENED) && rawbuf[0] == '#');
-	if (feof(OPENED)) {
-		if (logfp && OPENED == stdin)
-			fclose(logfp);
-	} else {
-		if (logfp && OPENED == stdin)
-			IGNORE(fputs(rawbuf, logfp));
-		else if (!isatty(0))
-			IGNORE(fputs(rawbuf, stdout));
-		strcpy(INLINE+1, rawbuf);
-		LNLENG=0;
-		for (I=1; I<=(long)sizeof(INLINE) && INLINE[I]!=0; I++) {
-		VAL=INLINE[I]+1;
-		INLINE[I]=MAP1[VAL];
-		if(INLINE[I] != 0)LNLENG=I;
-		} /* end loop */
-		LNPOSN=1;
-	}
+    if (!oldstyle && OPENED == stdin)
+	fputs("> ", stdout);
+    do {
+	IGNORE(fgets(rawbuf,sizeof(rawbuf)-1,OPENED));
+    } while
+	    (!feof(OPENED) && rawbuf[0] == '#');
+    if (feof(OPENED)) {
+	if (logfp && OPENED == stdin)
+	    fclose(logfp);
+    } else {
+	if (logfp && OPENED == stdin)
+	    IGNORE(fputs(rawbuf, logfp));
+	else if (!isatty(0))
+	    IGNORE(fputs(rawbuf, stdout));
+	strcpy(INLINE+1, rawbuf);
+	LNLENG=0;
+	for (I=1; I<=(long)sizeof(INLINE) && INLINE[I]!=0; I++) {
+	    VAL=INLINE[I]+1;
+	    INLINE[I]=MAP1[VAL];
+	    if(INLINE[I] != 0)LNLENG=I;
+	} /* end loop */
+	LNPOSN=1;
+    }
 }
 
-void TYPE(void) {
-long I, VAL;
-
+void TYPE(void)
 /*  Type the first "LNLENG" characters stored in inline, mapping them
- *  from integers to text per the rules described above.  INLINE(I),
- *  I=1,LNLENG may be changed by this routine. */
+ *  from integers to text per the rules described above.  INLINE
+ *  may be changed by this routine. */
+{
+    long i;
 
-	if(LNLENG != 0) goto L10;
+    if(LNLENG == 0) {
 	printf("\n");
 	return;
+    }
 
-L10:	if(MAP2[1] == 0)MPINIT();
-	for (I=1; I<=LNLENG; I++) {
-	VAL=INLINE[I];
-	{long x = VAL+1; INLINE[I]=MAP2[x];}
-	} /* end loop */
-	{long x = LNLENG+1; INLINE[x]=0;}
-	printf("%s\n",INLINE+1);
-	return;
+    if(MAP2[1] == 0)
+	MPINIT();
+    for (i=1; i<=LNLENG; i++) {
+	INLINE[i]=MAP2[INLINE[i]+1];
+    }
+    INLINE[LNLENG+1]=0;
+    printf("%s\n", INLINE+1);
+    return;
 }
 
 void MPINIT(void) {
@@ -846,11 +833,12 @@ L30:	if(IN)IGNORE(fread(ARR,sizeof(long),250,F));
 
 }
 
-void DATIME(long* D, long* T) {
-  struct timeval tv;
-  gettimeofday(&tv, NULL);
-  *D = (long) tv.tv_sec;
-  *T = (long) tv.tv_usec;
+void DATIME(long* D, long* T)
+{
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    *D = (long) tv.tv_sec;
+    *T = (long) tv.tv_usec;
 }
 
 long MOD(N,M)long N, M; {return(N%M);}
