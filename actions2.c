@@ -253,7 +253,7 @@ L9176:	SPK=164;
 
 /*  But throwing food is another story. */
 L9177:	obj=BEAR;
-	return(feed());
+	return(feed(obj));
 
 L9178:	SPK=159;
 /*  Snarf a treasure for the troll. */
@@ -269,28 +269,28 @@ L9178:	SPK=159;
 /*  Feed.  If bird, no seed.  Snake, dragon, troll: quip.  If dwarf, make him
  *  mad.  Bear, special. */
 
-int feed() {
-	if(OBJ != BIRD) goto L9212;
+int feed(long obj) {
+	if(obj != BIRD) goto L9212;
 	SPK=100;
 	 return(2011);
 
-L9212:	if(OBJ != SNAKE && OBJ != DRAGON && OBJ != TROLL) goto L9213;
+L9212:	if(obj != SNAKE && obj != DRAGON && obj != TROLL) goto L9213;
 	SPK=102;
-	if(OBJ == DRAGON && game.prop[DRAGON] != 0)SPK=110;
-	if(OBJ == TROLL)SPK=182;
-	if(OBJ != SNAKE || game.closed || !HERE(BIRD)) return(2011);
+	if(obj == DRAGON && game.prop[DRAGON] != 0)SPK=110;
+	if(obj == TROLL)SPK=182;
+	if(obj != SNAKE || game.closed || !HERE(BIRD)) return(2011);
 	SPK=101;
 	DSTROY(BIRD);
 	game.prop[BIRD]=0;
 	 return(2011);
 
-L9213:	if(OBJ != DWARF) goto L9214;
+L9213:	if(obj != DWARF) goto L9214;
 	if(!HERE(FOOD)) return(2011);
 	SPK=103;
 	game.dflag=game.dflag+2;
 	 return(2011);
 
-L9214:	if(OBJ != BEAR) goto L9215;
+L9214:	if(obj != BEAR) goto L9215;
 	if(game.prop[BEAR] == 0)SPK=102;
 	if(game.prop[BEAR] == 3)SPK=110;
 	if(!HERE(FOOD)) return(2011);
@@ -301,7 +301,7 @@ L9214:	if(OBJ != BEAR) goto L9215;
 	SPK=168;
 	 return(2011);
 
-L9215:	if(OBJ != OGRE) goto L9216;
+L9215:	if(obj != OGRE) goto L9216;
 	if(HERE(FOOD))SPK=202;
 	 return(2011);
 

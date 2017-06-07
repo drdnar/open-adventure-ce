@@ -420,7 +420,7 @@ L8201:	/*etc*/ ;
 
 /* Feed/fill are in the other module. */
 
-L9210:	return(feed());
+L9210:	return(feed(OBJ));
 L9220:	return(fill());
 
 /*  Blast.  No effect unless you've got dynamite, which is a neat trick! */
