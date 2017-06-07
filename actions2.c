@@ -129,52 +129,52 @@ L9028:	game.prop[VASE]=2;
  *  objects fall into two categories: enemies (snake, dwarf, etc.)  and others
  *  (bird, clam, machine).  Ambiguous if 2 enemies, or no enemies but 2 others. */
 
-int attack(FILE *input) {
+int attack(FILE *input, long obj) {
 	I=ATDWRF(game.loc);
-	if(OBJ != 0) goto L9124;
-	if(I > 0)OBJ=DWARF;
-	if(HERE(SNAKE))OBJ=OBJ*NOBJECTS+SNAKE;
-	if(AT(DRAGON) && game.prop[DRAGON] == 0)OBJ=OBJ*NOBJECTS+DRAGON;
-	if(AT(TROLL))OBJ=OBJ*NOBJECTS+TROLL;
-	if(AT(OGRE))OBJ=OBJ*NOBJECTS+OGRE;
-	if(HERE(BEAR) && game.prop[BEAR] == 0)OBJ=OBJ*NOBJECTS+BEAR;
-	if(OBJ > NOBJECTS) return(8000);
-	if(OBJ != 0) goto L9124;
+	if(obj != 0) goto L9124;
+	if(I > 0)obj=DWARF;
+	if(HERE(SNAKE))obj=obj*NOBJECTS+SNAKE;
+	if(AT(DRAGON) && game.prop[DRAGON] == 0)obj=obj*NOBJECTS+DRAGON;
+	if(AT(TROLL))obj=obj*NOBJECTS+TROLL;
+	if(AT(OGRE))obj=obj*NOBJECTS+OGRE;
+	if(HERE(BEAR) && game.prop[BEAR] == 0)obj=obj*NOBJECTS+BEAR;
+	if(obj > NOBJECTS) return(8000);
+	if(obj != 0) goto L9124;
 /*  CAN'T ATTACK BIRD OR MACHINE BY THROWING AXE. */
-	if(HERE(BIRD) && VERB != THROW)OBJ=BIRD;
-	if(HERE(VEND) && VERB != THROW)OBJ=OBJ*NOBJECTS+VEND;
+	if(HERE(BIRD) && VERB != THROW)obj=BIRD;
+	if(HERE(VEND) && VERB != THROW)obj=obj*NOBJECTS+VEND;
 /*  CLAM AND OYSTER BOTH TREATED AS CLAM FOR INTRANSITIVE CASE; NO HARM DONE. */
-	if(HERE(CLAM) || HERE(OYSTER))OBJ=NOBJECTS*OBJ+CLAM;
-	if(OBJ > NOBJECTS) return(8000);
-L9124:	if(OBJ == BIRD) {
+	if(HERE(CLAM) || HERE(OYSTER))obj=NOBJECTS*obj+CLAM;
+	if(obj > NOBJECTS) return(8000);
+L9124:	if(obj == BIRD) {
 		SPK=137;
 		if(game.closed) return(2011);
 		DSTROY(BIRD);
 		game.prop[BIRD]=0;
 		SPK=45;
 	}
-L9125:	if(OBJ != VEND) goto L9126;
+L9125:	if(obj != VEND) goto L9126;
 	PSPEAK(VEND,game.prop[VEND]+2);
 	game.prop[VEND]=3-game.prop[VEND];
 	 return(2012);
 
-L9126:	if(OBJ == 0)SPK=44;
-	if(OBJ == CLAM || OBJ == OYSTER)SPK=150;
-	if(OBJ == SNAKE)SPK=46;
-	if(OBJ == DWARF)SPK=49;
-	if(OBJ == DWARF && game.closed) return(19000);
-	if(OBJ == DRAGON)SPK=167;
-	if(OBJ == TROLL)SPK=157;
-	if(OBJ == OGRE)SPK=203;
-	if(OBJ == OGRE && I > 0) goto L9128;
-	if(OBJ == BEAR)SPK=165+(game.prop[BEAR]+1)/2;
-	if(OBJ != DRAGON || game.prop[DRAGON] != 0) return(2011);
+L9126:	if(obj == 0)SPK=44;
+	if(obj == CLAM || obj == OYSTER)SPK=150;
+	if(obj == SNAKE)SPK=46;
+	if(obj == DWARF)SPK=49;
+	if(obj == DWARF && game.closed) return(19000);
+	if(obj == DRAGON)SPK=167;
+	if(obj == TROLL)SPK=157;
+	if(obj == OGRE)SPK=203;
+	if(obj == OGRE && I > 0) goto L9128;
+	if(obj == BEAR)SPK=165+(game.prop[BEAR]+1)/2;
+	if(obj != DRAGON || game.prop[DRAGON] != 0) return(2011);
 /*  Fun stuff for dragon.  If he insists on attacking it, win!  Set game.prop to dead,
  *  move dragon to central loc (still fixed), move rug there (not fixed), and
  *  move him there, too.  Then do a null motion to get new description. */
 	RSPEAK(49);
 	VERB=0;
-	OBJ=0;
+	obj=0;
 	GETIN(input,WD1,WD1X,WD2,WD2X);
 	if(WD1 != MAKEWD(25) && WD1 != MAKEWD(250519)) return(2607);
 	PSPEAK(DRAGON,3);
@@ -186,8 +186,8 @@ L9126:	if(OBJ == 0)SPK=44;
 	MOVE(DRAGON,K);
 	MOVE(RUG,K);
 	DROP(BLOOD,K);
-	for (OBJ=1; OBJ<=NOBJECTS; OBJ++) {
-	if(game.place[OBJ] == PLAC[DRAGON] || game.place[OBJ] == FIXD[DRAGON])MOVE(OBJ,K);
+	for (obj=1; obj<=NOBJECTS; obj++) {
+	if(game.place[obj] == PLAC[DRAGON] || game.place[obj] == FIXD[DRAGON])MOVE(obj,K);
 	/*etc*/ ;
 	} /* end loop */
 	game.loc=K;
@@ -229,7 +229,7 @@ int throw(FILE *cmdin) {
 	if(AT(OGRE)) goto L9175;
 	if(HERE(BEAR) && game.prop[BEAR] == 0) goto L9176;
 	OBJ=0;
-	return(attack(cmdin));
+	return(attack(cmdin, OBJ));
 
 L9172:	SPK=48;
 	if(randrange(NDWARVES+1) < game.dflag) goto L9175;

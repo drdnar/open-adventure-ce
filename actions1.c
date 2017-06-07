@@ -308,7 +308,7 @@ L9094:	DROP(JADE,game.loc);
 
 /*  Attack also moved into separate module. */
 
-L9120:	return(attack(input));
+L9120:	return(attack(input, OBJ));
 
 /*  Pour.  If no object, or object is bottle, assume contents of bottle.
  *  special tests for pouring water or oil on plant or rusty door. */
