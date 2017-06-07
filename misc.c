@@ -306,8 +306,6 @@ long ALPH1, ALPH2, BYTE, DIV, I, W;
  *  as is.  any other value for case is the same as 0 but also causes
  *  trailing blanks to be included (in anticipation of subsequent
  *  additional text). */
-
-
 	ALPH1=13*CASE+24;
 	ALPH2=26*labs(CASE)+ALPH1;
 	if(labs(CASE) > 1)ALPH1=ALPH2;
@@ -488,73 +486,68 @@ L3:	LEXEME=KTAB[I];
 	return(LEXEME);
 }
 
-void DSTROY(long OBJECT) {
-/*  Permanently eliminate "OBJECT" by moving to a non-existent location. */
-
-	MOVE(OBJECT,0);
-	return;
+void DSTROY(long object)
+/*  Permanently eliminate "object" by moving to a non-existent location. */
+{
+    MOVE(object,0);
 }
 
-void JUGGLE(long OBJECT) {
-long I, J;
-
+void JUGGLE(long object)
 /*  Juggle an object by picking it up and putting it down again, the purpose
  *  being to get the object to the front of the chain of things at its loc. */
+{
+    long i, j;
 
-	I=game.place[OBJECT];
-	J=game.fixed[OBJECT];
-	MOVE(OBJECT,I);
-	MOVE(OBJECT+NOBJECTS,J);
-	return;
+    i=game.place[object];
+    j=game.fixed[object];
+    MOVE(object,i);
+    MOVE(object+NOBJECTS,j);
 }
 
-void MOVE(long OBJECT, long WHERE) {
-long FROM;
+void MOVE(long object, long where)
+/*  Place any object anywhere by picking it up and dropping it.  May
+ *  already be toting, in which case the carry is a no-op.  Mustn't
+ *  pick up objects which are not at any loc, since carry wants to
+ *  remove objects from game.atloc chains. */
+{
+    long from;
 
-/*  Place any object anywhere by picking it up and dropping it.  May already be
- *  toting, in which case the carry is a no-op.  Mustn't pick up objects which
- *  are not at any loc, since carry wants to remove objects from game.atloc chains. */
-
-
-	if(OBJECT > NOBJECTS) goto L1;
-	FROM=game.place[OBJECT];
-	 goto L2;
-L1:	{long x = OBJECT-NOBJECTS; FROM=game.fixed[x];}
-L2:	if(FROM > 0 && FROM <= 300)CARRY(OBJECT,FROM);
-	DROP(OBJECT,WHERE);
-	return;
+    if(object > NOBJECTS) goto L1;
+    from=game.place[object];
+    goto L2;
+L1:	from=game.fixed[object-NOBJECTS];
+L2:	if(from > 0 && from <= 300)
+	CARRY(object,from);
+    DROP(object,where);
 }
 
-long PUT(long OBJECT, long WHERE, long PVAL) {
-long X;
-
+long PUT(long object, long where, long pval)
 /*  PUT is the same as MOVE, except it returns a value used to set up the
  *  negated game.prop values for the repository objects. */
-
-	MOVE(OBJECT,WHERE);
-	X=(-1)-PVAL;
-	return(X);
+{
+    MOVE(object,where);
+    return (-1)-pval;;
 }
 
-void CARRY(long OBJECT, long WHERE) {
+void CARRY(long object, long where) {
 long TEMP;
 
 /*  Start toting an object, removing it from the list of things at its former
- *  location.  Incr holdng unless it was already being toted.  If OBJECT>NOBJECTS
+ *  location.  Incr holdng unless it was already being toted.  If object>NOBJECTS
  *  (moving "fixed" second loc), don't change game.place or game.holdng. */
 
-	if(OBJECT > NOBJECTS) goto L5;
-	if(game.place[OBJECT] == -1)return;
-	game.place[OBJECT]= -1;
+	if(object > NOBJECTS) goto L5;
+	if(game.place[object] == -1)return;
+	game.place[object]= -1;
 	game.holdng=game.holdng+1;
-L5:	if(game.atloc[WHERE] != OBJECT) goto L6;
-	game.atloc[WHERE]=game.link[OBJECT];
+L5:	if(game.atloc[where] != object) goto L6;
+	game.atloc[where]=game.link[object];
 	return;
-L6:	TEMP=game.atloc[WHERE];
-L7:	if(game.link[TEMP] == OBJECT) goto L8;
+L6:	TEMP=game.atloc[where];
+L7:	if(game.link[TEMP] == object) goto L8;
 	TEMP=game.link[TEMP];
 	 goto L7;
-L8:	game.link[TEMP]=game.link[OBJECT];
+L8:	game.link[TEMP]=game.link[object];
 	return;
 }
 
@@ -830,7 +823,6 @@ L20:	printf("\nFile name: ");
 L30:	if(IN)IGNORE(fread(ARR,sizeof(long),250,F));
 	if(!IN)fwrite(ARR,sizeof(long),250,F);
 	return;
-
 }
 
 void DATIME(long* D, long* T)
