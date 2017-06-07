@@ -142,17 +142,17 @@ void PSPEAK(vocab_t msg,int skip)
  *  the index of the inventory message for object.  (INVEN+N+1 message
  *  is game.prop=N message). */
 {
-    long I, M;
+    long i, m;
 
-    M=PTEXT[msg];
+    m=PTEXT[msg];
     if(skip >= 0) {
-	for (I=0; I<=skip; I++) {
-L1:	    M=labs(LINES[M]);
-	    if (LINES[M] >= 0)
+	for (i=0; i<=skip; i++) {
+L1:	    m=labs(LINES[m]);
+	    if (LINES[m] >= 0)
 		goto L1;
 	}
     }
-    SPEAK(M);
+    SPEAK(m);
 }
 void RSPEAK(vocab_t i)
 /* Print the i-th "random" message (section 6 of database). */
@@ -173,7 +173,6 @@ void SETPRM(long first, long p1, long p2)
     }
 }
 
-#undef GETIN
 #define WORD1 (*wORD1)
 #define WORD1X (*wORD1X)
 #define WORD2 (*wORD2)
@@ -208,26 +207,26 @@ L22:	JUNK=GETTXT(false,true,true);
 	RSPEAK(53);
     }
 }
-#define GETIN(SRC,WORD1,WORD1X,WORD2,WORD2X) fGETIN(SRC,&WORD1,&WORD1X,&WORD2,&WORD2X)
 
 long YES(FILE *input, vocab_t x, vocab_t y, vocab_t z)
 /*  Print message X, wait for yes/no answer.  If yes, print Y and return true;
  *  if no, print Z and return false. */
 {
-    token_t yeah, reply, junk1, junk2, junk3;
+    token_t reply, junk1, junk2, junk3;
 
-L1:	RSPEAK(x);
-    GETIN(input, reply,junk1,junk2,junk3);
-    if(reply == MAKEWD(250519) || reply == MAKEWD(25)) goto L10;
-    if(reply == MAKEWD(1415) || reply == MAKEWD(14)) goto L20;
-    RSPEAK(185);
-    goto L1;
-L10:	yeah=true;
-    RSPEAK(y);
-    return(yeah);
-L20:	yeah=false;
-    RSPEAK(z);
-    return(yeah);
+    for (;;) {
+	RSPEAK(x);
+	GETIN(input, reply,junk1,junk2,junk3);
+	if(reply == MAKEWD(250519) || reply == MAKEWD(25)) {
+	    RSPEAK(y);
+	    return true;
+	}
+	if(reply == MAKEWD(1415) || reply == MAKEWD(14)) {
+	    RSPEAK(z);
+	    return false;
+	}
+	RSPEAK(185);
+    }
 }
 
 /*  Line-parsing routines (GETTXT, MAKEWD, PUTTXT, SHFTXT, TYPE0) */
@@ -329,11 +328,11 @@ void fPUTTXT(token_t word, long *state, long casemake)
 	if(w <= 0 && *state == 0 && labs(casemake) <= 1)
 	    return;
 	byte=w/div;
-	if(*state != 0 || byte != 63) goto L12;
-	*state=63;
-	goto L18;
-
-L12:	SHFTXT(LNPOSN,1);
+	if (!(*state != 0 || byte != 63)) {
+	    *state=63;
+	    goto L18;
+	}
+	SHFTXT(LNPOSN,1);
 	*state=*state+byte;
 	if(*state < alph2 && *state >= alph1)*state=*state-26*casemake;
 	INLINE[LNPOSN]=*state;
@@ -408,11 +407,7 @@ void fSAVARR(long arr[], long n)
 }
 #define SAVARR(ARR,N) fSAVARR(ARR,N)
 
-#undef SAVWRD
-#define WORD (*wORD)
-void fSAVWRD(long OP, long *wORD) {
-static long BUF[250], CKSUM = 0, H1, HASH = 0, N = 0, STATE = 0;
-
+void fSAVWRD(long op, long *pword) 
 /*  If OP<0, start writing a file, using word to initialise encryption; save
  *  word in the file.  If OP>0, start reading a file; read the file to find
  *  the value with which to decrypt the rest.  In either case, if a file is
@@ -420,48 +415,56 @@ static long BUF[250], CKSUM = 0, H1, HASH = 0, N = 0, STATE = 0;
  *  read/write a single word.  Words are buffered in case that makes for more
  *  efficient disk use.  We also compute a simple checksum to catch elementary
  *  poking within the saved file.  When we finish reading/writing the file,
- *  we store zero into WORD if there's no checksum error, else nonzero. */
+ *  we store zero into *PWORD if there's no checksum error, else nonzero. */
+{
+    static long buf[250], cksum = 0, h1, hash = 0, n = 0, state = 0;
 
-	if(OP != 0){long ifvar; ifvar=(STATE); switch (ifvar<0? -1 : ifvar>0? 1 :
-		0) { case -1: goto L30; case 0: goto L10; case 1: goto L30; }}
-	if(STATE == 0)return;
-	if(N == 250)SAVEIO(1,STATE > 0,BUF);
-	N=MOD(N,250)+1;
-	H1=MOD(HASH*1093L+221573L,1048576L);
-	HASH=MOD(H1*1093L+221573L,1048576L);
-	H1=MOD(H1,1234)*765432+MOD(HASH,123);
-	N--;
-	if(STATE > 0)WORD=BUF[N]+H1;
-	BUF[N]=WORD-H1;
-	N++;
-	CKSUM=MOD(CKSUM*13+WORD,1000000000L);
+    if (op != 0)
+    {
+	long ifvar = state; 
+	switch (ifvar<0 ? -1 : (ifvar>0 ? 1 : 0)) 
+	{ 
+	case -1:
+	case 1:
+	    if(n == 250)SAVEIO(1,state > 0,buf);
+	    n=MOD(n,250)+1;
+	    if(state <= 0) {
+		n--; buf[n]=cksum; n++;
+		SAVEIO(1,false,buf);
+	    }
+	    n--; *pword=buf[n]-cksum; n++;
+	    SAVEIO(-1,state > 0,buf);
+	    state=0;
+	    break;
+	case 0:	/* FIXME: Huh? should be impossible */
+	    state=op;
+	    SAVEIO(0,state > 0,buf);
+	    n=1;
+	    if(state <= 0) {
+		hash=MOD(*pword,1048576L);
+		buf[0]=1234L*5678L-hash;
+	    }
+	    SAVEIO(1,true,buf);
+	    hash=MOD(1234L*5678L-buf[0],1048576L);
+	    cksum=buf[0];
+	    return;
+	}
+    }
+    if(state == 0)
 	return;
-
-L10:	STATE=OP;
-	SAVEIO(0,STATE > 0,BUF);
-	N=1;
-	if(STATE > 0) goto L15;
-	HASH=MOD(WORD,1048576L);
-	BUF[0]=1234L*5678L-HASH;
-L13:	CKSUM=BUF[0];
-	return;
-
-L15:	SAVEIO(1,true,BUF);
-	HASH=MOD(1234L*5678L-BUF[0],1048576L);
-	 goto L13;
-
-L30:	if(N == 250)SAVEIO(1,STATE > 0,BUF);
-	N=MOD(N,250)+1;
-	if(STATE > 0) goto L32;
-	N--; BUF[N]=CKSUM; N++;
-	SAVEIO(1,false,BUF);
-L32:	N--; WORD=BUF[N]-CKSUM; N++;
-	SAVEIO(-1,STATE > 0,BUF);
-	STATE=0;
-	return;
+    if(n == 250)
+	SAVEIO(1,state > 0,buf);
+    n=MOD(n,250)+1;
+    h1=MOD(hash*1093L+221573L,1048576L);
+    hash=MOD(h1*1093L+221573L,1048576L);
+    h1=MOD(h1,1234)*765432+MOD(hash,123);
+    n--;
+    if(state > 0)
+	*pword=buf[n]+h1;
+    buf[n]=*pword-h1;
+    n++;
+    cksum=MOD(cksum*13+*pword,1000000000L);
 }
-#undef WORD
-#define SAVWRD(OP,WORD) fSAVWRD(OP,&WORD)
 
 /*  Data structure  routines */
 
