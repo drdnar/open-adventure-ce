@@ -8,7 +8,7 @@
 #include "database.h"
 
 /* hack to ignore GCC Unused Result */
-#define IGNORE(r) do{if(r){}}while(0)
+#define IGNORE(r) do{if (r){}}while(0)
 
 /*  I/O routines (SPEAK, PSPEAK, RSPEAK, SETPRM, GETIN, YES) */
 
@@ -31,14 +31,14 @@ L10:
     state=0;
     for (I=K; I<=L; I++) {
 	PUTTXT(LINES[I],state,2);
-    } /* end loop */
+    }
     LNPOSN=0;
 L30:
     LNPOSN=LNPOSN+1;
 L32:
-    if(LNPOSN > LNLENG) 
+    if (LNPOSN > LNLENG) 
 	goto L40;
-    if(INLINE[LNPOSN] != 63) 
+    if (INLINE[LNPOSN] != 63) 
 	goto L30;
     {long x = LNPOSN+1; PRMTYP=INLINE[x];}
     /*  63 is a "%"; the next character determine the type of
@@ -49,28 +49,28 @@ L32:
      *  lower case with first letter capitalised, 30 (T) = text ending
      *  with a word of -1, 65-73 (1-9) = number using that many
      *  characters, 12 (B) = variable number of blanks. */
-    if(PRMTYP == 1)
+    if (PRMTYP == 1)
 	return;
-    if(PRMTYP == 29)
+    if (PRMTYP == 29)
 	goto L320;
-    if(PRMTYP == 30)
+    if (PRMTYP == 30)
 	goto L340;
-    if(PRMTYP == 12)
+    if (PRMTYP == 12)
 	goto L360;
-    if(PRMTYP == 33 || PRMTYP == 22 || PRMTYP == 31 || PRMTYP == 13)
+    if (PRMTYP == 33 || PRMTYP == 22 || PRMTYP == 31 || PRMTYP == 13)
 	goto L380;
     PRMTYP=PRMTYP-64;
-    if(PRMTYP < 1 || PRMTYP > 9) goto L30;
+    if (PRMTYP < 1 || PRMTYP > 9) goto L30;
     SHFTXT(LNPOSN+2,PRMTYP-2);
     LNPOSN=LNPOSN+PRMTYP;
     PARM=labs(PARMS[NPARMS]);
     NEG=0;
-    if(PARMS[NPARMS] < 0)
+    if (PARMS[NPARMS] < 0)
 	NEG=9;
     /* 390 */ for (I=1; I<=PRMTYP; I++) {
 	LNPOSN=LNPOSN-1;
 	INLINE[LNPOSN]=MOD(PARM,10)+64;
-	if(I == 1 || PARM != 0)
+	if (I == 1 || PARM != 0)
 	    goto L390;
 	INLINE[LNPOSN]=NEG;
 	NEG=0;
@@ -85,7 +85,7 @@ L395:
 L320:
     SHFTXT(LNPOSN+2,-1);
     INLINE[LNPOSN]=55;
-    if(PARMS[NPARMS] == 1)
+    if (PARMS[NPARMS] == 1)
 	SHFTXT(LNPOSN+1,-1);
     goto L395;
 
@@ -94,8 +94,8 @@ L340:
     state=0;
     casemake=2;
 L345: 
-    if(PARMS[NPARMS] < 0) goto L395;
-    {long x = NPARMS+1; if(PARMS[x] < 0)
+    if (PARMS[NPARMS] < 0) goto L395;
+    {long x = NPARMS+1; if (PARMS[x] < 0)
 			    casemake=0;}
     PUTTXT(PARMS[NPARMS],state,casemake);
     NPARMS=NPARMS+1;
@@ -104,7 +104,7 @@ L345:
 L360:
     PRMTYP=PARMS[NPARMS];
     SHFTXT(LNPOSN+2,PRMTYP-2);
-    if(PRMTYP == 0) goto L395;
+    if (PRMTYP == 0) goto L395;
     for (I=1; I<=PRMTYP; I++) {
 	INLINE[LNPOSN]=0;
 	LNPOSN=LNPOSN+1;
@@ -115,14 +115,14 @@ L380:
     SHFTXT(LNPOSN+2,-2);
     state=0;
     casemake= -1;
-    if(PRMTYP == 31)
+    if (PRMTYP == 31)
 	casemake=1;
-    if(PRMTYP == 33)
+    if (PRMTYP == 33)
 	casemake=0;
     I=LNPOSN;
     PUTTXT(PARMS[NPARMS],state,casemake);
     {long x = NPARMS+1; PUTTXT(PARMS[x],state,casemake);}
-    if(PRMTYP == 13 && INLINE[I] >= 37 && INLINE[I] <=
+    if (PRMTYP == 13 && INLINE[I] >= 37 && INLINE[I] <=
        62)INLINE[I]=INLINE[I]-26;
     NPARMS=NPARMS+2;
     goto L32;
@@ -133,7 +133,7 @@ L40:
     blank=false;
     TYPE();
     K=L+1;
-    if(LINES[K] >= 0)
+    if (LINES[K] >= 0)
 	goto L10;
 }
 
@@ -145,7 +145,7 @@ void PSPEAK(vocab_t msg,int skip)
     long i, m;
 
     m=PTEXT[msg];
-    if(skip >= 0) {
+    if (skip >= 0) {
 	for (i=0; i<=skip; i++) {
 L1:	    m=labs(LINES[m]);
 	    if (LINES[m] >= 0)
@@ -165,7 +165,7 @@ void SETPRM(long first, long p1, long p2)
 /*  Stores parameters into the PRMCOM parms array for use by speak.  P1 and P2
  *  are stored into PARMS(first) and PARMS(first+1). */
 {
-    if(first >= MAXPARMS)
+    if (first >= MAXPARMS)
 	BUG(29);
     else {
 	PARMS[first] = p1;
@@ -184,10 +184,10 @@ bool fGETIN(FILE *input, long *wORD1, long *wORD1X, long *wORD2, long *wORD2X)
  *  blanks may follow the word.  If a second word appears, it is returned in
  *  WORD2 (chars 6 thru 10 in WORD2X), else WORD2 is -1. */
 {
-    long JUNK;
+    long junk;
 
     for (;;) {
-	if(game.blklin)
+	if (game.blklin)
 	    TYPE0();
 	MAPLIN(input);
 	if (feof(input))
@@ -196,13 +196,17 @@ bool fGETIN(FILE *input, long *wORD1, long *wORD1X, long *wORD2, long *wORD2X)
 	if (game.blklin && WORD1 < 0)
 	    continue;
 	WORD1X=GETTXT(false,true,true);
-L12:	JUNK=GETTXT(false,true,true);
-	if(JUNK > 0) goto L12;
+	do {	
+	    junk=GETTXT(false,true,true);
+	} while 
+	    (junk > 0);
 	WORD2=GETTXT(true,true,true);
 	WORD2X=GETTXT(false,true,true);
-L22:	JUNK=GETTXT(false,true,true);
-	if(JUNK > 0) goto L22;
-	if(GETTXT(true,true,true) <= 0)
+	do {
+	    junk=GETTXT(false,true,true);
+	} while 
+	    (junk > 0);
+	if (GETTXT(true,true,true) <= 0)
 	    return true;
 	RSPEAK(53);
     }
@@ -217,11 +221,11 @@ long YES(FILE *input, vocab_t x, vocab_t y, vocab_t z)
     for (;;) {
 	RSPEAK(x);
 	GETIN(input, reply,junk1,junk2,junk3);
-	if(reply == MAKEWD(250519) || reply == MAKEWD(25)) {
+	if (reply == MAKEWD(250519) || reply == MAKEWD(25)) {
 	    RSPEAK(y);
 	    return true;
 	}
-	if(reply == MAKEWD(1415) || reply == MAKEWD(14)) {
+	if (reply == MAKEWD(1415) || reply == MAKEWD(14)) {
 	    RSPEAK(z);
 	    return false;
 	}
@@ -241,13 +245,13 @@ long GETTXT(bool skip, bool onewrd, bool upper)
     long text;
     static long splitting = -1;
 
-    if(LNPOSN != splitting)
+    if (LNPOSN != splitting)
 	splitting = -1;
     text= -1;
     while (true) {
-	if(LNPOSN > LNLENG)
+	if (LNPOSN > LNLENG)
 	    return(text);
-	if((!skip) || INLINE[LNPOSN] != 0)
+	if ((!skip) || INLINE[LNPOSN] != 0)
 	    break;
 	LNPOSN=LNPOSN+1;
     }
@@ -255,18 +259,18 @@ long GETTXT(bool skip, bool onewrd, bool upper)
     text=0;
     for (int I=1; I<=TOKLEN; I++) {
 	text=text*64;
-	if(LNPOSN > LNLENG || (onewrd && INLINE[LNPOSN] == 0))
+	if (LNPOSN > LNLENG || (onewrd && INLINE[LNPOSN] == 0))
 	    continue;
 	char current=INLINE[LNPOSN];
-	if(current < 63) {
+	if (current < 63) {
 	    splitting = -1;
-	    if(upper && current >= 37)
+	    if (upper && current >= 37)
 		current=current-26;
 	    text=text+current;
 	    LNPOSN=LNPOSN+1;
 	    continue;
 	}
-	if(splitting != LNPOSN) {
+	if (splitting != LNPOSN) {
 	    text=text+63;
 	    splitting = LNPOSN;
 	    continue;
@@ -294,7 +298,7 @@ token_t MAKEWD(long letters)
     for (long k=letters; k != 0; k=k/100) {
 	word=word+i*(MOD(k,50)+10);
 	i=i*64;
-	if(MOD(k,100) > 50)word=word+i*5;
+	if (MOD(k,100) > 50)word=word+i*5;
     }
     i=64L*64L*64L*64L*64L/i;
     word=word*i;
@@ -318,14 +322,14 @@ void fPUTTXT(token_t word, long *state, long casemake)
 
     alph1=13*casemake+24;
     alph2=26*labs(casemake)+alph1;
-    if(labs(casemake) > 1)
+    if (labs(casemake) > 1)
 	alph1=alph2;
     /*  alph1&2 define range of wrong-case chars, 11-36 or 37-62 or empty. */
     div=64L*64L*64L*64L;
     w=word;
     for (i=1; i<=TOKLEN; i++) 
     {
-	if(w <= 0 && *state == 0 && labs(casemake) <= 1)
+	if (w <= 0 && *state == 0 && labs(casemake) <= 1)
 	    return;
 	byte=w/div;
 	if (!(*state != 0 || byte != 63)) {
@@ -334,7 +338,7 @@ void fPUTTXT(token_t word, long *state, long casemake)
 	}
 	SHFTXT(LNPOSN,1);
 	*state=*state+byte;
-	if(*state < alph2 && *state >= alph1)*state=*state-26*casemake;
+	if (*state < alph2 && *state >= alph1)*state=*state-26*casemake;
 	INLINE[LNPOSN]=*state;
 	LNPOSN=LNPOSN+1;
 	*state=0;
@@ -352,16 +356,14 @@ void SHFTXT(long from, long delta)
     if (!(LNLENG < from || delta == 0)) {
 	for (I=from; I<=LNLENG; I++) {
 	    k=I;
-	    if(delta > 0)
+	    if (delta > 0)
 		k=from+LNLENG-I;
 	    j=k+delta;
 	    INLINE[j]=INLINE[k];
-	} /* end loop */
+	}
     }
     LNLENG=LNLENG+delta;
-    return;
 }
-
 
 void TYPE0(void)
 /*  Type a blank line.  This procedure is provided as a convenience for callers
@@ -378,7 +380,6 @@ void TYPE0(void)
 
 /*  Suspend/resume I/O routines (SAVWDS, SAVARR, SAVWRD) */
 
-#undef SAVWDS
 void fSAVWDS(long *W1, long *W2, long *W3, long *W4,
 	     long *W5, long *W6, long *W7)
 /* Write or read 7 variables.  See SAVWRD. */
@@ -390,11 +391,8 @@ void fSAVWDS(long *W1, long *W2, long *W3, long *W4,
     SAVWRD(0,(*W5));
     SAVWRD(0,(*W6));
     SAVWRD(0,(*W7));
-    return;
 }
-#define SAVWDS(W1,W2,W3,W4,W5,W6,W7) fSAVWDS(&W1,&W2,&W3,&W4,&W5,&W6,&W7)
 
-#undef SAVARR
 void fSAVARR(long arr[], long n)
 /* Write or read an array of n words.  See SAVWRD. */
 {
@@ -405,7 +403,6 @@ void fSAVARR(long arr[], long n)
     }
     return;
 }
-#define SAVARR(ARR,N) fSAVARR(ARR,N)
 
 void fSAVWRD(long op, long *pword) 
 /*  If OP<0, start writing a file, using word to initialise encryption; save
@@ -426,9 +423,9 @@ void fSAVWRD(long op, long *pword)
 	{ 
 	case -1:
 	case 1:
-	    if(n == 250)SAVEIO(1,state > 0,buf);
+	    if (n == 250)SAVEIO(1,state > 0,buf);
 	    n=MOD(n,250)+1;
-	    if(state <= 0) {
+	    if (state <= 0) {
 		n--; buf[n]=cksum; n++;
 		SAVEIO(1,false,buf);
 	    }
@@ -440,7 +437,7 @@ void fSAVWRD(long op, long *pword)
 	    state=op;
 	    SAVEIO(0,state > 0,buf);
 	    n=1;
-	    if(state <= 0) {
+	    if (state <= 0) {
 		hash=MOD(*pword,1048576L);
 		buf[0]=1234L*5678L-hash;
 	    }
@@ -450,16 +447,16 @@ void fSAVWRD(long op, long *pword)
 	    return;
 	}
     }
-    if(state == 0)
+    if (state == 0)
 	return;
-    if(n == 250)
+    if (n == 250)
 	SAVEIO(1,state > 0,buf);
     n=MOD(n,250)+1;
     h1=MOD(hash*1093L+221573L,1048576L);
     hash=MOD(h1*1093L+221573L,1048576L);
     h1=MOD(h1,1234)*765432+MOD(hash,123);
     n--;
-    if(state > 0)
+    if (state > 0)
 	*pword=buf[n]+h1;
     buf[n]=*pword-h1;
     n++;
@@ -479,24 +476,22 @@ long VOCAB(long id, long init)
     long i, lexeme;
 
     for (i=1; i<=TABSIZ; i++) {
-	if(KTAB[i] == -1) 
-	    goto L2;
-	if(init >= 0 && KTAB[i]/1000 != init) 
-	    goto L1;
-	if(ATAB[i] == id)
-	    goto L3;
-L1:;
+	if (KTAB[i] == -1) {
+	    lexeme= -1;
+	    if (init < 0)
+		return(lexeme);
+	    BUG(5);
+	}
+	if (init >= 0 && KTAB[i]/1000 != init) 
+	    continue;
+	if (ATAB[i] == id) {
+	    lexeme=KTAB[i];
+	    if (init >= 0)
+		lexeme=MOD(lexeme,1000);
+	    return(lexeme);
+	}
     }
     BUG(21);
-
-L2: lexeme= -1;
-    if(init < 0)
-	return(lexeme);
-    BUG(5);
-
-L3: lexeme=KTAB[i];
-    if(init >= 0)lexeme=MOD(lexeme,1000);
-    return(lexeme);
 }
 
 void DSTROY(long object)
@@ -525,14 +520,14 @@ void MOVE(long object, long where)
 {
     long from;
 
-    if(object > NOBJECTS) 
+    if (object > NOBJECTS) 
 	goto L1;
     from=game.place[object];
     goto L2;
 L1:
     from=game.fixed[object-NOBJECTS];
 L2:
-    if(from > 0 && from <= 300)
+    if (from > 0 && from <= 300)
 	CARRY(object,from);
     DROP(object,where);
 }
@@ -552,18 +547,18 @@ void CARRY(long object, long where)
 {
     long temp;
 
-    if(object <= NOBJECTS) {
-	if(game.place[object] == -1)
+    if (object <= NOBJECTS) {
+	if (game.place[object] == -1)
 	    return;
 	game.place[object]= -1;
 	game.holdng=game.holdng+1;
     }
-    if(game.atloc[where] == object) {
+    if (game.atloc[where] == object) {
 	game.atloc[where]=game.link[object];
 	return;
     }
     temp=game.atloc[where];
-L7: if(game.link[temp] == object)
+L7: if (game.link[temp] == object)
 	goto L8;
     temp=game.link[temp];
     goto L7;
@@ -574,14 +569,14 @@ void DROP(long object, long where)
 /*  Place an object at a given loc, prefixing it onto the game.atloc list.  Decr
  *  game.holdng if the object was being toted. */
 {
-    if(object > NOBJECTS)
+    if (object > NOBJECTS)
 	goto L1;
-    if(game.place[object] == -1)
+    if (game.place[object] == -1)
 	game.holdng=game.holdng-1;
     game.place[object]=where;
     goto L2;
 L1: game.fixed[object-NOBJECTS]=where;
-L2: if(where <= 0)
+L2: if (where <= 0)
 	return;
     game.link[object]=game.atloc[where];
     game.atloc[where]=object;
@@ -595,13 +590,13 @@ long ATDWRF(long where)
     long at, i;
 
     at =0;
-    if(game.dflag < 2)
+    if (game.dflag < 2)
 	return(at);
     at = -1;
     for (i=1; i<=NDWARVES-1; i++) {
-	if(game.dloc[i] == where)
+	if (game.dloc[i] == where)
 	    return i;
-	if(game.dloc[i] != 0)
+	if (game.dloc[i] != 0)
 	    at=0;
     }
     return(at);
@@ -706,7 +701,7 @@ void BUG(long num)
 
 void MAPLIN(FILE *fp)
 {
-    long I, VAL;
+    long i, val;
 
     /*  Read a line of input, from the specified input source,
      *  translate the chars to integers in the range 0-126 and store
@@ -733,7 +728,8 @@ void MAPLIN(FILE *fp)
      *  and is not changed thereafter unless the routines on this page choose
      *  to do so. */
 
-    if(MAP2[1] == 0)MPINIT();
+    if (MAP2[1] == 0)
+	MPINIT();
 
     if (!oldstyle && fp == stdin)
 	fputs("> ", stdout);
@@ -751,11 +747,12 @@ void MAPLIN(FILE *fp)
 	    IGNORE(fputs(rawbuf, stdout));
 	strcpy(INLINE+1, rawbuf);
 	LNLENG=0;
-	for (I=1; I<=(long)sizeof(INLINE) && INLINE[I]!=0; I++) {
-	    VAL=INLINE[I]+1;
-	    INLINE[I]=MAP1[VAL];
-	    if(INLINE[I] != 0)LNLENG=I;
-	} /* end loop */
+	for (i=1; i<=(long)sizeof(INLINE) && INLINE[i]!=0; i++) {
+	    val=INLINE[i]+1;
+	    INLINE[i]=MAP1[val];
+	    if (INLINE[i] != 0)
+		LNLENG=i;
+	}
 	LNPOSN=1;
     }
 }
@@ -767,12 +764,12 @@ void TYPE(void)
 {
     long i;
 
-    if(LNLENG == 0) {
+    if (LNLENG == 0) {
 	printf("\n");
 	return;
     }
 
-    if(MAP2[1] == 0)
+    if (MAP2[1] == 0)
 	MPINIT();
     for (i=1; i<=LNLENG; i++) {
 	INLINE[i]=MAP2[INLINE[i]+1];
@@ -812,7 +809,7 @@ void MPINIT(void)
     for (i=0; i<=126; i++) {
 	i++; val=MAP1[i]+1; i--;
 	MAP2[val] = i*('B'-'A');
-	if(i >= 64)
+	if (i >= 64)
 	    MAP2[val]=(i-64)*('B'-'A')+'@';
     }
 }
@@ -838,7 +835,7 @@ void fSAVEIO(long op, long in, long arr[])
 	    printf("\nFile name: ");
 	    IGNORE(fgets(name, sizeof(name), stdin));
 	    fp = fopen(name,(in ? READ_MODE : WRITE_MODE));
-	    if(fp == NULL)
+	    if (fp == NULL)
 		printf("Can't open file %s, try again.\n", name); 
 	}
 	break;
