@@ -15,6 +15,7 @@
  */
 
 int action(FILE *input, long STARTAT, long verb, long obj) {
+	int kk;
 	switch(STARTAT) {
 	   case 4000: goto L4000;
 	   case 4090: goto L4090;
@@ -517,14 +518,14 @@ L8300:	SPK=201;
 	RSPEAK(260);
 	if(!YES(input,200,54,54)) return(2012);
 	game.saved=game.saved+5;
-	KK= -1;
+	kk= -1;
 
 /*  This next part is shared with the "resume" code.  The two cases are
  *  distinguished by the value of kk (-1 for suspend, +1 for resume). */
 
 L8305:	DATIME(&I,&K);
 	K=I+650*K;
-	SAVWRD(KK,K);
+	SAVWRD(kk,K);
 	K=VRSION;
 	SAVWRD(0,K);
 	if(K != VRSION) goto L8312;
@@ -552,17 +553,17 @@ L8305:	DATIME(&I,&K);
 	SAVARR(game.odloc,NDWARVES);
 	SAVARR(game.place,NOBJECTS);
 	SAVARR(game.prop,NOBJECTS);
-	SAVWRD(KK,K);
+	SAVWRD(kk,K);
 	if(K != 0) goto L8318;
 	K=NUL;
 	game.zzword=RNDVOC(3,game.zzword);
-	if(KK > 0) return(8);
+	if(kk > 0) return(8);
 	RSPEAK(266);
 	exit(0);
 
 /*  Resume.  Read a suspended game back from a file. */
 
-L8310:	KK=1;
+L8310:	kk=1;
 	if(game.loc == 1 && game.abbrev[1] == 1) goto L8305;
 	RSPEAK(268);
 	if(!YES(input,200,54,54)) return(2012);
