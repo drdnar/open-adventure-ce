@@ -110,18 +110,16 @@ void score(long mode)
     SETPRM(3,game.turns,game.turns);
     RSPEAK(262);
     for (i=1; i<=CLSSES; i++) {
-	if(CVAL[i] >= score) goto L20210;
-    } /* end loop */
-    SPK=265;
-    goto L25000;
-
-L20210: SPEAK(CTEXT[i]);
-    SPK=264;
-    if(i >= CLSSES) goto L25000;
-    i=CVAL[i]+1-score;
-    SETPRM(1,i,i);
-    SPK=263;
-L25000: RSPEAK(SPK);
+	if(CVAL[i] >= score) {
+	    SPEAK(CTEXT[i]);
+	    i=CVAL[i]+1-score;
+	    SETPRM(1,i,i);
+	    RSPEAK(263);
+	    exit(0);
+	}
+    }
+    RSPEAK(265);
+    RSPEAK(264);
     exit(0);
 
 }
