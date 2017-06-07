@@ -162,7 +162,7 @@ L8010:	if(game.atloc[game.loc] == 0 || game.link[game.atloc[game.loc]] != 0 || A
 /*  Transitive carry/drop are in separate file. */
 
 L9010:	return(carry());
-L9020:	return(discard(false));
+L9020:	return(discard(OBJ, false));
 
 /*  SAY.  Echo WD2 (or WD1 if no WD2 (SAY WHAT?, etc.).)  Magic words override. */
 
@@ -421,7 +421,7 @@ L8201:	/*etc*/ ;
 /* Feed/fill are in the other module. */
 
 L9210:	return(feed(OBJ));
-L9220:	return(fill());
+L9220:	return(fill(OBJ));
 
 /*  Blast.  No effect unless you've got dynamite, which is a neat trick! */
 

@@ -55,35 +55,35 @@ L9015:	SPK=238;
  *  bird (might attack snake or dragon) and cage (might contain bird) and vase.
  *  Drop coins at vending machine for extra batteries. */
 
-int discard(bool just_do_it) {
+int discard(long obj, bool just_do_it) {
 	if(just_do_it) goto L9021;
-	if(TOTING(ROD2) && OBJ == ROD && !TOTING(ROD))OBJ=ROD2;
-	if(!TOTING(OBJ)) return(2011);
-	if(OBJ != BIRD || !HERE(SNAKE)) goto L9023;
+	if(TOTING(ROD2) && obj == ROD && !TOTING(ROD))obj=ROD2;
+	if(!TOTING(obj)) return(2011);
+	if(obj != BIRD || !HERE(SNAKE)) goto L9023;
 	RSPEAK(30);
 	if(game.closed) return(19000);
 	DSTROY(SNAKE);
 /*  SET game.prop FOR USE BY TRAVEL OPTIONS */
 	game.prop[SNAKE]=1;
 L9021:	K=LIQ(0);
-	if(K == OBJ)OBJ=BOTTLE;
-	if(OBJ == BOTTLE && K != 0)game.place[K]=0;
-	if(OBJ == CAGE && game.prop[BIRD] == 1)DROP(BIRD,game.loc);
-	DROP(OBJ,game.loc);
-	if(OBJ != BIRD) return(2012);
+	if(K == obj)obj=BOTTLE;
+	if(obj == BOTTLE && K != 0)game.place[K]=0;
+	if(obj == CAGE && game.prop[BIRD] == 1)DROP(BIRD,game.loc);
+	DROP(obj,game.loc);
+	if(obj != BIRD) return(2012);
 	game.prop[BIRD]=0;
 	if(FOREST(game.loc))game.prop[BIRD]=2;
 	 return(2012);
 
-L9023:	if(!(GSTONE(OBJ) && AT(CAVITY) && game.prop[CAVITY] != 0)) goto L9024;
+L9023:	if(!(GSTONE(obj) && AT(CAVITY) && game.prop[CAVITY] != 0)) goto L9024;
 	RSPEAK(218);
-	game.prop[OBJ]=1;
+	game.prop[obj]=1;
 	game.prop[CAVITY]=0;
-	if(!HERE(RUG) || !((OBJ == EMRALD && game.prop[RUG] != 2) || (OBJ == RUBY &&
+	if(!HERE(RUG) || !((obj == EMRALD && game.prop[RUG] != 2) || (obj == RUBY &&
 		game.prop[RUG] == 2))) goto L9021;
 	SPK=219;
 	if(TOTING(RUG))SPK=220;
-	if(OBJ == RUBY)SPK=221;
+	if(obj == RUBY)SPK=221;
 	RSPEAK(SPK);
 	if(SPK == 220) goto L9021;
 	K=2-game.prop[RUG];
@@ -92,19 +92,19 @@ L9023:	if(!(GSTONE(OBJ) && AT(CAVITY) && game.prop[CAVITY] != 0)) goto L9024;
 	MOVE(RUG+NOBJECTS,K);
 	 goto L9021;
 
-L9024:	if(OBJ != COINS || !HERE(VEND)) goto L9025;
+L9024:	if(obj != COINS || !HERE(VEND)) goto L9025;
 	DSTROY(COINS);
 	DROP(BATTER,game.loc);
 	PSPEAK(BATTER,0);
 	 return(2012);
 
-L9025:	if(OBJ != BIRD || !AT(DRAGON) || game.prop[DRAGON] != 0) goto L9026;
+L9025:	if(obj != BIRD || !AT(DRAGON) || game.prop[DRAGON] != 0) goto L9026;
 	RSPEAK(154);
 	DSTROY(BIRD);
 	game.prop[BIRD]=0;
 	 return(2012);
 
-L9026:	if(OBJ != BEAR || !AT(TROLL)) goto L9027;
+L9026:	if(obj != BEAR || !AT(TROLL)) goto L9027;
 	RSPEAK(163);
 	MOVE(TROLL,0);
 	MOVE(TROLL+NOBJECTS,0);
@@ -114,7 +114,7 @@ L9026:	if(OBJ != BEAR || !AT(TROLL)) goto L9027;
 	game.prop[TROLL]=2;
 	 goto L9021;
 
-L9027:	if(OBJ == VASE && game.loc != PLAC[PILLOW]) goto L9028;
+L9027:	if(obj == VASE && game.loc != PLAC[PILLOW]) goto L9028;
 	RSPEAK(54);
 	 goto L9021;
 
@@ -218,7 +218,7 @@ int throw(FILE *cmdin, long obj) {
 	if(!TOTING(obj)) return(2011);
 	if(obj >= 50 && obj <= MAXTRS && AT(TROLL)) goto L9178;
 	if(obj == FOOD && HERE(BEAR)) goto L9177;
-	if(obj != AXE) return(discard(false));
+	if(obj != AXE) return(discard(obj, false));
 	I=ATDWRF(game.loc);
 	if(I > 0) goto L9172;
 	SPK=152;
@@ -333,7 +333,7 @@ L9222:	SPK=29;
 	RSPEAK(145);
 	game.prop[VASE]=2;
 	game.fixed[VASE]= -1;
-	 return(discard(true));
+	return(discard(obj, true));
 
 L9224:	SPK=213;
 	if(game.prop[URN] != 0) return(2011);

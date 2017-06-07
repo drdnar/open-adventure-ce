@@ -38,7 +38,7 @@
 #define OUTSID(LOC)	((LOC) <= 8 || FOREST(LOC) || (LOC) == PLAC[SAPPH] || (LOC) == 180 || (LOC) == 182)
 #define INDEEP(LOC)	((LOC) >= 15 && !OUTSID(LOC) && (LOC) != 179)
 
-extern int carry(void), discard(bool), attack(FILE *, long), throw(FILE *, long obj), feed(long), fill(void);
+extern int carry(void), discard(long, bool), attack(FILE *, long), throw(FILE *, long obj), feed(long), fill(long);
 void score(long);
 
 
