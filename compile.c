@@ -268,13 +268,18 @@ int read_database(FILE* database) {
  *  section 6's stuff.  CTEXT(N) points to a player-class message.  TTEXT is for
  *  section 14.  We also clear COND (see description of section 9 for details). */
 
-  for (int I=1; I<=300; I++) {
-    if(I <= NOBJECTS) PTEXT[I] = 0;
-    if(I <= RTXSIZ) RTEXT[I] = 0;
-    if(I <= CLSMAX) CTEXT[I] = 0;
-    if(I <= NOBJECTS) OBJSND[I] = 0;
-    if(I <= NOBJECTS) OBJTXT[I] = 0;
-    if(I > LOCSIZ) break;
+  for (int I=1; I<=NOBJECTS; I++) {
+    PTEXT[I] = 0;
+    OBJSND[I] = 0;
+    OBJTXT[I] = 0;
+  }
+  for (int I=1; I<=RTXSIZ; I++) {
+    RTEXT[I] = 0;
+  }
+  for (int I=1; I<=CLSMAX; I++) {
+    CTEXT[I] = 0;
+  }
+  for (int I=1; I<=LOCSIZ; I++) {
     STEXT[I] = 0;
     LTEXT[I] = 0;
     COND[I] = 0;
