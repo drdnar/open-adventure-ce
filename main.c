@@ -449,12 +449,13 @@ L19999: K=43;
 	if((V1 != 1000+WATER && V1 != 1000+OIL) || (V2 != 1000+PLANT && V2 !=
 		1000+DOOR)) goto L2610;
 	{long x = V2-1000; if(AT(x))WD2=MAKEWD(16152118);}
-L2610:	if(V1 == 1000+CAGE && V2 == 1000+BIRD && HERE(CAGE) &&
-		HERE(BIRD))WD1=MAKEWD(301200308);
-L2620:	if(WD1 != MAKEWD(23051920)) goto L2625;
-	IWEST=IWEST+1;
-	if(IWEST == 10)RSPEAK(17);
-L2625:	if(WD1 != MAKEWD( 715) || WD2 == 0) goto L2630;
+L2610:	if(V1 == 1000+CAGE && V2 == 1000+BIRD && HERE(CAGE) && HERE(BIRD))
+		WD1=MAKEWD(301200308);
+L2620:	if(WD1 == MAKEWD(23051920)) {
+		IWEST=IWEST+1;
+		if(IWEST == 10)RSPEAK(17);
+	}
+	if(WD1 != MAKEWD( 715) || WD2 == 0) goto L2630;
 	IGO=IGO+1;
 	if(IGO == 10)RSPEAK(276);
 L2630:	I=VOCAB(WD1,-1);
@@ -632,10 +633,12 @@ L20:	K=OLDLOC;
 
 L21:	LL=MOD((labs(TRAVEL[KK])/1000),1000);
 	if(LL == K) goto L25;
-	if(LL > 300) goto L22;
-	J=KEY[LL];
-	if(FORCED(LL) && MOD((labs(TRAVEL[J])/1000),1000) == K)K2=KK;
-L22:	if(TRAVEL[KK] < 0) goto L23;
+	if(LL <= 300) {
+		J=KEY[LL];
+		if(FORCED(LL) && MOD((labs(TRAVEL[J])/1000),1000) == K)
+			K2=KK;
+	}
+	if(TRAVEL[KK] < 0) goto L23;
 	KK=KK+1;
 	 goto L21;
 
