@@ -24,7 +24,7 @@ L9011:	if(game.fixed[OBJ] != 0) return(2011);
 	K=OBJ;
 	OBJ=BOTTLE;
 	if(HERE(BOTTLE) && LIQ(0) == K) goto L9017;
-	if(TOTING(BOTTLE) && game.prop[BOTTLE] == 1) return(fill());
+	if(TOTING(BOTTLE) && game.prop[BOTTLE] == 1) return(fill(OBJ));
 	if(game.prop[BOTTLE] != 1)SPK=105;
 	if(!TOTING(BOTTLE))SPK=104;
 	 return(2011);
@@ -311,11 +311,11 @@ L9216:	SPK=14;
 
 /*  Fill.  Bottle or urn must be empty, and liquid available.  (Vase is nasty.) */
 
-int fill() {
-	if(OBJ == VASE) goto L9222;
-	if(OBJ == URN) goto L9224;
-	if(OBJ != 0 && OBJ != BOTTLE) return(2011);
-	if(OBJ == 0 && !HERE(BOTTLE)) return(8000);
+int fill(long obj) {
+	if(obj == VASE) goto L9222;
+	if(obj == URN) goto L9224;
+	if(obj != 0 && obj != BOTTLE) return(2011);
+	if(obj == 0 && !HERE(BOTTLE)) return(8000);
 	SPK=107;
 	if(LIQLOC(game.loc) == 0)SPK=106;
 	if(HERE(URN) && game.prop[URN] != 0)SPK=214;
