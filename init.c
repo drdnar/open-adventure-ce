@@ -369,11 +369,6 @@ void initialise(void)
     game.knfloc=0;
     game.detail=0;
     game.abbnum=5;
-    for (i=0; i<=4; i++) {
-	long x = 2*i+81;
-	if(RTEXT[x] != 0)
-	    MAXDIE=i+1;
-    }
     game.numdie=0;
     game.holdng=0;
     game.dkill=0;

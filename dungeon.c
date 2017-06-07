@@ -33,6 +33,7 @@ static long LNLENG;
 static long LNPOSN;
 static char INLINE[LINESIZE+1];
 static long OLDLOC;
+static long MAXDIE;
 
 // Storage for what comes out of the database
 long LINUSE;
@@ -556,6 +557,13 @@ void write_hints(FILE* c_file, FILE* header_file, long matrix[][HINTLEN], long d
 
 void write_files(FILE* c_file, FILE* header_file)
 {
+  int i, MAXDIE;
+  for (i=0; i<=4; i++) {
+      long x = 2*i+81;
+      if(RTEXT[x] != 0)
+	  MAXDIE=i+1;
+  }
+
   // preprocessor defines for the header
   fprintf(header_file, "#include \"sizes.h\"\n");
   fprintf(header_file, "#define RTXSIZ 277\n");
@@ -568,6 +576,7 @@ void write_files(FILE* c_file, FILE* header_file)
   fprintf(header_file, "#define TRVSIZ 885\n");
   fprintf(header_file, "#define TOKLEN %d\n", TOKLEN);
   fprintf(header_file, "#define HINTLEN %d\n", HINTLEN);
+  fprintf(header_file, "#define MAXDIE %d\n", MAXDIE);
   fprintf(header_file, "\n");
 
   // include the header in the C file

@@ -1764,6 +1764,7 @@
 78	You can't pour that.
 79	Watch it!
 80	Which way?
+# Sequence of the death & reincarnation messages must not be altered
 81	Oh dear, you seem to have gotten yourself killed.  I might be able to
 81	help you out, but I've never really done this before.  Do you want me
 81	to try to reincarnate you?
@@ -1779,6 +1780,7 @@
 85	me to do a decent reincarnation without any orange smoke, do you?
 86	Okay, if you're so smart, do it yourself!  I'm leaving!
 90	>>> messages 81 thru 90 are reserved for "obituaries". <<<
+# Death & reincarnation messages end here
 91	Sorry, but I no longer seem to remember how it was you got here.
 92	You can't carry anything more.  You'll have to drop something first.
 93	You can't go through a locked steel grate!
