@@ -5,44 +5,44 @@
  *  take one without the other).  Liquids also special, since they depend on
  *  status of bottle.  Also various side effects, etc. */
 
-int carry(void) {
-	if(TOTING(OBJ)) return(2011);
+int carry(long obj) {
+	if(TOTING(obj)) return(2011);
 	SPK=25;
-	if(OBJ == PLANT && game.prop[PLANT] <= 0)SPK=115;
-	if(OBJ == BEAR && game.prop[BEAR] == 1)SPK=169;
-	if(OBJ == CHAIN && game.prop[BEAR] != 0)SPK=170;
-	if(OBJ == URN)SPK=215;
-	if(OBJ == CAVITY)SPK=217;
-	if(OBJ == BLOOD)SPK=239;
-	if(OBJ == RUG && game.prop[RUG] == 2)SPK=222;
-	if(OBJ == SIGN)SPK=196;
-	if(OBJ != MESSAG) goto L9011;
+	if(obj == PLANT && game.prop[PLANT] <= 0)SPK=115;
+	if(obj == BEAR && game.prop[BEAR] == 1)SPK=169;
+	if(obj == CHAIN && game.prop[BEAR] != 0)SPK=170;
+	if(obj == URN)SPK=215;
+	if(obj == CAVITY)SPK=217;
+	if(obj == BLOOD)SPK=239;
+	if(obj == RUG && game.prop[RUG] == 2)SPK=222;
+	if(obj == SIGN)SPK=196;
+	if(obj != MESSAG) goto L9011;
 	SPK=190;
 	DSTROY(MESSAG);
-L9011:	if(game.fixed[OBJ] != 0) return(2011);
-	if(OBJ != WATER && OBJ != OIL) goto L9017;
-	K=OBJ;
-	OBJ=BOTTLE;
+L9011:	if(game.fixed[obj] != 0) return(2011);
+	if(obj != WATER && obj != OIL) goto L9017;
+	K=obj;
+	obj=BOTTLE;
 	if(HERE(BOTTLE) && LIQ(0) == K) goto L9017;
-	if(TOTING(BOTTLE) && game.prop[BOTTLE] == 1) return(fill(OBJ));
+	if(TOTING(BOTTLE) && game.prop[BOTTLE] == 1) return(fill(obj));
 	if(game.prop[BOTTLE] != 1)SPK=105;
 	if(!TOTING(BOTTLE))SPK=104;
 	 return(2011);
 L9017:	SPK=92;
 	if(game.holdng >= 7) return(2011);
-	if(OBJ != BIRD || game.prop[BIRD] == 1 || -1-game.prop[BIRD] == 1) goto L9014;
+	if(obj != BIRD || game.prop[BIRD] == 1 || -1-game.prop[BIRD] == 1) goto L9014;
 	if(game.prop[BIRD] == 2) goto L9015;
 	if(!TOTING(CAGE))SPK=27;
 	if(TOTING(ROD))SPK=26;
 	if(SPK/2 == 13) return(2011);
 	game.prop[BIRD]=1;
-L9014:	if((OBJ == BIRD || OBJ == CAGE) && (game.prop[BIRD] == 1 || -1-game.prop[BIRD] ==
-		1))CARRY(BIRD+CAGE-OBJ,game.loc);
-	CARRY(OBJ,game.loc);
+L9014:	if((obj == BIRD || obj == CAGE) && (game.prop[BIRD] == 1 || -1-game.prop[BIRD] ==
+		1))CARRY(BIRD+CAGE-obj,game.loc);
+	CARRY(obj,game.loc);
 	K=LIQ(0);
-	if(OBJ == BOTTLE && K != 0)game.place[K]= -1;
-	if(!GSTONE(OBJ) || game.prop[OBJ] == 0) return(2009);
-	game.prop[OBJ]=0;
+	if(obj == BOTTLE && K != 0)game.place[K]= -1;
+	if(!GSTONE(obj) || game.prop[obj] == 0) return(2009);
+	game.prop[obj]=0;
 	game.prop[CAVITY]=1;
 	 return(2009);
 

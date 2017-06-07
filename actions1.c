@@ -161,7 +161,7 @@ L8010:	if(game.atloc[game.loc] == 0 || game.link[game.atloc[game.loc]] != 0 || A
 
 /*  Transitive carry/drop are in separate file. */
 
-L9010:	return(carry());
+L9010:	return(carry(OBJ));
 L9020:	return(discard(OBJ, false));
 
 /*  SAY.  Echo WD2 (or WD1 if no WD2 (SAY WHAT?, etc.).)  Magic words override. */
