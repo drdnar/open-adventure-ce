@@ -1,7 +1,13 @@
+/*
+ * The dungeon compiler. Turns adventure.text into a set of C initializers
+ * defining (mostly) invariant state.  A couple of slots are messed with
+ * at runtime.
+ */
+#include "sizes.h"
+
 #define LINESIZE 100
 #define RTXSIZ 277
 #define CLSMAX 12
-#define LOCSIZ 185
 #define LINSIZ 12600
 #define TRNSIZ 5
 #define TABSIZ 330
@@ -548,10 +554,9 @@ void write_hints(FILE* c_file, FILE* header_file, long matrix[][HINTLEN], long d
 void write_files(FILE* c_file, FILE* header_file)
 {
   // preprocessor defines for the header
-  fprintf(header_file, "#define NOBJECTS %d\n", NOBJECTS);
+  fprintf(header_file, "#include \"sizes.h\"\n");
   fprintf(header_file, "#define RTXSIZ 277\n");
   fprintf(header_file, "#define CLSMAX 12\n");
-  fprintf(header_file, "#define LOCSIZ 185\n");
   fprintf(header_file, "#define LINSIZ %d\n", LINSIZ);
   fprintf(header_file, "#define TRNSIZ 5\n");
   fprintf(header_file, "#define TABSIZ 330\n");

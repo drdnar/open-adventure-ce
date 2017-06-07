@@ -11,7 +11,7 @@ ifeq ($(UNAME_S),Linux)
 endif
 
 OBJS=main.o init.o actions1.o actions2.o score.o misc.o
-SOURCES=$(OBJS:.o=.c) compile.c advent.h funcs.h adventure.text Makefile control
+SOURCES=$(OBJS:.o=.c) compile.c advent.h funcs.h sizes.h adventure.text Makefile control
 
 .c.o:
 	$(CC) $(CCFLAGS) $(DBX) -c $<
@@ -19,19 +19,19 @@ SOURCES=$(OBJS:.o=.c) compile.c advent.h funcs.h adventure.text Makefile control
 advent:	$(OBJS) database.o
 	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) database.o $(LDFLAGS) $(LIBS)
 
-main.o:		advent.h funcs.h database.h
+main.o:		advent.h funcs.h database.h sizes.h
 
-init.o:		advent.h funcs.h database.h
+init.o:		advent.h funcs.h database.h sizes.h
 
-actions1.o:	advent.h funcs.h database.h
+actions1.o:	advent.h funcs.h database.h sizes.h
 
-actions2.o:	advent.h funcs.h database.h
+actions2.o:	advent.h funcs.h database.h sizes.h
 
-score.o:	advent.h database.h
+score.o:	advent.h database.h sizes.h
 
-misc.o:		advent.h database.h
+misc.o:		advent.h database.h sizes.h
 
-database.o:	database.h
+database.o:	database.h sizes.h
 
 compile: compile.c
 	$(CC) $(CCFLAGS) -o $@ $<

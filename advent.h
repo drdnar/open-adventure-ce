@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+#include "sizes.h"
+
 #define LINESIZE	100
 #define NDWARVES	6
 #define PIRATE		NDWARVES	/* must be NDWARVES-1 when zero-origin */
@@ -51,7 +53,7 @@ struct game_t {
     long turns;
     long wzdark;
     long zzword;
-    long abbrev[185+1];		/* FIXME: LOCSIZE in the compiler */
+    long abbrev[LOCSIZ+1];
     long dseen[NDWARVES+1];
     long dloc[NDWARVES+1];
     long odloc[NDWARVES+1];

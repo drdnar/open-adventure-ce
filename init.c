@@ -33,6 +33,7 @@
 /* Note: 
  *  - the object count limit has been abstracted as NOBJECTS
  *  - the random message limit has been abstracted as RTXSIZE
+ *  - maximum locations limit has been abstracted as LOCSIZ
  */
 
 /*  Description of the database format
