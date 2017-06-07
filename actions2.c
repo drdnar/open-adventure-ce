@@ -61,7 +61,7 @@ int discard(bool just_do_it) {
 	if(!TOTING(OBJ)) return(2011);
 	if(OBJ != BIRD || !HERE(SNAKE)) goto L9023;
 	RSPEAK(30);
-	if(CLOSED) return(19000);
+	if(game.closed) return(19000);
 	DSTROY(SNAKE);
 /*  SET PROP FOR USE BY TRAVEL OPTIONS */
 	PROP[SNAKE]=1;
@@ -148,7 +148,7 @@ int attack(FILE *input) {
 	if(OBJ > NOBJECTS) return(8000);
 L9124:	if(OBJ == BIRD) {
 		SPK=137;
-		if(CLOSED) return(2011);
+		if(game.closed) return(2011);
 		DSTROY(BIRD);
 		PROP[BIRD]=0;
 		SPK=45;
@@ -162,7 +162,7 @@ L9126:	if(OBJ == 0)SPK=44;
 	if(OBJ == CLAM || OBJ == OYSTER)SPK=150;
 	if(OBJ == SNAKE)SPK=46;
 	if(OBJ == DWARF)SPK=49;
-	if(OBJ == DWARF && CLOSED) return(19000);
+	if(OBJ == DWARF && game.closed) return(19000);
 	if(OBJ == DRAGON)SPK=167;
 	if(OBJ == TROLL)SPK=157;
 	if(OBJ == OGRE)SPK=203;
@@ -236,8 +236,8 @@ L9172:	SPK=48;
 	game.dseen[I]=false;
 	game.dloc[I]=0;
 	SPK=47;
-	DKILL=DKILL+1;
-	if(DKILL == 1)SPK=149;
+	game.dkill=game.dkill+1;
+	if(game.dkill == 1)SPK=149;
 L9175:	RSPEAK(SPK);
 	DROP(AXE,LOC);
 	K=NUL;
@@ -278,7 +278,7 @@ L9212:	if(OBJ != SNAKE && OBJ != DRAGON && OBJ != TROLL) goto L9213;
 	SPK=102;
 	if(OBJ == DRAGON && PROP[DRAGON] != 0)SPK=110;
 	if(OBJ == TROLL)SPK=182;
-	if(OBJ != SNAKE || CLOSED || !HERE(BIRD)) return(2011);
+	if(OBJ != SNAKE || game.closed || !HERE(BIRD)) return(2011);
 	SPK=101;
 	DSTROY(BIRD);
 	PROP[BIRD]=0;

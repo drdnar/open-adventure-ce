@@ -325,11 +325,11 @@ L1106:	/*etc*/ ;
  *	3	A knife has been thrown (first set always misses)
  *	3+	Dwarves are mad (increases their accuracy)
  *  Sixth dwarf is special (the pirate).  He always starts at his chest's
- *  eventual location inside the maze.  This loc is saved in CHLOC for ref.
- *  the dead end in the other maze has its loc stored in CHLOC2. */
+ *  eventual location inside the maze.  This loc is saved in game.chloc for ref.
+ *  the dead end in the other maze has its loc stored in game.chloc2. */
 
-	CHLOC=114;
-	CHLOC2=140;
+	game.chloc=114;
+	game.chloc2=140;
 	for (I=1; I<=NDWARVES; I++) {
 		game.dseen[I]=false;
 	} /* end loop */
@@ -339,17 +339,17 @@ L1106:	/*etc*/ ;
 	game.dloc[3]=33;
 	game.dloc[4]=44;
 	game.dloc[5]=64;
-	game.dloc[6]=CHLOC;
+	game.dloc[6]=game.chloc;
 	DALTLC=18;
 
 /*  Other random flags and counters, as follows:
- *	ABBNUM	How often we should print non-abbreviated descriptions
- *	BONUS	Used to determine amount of bonus if he reaches closing
+ *	game.abbnum	How often we should print non-abbreviated descriptions
+ *	game.bonus	Used to determine amount of bonus if he reaches closing
  *	game.clock1	Number of turns from finding last treasure till closing
  *	game.clock2	Number of turns from first warning till blinding flash
- *	CONDS	Min value for cond(loc) if loc has any hints
- *	DETAIL	How often we've said "not allowed to give more detail"
- *	DKILL	Number of dwarves killed (unused in scoring, needed for msg)
+ *	game.conds	Min value for cond(loc) if loc has any hints
+ *	game.detail	How often we've said "not allowed to give more detail"
+ *	game.dkill	# of dwarves killed (unused in scoring, needed for msg)
  *	FOOBAR	Current progress in saying "FEE FIE FOE FOO".
  *	HOLDNG	Number of objects being carried
  *	IGO	How many times he's said "go XXX" instead of "XXX"
@@ -373,26 +373,27 @@ L1106:	/*etc*/ ;
 	IGO=0;
 	IWEST=0;
 	KNFLOC=0;
-	DETAIL=0;
-	ABBNUM=5;
+	game.detail=0;
+	game.abbnum=5;
 	for (I=0; I<=4; I++) {
 	{long x = 2*I+81; if(RTEXT[x] != 0)MAXDIE=I+1;}
 	} /* end loop */
 	NUMDIE=0;
 	HOLDNG=0;
-	DKILL=0;
+	game.dkill=0;
 	FOOBAR=0;
-	BONUS=0;
+	game.bonus=0;
 	game.clock1=30;
 	game.clock2=50;
-	CONDS=SETBIT(11);
+	game.conds=SETBIT(11);
 	SAVED=0;
-	CLOSNG=false;
+	game.closng=false;
 	PANIC=false;
-	CLOSED=false;
+	game.closed=false;
 	CLSHNT=false;
 	NOVICE=false;
 	SETUP=1;
+	game.blklin=true;
 
 	/* if we can ever think of how, we should save it at this point */
 

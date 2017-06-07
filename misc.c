@@ -16,10 +16,10 @@ void SPEAK(vocab_t N) {
 long BLANK, CASE, I, K, L, NEG, NPARMS, PARM, PRMTYP, STATE;
 
 /*  Print the message which starts at LINES(N).  Precede it with a blank line
- *  unless BLKLIN is false. */
+ *  unless game.blklin is false. */
 
 	if(N == 0)return;
-	BLANK=BLKLIN;
+	BLANK=game.blklin;
 	K=N;
 	NPARMS=1;
 L10:	L=labs(LINES[K])-1;
@@ -168,12 +168,12 @@ long JUNK;
  *  WORD2 (chars 6 thru 10 in WORD2X), else WORD2 is -1. */
 
 
-L10:	if(BLKLIN)TYPE0();
+L10:	if(game.blklin)TYPE0();
 	MAPLIN(input);
 	if (feof(input))
 	    return false;
 	WORD1=GETTXT(true,true,true);
-	if(BLKLIN && WORD1 < 0) goto L10;
+	if(game.blklin && WORD1 < 0) goto L10;
 	WORD1X=GETTXT(false,true,true);
 L12:	JUNK=GETTXT(false,true,true);
 	if(JUNK > 0) goto L12;

@@ -14,10 +14,22 @@ typedef long token_t;	/* word token - someday this will be char[TOKLEN+1] */
 typedef long vocab_t;	/* index into a vocabulary array */
 
 struct game_t {
+    long abbnum;
+    long blklin;
+    long bonus;
+    long chloc;
+    long chloc2;
     long clock1;
     long clock2;
+    long closed;
+    long closng;
+    long conds;
+    long detail;
+    long dkill;
+    long dtotal;
     long oldloc;
     long oldlc2;
+    long wzdark;
     long zzword;
     long dseen[NDWARVES+1];
     long dloc[NDWARVES+1];
@@ -90,12 +102,9 @@ extern unsigned long get_next_lcg_value(void);
 extern long randrange(long);
 
 extern void score(long);
-extern long ABBNUM, AMBER, ATTACK, AXE, BACK, BATTER, BEAR,
-   BIRD, BLOOD, BONUS,
-   BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST, CHLOC, CHLOC2,
-   CLAM, CLOSED, CLOSNG, CLSHNT,
-   COINS, CONDS, DALTLC, DETAIL,
-   DKILL, DOOR, DPRSSN, DRAGON, DTOTAL, DWARF, EGGS,
+extern long AMBER, ATTACK, AXE, BACK, BATTER, BEAR,
+   BIRD, BLOOD, BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST,
+   CLAM, CLSHNT, COINS, DALTLC, DOOR, DPRSSN, DRAGON, DWARF, EGGS,
    EMRALD, ENTER, ENTRNC, FIND, FISSUR, FOOBAR, FOOD,
    GRATE, HINT, HINTED[], HINTLC[],
    I, INVENT, IGO, IWEST, J, JADE, K, K2, KEYS, KK,
@@ -110,6 +119,5 @@ extern long ABBNUM, AMBER, ATTACK, AXE, BACK, BATTER, BEAR,
    STREAM, TALLY, THRESH, THROW, TK[], TRIDNT,
    TRNDEX, TRNLUZ, TROLL, TROLL2,
    TURNS, URN, V1, V2, VASE, VEND, VERB,
-   VOLCAN, VRSION, WATER, WD1, WD1X, WD2, WD2X,
-   WZDARK;
+   VOLCAN, VRSION, WATER, WD1, WD1X, WD2, WD2X;
 
