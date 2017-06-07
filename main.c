@@ -36,7 +36,7 @@ lcg_state lcgstate;
 
 extern void initialise();
 extern void score(long);
-extern int action(FILE *, long);
+extern int action(FILE *, long, long);
 
 void sig_handler(int signo)
 {
@@ -474,7 +474,7 @@ L4000:	I=4000; goto Laction;
 L4090:	I=4090; goto Laction;
 L5000:	I=5000;
 Laction:
-	 switch (action(cmdin, I)) {
+	 switch (action(cmdin, I, OBJ)) {
 	   case 2: return true;
 	   case 8: goto L8;
 	   case 2000: goto L2000;
