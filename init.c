@@ -179,40 +179,44 @@ void initialise(void) {
 }
 
 static int finish_init(void) {
-	for (I=1; I<=100; I++) {
-	game.place[I]=0;
-	game.prop[I]=0;
-	game.link[I]=0;
-	{long x = I+NOBJECTS; game.link[x]=0;}
+	int i;
+	for (i=1; i<=NOBJECTS; i++) {
+		game.place[i]=0;
+		game.prop[i]=0;
+		game.link[i]=0;
+		{long x = i+NOBJECTS; game.link[x]=0;}
 	} /* end loop */
 
-	/* 1102 */ for (I=1; I<=LOCSIZ; I++) {
-	game.abbrev[I]=0;
-	if(LTEXT[I] == 0 || KEY[I] == 0) goto L1102;
-	K=KEY[I];
-	if(MOD(labs(TRAVEL[K]),1000) == 1)COND[I]=2;
-L1102:	game.atloc[I]=0;
+	for (i=1; i<=LOCSIZ; i++) {
+		game.abbrev[i]=0;
+		if (!(LTEXT[i] == 0 || KEY[i] == 0)) {
+			K=KEY[i];
+			if(MOD(labs(TRAVEL[K]),1000) == 1)COND[i]=2;
+		}
+		game.atloc[i]=0;
 	} /* end loop */
 
-/*  Set up the game.atloc and game.link arrays as described above.  We'll use the DROP
- *  subroutine, which prefaces new objects on the lists.  Since we want things
- *  in the other order, we'll run the loop backwards.  If the object is in two
- *  locs, we drop it twice.  This also sets up "game.place" and "fixed" as copies of
- *  "PLAC" and "FIXD".  Also, since two-placed objects are typically best
+/*  Set up the game.atloc and game.link arrays as described above.
+ *  We'll use the DROP subroutine, which prefaces new objects on the
+ *  lists.  Since we want things in the other order, we'll run the
+ *  loop backwards.  If the object is in two locs, we drop it twice.
+ *  This also sets up "game.place" and "fixed" as copies of "PLAC" and
+ *  "FIXD".  Also, since two-placed objects are typically best
  *  described last, we'll drop them first. */
 
-	/* 1106 */ for (I=1; I<=NOBJECTS; I++) {
-	K=NOBJECTS + 1 - I;
-	if(FIXD[K] <= 0) goto L1106;
-	DROP(K+NOBJECTS,FIXD[K]);
-	DROP(K,PLAC[K]);
-L1106:	/*etc*/ ;
+	for (i=1; i<=NOBJECTS; i++) {
+		K=NOBJECTS + 1 - i;
+		if(FIXD[K] > 0) {
+			DROP(K+NOBJECTS,FIXD[K]);
+			DROP(K,PLAC[K]);
+		}
 	} /* end loop */
 
-	for (I=1; I<=NOBJECTS; I++) {
-	K=NOBJECTS + 1 - I;
-	game.fixed[K]=FIXD[K];
-	if(PLAC[K] != 0 && FIXD[K] <= 0)DROP(K,PLAC[K]);
+	for (i=1; i<=NOBJECTS; i++) {
+		K=NOBJECTS + 1 - i;
+		game.fixed[K]=FIXD[K];
+		if(PLAC[K] != 0 && FIXD[K] <= 0)
+			DROP(K,PLAC[K]);
 	} /* end loop */
 
 /*  Treasures, as noted earlier, are objects MINTRS through MAXTRS
@@ -221,17 +225,19 @@ L1106:	/*etc*/ ;
  *  when to close the cave. */
 
 	game.tally=0;
-	for (I=MINTRS; I<=MAXTRS; I++) {
-	if(PTEXT[I] != 0)game.prop[I]= -1;
-	game.tally=game.tally-game.prop[I];
+	for (i=MINTRS; i<=MAXTRS; i++) {
+		if(PTEXT[i] != 0)
+			game.prop[i]= -1;
+		game.tally=game.tally-game.prop[i];
 	} /* end loop */
 
-/*  Clear the hint stuff.  game.hintlc[I] is how long he's been at LOC with cond bit
- *  I.  game.hinted[I] is true iff hint I has been used. */
+/*  Clear the hint stuff.  game.hintlc[i] is how long he's been at LOC
+ *  with cond bit i.  game.hinted[i] is true iff hint i has been
+ *  used. */
 
-	for (I=1; I<=HNTMAX; I++) {
-	game.hinted[I]=false;
-	game.hintlc[I]=0;
+	for (i=1; i<=HNTMAX; i++) {
+		game.hinted[i]=false;
+		game.hintlc[i]=0;
 	} /* end loop */
 
 /*  Define some handy mnemonics.  These correspond to object numbers. */
@@ -330,8 +336,8 @@ L1106:	/*etc*/ ;
 
 	game.chloc=114;
 	game.chloc2=140;
-	for (I=1; I<=NDWARVES; I++) {
-		game.dseen[I]=false;
+	for (i=1; i<=NDWARVES; i++) {
+		game.dseen[i]=false;
 	} /* end loop */
 	game.dflag=0;
 	game.dloc[1]=19;
@@ -373,8 +379,8 @@ L1106:	/*etc*/ ;
 	game.knfloc=0;
 	game.detail=0;
 	game.abbnum=5;
-	for (I=0; I<=4; I++) {
-	{long x = 2*I+81; if(RTEXT[x] != 0)MAXDIE=I+1;}
+	for (i=0; i<=4; i++) {
+	{long x = 2*i+81; if(RTEXT[x] != 0)MAXDIE=i+1;}
 	} /* end loop */
 	game.numdie=0;
 	game.holdng=0;
