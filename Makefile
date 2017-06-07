@@ -11,7 +11,7 @@ ifeq ($(UNAME_S),Linux)
 endif
 
 OBJS=main.o init.o actions1.o actions2.o score.o misc.o
-SOURCES=$(OBJS:.o=.c) compile.c advent.h funcs.h sizes.h adventure.text Makefile control
+SOURCES=$(OBJS:.o=.c) dungeon.c advent.h funcs.h sizes.h adventure.text Makefile control
 
 .c.o:
 	$(CC) $(CCFLAGS) $(DBX) -c $<
@@ -33,15 +33,15 @@ misc.o:		advent.h database.h sizes.h
 
 database.o:	database.h sizes.h
 
-compile: compile.c
+dungeon: dungeon.c
 	$(CC) $(CCFLAGS) -o $@ $<
 
-database.c database.h: compile adventure.text
-	./compile
+database.c database.h: dungeon adventure.text
+	./dungeon
 	$(CC) $(CCFLAGS) $(DBX) -c database.c
 
 clean:
-	rm -f *.o advent *.html database.[ch] compile *.gcno *.gcda
+	rm -f *.o advent *.html database.[ch] dungeon *.gcno *.gcda
 	rm -f README advent.6 MANIFEST *.tar.gz
 	cd tests; $(MAKE) --quiet clean
 

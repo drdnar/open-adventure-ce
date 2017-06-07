@@ -1,5 +1,5 @@
 advent
-compile
+dungeon
 *.gcda
 *.gcno
 *.o
