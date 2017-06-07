@@ -8,7 +8,7 @@
 
 void score(long mode) {
 /* arg is <0 if scoring, >0 if quitting, =0 if died or won */
-	long mxscor = 0;
+	long i, score = 0, mxscor = 0;
 
 /*  The present scoring algorithm is as follows:
  *     Objective:          Points:        Present total possible:
@@ -29,21 +29,18 @@ void score(long mode) {
  *  Points can also be deducted for using hints or too many turns, or for
  *  saving intermediate positions. */
 
-	SCORE=0;
-	mxscor=0;
-
 /*  First tally up the treasures.  Must be in building and not broken.
  *  Give the poor guy 2 points just for finding each treasure. */
 
-	for (I=50; I<=MAXTRS; I++) {
-		if(PTEXT[I] != 0) {
+	for (i=MINTRS; i<=MAXTRS; i++) {
+		if(PTEXT[i] != 0) {
 			K=12;
-			if(I == CHEST)K=14;
-			if(I > CHEST)K=16;
-			if(game.prop[I] >= 0)
-				SCORE=SCORE+2;
-			if(game.place[I] == 3 && game.prop[I] == 0)
-				SCORE=SCORE+K-2;
+			if(i == CHEST)K=14;
+			if(i > CHEST)K=16;
+			if(game.prop[i] >= 0)
+				score=score+2;
+			if(game.place[i] == 3 && game.prop[i] == 0)
+				score=score+K-2;
 			mxscor=mxscor+K;
 		}
 	} /* end loop */
@@ -55,48 +52,48 @@ void score(long mode) {
  *  "cave closed" (indicated by "game.closed"), then bonus is zero for
  *  mundane exits or 133, 134, 135 if he blew it (so to speak). */
 
-	SCORE=SCORE+(MAXDIE-game.numdie)*10;
+	score=score+(MAXDIE-game.numdie)*10;
 	mxscor=mxscor+MAXDIE*10;
-	if(mode == 0)SCORE=SCORE+4;
+	if(mode == 0)score=score+4;
 	mxscor=mxscor+4;
-	if(game.dflag != 0)SCORE=SCORE+25;
+	if(game.dflag != 0)score=score+25;
 	mxscor=mxscor+25;
-	if(game.closng)SCORE=SCORE+25;
+	if(game.closng)score=score+25;
 	mxscor=mxscor+25;
 	if(game.closed) {
-		if(game.bonus == 0)SCORE=SCORE+10;
-		if(game.bonus == 135)SCORE=SCORE+25;
-		if(game.bonus == 134)SCORE=SCORE+30;
-		if(game.bonus == 133)SCORE=SCORE+45;
+		if(game.bonus == 0)score=score+10;
+		if(game.bonus == 135)score=score+25;
+		if(game.bonus == 134)score=score+30;
+		if(game.bonus == 133)score=score+45;
 	}
 	mxscor=mxscor+45;
 
 /*  Did he come to Witt's End as he should? */
 
 	if(game.place[MAGZIN] == 108)
-		SCORE=SCORE+1;
+		score=score+1;
 	mxscor=mxscor+1;
 
 /*  Round it off. */
 
-	SCORE=SCORE+2;
+	score=score+2;
 	mxscor=mxscor+2;
 
 /*  Deduct for hints/turns/saves.  Hints < 4 are special; see database desc. */
 
-	for (I=1; I<=HNTMAX; I++) {
-		if(game.hinted[I])SCORE=SCORE-HINTS[I][2];
+	for (i=1; i<=HNTMAX; i++) {
+		if(game.hinted[i])score=score-HINTS[i][2];
 	} /* end loop */
 	if(game.novice)
-		SCORE=SCORE-5;
+		score=score-5;
 	if(game.clshnt)
-		SCORE=SCORE-10;
-	SCORE=SCORE-game.trnluz-game.saved;
+		score=score-10;
+	score=score-game.trnluz-game.saved;
 
 /*  Return to score command if that's where we came from. */
 
 	if(mode < 0) {
-		SETPRM(1,SCORE,mxscor);
+		SETPRM(1,score,mxscor);
 		SETPRM(3,game.turns,game.turns);
 		RSPEAK(259);
 		return;
@@ -104,22 +101,22 @@ void score(long mode) {
 
 /*  that should be good enough.  Let's tell him all about it. */
 
-	if(SCORE+game.trnluz+1 >= mxscor && game.trnluz != 0)RSPEAK(242);
-	if(SCORE+game.saved+1 >= mxscor && game.saved != 0)RSPEAK(143);
-	SETPRM(1,SCORE,mxscor);
+	if(score+game.trnluz+1 >= mxscor && game.trnluz != 0)RSPEAK(242);
+	if(score+game.saved+1 >= mxscor && game.saved != 0)RSPEAK(143);
+	SETPRM(1,score,mxscor);
 	SETPRM(3,game.turns,game.turns);
 	RSPEAK(262);
-	for (I=1; I<=CLSSES; I++) {
-		if(CVAL[I] >= SCORE) goto L20210;
+	for (i=1; i<=CLSSES; i++) {
+		if(CVAL[i] >= score) goto L20210;
 	} /* end loop */
 	SPK=265;
 	goto L25000;
 
-L20210: SPEAK(CTEXT[I]);
+L20210: SPEAK(CTEXT[i]);
 	SPK=264;
-	if(I >= CLSSES) goto L25000;
-	I=CVAL[I]+1-SCORE;
-	SETPRM(1,I,I);
+	if(i >= CLSSES) goto L25000;
+	i=CVAL[i]+1-score;
+	SETPRM(1,i,i);
 	SPK=263;
 L25000: RSPEAK(SPK);
 	exit(0);
