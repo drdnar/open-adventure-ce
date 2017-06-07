@@ -146,14 +146,16 @@ void PSPEAK(vocab_t msg,int skip)
 
     m=PTEXT[msg];
     if (skip >= 0) {
-	for (i=0; i<=skip; i++) {
-L1:	    m=labs(LINES[m]);
-	    if (LINES[m] >= 0)
-		goto L1;
+	for (i=0; i <=skip; i++) {
+	    do {
+		m=labs(LINES[m]);
+	    } while
+		(LINES[m] >= 0);
 	}
     }
     SPEAK(m);
 }
+
 void RSPEAK(vocab_t i)
 /* Print the i-th "random" message (section 6 of database). */
 {
@@ -173,11 +175,9 @@ void SETPRM(long first, long p1, long p2)
     }
 }
 
-#define WORD1 (*wORD1)
-#define WORD1X (*wORD1X)
-#define WORD2 (*wORD2)
-#define WORD2X (*wORD2X)
-bool fGETIN(FILE *input, long *wORD1, long *wORD1X, long *wORD2, long *wORD2X) 
+bool fGETIN(FILE *input, 
+	    long *pword1, long *pword1x, 
+	    long *pword2, long *pword2x) 
 /*  Get a command from the adventurer.  Snarf out the first word, pad it with
  *  blanks, and return it in WORD1.  Chars 6 thru 10 are returned in WORD1X, in
  *  case we need to print out the whole word in an error message.  Any number of
@@ -192,16 +192,16 @@ bool fGETIN(FILE *input, long *wORD1, long *wORD1X, long *wORD2, long *wORD2X)
 	MAPLIN(input);
 	if (feof(input))
 	    return false;
-	WORD1=GETTXT(true,true,true);
-	if (game.blklin && WORD1 < 0)
+	*pword1=GETTXT(true,true,true);
+	if (game.blklin && *pword1 < 0)
 	    continue;
-	WORD1X=GETTXT(false,true,true);
+	*pword1x=GETTXT(false,true,true);
 	do {	
 	    junk=GETTXT(false,true,true);
 	} while 
 	    (junk > 0);
-	WORD2=GETTXT(true,true,true);
-	WORD2X=GETTXT(false,true,true);
+	*pword2=GETTXT(true,true,true);
+	*pword2x=GETTXT(false,true,true);
 	do {
 	    junk=GETTXT(false,true,true);
 	} while 
@@ -332,9 +332,10 @@ void fPUTTXT(token_t word, long *state, long casemake)
 	if (w <= 0 && *state == 0 && labs(casemake) <= 1)
 	    return;
 	byte=w/div;
+	w=(w-byte*div)*64;
 	if (!(*state != 0 || byte != 63)) {
 	    *state=63;
-	    goto L18;
+	    continue;
 	}
 	SHFTXT(LNPOSN,1);
 	*state=*state+byte;
@@ -342,7 +343,6 @@ void fPUTTXT(token_t word, long *state, long casemake)
 	INLINE[LNPOSN]=*state;
 	LNPOSN=LNPOSN+1;
 	*state=0;
-L18:	w=(w-byte*div)*64;
     }
 }
 #define PUTTXT(WORD,STATE,CASE) fPUTTXT(WORD,&STATE,CASE)
