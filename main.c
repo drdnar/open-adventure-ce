@@ -22,7 +22,7 @@ long AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
 		CLAM, COINS, DALTLC, DOOR, DPRSSN, DRAGON, DWARF, EGGS,
 		EMRALD, ENTER, ENTRNC, FIND, FISSUR, FOOD,
 		GRATE, HINT, I, INVENT, IGO, J, JADE, K, K2, KEYS, KK,
-		KNIFE, KQ, L, LAMP, LL, LOC, LOCK, LOOK,
+		KNIFE, KQ, L, LAMP, LOC, LOCK, LOOK,
 		MAGZIN, MAXDIE, MAXTRS, MESSAG, MIRROR, MXSCOR,
 		NUGGET, NUL, OBJ, OGRE, OIL, OYSTER, PEARL, PILLOW,
 		PLANT, PLANT2, PYRAM, RESER, ROD, ROD2, RUBY, RUG, SAPPH, SAY,
@@ -54,7 +54,7 @@ static bool do_command(FILE *);
 
 int main(int argc, char *argv[]) {
 	int ch;
-
+	
 /*  Adventure (rev 2: 20 treasures) */
 
 /*  History: Original idea & 5-treasure version (adventures) by Willie Crowther
@@ -154,6 +154,7 @@ static bool fallback_handler(char *buf)
 }
 
 static bool do_command(FILE *cmdin) {
+	long LL;
 
 /*  Can't leave cave once it's closing (except by main office). */
 
@@ -312,11 +313,6 @@ L6030:	/*etc*/ ;
 	if(STICK == 0) goto L2000;
 	game.oldlc2=LOC;
 	 goto L99;
-
-
-
-
-
 
 /*  Describe the current location and (maybe) get next command. */
 
@@ -508,7 +504,7 @@ L8000:	SETPRM(1,WD1,WD1X);
  *
  *  Given the current location in "LOC", and a motion verb number in
  *  "K", put the new location in "game.newloc".  The current loc is saved
- *  in "game.olddloc" in case he wants to retreat.  The current
+ *  in "game.oldloc" in case he wants to retreat.  The current
  *  game.oldloc is saved in game.oldlc2, in case he dies.  (if he
  *  does, game.newloc will be limbo, and OLgame.dloc will be what killed
  *  him, so we need game.oldlc2, which is the last place he was
