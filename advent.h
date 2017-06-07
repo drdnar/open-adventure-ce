@@ -37,6 +37,7 @@ struct game_t {
     long knfloc;
     long limit;
     long lmwarn;
+    long loc;
     long newloc;
     long novice;
     long numdie;
@@ -135,7 +136,7 @@ extern long AMBER, ATTACK, AXE, BACK, BATTER, BEAR,
    CLAM, COINS, DALTLC, DOOR, DPRSSN, DRAGON, DWARF, EGGS,
    EMRALD, ENTER, ENTRNC, FIND, FISSUR, FOOD,
    GRATE, HINT, I, INVENT, IGO, J, JADE, K, K2, KEYS, KK,
-   KNIFE, KQ, L, LAMP, LOC, LOCK, LOOK,
+   KNIFE, KQ, L, LAMP, LOCK, LOOK,
    MAGZIN, MAXDIE, MAXTRS, MESSAG, MIRROR, MXSCOR, NUGGET, NUL, OBJ,
    OGRE, OIL, OLDOBJ, OYSTER, PANIC, PEARL, PILLOW, PLANT, PLANT2, PYRAM,
    RESER, ROD, ROD2, RUBY, RUG, SAPPH, SAY,

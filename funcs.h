@@ -16,14 +16,14 @@
  *  TOTING(OBJ) = true if the OBJ is being carried */
 
 #define TOTING(OBJ)	(game.place[OBJ] == -1)
-#define AT(OBJ) (game.place[OBJ] == LOC || game.fixed[OBJ] == LOC)
+#define AT(OBJ) (game.place[OBJ] == game.loc || game.fixed[OBJ] == game.loc)
 #define HERE(OBJ)	(AT(OBJ) || TOTING(OBJ))
 #define LIQ2(PBOTL)	((1-(PBOTL))*WATER+((PBOTL)/2)*(WATER+OIL))
 #define LIQ(DUMMY)	(LIQ2(game.prop[BOTTLE]<0 ? -1-game.prop[BOTTLE] : game.prop[BOTTLE]))
 #define LIQLOC(LOC)	(LIQ2((MOD(COND[LOC]/2*2,8)-5)*MOD(COND[LOC]/4,2)+1))
 #define CNDBIT(L,N)	(TSTBIT(COND[L],N))
 #define FORCED(LOC)	(COND[LOC] == 2)
-#define DARK(DUMMY)	((!CNDBIT(LOC,0)) && (game.prop[LAMP] == 0 || !HERE(LAMP)))
+#define DARK(DUMMY)	((!CNDBIT(game.loc,0)) && (game.prop[LAMP] == 0 || !HERE(LAMP)))
 #define PCT(N)	(randrange(100) < (N))
 #define GSTONE(OBJ)	((OBJ) == EMRALD || (OBJ) == RUBY || (OBJ) == AMBER || (OBJ) == SAPPH)
 #define FOREST(LOC)	((LOC) >= 145 && (LOC) <= 166)

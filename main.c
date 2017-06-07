@@ -22,7 +22,7 @@ long AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
 		CLAM, COINS, DALTLC, DOOR, DPRSSN, DRAGON, DWARF, EGGS,
 		EMRALD, ENTER, ENTRNC, FIND, FISSUR, FOOD,
 		GRATE, HINT, I, INVENT, IGO, J, JADE, K, K2, KEYS, KK,
-		KNIFE, KQ, L, LAMP, LOC, LOCK, LOOK,
+		KNIFE, KQ, L, LAMP, LOCK, LOOK,
 		MAGZIN, MAXDIE, MAXTRS, MESSAG, MIRROR, MXSCOR,
 		NUGGET, NUL, OBJ, OGRE, OIL, OYSTER, PEARL, PILLOW,
 		PLANT, PLANT2, PYRAM, RESER, ROD, ROD2, RUBY, RUG, SAPPH, SAY,
@@ -123,7 +123,7 @@ L1:	game.setup= -1;
 	game.zzword=RNDVOC(3,0);
 	game.novice=YES(stdin, 65,1,0);
 	game.newloc=1;
-	LOC=1;
+	game.loc=1;
 	game.limit=330;
 	if(game.novice)game.limit=1000;
 
@@ -160,7 +160,7 @@ static bool do_command(FILE *cmdin) {
 
 	if(!OUTSID(game.newloc) || game.newloc == 0 || !game.closng) goto L71;
 	RSPEAK(130);
-	game.newloc=LOC;
+	game.newloc=game.loc;
 	if(!game.panic)game.clock2=15;
 	game.panic=true;
 
@@ -168,15 +168,15 @@ static bool do_command(FILE *cmdin) {
  *  the dwarf's blocking his way.  If coming from place forbidden to pirate
  *  (dwarves rooted in place) let him get out (and attacked). */
 
-L71:	if(game.newloc == LOC || FORCED(LOC) || CNDBIT(LOC,3)) goto L74;
+L71:	if(game.newloc == game.loc || FORCED(game.loc) || CNDBIT(game.loc,3)) goto L74;
 	/* 73 */ for (I=1; I<=NDWARVES-1; I++) {
 	if(game.odloc[I] != game.newloc || !game.dseen[I]) goto L73;
-	game.newloc=LOC;
+	game.newloc=game.loc;
 	RSPEAK(2);
 	 goto L74;
 L73:	/*etc*/ ;
 	} /* end loop */
-L74:	LOC=game.newloc;
+L74:	game.loc=game.newloc;
 
 /*  Dwarf stuff.  See earlier comments for description of variables.  Remember
  *  sixth dwarf is pirate and is thus very different except for motion rules. */
@@ -188,27 +188,27 @@ L74:	LOC=game.newloc;
  *  dwarves can't meet the bear.  Also means dwarves won't follow him into dead
  *  end in maze, but c'est la vie.  They'll wait for him outside the dead end. */
 
-	if(LOC == 0 || FORCED(LOC) || CNDBIT(game.newloc,3)) goto L2000;
+	if(game.loc == 0 || FORCED(game.loc) || CNDBIT(game.newloc,3)) goto L2000;
 	if(game.dflag != 0) goto L6000;
-	if(INDEEP(LOC))game.dflag=1;
+	if(INDEEP(game.loc))game.dflag=1;
 	 goto L2000;
 
 /*  When we encounter the first dwarf, we kill 0, 1, or 2 of the 5 dwarves.  If
  *  any of the survivors is at loc, replace him with the alternate. */
 
 L6000:	if(game.dflag != 1) goto L6010;
-	if(!INDEEP(LOC) || (PCT(95) && (!CNDBIT(LOC,4) || PCT(85)))) goto L2000;
+	if(!INDEEP(game.loc) || (PCT(95) && (!CNDBIT(game.loc,4) || PCT(85)))) goto L2000;
 	game.dflag=2;
 	for (I=1; I<=2; I++) {
 	J=1+randrange(NDWARVES-1);
 	if(PCT(50))game.dloc[J]=0;
 	} /* end loop */
 	for (I=1; I<=NDWARVES-1; I++) {
-	if(game.dloc[I] == LOC)game.dloc[I]=DALTLC;
+	if(game.dloc[I] == game.loc)game.dloc[I]=DALTLC;
 	game.odloc[I]=game.dloc[I];
 	} /* end loop */
 	RSPEAK(3);
-	DROP(AXE,LOC);
+	DROP(AXE,game.loc);
 	 goto L2000;
 
 /*  Things are in full swing.  Move each dwarf at random, except if he's seen us
@@ -241,9 +241,9 @@ L6016:	TK[J]=game.odloc[I];
 	J=1+randrange(J);
 	game.odloc[I]=game.dloc[I];
 	game.dloc[I]=TK[J];
-	game.dseen[I]=(game.dseen[I] && INDEEP(LOC)) || (game.dloc[I] == LOC || game.odloc[I] == LOC);
+	game.dseen[I]=(game.dseen[I] && INDEEP(game.loc)) || (game.dloc[I] == game.loc || game.odloc[I] == game.loc);
 	if(!game.dseen[I]) goto L6030;
-	game.dloc[I]=LOC;
+	game.dloc[I]=game.loc;
 	if(I != 6) goto L6027;
 
 /*  The pirate's spotted him.  He leaves him alone once we've found chest.  K
@@ -251,11 +251,11 @@ L6016:	TK[J]=game.odloc[I];
  *  the pirate be spotted.  Note that game.place(CHEST)=0 might mean that he's
  *  thrown it to the troll, but in that case he's seen the chest (game.prop=0). */
 
-	if(LOC == game.chloc || game.prop[CHEST] >= 0) goto L6030;
+	if(game.loc == game.chloc || game.prop[CHEST] >= 0) goto L6030;
 	K=0;
 	/* 6020 */ for (J=50; J<=MAXTRS; J++) {
 /*  Pirate won't take pyramid from plover room or dark room (too easy!). */
-	if(J == PYRAM && (LOC == PLAC[PYRAM] || LOC == PLAC[EMRALD])) goto L6020;
+	if(J == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD])) goto L6020;
 	if(TOTING(J)) goto L6021;
 L6020:	if(HERE(J))K=1;
 	} /* end loop */
@@ -270,8 +270,8 @@ L6021:	if(game.place[CHEST] != 0) goto L6022;
 	MOVE(MESSAG,game.chloc2);
 L6022:	RSPEAK(128);
 	/* 6023 */ for (J=50; J<=MAXTRS; J++) {
-	if(J == PYRAM && (LOC == PLAC[PYRAM] || LOC == PLAC[EMRALD])) goto L6023;
-	if(AT(J) && game.fixed[J] == 0)CARRY(J,LOC);
+	if(J == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD])) goto L6023;
+	if(AT(J) && game.fixed[J] == 0)CARRY(J,game.loc);
 	if(TOTING(J))DROP(J,game.chloc);
 L6023:	/*etc*/ ;
 	} /* end loop */
@@ -290,7 +290,7 @@ L6025:	RSPEAK(186);
 L6027:	game.dtotal=game.dtotal+1;
 	if(game.odloc[I] != game.dloc[I]) goto L6030;
 	ATTACK=ATTACK+1;
-	if(game.knfloc >= 0)game.knfloc=LOC;
+	if(game.knfloc >= 0)game.knfloc=game.loc;
 	if(randrange(1000) < 95*(game.dflag-2))STICK=STICK+1;
 L6030:	/*etc*/ ;
 	} /* end loop */
@@ -311,24 +311,24 @@ L6030:	/*etc*/ ;
 	SETPRM(1,STICK,0);
 	RSPEAK(K+1+2/(1+STICK));
 	if(STICK == 0) goto L2000;
-	game.oldlc2=LOC;
+	game.oldlc2=game.loc;
 	 goto L99;
 
 /*  Describe the current location and (maybe) get next command. */
 
 /*  Print text for current loc. */
 
-L2000:	if(LOC == 0) goto L99;
-	KK=STEXT[LOC];
-	if(MOD(game.abbrev[LOC],game.abbnum) == 0 || KK == 0)KK=LTEXT[LOC];
-	if(FORCED(LOC) || !DARK(0)) goto L2001;
+L2000:	if(game.loc == 0) goto L99;
+	KK=STEXT[game.loc];
+	if(MOD(game.abbrev[game.loc],game.abbnum) == 0 || KK == 0)KK=LTEXT[game.loc];
+	if(FORCED(game.loc) || !DARK(0)) goto L2001;
 	if(game.wzdark && PCT(35)) goto L90;
 	KK=RTEXT[16];
 L2001:	if(TOTING(BEAR))RSPEAK(141);
 	SPEAK(KK);
 	K=1;
-	if(FORCED(LOC)) goto L8;
-	if(LOC == 33 && PCT(25) && !game.closng)RSPEAK(7);
+	if(FORCED(game.loc)) goto L8;
+	if(game.loc == 33 && PCT(25) && !game.closng)RSPEAK(7);
 
 /*  Print out descriptions of objects at this location.  If not closing and
  *  property value is negative, tally off another treasure.  Rug is special
@@ -337,8 +337,8 @@ L2001:	if(TOTING(BEAR))RSPEAK(141);
  *  are because game.prop=0 is needed to get full score. */
 
 	if(DARK(0)) goto L2012;
-	game.abbrev[LOC]=game.abbrev[LOC]+1;
-	I=game.atloc[LOC];
+	game.abbrev[game.loc]=game.abbrev[game.loc]+1;
+	I=game.atloc[game.loc];
 L2004:	if(I == 0) goto L2012;
 	OBJ=I;
 	if(OBJ > NOBJECTS)OBJ=OBJ-NOBJECTS;
@@ -360,7 +360,7 @@ L2004:	if(I == 0) goto L2012;
  *  anyone who makes such a gross blunder isn't likely to find everything
  *  else anyway (so goes the rationalisation). */
 L2006:	KK=game.prop[OBJ];
-	if(OBJ == STEPS && LOC == game.fixed[STEPS])KK=1;
+	if(OBJ == STEPS && game.loc == game.fixed[STEPS])KK=1;
 	PSPEAK(OBJ,KK);
 L2008:	I=game.link[I];
 	 goto L2004;
@@ -378,10 +378,10 @@ L2012:	VERB=0;
  *  to finish the loop.  Ignore "HINTS" < 4 (special stuff, see database notes).
 		*/
 
-L2600:	if(COND[LOC] < game.conds) goto L2603;
+L2600:	if(COND[game.loc] < game.conds) goto L2603;
 	/* 2602 */ for (HINT=1; HINT<=HNTMAX; HINT++) {
 	if(game.hinted[HINT]) goto L2602;
-	if(!CNDBIT(LOC,HINT+10))game.hintlc[HINT]= -1;
+	if(!CNDBIT(game.loc,HINT+10))game.hintlc[HINT]= -1;
 	game.hintlc[HINT]=game.hintlc[HINT]+1;
 	if(game.hintlc[HINT] >= HINTS[HINT][1]) goto L40000;
 L2602:	/*etc*/ ;
@@ -398,7 +398,7 @@ L2603:	if(!game.closed) goto L2605;
 	if(TOTING(I) && game.prop[I] < 0)game.prop[I]= -1-game.prop[I];
 	} /* end loop */
 L2605:	game.wzdark=DARK(0);
-	if(game.knfloc > 0 && game.knfloc != LOC)game.knfloc=0;
+	if(game.knfloc > 0 && game.knfloc != game.loc)game.knfloc=0;
 	I=0;
 	if (!GETIN(cmdin, WD1,WD1X,WD2,WD2X))
 	    return false;
@@ -418,7 +418,7 @@ L2607:	game.foobar=(game.foobar>0 ? -game.foobar : 0);
 	}
 	if(VERB == SAY && WD2 > 0)VERB=0;
 	if(VERB == SAY) goto L4090;
-	if(game.tally == 0 && INDEEP(LOC) && LOC != 33)game.clock1=game.clock1-1;
+	if(game.tally == 0 && INDEEP(game.loc) && game.loc != 33)game.clock1=game.clock1-1;
 	if(game.clock1 == 0) goto L10000;
 	if(game.clock1 < 0)game.clock2=game.clock2-1;
 	if(game.clock2 == 0) goto L11000;
@@ -428,7 +428,7 @@ L2607:	game.foobar=(game.foobar>0 ? -game.foobar : 0);
 	if(game.limit == 0) goto L12400;
 	if(game.limit <= 30) goto L12200;
 L19999: K=43;
-	if(LIQLOC(LOC) == WATER)K=70;
+	if(LIQLOC(game.loc) == WATER)K=70;
 	V1=VOCAB(WD1,-1);
 	V2=VOCAB(WD2,-1);
 	if(V1 == ENTER && (V2 == STREAM || V2 == 1000+WATER)) goto L2010;
@@ -502,7 +502,7 @@ L8000:	SETPRM(1,WD1,WD1X);
 
 /*  Figure out the new location
  *
- *  Given the current location in "LOC", and a motion verb number in
+ *  Given the current location in "game.loc", and a motion verb number in
  *  "K", put the new location in "game.newloc".  The current loc is saved
  *  in "game.oldloc" in case he wants to retreat.  The current
  *  game.oldloc is saved in game.oldlc2, in case he dies.  (if he
@@ -510,15 +510,15 @@ L8000:	SETPRM(1,WD1,WD1X);
  *  him, so we need game.oldlc2, which is the last place he was
  *  safe.) */
 
-L8:	KK=KEY[LOC];
-	game.newloc=LOC;
+L8:	KK=KEY[game.loc];
+	game.newloc=game.loc;
 	if(KK == 0)BUG(26);
 	if(K == NUL) return true;
 	if(K == BACK) goto L20;
 	if(K == LOOK) goto L30;
 	if(K == CAVE) goto L40;
 	game.oldlc2=game.oldloc;
-	game.oldloc=LOC;
+	game.oldloc=game.loc;
 
 L9:	LL=labs(TRAVEL[KK]);
 	if(MOD(LL,1000) == 1 || MOD(LL,1000) == K) goto L10;
@@ -547,7 +547,7 @@ L16:	game.newloc=MOD(LL,1000);
 	if(game.newloc <= 300) return true;
 	if(game.newloc <= 500) goto L30000;
 	RSPEAK(game.newloc-500);
-	game.newloc=LOC;
+	game.newloc=game.loc;
 	 return true;
 
 /*  Special motions come here.  Labelling convention: statement numbers NNNXX
@@ -562,9 +562,9 @@ L30000: game.newloc=game.newloc-300;
  *  table must include "useless" entries going through passage, which can never
  *  be used for actual motion, but can be spotted by "go back". */
 
-L30100: game.newloc=99+100-LOC;	/* ESR: an instance of NOBJECTS? */
+L30100: game.newloc=99+100-game.loc;	/* ESR: an instance of NOBJECTS? */
 	if(game.holdng == 0 || (game.holdng == 1 && TOTING(EMRALD))) return true;
-	game.newloc=LOC;
+	game.newloc=game.loc;
 	RSPEAK(117);
 	return true;
 
@@ -572,7 +572,7 @@ L30100: game.newloc=99+100-LOC;	/* ESR: an instance of NOBJECTS? */
  *  toting it), so he's forced to use the plover-passage to get it out.  Having
  *  dropped it, go back and pretend he wasn't carrying it after all. */
 
-L30200: DROP(EMRALD,LOC);
+L30200: DROP(EMRALD,game.loc);
 	 goto L12;
 
 /*  Travel 303.  Troll bridge.  Must be done only as special motion so that
@@ -589,10 +589,10 @@ L30300: if(game.prop[TROLL] != 1) goto L30310;
 	MOVE(TROLL,PLAC[TROLL]);
 	MOVE(TROLL+NOBJECTS,FIXD[TROLL]);
 	JUGGLE(CHASM);
-	game.newloc=LOC;
+	game.newloc=game.loc;
 	return true;
 
-L30310: game.newloc=PLAC[TROLL]+FIXD[TROLL]-LOC;
+L30310: game.newloc=PLAC[TROLL]+FIXD[TROLL]-game.loc;
 	if(game.prop[TROLL] == 0)game.prop[TROLL]=1;
 	if(!TOTING(BEAR)) return true;
 	RSPEAK(162);
@@ -606,16 +606,16 @@ L30310: game.newloc=PLAC[TROLL]+FIXD[TROLL]-LOC;
 
 /*  End of specials. */
 
-/*  Handle "go back".  Look for verb which goes from LOC to game.oldloc, or to game.oldlc2
+/*  Handle "go back".  Look for verb which goes from game.loc to game.oldloc, or to game.oldlc2
  *  If game.oldloc has forced-motion.  K2 saves entry -> forced loc -> previous loc. */
 
 L20:	K=game.oldloc;
 	if(FORCED(K))K=game.oldlc2;
 	game.oldlc2=game.oldloc;
-	game.oldloc=LOC;
+	game.oldloc=game.loc;
 	K2=0;
-	if(K == LOC)K2=91;
-	if(CNDBIT(LOC,4))K2=274;
+	if(K == game.loc)K2=91;
+	if(CNDBIT(game.loc,4))K2=274;
 	if(K2 == 0) goto L21;
 	RSPEAK(K2);
 	return true;
@@ -639,7 +639,7 @@ L23:		KK=K2;
 	}
 
 	K=MOD(labs(TRAVEL[KK]),1000);
-	KK=KEY[LOC];
+	KK=KEY[game.loc];
 	 goto L9;
 
 /*  Look.  Can't give more detail.  Pretend it wasn't dark (though it may "now"
@@ -648,13 +648,13 @@ L23:		KK=K2;
 L30:	if(game.detail < 3)RSPEAK(15);
 	game.detail=game.detail+1;
 	game.wzdark=false;
-	game.abbrev[LOC]=0;
+	game.abbrev[game.loc]=0;
 	return true;
 
 /*  Cave.  Different messages depending on whether above ground. */
 
 L40:	K=58;
-	if(OUTSID(LOC) && LOC != 8)K=57;
+	if(OUTSID(game.loc) && game.loc != 8)K=57;
 	RSPEAK(K);
 	return true;
 
@@ -691,7 +691,7 @@ L50:	SPK=12;
 /*  The easiest way to get killed is to fall into a pit in pitch darkness. */
 
 L90:	RSPEAK(23);
-	game.oldlc2=LOC;
+	game.oldlc2=game.loc;
 
 /*  Okay, he's dead.  Let's get on with it. */
 
@@ -710,8 +710,8 @@ L99:	if(game.closng) goto L95;
 	DROP(I,K);
 L98:	/*etc*/ ;
 	} /* end loop */
-	LOC=3;
-	game.oldloc=LOC;
+	game.loc=3;
+	game.oldloc=game.loc;
 	 goto L2000;
 
 /*  He died during closing time.  No resurrection.  Tally up a death and exit. */
@@ -753,13 +753,13 @@ L40030:  goto L2602;
 L40100: if(game.prop[GRATE] == 0 && !HERE(KEYS)) goto L40010;
 	 goto L40020;
 
-L40200: if(game.place[BIRD] == LOC && TOTING(ROD) && game.oldobj == BIRD) goto L40010;
+L40200: if(game.place[BIRD] == game.loc && TOTING(ROD) && game.oldobj == BIRD) goto L40010;
 	 goto L40030;
 
 L40300: if(HERE(SNAKE) && !HERE(BIRD)) goto L40010;
 	 goto L40020;
 
-L40400: if(game.atloc[LOC] == 0 && game.atloc[game.oldloc] == 0 && game.atloc[game.oldlc2] == 0 && game.holdng >
+L40400: if(game.atloc[game.loc] == 0 && game.atloc[game.oldloc] == 0 && game.atloc[game.oldlc2] == 0 && game.holdng >
 		1) goto L40010;
 	 goto L40020;
 
@@ -771,11 +771,11 @@ L40600:  goto L40010;
 L40700: if(game.dflag == 0) goto L40010;
 	 goto L40020;
 
-L40800: if(game.atloc[LOC] == 0 && game.atloc[game.oldloc] == 0 && game.atloc[game.oldlc2] == 0) goto
+L40800: if(game.atloc[game.loc] == 0 && game.atloc[game.oldloc] == 0 && game.atloc[game.oldlc2] == 0) goto
 		L40010;
 	 goto L40030;
 
-L40900: I=ATDWRF(LOC);
+L40900: I=ATDWRF(game.loc);
 	if(I < 0) goto L40020;
 	if(HERE(OGRE) && I == 0) goto L40010;
 	 goto L40030;
@@ -859,7 +859,7 @@ L11000: game.prop[BOTTLE]=PUT(BOTTLE,115,1);
 	game.prop[LAMP]=PUT(LAMP,115,0);
 	game.prop[ROD]=PUT(ROD,115,0);
 	game.prop[DWARF]=PUT(DWARF,115,0);
-	LOC=115;
+	game.loc=115;
 	game.oldloc=115;
 	game.newloc=115;
 
@@ -894,7 +894,7 @@ L11000: game.prop[BOTTLE]=PUT(BOTTLE,115,1);
 
 L12000: RSPEAK(188);
 	game.prop[BATTER]=1;
-	if(TOTING(BATTER))DROP(BATTER,LOC);
+	if(TOTING(BATTER))DROP(BATTER,game.loc);
 	game.limit=game.limit+2500;
 	game.lmwarn=false;
 	 goto L19999;
