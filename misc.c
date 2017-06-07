@@ -592,8 +592,8 @@ long AT, I;
 	if(DFLAG < 2)return(AT);
 	AT= -1;
 	for (I=1; I<=NDWARVES-1; I++) {
-	if(DLOC[I] == WHERE) goto L2;
-	if(DLOC[I] != 0)AT=0;
+	if(game.dloc[I] == WHERE) goto L2;
+	if(game.dloc[I] != 0)AT=0;
 	} /* end loop */
 	return(AT);
 

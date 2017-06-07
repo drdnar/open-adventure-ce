@@ -12,8 +12,10 @@
 #include "advent.h"
 #include "database.h"
 
+struct game_t game;
+
 long ABB[186], ATLOC[186], BLKLIN = true, DFLAG,
-		DLOC[7], FIXED[NOBJECTS+1], HOLDNG,
+		FIXED[NOBJECTS+1], HOLDNG,
 		LINK[NOBJECTS*2 + 1], LNLENG, LNPOSN,
 		PARMS[26], PLACE[NOBJECTS+1],
 		SETUP = 0;
@@ -23,7 +25,7 @@ long ABBNUM, AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD, BONUS,
 		 BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST, CHLOC, CHLOC2,
 		CLAM, CLOCK1, CLOCK2, CLOSED, CLOSNG, CLSHNT,
 		COINS, CONDS, DALTLC, DETAIL,
-		DKILL, DOOR, DPRSSN, DRAGON, DSEEN[NDWARVES+1], DTOTAL, DWARF, EGGS,
+		DKILL, DOOR, DPRSSN, DRAGON, DTOTAL, DWARF, EGGS,
 		EMRALD, ENTER, ENTRNC, FIND, FISSUR, FOOBAR, FOOD,
 		GRATE, HINT, HINTED[21], HINTLC[21],
 		I, INVENT, IGO, IWEST, J, JADE, K, K2, KEYS, KK,
@@ -32,7 +34,7 @@ long ABBNUM, AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD, BONUS,
 		MAGZIN, MAXDIE, MAXTRS,
 		MESSAG, MIRROR, MXSCOR,
 		NEWLOC, NOVICE, NUGGET, NUL, NUMDIE, OBJ,
-		ODLOC[NDWARVES+1], OGRE, OIL, OLDLC2, OLDLOC, OLDOBJ, OYSTER,
+ 		OGRE, OIL, OLDLC2, OLDLOC, OLDOBJ, OYSTER,
 		PANIC, PEARL, PILLOW, PLANT, PLANT2, PROP[NOBJECTS+1], PYRAM,
 		RESER, ROD, ROD2, RUBY, RUG, SAPPH, SAVED, SAY,
 		SCORE, SECT, SIGN, SNAKE, SPK, STEPS, STICK,
@@ -180,7 +182,7 @@ static bool do_command(FILE *cmdin) {
 
 L71:	if(NEWLOC == LOC || FORCED(LOC) || CNDBIT(LOC,3)) goto L74;
 	/* 73 */ for (I=1; I<=NDWARVES-1; I++) {
-	if(ODLOC[I] != NEWLOC || !DSEEN[I]) goto L73;
+	if(game.odloc[I] != NEWLOC || !game.dseen[I]) goto L73;
 	NEWLOC=LOC;
 	RSPEAK(2);
 	 goto L74;
@@ -211,11 +213,11 @@ L6000:	if(DFLAG != 1) goto L6010;
 	DFLAG=2;
 	for (I=1; I<=2; I++) {
 	J=1+randrange(NDWARVES-1);
-	if(PCT(50))DLOC[J]=0;
+	if(PCT(50))game.dloc[J]=0;
 	} /* end loop */
 	for (I=1; I<=NDWARVES-1; I++) {
-	if(DLOC[I] == LOC)DLOC[I]=DALTLC;
-	ODLOC[I]=DLOC[I];
+	if(game.dloc[I] == LOC)game.dloc[I]=DALTLC;
+	game.odloc[I]=game.dloc[I];
 	} /* end loop */
 	RSPEAK(3);
 	DROP(AXE,LOC);
@@ -230,30 +232,30 @@ L6010:	DTOTAL=0;
 	ATTACK=0;
 	STICK=0;
 	/* 6030 */ for (I=1; I<=NDWARVES; I++) {
-	if(DLOC[I] == 0) goto L6030;
+	if(game.dloc[I] == 0) goto L6030;
 /*  Fill TK array with all the places this dwarf might go. */
 	J=1;
-	KK=DLOC[I];
+	KK=game.dloc[I];
 	KK=KEY[KK];
 	if(KK == 0) goto L6016;
 L6012:	NEWLOC=MOD(labs(TRAVEL[KK])/1000,1000);
 	{long x = J-1;
-	if(NEWLOC > 300 || !INDEEP(NEWLOC) || NEWLOC == ODLOC[I] || (J > 1 &&
-		NEWLOC == TK[x]) || J >= 20 || NEWLOC == DLOC[I] ||
+	if(NEWLOC > 300 || !INDEEP(NEWLOC) || NEWLOC == game.odloc[I] || (J > 1 &&
+		NEWLOC == TK[x]) || J >= 20 || NEWLOC == game.dloc[I] ||
 		FORCED(NEWLOC) || (I == 6 && CNDBIT(NEWLOC,3)) ||
 		labs(TRAVEL[KK])/1000000 == 100) goto L6014;}
 	TK[J]=NEWLOC;
 	J=J+1;
 L6014:	KK=KK+1;
 	{long x = KK-1; if(TRAVEL[x] >= 0) goto L6012;}
-L6016:	TK[J]=ODLOC[I];
+L6016:	TK[J]=game.odloc[I];
 	if(J >= 2)J=J-1;
 	J=1+randrange(J);
-	ODLOC[I]=DLOC[I];
-	DLOC[I]=TK[J];
-	DSEEN[I]=(DSEEN[I] && INDEEP(LOC)) || (DLOC[I] == LOC || ODLOC[I] == LOC);
-	if(!DSEEN[I]) goto L6030;
-	DLOC[I]=LOC;
+	game.odloc[I]=game.dloc[I];
+	game.dloc[I]=TK[J];
+	game.dseen[I]=(game.dseen[I] && INDEEP(LOC)) || (game.dloc[I] == LOC || game.odloc[I] == LOC);
+	if(!game.dseen[I]) goto L6030;
+	game.dloc[I]=LOC;
 	if(I != 6) goto L6027;
 
 /*  The pirate's spotted him.  He leaves him alone once we've found chest.  K
@@ -271,7 +273,7 @@ L6020:	if(HERE(J))K=1;
 	} /* end loop */
 	if(TALLY == 1 && K == 0 && PLACE[CHEST] == 0 && HERE(LAMP) && PROP[LAMP]
 		== 1) goto L6025;
-	if(ODLOC[6] != DLOC[6] && PCT(20))RSPEAK(127);
+	if(game.odloc[6] != game.dloc[6] && PCT(20))RSPEAK(127);
 	 goto L6030;
 
 L6021:	if(PLACE[CHEST] != 0) goto L6022;
@@ -285,9 +287,9 @@ L6022:	RSPEAK(128);
 	if(TOTING(J))DROP(J,CHLOC);
 L6023:	/*etc*/ ;
 	} /* end loop */
-L6024:	DLOC[6]=CHLOC;
-	ODLOC[6]=CHLOC;
-	DSEEN[6]=false;
+L6024:	game.dloc[6]=CHLOC;
+	game.odloc[6]=CHLOC;
+	game.dseen[6]=false;
 	 goto L6030;
 
 L6025:	RSPEAK(186);
@@ -298,7 +300,7 @@ L6025:	RSPEAK(186);
 /*  This threatening little dwarf is in the room with him! */
 
 L6027:	DTOTAL=DTOTAL+1;
-	if(ODLOC[I] != DLOC[I]) goto L6030;
+	if(game.odloc[I] != game.dloc[I]) goto L6030;
 	ATTACK=ATTACK+1;
 	if(KNFLOC >= 0)KNFLOC=LOC;
 	if(randrange(1000) < 95*(DFLAG-2))STICK=STICK+1;
@@ -518,9 +520,9 @@ L8000:	SETPRM(1,WD1,WD1X);
 /*  Figure out the new location
  *
  *  Given the current location in "LOC", and a motion verb number in "K", put
- *  the new location in "NEWLOC".  The current loc is saved in "OLDLOC" in case
- *  he wants to retreat.  The current OLDLOC is saved in OLDLC2, in case he
- *  dies.  (if he does, NEWLOC will be limbo, and OLDLOC will be what killed
+ *  the new location in "NEWLOC".  The current loc is saved in "OLgame.dloc" in case
+ *  he wants to retreat.  The current OLgame.dloc is saved in OLDLC2, in case he
+ *  dies.  (if he does, NEWLOC will be limbo, and OLgame.dloc will be what killed
  *  him, so we need OLDLC2, which is the last place he was safe.) */
 
 L8:	KK=KEY[LOC];
@@ -835,8 +837,8 @@ L41000: if(TALLY == 1 && PROP[JADE] < 0) goto L40010;
 L10000: PROP[GRATE]=0;
 	PROP[FISSUR]=0;
 	for (I=1; I<=NDWARVES; I++) {
-	DSEEN[I]=false;
-	DLOC[I]=0;
+	game.dseen[I]=false;
+	game.dloc[I]=0;
 	} /* end loop */
 	MOVE(TROLL,0);
 	MOVE(TROLL+NOBJECTS,0);

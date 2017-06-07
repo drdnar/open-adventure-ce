@@ -13,7 +13,15 @@ typedef struct lcg_state
 typedef long token_t;	/* word token - someday this will be a character array */
 typedef long vocab_t;	/* index into a vocabulary array */
 
-extern long ABB[], ATLOC[], BLKLIN, DFLAG, DLOC[], FIXED[], HOLDNG,
+struct game_t {
+    long dseen[NDWARVES+1];
+    long dloc[NDWARVES+1];
+    long odloc[NDWARVES+1];
+};
+
+extern struct game_t game;
+
+extern long ABB[], ATLOC[], BLKLIN, DFLAG, FIXED[], HOLDNG,
 		LINK[], LNLENG, LNPOSN,
 		PARMS[], PLACE[];
 extern char rawbuf[LINESIZE], INLINE[LINESIZE+1], MAP1[], MAP2[];
@@ -82,15 +90,15 @@ extern long ABBNUM, AMBER, ATTACK, AXE, BACK, BATTER, BEAR,
    BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST, CHLOC, CHLOC2,
    CLAM, CLOCK1, CLOCK2, CLOSED, CLOSNG, CLSHNT,
    COINS, CONDS, DALTLC, DETAIL,
-   DKILL, DOOR, DPRSSN, DRAGON, DSEEN[], DTOTAL, DWARF, EGGS,
+    DKILL, DOOR, DPRSSN, DRAGON, DTOTAL, DWARF, EGGS,
    EMRALD, ENTER, ENTRNC, FIND, FISSUR, FOOBAR, FOOD,
    GRATE, HINT, HINTED[], HINTLC[],
    I, INVENT, IGO, IWEST, J, JADE, K, K2, KEYS, KK,
    KNFLOC, KNIFE, KQ, L, LAMP, LIMIT, LL,
-  LMWARN, LOC, LOCK, LOOK,
+   LMWARN, LOC, LOCK, LOOK,
    MAGZIN, MAXDIE, MAXTRS, MESSAG, MIRROR, MXSCOR,
    NEWLOC, NOVICE, NUGGET, NUL, NUMDIE, OBJ,
-   ODLOC[], OGRE, OIL, OLDLC2, OLDLOC, OLDOBJ, OYSTER,
+   OGRE, OIL, OLDLC2, OLDLOC, OLDOBJ, OYSTER,
    PANIC, PEARL, PILLOW, PLANT, PLANT2, PROP[], PYRAM,
    RESER, ROD, ROD2, RUBY, RUG, SAPPH, SAVED, SAY,
    SCORE, SECT, SETUP, SIGN, SNAKE, SPK, STEPS, STICK,

@@ -199,10 +199,10 @@ L9128:	RSPEAK(SPK);
 	DSTROY(OGRE);
 	K=0;
 	for (I=1; I < PIRATE; I++) {
-		if(DLOC[I] == LOC) {
+		if(game.dloc[I] == LOC) {
 			K=K+1;
-			DLOC[I]=61;
-			DSEEN[I]=false;
+			game.dloc[I]=61;
+			game.dseen[I]=false;
 		}
 	}
 	SPK=SPK+1+1/K;
@@ -233,8 +233,8 @@ int throw(FILE *cmdin) {
 
 L9172:	SPK=48;
 	if(randrange(NDWARVES+1) < DFLAG) goto L9175;
-	DSEEN[I]=false;
-	DLOC[I]=0;
+	game.dseen[I]=false;
+	game.dloc[I]=0;
 	SPK=47;
 	DKILL=DKILL+1;
 	if(DKILL == 1)SPK=149;

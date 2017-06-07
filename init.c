@@ -314,10 +314,10 @@ L1106:	/*etc*/ ;
 	SAY=VOCWRD(190125,2);
 	THROW=VOCWRD(2008181523,2);
 
-/*  Initialise the dwarves.  DLOC is loc of dwarves, hard-wired in.  ODLOC is
+/*  Initialise the dwarves.  game.dloc is loc of dwarves, hard-wired in.  game.odloc is
  *  prior loc of each dwarf, initially garbage.  DALTLC is alternate initial loc
  *  for dwarf, in case one of them starts out on top of the adventurer.  (No 2
- *  of the 5 initial locs are adjacent.)  DSEEN is true if dwarf has seen him.
+ *  of the 5 initial locs are adjacent.)  game.dseen is true if dwarf has seen him.
  *  DFLAG controls the level of activation of all this:
  *	0	No dwarf stuff yet (wait until reaches Hall Of Mists)
  *	1	Reached Hall Of Mists, but hasn't met first dwarf
@@ -331,15 +331,15 @@ L1106:	/*etc*/ ;
 	CHLOC=114;
 	CHLOC2=140;
 	for (I=1; I<=NDWARVES; I++) {
-		DSEEN[I]=false;
+		game.dseen[I]=false;
 	} /* end loop */
 	DFLAG=0;
-	DLOC[1]=19;
-	DLOC[2]=27;
-	DLOC[3]=33;
-	DLOC[4]=44;
-	DLOC[5]=64;
-	DLOC[6]=CHLOC;
+	game.dloc[1]=19;
+	game.dloc[2]=27;
+	game.dloc[3]=33;
+	game.dloc[4]=44;
+	game.dloc[5]=64;
+	game.dloc[6]=CHLOC;
 	DALTLC=18;
 
 /*  Other random flags and counters, as follows:
