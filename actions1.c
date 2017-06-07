@@ -12,10 +12,9 @@
 
 /*  Analyse a verb.  Remember what it was, go back for object if second word
  *  unless verb is "say", which snarfs arbitrary second word.
- *  FIXME: Takes K and VERB as additional inputs.
  */
 
-int action(FILE *input, long STARTAT, long obj) {
+int action(FILE *input, long STARTAT, long verb, long obj) {
 	switch(STARTAT) {
 	   case 4000: goto L4000;
 	   case 4090: goto L4090;
@@ -23,15 +22,15 @@ int action(FILE *input, long STARTAT, long obj) {
 	   }
 	BUG(99);
 
-L4000:	VERB=K;
-	SPK=ACTSPK[VERB];
-	if(WD2 > 0 && VERB != SAY) return(2800);
-	if(VERB == SAY)obj=WD2;
+L4000:	
+	SPK=ACTSPK[verb];
+	if(WD2 > 0 && verb != SAY) return(2800);
+	if(verb == SAY)obj=WD2;
 	if(obj > 0) goto L4090;
 
 /*  Analyse an intransitive verb (ie, no object given yet). */
 
-	switch (VERB-1) {
+	switch (verb-1) {
 		case 0: goto L8010;	/* CARRY */
 		case 1: return(8000);	/* DROP */
 		case 2:	return(8000);	/* SAY */
@@ -71,7 +70,7 @@ L4000:	VERB=K;
 
 /*  Analyse a transitive verb. */
 
-L4090:	switch (VERB-1) {
+L4090:	switch (verb-1) {
 		case 0: goto L9010;	/* CARRY */
 		case 1: goto L9020;	/* DROP */
 		case 2: goto L9030;	/* SAY */
@@ -118,7 +117,7 @@ L4090:	switch (VERB-1) {
 L5000:	obj=K;
 	if(!HERE(K)) goto L5100;
 L5010:	if(WD2 > 0) return(2800);
-	if(VERB != 0) goto L4090;
+	if(verb != 0) goto L4090;
 	SETPRM(1,WD1,WD1X);
 	RSPEAK(255);
 	 return(2600);
@@ -142,7 +141,7 @@ L5130:	if(obj != KNIFE || game.knfloc != game.loc) goto L5140;
 L5140:	if(obj != ROD || !HERE(ROD2)) goto L5190;
 	obj=ROD2;
 	 goto L5010;
-L5190:	if((VERB == FIND || VERB == INVENT) && WD2 <= 0) goto L5010;
+L5190:	if((verb == FIND || verb == INVENT) && WD2 <= 0) goto L5010;
 	SETPRM(1,WD1,WD1X);
 	RSPEAK(256);
 	 return(2012);
@@ -209,7 +208,7 @@ L9040:	if(obj == CLAM || obj == OYSTER) goto L9046;
 
 L9043:	K=34+game.prop[GRATE];
 	game.prop[GRATE]=1;
-	if(VERB == LOCK)game.prop[GRATE]=0;
+	if(verb == LOCK)game.prop[GRATE]=0;
 	K=K+2*game.prop[GRATE];
 	 return(2010);
 
@@ -219,7 +218,7 @@ L9046:	K=0;
 	SPK=124+K;
 	if(TOTING(obj))SPK=120+K;
 	if(!TOTING(TRIDNT))SPK=122+K;
-	if(VERB == LOCK)SPK=61;
+	if(verb == LOCK)SPK=61;
 	if(SPK != 124) return(2011);
 	DSTROY(CLAM);
 	DROP(OYSTER,game.loc);
@@ -227,7 +226,7 @@ L9046:	K=0;
 	 return(2011);
 
 /*  Chain. */
-L9048:	if(VERB == LOCK) goto L9049;
+L9048:	if(verb == LOCK) goto L9049;
 	SPK=171;
 	if(game.prop[BEAR] == 0)SPK=41;
 	if(game.prop[CHAIN] == 0)SPK=37;
@@ -310,7 +309,7 @@ L9094:	DROP(JADE,game.loc);
 
 /*  Attack also moved into separate module. */
 
-L9120:	return(attack(input, obj, VERB));
+L9120:	return(attack(input, obj, verb));
 
 /*  Pour.  If no object, or object is bottle, assume contents of bottle.
  *  special tests for pouring water or oil on plant or rusty door. */
@@ -390,7 +389,7 @@ L9160:	if(obj != LAMP)SPK=76;
 
 /*  Throw moved into separate module. */
 
-L9170:	return(throw(input, obj, VERB));
+L9170:	return(throw(input, obj, verb));
 
 /*  Quit.  Intransitive only.  Verify intent and exit if that's what he wants. */
 

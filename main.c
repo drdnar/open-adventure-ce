@@ -36,7 +36,7 @@ lcg_state lcgstate;
 
 extern void initialise();
 extern void score(long);
-extern int action(FILE *, long, long);
+extern int action(FILE *, long, long, long);
 
 void sig_handler(int signo)
 {
@@ -471,11 +471,11 @@ L3000:	SETPRM(1,WD1,WD1X);
 
 /* Verb and object analysis moved to separate module. */
 
-L4000:	I=4000; goto Laction;
+L4000:	I=4000; VERB=K; goto Laction;
 L4090:	I=4090; goto Laction;
 L5000:	I=5000;
 Laction:
-	 switch (action(cmdin, I, obj)) {
+	 switch (action(cmdin, I, VERB, obj)) {
 	   case 2: return true;
 	   case 8: goto L8;
 	   case 2000: goto L2000;
