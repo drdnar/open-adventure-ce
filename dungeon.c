@@ -32,7 +32,6 @@ const char ascii_to_advent[] = {0, 74, 75, 76, 77, 78, 79, 80, 81, 82, 0, 0, 85,
 static long LNLENG;
 static long LNPOSN;
 static char INLINE[LINESIZE+1];
-static long NEWLOC;
 static long OLDLOC;
 
 // Storage for what comes out of the database
@@ -295,25 +294,25 @@ int read_database(FILE* database) {
 
   while(true)
     {
-      long SECT=GETNUM(database);
+      long sect=GETNUM(database);
       OLDLOC= -1;
-      switch (SECT)
+      switch (sect)
         {
           case 0: return(0);
-          case 1: read_messages(database, SECT); break;
-          case 2: read_messages(database, SECT); break;
+          case 1: read_messages(database, sect); break;
+          case 2: read_messages(database, sect); break;
           case 3: read_section3_stuff(database); break;
           case 4: read_vocabulary(database); break;
-          case 5: read_messages(database, SECT); break;
-          case 6: read_messages(database, SECT); break;
+          case 5: read_messages(database, sect); break;
+          case 6: read_messages(database, sect); break;
           case 7: read_initial_locations(database); break;
           case 8: read_action_verb_message_nr(database); break;
           case 9: read_conditions(database); break;
-          case 10: read_messages(database, SECT); break;
+          case 10: read_messages(database, sect); break;
           case 11: read_hints(database); break;
           case 12: break;
           case 13: read_sound_text(database); break;
-          case 14: read_messages(database, SECT); break;
+          case 14: read_messages(database, sect); break;
           default: BUG(9);
         }
     }
@@ -321,16 +320,16 @@ int read_database(FILE* database) {
 
 
 /*  Sections 1, 2, 5, 6, 10, 14.  Read messages and set up pointers. */
-void read_messages(FILE* database, long SECT)
+void read_messages(FILE* database, long sect)
   {
     long KK=LINUSE;
     while(true)
       {
-        long LOC;
+        long loc;
         LINUSE=KK;
-        LOC=GETNUM(database);
+        loc=GETNUM(database);
         if(LNLENG >= LNPOSN+70)BUG(0);
-        if(LOC == -1) return;
+        if(loc == -1) return;
         if(LNLENG < LNPOSN)BUG(1);
         do {
             KK=KK+1;
@@ -339,63 +338,63 @@ void read_messages(FILE* database, long SECT)
           }
         while(LINES[KK] != -1);
         LINES[LINUSE]=KK;
-        if(LOC == OLDLOC) continue;
-        OLDLOC=LOC;
+        if(loc == OLDLOC) continue;
+        OLDLOC=loc;
         LINES[LINUSE]= -KK;
-        if(SECT == 14)
+        if(sect == 14)
           {
             TRNVLS=TRNVLS+1;
             if(TRNVLS > TRNSIZ)BUG(11);
             TTEXT[TRNVLS]=LINUSE;
-            TRNVAL[TRNVLS]=LOC;
+            TRNVAL[TRNVLS]=loc;
             continue;
           }
-        if(SECT == 10)
+        if(sect == 10)
           {
             CLSSES=CLSSES+1;
             if(CLSSES > CLSMAX)BUG(11);
             CTEXT[CLSSES]=LINUSE;
-            CVAL[CLSSES]=LOC;
+            CVAL[CLSSES]=loc;
             continue;
           }
-        if(SECT == 6)
+        if(sect == 6)
           {
-            if(LOC > RTXSIZ)BUG(6);
-            RTEXT[LOC]=LINUSE;
+            if(loc > RTXSIZ)BUG(6);
+            RTEXT[loc]=LINUSE;
             continue;
           }
-        if(SECT == 5)
+        if(sect == 5)
           {
-            if(LOC > 0 && LOC <= NOBJECTS)PTEXT[LOC]=LINUSE;
+            if(loc > 0 && loc <= NOBJECTS)PTEXT[loc]=LINUSE;
             continue;
           }
-        if(LOC > LOCSIZ)BUG(10);
-        if(SECT == 1)
+        if(loc > LOCSIZ)BUG(10);
+        if(sect == 1)
           {
-            LTEXT[LOC]=LINUSE;
+            LTEXT[loc]=LINUSE;
             continue;
           }
 
-        STEXT[LOC]=LINUSE;
+        STEXT[loc]=LINUSE;
       }
   }
 
 
 /*  The stuff for section 3 is encoded here.  Each "from-location" gets a
  *  contiguous section of the "TRAVEL" array.  Each entry in travel is
- *  NEWLOC*1000 + KEYWORD (from section 4, motion verbs), and is negated if
+ *  newloc*1000 + KEYWORD (from section 4, motion verbs), and is negated if
  *  this is the last entry for this location.  KEY(N) is the index in travel
  *  of the first option at location N. */
 void read_section3_stuff(FILE* database)
   {
-    long LOC;
-    while((LOC=GETNUM(database)) != -1)
+    long loc;
+    while((loc=GETNUM(database)) != -1)
       {
-        long NEWLOC=GETNUM(NULL);
+        long newloc=GETNUM(NULL);
         long L;
-        if(KEY[LOC] == 0)
+        if(KEY[loc] == 0)
           {
-            KEY[LOC]=TRVS;
+            KEY[loc]=TRVS;
           }
         else
           {
@@ -403,7 +402,7 @@ void read_section3_stuff(FILE* database)
           }
         while((L=GETNUM(NULL)) != 0)
           {
-            TRAVEL[TRVS]=NEWLOC*1000+L;
+            TRAVEL[TRVS]=newloc*1000+L;
             TRVS=TRVS+1;
             if(TRVS == TRVSIZ)BUG(3);
           }
@@ -444,10 +443,10 @@ void read_initial_locations(FILE* database)
 /*  Read default message numbers for action verbs, store in ACTSPK. */
 void read_action_verb_message_nr(FILE* database)
   {
-    long VERB;
-    while((VERB=GETNUM(database)) != -1)
+    long verb;
+    while((verb=GETNUM(database)) != -1)
       {
-        ACTSPK[VERB]=GETNUM(NULL);
+        ACTSPK[verb]=GETNUM(NULL);
       }
   }
 
@@ -458,11 +457,11 @@ void read_conditions(FILE* database)
     long K;
     while((K=GETNUM(database)) != -1)
       {
-        long LOC;
-        while((LOC=GETNUM(NULL)) != 0)
+        long loc;
+        while((loc=GETNUM(NULL)) != 0)
           {
-            if(is_set(COND[LOC],K)) BUG(8);
-            COND[LOC]=COND[LOC] + (1l << K);
+            if(is_set(COND[loc],K)) BUG(8);
+            COND[loc]=COND[loc] + (1l << K);
           }
       }
   }
