@@ -9,7 +9,7 @@
 void score(long mode)
 /* mode is <0 if scoring, >0 if quitting, =0 if died or won */
 {
-    long i, score = 0, mxscor = 0;
+    long i, k, score = 0, mxscor = 0;
 
     /*  The present scoring algorithm is as follows:
      *     Objective:          Points:        Present total possible:
@@ -32,17 +32,16 @@ void score(long mode)
 
     /*  First tally up the treasures.  Must be in building and not broken.
      *  Give the poor guy 2 points just for finding each treasure. */
-
     for (i=MINTRS; i<=MAXTRS; i++) {
 	if(PTEXT[i] != 0) {
-	    K=12;
-	    if(i == CHEST)K=14;
-	    if(i > CHEST)K=16;
+	    k=12;
+	    if(i == CHEST)k=14;
+	    if(i > CHEST)k=16;
 	    if(game.prop[i] >= 0)
 		score=score+2;
 	    if(game.place[i] == 3 && game.prop[i] == 0)
-		score=score+K-2;
-	    mxscor=mxscor+K;
+		score=score+k-2;
+	    mxscor=mxscor+k;
 	}
     }
 
@@ -52,7 +51,6 @@ void score(long mode)
      *  indicates whether he reached the endgame.  And if he got as far as
      *  "cave closed" (indicated by "game.closed"), then bonus is zero for
      *  mundane exits or 133, 134, 135 if he blew it (so to speak). */
-
     score=score+(MAXDIE-game.numdie)*10;
     mxscor=mxscor+MAXDIE*10;
     if(mode == 0)score=score+4;
