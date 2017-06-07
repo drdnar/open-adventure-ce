@@ -12,7 +12,7 @@
 
 /*  Analyse a verb.  Remember what it was, go back for object if second word
  *  unless verb is "say", which snarfs arbitrary second word.
- *  Takes K, OBJ, and VERB as inputs.
+ *  FIXME: Takes K and VERB as additional inputs.
  */
 
 int action(FILE *input, long STARTAT, long obj) {
@@ -310,7 +310,7 @@ L9094:	DROP(JADE,game.loc);
 
 /*  Attack also moved into separate module. */
 
-L9120:	return(attack(input, obj));
+L9120:	return(attack(input, obj, VERB));
 
 /*  Pour.  If no object, or object is bottle, assume contents of bottle.
  *  special tests for pouring water or oil on plant or rusty door. */
@@ -390,7 +390,7 @@ L9160:	if(obj != LAMP)SPK=76;
 
 /*  Throw moved into separate module. */
 
-L9170:	return(throw(input, obj));
+L9170:	return(throw(input, obj, VERB));
 
 /*  Quit.  Intransitive only.  Verify intent and exit if that's what he wants. */
 

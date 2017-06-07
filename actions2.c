@@ -129,7 +129,7 @@ L9028:	game.prop[VASE]=2;
  *  objects fall into two categories: enemies (snake, dwarf, etc.)  and others
  *  (bird, clam, machine).  Ambiguous if 2 enemies, or no enemies but 2 others. */
 
-int attack(FILE *input, long obj) {
+int attack(FILE *input, long obj, long verb) {
 	I=ATDWRF(game.loc);
 	if(obj != 0) goto L9124;
 	if(I > 0)obj=DWARF;
@@ -141,8 +141,8 @@ int attack(FILE *input, long obj) {
 	if(obj > NOBJECTS) return(8000);
 	if(obj != 0) goto L9124;
 /*  CAN'T ATTACK BIRD OR MACHINE BY THROWING AXE. */
-	if(HERE(BIRD) && VERB != THROW)obj=BIRD;
-	if(HERE(VEND) && VERB != THROW)obj=obj*NOBJECTS+VEND;
+	if(HERE(BIRD) && verb != THROW)obj=BIRD;
+	if(HERE(VEND) && verb != THROW)obj=obj*NOBJECTS+VEND;
 /*  CLAM AND OYSTER BOTH TREATED AS CLAM FOR INTRANSITIVE CASE; NO HARM DONE. */
 	if(HERE(CLAM) || HERE(OYSTER))obj=NOBJECTS*obj+CLAM;
 	if(obj > NOBJECTS) return(8000);
@@ -173,8 +173,6 @@ L9126:	if(obj == 0)SPK=44;
  *  move dragon to central loc (still fixed), move rug there (not fixed), and
  *  move him there, too.  Then do a null motion to get new description. */
 	RSPEAK(49);
-	VERB=0;
-	obj=0;
 	GETIN(input,WD1,WD1X,WD2,WD2X);
 	if(WD1 != MAKEWD(25) && WD1 != MAKEWD(250519)) return(2607);
 	PSPEAK(DRAGON,3);
@@ -213,7 +211,7 @@ L9128:	RSPEAK(SPK);
  *  and if dwarf is present then one might be killed.  (Only way to do so!)
  *  Axe also special for dragon, bear, and troll.  Treasures special for troll. */
 
-int throw(FILE *cmdin, long obj) {
+int throw(FILE *cmdin, long obj, long verb) {
 	if(TOTING(ROD2) && obj == ROD && !TOTING(ROD))obj=ROD2;
 	if(!TOTING(obj)) return(2011);
 	if(obj >= 50 && obj <= MAXTRS && AT(TROLL)) goto L9178;
@@ -229,7 +227,7 @@ int throw(FILE *cmdin, long obj) {
 	if(AT(OGRE)) goto L9175;
 	if(HERE(BEAR) && game.prop[BEAR] == 0) goto L9176;
 	obj=0;
-	return(attack(cmdin, obj));
+	return(attack(cmdin, obj, verb));
 
 L9172:	SPK=48;
 	if(randrange(NDWARVES+1) < game.dflag) goto L9175;
