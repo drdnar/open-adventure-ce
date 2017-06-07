@@ -8,6 +8,8 @@
 #define VRBSIZ 35
 #define HNTSIZ 20
 #define TRVSIZ 885
+#define TOKLEN 5
+#define HINTLEN 5
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -55,7 +57,7 @@ long ATAB[TABSIZ + 1];
 long PLAC[NOBJECTS+1];
 long FIXD[NOBJECTS+1];
 long ACTSPK[VRBSIZ + 1];
-long HINTS[HNTSIZ + 1][5];
+long HINTS[HNTSIZ + 1][HINTLEN];
 
 bool is_set(long, long);
 long GETTXT(long, long, long);
@@ -73,7 +75,7 @@ void read_hints(FILE*);
 void read_sound_text(FILE*);
 void write_0d(FILE*, FILE*, long, char*);
 void write_1d(FILE*, FILE*, long[], long, char*);
-void write_hints(FILE*, FILE*, long[][5], long, long, char*);
+void write_hints(FILE*, FILE*, long[][HINTLEN], long, long, char*);
 void write_files(FILE*, FILE*);
 
 bool is_set(long var, long position)
@@ -105,7 +107,7 @@ long GETTXT(long SKIP,long ONEWRD, long UPPER) {
   }
 
   TEXT=0;
-  for (int I=1; I<=5; I++) {
+  for (int I=1; I<=TOKLEN; I++) {
     TEXT=TEXT*64;
     if(LNPOSN > LNLENG || (ONEWRD && INLINE[LNPOSN] == 0))
       continue;
@@ -527,7 +529,7 @@ void write_1d(FILE* c_file, FILE* header_file, long array[], long dim, char* var
   fprintf(header_file, "extern long %s[%ld];\n", varname, dim);
 }
 
-void write_hints(FILE* c_file, FILE* header_file, long matrix[][5], long dim1, long dim2, char* varname)
+void write_hints(FILE* c_file, FILE* header_file, long matrix[][HINTLEN], long dim1, long dim2, char* varname)
 {
   fprintf(c_file, "long %s[][%ld] = {\n", varname, dim2);
   for (int i = 0; i < dim1; ++i)
@@ -556,6 +558,8 @@ void write_files(FILE* c_file, FILE* header_file)
   fprintf(header_file, "#define VRBSIZ 35\n");
   fprintf(header_file, "#define HNTSIZ 20\n");
   fprintf(header_file, "#define TRVSIZ 885\n");
+  fprintf(header_file, "#define TOKLEN %d\n", TOKLEN);
+  fprintf(header_file, "#define HINTLEN %d\n", HINTLEN);
   fprintf(header_file, "\n");
 
   // include the header in the C file

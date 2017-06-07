@@ -245,7 +245,7 @@ long GETTXT(bool SKIP,bool ONEWRD, bool UPPER) {
   }
 
   TEXT=0;
-  for (int I=1; I<=5; I++) {
+  for (int I=1; I<=TOKLEN; I++) {
     TEXT=TEXT*64;
     if(LNPOSN > LNLENG || (ONEWRD && INLINE[LNPOSN] == 0))
       continue;
@@ -275,12 +275,13 @@ long GETTXT(bool SKIP,bool ONEWRD, bool UPPER) {
 token_t MAKEWD(long LETTRS) {
 long I, L, WORD;
 
-/*  Combine five uppercase letters (represented by pairs of decimal digits
- *  in lettrs) to form a 30-bit value matching the one that GETTXT would
- *  return given those characters plus trailing blanks.  Caution:
- *  lettrs will overflow 31 bits if 5-letter word starts with V-Z.  As a
- *  kludgey workaround, you can increment a letter by 5 by adding 50 to
- *  the next pair of digits. */
+/*  Combine TOKLEN (currently 5) uppercase letters (represented by
+ *  pairs of decimal digits in lettrs) to form a 30-bit value matching
+ *  the one that GETTXT would return given those characters plus
+ *  trailing blanks.  Caution: lettrs will overflow 31 bits if
+ *  5-letter word starts with V-Z.  As a kludgey workaround, you can
+ *  increment a letter by 5 by adding 50 to the next pair of
+ *  digits. */
 
 	WORD=0;
 	I=1;
@@ -299,15 +300,17 @@ long I, L, WORD;
 void fPUTTXT(token_t WORD, long *sTATE, long CASE) {
 long ALPH1, ALPH2, BYTE, DIV, I, W;
 
-/*  Unpack the 30-bit value in word to obtain up to 5 integer-encoded chars,
- *  and store them in inline starting at LNPOSN.  If LNLENG>=LNPOSN, shift
- *  existing characters to the right to make room.  STATE will be zero when
- *  puttxt is called with the first of a sequence of words, but is thereafter
- *  unchanged by the caller, so PUTTXT can use it to maintain state across
- *  calls.  LNPOSN and LNLENG are incremented by the number of chars stored.
- *  If CASE=1, all letters are made uppercase; if -1, lowercase; if 0, as is.
- *  any other value for case is the same as 0 but also causes trailing blanks
- *  to be included (in anticipation of subsequent additional text). */
+/*  Unpack the 30-bit value in word to obtain up to TOKLEN (currently
+ *  5) integer-encoded chars, and store them in inline starting at
+ *  LNPOSN.  If LNLENG>=LNPOSN, shift existing characters to the right
+ *  to make room.  STATE will be zero when puttxt is called with the
+ *  first of a sequence of words, but is thereafter unchanged by the
+ *  caller, so PUTTXT can use it to maintain state across calls.
+ *  LNPOSN and LNLENG are incremented by the number of chars stored.
+ *  If CASE=1, all letters are made uppercase; if -1, lowercase; if 0,
+ *  as is.  any other value for case is the same as 0 but also causes
+ *  trailing blanks to be included (in anticipation of subsequent
+ *  additional text). */
 
 
 	ALPH1=13*CASE+24;
@@ -316,7 +319,7 @@ long ALPH1, ALPH2, BYTE, DIV, I, W;
 /*  ALPH1&2 DEFINE RANGE OF WRONG-CASE CHARS, 11-36 OR 37-62 OR EMPTY. */
 	DIV=64L*64L*64L*64L;
 	W=WORD;
-	/* 18 */ for (I=1; I<=5; I++) {
+	/* 18 */ for (I=1; I<=TOKLEN; I++) {
 	if(W <= 0 && STATE == 0 && labs(CASE) <= 1)return;
 	BYTE=W/DIV;
 	if(STATE != 0 || BYTE != 63) goto L12;

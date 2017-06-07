@@ -10,7 +10,7 @@ typedef struct lcg_state
   unsigned long a, c, m, x;
 } lcg_state;
 
-typedef long token_t;	/* word token - someday this will be a character array */
+typedef long token_t;	/* word token - someday this will be char[TOKLEN+1] */
 typedef long vocab_t;	/* index into a vocabulary array */
 
 struct game_t {
