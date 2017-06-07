@@ -318,7 +318,7 @@ L1106:	/*etc*/ ;
  *  prior loc of each dwarf, initially garbage.  DALTLC is alternate initial loc
  *  for dwarf, in case one of them starts out on top of the adventurer.  (No 2
  *  of the 5 initial locs are adjacent.)  game.dseen is true if dwarf has seen him.
- *  DFLAG controls the level of activation of all this:
+ *  game.dflag controls the level of activation of all this:
  *	0	No dwarf stuff yet (wait until reaches Hall Of Mists)
  *	1	Reached Hall Of Mists, but hasn't met first dwarf
  *	2	Met first dwarf, others start moving, no knives thrown yet
@@ -333,7 +333,7 @@ L1106:	/*etc*/ ;
 	for (I=1; I<=NDWARVES; I++) {
 		game.dseen[I]=false;
 	} /* end loop */
-	DFLAG=0;
+	game.dflag=0;
 	game.dloc[1]=19;
 	game.dloc[2]=27;
 	game.dloc[3]=33;
@@ -350,12 +350,12 @@ L1106:	/*etc*/ ;
  *	game.conds	Min value for cond(loc) if loc has any hints
  *	game.detail	How often we've said "not allowed to give more detail"
  *	game.dkill	# of dwarves killed (unused in scoring, needed for msg)
- *	FOOBAR	Current progress in saying "FEE FIE FOE FOO".
- *	HOLDNG	Number of objects being carried
+ *	game.foobar	Current progress in saying "FEE FIE FOE FOO".
+ *	game.holdng	Number of objects being carried
  *	IGO	How many times he's said "go XXX" instead of "XXX"
- *	IWEST	How many times he's said "west" instead of "w"
- *	KNFLOC	0 if no knife here, loc if knife here, -1 after caveat
- *	LIMIT	Lifetime of lamp (not set here)
+ *	game.iwest	How many times he's said "west" instead of "w"
+ *	game.knfloc	0 if no knife here, loc if knife here, -1 after caveat
+ *	game.limit	Lifetime of lamp (not set here)
  *	MAXDIE	Number of reincarnation messages available (up to 5)
  *	NUMDIE	Number of times killed so far
  *	THRESH	Next #turns threshhold (-1 if none)
@@ -369,19 +369,19 @@ L1106:	/*etc*/ ;
 	THRESH= -1;
 	if(TRNVLS > 0)THRESH=MOD(TRNVAL[1],100000)+1;
 	TRNLUZ=0;
-	LMWARN=false;
+	game.lmwarn=false;
 	IGO=0;
-	IWEST=0;
-	KNFLOC=0;
+	game.iwest=0;
+	game.knfloc=0;
 	game.detail=0;
 	game.abbnum=5;
 	for (I=0; I<=4; I++) {
 	{long x = 2*I+81; if(RTEXT[x] != 0)MAXDIE=I+1;}
 	} /* end loop */
 	NUMDIE=0;
-	HOLDNG=0;
+	game.holdng=0;
 	game.dkill=0;
-	FOOBAR=0;
+	game.foobar=0;
 	game.bonus=0;
 	game.clock1=30;
 	game.clock2=50;

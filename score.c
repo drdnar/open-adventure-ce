@@ -46,7 +46,7 @@ L20010: /*etc*/ ;
 	} /* end loop */
 
 /*  Now look at how he finished and how far he got.  MAXDIE and NUMDIE tell us
- *  how well he survived.  DFLAG will
+ *  how well he survived.  game.dflag will
  *  tell us if he ever got suitably deep into the cave.  game.closng still indicates
  *  whether he reached the endgame.  And if he got as far as "cave closed"
  *  (indicated by "game.closed"), then bonus is zero for mundane exits or 133, 134,
@@ -56,7 +56,7 @@ L20010: /*etc*/ ;
 	MXSCOR=MXSCOR+MAXDIE*10;
 	if(MODE == 0)SCORE=SCORE+4;
 	MXSCOR=MXSCOR+4;
-	if(DFLAG != 0)SCORE=SCORE+25;
+	if(game.dflag != 0)SCORE=SCORE+25;
 	MXSCOR=MXSCOR+25;
 	if(game.closng)SCORE=SCORE+25;
 	MXSCOR=MXSCOR+25;

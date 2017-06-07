@@ -29,7 +29,7 @@ L9011:	if(FIXED[OBJ] != 0) return(2011);
 	if(!TOTING(BOTTLE))SPK=104;
 	 return(2011);
 L9017:	SPK=92;
-	if(HOLDNG >= 7) return(2011);
+	if(game.holdng >= 7) return(2011);
 	if(OBJ != BIRD || PROP[BIRD] == 1 || -1-PROP[BIRD] == 1) goto L9014;
 	if(PROP[BIRD] == 2) goto L9015;
 	if(!TOTING(CAGE))SPK=27;
@@ -232,7 +232,7 @@ int throw(FILE *cmdin) {
 	return(attack(cmdin));
 
 L9172:	SPK=48;
-	if(randrange(NDWARVES+1) < DFLAG) goto L9175;
+	if(randrange(NDWARVES+1) < game.dflag) goto L9175;
 	game.dseen[I]=false;
 	game.dloc[I]=0;
 	SPK=47;
@@ -287,7 +287,7 @@ L9212:	if(OBJ != SNAKE && OBJ != DRAGON && OBJ != TROLL) goto L9213;
 L9213:	if(OBJ != DWARF) goto L9214;
 	if(!HERE(FOOD)) return(2011);
 	SPK=103;
-	DFLAG=DFLAG+2;
+	game.dflag=game.dflag+2;
 	 return(2011);
 
 L9214:	if(OBJ != BEAR) goto L9215;

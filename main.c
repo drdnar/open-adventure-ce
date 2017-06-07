@@ -14,8 +14,8 @@
 
 struct game_t game;
 
-long ABB[186], ATLOC[186], DFLAG,
-		FIXED[NOBJECTS+1], HOLDNG,
+long ABB[186], ATLOC[186],
+		FIXED[NOBJECTS+1],
 		LINK[NOBJECTS*2 + 1], LNLENG, LNPOSN,
 		PARMS[26], PLACE[NOBJECTS+1],
 		SETUP = 0;
@@ -25,13 +25,11 @@ long AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
 		BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST,
 		CLAM, CLSHNT, COINS, DALTLC,
 		DOOR, DPRSSN, DRAGON, DWARF, EGGS,
-		EMRALD, ENTER, ENTRNC, FIND, FISSUR, FOOBAR, FOOD,
+		EMRALD, ENTER, ENTRNC, FIND, FISSUR, FOOD,
 		GRATE, HINT, HINTED[21], HINTLC[21],
-		I, INVENT, IGO, IWEST, J, JADE, K, K2, KEYS, KK,
-		KNFLOC, KNIFE, KQ, L, LAMP, LIMIT, LL,
-		LMWARN, LOC, LOCK, LOOK,
-		MAGZIN, MAXDIE, MAXTRS,
-		MESSAG, MIRROR, MXSCOR,
+		I, INVENT, IGO, J, JADE, K, K2, KEYS, KK,
+		KNIFE, KQ, L, LAMP, LL, LOC, LOCK, LOOK,
+		MAGZIN, MAXDIE, MAXTRS, MESSAG, MIRROR, MXSCOR,
 		NEWLOC, NOVICE, NUGGET, NUL, NUMDIE, OBJ,
 		OGRE, OIL, OLDOBJ, OYSTER,
 		PANIC, PEARL, PILLOW, PLANT, PLANT2, PROP[NOBJECTS+1], PYRAM,
@@ -97,7 +95,7 @@ int main(int argc, char *argv[]) {
  *  game.closed says whether we're all the way closed
  *  game.closng says whether it's closing time yet
  *  CLSHNT says whether he's read the clue in the endgame
- *  LMWARN says whether he's been warned about lamp going dim
+ *  game.lmwarn says whether he's been warned about lamp going dim
  *  NOVICE says whether he asked for instructions at start-up
  *  PANIC says whether he's found out he's trapped in the cave
  *  game.wzdark says whether the loc he's leaving was dark */
@@ -135,8 +133,8 @@ L1:	SETUP= -1;
 	NOVICE=YES(stdin, 65,1,0);
 	NEWLOC=1;
 	LOC=1;
-	LIMIT=330;
-	if(NOVICE)LIMIT=1000;
+	game.limit=330;
+	if(NOVICE)game.limit=1000;
 
 	if (logfp)
 	    fprintf(logfp, "seed %ld\n", seedval);
@@ -199,16 +197,16 @@ L74:	LOC=NEWLOC;
  *  end in maze, but c'est la vie.  They'll wait for him outside the dead end. */
 
 	if(LOC == 0 || FORCED(LOC) || CNDBIT(NEWLOC,3)) goto L2000;
-	if(DFLAG != 0) goto L6000;
-	if(INDEEP(LOC))DFLAG=1;
+	if(game.dflag != 0) goto L6000;
+	if(INDEEP(LOC))game.dflag=1;
 	 goto L2000;
 
 /*  When we encounter the first dwarf, we kill 0, 1, or 2 of the 5 dwarves.  If
  *  any of the survivors is at loc, replace him with the alternate. */
 
-L6000:	if(DFLAG != 1) goto L6010;
+L6000:	if(game.dflag != 1) goto L6010;
 	if(!INDEEP(LOC) || (PCT(95) && (!CNDBIT(LOC,4) || PCT(85)))) goto L2000;
-	DFLAG=2;
+	game.dflag=2;
 	for (I=1; I<=2; I++) {
 	J=1+randrange(NDWARVES-1);
 	if(PCT(50))game.dloc[J]=0;
@@ -300,8 +298,8 @@ L6025:	RSPEAK(186);
 L6027:	game.dtotal=game.dtotal+1;
 	if(game.odloc[I] != game.dloc[I]) goto L6030;
 	ATTACK=ATTACK+1;
-	if(KNFLOC >= 0)KNFLOC=LOC;
-	if(randrange(1000) < 95*(DFLAG-2))STICK=STICK+1;
+	if(game.knfloc >= 0)game.knfloc=LOC;
+	if(randrange(1000) < 95*(game.dflag-2))STICK=STICK+1;
 L6030:	/*etc*/ ;
 	} /* end loop */
 
@@ -313,7 +311,7 @@ L6030:	/*etc*/ ;
 	SETPRM(1,game.dtotal,0);
 	RSPEAK(4+1/game.dtotal);
 	if(ATTACK == 0) goto L2000;
-	if(DFLAG == 2)DFLAG=3;
+	if(game.dflag == 2)game.dflag=3;
 	SETPRM(1,ATTACK,0);
 	K=6;
 	if(ATTACK > 1)K=250;
@@ -413,15 +411,15 @@ L2603:	if(!game.closed) goto L2605;
 	if(TOTING(I) && PROP[I] < 0)PROP[I]= -1-PROP[I];
 	} /* end loop */
 L2605:	game.wzdark=DARK(0);
-	if(KNFLOC > 0 && KNFLOC != LOC)KNFLOC=0;
+	if(game.knfloc > 0 && game.knfloc != LOC)game.knfloc=0;
 	I=0;
 	if (!GETIN(cmdin, WD1,WD1X,WD2,WD2X))
 	    return false;
 
-/*  Every input, check "FOOBAR" flag.  If zero, nothing's going on.  If pos,
+/*  Every input, check "game.foobar" flag.  If zero, nothing's going on.  If pos,
  *  make neg.  If neg, he skipped a word, so make it zero. */
 
-L2607:	FOOBAR=(FOOBAR>0 ? -FOOBAR : 0);
+L2607:	game.foobar=(game.foobar>0 ? -game.foobar : 0);
 	TURNS=TURNS+1;
 	if(TURNS == THRESH) {
 	SPEAK(TTEXT[TRNDEX]);
@@ -437,11 +435,11 @@ L2607:	FOOBAR=(FOOBAR>0 ? -FOOBAR : 0);
 	if(game.clock1 == 0) goto L10000;
 	if(game.clock1 < 0)game.clock2=game.clock2-1;
 	if(game.clock2 == 0) goto L11000;
-	if(PROP[LAMP] == 1)LIMIT=LIMIT-1;
-	if(LIMIT <= 30 && HERE(BATTER) && PROP[BATTER] == 0 && HERE(LAMP)) goto
+	if(PROP[LAMP] == 1)game.limit=game.limit-1;
+	if(game.limit <= 30 && HERE(BATTER) && PROP[BATTER] == 0 && HERE(LAMP)) goto
 		L12000;
-	if(LIMIT == 0) goto L12400;
-	if(LIMIT <= 30) goto L12200;
+	if(game.limit == 0) goto L12400;
+	if(game.limit <= 30) goto L12200;
 L19999: K=43;
 	if(LIQLOC(LOC) == WATER)K=70;
 	V1=VOCAB(WD1,-1);
@@ -454,8 +452,8 @@ L19999: K=43;
 L2610:	if(V1 == 1000+CAGE && V2 == 1000+BIRD && HERE(CAGE) && HERE(BIRD))
 		WD1=MAKEWD(301200308);
 L2620:	if(WD1 == MAKEWD(23051920)) {
-		IWEST=IWEST+1;
-		if(IWEST == 10)RSPEAK(17);
+		game.iwest=game.iwest+1;
+		if(game.iwest == 10)RSPEAK(17);
 	}
 	if(WD1 != MAKEWD( 715) || WD2 == 0) goto L2630;
 	IGO=IGO+1;
@@ -578,7 +576,7 @@ L30000: NEWLOC=NEWLOC-300;
  *  be used for actual motion, but can be spotted by "go back". */
 
 L30100: NEWLOC=99+100-LOC;	/* ESR: an instance of NOBJECTS? */
-	if(HOLDNG == 0 || (HOLDNG == 1 && TOTING(EMRALD))) return true;
+	if(game.holdng == 0 || (game.holdng == 1 && TOTING(EMRALD))) return true;
 	NEWLOC=LOC;
 	RSPEAK(117);
 	return true;
@@ -759,7 +757,7 @@ L40010: HINTLC[HINT]=0;
 	SETPRM(1,HINTS[HINT][2],HINTS[HINT][2]);
 	RSPEAK(261);
 	HINTED[HINT]=YES(cmdin,175,HINTS[HINT][4],54);
-	if(HINTED[HINT] && LIMIT > 30)LIMIT=LIMIT+30*HINTS[HINT][2];
+	if(HINTED[HINT] && game.limit > 30)game.limit=game.limit+30*HINTS[HINT][2];
 L40020: HINTLC[HINT]=0;
 L40030:  goto L2602;
 
@@ -774,7 +772,7 @@ L40200: if(PLACE[BIRD] == LOC && TOTING(ROD) && OLDOBJ == BIRD) goto L40010;
 L40300: if(HERE(SNAKE) && !HERE(BIRD)) goto L40010;
 	 goto L40020;
 
-L40400: if(ATLOC[LOC] == 0 && ATLOC[game.oldloc] == 0 && ATLOC[game.oldlc2] == 0 && HOLDNG >
+L40400: if(ATLOC[LOC] == 0 && ATLOC[game.oldloc] == 0 && ATLOC[game.oldlc2] == 0 && game.holdng >
 		1) goto L40010;
 	 goto L40020;
 
@@ -783,7 +781,7 @@ L40500: if(PROP[EMRALD] != -1 && PROP[PYRAM] == -1) goto L40010;
 
 L40600:  goto L40010;
 
-L40700: if(DFLAG == 0) goto L40010;
+L40700: if(game.dflag == 0) goto L40010;
 	 goto L40020;
 
 L40800: if(ATLOC[LOC] == 0 && ATLOC[game.oldloc] == 0 && ATLOC[game.oldlc2] == 0) goto
@@ -910,19 +908,19 @@ L11000: PROP[BOTTLE]=PUT(BOTTLE,115,1);
 L12000: RSPEAK(188);
 	PROP[BATTER]=1;
 	if(TOTING(BATTER))DROP(BATTER,LOC);
-	LIMIT=LIMIT+2500;
-	LMWARN=false;
+	game.limit=game.limit+2500;
+	game.lmwarn=false;
 	 goto L19999;
 
-L12200: if(LMWARN || !HERE(LAMP)) goto L19999;
-	LMWARN=true;
+L12200: if(game.lmwarn || !HERE(LAMP)) goto L19999;
+	game.lmwarn=true;
 	SPK=187;
 	if(PLACE[BATTER] == 0)SPK=183;
 	if(PROP[BATTER] == 1)SPK=189;
 	RSPEAK(SPK);
 	 goto L19999;
 
-L12400: LIMIT= -1;
+L12400: game.limit= -1;
 	PROP[LAMP]=0;
 	if(HERE(LAMP))RSPEAK(184);
 	 goto L19999;

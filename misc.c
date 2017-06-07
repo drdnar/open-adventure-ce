@@ -549,12 +549,12 @@ long TEMP;
 
 /*  Start toting an object, removing it from the list of things at its former
  *  location.  Incr holdng unless it was already being toted.  If OBJECT>NOBJECTS
- *  (moving "fixed" second loc), don't change PLACE or HOLDNG. */
+ *  (moving "fixed" second loc), don't change PLACE or game.holdng. */
 
 	if(OBJECT > NOBJECTS) goto L5;
 	if(PLACE[OBJECT] == -1)return;
 	PLACE[OBJECT]= -1;
-	HOLDNG=HOLDNG+1;
+	game.holdng=game.holdng+1;
 L5:	if(ATLOC[WHERE] != OBJECT) goto L6;
 	ATLOC[WHERE]=LINK[OBJECT];
 	return;
@@ -568,10 +568,10 @@ L8:	LINK[TEMP]=LINK[OBJECT];
 
 void DROP(long OBJECT, long WHERE) {
 /*  Place an object at a given loc, prefixing it onto the ATLOC list.  Decr
- *  HOLDNG if the object was being toted. */
+ *  game.holdng if the object was being toted. */
 
 	if(OBJECT > NOBJECTS) goto L1;
-	if(PLACE[OBJECT] == -1)HOLDNG=HOLDNG-1;
+	if(PLACE[OBJECT] == -1)game.holdng=game.holdng-1;
 	PLACE[OBJECT]=WHERE;
 	 goto L2;
 L1:	{long x = OBJECT-NOBJECTS; FIXED[x]=WHERE;}
@@ -592,7 +592,7 @@ long AT, I;
 
 
 	AT=0;
-	if(DFLAG < 2)return(AT);
+	if(game.dflag < 2)return(AT);
 	AT= -1;
 	for (I=1; I<=NDWARVES-1; I++) {
 	if(game.dloc[I] == WHERE) goto L2;

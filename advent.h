@@ -25,8 +25,15 @@ struct game_t {
     long closng;
     long conds;
     long detail;
+    long dflag;
     long dkill;
     long dtotal;
+    long foobar;
+    long holdng;
+    long iwest;
+    long knfloc;
+    long limit;
+    long lmwarn;
     long oldloc;
     long oldlc2;
     long wzdark;
@@ -38,7 +45,7 @@ struct game_t {
 
 extern struct game_t game;
 
-extern long ABB[], ATLOC[], BLKLIN, DFLAG, FIXED[], HOLDNG,
+extern long ABB[], ATLOC[], FIXED[],
 		LINK[], LNLENG, LNPOSN,
 		PARMS[], PLACE[];
 extern char rawbuf[LINESIZE], INLINE[LINESIZE+1], MAP1[], MAP2[];
@@ -105,11 +112,10 @@ extern void score(long);
 extern long AMBER, ATTACK, AXE, BACK, BATTER, BEAR,
    BIRD, BLOOD, BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST,
    CLAM, CLSHNT, COINS, DALTLC, DOOR, DPRSSN, DRAGON, DWARF, EGGS,
-   EMRALD, ENTER, ENTRNC, FIND, FISSUR, FOOBAR, FOOD,
+   EMRALD, ENTER, ENTRNC, FIND, FISSUR, FOOD,
    GRATE, HINT, HINTED[], HINTLC[],
-   I, INVENT, IGO, IWEST, J, JADE, K, K2, KEYS, KK,
-   KNFLOC, KNIFE, KQ, L, LAMP, LIMIT, LL,
-   LMWARN, LOC, LOCK, LOOK,
+   I, INVENT, IGO, J, JADE, K, K2, KEYS, KK,
+   KNIFE, KQ, L, LAMP, LL, LOC, LOCK, LOOK,
    MAGZIN, MAXDIE, MAXTRS, MESSAG, MIRROR, MXSCOR,
    NEWLOC, NOVICE, NUGGET, NUL, NUMDIE, OBJ,
    OGRE, OIL, OLDOBJ, OYSTER,

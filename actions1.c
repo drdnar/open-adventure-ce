@@ -133,8 +133,8 @@ L5110:	if(K == DWARF && ATDWRF(LOC) > 0) goto L5010;
 L5120:	if(OBJ != PLANT || !AT(PLANT2) || PROP[PLANT2] == 0) goto L5130;
 	OBJ=PLANT2;
 	 goto L5010;
-L5130:	if(OBJ != KNIFE || KNFLOC != LOC) goto L5140;
-	KNFLOC= -1;
+L5130:	if(OBJ != KNIFE || game.knfloc != LOC) goto L5140;
+	game.knfloc= -1;
 	SPK=116;
 	 return(2011);
 L5140:	if(OBJ != ROD || !HERE(ROD2)) goto L5190;
@@ -247,14 +247,14 @@ L9049:	SPK=172;
 
 /*  Light.  Applicable only to lamp and urn. */
 
-L8070:	if(HERE(LAMP) && PROP[LAMP] == 0 && LIMIT >= 0)OBJ=LAMP;
+L8070:	if(HERE(LAMP) && PROP[LAMP] == 0 && game.limit >= 0)OBJ=LAMP;
 	if(HERE(URN) && PROP[URN] == 1)OBJ=OBJ*NOBJECTS+URN;
 	if(OBJ == 0 || OBJ > NOBJECTS) return(8000);
 
 L9070:	if(OBJ == URN) goto L9073;
 	if(OBJ != LAMP) return(2011);
 	SPK=184;
-	if(LIMIT < 0) return(2011);
+	if(game.limit < 0) return(2011);
 	PROP[LAMP]=1;
 	RSPEAK(39);
 	if(game.wzdark) return(2000);
@@ -446,13 +446,13 @@ L8240:	score(-1);
 
 L8250:	K=VOCAB(WD1,3);
 	SPK=42;
-	if(FOOBAR == 1-K) goto L8252;
-	if(FOOBAR != 0)SPK=151;
+	if(game.foobar == 1-K) goto L8252;
+	if(game.foobar != 0)SPK=151;
 	 return(2011);
 
-L8252:	FOOBAR=K;
+L8252:	game.foobar=K;
 	if(K != 4) return(2009);
-	FOOBAR=0;
+	game.foobar=0;
 	if(PLACE[EGGS] == PLAC[EGGS] || (TOTING(EGGS) && LOC == PLAC[EGGS])) 
 		return(2011);
 /*  Bring back troll if we steal the eggs back from him before crossing. */
@@ -534,8 +534,8 @@ L8305:	DATIME(&I,&K);
  *  needs to be saved, include it.  Overkill can't hurt.  Pad the last savwds
  *  with junk variables to bring it up to 7 values. */
 	SAVWDS(game.abbnum,game.blklin,game.bonus,game.clock1,game.clock2,game.closed,game.closng);
-	SAVWDS(game.detail,DFLAG,game.dkill,game.dtotal,FOOBAR,HOLDNG,IWEST);
-	SAVWDS(KNFLOC,LIMIT,LL,LMWARN,LOC,NEWLOC,NUMDIE);
+	SAVWDS(game.detail,game.dflag,game.dkill,game.dtotal,game.foobar,game.holdng,game.iwest);
+	SAVWDS(game.knfloc,game.limit,LL,game.lmwarn,LOC,NEWLOC,NUMDIE);
 	SAVWDS(OBJ,game.oldlc2,game.oldloc,OLDOBJ,PANIC,SAVED,SETUP);
 	SAVWDS(SPK,TALLY,THRESH,TRNDEX,TRNLUZ,TURNS,OBJTXT[OYSTER]);
 	SAVWDS(VERB,WD1,WD1X,WD2,game.wzdark,game.zzword,OBJSND[BIRD]);
