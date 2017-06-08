@@ -12,129 +12,131 @@
 
 /*  I/O routines (SPEAK, PSPEAK, RSPEAK, SETPRM, GETIN, YES) */
 
-void SPEAK(vocab_t N)
-/*  Print the message which starts at LINES(N).  Precede it with a blank line
+void SPEAK(vocab_t msg)
+/*  Print the message which starts at LINES[N].  Precede it with a blank line
  *  unless game.blklin is false. */
 {
-    long blank, casemake, I, K, L, NEG, NPARMS, PARM, PRMTYP, state;
+    long blank, casemake, i, nxt, neg, nparms, param, prmtyp, state;
 
-    if (N == 0)
+    if (msg == 0)
 	return;
     blank=game.blklin;
-    K=N;
-    NPARMS=1;
-L10:
-    L=labs(LINES[K])-1;
-    K=K+1;
-    LNLENG=0;
-    LNPOSN=1;
-    state=0;
-    for (I=K; I<=L; I++) {
-	PUTTXT(LINES[I],state,2);
-    }
-    LNPOSN=0;
+    nparms=1;
+    do {
+	nxt=labs(LINES[msg])-1;
+	msg=msg+1;
+	LNLENG=0;
+	LNPOSN=1;
+	state=0;
+	for (i = msg; i <= nxt; i++) {
+	    PUTTXT(LINES[i],state,2);
+	}
+	LNPOSN=0;
 L30:
-    LNPOSN=LNPOSN+1;
+	++LNPOSN;
 L32:
-    if (LNPOSN > LNLENG) 
-	goto L40;
-    if (INLINE[LNPOSN] != 63) 
-	goto L30;
-    {long x = LNPOSN+1; PRMTYP=INLINE[x];}
-    /*  63 is a "%"; the next character determine the type of
-     *  parameter: 1 (!) = suppress message completely, 29 (S) = NULL
-     *  If PARM=1, else 'S' (optional plural ending), 33 (W) = word
-     *  (two 30-bit values) with trailing spaces suppressed, 22 (L) or
-     *  31 (U) = word but map to lower/upper case, 13 (C) = word in
-     *  lower case with first letter capitalised, 30 (T) = text ending
-     *  with a word of -1, 65-73 (1-9) = number using that many
-     *  characters, 12 (B) = variable number of blanks. */
-    if (PRMTYP == 1)
-	return;
-    if (PRMTYP == 29)
-	goto L320;
-    if (PRMTYP == 30)
-	goto L340;
-    if (PRMTYP == 12)
-	goto L360;
-    if (PRMTYP == 33 || PRMTYP == 22 || PRMTYP == 31 || PRMTYP == 13)
-	goto L380;
-    PRMTYP=PRMTYP-64;
-    if (PRMTYP < 1 || PRMTYP > 9) goto L30;
-    SHFTXT(LNPOSN+2,PRMTYP-2);
-    LNPOSN=LNPOSN+PRMTYP;
-    PARM=labs(PARMS[NPARMS]);
-    NEG=0;
-    if (PARMS[NPARMS] < 0)
-	NEG=9;
-    /* 390 */ for (I=1; I<=PRMTYP; I++) {
-	LNPOSN=LNPOSN-1;
-	INLINE[LNPOSN]=MOD(PARM,10)+64;
-	if (I == 1 || PARM != 0)
-	    goto L390;
-	INLINE[LNPOSN]=NEG;
-	NEG=0;
-L390:
-	PARM=PARM/10;
-    }
-    LNPOSN=LNPOSN+PRMTYP;
+	if (LNPOSN > LNLENG) 
+	    goto L40;
+	if (INLINE[LNPOSN] != 63) 
+	    goto L30;
+	prmtyp=INLINE[LNPOSN+1];
+	/*  63 is a "%"; the next character determine the type of
+	 *  parameter: 1 (!) = suppress message completely, 29 (S) = NULL
+	 *  If PARAM=1, else 'S' (optional plural ending), 33 (W) = word
+	 *  (two 30-bit values) with trailing spaces suppressed, 22 (L) or
+	 *  31 (U) = word but map to lower/upper case, 13 (C) = word in
+	 *  lower case with first letter capitalised, 30 (T) = text ending
+	 *  with a word of -1, 65-73 (1-9) = number using that many
+	 *  characters, 12 (B) = variable number of blanks. */
+	if (prmtyp == 1)
+	    return;
+	if (prmtyp == 29)
+	    goto L320;
+	if (prmtyp == 30)
+	    goto L340;
+	if (prmtyp == 12)
+	    goto L360;
+	if (prmtyp == 33 || prmtyp == 22 || prmtyp == 31 || prmtyp == 13)
+	    goto L380;
+	prmtyp=prmtyp-64;
+	if (prmtyp < 1 || prmtyp > 9)
+	    goto L30;
+	SHFTXT(LNPOSN+2,prmtyp-2);
+	LNPOSN += prmtyp;
+	param=labs(PARMS[nparms]);
+	neg=0;
+	if (PARMS[nparms] < 0)
+	    neg=9;
+	for (i=1; i <= prmtyp; i++) {
+	    --LNPOSN;
+	    INLINE[LNPOSN]=MOD(param,10)+64;
+	    if (i != 1 && param == 0) {
+		INLINE[LNPOSN]=neg;
+		neg=0;
+	    }
+	    param=param/10;
+	}
+	LNPOSN=LNPOSN+prmtyp;
 L395:
-    NPARMS=NPARMS+1;
-    goto L32;
+	++nparms;
+	goto L32;
 
 L320:
-    SHFTXT(LNPOSN+2,-1);
-    INLINE[LNPOSN]=55;
-    if (PARMS[NPARMS] == 1)
-	SHFTXT(LNPOSN+1,-1);
-    goto L395;
+	SHFTXT(LNPOSN+2,-1);
+	INLINE[LNPOSN]=55;
+	if (PARMS[nparms] == 1)
+	    SHFTXT(LNPOSN+1,-1);
+	goto L395;
 
 L340:
-    SHFTXT(LNPOSN+2,-2);
-    state=0;
-    casemake=2;
-L345: 
-    if (PARMS[NPARMS] < 0) goto L395;
-    {long x = NPARMS+1; if (PARMS[x] < 0)
-			    casemake=0;}
-    PUTTXT(PARMS[NPARMS],state,casemake);
-    NPARMS=NPARMS+1;
-    goto L345;
+	SHFTXT(LNPOSN+2,-2);
+	state=0;
+	casemake=2;
+
+	for (;;) {
+	    if (PARMS[nparms] < 0)
+		goto L395;
+	    if (PARMS[nparms+1] < 0)
+		casemake=0;
+	    PUTTXT(PARMS[nparms],state,casemake);
+	    nparms=nparms+1;
+	}
 
 L360:
-    PRMTYP=PARMS[NPARMS];
-    SHFTXT(LNPOSN+2,PRMTYP-2);
-    if (PRMTYP == 0) goto L395;
-    for (I=1; I<=PRMTYP; I++) {
-	INLINE[LNPOSN]=0;
-	LNPOSN=LNPOSN+1;
-    }
-    goto L395;
+	prmtyp=PARMS[nparms];
+	SHFTXT(LNPOSN+2,prmtyp-2);
+	if (prmtyp != 0) {
+	    for (i=1; i<=prmtyp; i++) {
+		INLINE[LNPOSN]=0;
+		LNPOSN=LNPOSN+1;
+	    }
+	}
+	goto L395;
 
 L380:
-    SHFTXT(LNPOSN+2,-2);
-    state=0;
-    casemake= -1;
-    if (PRMTYP == 31)
-	casemake=1;
-    if (PRMTYP == 33)
-	casemake=0;
-    I=LNPOSN;
-    PUTTXT(PARMS[NPARMS],state,casemake);
-    {long x = NPARMS+1; PUTTXT(PARMS[x],state,casemake);}
-    if (PRMTYP == 13 && INLINE[I] >= 37 && INLINE[I] <=
-       62)INLINE[I]=INLINE[I]-26;
-    NPARMS=NPARMS+2;
-    goto L32;
+	SHFTXT(LNPOSN+2,-2);
+	state = 0;
+	casemake = -1;
+	if (prmtyp == 31)
+	    casemake=1;
+	if (prmtyp == 33)
+	    casemake=0;
+	i = LNPOSN;
+	PUTTXT(PARMS[nparms],state,casemake);
+	PUTTXT(PARMS[nparms+1],state,casemake);
+	if (prmtyp == 13 && INLINE[i] >= 37 && INLINE[i] <= 62)
+	    INLINE[i] -= 26;
+	nparms = nparms+2;
+	goto L32;
 
-L40:	
-    if (blank)
-	TYPE0();
-    blank=false;
-    TYPE();
-    K=L+1;
-    if (LINES[K] >= 0)
-	goto L10;
+L40:
+	if (blank)
+	    TYPE0();
+	blank=false;
+	TYPE();
+	msg = nxt + 1;
+    } while
+	(LINES[msg] >= 0);
 }
 
 void PSPEAK(vocab_t msg,int skip)
@@ -555,11 +557,10 @@ void CARRY(long object, long where)
 	return;
     }
     temp=game.atloc[where];
-L7: if (game.link[temp] == object)
-	goto L8;
-    temp=game.link[temp];
-    goto L7;
-L8: game.link[temp]=game.link[object];
+    while (game.link[temp] != object) {
+	temp=game.link[temp];
+    }
+    game.link[temp]=game.link[object];
 }
 
 void DROP(long object, long where)
