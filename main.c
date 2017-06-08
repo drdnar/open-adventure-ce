@@ -204,33 +204,37 @@ static bool do_command(FILE *cmdin) {
 	 /*  When we encounter the first dwarf, we kill 0, 1, or 2 of
 	  *  the 5 dwarves.  If any of the survivors is at loc,
 	  *  replace him with the alternate. */
-
-L6000:	if(game.dflag != 1) goto L6010;
-	if(!INDEEP(game.loc) || (PCT(95) && (!CNDBIT(game.loc,4) || PCT(85)))) goto L2000;
+L6000:	if(game.dflag != 1)
+	    goto L6010;
+	if(!INDEEP(game.loc) || (PCT(95) && (!CNDBIT(game.loc,4) || PCT(85))))
+	    goto L2000;
 	game.dflag=2;
 	for (I=1; I<=2; I++) {
-	J=1+randrange(NDWARVES-1);
-	if(PCT(50))game.dloc[J]=0;
-	} /* end loop */
+	    J=1+randrange(NDWARVES-1);
+	    if(PCT(50))
+		game.dloc[J]=0;
+	}
 	for (I=1; I<=NDWARVES-1; I++) {
-	if(game.dloc[I] == game.loc)game.dloc[I]=DALTLC;
-	game.odloc[I]=game.dloc[I];
-	} /* end loop */
+	    if(game.dloc[I] == game.loc)
+		game.dloc[I]=DALTLC;
+	    game.odloc[I]=game.dloc[I];
+	}
 	RSPEAK(3);
 	DROP(AXE,game.loc);
-	 goto L2000;
+	goto L2000;
 
-/*  Things are in full swing.  Move each dwarf at random, except if he's seen us
- *  he sticks with us.  Dwarves stay deep inside.  If wandering at random,
- *  they don't back up unless there's no alternative.  If they don't have to
- *  move, they attack.  And, of course, dead dwarves don't do much of anything. */
-
+	/*  Things are in full swing.  Move each dwarf at random,
+	 *  except if he's seen us he sticks with us.  Dwarves stay
+	 *  deep inside.  If wandering at random, they don't back up
+	 *  unless there's no alternative.  If they don't have to
+	 *  move, they attack.  And, of course, dead dwarves don't do
+	 *  much of anything. */
 L6010:	game.dtotal=0;
 	ATTACK=0;
 	STICK=0;
 	/* 6030 */ for (I=1; I<=NDWARVES; I++) {
 	if(game.dloc[I] == 0) goto L6030;
-/*  Fill TK array with all the places this dwarf might go. */
+	/*  Fill TK array with all the places this dwarf might go. */
 	J=1;
 	KK=game.dloc[I];
 	KK=KEY[KK];
@@ -385,8 +389,7 @@ L2012:	VERB=0;
 /*  Check if this loc is eligible for any hints.  If been here long enough,
  *  branch to help section (on later page).  Hints all come back here eventually
  *  to finish the loop.  Ignore "HINTS" < 4 (special stuff, see database notes).
-		*/
-
+ */
 L2600:	if(COND[game.loc] < game.conds) goto L2603;
 	/* 2602 */ for (HINT=1; HINT<=HNTMAX; HINT++) {
 	if(game.hinted[HINT]) goto L2602;
@@ -396,25 +399,30 @@ L2600:	if(COND[game.loc] < game.conds) goto L2603;
 L2602:	/*etc*/ ;
 	} /* end loop */
 
-/*  If closing time, check for any objects being toted with game.prop < 0 and set
- *  the prop to -1-game.prop.  This way objects won't be described until they've
- *  been picked up and put down separate from their respective piles.  Don't
- *  tick game.clock1 unless well into cave (and not at Y2). */
+	/*  If closing time, check for any objects being toted with
+	 *  game.prop < 0 and set the prop to -1-game.prop.  This way
+	 *  objects won't be described until they've been picked up
+	 *  and put down separate from their respective piles.  Don't
+	 *  tick game.clock1 unless well into cave (and not at Y2). */
+L2603:	if(game.closed) {
+	    if(game.prop[OYSTER] < 0 && TOTING(OYSTER))
+		PSPEAK(OYSTER,1);
+	    for (i=1; i<=NOBJECTS; i++) {
+		if(TOTING(i) && game.prop[i] < 0)
+		    game.prop[i] = -1-game.prop[i];
+	    }
+	}
+	game.wzdark=DARK(0);
+	if(game.knfloc > 0 && game.knfloc != game.loc)
+	    game.knfloc=0;
 
-L2603:	if(!game.closed) goto L2605;
-	if(game.prop[OYSTER] < 0 && TOTING(OYSTER))PSPEAK(OYSTER,1);
-	for (I=1; I<=NOBJECTS; I++) {
-	if(TOTING(I) && game.prop[I] < 0)game.prop[I]= -1-game.prop[I];
-	} /* end loop */
-L2605:	game.wzdark=DARK(0);
-	if(game.knfloc > 0 && game.knfloc != game.loc)game.knfloc=0;
-	I=0;
+	/* This is where we get a new command from the user */
 	if (!GETIN(cmdin, WD1,WD1X,WD2,WD2X))
 	    return false;
 
-/*  Every input, check "game.foobar" flag.  If zero, nothing's going on.  If pos,
- *  make neg.  If neg, he skipped a word, so make it zero. */
-
+	/*  Every input, check "game.foobar" flag.  If zero, nothing's
+	 *  going on.  If pos, make neg.  If neg, he skipped a word,
+	 *  so make it zero. */
 L2607:	game.foobar=(game.foobar>0 ? -game.foobar : 0);
 	game.turns=game.turns+1;
 	if(game.turns == game.thresh) {
