@@ -219,6 +219,14 @@ L9128:	RSPEAK(SPK);
 	return(2011);
 }
 
+int throw_support(long spk)
+{
+    RSPEAK(spk);
+    DROP(AXE,game.loc);
+    K=NUL;
+    return(8);
+}
+
 int throw(FILE *cmdin, long obj, long verb)
 /*  Throw.  Same as discard unless axe.  Then same as attack except
  *  ignore bird, and if dwarf is present then one might be killed.
@@ -228,66 +236,61 @@ int throw(FILE *cmdin, long obj, long verb)
     if (TOTING(ROD2) && obj == ROD && !TOTING(ROD))obj=ROD2;
     if (!TOTING(obj))
 	return(2011);
-    if (obj >= 50 && obj <= MAXTRS && AT(TROLL))
-	goto L9178;
-    if (obj == FOOD && HERE(BEAR))
-	goto L9177;
+    if (obj >= 50 && obj <= MAXTRS && AT(TROLL)) {
+        SPK=159;
+        /*  Snarf a treasure for the troll. */
+        DROP(obj,0);
+        MOVE(TROLL,0);
+        MOVE(TROLL+NOBJECTS,0);
+        DROP(TROLL2,PLAC[TROLL]);
+        DROP(TROLL2+NOBJECTS,FIXD[TROLL]);
+        JUGGLE(CHASM);
+        return(2011);
+    }
+    if (obj == FOOD && HERE(BEAR)) {
+    /* But throwing food is another story. */
+        obj=BEAR;
+        return(feed(obj));
+    }
     if (obj != AXE)
 	return(discard(obj, false));
     I=ATDWRF(game.loc);
-    if (I > 0)
-	goto L9172;
-    SPK=152;
-    if (AT(DRAGON) && game.prop[DRAGON] == 0)
-	goto L9175;
-    SPK=158;
-    if (AT(TROLL))
-	goto L9175;
-    SPK=203;
-    if (AT(OGRE))
-	goto L9175;
-    if (HERE(BEAR) && game.prop[BEAR] == 0)
-	goto L9176;
-    return(attack(cmdin, 0, verb));
+    if (I <= 0) {
+        if (AT(DRAGON) && game.prop[DRAGON] == 0) {
+            SPK=152;
+            return throw_support(SPK);
+        }
+        if (AT(TROLL)) {
+            SPK=158;
+            return throw_support(SPK);
+        }
+        if (AT(OGRE)) {
+            SPK=203;
+            return throw_support(SPK);
+        }
+        if (HERE(BEAR) && game.prop[BEAR] == 0) {
+            /* This'll teach him to throw the axe at the bear! */
+            SPK=164;
+            DROP(AXE,game.loc);
+            game.fixed[AXE]= -1;
+            game.prop[AXE]=1;
+            JUGGLE(BEAR);
+            return(2011);
+        }
+        return(attack(cmdin, 0, verb));
+    }
 
-L9172:
-    SPK=48;
-    if (randrange(NDWARVES+1) < game.dflag) goto L9175;
+    if (randrange(NDWARVES+1) < game.dflag) {
+        SPK=48;
+        return throw_support(SPK);
+    }
     game.dseen[I]=false;
     game.dloc[I]=0;
     SPK=47;
     game.dkill=game.dkill+1;
     if (game.dkill == 1)SPK=149;
-L9175:
-    RSPEAK(SPK);
-    DROP(AXE,game.loc);
-    K=NUL;
-    return(8);
 
-    /* This'll teach him to throw the axe at the bear! */
-L9176:
-    SPK=164;
-    DROP(AXE,game.loc);
-    game.fixed[AXE]= -1;
-    game.prop[AXE]=1;
-    JUGGLE(BEAR);
-    return(2011);
-
-    /* But throwing food is another story. */
-L9177:
-    obj=BEAR;
-    return(feed(obj));
-
-L9178:
-    SPK=159;
-    /*  Snarf a treasure for the troll. */
-    DROP(obj,0);
-    MOVE(TROLL,0);
-    MOVE(TROLL+NOBJECTS,0);
-    DROP(TROLL2,PLAC[TROLL]);
-    DROP(TROLL2+NOBJECTS,FIXD[TROLL]);
-    JUGGLE(CHASM);
-    return(2011);
+    return throw_support(SPK);
 }
 
 int feed(long obj)
