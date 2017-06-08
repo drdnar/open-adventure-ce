@@ -412,6 +412,39 @@ static bool dwarfmove(void)
     return false;
 }
 
+static void croak(FILE *cmdin)
+/*  Okay, he's dead.  Let's get on with it. */
+{
+    if(game.closng) {
+	/*  He died during closing time.  No resurrection.  Tally up a
+	 *  death and exit. */
+	RSPEAK(131);
+	++game.numdie;
+	score(0);
+    } else {
+	++game.numdie;
+	if(!YES(cmdin,79+game.numdie*2,80+game.numdie*2,54))
+	    score(0);
+	if(game.numdie == MAXDIE)
+	    score(0);
+	game.place[WATER]=0;
+	game.place[OIL]=0;
+	if(TOTING(LAMP))
+	    game.prop[LAMP]=0;
+	for (J=1; J<=NOBJECTS; J++) {
+	    I=NOBJECTS + 1 - J;
+	    if(TOTING(I)) {
+		K=game.oldlc2;
+		if(I == LAMP)
+		    K=1;
+		DROP(I,K);
+	    }
+	}
+	game.loc=3;
+	game.oldloc=game.loc;
+    }
+}
+
 static bool do_command(FILE *cmdin) {
 	long LL, KQ, VERB, KK, K2, V1, V2;
 	long obj, i;
@@ -441,13 +474,14 @@ static bool do_command(FILE *cmdin) {
 	game.loc=game.newloc;
 
 	if (!dwarfmove())
-	    goto L99;
+	    croak(cmdin);
 
 /*  Describe the current location and (maybe) get next command. */
 
 /*  Print text for current loc. */
 
-L2000:	if(game.loc == 0) goto L99;
+L2000:	if(game.loc == 0)
+	    croak(cmdin);
 	KK=STEXT[game.loc];
 	if(MOD(game.abbrev[game.loc],game.abbnum) == 0 || KK == 0)KK=LTEXT[game.loc];
 	if(FORCED(game.loc) || !DARK(0)) goto L2001;
@@ -770,10 +804,10 @@ L30310: game.newloc=PLAC[TROLL]+FIXD[TROLL]-game.loc;
 	game.fixed[BEAR]= -1;
 	game.prop[BEAR]=3;
 	game.oldlc2=game.newloc;
-	 goto L99;
+	croak(cmdin);
+	goto L2000;
 
 /*  End of specials. */
-
 
 L21:	LL=MOD((labs(TRAVEL[KK])/1000),1000);
 	if(LL != K) {
@@ -833,38 +867,8 @@ L50:	SPK=12;
 
 L90:	RSPEAK(23);
 	game.oldlc2=game.loc;
-
-/*  Okay, he's dead.  Let's get on with it. */
-
-L99:	if(game.closng) {
-	/*  He died during closing time.  No resurrection.  Tally up a
-	 *  death and exit. */
-	    RSPEAK(131);
-	    ++game.numdie;
-	    score(0);
-	} else {
-	    ++game.numdie;
-	    if(!YES(cmdin,79+game.numdie*2,80+game.numdie*2,54))
-		score(0);
-	    if(game.numdie == MAXDIE)
-		score(0);
-	    game.place[WATER]=0;
-	    game.place[OIL]=0;
-	    if(TOTING(LAMP))
-		game.prop[LAMP]=0;
-	    for (J=1; J<=NOBJECTS; J++) {
-		I=NOBJECTS + 1 - J;
-		if(TOTING(I)) {
-		    K=game.oldlc2;
-		    if(I == LAMP)
-			K=1;
-		    DROP(I,K);
-		}
-	    }
-	    game.loc=3;
-	    game.oldloc=game.loc;
-	    goto L2000;
-	}
+	croak(cmdin);
+	goto L2000;
 
 /*  Cave closing and scoring */
 
