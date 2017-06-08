@@ -8,7 +8,25 @@
  * that calls these.  Absolutely nothing like the original FORTRAN
  */
 
-static int chain(int verb)
+static int bivalve(token_t verb, token_t obj)
+/* Clam/oyster actions */
+{
+    int k=0;
+    if(obj == OYSTER)k=1;
+    SPK=124+k;
+    if(TOTING(obj))SPK=120+k;
+    if(!TOTING(TRIDNT))SPK=122+k;
+    if(verb == LOCK)SPK=61;
+    if(SPK != 124)
+	return(2011);
+    DSTROY(CLAM);
+    DROP(OYSTER,game.loc);
+    DROP(PEARL,105);
+    return(2011);
+}
+
+static int chain(token_t verb)
+/* Do something to the bear's chain */
 {
     if(verb != LOCK) {
 	SPK=171;
@@ -30,6 +48,19 @@ static int chain(int verb)
 	game.fixed[CHAIN]= -1;
 	return(2011);
     }
+}
+
+static int find(token_t obj)
+/*  Find.  Might be carrying it, or it might be here.  Else give caveat. */
+{
+    if(AT(obj) ||
+       (LIQ(0) == obj && AT(BOTTLE)) ||
+       K == LIQLOC(game.loc) ||
+       (obj == DWARF && ATDWRF(game.loc) > 0))
+	SPK=94;
+    if(game.closed)SPK=138;
+    if(TOTING(obj))SPK=24;
+    return(2011);
 }
 
 /* This stuff was broken off as part of an effort to get the main program
@@ -229,30 +260,20 @@ L9040:	if(obj == CLAM || obj == OYSTER) goto L9046;
 	if(obj == GRATE || obj == CHAIN)SPK=31;
 	if(SPK != 31 || !HERE(KEYS)) return(2011);
 	if(obj == CHAIN) goto L9048;
-	if(!game.closng) goto L9043;
-	K=130;
-	if(!game.panic)game.clock2=15;
-	game.panic=true;
-	 return(2010);
-
-L9043:	K=34+game.prop[GRATE];
+	if (game.closng) {
+	    K=130;
+	    if(!game.panic)game.clock2=15;
+	    game.panic=true;
+	    return(2010);
+	}
+	K=34+game.prop[GRATE];
 	game.prop[GRATE]=1;
 	if(verb == LOCK)game.prop[GRATE]=0;
 	K=K+2*game.prop[GRATE];
 	 return(2010);
 
 /*  Clam/Oyster. */
-L9046:	K=0;
-	if(obj == OYSTER)K=1;
-	SPK=124+K;
-	if(TOTING(obj))SPK=120+K;
-	if(!TOTING(TRIDNT))SPK=122+K;
-	if(verb == LOCK)SPK=61;
-	if(SPK != 124) return(2011);
-	DSTROY(CLAM);
-	DROP(OYSTER,game.loc);
-	DROP(PEARL,105);
-	 return(2011);
+L9046:	return bivalve(verb, obj);
 
 /*  Chain. */
 L9048:  return chain(verb);
@@ -320,7 +341,7 @@ L9094:	DROP(JADE,game.loc);
 
 /*  Attack also moved into separate module. */
 
-L9120:	return(attack(input, obj, verb));
+L9120:	return(attack(input, verb, obj));
 
 /*  Pour.  If no object, or object is bottle, assume contents of bottle.
  *  special tests for pouring water or oil on plant or rusty door. */
@@ -396,24 +417,17 @@ L9160:	if(obj != LAMP)SPK=76;
 	game.tally=game.tally-1;
 	DROP(CAVITY,game.loc);
 	SPK=216;
-	 return(2011);
+	return(2011);
 
-/*  Throw moved into separate module. */
-
-L9170:	return(throw(input, obj, verb));
+L9170:	return(throw(input, verb, obj));
 
 /*  Quit.  Intransitive only.  Verify intent and exit if that's what he wants. */
 
 L8180:	if(YES(input,22,54,54)) score(1);
 	 return(2012);
 
-/*  Find.  Might be carrying it, or it might be here.  Else give caveat. */
 
-L9190:	if(AT(obj) || (LIQ(0) == obj && AT(BOTTLE)) || K == LIQLOC(game.loc) || (obj ==
-		DWARF && ATDWRF(game.loc) > 0))SPK=94;
-	if(game.closed)SPK=138;
-	if(TOTING(obj))SPK=24;
-	 return(2011);
+L9190:	return find(obj);
 
 /*  Inventory.  If object, treat same as find.  Else report on current burden. */
 

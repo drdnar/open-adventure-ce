@@ -134,7 +134,7 @@ int discard(long obj, bool just_do_it) {
  *  objects fall into two categories: enemies (snake, dwarf, etc.)  and others
  *  (bird, clam, machine).  Ambiguous if 2 enemies, or no enemies but 2 others. */
 
-int attack(FILE *input, long obj, long verb) {
+int attack(FILE *input, long verb, long obj) {
 	int i =ATDWRF(game.loc);
 	if (obj == 0) {
 	    if (i > 0)
@@ -226,7 +226,7 @@ int throw_support(long spk)
     return(8);
 }
 
-int throw(FILE *cmdin, long obj, long verb)
+int throw(FILE *cmdin, long verb, long obj)
 /*  Throw.  Same as discard unless axe.  Then same as attack except
  *  ignore bird, and if dwarf is present then one might be killed.
  *  (Only way to do so!)  Axe also special for dragon, bear, and
@@ -276,7 +276,7 @@ int throw(FILE *cmdin, long obj, long verb)
             JUGGLE(BEAR);
             return(2011);
         }
-        return(attack(cmdin, 0, verb));
+        return(attack(cmdin, verb, 0));
     }
 
     if (randrange(NDWARVES+1) < game.dflag) {
