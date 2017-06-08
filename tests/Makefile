@@ -14,7 +14,7 @@ all: regress
 .SUFFIXES: .chk
 
 clean:
-	rm -fr *~ adventure.text
+	rm -fr *~ adventure.text *.adv
 
 # Show summary lines for all tests.
 testlist:
