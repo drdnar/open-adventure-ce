@@ -6,6 +6,7 @@
 #include "advent.h"
 #include "funcs.h"
 #include "database.h"
+#include "linenoise/linenoise.h"
 
 /* hack to ignore GCC Unused Result */
 #define IGNORE(r) do{if (r){}}while(0)
@@ -819,8 +820,8 @@ void fSAVEIO(long op, long in, long arr[])
  *  automatically.  Finishing reading can be a no-op as long as a subsequent
  *  SAVEIO(0,false,X) will still work.) */
 {
-    static FILE *fp = NULL; 
-    char name[50];
+    static FILE *fp = NULL;
+    char* name;
 
     switch (op < 0 ? -1 : (op > 0 ? 1 : 0)) 
     { 
@@ -829,12 +830,12 @@ void fSAVEIO(long op, long in, long arr[])
 	break;
     case 0:
 	while (fp == NULL) {
-	    printf("\nFile name: ");
-	    IGNORE(fgets(name, sizeof(name), stdin));
+	    name = linenoise("File name: ");
 	    fp = fopen(name,(in ? READ_MODE : WRITE_MODE));
 	    if (fp == NULL)
 		printf("Can't open file %s, try again.\n", name); 
 	}
+	linenoiseFree(name);
 	break;
     case 1: 
 	if (in)
