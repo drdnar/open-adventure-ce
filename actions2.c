@@ -21,18 +21,22 @@ int carry(long obj)
 	SPK=190;
 	DSTROY(MESSAG);
     }
-    if (game.fixed[obj] != 0) return(2011);
-    if (obj != WATER && obj != OIL) goto L9017;
-    //K = obj;
-    obj = BOTTLE;
-    if (HERE(BOTTLE) && LIQ(0) == K) goto L9017;
-    if (TOTING(BOTTLE) && game.prop[BOTTLE] == 1) return(fill(BOTTLE));
-    if (game.prop[BOTTLE] != 1)SPK=105;
-    if (!TOTING(BOTTLE))SPK=104;
-    return(2011);
-L9017:
+    if (game.fixed[obj] != 0)
+	return(2011);
+    if (obj == WATER || obj == OIL) {
+	if (!HERE(BOTTLE) || LIQ(0) != obj) {
+	    if (TOTING(BOTTLE) && game.prop[BOTTLE] == 1)
+		return(fill(BOTTLE));
+	    if (game.prop[BOTTLE] != 1)SPK=105;
+	    if (!TOTING(BOTTLE))SPK=104;
+	    return(2011);
+	}
+	obj = BOTTLE;
+    }
+
     SPK=92;
-    if (game.holdng >= 7) return(2011);
+    if (game.holdng >= INVLIMIT)
+	return(2011);
     if (obj == BIRD && game.prop[BIRD] != 1 && -1-game.prop[BIRD] != 1) {
 	if (game.prop[BIRD] == 2) {
 	    SPK=238;
@@ -47,9 +51,10 @@ L9017:
     if ((obj==BIRD || obj==CAGE) && (game.prop[BIRD]==1 || -1-game.prop[BIRD]==1))
 	CARRY(BIRD+CAGE-obj,game.loc);
     CARRY(obj,game.loc);
-    K=LIQ(0);
-    if (obj == BOTTLE && K != 0)game.place[K]= -1;
-    if (!GSTONE(obj) || game.prop[obj] == 0) return(2009);
+    if (obj == BOTTLE && LIQ(0) != 0)
+	game.place[LIQ(0)] = -1;
+    if (!GSTONE(obj) || game.prop[obj] == 0)
+	return(2009);
     game.prop[obj]=0;
     game.prop[CAVITY]=1;
     return(2009);
@@ -158,12 +163,13 @@ L9124:	if (obj == BIRD) {
 		game.prop[BIRD]=0;
 		SPK=45;
 	}
-L9125:	if (obj != VEND) goto L9126;
-	PSPEAK(VEND,game.prop[VEND]+2);
-	game.prop[VEND]=3-game.prop[VEND];
-	return(2012);
+L9125:	if (obj == VEND) {
+	    PSPEAK(VEND,game.prop[VEND]+2);
+	    game.prop[VEND]=3-game.prop[VEND];
+	    return(2012);
+	}
 
-L9126:	if (obj == 0)SPK=44;
+	if (obj == 0)SPK=44;
 	if (obj == CLAM || obj == OYSTER)SPK=150;
 	if (obj == SNAKE)SPK=46;
 	if (obj == DWARF)SPK=49;
@@ -270,53 +276,61 @@ L9178:	SPK=159;
 	 return(2011);
 }
 
+int feed(long obj)
 /*  Feed.  If bird, no seed.  Snake, dragon, troll: quip.  If dwarf, make him
  *  mad.  Bear, special. */
-
-int feed(long obj) {
-	if (obj != BIRD) goto L9212;
+{
+    if (obj == BIRD) {
 	SPK=100;
-	 return(2011);
+	return(2011);
+    }
 
-L9212:	if (obj != SNAKE && obj != DRAGON && obj != TROLL) goto L9213;
+    if (!(obj != SNAKE && obj != DRAGON && obj != TROLL)) {
 	SPK=102;
 	if (obj == DRAGON && game.prop[DRAGON] != 0)SPK=110;
 	if (obj == TROLL)SPK=182;
-	if (obj != SNAKE || game.closed || !HERE(BIRD)) return(2011);
+	if (obj != SNAKE || game.closed || !HERE(BIRD))
+	    return(2011);
 	SPK=101;
 	DSTROY(BIRD);
 	game.prop[BIRD]=0;
-	 return(2011);
+	return(2011);
+    }
 
-L9213:	if (obj != DWARF) goto L9214;
-	if (!HERE(FOOD)) return(2011);
+    if (obj == DWARF) {
+	if (!HERE(FOOD))
+	    return(2011);
 	SPK=103;
 	game.dflag=game.dflag+2;
-	 return(2011);
+	return(2011);
+    }
 
-L9214:	if (obj != BEAR) goto L9215;
+    if (obj == BEAR) {
 	if (game.prop[BEAR] == 0)SPK=102;
 	if (game.prop[BEAR] == 3)SPK=110;
-	if (!HERE(FOOD)) return(2011);
+	if (!HERE(FOOD))
+	    return(2011);
 	DSTROY(FOOD);
 	game.prop[BEAR]=1;
 	game.fixed[AXE]=0;
 	game.prop[AXE]=0;
 	SPK=168;
-	 return(2011);
+	return(2011);
+    }
 
-L9215:	if (obj != OGRE) goto L9216;
-	if (HERE(FOOD))SPK=202;
-	 return(2011);
+    if (obj == OGRE) {
+	if (HERE(FOOD))
+	    SPK=202;
+	return(2011);
+    }
 
-L9216:	SPK=14;
-	 return(2011);
+    SPK=14;
+    return(2011);
 }
 
+int fill(long obj)
 /*  Fill.  Bottle or urn must be empty, and liquid available.  (Vase
  *  is nasty.) */
-
-int fill(long obj)
 {
     if (obj == VASE) {
 	SPK=29;
