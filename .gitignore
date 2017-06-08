@@ -9,4 +9,5 @@ database.c
 advent.6
 *.tar.gz
 MANIFEST
+*.adv
 
