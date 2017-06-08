@@ -34,96 +34,100 @@ void SPEAK(vocab_t msg)
 	    PUTTXT(LINES[i],state,2);
 	}
 	LNPOSN=0;
-L30:
 	++LNPOSN;
-L32:
-	if (LNPOSN > LNLENG) 
-	    goto L40;
-	if (INLINE[LNPOSN] != PERCENT) 
-	    goto L30;
-	prmtyp = INLINE[LNPOSN+1];
-	/*  A "%"; the next character determine the type of
-	 *  parameter: 1 (!) = suppress message completely, 29 (S) = NULL
-	 *  If PARAM=1, else 'S' (optional plural ending), 33 (W) = word
-	 *  (two 30-bit values) with trailing spaces suppressed, 22 (L) or
-	 *  31 (U) = word but map to lower/upper case, 13 (C) = word in
-	 *  lower case with first letter capitalised, 30 (T) = text ending
-	 *  with a word of -1, 65-73 (1-9) = number using that many
-	 *  characters, 12 (B) = variable number of blanks. */
-	if (prmtyp == 1)
-	    return;
-	if (prmtyp == 29) {
-	    SHFTXT(LNPOSN+2,-1);
-	    INLINE[LNPOSN] = 55;
-	    if (PARMS[nparms] == 1)
-		SHFTXT(LNPOSN+1,-1);
-	    goto L395;
-	}
-	if (prmtyp == 30) {
-	    SHFTXT(LNPOSN+2,-2);
-	    state=0;
-	    casemake=2;
 
-	    for (;;) {
-		if (PARMS[nparms] < 0)
-		    goto L395;
-		if (PARMS[nparms+1] < 0)
-		    casemake=0;
-		PUTTXT(PARMS[nparms],state,casemake);
-		nparms=nparms+1;
+	while (LNPOSN <= LNLENG) { 
+	    if (INLINE[LNPOSN] != PERCENT) {
+		++LNPOSN;
+		continue;
 	    }
-	}
-	if (prmtyp == 12) {
-	    prmtyp=PARMS[nparms];
-	    SHFTXT(LNPOSN+2,prmtyp-2);
-	    if (prmtyp != 0) {
-		for (i=1; i<=prmtyp; i++) {
-		    INLINE[LNPOSN]=0;
-		    LNPOSN=LNPOSN+1;
+	    prmtyp = INLINE[LNPOSN+1];
+	    /*  A "%"; the next character determine the type of
+	     *  parameter: 1 (!) = suppress message completely, 29 (S) = NULL
+	     *  If PARAM=1, else 'S' (optional plural ending), 33 (W) = word
+	     *  (two 30-bit values) with trailing spaces suppressed, 22 (L) or
+	     *  31 (U) = word but map to lower/upper case, 13 (C) = word in
+	     *  lower case with first letter capitalised, 30 (T) = text ending
+	     *  with a word of -1, 65-73 (1-9) = number using that many
+	     *  characters, 12 (B) = variable number of blanks. */
+	    if (prmtyp == 1)
+		return;
+	    if (prmtyp == 29) {
+		SHFTXT(LNPOSN+2,-1);
+		INLINE[LNPOSN] = 55;
+		if (PARMS[nparms] == 1)
+		    SHFTXT(LNPOSN+1,-1);
+		++nparms;
+		continue;
+	    }
+	    if (prmtyp == 30) {
+		SHFTXT(LNPOSN+2,-2);
+		state=0;
+		casemake=2;
+
+		while (PARMS[nparms] > 0) {
+		    if (PARMS[nparms+1] < 0)
+			casemake=0;
+		    PUTTXT(PARMS[nparms],state,casemake);
+		    nparms=nparms+1;
 		}
+		++nparms;
+		continue;
 	    }
-	    goto L395;
-	}
-	if (prmtyp == 33 || prmtyp == 22 || prmtyp == 31 || prmtyp == 13) {
-	    SHFTXT(LNPOSN+2,-2);
-	    state = 0;
-	    casemake = -1;
-	    if (prmtyp == 31)
-		casemake=1;
-	    if (prmtyp == 33)
-		casemake=0;
-	    i = LNPOSN;
-	    PUTTXT(PARMS[nparms],state,casemake);
-	    PUTTXT(PARMS[nparms+1],state,casemake);
-	    if (prmtyp == 13 && INLINE[i] >= 37 && INLINE[i] <= 62)
-		INLINE[i] -= 26;
-	    nparms += 2;
-	    goto L32;
-	}
-	prmtyp=prmtyp-64;
-	if (prmtyp < 1 || prmtyp > 9)
-	    goto L30;
-	SHFTXT(LNPOSN+2,prmtyp-2);
-	LNPOSN += prmtyp;
-	param=labs(PARMS[nparms]);
-	neg=0;
-	if (PARMS[nparms] < 0)
-	    neg=9;
-	for (i=1; i <= prmtyp; i++) {
-	    --LNPOSN;
-	    INLINE[LNPOSN]=MOD(param,10)+64;
-	    if (i != 1 && param == 0) {
-		INLINE[LNPOSN]=neg;
-		neg=0;
+	    if (prmtyp == 12) {
+		prmtyp=PARMS[nparms];
+		SHFTXT(LNPOSN+2,prmtyp-2);
+		if (prmtyp != 0) {
+		    for (i=1; i<=prmtyp; i++) {
+			INLINE[LNPOSN]=0;
+			++LNPOSN;
+		    }
+		}
+		++nparms;
+		continue;
 	    }
-	    param=param/10;
-	}
-	LNPOSN += prmtyp;
-L395:
-	++nparms;
-	goto L32;
+	    if (prmtyp == 33 || prmtyp == 22 || prmtyp == 31 || prmtyp == 13) {
+		SHFTXT(LNPOSN+2,-2);
+		state = 0;
+		casemake = -1;
+		if (prmtyp == 31)
+		    casemake=1;
+		if (prmtyp == 33)
+		    casemake=0;
+		i = LNPOSN;
+		PUTTXT(PARMS[nparms],state,casemake);
+		PUTTXT(PARMS[nparms+1],state,casemake);
+		if (prmtyp == 13 && INLINE[i] >= 37 && INLINE[i] <= 62)
+		    INLINE[i] -= 26;
+		nparms += 2;
+		continue;
+	    }
 
-L40:
+	    prmtyp=prmtyp-64;
+	    if (prmtyp < 1 || prmtyp > 9) {
+		++LNPOSN;
+		continue;
+	    }
+	    SHFTXT(LNPOSN+2,prmtyp-2);
+	    LNPOSN += prmtyp;
+	    param=labs(PARMS[nparms]);
+	    neg=0;
+	    if (PARMS[nparms] < 0)
+		neg=9;
+	    for (i=1; i <= prmtyp; i++) {
+		--LNPOSN;
+		INLINE[LNPOSN]=MOD(param,10)+64;
+		if (i != 1 && param == 0) {
+		    INLINE[LNPOSN]=neg;
+		    neg=0;
+		}
+		param=param/10;
+	    }
+	    LNPOSN += prmtyp;
+	    ++nparms;
+	    continue;
+	}
+
 	if (blank)
 	    TYPE0();
 	blank=false;
