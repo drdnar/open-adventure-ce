@@ -151,6 +151,94 @@ static bool fallback_handler(char *buf)
     return false;
 }
 
+static void dohint(FILE *cmdin, int hint)
+{
+    /*  Hints */
+
+    /*  Come here if he's been long enough at required loc(s) for some
+     *  unused hint.  hint number is in variable "hint".  Branch to
+     *  quick test for additional conditions, then come back to do
+     *  neat stuff.  Goto 40010 if conditions are met and we want to
+     *  offer the hint.  Goto 40020 to clear game.hintlc back to zero,
+     *  40030 to take no action yet. */
+
+    switch (hint-1)
+    {
+    case 0: goto L40100;
+    case 1: goto L40200;
+    case 2: goto L40300;
+    case 3: goto L40400;
+    case 4: goto L40500;
+    case 5: goto L40600;
+    case 6: goto L40700;
+    case 7: goto L40800;
+    case 8: goto L40900;
+    case 9: goto L41000;
+    }
+/*		CAVE  BIRD  SNAKE MAZE  DARK  WITT  URN   WOODS OGRE
+ *		JADE */
+    BUG(27);
+
+L40010:
+    game.hintlc[hint]=0;
+    if(!YES(cmdin,HINTS[hint][3],0,54)) return;
+    SETPRM(1,HINTS[hint][2],HINTS[hint][2]);
+    RSPEAK(261);
+    game.hinted[hint]=YES(cmdin,175,HINTS[hint][4],54);
+    if(game.hinted[hint] && game.limit > 30)
+	game.limit=game.limit+30*HINTS[hint][2];
+L40020: game.hintlc[hint]=0;
+L40030: return;
+
+/*  Now for the quick tests.  See database description for one-line notes. */
+
+L40100: if(game.prop[GRATE] == 0 && !HERE(KEYS))
+	goto L40010;
+    goto L40020;
+
+L40200: if(game.place[BIRD] == game.loc && TOTING(ROD) && game.oldobj == BIRD) goto L40010;
+    goto L40030;
+
+L40300: if(HERE(SNAKE) && !HERE(BIRD))
+	goto L40010;
+    goto L40020;
+
+L40400: if(game.atloc[game.loc] == 0 &&
+	   game.atloc[game.oldloc] == 0 &&
+	   game.atloc[game.oldlc2] == 0 &&
+	   game.holdng > 1)
+	goto L40010;
+    goto L40020;
+
+L40500: if(game.prop[EMRALD] != -1 && game.prop[PYRAM] == -1)
+	goto L40010;
+    goto L40020;
+
+L40600:  goto L40010;
+
+L40700: if(game.dflag == 0)
+	goto L40010;
+    goto L40020;
+
+L40800: if(game.atloc[game.loc] == 0 &&
+	   game.atloc[game.oldloc] == 0 &&
+	   game.atloc[game.oldlc2] == 0)
+	goto L40010;
+    goto L40030;
+
+L40900: I=ATDWRF(game.loc);
+    if(I < 0)
+	goto L40020;
+    if(HERE(OGRE) && I == 0)
+	goto L40010;
+    goto L40030;
+
+L41000: if(game.tally == 1 && game.prop[JADE] < 0)
+	goto L40010;
+    goto L40020;
+}
+
+
 static bool dwarfmove(void)
 /* Dwarves move.  Return true if player survives, false if he dies. */
 {
@@ -260,13 +348,19 @@ static bool dwarfmove(void)
 		*  room (too easy!). */
 		if(J == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD]))
 		    goto L6020;
-		if(TOTING(J))
+		if(TOTING(J)) {
 		    goto L6021;
+		}
 	    L6020:
-		if(HERE(J))K=1;
+		if(HERE(J))
+		    K=1;
 	    }
-	    if(game.tally == 1 && K == 0 && game.place[CHEST] == 0 && HERE(LAMP) && game.prop[LAMP] == 1)
-		goto L6025;
+	    if(game.tally == 1 && K == 0 && game.place[CHEST] == 0 && HERE(LAMP) && game.prop[LAMP] == 1) {
+		RSPEAK(186);
+		MOVE(CHEST,game.chloc);
+		MOVE(MESSAG,game.chloc2);
+		goto L6024;
+	    }
 	    if(game.odloc[PIRATE] != game.dloc[PIRATE] && PCT(20))
 		RSPEAK(127);
 	    continue;
@@ -292,13 +386,6 @@ static bool dwarfmove(void)
 	    game.odloc[PIRATE]=game.chloc;
 	    game.dseen[PIRATE]=false;
 	    continue;
-
-	L6025:
-	    RSPEAK(186);
-	    MOVE(CHEST,game.chloc);
-	    MOVE(MESSAG,game.chloc2);
-	    goto L6024;
-
 	}
 
 	/* This threatening little dwarf is in the room with him! */
@@ -428,15 +515,18 @@ L2012:	VERB=0;
  *  branch to help section (on later page).  Hints all come back here eventually
  *  to finish the loop.  Ignore "HINTS" < 4 (special stuff, see database notes).
  */
-L2600:	if(COND[game.loc] < game.conds) goto L2603;
-	/* 2602 */ for (HINT=1; HINT<=HNTMAX; HINT++) {
-	if(game.hinted[HINT]) goto L2602;
-	if(!CNDBIT(game.loc,HINT+10))game.hintlc[HINT]= -1;
-	game.hintlc[HINT]=game.hintlc[HINT]+1;
-	if(game.hintlc[HINT] >= HINTS[HINT][1]) goto L40000;
-L2602:	/*etc*/ ;
-	} /* end loop */
-
+L2600:	if(COND[game.loc] >= game.conds) {
+	    for (int hint=1; hint<=HNTMAX; hint++) {
+		if(game.hinted[hint])
+		    continue;
+		if(!CNDBIT(game.loc,hint+10))
+		    game.hintlc[hint]= -1;
+		game.hintlc[hint] = game.hintlc[hint]+1;
+		if(game.hintlc[hint] >= HINTS[hint][1]) 
+		    dohint(cmdin, hint);
+	    }
+	}
+	    
 	/*  If closing time, check for any objects being toted with
 	 *  game.prop < 0 and set the prop to -1-game.prop.  This way
 	 *  objects won't be described until they've been picked up
@@ -497,11 +587,14 @@ L2620:	if(WD1 == MAKEWD(23051920)) {
 		game.iwest=game.iwest+1;
 		if(game.iwest == 10)RSPEAK(17);
 	}
-	if(WD1 != MAKEWD( 715) || WD2 == 0) goto L2630;
-	IGO=IGO+1;
-	if(IGO == 10)RSPEAK(276);
-L2630:	I=VOCAB(WD1,-1);
-	if(I == -1) goto L3000;
+	if(WD1 == MAKEWD( 715) && WD2 != 0) {
+	    if(++IGO == 10)
+		RSPEAK(276);
+	}
+L2630:
+	I=VOCAB(WD1,-1);
+	if(I == -1)
+	   goto L3000;
 	K=MOD(I,1000);
 	KQ=I/1000+1;
 	 switch (KQ-1) { case 0: goto L8; case 1: goto L5000; case 2: goto L4000;
@@ -780,70 +873,6 @@ L99:	if(game.closng) {
 	    game.oldloc=game.loc;
 	    goto L2000;
 	}
-
-/*  Hints */
-
-/*  Come here if he's been long enough at required loc(s) for some unused hint.
- *  hint number is in variable "hint".  Branch to quick test for additional
- *  conditions, then come back to do neat stuff.  Goto 40010 if conditions are
- *  met and we want to offer the hint.  Goto 40020 to clear game.hintlc back to zero,
- *  40030 to take no action yet. */
-
-L40000:    switch (HINT-1) { case 0: goto L40100; case 1: goto L40200; case 2: goto
-		L40300; case 3: goto L40400; case 4: goto L40500; case 5: goto
-		L40600; case 6: goto L40700; case 7: goto L40800; case 8: goto
-		L40900; case 9: goto L41000; }
-/*		CAVE  BIRD  SNAKE MAZE  DARK  WITT  URN   WOODS OGRE
- *		JADE */
-	BUG(27);
-
-L40010: game.hintlc[HINT]=0;
-	if(!YES(cmdin,HINTS[HINT][3],0,54)) goto L2602;
-	SETPRM(1,HINTS[HINT][2],HINTS[HINT][2]);
-	RSPEAK(261);
-	game.hinted[HINT]=YES(cmdin,175,HINTS[HINT][4],54);
-	if(game.hinted[HINT] && game.limit > 30)game.limit=game.limit+30*HINTS[HINT][2];
-L40020: game.hintlc[HINT]=0;
-L40030:  goto L2602;
-
-/*  Now for the quick tests.  See database description for one-line notes. */
-
-L40100: if(game.prop[GRATE] == 0 && !HERE(KEYS)) goto L40010;
-	 goto L40020;
-
-L40200: if(game.place[BIRD] == game.loc && TOTING(ROD) && game.oldobj == BIRD) goto L40010;
-	 goto L40030;
-
-L40300: if(HERE(SNAKE) && !HERE(BIRD)) goto L40010;
-	 goto L40020;
-
-L40400: if(game.atloc[game.loc] == 0 && game.atloc[game.oldloc] == 0 && game.atloc[game.oldlc2] == 0 && game.holdng >
-		1) goto L40010;
-	 goto L40020;
-
-L40500: if(game.prop[EMRALD] != -1 && game.prop[PYRAM] == -1) goto L40010;
-	 goto L40020;
-
-L40600:  goto L40010;
-
-L40700: if(game.dflag == 0) goto L40010;
-	 goto L40020;
-
-L40800: if(game.atloc[game.loc] == 0 && game.atloc[game.oldloc] == 0 && game.atloc[game.oldlc2] == 0) goto
-		L40010;
-	 goto L40030;
-
-L40900: I=ATDWRF(game.loc);
-	if(I < 0) goto L40020;
-	if(HERE(OGRE) && I == 0) goto L40010;
-	 goto L40030;
-
-L41000: if(game.tally == 1 && game.prop[JADE] < 0) goto L40010;
-	 goto L40020;
-
-
-
-
 
 /*  Cave closing and scoring */
 
