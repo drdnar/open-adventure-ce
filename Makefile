@@ -16,33 +16,34 @@ SOURCES=$(OBJS:.o=.c) dungeon.c advent.h funcs.h sizes.h adventure.text Makefile
 .c.o:
 	$(CC) $(CCFLAGS) $(DBX) -c $<
 
-advent:	$(OBJS) database.o
+advent: $(OBJS) database.o
 	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) database.o $(LDFLAGS) $(LIBS)
 
-main.o:		advent.h funcs.h database.h sizes.h
+main.o:	 	advent.h funcs.h database.h database.c sizes.h
 
-init.o:		advent.h funcs.h database.h sizes.h
+init.o:	 	advent.h funcs.h database.h database.c sizes.h
 
-actions1.o:	advent.h funcs.h database.h sizes.h
+actions1.o:     advent.h funcs.h database.h database.c sizes.h
 
-actions2.o:	advent.h funcs.h database.h sizes.h
+actions2.o:     advent.h funcs.h database.h database.c sizes.h
 
-score.o:	advent.h database.h sizes.h
+score.o:	advent.h database.h database.c sizes.h
 
-misc.o:		advent.h database.h sizes.h
+misc.o:	 advent.h database.h database.c sizes.h
 
-database.o:	database.h sizes.h
+database.o:     database.c database.h sizes.h
+	$(CC) $(CCFLAGS) $(DBX) -c database.c
+
+database.c database.h: dungeon
+	./dungeon
 
 dungeon: dungeon.c
 	$(CC) $(CCFLAGS) -o $@ $<
 
-database.c database.h: dungeon adventure.text
-	./dungeon
-	$(CC) $(CCFLAGS) $(DBX) -c database.c
-
 clean:
 	rm -f *.o advent *.html database.[ch] dungeon *.gcno *.gcda
 	rm -f README advent.6 MANIFEST *.tar.gz
+	rm -f *~
 	cd tests; $(MAKE) --quiet clean
 
 check: advent
