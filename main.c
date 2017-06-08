@@ -346,11 +346,15 @@ static bool dwarfmove(void)
 		if(HERE(J))
 		    K=1;
 	    }
+	    /* Force chest placement before player finds last treasure */
 	    if(game.tally == 1 && K == 0 && game.place[CHEST] == 0 && HERE(LAMP) && game.prop[LAMP] == 1) {
 		RSPEAK(186);
 		MOVE(CHEST,game.chloc);
 		MOVE(MESSAG,game.chloc2);
-		goto L6024;
+		game.dloc[PIRATE]=game.chloc;
+		game.odloc[PIRATE]=game.chloc;
+		game.dseen[PIRATE]=false;
+		continue;
 	    }
 	    if(game.odloc[PIRATE] != game.dloc[PIRATE] && PCT(20))
 		RSPEAK(127);
@@ -372,7 +376,6 @@ static bool dwarfmove(void)
 			DROP(J,game.chloc);
 		}
 	    }
-	L6024:
 	    game.dloc[PIRATE]=game.chloc;
 	    game.odloc[PIRATE]=game.chloc;
 	    game.dseen[PIRATE]=false;
