@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
+
 #include "advent.h"
-#include "funcs.h"
 #include "database.h"
 #include "linenoise/linenoise.h"
 

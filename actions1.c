@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "advent.h"
-#include "funcs.h"
 #include "database.h"
 
 /* This stuff was broken off as part of an effort to get the main program

@@ -4,7 +4,6 @@
 #include <stdbool.h>
 
 #include "advent.h"
-#include "funcs.h"
 #include "database.h"
 
 /*

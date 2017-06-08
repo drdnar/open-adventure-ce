@@ -22,7 +22,7 @@ ifeq ($(UNAME_S),Linux)
 endif
 
 OBJS=main.o init.o actions1.o actions2.o score.o misc.o
-SOURCES=$(OBJS:.o=.c) dungeon.c advent.h funcs.h sizes.h adventure.text Makefile control linenoise/linenoise.[ch]
+SOURCES=$(OBJS:.o=.c) dungeon.c advent.h sizes.h adventure.text Makefile control linenoise/linenoise.[ch]
 
 .c.o:
 	$(CC) $(CCFLAGS) $(DBX) -c $<
@@ -30,13 +30,13 @@ SOURCES=$(OBJS:.o=.c) dungeon.c advent.h funcs.h sizes.h adventure.text Makefile
 advent:	$(OBJS) database.o linenoise.o
 	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) database.o linenoise.o $(LDFLAGS) $(LIBS)
 
-main.o:	 	advent.h funcs.h database.h database.c sizes.h
+main.o:	 	advent.h database.h database.c sizes.h
 
-init.o:	 	advent.h funcs.h database.h database.c sizes.h
+init.o:	 	advent.h database.h database.c sizes.h
 
-actions1.o:     advent.h funcs.h database.h database.c sizes.h
+actions1.o:     advent.h database.h database.c sizes.h
 
-actions2.o:     advent.h funcs.h database.h database.c sizes.h
+actions2.o:     advent.h database.h database.c sizes.h
 
 score.o:	advent.h database.h database.c sizes.h
 

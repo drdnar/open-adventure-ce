@@ -1,5 +1,5 @@
 #include "advent.h"
-#include "funcs.h"
+#include "database.h"
 
 /*  Carry an object.  Special cases for bird and cage (if bird in cage, can't
  *  take one without the other).  Liquids also special, since they depend on

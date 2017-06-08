@@ -90,8 +90,6 @@ int main(int argc, char *argv[]) {
  *  game.panic says whether he's found out he's trapped in the cave
  *  game.wzdark says whether the loc he's leaving was dark */
 
-#include "funcs.h"
-
 /* Initialize our LCG PRNG with parameters tested against Knuth vol. 2. by the original authors */
 
 	lcgstate.a = 1093;
