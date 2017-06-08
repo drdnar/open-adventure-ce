@@ -65,73 +65,69 @@ int carry(long obj)
  *  Drop coins at vending machine for extra batteries. */
 
 int discard(long obj, bool just_do_it) {
-	if (just_do_it) goto L9021;
-	if (TOTING(ROD2) && obj == ROD && !TOTING(ROD))obj=ROD2;
-	if (!TOTING(obj)) return(2011);
-	if (obj != BIRD || !HERE(SNAKE)) goto L9023;
-	RSPEAK(30);
-	if (game.closed) return(19000);
-	DSTROY(SNAKE);
-	/* Set game.prop for use by travel options */
-	game.prop[SNAKE]=1;
-L9021:	K=LIQ(0);
-	if (K == obj)obj=BOTTLE;
-	if (obj == BOTTLE && K != 0)game.place[K]=0;
-	if (obj == CAGE && game.prop[BIRD] == 1)DROP(BIRD,game.loc);
-	DROP(obj,game.loc);
-	if (obj != BIRD) return(2012);
-	game.prop[BIRD]=0;
-	if (FOREST(game.loc))game.prop[BIRD]=2;
-	 return(2012);
+    if (!just_do_it) {
+        if (TOTING(ROD2) && obj == ROD && !TOTING(ROD))obj=ROD2;
+        if (!TOTING(obj)) return(2011);
+        if (obj == BIRD && HERE(SNAKE)) {
+            RSPEAK(30);
+            if (game.closed) return(19000);
+            DSTROY(SNAKE);
+            /* Set game.prop for use by travel options */
+            game.prop[SNAKE]=1;
 
-L9023:	if (!(GSTONE(obj) && AT(CAVITY) && game.prop[CAVITY] != 0)) goto L9024;
-	RSPEAK(218);
-	game.prop[obj]=1;
-	game.prop[CAVITY]=0;
-	if (!HERE(RUG) || !((obj == EMRALD && game.prop[RUG] != 2) || (obj == RUBY &&
-		game.prop[RUG] == 2))) goto L9021;
-	SPK=219;
-	if (TOTING(RUG))SPK=220;
-	if (obj == RUBY)SPK=221;
-	RSPEAK(SPK);
-	if (SPK == 220) goto L9021;
-	K=2-game.prop[RUG];
-	game.prop[RUG]=K;
-	if (K == 2)K=PLAC[SAPPH];
-	MOVE(RUG+NOBJECTS,K);
-	 goto L9021;
-
-L9024:	if (obj != COINS || !HERE(VEND)) goto L9025;
-	DSTROY(COINS);
-	DROP(BATTER,game.loc);
-	PSPEAK(BATTER,0);
-	 return(2012);
-
-L9025:	if (obj != BIRD || !AT(DRAGON) || game.prop[DRAGON] != 0) goto L9026;
-	RSPEAK(154);
-	DSTROY(BIRD);
-	game.prop[BIRD]=0;
-	 return(2012);
-
-L9026:	if (obj != BEAR || !AT(TROLL)) goto L9027;
-	RSPEAK(163);
-	MOVE(TROLL,0);
-	MOVE(TROLL+NOBJECTS,0);
-	MOVE(TROLL2,PLAC[TROLL]);
-	MOVE(TROLL2+NOBJECTS,FIXD[TROLL]);
-	JUGGLE(CHASM);
-	game.prop[TROLL]=2;
-	 goto L9021;
-
-L9027:	if (obj == VASE && game.loc != PLAC[PILLOW]) goto L9028;
-	RSPEAK(54);
-	 goto L9021;
-
-L9028:	game.prop[VASE]=2;
-	if (AT(PILLOW))game.prop[VASE]=0;
-	PSPEAK(VASE,game.prop[VASE]+1);
-	if (game.prop[VASE] != 0)game.fixed[VASE]= -1;
-	 goto L9021;
+        } else if ((GSTONE(obj) && AT(CAVITY) && game.prop[CAVITY] != 0)) {
+            RSPEAK(218);
+            game.prop[obj]=1;
+            game.prop[CAVITY]=0;
+            if (HERE(RUG) && ((obj == EMRALD && game.prop[RUG] != 2) || (obj == RUBY &&
+                    game.prop[RUG] == 2))) {
+                SPK=219;
+                if (TOTING(RUG))SPK=220;
+                if (obj == RUBY)SPK=221;
+                RSPEAK(SPK);
+                if (SPK != 220) {
+                    K=2-game.prop[RUG];
+                    game.prop[RUG]=K;
+                    if (K == 2)K=PLAC[SAPPH];
+                    MOVE(RUG+NOBJECTS,K);
+                }
+            }
+        } else if (obj == COINS && HERE(VEND)) {
+            DSTROY(COINS);
+            DROP(BATTER,game.loc);
+            PSPEAK(BATTER,0);
+            return(2012);
+        } else if (obj == BIRD && AT(DRAGON) && game.prop[DRAGON] == 0) {
+            RSPEAK(154);
+            DSTROY(BIRD);
+            game.prop[BIRD]=0;
+            return(2012);
+        } else if (obj == BEAR && AT(TROLL)) {
+            RSPEAK(163);
+            MOVE(TROLL,0);
+            MOVE(TROLL+NOBJECTS,0);
+            MOVE(TROLL2,PLAC[TROLL]);
+            MOVE(TROLL2+NOBJECTS,FIXD[TROLL]);
+            JUGGLE(CHASM);
+            game.prop[TROLL]=2;
+        } else if (obj != VASE || game.loc == PLAC[PILLOW]) {
+            RSPEAK(54);
+        } else {
+            game.prop[VASE]=2;
+            if (AT(PILLOW))game.prop[VASE]=0;
+            PSPEAK(VASE,game.prop[VASE]+1);
+            if (game.prop[VASE] != 0)game.fixed[VASE]= -1;
+        }
+    }
+    K=LIQ(0);
+    if (K == obj)obj=BOTTLE;
+    if (obj == BOTTLE && K != 0)game.place[K]=0;
+    if (obj == CAGE && game.prop[BIRD] == 1)DROP(BIRD,game.loc);
+    DROP(obj,game.loc);
+    if (obj != BIRD) return(2012);
+    game.prop[BIRD]=0;
+    if (FOREST(game.loc))game.prop[BIRD]=2;
+    return(2012);
 }
 
 /*  Attack.  Assume target if unambiguous.  "Throw" also links here.  Attackable
@@ -140,30 +136,32 @@ L9028:	game.prop[VASE]=2;
 
 int attack(FILE *input, long obj, long verb) {
 	I=ATDWRF(game.loc);
-	if (obj != 0) goto L9124;
-	if (I > 0)obj=DWARF;
-	if (HERE(SNAKE))obj=obj*NOBJECTS+SNAKE;
-	if (AT(DRAGON) && game.prop[DRAGON] == 0)obj=obj*NOBJECTS+DRAGON;
-	if (AT(TROLL))obj=obj*NOBJECTS+TROLL;
-	if (AT(OGRE))obj=obj*NOBJECTS+OGRE;
-	if (HERE(BEAR) && game.prop[BEAR] == 0)obj=obj*NOBJECTS+BEAR;
-	if (obj > NOBJECTS) return(8000);
-	if (obj != 0) goto L9124;
-	/* Can't attack bird or machine by throwing axe. */
-	if (HERE(BIRD) && verb != THROW)obj=BIRD;
-	if (HERE(VEND) && verb != THROW)obj=obj*NOBJECTS+VEND;
-	/* Clam and oyster both treated as clam for intransitive case;
-	 * no harm done. */
-	if (HERE(CLAM) || HERE(OYSTER))obj=NOBJECTS*obj+CLAM;
-	if (obj > NOBJECTS) return(8000);
-L9124:	if (obj == BIRD) {
+	if (obj == 0) {
+	    if (I > 0)obj=DWARF;
+	    if (HERE(SNAKE))obj=obj*NOBJECTS+SNAKE;
+	    if (AT(DRAGON) && game.prop[DRAGON] == 0)obj=obj*NOBJECTS+DRAGON;
+	    if (AT(TROLL))obj=obj*NOBJECTS+TROLL;
+	    if (AT(OGRE))obj=obj*NOBJECTS+OGRE;
+	    if (HERE(BEAR) && game.prop[BEAR] == 0)obj=obj*NOBJECTS+BEAR;
+	    if (obj > NOBJECTS) return(8000);
+	    if (obj == 0) {
+		/* Can't attack bird or machine by throwing axe. */
+		if (HERE(BIRD) && verb != THROW)obj=BIRD;
+		if (HERE(VEND) && verb != THROW)obj=obj*NOBJECTS+VEND;
+		/* Clam and oyster both treated as clam for intransitive case;
+		 * no harm done. */
+		if (HERE(CLAM) || HERE(OYSTER))obj=NOBJECTS*obj+CLAM;
+		if (obj > NOBJECTS) return(8000);
+	    }
+	}
+	if (obj == BIRD) {
 		SPK=137;
 		if (game.closed) return(2011);
 		DSTROY(BIRD);
 		game.prop[BIRD]=0;
 		SPK=45;
 	}
-L9125:	if (obj == VEND) {
+	if (obj == VEND) {
 	    PSPEAK(VEND,game.prop[VEND]+2);
 	    game.prop[VEND]=3-game.prop[VEND];
 	    return(2012);
