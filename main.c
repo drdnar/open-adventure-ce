@@ -47,91 +47,92 @@ void sig_handler(int signo)
 
 /*
  * MAIN PROGRAM
+ *
+ *  Adventure (rev 2: 20 treasures)
+ *
+ *  History: Original idea & 5-treasure version (adventures) by Willie Crowther
+ *           15-treasure version (adventure) by Don Woods, April-June 1977
+ *           20-treasure version (rev 2) by Don Woods, August 1978
+ *		Errata fixed: 78/12/25
+ *	     Revived 2017 as Open Advebture.
  */
 
 static bool do_command(FILE *);
 
-int main(int argc, char *argv[]) {
-	int ch;
+int main(int argc, char *argv[])
+{
+    int ch;
 	
-/*  Adventure (rev 2: 20 treasures) */
-
-/*  History: Original idea & 5-treasure version (adventures) by Willie Crowther
- *           15-treasure version (adventure) by Don Woods, April-June 1977
- *           20-treasure version (rev 2) by Don Woods, August 1978
- *		Errata fixed: 78/12/25 */
-
-
 /*  Options. */
 
-	while ((ch = getopt(argc, argv, "l:o")) != EOF) {
-		switch (ch) {
-		case 'l':
-			logfp = fopen(optarg, "w");
-			if (logfp == NULL)
-				fprintf(stderr,
-					"advent: can't open logfile %s for write\n",
-					optarg);
-			signal(SIGINT, sig_handler);
-			break;
-		case 'o':
-		    oldstyle = true;
-		    break;
-		}
+    while ((ch = getopt(argc, argv, "l:o")) != EOF) {
+	switch (ch) {
+	case 'l':
+	    logfp = fopen(optarg, "w");
+	    if (logfp == NULL)
+		fprintf(stderr,
+			"advent: can't open logfile %s for write\n",
+			optarg);
+	    signal(SIGINT, sig_handler);
+	    break;
+	case 'o':
+	    oldstyle = true;
+	    break;
 	}
+    }
 
-/* Logical variables:
- *
- *  game.closed says whether we're all the way closed
- *  game.closng says whether it's closing time yet
- *  game.clshnt says whether he's read the clue in the endgame
- *  game.lmwarn says whether he's been warned about lamp going dim
- *  game.novice says whether he asked for instructions at start-up
- *  game.panic says whether he's found out he's trapped in the cave
- *  game.wzdark says whether the loc he's leaving was dark */
+    /* Logical variables:
+     *
+     *  game.closed says whether we're all the way closed
+     *  game.closng says whether it's closing time yet
+     *  game.clshnt says whether he's read the clue in the endgame
+     *  game.lmwarn says whether he's been warned about lamp going dim
+     *  game.novice says whether he asked for instructions at start-up
+     *  game.panic says whether he's found out he's trapped in the cave
+     *  game.wzdark says whether the loc he's leaving was dark */
 
-/* Initialize our LCG PRNG with parameters tested against Knuth vol. 2. by the original authors */
+    /* Initialize our LCG PRNG with parameters tested against
+     * Knuth vol. 2. by the original authors */
+    lcgstate.a = 1093;
+    lcgstate.c = 221587;
+    lcgstate.m = 1048576;
+    srand(time(NULL));
+    long seedval = (long)rand();
+    set_seed(seedval);
 
-	lcgstate.a = 1093;
-	lcgstate.c = 221587;
-	lcgstate.m = 1048576;
-	srand(time(NULL));
-	long seedval = (long)rand();
-	set_seed(seedval);
+    /*  Initialize game variables */
+    MAP2[1] = 0;
+    if (!game.setup)
+	initialise();
 
-/*  Read the database if we have not yet done so */
-
-	MAP2[1] = 0;
-	if (!game.setup)initialise();
-	if(game.setup > 0) goto L1;
-
-/*  Unlike earlier versions, adventure is no longer restartable.  (This
- *  lets us get away with modifying things such as OBJSND(BIRD) without
- *  having to be able to undo the changes later.)  If a "used" copy is
- *  rerun, we come here and tell the player to run a fresh copy. */
-
+    /*  Unlike earlier versions, adventure is no longer restartable.  (This
+     *  lets us get away with modifying things such as OBJSND(BIRD) without
+     *  having to be able to undo the changes later.)  If a "used" copy is
+     *  rerun, we come here and tell the player to run a fresh copy. */
+    if(game.setup <= 0) {
 	RSPEAK(201);
 	exit(0);
+    }
 
-/*  Start-up, dwarf stuff */
+    /*  Start-up, dwarf stuff */
+    game.setup= -1;
+    game.zzword=RNDVOC(3,0);
+    game.novice=YES(stdin, 65,1,0);
+    game.newloc=1;
+    game.loc=1;
+    game.limit=330;
+    if(game.novice)game.limit=1000;
 
-L1:	game.setup= -1;
-	I=0;
-	game.zzword=RNDVOC(3,0);
-	game.novice=YES(stdin, 65,1,0);
-	game.newloc=1;
-	game.loc=1;
-	game.limit=330;
-	if(game.novice)game.limit=1000;
+    if (logfp)
+	fprintf(logfp, "seed %ld\n", seedval);
 
-	if (logfp)
-	    fprintf(logfp, "seed %ld\n", seedval);
-
-	for (;;) {
-	    if (!do_command(stdin))
-		break;
-	}
-	score(1);
+    /* interpret commands ubtil EOF or interrupt */
+    for (;;) {
+	if (!do_command(stdin))
+	    break;
+    }
+    /* show score and exit */
+    score(1);
 }
 
 static bool fallback_handler(char *buf)
@@ -152,49 +153,57 @@ static bool fallback_handler(char *buf)
 
 static bool do_command(FILE *cmdin) {
 	long LL, KQ, VERB, KK, K2, V1, V2;
-	long obj;
+	long obj, i;
 	long TK[21];
 	static long IGO = 0;
 
-/*  Can't leave cave once it's closing (except by main office). */
+	/*  Can't leave cave once it's closing (except by main office). */
+	if(OUTSID(game.newloc) && game.newloc != 0 && game.closng) {
+	    RSPEAK(130);
+	    game.newloc=game.loc;
+	    if(!game.panic)game.clock2=15;
+	    game.panic=true;
+	}
 
-	if(!OUTSID(game.newloc) || game.newloc == 0 || !game.closng) goto L71;
-	RSPEAK(130);
-	game.newloc=game.loc;
-	if(!game.panic)game.clock2=15;
-	game.panic=true;
+	/*  See if a dwarf has seen him and has come from where he
+	 *  wants to go.  If so, the dwarf's blocking his way.  If
+	 *  coming from place forbidden to pirate (dwarves rooted in
+	 *  place) let him get out (and attacked). */
+	if(game.newloc != game.loc && !FORCED(game.loc) && !CNDBIT(game.loc,3)) {
+		for (i=1; i<=NDWARVES-1; i++) {
+		    if(game.odloc[i] == game.newloc && game.dseen[i]) {
+			game.newloc=game.loc;
+			RSPEAK(2);
+			break;
+		    }
+		}
+	}
+	game.loc=game.newloc;
 
-/*  See if a dwarf has seen him and has come from where he wants to go.  If so,
- *  the dwarf's blocking his way.  If coming from place forbidden to pirate
- *  (dwarves rooted in place) let him get out (and attacked). */
+	/*  Dwarf stuff.  See earlier comments for description of
+	 *  variables.  Remember sixth dwarf is pirate and is thus
+	 *  very different except for motion rules. */
 
-L71:	if(game.newloc == game.loc || FORCED(game.loc) || CNDBIT(game.loc,3)) goto L74;
-	/* 73 */ for (I=1; I<=NDWARVES-1; I++) {
-	if(game.odloc[I] != game.newloc || !game.dseen[I]) goto L73;
-	game.newloc=game.loc;
-	RSPEAK(2);
-	 goto L74;
-L73:	/*etc*/ ;
-	} /* end loop */
-L74:	game.loc=game.newloc;
+	/*  First off, don't let the dwarves follow him into a pit or
+	 *  a wall.  Activate the whole mess the first time he gets as
+	 *  far as the hall of mists (loc 15).  If game.newloc is
+	 *  forbidden to pirate (in particular, if it's beyond the
+	 *  troll bridge), bypass dwarf stuff.  That way pirate can't
+	 *  steal return toll, and dwarves can't meet the bear.  Also
+	 *  means dwarves won't follow him into dead end in maze, but
+	 *  c'est la vie.  They'll wait for him outside the dead
+	 *  end. */
+	if(game.loc == 0 || FORCED(game.loc) || CNDBIT(game.newloc,3))
+	    goto L2000;
+	if(game.dflag != 0)
+	    goto L6000;
+	if(INDEEP(game.loc))
+	    game.dflag=1;
+	goto L2000;
 
-/*  Dwarf stuff.  See earlier comments for description of variables.  Remember
- *  sixth dwarf is pirate and is thus very different except for motion rules. */
-
-/*  First off, don't let the dwarves follow him into a pit or a wall.  Activate
- *  the whole mess the first time he gets as far as the hall of mists (loc 15).
- *  If game.newloc is forbidden to pirate (in particular, if it's beyond the troll
- *  bridge), bypass dwarf stuff.  That way pirate can't steal return toll, and
- *  dwarves can't meet the bear.  Also means dwarves won't follow him into dead
- *  end in maze, but c'est la vie.  They'll wait for him outside the dead end. */
-
-	if(game.loc == 0 || FORCED(game.loc) || CNDBIT(game.newloc,3)) goto L2000;
-	if(game.dflag != 0) goto L6000;
-	if(INDEEP(game.loc))game.dflag=1;
-	 goto L2000;
-
-/*  When we encounter the first dwarf, we kill 0, 1, or 2 of the 5 dwarves.  If
- *  any of the survivors is at loc, replace him with the alternate. */
+	 /*  When we encounter the first dwarf, we kill 0, 1, or 2 of
+	  *  the 5 dwarves.  If any of the survivors is at loc,
+	  *  replace him with the alternate. */
 
 L6000:	if(game.dflag != 1) goto L6010;
 	if(!INDEEP(game.loc) || (PCT(95) && (!CNDBIT(game.loc,4) || PCT(85)))) goto L2000;
