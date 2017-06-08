@@ -307,33 +307,24 @@ L9216:	SPK=14;
 	 return(2011);
 }
 
-/*  Fill.  Bottle or urn must be empty, and liquid available.  (Vase is nasty.) */
+/*  Fill.  Bottle or urn must be empty, and liquid available.  (Vase
+ *  is nasty.) */
 
-int fill(long obj) {
-	if(obj == VASE) goto L9222;
-	if(obj == URN) goto L9224;
-	if(obj != 0 && obj != BOTTLE) return(2011);
-	if(obj == 0 && !HERE(BOTTLE)) return(8000);
-	SPK=107;
-	if(LIQLOC(game.loc) == 0)SPK=106;
-	if(HERE(URN) && game.prop[URN] != 0)SPK=214;
-	if(LIQ(0) != 0)SPK=105;
-	if(SPK != 107) return(2011);
-	game.prop[BOTTLE]=MOD(COND[game.loc],4)/2*2;
-	K=LIQ(0);
-	if(TOTING(BOTTLE))game.place[K]= -1;
-	if(K == OIL)SPK=108;
-	 return(2011);
-
-L9222:	SPK=29;
+int fill(long obj)
+{
+    if(obj == VASE) {
+	SPK=29;
 	if(LIQLOC(game.loc) == 0)SPK=144;
-	if(LIQLOC(game.loc) == 0 || !TOTING(VASE)) return(2011);
+	if(LIQLOC(game.loc) == 0 || !TOTING(VASE))
+	    return(2011);
 	RSPEAK(145);
 	game.prop[VASE]=2;
 	game.fixed[VASE]= -1;
 	return(discard(obj, true));
+    }
 
-L9224:	SPK=213;
+    if(obj == URN){
+	SPK=213;
 	if(game.prop[URN] != 0) return(2011);
 	SPK=144;
 	K=LIQ(0);
@@ -342,5 +333,27 @@ L9224:	SPK=213;
 	game.prop[BOTTLE]=1;
 	if(K == OIL)game.prop[URN]=1;
 	SPK=211+game.prop[URN];
-	 return(2011);
+	return(2011);
+    }
+
+    if(obj != 0 && obj != BOTTLE)
+	return(2011);
+    if(obj == 0 && !HERE(BOTTLE))
+	return(8000);
+    SPK=107;
+    if(LIQLOC(game.loc) == 0)
+	SPK=106;
+    if(HERE(URN) && game.prop[URN] != 0)
+	SPK=214;
+    if(LIQ(0) != 0)
+	SPK=105;
+    if(SPK != 107)
+	return(2011);
+    game.prop[BOTTLE]=MOD(COND[game.loc],4)/2*2;
+    K=LIQ(0);
+    if(TOTING(BOTTLE))
+	game.place[K]= -1;
+    if(K == OIL)
+	SPK=108;
+    return(2011);
 }
