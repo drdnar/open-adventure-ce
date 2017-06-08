@@ -3,14 +3,14 @@
 VERS=1.0
 
 CC?=gcc
-CCFLAGS+=-std=c99
+CCFLAGS+=-std=c99 -D _DEFAULT_SOURCE
 LIBS=
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
 	LIBS=-lrt
 endif
 
-OBJS=main.o init.o actions1.o actions2.o score.o misc.o
+OBJS=main.o init.o actions1.o actions2.o score.o misc.o linenoise.o
 SOURCES=$(OBJS:.o=.c) dungeon.c advent.h funcs.h sizes.h adventure.text Makefile control
 
 .c.o:
@@ -36,6 +36,9 @@ database.o:     database.c database.h sizes.h
 
 database.c database.h: dungeon
 	./dungeon
+
+linenoise.o:	linenoise/linenoise.h
+	$(CC) $(CCFLAGS) $(DBX) -c linenoise/linenoise.c
 
 dungeon: dungeon.c
 	$(CC) $(CCFLAGS) -o $@ $<
