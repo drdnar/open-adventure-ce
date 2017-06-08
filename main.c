@@ -228,16 +228,17 @@ static bool dwarfmove(void)
 				J >= 20 ||
 				game.newloc == game.dloc[I] ||
 				FORCED(game.newloc) ||
-				(I == 6 && CNDBIT(game.newloc,3)) ||
+				(I == PIRATE && CNDBIT(game.newloc,3)) ||
 				labs(TRAVEL[kk])/1000000 == 100);
 		if (!avoided) {
 		    TK[J++] = game.newloc;
 		}
-		kk=kk+1;
+		++kk;
 	    } while
 		(TRAVEL[kk-1] >= 0);
 	TK[J]=game.odloc[I];
-	if(J >= 2)J=J-1;
+	if(J >= 2)
+	    --J;
 	J=1+randrange(J);
 	game.odloc[I]=game.dloc[I];
 	game.dloc[I]=TK[J];
@@ -251,7 +252,8 @@ static bool dwarfmove(void)
 	     *  Note that game.place(CHEST)=0 might mean that he's thrown
 	     *  it to the troll, but in that case he's seen the chest
 	     *  (game.prop=0). */
-	    if(game.loc == game.chloc || game.prop[CHEST] >= 0) continue;
+	    if(game.loc == game.chloc || game.prop[CHEST] >= 0)
+		continue;
 	    K=0;
 	    for (J=MINTRS; J<=MAXTRS; J++) {
                /*  Pirate won't take pyramid from plover room or dark
@@ -269,17 +271,21 @@ static bool dwarfmove(void)
 		RSPEAK(127);
 	    continue;
 
-	L6021:	if(game.place[CHEST] != 0) goto L6022;
-	    /*  Install chest only once, to insure it is the last treasure in
-	     *  the list. */
-	    MOVE(CHEST,game.chloc);
-	    MOVE(MESSAG,game.chloc2);
-	L6022:	RSPEAK(128);
-	    /* 6023 */ for (J=50; J<=MAXTRS; J++) {
-		if(J == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD])) goto L6023;
-		if(AT(J) && game.fixed[J] == 0)CARRY(J,game.loc);
-		if(TOTING(J))DROP(J,game.chloc);
-	    L6023:	/*etc*/ ;
+	L6021:
+	    if(game.place[CHEST] == 0) {
+		/*  Install chest only once, to insure it is the last treasure in
+		 *  the list. */
+		MOVE(CHEST,game.chloc);
+		MOVE(MESSAG,game.chloc2);
+	    }
+	    RSPEAK(128);
+	    for (J=MINTRS; J<=MAXTRS; J++) {
+		if (!(J == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD]))) {
+		    if(AT(J) && game.fixed[J] == 0)
+			CARRY(J,game.loc);
+		    if(TOTING(J))
+			DROP(J,game.chloc);
+		}
 	    }
 	L6024:
 	    game.dloc[PIRATE]=game.chloc;
