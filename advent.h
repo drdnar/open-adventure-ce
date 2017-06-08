@@ -189,6 +189,6 @@ extern long AMBER, ATTACK, AXE, BACK, BATTER, BEAR,
    RESER, ROD, ROD2, RUBY, RUG, SAPPH, SAY, SECT, SIGN, SNAKE,
    STEPS, STICK, STREAM, THROW, TRIDNT, TROLL, TROLL2,
    URN, VASE, VEND, VOLCAN, WATER;
-/* evrything else */
-extern long I, J, K, L, SPK, V1, V2, VRSION, WD1, WD1X, WD2, WD2X;
+/* everything else */
+extern long I, J, K, L, SPK, VRSION, WD1, WD1X, WD2, WD2X;
 
