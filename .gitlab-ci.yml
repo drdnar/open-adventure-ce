@@ -1,8 +1,8 @@
 image: alpine
 
-before_script:
-  - git submodule sync --recursive
-  - git submodule update --init --recursive
+variables:
+  GIT_SSL_CAPATH=/etc/ssl/certs
+  GIT_CURL_VERBOSE=1
 
 stages:
   - build
