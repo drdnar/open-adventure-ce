@@ -1,5 +1,16 @@
 # Makefile for the open-source release of adventure 2.5
 
+# Note: If you're building from the repository rather than the source tarball,
+# do this to get the linenoise library where you can use it:
+#
+# git submodule update --recursive --remote --init
+#
+# Therafter, you can update it like this:
+#
+# git submodule update --recursive --remote
+#
+# but this should seldom be necessary as that library is pretty stable.
+
 VERS=1.0
 
 CC?=gcc
@@ -11,7 +22,7 @@ ifeq ($(UNAME_S),Linux)
 endif
 
 OBJS=main.o init.o actions1.o actions2.o score.o misc.o
-SOURCES=$(OBJS:.o=.c) dungeon.c advent.h funcs.h sizes.h adventure.text Makefile control linenoise/linenoise.h
+SOURCES=$(OBJS:.o=.c) dungeon.c advent.h funcs.h sizes.h adventure.text Makefile control linenoise/linenoise.[ch]
 
 .c.o:
 	$(CC) $(CCFLAGS) $(DBX) -c $<
