@@ -220,13 +220,19 @@ static bool dwarfmove(void)
 	if(kk != 0)
 	    do {
 		game.newloc=MOD(labs(TRAVEL[kk])/1000,1000);
-		if(game.newloc > 300 || !INDEEP(game.newloc) || game.newloc == game.odloc[I] || (J > 1 && game.newloc == TK[J-1]) || J >= 20 || game.newloc == game.dloc[I] ||
-		   FORCED(game.newloc) || (I == 6 && CNDBIT(game.newloc,3)) ||
-		   labs(TRAVEL[kk])/1000000 == 100)
-		    goto L6014;
-		TK[J]=game.newloc;
-		J=J+1;
-	    L6014:
+		/* Have we avoided a dwarf enciounter? */
+		bool avoided = (game.newloc > 300 ||
+				!INDEEP(game.newloc) ||
+				game.newloc == game.odloc[I] ||
+				(J > 1 && game.newloc == TK[J-1]) ||
+				J >= 20 ||
+				game.newloc == game.dloc[I] ||
+				FORCED(game.newloc) ||
+				(I == 6 && CNDBIT(game.newloc,3)) ||
+				labs(TRAVEL[kk])/1000000 == 100);
+		if (!avoided) {
+		    TK[J++] = game.newloc;
+		}
 		kk=kk+1;
 	    } while
 		(TRAVEL[kk-1] >= 0);
@@ -247,7 +253,7 @@ static bool dwarfmove(void)
 	     *  (game.prop=0). */
 	    if(game.loc == game.chloc || game.prop[CHEST] >= 0) continue;
 	    K=0;
-	    for (J=50; J<=MAXTRS; J++) {
+	    for (J=MINTRS; J<=MAXTRS; J++) {
                /*  Pirate won't take pyramid from plover room or dark
 		*  room (too easy!). */
 		if(J == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD]))
@@ -256,7 +262,7 @@ static bool dwarfmove(void)
 		    goto L6021;
 	    L6020:
 		if(HERE(J))K=1;
-	    } /* end loop */
+	    }
 	    if(game.tally == 1 && K == 0 && game.place[CHEST] == 0 && HERE(LAMP) && game.prop[LAMP] == 1)
 		goto L6025;
 	    if(game.odloc[PIRATE] != game.dloc[PIRATE] && PCT(20))
