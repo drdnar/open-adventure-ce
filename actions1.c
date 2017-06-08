@@ -3,6 +3,35 @@
 #include "advent.h"
 #include "database.h"
 
+/*
+ * Action handlers.  Eventually we'll do lookup through a method table
+ * that calls these.  Absolutely nothing like the original FORTRAN
+ */
+
+static int chain(int verb)
+{
+    if(verb != LOCK) {
+	SPK=171;
+	if(game.prop[BEAR] == 0)SPK=41;
+	if(game.prop[CHAIN] == 0)SPK=37;
+	if(SPK != 171) return(2011);
+	game.prop[CHAIN]=0;
+	game.fixed[CHAIN]=0;
+	if(game.prop[BEAR] != 3)game.prop[BEAR]=2;
+	game.fixed[BEAR]=2-game.prop[BEAR];
+	return(2011);
+    } else {
+	SPK=172;
+	if(game.prop[CHAIN] != 0)SPK=34;
+	if(game.loc != PLAC[CHAIN])SPK=173;
+	if(SPK != 172) return(2011);
+	game.prop[CHAIN]=2;
+	if(TOTING(CHAIN))DROP(CHAIN,game.loc);
+	game.fixed[CHAIN]= -1;
+	return(2011);
+    }
+}
+
 /* This stuff was broken off as part of an effort to get the main program
  * to compile without running out of memory.  We're called with a number
  * that says what label the caller wanted to "goto", and we return a
@@ -226,25 +255,7 @@ L9046:	K=0;
 	 return(2011);
 
 /*  Chain. */
-L9048:	if(verb == LOCK) goto L9049;
-	SPK=171;
-	if(game.prop[BEAR] == 0)SPK=41;
-	if(game.prop[CHAIN] == 0)SPK=37;
-	if(SPK != 171) return(2011);
-	game.prop[CHAIN]=0;
-	game.fixed[CHAIN]=0;
-	if(game.prop[BEAR] != 3)game.prop[BEAR]=2;
-	game.fixed[BEAR]=2-game.prop[BEAR];
-	 return(2011);
-
-L9049:	SPK=172;
-	if(game.prop[CHAIN] != 0)SPK=34;
-	if(game.loc != PLAC[CHAIN])SPK=173;
-	if(SPK != 172) return(2011);
-	game.prop[CHAIN]=2;
-	if(TOTING(CHAIN))DROP(CHAIN,game.loc);
-	game.fixed[CHAIN]= -1;
-	 return(2011);
+L9048:  return chain(verb);
 
 /*  Light.  Applicable only to lamp and urn. */
 
