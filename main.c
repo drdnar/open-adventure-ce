@@ -17,7 +17,7 @@ struct game_t game;
 long LNLENG, LNPOSN, PARMS[MAXPARMS+1];
 char rawbuf[LINESIZE], INLINE[LINESIZE+1], MAP1[129], MAP2[129];
 
-long AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
+long AMBER, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
 		BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST,
 		CLAM, COINS, DOOR, DPRSSN, DRAGON, DWARF, EGGS,
 		EMRALD, ENTER, ENTRNC, FIND, FISSUR, FOOD,
@@ -26,7 +26,7 @@ long AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
 		MESSAG, MIRROR, NUGGET, NUL, OGRE, OIL, OYSTER,
 		PEARL, PILLOW, PLANT, PLANT2, PYRAM, RESER, ROD, ROD2,
 		RUBY, RUG, SAPPH, SAY, SECT, SIGN, SNAKE, SPK,
-    		STEPS, STICK, STREAM, THROW, TRIDNT, TROLL, TROLL2,
+    		STEPS, STREAM, THROW, TRIDNT, TROLL, TROLL2,
 		URN, VASE, VEND,
 		VOLCAN, VRSION = 25, WATER, WD1, WD1X, WD2, WD2X;
 FILE  *logfp;
@@ -151,10 +151,177 @@ static bool fallback_handler(char *buf)
     return false;
 }
 
+static bool dwarfmove(void)
+/* Dwarves move.  Return true if player survives, false if he dies. */
+{
+    int kk, stick, attack;
+    long TK[21];
+
+	/*  Dwarf stuff.  See earlier comments for description of
+     *  variables.  Remember sixth dwarf is pirate and is thus
+     *  very different except for motion rules. */
+
+    /*  First off, don't let the dwarves follow him into a pit or
+     *  a wall.  Activate the whole mess the first time he gets as
+     *  far as the hall of mists (loc 15).  If game.newloc is
+     *  forbidden to pirate (in particular, if it's beyond the
+     *  troll bridge), bypass dwarf stuff.  That way pirate can't
+     *  steal return toll, and dwarves can't meet the bear.  Also
+     *  means dwarves won't follow him into dead end in maze, but
+     *  c'est la vie.  They'll wait for him outside the dead
+     *  end. */
+    if(game.loc == 0 || FORCED(game.loc) || CNDBIT(game.newloc,3))
+	return true;
+
+    /* Dwarf activity level ratchets up */
+    if(game.dflag == 0) {
+	if(INDEEP(game.loc))
+	    game.dflag=1;
+	return true;
+    }
+
+    /*  When we encounter the first dwarf, we kill 0, 1, or 2 of
+     *  the 5 dwarves.  If any of the survivors is at loc,
+     *  replace him with the alternate. */
+    if(game.dflag == 1) {
+	if(!INDEEP(game.loc) || (PCT(95) && (!CNDBIT(game.loc,4) || PCT(85))))
+	    return true;
+	game.dflag=2;
+	for (I=1; I<=2; I++) {
+	    J=1+randrange(NDWARVES-1);
+	    if(PCT(50))
+		game.dloc[J]=0;
+	}
+	for (I=1; I<=NDWARVES-1; I++) {
+	    if(game.dloc[I] == game.loc)
+		game.dloc[I]=DALTLC;
+	    game.odloc[I]=game.dloc[I];
+	}
+	RSPEAK(3);
+	DROP(AXE,game.loc);
+	return true;
+    }
+
+    /*  Things are in full swing.  Move each dwarf at random,
+     *  except if he's seen us he sticks with us.  Dwarves stay
+     *  deep inside.  If wandering at random, they don't back up
+     *  unless there's no alternative.  If they don't have to
+     *  move, they attack.  And, of course, dead dwarves don't do
+     *  much of anything. */
+    game.dtotal=0;
+    attack=0;
+    stick=0;
+    /* 6030 */ for (I=1; I<=NDWARVES; I++) {
+	if(game.dloc[I] == 0) goto L6030;
+	/*  Fill TK array with all the places this dwarf might go. */
+	J=1;
+	kk=game.dloc[I];
+	kk=KEY[kk];
+	if(kk == 0) goto L6016;
+    L6012:	game.newloc=MOD(labs(TRAVEL[kk])/1000,1000);
+	{long x = J-1;
+	    if(game.newloc > 300 || !INDEEP(game.newloc) || game.newloc == game.odloc[I] || (J > 1 &&
+											     game.newloc == TK[x]) || J >= 20 || game.newloc == game.dloc[I] ||
+	       FORCED(game.newloc) || (I == 6 && CNDBIT(game.newloc,3)) ||
+	       labs(TRAVEL[kk])/1000000 == 100) goto L6014;}
+	TK[J]=game.newloc;
+	J=J+1;
+    L6014:
+	kk=kk+1;
+	if(TRAVEL[kk-1] >= 0)
+	    goto L6012;
+    L6016:
+	TK[J]=game.odloc[I];
+	if(J >= 2)J=J-1;
+	J=1+randrange(J);
+	game.odloc[I]=game.dloc[I];
+	game.dloc[I]=TK[J];
+	game.dseen[I]=(game.dseen[I] && INDEEP(game.loc)) || (game.dloc[I] == game.loc || game.odloc[I] == game.loc);
+	if(!game.dseen[I]) goto L6030;
+	game.dloc[I]=game.loc;
+	if(I != 6) goto L6027;
+
+	/*  The pirate's spotted him.  He leaves him alone once we've
+	 *  found chest.  K counts if a treasure is here.  If not, and
+	 *  tally=1 for an unseen chest, let the pirate be spotted.
+	 *  Note that game.place(CHEST)=0 might mean that he's thrown
+	 *  it to the troll, but in that case he's seen the chest
+	 *  (game.prop=0). */
+
+	if(game.loc == game.chloc || game.prop[CHEST] >= 0) goto L6030;
+	K=0;
+	/* 6020 */ for (J=50; J<=MAXTRS; J++) {
+/*  Pirate won't take pyramid from plover room or dark room (too easy!). */
+	    if(J == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD])) goto L6020;
+	    if(TOTING(J)) goto L6021;
+	L6020:	if(HERE(J))K=1;
+	} /* end loop */
+	if(game.tally == 1 && K == 0 && game.place[CHEST] == 0 && HERE(LAMP) && game.prop[LAMP]
+	   == 1) goto L6025;
+	if(game.odloc[6] != game.dloc[6] && PCT(20))RSPEAK(127);
+	goto L6030;
+
+    L6021:	if(game.place[CHEST] != 0) goto L6022;
+    /*  Install chest only once, to insure it is the last treasure in
+     *  the list. */
+	MOVE(CHEST,game.chloc);
+	MOVE(MESSAG,game.chloc2);
+    L6022:	RSPEAK(128);
+	/* 6023 */ for (J=50; J<=MAXTRS; J++) {
+	    if(J == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD])) goto L6023;
+	    if(AT(J) && game.fixed[J] == 0)CARRY(J,game.loc);
+	    if(TOTING(J))DROP(J,game.chloc);
+	L6023:	/*etc*/ ;
+	} /* end loop */
+    L6024:	game.dloc[6]=game.chloc;
+	game.odloc[6]=game.chloc;
+	game.dseen[6]=false;
+	goto L6030;
+
+    L6025:
+	RSPEAK(186);
+	MOVE(CHEST,game.chloc);
+	MOVE(MESSAG,game.chloc2);
+	goto L6024;
+
+    /* This threatening little dwarf is in the room with him! */
+    L6027:
+	++game.dtotal;
+	if(game.odloc[I] == game.dloc[I]) {
+	    ++attack;
+	    if(game.knfloc >= 0)
+		game.knfloc=game.loc;
+	    if(randrange(1000) < 95*(game.dflag-2))
+		++stick;
+	}
+    L6030:;
+    }
+
+    /*  Now we know what's happening.  Let's tell the poor sucker about it.
+     *  Note that various of the "knife" messages must have specific relative
+     *  positions in the RSPEAK database. */
+    if(game.dtotal == 0)
+	return true;
+    SETPRM(1,game.dtotal,0);
+    RSPEAK(4+1/game.dtotal);
+    if(attack == 0)
+	return true;
+    if(game.dflag == 2)game.dflag=3;
+    SETPRM(1,attack,0);
+    K=6;
+    if(attack > 1)K=250;
+    RSPEAK(K);
+    SETPRM(1,stick,0);
+    RSPEAK(K+1+2/(1+stick));
+    if(stick == 0)
+	return true;
+    game.oldlc2=game.loc;
+    return false;
+}
+
 static bool do_command(FILE *cmdin) {
 	long LL, KQ, VERB, KK, K2, V1, V2;
 	long obj, i;
-	long TK[21];
 	static long IGO = 0;
 
 	/*  Can't leave cave once it's closing (except by main office). */
@@ -180,152 +347,8 @@ static bool do_command(FILE *cmdin) {
 	}
 	game.loc=game.newloc;
 
-	/*  Dwarf stuff.  See earlier comments for description of
-	 *  variables.  Remember sixth dwarf is pirate and is thus
-	 *  very different except for motion rules. */
-
-	/*  First off, don't let the dwarves follow him into a pit or
-	 *  a wall.  Activate the whole mess the first time he gets as
-	 *  far as the hall of mists (loc 15).  If game.newloc is
-	 *  forbidden to pirate (in particular, if it's beyond the
-	 *  troll bridge), bypass dwarf stuff.  That way pirate can't
-	 *  steal return toll, and dwarves can't meet the bear.  Also
-	 *  means dwarves won't follow him into dead end in maze, but
-	 *  c'est la vie.  They'll wait for him outside the dead
-	 *  end. */
-	if(game.loc == 0 || FORCED(game.loc) || CNDBIT(game.newloc,3))
-	    goto L2000;
-	if(game.dflag != 0)
-	    goto L6000;
-	if(INDEEP(game.loc))
-	    game.dflag=1;
-	goto L2000;
-
-	 /*  When we encounter the first dwarf, we kill 0, 1, or 2 of
-	  *  the 5 dwarves.  If any of the survivors is at loc,
-	  *  replace him with the alternate. */
-L6000:	if(game.dflag != 1)
-	    goto L6010;
-	if(!INDEEP(game.loc) || (PCT(95) && (!CNDBIT(game.loc,4) || PCT(85))))
-	    goto L2000;
-	game.dflag=2;
-	for (I=1; I<=2; I++) {
-	    J=1+randrange(NDWARVES-1);
-	    if(PCT(50))
-		game.dloc[J]=0;
-	}
-	for (I=1; I<=NDWARVES-1; I++) {
-	    if(game.dloc[I] == game.loc)
-		game.dloc[I]=DALTLC;
-	    game.odloc[I]=game.dloc[I];
-	}
-	RSPEAK(3);
-	DROP(AXE,game.loc);
-	goto L2000;
-
-	/*  Things are in full swing.  Move each dwarf at random,
-	 *  except if he's seen us he sticks with us.  Dwarves stay
-	 *  deep inside.  If wandering at random, they don't back up
-	 *  unless there's no alternative.  If they don't have to
-	 *  move, they attack.  And, of course, dead dwarves don't do
-	 *  much of anything. */
-L6010:	game.dtotal=0;
-	ATTACK=0;
-	STICK=0;
-	/* 6030 */ for (I=1; I<=NDWARVES; I++) {
-	if(game.dloc[I] == 0) goto L6030;
-	/*  Fill TK array with all the places this dwarf might go. */
-	J=1;
-	KK=game.dloc[I];
-	KK=KEY[KK];
-	if(KK == 0) goto L6016;
-L6012:	game.newloc=MOD(labs(TRAVEL[KK])/1000,1000);
-	{long x = J-1;
-	if(game.newloc > 300 || !INDEEP(game.newloc) || game.newloc == game.odloc[I] || (J > 1 &&
-		game.newloc == TK[x]) || J >= 20 || game.newloc == game.dloc[I] ||
-		FORCED(game.newloc) || (I == 6 && CNDBIT(game.newloc,3)) ||
-		labs(TRAVEL[KK])/1000000 == 100) goto L6014;}
-	TK[J]=game.newloc;
-	J=J+1;
-L6014:	KK=KK+1;
-	{long x = KK-1; if(TRAVEL[x] >= 0) goto L6012;}
-L6016:	TK[J]=game.odloc[I];
-	if(J >= 2)J=J-1;
-	J=1+randrange(J);
-	game.odloc[I]=game.dloc[I];
-	game.dloc[I]=TK[J];
-	game.dseen[I]=(game.dseen[I] && INDEEP(game.loc)) || (game.dloc[I] == game.loc || game.odloc[I] == game.loc);
-	if(!game.dseen[I]) goto L6030;
-	game.dloc[I]=game.loc;
-	if(I != 6) goto L6027;
-
-/*  The pirate's spotted him.  He leaves him alone once we've found chest.  K
- *  counts if a treasure is here.  If not, and tally=1 for an unseen chest, let
- *  the pirate be spotted.  Note that game.place(CHEST)=0 might mean that he's
- *  thrown it to the troll, but in that case he's seen the chest (game.prop=0). */
-
-	if(game.loc == game.chloc || game.prop[CHEST] >= 0) goto L6030;
-	K=0;
-	/* 6020 */ for (J=50; J<=MAXTRS; J++) {
-/*  Pirate won't take pyramid from plover room or dark room (too easy!). */
-	if(J == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD])) goto L6020;
-	if(TOTING(J)) goto L6021;
-L6020:	if(HERE(J))K=1;
-	} /* end loop */
-	if(game.tally == 1 && K == 0 && game.place[CHEST] == 0 && HERE(LAMP) && game.prop[LAMP]
-		== 1) goto L6025;
-	if(game.odloc[6] != game.dloc[6] && PCT(20))RSPEAK(127);
-	 goto L6030;
-
-L6021:	if(game.place[CHEST] != 0) goto L6022;
-/*  Install chest only once, to insure it is the last treasure in the list. */
-	MOVE(CHEST,game.chloc);
-	MOVE(MESSAG,game.chloc2);
-L6022:	RSPEAK(128);
-	/* 6023 */ for (J=50; J<=MAXTRS; J++) {
-	if(J == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD])) goto L6023;
-	if(AT(J) && game.fixed[J] == 0)CARRY(J,game.loc);
-	if(TOTING(J))DROP(J,game.chloc);
-L6023:	/*etc*/ ;
-	} /* end loop */
-L6024:	game.dloc[6]=game.chloc;
-	game.odloc[6]=game.chloc;
-	game.dseen[6]=false;
-	 goto L6030;
-
-L6025:	RSPEAK(186);
-	MOVE(CHEST,game.chloc);
-	MOVE(MESSAG,game.chloc2);
-	 goto L6024;
-
-/*  This threatening little dwarf is in the room with him! */
-
-L6027:	game.dtotal=game.dtotal+1;
-	if(game.odloc[I] != game.dloc[I]) goto L6030;
-	ATTACK=ATTACK+1;
-	if(game.knfloc >= 0)game.knfloc=game.loc;
-	if(randrange(1000) < 95*(game.dflag-2))STICK=STICK+1;
-L6030:	/*etc*/ ;
-	} /* end loop */
-
-/*  Now we know what's happening.  Let's tell the poor sucker about it.
- *  Note that various of the "knife" messages must have specific relative
- *  positions in the RSPEAK database. */
-
-	if(game.dtotal == 0) goto L2000;
-	SETPRM(1,game.dtotal,0);
-	RSPEAK(4+1/game.dtotal);
-	if(ATTACK == 0) goto L2000;
-	if(game.dflag == 2)game.dflag=3;
-	SETPRM(1,ATTACK,0);
-	K=6;
-	if(ATTACK > 1)K=250;
-	RSPEAK(K);
-	SETPRM(1,STICK,0);
-	RSPEAK(K+1+2/(1+STICK));
-	if(STICK == 0) goto L2000;
-	game.oldlc2=game.loc;
-	 goto L99;
+	if (!dwarfmove())
+	    goto L99;
 
 /*  Describe the current location and (maybe) get next command. */
 
