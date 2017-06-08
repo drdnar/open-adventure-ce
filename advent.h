@@ -9,6 +9,7 @@
 #define DALTLC		18		/* alternate dwarf location; low room */
 #define MINTRS		50
 #define MAXTRS		79
+#define MAXPARMS	25
 
 typedef struct lcg_state
 {

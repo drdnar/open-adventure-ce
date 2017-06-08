@@ -521,12 +521,9 @@ void MOVE(long object, long where)
     long from;
 
     if (object > NOBJECTS) 
-	goto L1;
-    from=game.place[object];
-    goto L2;
-L1:
-    from=game.fixed[object-NOBJECTS];
-L2:
+	from=game.fixed[object-NOBJECTS];
+    else
+	from=game.place[object];
     if (from > 0 && from <= 300)
 	CARRY(object,from);
     DROP(object,where);
@@ -570,16 +567,17 @@ void DROP(long object, long where)
  *  game.holdng if the object was being toted. */
 {
     if (object > NOBJECTS)
-	goto L1;
-    if (game.place[object] == -1)
-	game.holdng=game.holdng-1;
-    game.place[object]=where;
-    goto L2;
-L1: game.fixed[object-NOBJECTS]=where;
-L2: if (where <= 0)
+	game.fixed[object-NOBJECTS] = where;
+    else
+    {
+	if (game.place[object] == -1)
+	    --game.holdng;
+	game.place[object] = where;
+    }
+    if (where <= 0)
 	return;
-    game.link[object]=game.atloc[where];
-    game.atloc[where]=object;
+    game.link[object] = game.atloc[where];
+    game.atloc[where] = object;
 }
 
 long ATDWRF(long where)
