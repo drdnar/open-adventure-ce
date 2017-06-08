@@ -211,81 +211,85 @@ static bool dwarfmove(void)
     game.dtotal=0;
     attack=0;
     stick=0;
-    /* 6030 */ for (I=1; I<=NDWARVES; I++) {
-	if(game.dloc[I] == 0) goto L6030;
+    for (I=1; I<=NDWARVES; I++) {
+	if(game.dloc[I] == 0)
+	    continue;
 	/*  Fill TK array with all the places this dwarf might go. */
 	J=1;
-	kk=game.dloc[I];
-	kk=KEY[kk];
-	if(kk == 0) goto L6016;
-    L6012:	game.newloc=MOD(labs(TRAVEL[kk])/1000,1000);
-	{long x = J-1;
-	    if(game.newloc > 300 || !INDEEP(game.newloc) || game.newloc == game.odloc[I] || (J > 1 &&
-											     game.newloc == TK[x]) || J >= 20 || game.newloc == game.dloc[I] ||
-	       FORCED(game.newloc) || (I == 6 && CNDBIT(game.newloc,3)) ||
-	       labs(TRAVEL[kk])/1000000 == 100) goto L6014;}
-	TK[J]=game.newloc;
-	J=J+1;
-    L6014:
-	kk=kk+1;
-	if(TRAVEL[kk-1] >= 0)
-	    goto L6012;
-    L6016:
+	kk=KEY[game.dloc[I]];
+	if(kk != 0)
+	    do {
+		game.newloc=MOD(labs(TRAVEL[kk])/1000,1000);
+		if(game.newloc > 300 || !INDEEP(game.newloc) || game.newloc == game.odloc[I] || (J > 1 && game.newloc == TK[J-1]) || J >= 20 || game.newloc == game.dloc[I] ||
+		   FORCED(game.newloc) || (I == 6 && CNDBIT(game.newloc,3)) ||
+		   labs(TRAVEL[kk])/1000000 == 100)
+		    goto L6014;
+		TK[J]=game.newloc;
+		J=J+1;
+	    L6014:
+		kk=kk+1;
+	    } while
+		(TRAVEL[kk-1] >= 0);
 	TK[J]=game.odloc[I];
 	if(J >= 2)J=J-1;
 	J=1+randrange(J);
 	game.odloc[I]=game.dloc[I];
 	game.dloc[I]=TK[J];
 	game.dseen[I]=(game.dseen[I] && INDEEP(game.loc)) || (game.dloc[I] == game.loc || game.odloc[I] == game.loc);
-	if(!game.dseen[I]) goto L6030;
+	if(!game.dseen[I]) continue;
 	game.dloc[I]=game.loc;
-	if(I != 6) goto L6027;
+	if(I == PIRATE) {
+	    /*  The pirate's spotted him.  He leaves him alone once we've
+	     *  found chest.  K counts if a treasure is here.  If not, and
+	     *  tally=1 for an unseen chest, let the pirate be spotted.
+	     *  Note that game.place(CHEST)=0 might mean that he's thrown
+	     *  it to the troll, but in that case he's seen the chest
+	     *  (game.prop=0). */
+	    if(game.loc == game.chloc || game.prop[CHEST] >= 0) continue;
+	    K=0;
+	    for (J=50; J<=MAXTRS; J++) {
+               /*  Pirate won't take pyramid from plover room or dark
+		*  room (too easy!). */
+		if(J == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD]))
+		    goto L6020;
+		if(TOTING(J))
+		    goto L6021;
+	    L6020:
+		if(HERE(J))K=1;
+	    } /* end loop */
+	    if(game.tally == 1 && K == 0 && game.place[CHEST] == 0 && HERE(LAMP) && game.prop[LAMP] == 1)
+		goto L6025;
+	    if(game.odloc[PIRATE] != game.dloc[PIRATE] && PCT(20))
+		RSPEAK(127);
+	    continue;
 
-	/*  The pirate's spotted him.  He leaves him alone once we've
-	 *  found chest.  K counts if a treasure is here.  If not, and
-	 *  tally=1 for an unseen chest, let the pirate be spotted.
-	 *  Note that game.place(CHEST)=0 might mean that he's thrown
-	 *  it to the troll, but in that case he's seen the chest
-	 *  (game.prop=0). */
+	L6021:	if(game.place[CHEST] != 0) goto L6022;
+	    /*  Install chest only once, to insure it is the last treasure in
+	     *  the list. */
+	    MOVE(CHEST,game.chloc);
+	    MOVE(MESSAG,game.chloc2);
+	L6022:	RSPEAK(128);
+	    /* 6023 */ for (J=50; J<=MAXTRS; J++) {
+		if(J == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD])) goto L6023;
+		if(AT(J) && game.fixed[J] == 0)CARRY(J,game.loc);
+		if(TOTING(J))DROP(J,game.chloc);
+	    L6023:	/*etc*/ ;
+	    }
+	L6024:
+	    game.dloc[PIRATE]=game.chloc;
+	    game.odloc[PIRATE]=game.chloc;
+	    game.dseen[PIRATE]=false;
+	    continue;
 
-	if(game.loc == game.chloc || game.prop[CHEST] >= 0) goto L6030;
-	K=0;
-	/* 6020 */ for (J=50; J<=MAXTRS; J++) {
-/*  Pirate won't take pyramid from plover room or dark room (too easy!). */
-	    if(J == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD])) goto L6020;
-	    if(TOTING(J)) goto L6021;
-	L6020:	if(HERE(J))K=1;
-	} /* end loop */
-	if(game.tally == 1 && K == 0 && game.place[CHEST] == 0 && HERE(LAMP) && game.prop[LAMP]
-	   == 1) goto L6025;
-	if(game.odloc[6] != game.dloc[6] && PCT(20))RSPEAK(127);
-	goto L6030;
+	L6025:
+	    RSPEAK(186);
+	    MOVE(CHEST,game.chloc);
+	    MOVE(MESSAG,game.chloc2);
+	    goto L6024;
 
-    L6021:	if(game.place[CHEST] != 0) goto L6022;
-    /*  Install chest only once, to insure it is the last treasure in
-     *  the list. */
-	MOVE(CHEST,game.chloc);
-	MOVE(MESSAG,game.chloc2);
-    L6022:	RSPEAK(128);
-	/* 6023 */ for (J=50; J<=MAXTRS; J++) {
-	    if(J == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD])) goto L6023;
-	    if(AT(J) && game.fixed[J] == 0)CARRY(J,game.loc);
-	    if(TOTING(J))DROP(J,game.chloc);
-	L6023:	/*etc*/ ;
-	} /* end loop */
-    L6024:	game.dloc[6]=game.chloc;
-	game.odloc[6]=game.chloc;
-	game.dseen[6]=false;
-	goto L6030;
+	}
 
-    L6025:
-	RSPEAK(186);
-	MOVE(CHEST,game.chloc);
-	MOVE(MESSAG,game.chloc2);
-	goto L6024;
-
-    /* This threatening little dwarf is in the room with him! */
-    L6027:
+	/* This threatening little dwarf is in the room with him! */
 	++game.dtotal;
 	if(game.odloc[I] == game.dloc[I]) {
 	    ++attack;
@@ -294,7 +298,6 @@ static bool dwarfmove(void)
 	    if(randrange(1000) < 95*(game.dflag-2))
 		++stick;
 	}
-    L6030:;
     }
 
     /*  Now we know what's happening.  Let's tell the poor sucker about it.
@@ -646,8 +649,9 @@ L30310: game.newloc=PLAC[TROLL]+FIXD[TROLL]-game.loc;
 
 /*  End of specials. */
 
-/*  Handle "go back".  Look for verb which goes from game.loc to game.oldloc, or to game.oldlc2
- *  If game.oldloc has forced-motion.  K2 saves entry -> forced loc -> previous loc. */
+/*  Handle "go back".  Look for verb which goes from game.loc to
+ *  game.oldloc, or to game.oldlc2 If game.oldloc has forced-motion.
+ *  K2 saves entry -> forced loc -> previous loc. */
 
 L20:	K=game.oldloc;
 	if(FORCED(K))K=game.oldlc2;
