@@ -1,8 +1,7 @@
 image: alpine
 
 variables:
-  GIT_SSL_CAPATH: "/etc/ssl/certs"
-  GIT_CURL_VERBOSE: "1"
+  GIT_SUBMODULE_STRATEGY: "normal"
 
 stages:
   - build
