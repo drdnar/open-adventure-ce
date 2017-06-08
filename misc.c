@@ -606,7 +606,7 @@ long ATDWRF(long where)
 long SETBIT(long bit)
 /*  Returns 2**bit for use in constructing bit-masks. */
 {
-    return(2 << bit);
+    return(1 << bit);
 }
 
 bool TSTBIT(long mask, int bit)
