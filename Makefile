@@ -10,13 +10,13 @@ ifeq ($(UNAME_S),Linux)
 	LIBS=-lrt
 endif
 
-OBJS=main.o init.o actions1.o actions2.o score.o misc.o linenoise.o
-SOURCES=$(OBJS:.o=.c) dungeon.c advent.h funcs.h sizes.h adventure.text Makefile control
+OBJS=main.o init.o actions1.o actions2.o score.o misc.o
+SOURCES=$(OBJS:.o=.c) dungeon.c advent.h funcs.h sizes.h adventure.text Makefile control linenoise/linenoise.h
 
 .c.o:
 	$(CC) $(CCFLAGS) $(DBX) -c $<
 
-advent: $(OBJS) database.o
+advent:	$(OBJS) database.o linenoise.o
 	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) database.o $(LDFLAGS) $(LIBS)
 
 main.o:	 	advent.h funcs.h database.h database.c sizes.h
@@ -66,11 +66,12 @@ html: advent.html history.html hints.html
 
 # README.adoc exists because that filename is magic on GitLab.
 DOCS=COPYING NEWS README.adoc TODO advent.adoc history.adoc hints.adoc advent.6
+TESTFILES=tests/*.log tests/*.chk tests/README tests/decheck tests/Makefile
 
 # Can't use GNU tar's --transform, needs to build under Alpine Linux.
 # This is a requirement for testing dist in GitLab's CI pipeline
 advent-$(VERS).tar.gz: $(SOURCES) $(DOCS)
-	@find $(SOURCES) $(DOCS) tests -print | sed s:^:advent-$(VERS)/: >MANIFEST
+	@find $(SOURCES) $(DOCS) $(TESTFILES) -print | sed s:^:advent-$(VERS)/: >MANIFEST
 	@(ln -s . advent-$(VERS))
 	(tar -T MANIFEST -czvf advent-$(VERS).tar.gz)
 	@(rm advent-$(VERS))
