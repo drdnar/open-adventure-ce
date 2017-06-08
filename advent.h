@@ -10,6 +10,7 @@
 #define MINTRS		50
 #define MAXTRS		79
 #define MAXPARMS	25
+#define INVLIMIT	7
 
 typedef struct lcg_state
 {
