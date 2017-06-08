@@ -120,7 +120,7 @@ extern long ATDWRF(long);
 extern long SETBIT(long);
 extern bool TSTBIT(long,int);
 extern long RNDVOC(long,long);
-extern void BUG(long);
+extern void BUG(long) __attribute__((noreturn));
 extern void MAPLIN(FILE *);
 extern void TYPE(void);
 extern void MPINIT(void);
