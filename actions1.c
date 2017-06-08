@@ -8,6 +8,36 @@
  * that calls these.  Absolutely nothing like the original FORTRAN
  */
 
+static int bigwords(long foo)
+/*  FEE FIE FOE FOO (AND FUM).  Advance to next state if given in proper order.
+ *  Look up WD1 in section 3 of vocab to determine which word we've got.  Last
+ *  word zips the eggs back to the giant room (unless already there). */
+{
+    int k=VOCAB(foo,3);
+    SPK=42;
+    if(game.foobar != 1-k) {
+	if(game.foobar != 0)SPK=151;
+	return(2011);
+    } else {
+
+	game.foobar=k;
+	if(k != 4) return(2009);
+	game.foobar=0;
+	if(game.place[EGGS] == PLAC[EGGS] || (TOTING(EGGS) && game.loc == PLAC[EGGS])) 
+	    return(2011);
+	/*  Bring back troll if we steal the eggs back from him before
+	 *  crossing. */
+	if(game.place[EGGS]==0 && game.place[TROLL]==0 && game.prop[TROLL]==0)
+	    game.prop[TROLL]=1;
+	k=2;
+	if(HERE(EGGS))k=1;
+	if(game.loc == PLAC[EGGS])k=0;
+	MOVE(EGGS,PLAC[EGGS]);
+	PSPEAK(EGGS,k);
+	return(2012);
+    }
+}
+
 static int bivalve(token_t verb, token_t obj)
 /* Clam/oyster actions */
 {
@@ -163,6 +193,38 @@ static int listen(void)
 	    DSTROY(BIRD);
     }
     return(2011);
+}
+
+static int pour(token_t obj)
+/*  Pour.  If no object, or object is bottle, assume contents of bottle.
+ *  special tests for pouring water or oil on plant or rusty door. */
+{
+    if(obj == BOTTLE || obj == 0)obj=LIQ(0);
+    if(obj == 0) return(8000);
+    if(!TOTING(obj)) return(2011);
+    SPK=78;
+    if(obj != OIL && obj != WATER) return(2011);
+    if(HERE(URN) && game.prop[URN] == 0)
+	return fill(URN);
+    game.prop[BOTTLE]=1;
+    game.place[obj]=0;
+    SPK=77;
+    if(!(AT(PLANT) || AT(DOOR)))
+	return(2011);
+    if(!AT(DOOR)) {
+	SPK=112;
+	if(obj != WATER) return(2011);
+	PSPEAK(PLANT,game.prop[PLANT]+3);
+	game.prop[PLANT]=MOD(game.prop[PLANT]+1,3);
+	game.prop[PLANT2]=game.prop[PLANT];
+	K=NUL;
+	return(8);
+    } else {
+	game.prop[DOOR]=0;
+	if(obj == OIL)game.prop[DOOR]=1;
+	SPK=113+game.prop[DOOR];
+	return(2011);
+    }
 }
 
 static int quit(FILE *input)
@@ -487,36 +549,7 @@ L9090: return wave(obj);
 
 L9120: return attack(input, verb, obj);
 
-/*  Pour.  If no object, or object is bottle, assume contents of bottle.
- *  special tests for pouring water or oil on plant or rusty door. */
-
-L9130:	if(obj == BOTTLE || obj == 0)obj=LIQ(0);
-	if(obj == 0) return(8000);
-	if(!TOTING(obj)) return(2011);
-	SPK=78;
-	if(obj != OIL && obj != WATER) return(2011);
-	if(HERE(URN) && game.prop[URN] == 0) goto L9134;
-	game.prop[BOTTLE]=1;
-	game.place[obj]=0;
-	SPK=77;
-	if(!(AT(PLANT) || AT(DOOR))) return(2011);
-
-	if(AT(DOOR)) goto L9132;
-	SPK=112;
-	if(obj != WATER) return(2011);
-	PSPEAK(PLANT,game.prop[PLANT]+3);
-	game.prop[PLANT]=MOD(game.prop[PLANT]+1,3);
-	game.prop[PLANT2]=game.prop[PLANT];
-	K=NUL;
-	 return(8);
-
-L9132:	game.prop[DOOR]=0;
-	if(obj == OIL)game.prop[DOOR]=1;
-	SPK=113+game.prop[DOOR];
-	 return(2011);
-
-L9134:	obj=URN;
-	 goto L9220;
+L9130: return pour(obj);
 
 /*  Eat.  Intransitive: assume food if present, else ask what.  Transitive: food
  *  ok, some things lose appetite, rest are ridiculous. */
@@ -552,30 +585,7 @@ L9230: return blast();
 
 L8240: return vscore();
 
-/*  FEE FIE FOE FOO (AND FUM).  Advance to next state if given in proper order.
- *  Look up WD1 in section 3 of vocab to determine which word we've got.  Last
- *  word zips the eggs back to the giant room (unless already there). */
-
-L8250:	K=VOCAB(WD1,3);
-	SPK=42;
-	if(game.foobar == 1-K) goto L8252;
-	if(game.foobar != 0)SPK=151;
-	 return(2011);
-
-L8252:	game.foobar=K;
-	if(K != 4) return(2009);
-	game.foobar=0;
-	if(game.place[EGGS] == PLAC[EGGS] || (TOTING(EGGS) && game.loc == PLAC[EGGS])) 
-		return(2011);
-/*  Bring back troll if we steal the eggs back from him before crossing. */
-	if(game.place[EGGS] == 0 && game.place[TROLL] == 0 && game.prop[TROLL] ==
-		0)game.prop[TROLL]=1;
-	K=2;
-	if(HERE(EGGS))K=1;
-	if(game.loc == PLAC[EGGS])K=0;
-	MOVE(EGGS,PLAC[EGGS]);
-	PSPEAK(EGGS,K);
-	 return(2012);
+L8250: return bigwords(WD1);
 
 L8260: return brief();
 
