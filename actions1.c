@@ -25,6 +25,44 @@ static int bivalve(token_t verb, token_t obj)
     return(2011);
 }
 
+static int blast(void)
+/*  Blast.  No effect unless you've got dynamite, which is a neat trick! */
+{
+    if(game.prop[ROD2] < 0 || !game.closed) return(2011);
+    game.bonus=133;
+    if(game.loc == 115)game.bonus=134;
+    if(HERE(ROD2))game.bonus=135;
+    RSPEAK(game.bonus);
+    score(0);
+}
+
+static int vbreak(token_t obj)
+/*  Break.  Only works for mirror in repository and, of course, the vase. */
+{
+    if(obj == MIRROR)SPK=148;
+    if(obj == VASE && game.prop[VASE] == 0) {
+	SPK=198;
+	if(TOTING(VASE))DROP(VASE,game.loc);
+	game.prop[VASE]=2;
+	game.fixed[VASE]= -1;
+	return(2011);
+    } else {
+	if(obj != MIRROR || !game.closed) return(2011);
+	SPK=197;
+	return(18999);
+    }
+}
+
+
+static int brief(void)
+/*  Brief.  Intransitive only.  Suppress long descriptions after first time. */
+{
+    SPK=156;
+    game.abbnum=10000;
+    game.detail=3;
+    return(2011);
+}
+
 static int chain(token_t verb)
 /* Do something to the bear's chain */
 {
@@ -50,8 +88,30 @@ static int chain(token_t verb)
     }
 }
 
+static int drink(token_t obj)
+/*  Drink.  If no object, assume water and look for it here.  If water is in
+ *  the bottle, drink that, else must be at a water loc, so drink stream. */
+{
+    if(obj == 0 && LIQLOC(game.loc) != WATER && (LIQ(0) != WATER || !HERE(BOTTLE)))
+	return(8000);
+    if(obj != BLOOD) {
+	if(obj != 0 && obj != WATER)SPK=110;
+	if(SPK == 110 || LIQ(0) != WATER || !HERE(BOTTLE)) return(2011);
+	game.prop[BOTTLE]=1;
+	game.place[WATER]=0;
+	SPK=74;
+	return(2011);
+    } else {
+	DSTROY(BLOOD);
+	game.prop[DRAGON]=2;
+	OBJSND[BIRD]=OBJSND[BIRD]+3;
+	SPK=240;
+	return(2011);
+    }
+}
+
 static int find(token_t obj)
-/*  Find.  Might be carrying it, or it might be here.  Else give caveat. */
+/* Find.  Might be carrying it, or it might be here.  Else give caveat. */
 {
     if(AT(obj) ||
        (LIQ(0) == obj && AT(BOTTLE)) ||
@@ -61,6 +121,110 @@ static int find(token_t obj)
     if(game.closed)SPK=138;
     if(TOTING(obj))SPK=24;
     return(2011);
+}
+
+static int inven(token_t obj)
+/* Inventory. If object, treat same as find.  Else report on current burden. */
+{
+    int i;
+    SPK=98;
+    for (i=1; i<=NOBJECTS; i++) {
+	if(i == BEAR || !TOTING(i))
+	    continue;
+	if(SPK == 98)RSPEAK(99);
+	game.blklin=false;
+	PSPEAK(i,-1);
+	game.blklin=true;
+	SPK=0;
+    }
+    if(TOTING(BEAR))
+	SPK=141;
+    return(2011);
+}
+
+static int listen(void)
+/*  Listen.  Intransitive only.  Print stuff based on objsnd/locsnd. */
+{
+    int i, k;
+    SPK=228;
+    k=LOCSND[game.loc];
+    if(k != 0) {
+	RSPEAK(labs(k));
+	if(k < 0) return(2012);
+	SPK=0;
+    }
+    SETPRM(1,game.zzword,0);
+    for (i=1; i<=NOBJECTS; i++) {
+	if(!HERE(i) || OBJSND[i] == 0 || game.prop[i] < 0)
+	    continue;
+	PSPEAK(i,OBJSND[i]+game.prop[i]);
+	SPK=0;
+	if(i == BIRD && OBJSND[i]+game.prop[i] == 8)
+	    DSTROY(BIRD);
+    }
+    return(2011);
+}
+
+static int quit(FILE *input)
+/*  Quit.  Intransitive only.  Verify intent and exit if that's what he wants. */
+{
+    if(YES(input,22,54,54))
+	score(1);
+    return(2012);
+}
+
+static int rub(token_t obj)
+/* Rub.  Yields various snide remarks except for lit urn. */
+{
+    if(obj != LAMP)SPK=76;
+    if(obj != URN || game.prop[URN] != 2) return(2011);
+    DSTROY(URN);
+    DROP(AMBER,game.loc);
+    game.prop[AMBER]=1;
+    game.tally=game.tally-1;
+    DROP(CAVITY,game.loc);
+    SPK=216;
+    return(2011);
+}
+
+static int vscore(void)
+/* Score.  Call scoring routine but tell it to return. */
+{
+    score(-1);
+    return(2012);
+}
+
+static int wake(token_t obj)
+/* Wake.  Only use is to disturb the dwarves. */
+{
+    if(obj != DWARF || !game.closed) return(2011);
+    SPK=199;
+    return(18999);
+}
+
+static int wave(token_t obj)
+/* Wave.  No effect unless waving rod at fissure or at bird. */
+{
+    if((!TOTING(obj)) && (obj != ROD || !TOTING(ROD2)))SPK=29;
+    if(obj != ROD ||
+       !TOTING(obj) ||
+       (!HERE(BIRD) && (game.closng || !AT(FISSUR))))
+	return(2011);
+    if(HERE(BIRD))SPK=206+MOD(game.prop[BIRD],2);
+    if(SPK == 206 && game.loc == game.place[STEPS] && game.prop[JADE] < 0) {
+	DROP(JADE,game.loc);
+	game.prop[JADE]=0;
+	game.tally=game.tally-1;
+	SPK=208;
+	return(2011);
+    } else {
+	if(game.closed) return(18999);
+	if(game.closng || !AT(FISSUR)) return(2011);
+	if(HERE(BIRD))RSPEAK(SPK);
+	game.prop[FISSUR]=1-game.prop[FISSUR];
+	PSPEAK(FISSUR,2-game.prop[FISSUR]);
+	return(2012);
+    }
 }
 
 /* This stuff was broken off as part of an effort to get the main program
@@ -319,29 +483,9 @@ L9086:	game.prop[LAMP]=0;
 	if(DARK(0))RSPEAK(16);
 	 return(2012);
 
-/*  Wave.  No effect unless waving rod at fissure or at bird. */
+L9090: return wave(obj);
 
-L9090:	if((!TOTING(obj)) && (obj != ROD || !TOTING(ROD2)))SPK=29;
-	if(obj != ROD || !TOTING(obj) || (!HERE(BIRD) && (game.closng || !AT(FISSUR))))
-		return(2011);
-	if(HERE(BIRD))SPK=206+MOD(game.prop[BIRD],2);
-	if(SPK == 206 && game.loc == game.place[STEPS] && game.prop[JADE] < 0) goto L9094;
-	if(game.closed) return(18999);
-	if(game.closng || !AT(FISSUR)) return(2011);
-	if(HERE(BIRD))RSPEAK(SPK);
-	game.prop[FISSUR]=1-game.prop[FISSUR];
-	PSPEAK(FISSUR,2-game.prop[FISSUR]);
-	 return(2012);
-
-L9094:	DROP(JADE,game.loc);
-	game.prop[JADE]=0;
-	game.tally=game.tally-1;
-	SPK=208;
-	 return(2011);
-
-/*  Attack also moved into separate module. */
-
-L9120:	return(attack(input, verb, obj));
+L9120: return attack(input, verb, obj);
 
 /*  Pour.  If no object, or object is bottle, assume contents of bottle.
  *  special tests for pouring water or oil on plant or rusty door. */
@@ -388,80 +532,25 @@ L9140:	if(obj == FOOD) goto L8142;
 		OGRE)SPK=71;
 	 return(2011);
 
-/*  Drink.  If no object, assume water and look for it here.  If water is in
- *  the bottle, drink that, else must be at a water loc, so drink stream. */
+L9150: return drink(obj);
 
-L9150:	if(obj == 0 && LIQLOC(game.loc) != WATER && (LIQ(0) != WATER || !HERE(BOTTLE)))
-		return(8000);
-	if(obj == BLOOD) goto L9153;
-	if(obj != 0 && obj != WATER)SPK=110;
-	if(SPK == 110 || LIQ(0) != WATER || !HERE(BOTTLE)) return(2011);
-	game.prop[BOTTLE]=1;
-	game.place[WATER]=0;
-	SPK=74;
-	 return(2011);
+L9160: return rub(obj);
 
-L9153:	DSTROY(BLOOD);
-	game.prop[DRAGON]=2;
-	OBJSND[BIRD]=OBJSND[BIRD]+3;
-	SPK=240;
-	 return(2011);
+L9170: return throw(input, verb, obj);
 
-/*  Rub.  Yields various snide remarks except for lit urn. */
+L8180: return quit(input);
 
-L9160:	if(obj != LAMP)SPK=76;
-	if(obj != URN || game.prop[URN] != 2) return(2011);
-	DSTROY(URN);
-	DROP(AMBER,game.loc);
-	game.prop[AMBER]=1;
-	game.tally=game.tally-1;
-	DROP(CAVITY,game.loc);
-	SPK=216;
-	return(2011);
+L9190: return find(obj);
 
-L9170:	return(throw(input, verb, obj));
+L8200: return inven(obj);
 
-/*  Quit.  Intransitive only.  Verify intent and exit if that's what he wants. */
+L9210: return feed(obj);
 
-L8180:	if(YES(input,22,54,54)) score(1);
-	 return(2012);
+L9220: return fill(obj);
 
+L9230: return blast();
 
-L9190:	return find(obj);
-
-/*  Inventory.  If object, treat same as find.  Else report on current burden. */
-
-L8200:	SPK=98;
-	/* 8201 */ for (I=1; I<=NOBJECTS; I++) {
-	if(I == BEAR || !TOTING(I)) goto L8201;
-	if(SPK == 98)RSPEAK(99);
-	game.blklin=false;
-	PSPEAK(I,-1);
-	game.blklin=true;
-	SPK=0;
-L8201:	/*etc*/ ;
-	} /* end loop */
-	if(TOTING(BEAR))SPK=141;
-	 return(2011);
-
-/* Feed/fill are in the other module. */
-
-L9210:	return(feed(obj));
-L9220:	return(fill(obj));
-
-/*  Blast.  No effect unless you've got dynamite, which is a neat trick! */
-
-L9230:	if(game.prop[ROD2] < 0 || !game.closed) return(2011);
-	game.bonus=133;
-	if(game.loc == 115)game.bonus=134;
-	if(HERE(ROD2))game.bonus=135;
-	RSPEAK(game.bonus);
-	 score(0);
-
-/*  Score.  Call scoring routine but tell it to return. */
-
-L8240:	score(-1);
-	return(2012);
+L8240: return vscore();
 
 /*  FEE FIE FOE FOO (AND FUM).  Advance to next state if given in proper order.
  *  Look up WD1 in section 3 of vocab to determine which word we've got.  Last
@@ -488,12 +577,7 @@ L8252:	game.foobar=K;
 	PSPEAK(EGGS,K);
 	 return(2012);
 
-/*  Brief.  Intransitive only.  Suppress long descriptions after first time. */
-
-L8260:	SPK=156;
-	game.abbnum=10000;
-	game.detail=3;
-	 return(2011);
+L8260: return brief();
 
 /*  Read.  Print stuff based on objtxt.  Oyster (?) is special case. */
 
@@ -511,25 +595,9 @@ L9270:	if(DARK(0)) goto L5190;
 L9275:	game.clshnt=YES(input,192,193,54);
 	 return(2012);
 
-/*  Break.  Only works for mirror in repository and, of course, the vase. */
+L9280: return vbreak(obj);
 
-L9280:	if(obj == MIRROR)SPK=148;
-	if(obj == VASE && game.prop[VASE] == 0) goto L9282;
-	if(obj != MIRROR || !game.closed) return(2011);
-	SPK=197;
-	 return(18999);
-
-L9282:	SPK=198;
-	if(TOTING(VASE))DROP(VASE,game.loc);
-	game.prop[VASE]=2;
-	game.fixed[VASE]= -1;
-	 return(2011);
-
-/*  Wake.  Only use is to disturb the dwarves. */
-
-L9290:	if(obj != DWARF || !game.closed) return(2011);
-	SPK=199;
-	 return(18999);
+L9290: return wake(obj);
 
 /*  Suspend.  Offer to save things in a file, but charging some points (so
  *  can't win by using saved games to retry battles or to start over after
@@ -616,23 +684,7 @@ L9320:	if(obj != RUG) return(2011);
 	RSPEAK(SPK);
 	 return(2);
 
-/*  Listen.  Intransitive only.  Print stuff based on objsnd/locsnd. */
-
-L8330:	SPK=228;
-	K=LOCSND[game.loc];
-	if(K == 0) goto L8332;
-	RSPEAK(labs(K));
-	if(K < 0) return(2012);
-	SPK=0;
-L8332:	SETPRM(1,game.zzword,0);
-	/* 8335 */ for (I=1; I<=NOBJECTS; I++) {
-	if(!HERE(I) || OBJSND[I] == 0 || game.prop[I] < 0) goto L8335;
-	PSPEAK(I,OBJSND[I]+game.prop[I]);
-	SPK=0;
-	if(I == BIRD && OBJSND[I]+game.prop[I] == 8)DSTROY(BIRD);
-L8335:	/*etc*/ ;
-	} /* end loop */
-	 return(2011);
+L8330: return listen();
 
 /*  Z'ZZZ (word gets recomputed at startup; different each game). */
 
