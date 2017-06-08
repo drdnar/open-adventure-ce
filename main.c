@@ -712,33 +712,35 @@ L90:	RSPEAK(23);
 
 /*  Okay, he's dead.  Let's get on with it. */
 
-L99:	if(game.closng) goto L95;
-	game.numdie=game.numdie+1;
-	if(!YES(cmdin,79+game.numdie*2,80+game.numdie*2,54)) score(0);
-	if(game.numdie == MAXDIE) score(0);
-	game.place[WATER]=0;
-	game.place[OIL]=0;
-	if(TOTING(LAMP))game.prop[LAMP]=0;
-	/* 98 */ for (J=1; J<=NOBJECTS; J++) {
-	I=NOBJECTS + 1 - J;
-	if(!TOTING(I)) goto L98;
-	K=game.oldlc2;
-	if(I == LAMP)K=1;
-	DROP(I,K);
-L98:	/*etc*/ ;
-	} /* end loop */
-	game.loc=3;
-	game.oldloc=game.loc;
-	 goto L2000;
-
-/*  He died during closing time.  No resurrection.  Tally up a death and exit. */
-
-L95:	RSPEAK(131);
-	game.numdie=game.numdie+1;
-	 score(0);
-
-
-
+L99:	if(game.closng) {
+	/*  He died during closing time.  No resurrection.  Tally up a
+	 *  death and exit. */
+	    RSPEAK(131);
+	    ++game.numdie;
+	    score(0);
+	} else {
+	    ++game.numdie;
+	    if(!YES(cmdin,79+game.numdie*2,80+game.numdie*2,54))
+		score(0);
+	    if(game.numdie == MAXDIE)
+		score(0);
+	    game.place[WATER]=0;
+	    game.place[OIL]=0;
+	    if(TOTING(LAMP))
+		game.prop[LAMP]=0;
+	    for (J=1; J<=NOBJECTS; J++) {
+		I=NOBJECTS + 1 - J;
+		if(TOTING(I)) {
+		    K=game.oldlc2;
+		    if(I == LAMP)
+			K=1;
+		    DROP(I,K);
+		}
+	    }
+	    game.loc=3;
+	    game.oldloc=game.loc;
+	    goto L2000;
+	}
 
 /*  Hints */
 
