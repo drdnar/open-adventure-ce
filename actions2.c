@@ -135,9 +135,10 @@ int discard(long obj, bool just_do_it) {
  *  (bird, clam, machine).  Ambiguous if 2 enemies, or no enemies but 2 others. */
 
 int attack(FILE *input, long obj, long verb) {
-	I=ATDWRF(game.loc);
+	int i =ATDWRF(game.loc);
 	if (obj == 0) {
-	    if (I > 0)obj=DWARF;
+	    if (i > 0)
+		obj=DWARF;
 	    if (HERE(SNAKE))obj=obj*NOBJECTS+SNAKE;
 	    if (AT(DRAGON) && game.prop[DRAGON] == 0)obj=obj*NOBJECTS+DRAGON;
 	    if (AT(TROLL))obj=obj*NOBJECTS+TROLL;
@@ -175,7 +176,21 @@ int attack(FILE *input, long obj, long verb) {
 	if (obj == DRAGON)SPK=167;
 	if (obj == TROLL)SPK=157;
 	if (obj == OGRE)SPK=203;
-	if (obj == OGRE && I > 0) goto L9128;
+	if (obj == OGRE && i > 0) {
+	    RSPEAK(SPK);
+	    RSPEAK(6);
+	    DSTROY(OGRE);
+	    int k=0;
+	    for (i=1; i < PIRATE; i++) {
+		if (game.dloc[i] == game.loc) {
+		    ++k;
+		    game.dloc[i]=61;
+		    game.dseen[i]=false;
+		}
+	    }
+	    SPK=SPK+1+1/k;
+	    return(2011);
+	}
 	if (obj == BEAR)SPK=165+(game.prop[BEAR]+1)/2;
 	if (obj != DRAGON || game.prop[DRAGON] != 0) return(2011);
 	/*  Fun stuff for dragon.  If he insists on attacking it, win!
@@ -200,21 +215,7 @@ int attack(FILE *input, long obj, long verb) {
 	} /* end loop */
 	game.loc=K;
 	K=NUL;
-	 return(8);
-
-L9128:	RSPEAK(SPK);
-	RSPEAK(6);
-	DSTROY(OGRE);
-	K=0;
-	for (I=1; I < PIRATE; I++) {
-		if (game.dloc[I] == game.loc) {
-			K=K+1;
-			game.dloc[I]=61;
-			game.dseen[I]=false;
-		}
-	}
-	SPK=SPK+1+1/K;
-	return(2011);
+	return(8);
 }
 
 int throw_support(long spk)
