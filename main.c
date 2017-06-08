@@ -651,11 +651,40 @@ L8000:	SETPRM(1,WD1,WD1X);
 
 L8:	KK=KEY[game.loc];
 	game.newloc=game.loc;
-	if(KK == 0)BUG(26);
-	if(K == NUL) return true;
-	if(K == BACK) goto L20;
-	if(K == LOOK) goto L30;
-	if(K == CAVE) goto L40;
+	if(KK == 0)
+	    BUG(26);
+	if(K == NUL)
+	    return true;
+	if(K == BACK) {
+	    /*  Handle "go back".  Look for verb which goes from game.loc to
+	     *  game.oldloc, or to game.oldlc2 If game.oldloc has forced-motion.
+	     *  K2 saves entry -> forced loc -> previous loc. */
+	    K=game.oldloc;
+	    if(FORCED(K))K=game.oldlc2;
+	    game.oldlc2=game.oldloc;
+	    game.oldloc=game.loc;
+	    K2=0;
+	    if(K == game.loc)K2=91;
+	    if(CNDBIT(game.loc,4))K2=274;
+	    if(K2 == 0) goto L21;
+	    RSPEAK(K2);
+	    return true;
+	}
+	if(K == LOOK) {
+	    /*  Look.  Can't give more detail.  Pretend it wasn't dark
+	     *  (though it may "now" be dark) so he won't fall into a
+	     *  pit while staring into the gloom. */
+	    if(game.detail < 3)RSPEAK(15);
+	    game.detail=game.detail+1;
+	    game.wzdark=false;
+	    game.abbrev[game.loc]=0;
+	    return true;
+	}
+	if(K == CAVE) {
+	    /*  Cave.  Different messages depending on whether above ground. */
+	    RSPEAK((OUTSID(game.loc) && game.loc != 8) ? 57 : 58);
+	    return true;
+	}
 	game.oldlc2=game.oldloc;
 	game.oldloc=game.loc;
 
@@ -663,7 +692,7 @@ L9:	LL=labs(TRAVEL[KK]);
 	if(MOD(LL,1000) == 1 || MOD(LL,1000) == K) goto L10;
 	if(TRAVEL[KK] < 0) goto L50;
 	KK=KK+1;
-	 goto L9;
+	goto L9;
 
 L10:	LL=LL/1000;
 L11:	game.newloc=LL/1000;
@@ -745,20 +774,6 @@ L30310: game.newloc=PLAC[TROLL]+FIXD[TROLL]-game.loc;
 
 /*  End of specials. */
 
-/*  Handle "go back".  Look for verb which goes from game.loc to
- *  game.oldloc, or to game.oldlc2 If game.oldloc has forced-motion.
- *  K2 saves entry -> forced loc -> previous loc. */
-
-L20:	K=game.oldloc;
-	if(FORCED(K))K=game.oldlc2;
-	game.oldlc2=game.oldloc;
-	game.oldloc=game.loc;
-	K2=0;
-	if(K == game.loc)K2=91;
-	if(CNDBIT(game.loc,4))K2=274;
-	if(K2 == 0) goto L21;
-	RSPEAK(K2);
-	return true;
 
 L21:	LL=MOD((labs(TRAVEL[KK])/1000),1000);
 	if(LL != K) {
@@ -767,7 +782,8 @@ L21:	LL=MOD((labs(TRAVEL[KK])/1000),1000);
 			if(FORCED(LL) && MOD((labs(TRAVEL[J])/1000),1000) == K)
 				K2=KK;
 		}
-		if(TRAVEL[KK] < 0) goto L23;
+		if(TRAVEL[KK] < 0)
+		    goto L23;
 		KK=KK+1;
 		goto L21;
 
@@ -780,23 +796,8 @@ L23:		KK=K2;
 
 	K=MOD(labs(TRAVEL[KK]),1000);
 	KK=KEY[game.loc];
-	 goto L9;
+	goto L9;
 
-/*  Look.  Can't give more detail.  Pretend it wasn't dark (though it may "now"
- *  be dark) so he won't fall into a pit while staring into the gloom. */
-
-L30:	if(game.detail < 3)RSPEAK(15);
-	game.detail=game.detail+1;
-	game.wzdark=false;
-	game.abbrev[game.loc]=0;
-	return true;
-
-/*  Cave.  Different messages depending on whether above ground. */
-
-L40:	K=58;
-	if(OUTSID(game.loc) && game.loc != 8)K=57;
-	RSPEAK(K);
-	return true;
 
 /*  Non-applicable motion.  Various messages depending on word given. */
 
