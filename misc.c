@@ -10,6 +10,8 @@
 /* hack to ignore GCC Unused Result */
 #define IGNORE(r) do{if (r){}}while(0)
 
+#define PERCENT	63	/* partly hide the packed encoding */
+
 /*  I/O routines (SPEAK, PSPEAK, RSPEAK, SETPRM, GETIN, YES) */
 
 void SPEAK(vocab_t msg)
@@ -37,10 +39,10 @@ L30:
 L32:
 	if (LNPOSN > LNLENG) 
 	    goto L40;
-	if (INLINE[LNPOSN] != 63) 
+	if (INLINE[LNPOSN] != PERCENT) 
 	    goto L30;
-	prmtyp=INLINE[LNPOSN+1];
-	/*  63 is a "%"; the next character determine the type of
+	prmtyp = INLINE[LNPOSN+1];
+	/*  A "%"; the next character determine the type of
 	 *  parameter: 1 (!) = suppress message completely, 29 (S) = NULL
 	 *  If PARAM=1, else 'S' (optional plural ending), 33 (W) = word
 	 *  (two 30-bit values) with trailing spaces suppressed, 22 (L) or
@@ -50,14 +52,54 @@ L32:
 	 *  characters, 12 (B) = variable number of blanks. */
 	if (prmtyp == 1)
 	    return;
-	if (prmtyp == 29)
-	    goto L320;
-	if (prmtyp == 30)
-	    goto L340;
-	if (prmtyp == 12)
-	    goto L360;
-	if (prmtyp == 33 || prmtyp == 22 || prmtyp == 31 || prmtyp == 13)
-	    goto L380;
+	if (prmtyp == 29) {
+	    SHFTXT(LNPOSN+2,-1);
+	    INLINE[LNPOSN] = 55;
+	    if (PARMS[nparms] == 1)
+		SHFTXT(LNPOSN+1,-1);
+	    goto L395;
+	}
+	if (prmtyp == 30) {
+	    SHFTXT(LNPOSN+2,-2);
+	    state=0;
+	    casemake=2;
+
+	    for (;;) {
+		if (PARMS[nparms] < 0)
+		    goto L395;
+		if (PARMS[nparms+1] < 0)
+		    casemake=0;
+		PUTTXT(PARMS[nparms],state,casemake);
+		nparms=nparms+1;
+	    }
+	}
+	if (prmtyp == 12) {
+	    prmtyp=PARMS[nparms];
+	    SHFTXT(LNPOSN+2,prmtyp-2);
+	    if (prmtyp != 0) {
+		for (i=1; i<=prmtyp; i++) {
+		    INLINE[LNPOSN]=0;
+		    LNPOSN=LNPOSN+1;
+		}
+	    }
+	    goto L395;
+	}
+	if (prmtyp == 33 || prmtyp == 22 || prmtyp == 31 || prmtyp == 13) {
+	    SHFTXT(LNPOSN+2,-2);
+	    state = 0;
+	    casemake = -1;
+	    if (prmtyp == 31)
+		casemake=1;
+	    if (prmtyp == 33)
+		casemake=0;
+	    i = LNPOSN;
+	    PUTTXT(PARMS[nparms],state,casemake);
+	    PUTTXT(PARMS[nparms+1],state,casemake);
+	    if (prmtyp == 13 && INLINE[i] >= 37 && INLINE[i] <= 62)
+		INLINE[i] -= 26;
+	    nparms += 2;
+	    goto L32;
+	}
 	prmtyp=prmtyp-64;
 	if (prmtyp < 1 || prmtyp > 9)
 	    goto L30;
@@ -76,57 +118,9 @@ L32:
 	    }
 	    param=param/10;
 	}
-	LNPOSN=LNPOSN+prmtyp;
+	LNPOSN += prmtyp;
 L395:
 	++nparms;
-	goto L32;
-
-L320:
-	SHFTXT(LNPOSN+2,-1);
-	INLINE[LNPOSN]=55;
-	if (PARMS[nparms] == 1)
-	    SHFTXT(LNPOSN+1,-1);
-	goto L395;
-
-L340:
-	SHFTXT(LNPOSN+2,-2);
-	state=0;
-	casemake=2;
-
-	for (;;) {
-	    if (PARMS[nparms] < 0)
-		goto L395;
-	    if (PARMS[nparms+1] < 0)
-		casemake=0;
-	    PUTTXT(PARMS[nparms],state,casemake);
-	    nparms=nparms+1;
-	}
-
-L360:
-	prmtyp=PARMS[nparms];
-	SHFTXT(LNPOSN+2,prmtyp-2);
-	if (prmtyp != 0) {
-	    for (i=1; i<=prmtyp; i++) {
-		INLINE[LNPOSN]=0;
-		LNPOSN=LNPOSN+1;
-	    }
-	}
-	goto L395;
-
-L380:
-	SHFTXT(LNPOSN+2,-2);
-	state = 0;
-	casemake = -1;
-	if (prmtyp == 31)
-	    casemake=1;
-	if (prmtyp == 33)
-	    casemake=0;
-	i = LNPOSN;
-	PUTTXT(PARMS[nparms],state,casemake);
-	PUTTXT(PARMS[nparms+1],state,casemake);
-	if (prmtyp == 13 && INLINE[i] >= 37 && INLINE[i] <= 62)
-	    INLINE[i] -= 26;
-	nparms = nparms+2;
 	goto L32;
 
 L40:
@@ -264,7 +258,7 @@ long GETTXT(bool skip, bool onewrd, bool upper)
 	if (LNPOSN > LNLENG || (onewrd && INLINE[LNPOSN] == 0))
 	    continue;
 	char current=INLINE[LNPOSN];
-	if (current < 63) {
+	if (current < PERCENT) {
 	    splitting = -1;
 	    if (upper && current >= 37)
 		current=current-26;
@@ -273,12 +267,12 @@ long GETTXT(bool skip, bool onewrd, bool upper)
 	    continue;
 	}
 	if (splitting != LNPOSN) {
-	    text=text+63;
+	    text=text+PERCENT;
 	    splitting = LNPOSN;
 	    continue;
 	}
 
-	text=text+current-63;
+	text=text+current-PERCENT;
 	splitting = -1;
 	LNPOSN=LNPOSN+1;
     }
@@ -335,8 +329,8 @@ void fPUTTXT(token_t word, long *state, long casemake)
 	    return;
 	byte=w/div;
 	w=(w-byte*div)*64;
-	if (!(*state != 0 || byte != 63)) {
-	    *state=63;
+	if (!(*state != 0 || byte != PERCENT)) {
+	    *state=PERCENT;
 	    continue;
 	}
 	SHFTXT(LNPOSN,1);
