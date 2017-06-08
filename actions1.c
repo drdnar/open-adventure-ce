@@ -5,7 +5,7 @@
 
 /*
  * Action handlers.  Eventually we'll do lookup through a method table
- * that calls these.  Absolutely nothing like the original FORTRAN
+ * that calls these.  Absolutely nothing like the original FORTRAN.
  */
 
 static int bigwords(long foo)
@@ -249,6 +249,23 @@ static int rub(token_t obj)
     return(2011);
 }
 
+static int say(void)
+/* SAY.  Echo WD2 (or WD1 if no WD2 (SAY WHAT?, etc.).)  Magic words override. */
+{
+    /* FIXME: ugly use of globals */
+    SETPRM(1,WD2,WD2X);
+    if(WD2 <= 0)SETPRM(1,WD1,WD1X);
+    if(WD2 > 0)WD1=WD2;
+    I=VOCAB(WD1,-1);
+    if(I == 62 || I == 65 || I == 71 || I == 2025 || I == 2034) goto L9035;
+    RSPEAK(258);
+    return(2012);
+
+L9035:	WD2=0;
+    //obj=0;
+    return(2630);
+}
+
 static int vscore(void)
 /* Score.  Call scoring routine but tell it to return. */
 {
@@ -448,22 +465,10 @@ L8010:	if(game.atloc[game.loc] == 0 || game.link[game.atloc[game.loc]] != 0 || A
 
 /*  Transitive carry/drop are in separate file. */
 
-L9010:	return(carry(obj));
-L9020:	return(discard(obj, false));
+L9010: return carry(obj);
+L9020: return discard(obj, false);
 
-/*  SAY.  Echo WD2 (or WD1 if no WD2 (SAY WHAT?, etc.).)  Magic words override. */
-
-L9030:	SETPRM(1,WD2,WD2X);
-	if(WD2 <= 0)SETPRM(1,WD1,WD1X);
-	if(WD2 > 0)WD1=WD2;
-	I=VOCAB(WD1,-1);
-	if(I == 62 || I == 65 || I == 71 || I == 2025 || I == 2034) goto L9035;
-	RSPEAK(258);
-	 return(2012);
-
-L9035:	WD2=0;
-	obj=0;
-	 return(2630);
+L9030: return say();
 
 /*  Lock, unlock, no object given.  Assume various things if present. */
 
