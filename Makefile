@@ -17,7 +17,7 @@ SOURCES=$(OBJS:.o=.c) dungeon.c advent.h funcs.h sizes.h adventure.text Makefile
 	$(CC) $(CCFLAGS) $(DBX) -c $<
 
 advent:	$(OBJS) database.o linenoise.o
-	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) database.o $(LDFLAGS) $(LIBS)
+	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) database.o linenoise.o $(LDFLAGS) $(LIBS)
 
 main.o:	 	advent.h funcs.h database.h database.c sizes.h
 
