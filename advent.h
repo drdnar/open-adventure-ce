@@ -89,17 +89,11 @@ extern void SPEAK(vocab_t);
 extern void PSPEAK(vocab_t,int);
 extern void RSPEAK(vocab_t);
 extern void SETPRM(long,long,long);
-
-extern bool fGETIN(FILE *,token_t*,token_t*,token_t*,token_t*);
-#define GETIN(input,WORD1,WORD1X,WORD2,WORD2X) fGETIN(input,&WORD1,&WORD1X,&WORD2,&WORD2X)
-
+extern bool GETIN(FILE *,token_t*,token_t*,token_t*,token_t*);
 extern long YES(FILE *,vocab_t,vocab_t,vocab_t);
 extern long GETTXT(bool,bool,bool);
 extern token_t MAKEWD(long);
-
-extern void fPUTTXT(token_t,long*,long);
-#define PUTTXT(WORD,STATE,CASE) fPUTTXT(WORD,&STATE,CASE)
-
+extern void PUTTXT(token_t,long*,long);
 extern void SHFTXT(long,long);
 extern void TYPE0(void);
 

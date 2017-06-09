@@ -81,7 +81,7 @@ static int attack(FILE *input, long verb, long obj)
      *  fixed), move rug there (not fixed), and move him there,
      *  too.  Then do a null motion to get new description. */
     RSPEAK(49);
-    GETIN(input,WD1,WD1X,WD2,WD2X);
+    GETIN(input,&WD1,&WD1X,&WD2,&WD2X);
     if (WD1 != MAKEWD(25) && WD1 != MAKEWD(250519))
 	return(2607);
     PSPEAK(DRAGON,3);

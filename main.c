@@ -574,7 +574,7 @@ L2603:	if(game.closed) {
 	    game.knfloc=0;
 
 	/* This is where we get a new command from the user */
-	if (!GETIN(cmdin, WD1,WD1X,WD2,WD2X))
+	if (!GETIN(cmdin, &WD1,&WD1X,&WD2,&WD2X))
 	    return false;
 
 	/*  Every input, check "game.foobar" flag.  If zero, nothing's

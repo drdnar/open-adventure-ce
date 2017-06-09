@@ -32,7 +32,7 @@ void SPEAK(vocab_t msg)
 	LNPOSN=1;
 	state=0;
 	for (i = msg; i <= nxt; i++) {
-	    PUTTXT(LINES[i],state,2);
+	    PUTTXT(LINES[i],&state,2);
 	}
 	LNPOSN=0;
 	++LNPOSN;
@@ -69,7 +69,7 @@ void SPEAK(vocab_t msg)
 		while (PARMS[nparms] > 0) {
 		    if (PARMS[nparms+1] < 0)
 			casemake=0;
-		    PUTTXT(PARMS[nparms],state,casemake);
+		    PUTTXT(PARMS[nparms],&state,casemake);
 		    nparms=nparms+1;
 		}
 		++nparms;
@@ -96,8 +96,8 @@ void SPEAK(vocab_t msg)
 		if (prmtyp == 33)
 		    casemake=0;
 		i = LNPOSN;
-		PUTTXT(PARMS[nparms],state,casemake);
-		PUTTXT(PARMS[nparms+1],state,casemake);
+		PUTTXT(PARMS[nparms],&state,casemake);
+		PUTTXT(PARMS[nparms+1],&state,casemake);
 		if (prmtyp == 13 && INLINE[i] >= 37 && INLINE[i] <= 62)
 		    INLINE[i] -= 26;
 		nparms += 2;
@@ -176,7 +176,7 @@ void SETPRM(long first, long p1, long p2)
     }
 }
 
-bool fGETIN(FILE *input, 
+bool GETIN(FILE *input,
 	    long *pword1, long *pword1x, 
 	    long *pword2, long *pword2x) 
 /*  Get a command from the adventurer.  Snarf out the first word, pad it with
@@ -221,7 +221,7 @@ long YES(FILE *input, vocab_t x, vocab_t y, vocab_t z)
 
     for (;;) {
 	RSPEAK(x);
-	GETIN(input, reply,junk1,junk2,junk3);
+	GETIN(input, &reply, &junk1, &junk2, &junk3);
 	if (reply == MAKEWD(250519) || reply == MAKEWD(25)) {
 	    RSPEAK(y);
 	    return true;
@@ -306,7 +306,7 @@ token_t MAKEWD(long letters)
     return word;
 }
 
-void fPUTTXT(token_t word, long *state, long casemake)
+void PUTTXT(token_t word, long *state, long casemake)
 /*  Unpack the 30-bit value in word to obtain up to TOKLEN (currently
  *  5) integer-encoded chars, and store them in inline starting at
  *  LNPOSN.  If LNLENG>=LNPOSN, shift existing characters to the right
