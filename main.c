@@ -561,67 +561,65 @@ L13:	if(game.newloc <= 100)
 L14:	if(game.newloc != 0 && !PCT(game.newloc)) goto L12;
 L16:	game.newloc=MOD(LL,1000);
     if(game.newloc <= 300) return true;
-    if(game.newloc <= 500) goto L30000;
+    if(game.newloc <= 500) {
+	game.newloc=game.newloc-300;
+	switch (game.newloc)
+	{
+	case 1:
+	    /*  Travel 301.  Plover-alcove passage.  Can carry only
+	     *  emerald.  Note: travel table must include "useless"
+	     *  entries going through passage, which can never be used for
+	     *  actual motion, but can be spotted by "go back". */
+	    game.newloc=99+100-game.loc;	/* ESR: an instance of NOBJECTS? */
+	    if(game.holdng == 0 || (game.holdng == 1 && TOTING(EMRALD))) return true;
+	    game.newloc=game.loc;
+	    RSPEAK(117);
+	    return true;
+	case 2:
+	    /*  Travel 302.  Plover transport.  Drop the emerald (only use
+	     *  special travel if toting it), so he's forced to use the
+	     *  plover-passage to get it out.  Having dropped it, go back and
+	     *  pretend he wasn't carrying it after all. */
+	    DROP(EMRALD,game.loc);
+	    goto L12;
+	case 3:
+	    /*  Travel 303.  Troll bridge.  Must be done only as special
+	     *  motion so that dwarves won't wander across and encounter
+	     *  the bear.  (They won't follow the player there because
+	     *  that region is forbidden to the pirate.)  If
+	     *  game.prop(TROLL)=1, he's crossed since paying, so step out
+	     *  and block him.  (standard travel entries check for
+	     *  game.prop(TROLL)=0.)  Special stuff for bear. */
+	    if(game.prop[TROLL] == 1) {
+		PSPEAK(TROLL,1);
+		game.prop[TROLL]=0;
+		MOVE(TROLL2,0);
+		MOVE(TROLL2+NOBJECTS,0);
+		MOVE(TROLL,PLAC[TROLL]);
+		MOVE(TROLL+NOBJECTS,FIXD[TROLL]);
+		JUGGLE(CHASM);
+		game.newloc=game.loc;
+		return true;
+	    } else {
+		game.newloc=PLAC[TROLL]+FIXD[TROLL]-game.loc;
+		if(game.prop[TROLL] == 0)game.prop[TROLL]=1;
+		if(!TOTING(BEAR)) return true;
+		RSPEAK(162);
+		game.prop[CHASM]=1;
+		game.prop[TROLL]=2;
+		DROP(BEAR,game.newloc);
+		game.fixed[BEAR]= -1;
+		game.prop[BEAR]=3;
+		game.oldlc2=game.newloc;
+		croak(cmdin);
+		return false;
+	    }
+	}
+	BUG(20);
+    }
     RSPEAK(game.newloc-500);
     game.newloc=game.loc;
     return true;
-
-/*  Special motions come here.  Labelling convention: statement numbers NNNXX
- *  (XX=00-99) are used for special case number NNN (NNN=301-500). */
-
-L30000: game.newloc=game.newloc-300;
-    switch (game.newloc) { case 1: goto L30100; case 2: goto L30200; case 3: goto
-									 L30300; }
-    BUG(20);
-
-/*  Travel 301.  Plover-alcove passage.  Can carry only emerald.  Note: travel
- *  table must include "useless" entries going through passage, which can never
- *  be used for actual motion, but can be spotted by "go back". */
-
-L30100: game.newloc=99+100-game.loc;	/* ESR: an instance of NOBJECTS? */
-    if(game.holdng == 0 || (game.holdng == 1 && TOTING(EMRALD))) return true;
-    game.newloc=game.loc;
-    RSPEAK(117);
-    return true;
-
-/*  Travel 302.  Plover transport.  Drop the emerald (only use special travel if
- *  toting it), so he's forced to use the plover-passage to get it out.  Having
- *  dropped it, go back and pretend he wasn't carrying it after all. */
-
-L30200: DROP(EMRALD,game.loc);
-    goto L12;
-
-/*  Travel 303.  Troll bridge.  Must be done only as special motion so that
- *  dwarves won't wander across and encounter the bear.  (They won't follow the
- *  player there because that region is forbidden to the pirate.)  If
- *  game.prop(TROLL)=1, he's crossed since paying, so step out and block him.
- *  (standard travel entries check for game.prop(TROLL)=0.)  Special stuff for bear. */
-
-L30300: if(game.prop[TROLL] != 1) goto L30310;
-    PSPEAK(TROLL,1);
-    game.prop[TROLL]=0;
-    MOVE(TROLL2,0);
-    MOVE(TROLL2+NOBJECTS,0);
-    MOVE(TROLL,PLAC[TROLL]);
-    MOVE(TROLL+NOBJECTS,FIXD[TROLL]);
-    JUGGLE(CHASM);
-    game.newloc=game.loc;
-    return true;
-
-L30310: game.newloc=PLAC[TROLL]+FIXD[TROLL]-game.loc;
-    if(game.prop[TROLL] == 0)game.prop[TROLL]=1;
-    if(!TOTING(BEAR)) return true;
-    RSPEAK(162);
-    game.prop[CHASM]=1;
-    game.prop[TROLL]=2;
-    DROP(BEAR,game.newloc);
-    game.fixed[BEAR]= -1;
-    game.prop[BEAR]=3;
-    game.oldlc2=game.newloc;
-    croak(cmdin);
-    return false;
-
-/*  End of specials. */
 
 L21:	LL=MOD((labs(TRAVEL[KK])/1000),1000);
     if(LL != K) {
