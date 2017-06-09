@@ -469,8 +469,185 @@ static void croak(FILE *cmdin)
     }
 }
 
+/*  Given the current location in "game.loc", and a motion verb number in
+ *  "K", put the new location in "game.newloc".  The current loc is saved
+ *  in "game.oldloc" in case he wants to retreat.  The current
+ *  game.oldloc is saved in game.oldlc2, in case he dies.  (if he
+ *  does, game.newloc will be limbo, and OLgame.dloc will be what killed
+ *  him, so we need game.oldlc2, which is the last place he was
+ *  safe.) */
+
+static bool playermove(FILE *cmdin, token_t verb)
+{
+    int LL, K2, KK=KEY[game.loc];
+    game.newloc=game.loc;
+    if(KK == 0)
+	BUG(26);
+    if(K == NUL)
+	return true;
+    if(K == BACK) {
+	/*  Handle "go back".  Look for verb which goes from game.loc to
+	 *  game.oldloc, or to game.oldlc2 If game.oldloc has forced-motion.
+	 *  K2 saves entry -> forced loc -> previous loc. */
+	K=game.oldloc;
+	if(FORCED(K))K=game.oldlc2;
+	game.oldlc2=game.oldloc;
+	game.oldloc=game.loc;
+	K2=0;
+	if(K == game.loc)K2=91;
+	if(CNDBIT(game.loc,4))K2=274;
+	if(K2 == 0) goto L21;
+	RSPEAK(K2);
+	return true;
+    }
+    if(K == LOOK) {
+	/*  Look.  Can't give more detail.  Pretend it wasn't dark
+	 *  (though it may "now" be dark) so he won't fall into a
+	 *  pit while staring into the gloom. */
+	if(game.detail < 3)RSPEAK(15);
+	game.detail=game.detail+1;
+	game.wzdark=false;
+	game.abbrev[game.loc]=0;
+	return true;
+    }
+    if(K == CAVE) {
+	/*  Cave.  Different messages depending on whether above ground. */
+	RSPEAK((OUTSID(game.loc) && game.loc != 8) ? 57 : 58);
+	return true;
+    }
+    game.oldlc2=game.oldloc;
+    game.oldloc=game.loc;
+
+L9:
+    LL=labs(TRAVEL[KK]);
+    if(MOD(LL,1000) == 1 || MOD(LL,1000) == K)
+	goto L10;
+    if(TRAVEL[KK] < 0) {
+	/*  Non-applicable motion.  Various messages depending on
+	 *  word given. */
+	SPK=12;
+	if(K >= 43 && K <= 50)SPK=52;
+	if(K == 29 || K == 30)SPK=52;
+	if(K == 7 || K == 36 || K == 37)SPK=10;
+	if(K == 11 || K == 19)SPK=11;
+	if(verb == FIND || verb == INVENT)SPK=59;
+	if(K == 62 || K == 65)SPK=42;
+	if(K == 17)SPK=80;
+	RSPEAK(SPK);
+	return true;
+    }
+    KK=KK+1;
+    goto L9;
+
+L10:	LL=LL/1000;
+L11:	game.newloc=LL/1000;
+    K=MOD(game.newloc,100);	/* ESR: an instance of NOBJECTS? */
+    if(game.newloc <= 300)
+	goto L13;
+    if(game.prop[K] != game.newloc/100-3)
+	goto L16;
+L12:	if(TRAVEL[KK] < 0)BUG(25);
+    KK=KK+1;
+    game.newloc=labs(TRAVEL[KK])/1000;
+    if(game.newloc == LL) goto L12;
+    LL=game.newloc;
+    goto L11;
+
+L13:	if(game.newloc <= 100)
+	goto L14;
+    if(TOTING(K) || (game.newloc > 200 && AT(K))) goto L16;
+    goto L12;
+
+L14:	if(game.newloc != 0 && !PCT(game.newloc)) goto L12;
+L16:	game.newloc=MOD(LL,1000);
+    if(game.newloc <= 300) return true;
+    if(game.newloc <= 500) goto L30000;
+    RSPEAK(game.newloc-500);
+    game.newloc=game.loc;
+    return true;
+
+/*  Special motions come here.  Labelling convention: statement numbers NNNXX
+ *  (XX=00-99) are used for special case number NNN (NNN=301-500). */
+
+L30000: game.newloc=game.newloc-300;
+    switch (game.newloc) { case 1: goto L30100; case 2: goto L30200; case 3: goto
+									 L30300; }
+    BUG(20);
+
+/*  Travel 301.  Plover-alcove passage.  Can carry only emerald.  Note: travel
+ *  table must include "useless" entries going through passage, which can never
+ *  be used for actual motion, but can be spotted by "go back". */
+
+L30100: game.newloc=99+100-game.loc;	/* ESR: an instance of NOBJECTS? */
+    if(game.holdng == 0 || (game.holdng == 1 && TOTING(EMRALD))) return true;
+    game.newloc=game.loc;
+    RSPEAK(117);
+    return true;
+
+/*  Travel 302.  Plover transport.  Drop the emerald (only use special travel if
+ *  toting it), so he's forced to use the plover-passage to get it out.  Having
+ *  dropped it, go back and pretend he wasn't carrying it after all. */
+
+L30200: DROP(EMRALD,game.loc);
+    goto L12;
+
+/*  Travel 303.  Troll bridge.  Must be done only as special motion so that
+ *  dwarves won't wander across and encounter the bear.  (They won't follow the
+ *  player there because that region is forbidden to the pirate.)  If
+ *  game.prop(TROLL)=1, he's crossed since paying, so step out and block him.
+ *  (standard travel entries check for game.prop(TROLL)=0.)  Special stuff for bear. */
+
+L30300: if(game.prop[TROLL] != 1) goto L30310;
+    PSPEAK(TROLL,1);
+    game.prop[TROLL]=0;
+    MOVE(TROLL2,0);
+    MOVE(TROLL2+NOBJECTS,0);
+    MOVE(TROLL,PLAC[TROLL]);
+    MOVE(TROLL+NOBJECTS,FIXD[TROLL]);
+    JUGGLE(CHASM);
+    game.newloc=game.loc;
+    return true;
+
+L30310: game.newloc=PLAC[TROLL]+FIXD[TROLL]-game.loc;
+    if(game.prop[TROLL] == 0)game.prop[TROLL]=1;
+    if(!TOTING(BEAR)) return true;
+    RSPEAK(162);
+    game.prop[CHASM]=1;
+    game.prop[TROLL]=2;
+    DROP(BEAR,game.newloc);
+    game.fixed[BEAR]= -1;
+    game.prop[BEAR]=3;
+    game.oldlc2=game.newloc;
+    croak(cmdin);
+    return false;
+
+/*  End of specials. */
+
+L21:	LL=MOD((labs(TRAVEL[KK])/1000),1000);
+    if(LL != K) {
+	if(LL <= 300) {
+	    if(FORCED(LL) && MOD((labs(TRAVEL[KEY[LL]])/1000),1000) == K)
+		K2=KK;
+	}
+	if(TRAVEL[KK] < 0)
+	    goto L23;
+	KK=KK+1;
+	goto L21;
+
+    L23:		KK=K2;
+	if(KK == 0) {
+	    RSPEAK(140);
+	    return true;
+	}
+    }
+
+    K=MOD(labs(TRAVEL[KK]),1000);
+    KK=KEY[game.loc];
+    goto L9;
+}
+
 static bool do_command(FILE *cmdin) {
-	long LL, KQ, VERB, KK, K2, V1, V2;
+	long KQ, VERB, KK, V1, V2;
 	long obj, i;
 	static long IGO = 0;
 
@@ -709,179 +886,15 @@ L8000:	SETPRM(1,WD1,WD1X);
 	obj=0;
 	goto L2600;
 
-/*  Figure out the new location
- *
- *  Given the current location in "game.loc", and a motion verb number in
- *  "K", put the new location in "game.newloc".  The current loc is saved
- *  in "game.oldloc" in case he wants to retreat.  The current
- *  game.oldloc is saved in game.oldlc2, in case he dies.  (if he
- *  does, game.newloc will be limbo, and OLgame.dloc will be what killed
- *  him, so we need game.oldlc2, which is the last place he was
- *  safe.) */
+/*  Figure out the new location */
 
-L8:	KK=KEY[game.loc];
-	game.newloc=game.loc;
-	if(KK == 0)
-	    BUG(26);
-	if(K == NUL)
+L8:
+	if (playermove(cmdin, VERB))
 	    return true;
-	if(K == BACK) {
-	    /*  Handle "go back".  Look for verb which goes from game.loc to
-	     *  game.oldloc, or to game.oldlc2 If game.oldloc has forced-motion.
-	     *  K2 saves entry -> forced loc -> previous loc. */
-	    K=game.oldloc;
-	    if(FORCED(K))K=game.oldlc2;
-	    game.oldlc2=game.oldloc;
-	    game.oldloc=game.loc;
-	    K2=0;
-	    if(K == game.loc)K2=91;
-	    if(CNDBIT(game.loc,4))K2=274;
-	    if(K2 == 0) goto L21;
-	    RSPEAK(K2);
-	    return true;
-	}
-	if(K == LOOK) {
-	    /*  Look.  Can't give more detail.  Pretend it wasn't dark
-	     *  (though it may "now" be dark) so he won't fall into a
-	     *  pit while staring into the gloom. */
-	    if(game.detail < 3)RSPEAK(15);
-	    game.detail=game.detail+1;
-	    game.wzdark=false;
-	    game.abbrev[game.loc]=0;
-	    return true;
-	}
-	if(K == CAVE) {
-	    /*  Cave.  Different messages depending on whether above ground. */
-	    RSPEAK((OUTSID(game.loc) && game.loc != 8) ? 57 : 58);
-	    return true;
-	}
-	game.oldlc2=game.oldloc;
-	game.oldloc=game.loc;
-
-L9:	LL=labs(TRAVEL[KK]);
-	if(MOD(LL,1000) == 1 || MOD(LL,1000) == K) goto L10;
-	if(TRAVEL[KK] < 0) {
-	    /*  Non-applicable motion.  Various messages depending on
-	     *  word given. */
-	    SPK=12;
-	    if(K >= 43 && K <= 50)SPK=52;
-	    if(K == 29 || K == 30)SPK=52;
-	    if(K == 7 || K == 36 || K == 37)SPK=10;
-	    if(K == 11 || K == 19)SPK=11;
-	    if(VERB == FIND || VERB == INVENT)SPK=59;
-	    if(K == 62 || K == 65)SPK=42;
-	    if(K == 17)SPK=80;
-	    RSPEAK(SPK);
-	    return true;
-	}
-	KK=KK+1;
-	goto L9;
-
-L10:	LL=LL/1000;
-L11:	game.newloc=LL/1000;
-	 K=MOD(game.newloc,100);	/* ESR: an instance of NOBJECTS? */
-	if(game.newloc <= 300) goto L13;
-	if(game.prop[K] != game.newloc/100-3) goto L16;
-L12:	if(TRAVEL[KK] < 0)BUG(25);
-	KK=KK+1;
-	game.newloc=labs(TRAVEL[KK])/1000;
-	if(game.newloc == LL) goto L12;
-	LL=game.newloc;
-	 goto L11;
-
-L13:	if(game.newloc <= 100) goto L14;	/* ESR: an instance of NOBJECTS? */
-	if(TOTING(K) || (game.newloc > 200 && AT(K))) goto L16;
-	 goto L12;
-
-L14:	if(game.newloc != 0 && !PCT(game.newloc)) goto L12;
-L16:	game.newloc=MOD(LL,1000);
-	if(game.newloc <= 300) return true;
-	if(game.newloc <= 500) goto L30000;
-	RSPEAK(game.newloc-500);
-	game.newloc=game.loc;
-	 return true;
-
-/*  Special motions come here.  Labelling convention: statement numbers NNNXX
- *  (XX=00-99) are used for special case number NNN (NNN=301-500). */
-
-L30000: game.newloc=game.newloc-300;
-	 switch (game.newloc) { case 1: goto L30100; case 2: goto L30200; case 3: goto
-		L30300; }
-	BUG(20);
-
-/*  Travel 301.  Plover-alcove passage.  Can carry only emerald.  Note: travel
- *  table must include "useless" entries going through passage, which can never
- *  be used for actual motion, but can be spotted by "go back". */
-
-L30100: game.newloc=99+100-game.loc;	/* ESR: an instance of NOBJECTS? */
-	if(game.holdng == 0 || (game.holdng == 1 && TOTING(EMRALD))) return true;
-	game.newloc=game.loc;
-	RSPEAK(117);
-	return true;
-
-/*  Travel 302.  Plover transport.  Drop the emerald (only use special travel if
- *  toting it), so he's forced to use the plover-passage to get it out.  Having
- *  dropped it, go back and pretend he wasn't carrying it after all. */
-
-L30200: DROP(EMRALD,game.loc);
-	 goto L12;
-
-/*  Travel 303.  Troll bridge.  Must be done only as special motion so that
- *  dwarves won't wander across and encounter the bear.  (They won't follow the
- *  player there because that region is forbidden to the pirate.)  If
- *  game.prop(TROLL)=1, he's crossed since paying, so step out and block him.
- *  (standard travel entries check for game.prop(TROLL)=0.)  Special stuff for bear. */
-
-L30300: if(game.prop[TROLL] != 1) goto L30310;
-	PSPEAK(TROLL,1);
-	game.prop[TROLL]=0;
-	MOVE(TROLL2,0);
-	MOVE(TROLL2+NOBJECTS,0);
-	MOVE(TROLL,PLAC[TROLL]);
-	MOVE(TROLL+NOBJECTS,FIXD[TROLL]);
-	JUGGLE(CHASM);
-	game.newloc=game.loc;
-	return true;
-
-L30310: game.newloc=PLAC[TROLL]+FIXD[TROLL]-game.loc;
-	if(game.prop[TROLL] == 0)game.prop[TROLL]=1;
-	if(!TOTING(BEAR)) return true;
-	RSPEAK(162);
-	game.prop[CHASM]=1;
-	game.prop[TROLL]=2;
-	DROP(BEAR,game.newloc);
-	game.fixed[BEAR]= -1;
-	game.prop[BEAR]=3;
-	game.oldlc2=game.newloc;
-	croak(cmdin);
-	goto L2000;
-
-/*  End of specials. */
-
-L21:	LL=MOD((labs(TRAVEL[KK])/1000),1000);
-	if(LL != K) {
-	    if(LL <= 300) {
-		if(FORCED(LL) && MOD((labs(TRAVEL[KEY[LL]])/1000),1000) == K)
-		    K2=KK;
-	    }
-	    if(TRAVEL[KK] < 0)
-		goto L23;
-	    KK=KK+1;
-	    goto L21;
-
-	L23:		KK=K2;
-	    if(KK == 0) {
-		RSPEAK(140);
-		return true;
-	    }
-	}
-
-	K=MOD(labs(TRAVEL[KK]),1000);
-	KK=KEY[game.loc];
-	goto L9;
+	else
+	    goto L2000;
 
 /*  Cave closing and scoring */
-
 
 /*  These sections handle the closing of the cave.  The cave closes "clock1"
  *  turns after the last treasure has been located (including the pirate's
