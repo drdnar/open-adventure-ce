@@ -7,6 +7,15 @@
 
 int carry(long obj)
 {
+    if (obj == INTRANSITIVE) {
+	/*  Carry, no object given yet.  OK if only one object present. */
+	if(game.atloc[game.loc] == 0 ||
+	   game.link[game.atloc[game.loc]] != 0 ||
+	   ATDWRF(game.loc) > 0)
+	    return(8000);
+	obj=game.atloc[game.loc];
+    }
+
     if (TOTING(obj)) return(2011);
     SPK=25;
     if (obj == PLANT && game.prop[PLANT] <= 0)SPK=115;

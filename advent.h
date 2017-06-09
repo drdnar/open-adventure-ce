@@ -11,6 +11,7 @@
 #define MAXTRS		79
 #define MAXPARMS	25
 #define INVLIMIT	7
+#define INTRANSITIVE	-1	/* illegal object number */
 
 typedef struct lcg_state
 {
