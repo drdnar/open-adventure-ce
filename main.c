@@ -416,6 +416,26 @@ static bool dwarfmove(void)
     return false;
 }
 
+/*  "You're dead, Jim."
+ *
+ *  If the current loc is zero, it means the clown got himself killed.
+ *  We'll allow this maxdie times.  MAXDIE is automatically set based
+ *  on the number of snide messages available.  Each death results in
+ *  a message (81, 83, etc.)  which offers reincarnation; if accepted,
+ *  this results in message 82, 84, etc.  The last time, if he wants
+ *  another chance, he gets a snide remark as we exit.  When
+ *  reincarnated, all objects being carried get dropped at game.oldlc2
+ *  (presumably the last place prior to being killed) without change
+ *  of props.  the loop runs backwards to assure that the bird is
+ *  dropped before the cage.  (this kluge could be changed once we're
+ *  sure all references to bird and cage are done by keywords.)  The
+ *  lamp is a special case (it wouldn't do to leave it in the cave).
+ *  It is turned off and left outside the building (only if he was
+ *  carrying it, of course).  He himself is left inside the building
+ *  (and heaven help him if he tries to xyzzy back into the cave
+ *  without the lamp!).  game.oldloc is zapped so he can't just
+ *  "retreat". */
+
 static void croak(FILE *cmdin)
 /*  Okay, he's dead.  Let's get on with it. */
 {
@@ -480,28 +500,40 @@ static bool do_command(FILE *cmdin) {
 	if (!dwarfmove())
 	    croak(cmdin);
 
-/*  Describe the current location and (maybe) get next command. */
+       /*  Describe the current location and (maybe) get next command. */
 
-/*  Print text for current loc. */
+       /*  Print text for current loc. */
 
 L2000:	if(game.loc == 0)
 	    croak(cmdin);
 	KK=STEXT[game.loc];
-	if(MOD(game.abbrev[game.loc],game.abbnum) == 0 || KK == 0)KK=LTEXT[game.loc];
-	if(FORCED(game.loc) || !DARK(0)) goto L2001;
-	if(game.wzdark && PCT(35)) goto L90;
-	KK=RTEXT[16];
-L2001:	if(TOTING(BEAR))RSPEAK(141);
+	if(MOD(game.abbrev[game.loc],game.abbnum) == 0 || KK == 0)
+	    KK=LTEXT[game.loc];
+	if(!FORCED(game.loc) && DARK(0)) {
+	    /*  The easiest way to get killed is to fall into a pit in
+	     *  pitch darkness. */
+	    if(game.wzdark && PCT(35)) {
+		RSPEAK(23);
+		game.oldlc2 = game.loc;
+		croak(cmdin);
+		goto L2000;
+	    }
+	    KK=RTEXT[16];
+	}
+	if(TOTING(BEAR))RSPEAK(141);
 	SPEAK(KK);
 	K=1;
-	if(FORCED(game.loc)) goto L8;
+	if(FORCED(game.loc))
+	    goto L8;
 	if(game.loc == 33 && PCT(25) && !game.closng)RSPEAK(7);
 
-/*  Print out descriptions of objects at this location.  If not closing and
- *  property value is negative, tally off another treasure.  Rug is special
- *  case; once seen, its game.prop is 1 (dragon on it) till dragon is killed.
- *  Similarly for chain; game.prop is initially 1 (locked to bear).  These hacks
- *  are because game.prop=0 is needed to get full score. */
+	/*  Print out descriptions of objects at this location.  If
+	 *  not closing and property value is negative, tally off
+	 *  another treasure.  Rug is special case; once seen, its
+	 *  game.prop is 1 (dragon on it) till dragon is killed.
+	 *  Similarly for chain; game.prop is initially 1 (locked to
+	 *  bear).  These hacks are because game.prop=0 is needed to
+	 *  get full score. */
 
 	if(DARK(0)) goto L2012;
 	game.abbrev[game.loc]=game.abbrev[game.loc]+1;
@@ -848,30 +880,6 @@ L50:	SPK=12;
 	if(K == 17)SPK=80;
 	RSPEAK(SPK);
 	return true;
-
-/*  "You're dead, Jim."
- *
- *  If the current loc is zero, it means the clown got himself killed.  We'll
- *  allow this maxdie times.  MAXDIE is automatically set based on the number of
- *  snide messages available.  Each death results in a message (81, 83, etc.)
- *  which offers reincarnation; if accepted, this results in message 82, 84,
- *  etc.  The last time, if he wants another chance, he gets a snide remark as
- *  we exit.  When reincarnated, all objects being carried get dropped at game.oldlc2
- *  (presumably the last place prior to being killed) without change of props.
- *  the loop runs backwards to assure that the bird is dropped before the cage.
- *  (this kluge could be changed once we're sure all references to bird and cage
- *  are done by keywords.)  The lamp is a special case (it wouldn't do to leave
- *  it in the cave).  It is turned off and left outside the building (only if he
- *  was carrying it, of course).  He himself is left inside the building (and
- *  heaven help him if he tries to xyzzy back into the cave without the lamp!).
- *  game.oldloc is zapped so he can't just "retreat". */
-
-/*  The easiest way to get killed is to fall into a pit in pitch darkness. */
-
-L90:	RSPEAK(23);
-	game.oldlc2=game.loc;
-	croak(cmdin);
-	goto L2000;
 
 /*  Cave closing and scoring */
 
