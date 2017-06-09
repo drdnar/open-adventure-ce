@@ -3,6 +3,8 @@
 #include "advent.h"
 #include "database.h"
 
+#define VRSION	25	/* bump on save format change */
+
 /*
  * Action handlers.  Eventually we'll do lookup through a method table
  * that calls these.  Absolutely nothing like the original FORTRAN.
