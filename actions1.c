@@ -373,6 +373,47 @@ static int quit(FILE *input)
     return(2012);
 }
 
+static int read(FILE *input, token_t obj)
+/*  Read.  Print stuff based on objtxt.  Oyster (?) is special case. */
+{
+    int i;
+    if (obj == INTRANSITIVE) {
+	obj = 0;
+	for (i=1; i<=NOBJECTS; i++) {
+	    if (HERE(i) && OBJTXT[i] != 0 && game.prop[i] >= 0)
+		obj = obj * NOBJECTS + i;
+	}
+	if (obj > NOBJECTS || obj == 0 || DARK(0)) return(8000);
+    }
+	
+    if (DARK(0)) {
+	SETPRM(1,WD1,WD1X);
+	RSPEAK(256);
+	return(2012);
+    }
+    if (OBJTXT[obj] == 0 || game.prop[obj] < 0)
+	return(2011);
+    if (obj == OYSTER && !game.clshnt) {
+	game.clshnt=YES(input,192,193,54);
+	return(2012);
+    }
+    PSPEAK(obj,OBJTXT[obj]+game.prop[obj]);
+    return(2012);
+}
+
+static int reservoir(void)
+/*  Z'ZZZ (word gets recomputed at startup; different each game). */
+{
+    if (!AT(RESER) && game.loc != game.fixed[RESER]-1) return(2011);
+    PSPEAK(RESER,game.prop[RESER]+1);
+    game.prop[RESER]=1-game.prop[RESER];
+    if (AT(RESER)) return(2012);
+    game.oldlc2=game.loc;
+    game.newloc=0;
+    RSPEAK(241);
+    return(2);
+}
+
 static int rub(token_t obj)
 /* Rub.  Yields various snide remarks except for lit urn. */
 {
@@ -620,23 +661,8 @@ L9230: return blast();
 L8240: return vscore();
 L8250: return bigwords(WD1);
 L8260: return brief();
-
-/*  Read.  Print stuff based on objtxt.  Oyster (?) is special case. */
-
-L8270:	for (I=1; I<=NOBJECTS; I++) {
-	if (HERE(I) && OBJTXT[I] != 0 && game.prop[I] >= 0)obj=obj*NOBJECTS+I;
-	} /* end loop */
-	if (obj > NOBJECTS || obj == 0 || DARK(0)) return(8000);
-
-L9270:	if (DARK(0)) goto L5190;
-	if (OBJTXT[obj] == 0 || game.prop[obj] < 0) return(2011);
-	if (obj == OYSTER && !game.clshnt) goto L9275;
-	PSPEAK(obj,OBJTXT[obj]+game.prop[obj]);
-	 return(2012);
-
-L9275:	game.clshnt=YES(input,192,193,54);
-	 return(2012);
-
+L8270: return read(input, INTRANSITIVE);
+L9270: return read(input, obj);
 L9280: return vbreak(obj);
 L9290: return wake(obj);
 
@@ -710,16 +736,5 @@ L8318:	RSPEAK(270);
 L8320: return fly(INTRANSITIVE);
 L9320: return fly(obj);
 L8330: return listen();
-
-/*  Z'ZZZ (word gets recomputed at startup; different each game). */
-
-L8340:	if (!AT(RESER) && game.loc != game.fixed[RESER]-1) return(2011);
-	PSPEAK(RESER,game.prop[RESER]+1);
-	game.prop[RESER]=1-game.prop[RESER];
-	if (AT(RESER)) return(2012);
-	game.oldlc2=game.loc;
-	game.newloc=0;
-	RSPEAK(241);
-	 return(2);
-
+L8340: return reservoir();
 }
