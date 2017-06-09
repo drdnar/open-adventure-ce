@@ -140,6 +140,26 @@ static int drink(token_t obj)
     }
 }
 
+static int extinguish(int obj)
+/* Extinguish lamp or urn */
+{
+    if(obj == URN) {
+	game.prop[URN]=game.prop[URN]/2;
+	SPK=210;
+	return(2011);
+    }
+    if(obj == LAMP) {
+	game.prop[LAMP]=0;
+	RSPEAK(40);
+	if(DARK(0))
+	    RSPEAK(16);
+	return(2012);
+    }
+    if(obj == DRAGON || obj == VOLCAN)
+	SPK=146;
+    return(2011);
+}
+
 static int find(token_t obj)
 /* Find.  Might be carrying it, or it might be here.  Else give caveat. */
 {
@@ -536,19 +556,7 @@ L8080:	if(HERE(LAMP) && game.prop[LAMP] == 1)obj=LAMP;
 	if(HERE(URN) && game.prop[URN] == 2)obj=obj*NOBJECTS+URN;
 	if(obj == 0 || obj > NOBJECTS) return(8000);
 
-L9080:	if(obj == URN) goto L9083;
-	if(obj == LAMP) goto L9086;
-	if(obj == DRAGON || obj == VOLCAN)SPK=146;
-	 return(2011);
-
-L9083:	game.prop[URN]=game.prop[URN]/2;
-	SPK=210;
-	 return(2011);
-
-L9086:	game.prop[LAMP]=0;
-	RSPEAK(40);
-	if(DARK(0))RSPEAK(16);
-	 return(2012);
+L9080: return extinguish(obj);
 
 L9090: return wave(obj);
 
