@@ -136,12 +136,6 @@ extern void set_seed(long);
 extern unsigned long get_next_lcg_value(void);
 extern long randrange(long);
 extern void score(long);
-extern int carry(long);
-extern int discard(long, bool);
-extern int attack(FILE *, long, long);
-extern int throw(FILE *, long, long);
-extern int feed(long);
-extern int fill(long);
 
 /*  Statement functions
  *
