@@ -141,7 +141,7 @@ static int drink(token_t obj)
 }
 
 static int extinguish(int obj)
-/* Extinguish lamp or urn */
+/* Extinguish.  Lamp, urn, dragon/volcano (nice try). */
 {
     if (obj == INTRANSITIVE) {
 	if(HERE(LAMP) && game.prop[LAMP] == 1)obj=LAMP;
@@ -196,6 +196,33 @@ static int inven(token_t obj)
     if(TOTING(BEAR))
 	SPK=141;
     return(2011);
+}
+
+int light(token_t obj)
+/*  Light.  Applicable only to lamp and urn. */
+{
+    if (obj == INTRANSITIVE) {
+	if(HERE(LAMP) && game.prop[LAMP] == 0 && game.limit >= 0)obj=LAMP;
+	if(HERE(URN) && game.prop[URN] == 1)obj=obj*NOBJECTS+URN;
+	if(obj == 0 || obj > NOBJECTS) return(8000);
+    }
+
+    if (obj == URN) {
+	SPK=38;
+	if(game.prop[URN] == 0)
+	    return(2011);
+	SPK=209;
+	game.prop[URN]=2;
+	return(2011);
+    } else {
+	if(obj != LAMP) return(2011);
+	SPK=184;
+	if(game.limit < 0) return(2011);
+	game.prop[LAMP]=1;
+	RSPEAK(39);
+	if(game.wzdark) return(2000);
+	return(2012);
+    }	 
 }
 
 static int listen(void)
@@ -530,44 +557,14 @@ L9020: return discard(obj, false);
 L9030: return say();
 L8040: return lock(verb, INTRANSITIVE);
 L9040: return lock(verb, obj);
-
-/*  Clam/Oyster. */
-L9046:	return bivalve(verb, obj);
-
-/*  Chain. */
-L9048:  return chain(verb);
-
-/*  Light.  Applicable only to lamp and urn. */
-
-L8070:	if(HERE(LAMP) && game.prop[LAMP] == 0 && game.limit >= 0)obj=LAMP;
-	if(HERE(URN) && game.prop[URN] == 1)obj=obj*NOBJECTS+URN;
-	if(obj == 0 || obj > NOBJECTS) return(8000);
-
-L9070:	if(obj == URN) goto L9073;
-	if(obj != LAMP) return(2011);
-	SPK=184;
-	if(game.limit < 0) return(2011);
-	game.prop[LAMP]=1;
-	RSPEAK(39);
-	if(game.wzdark) return(2000);
-	 return(2012);
-
-L9073:	SPK=38;
-	if(game.prop[URN] == 0) return(2011);
-	SPK=209;
-	game.prop[URN]=2;
-	 return(2011);
-
-/*  Extinguish.  Lamp, urn, dragon/volcano (nice try). */
-
+L9046: return bivalve(verb, obj);
+L9048: return chain(verb);
+L8070: return light(INTRANSITIVE);
+L9070: return light(obj);
 L8080: return extinguish(INTRANSITIVE);
-
 L9080: return extinguish(obj);
-
 L9090: return wave(obj);
-
 L9120: return attack(input, verb, obj);
-
 L9130: return pour(obj);
 
 /*  Eat.  Intransitive: assume food if present, else ask what.  Transitive: food
@@ -585,27 +582,16 @@ L9140:	if(obj == FOOD) goto L8142;
 	 return(2011);
 
 L9150: return drink(obj);
-
 L9160: return rub(obj);
-
 L9170: return throw(input, verb, obj);
-
 L8180: return quit(input);
-
 L9190: return find(obj);
-
 L8200: return inven(obj);
-
 L9210: return feed(obj);
-
 L9220: return fill(obj);
-
 L9230: return blast();
-
 L8240: return vscore();
-
 L8250: return bigwords(WD1);
-
 L8260: return brief();
 
 /*  Read.  Print stuff based on objtxt.  Oyster (?) is special case. */
