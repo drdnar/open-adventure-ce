@@ -13,6 +13,10 @@
 
 #define PERCENT	63	/* partly hide the packed encoding */
 
+const char advent_to_ascii[] = {0, 32, 33, 34, 39, 40, 41, 42, 43, 44, 45, 46, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 37, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 35, 36, 38, 47, 58, 59, 60, 61, 62, 63, 64, 91, 92, 93, 94, 95, 96, 123, 124, 125, 126, 0};
+/* Rendered from the now-gone MPINIT() function */
+const char ascii_to_advent[] = {0, 74, 75, 76, 77, 78, 79, 80, 81, 82, 0, 0, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 0, 1, 2, 106, 107, 63, 108, 3, 4, 5, 6, 7, 8, 9, 10, 109, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 110, 111, 112, 113, 114, 115, 116, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 117, 118, 119, 120, 121, 122, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 123, 124, 125, 126, 83};
+
 /*  I/O routines (SPEAK, PSPEAK, RSPEAK, SETPRM, GETIN, YES) */
 
 void SPEAK(vocab_t msg)
@@ -695,7 +699,7 @@ void BUG(long num)
     exit(0);
 }
 
-/*  Machine dependent routines (MAPLIN, TYPE, MPINIT, SAVEIO) */
+/*  Machine dependent routines (MAPLIN, TYPE, SAVEIO) */
 
 void MAPLIN(FILE *fp)
 {
@@ -726,9 +730,6 @@ void MAPLIN(FILE *fp)
      *  and is not changed thereafter unless the routines on this page choose
      *  to do so. */
 
-    if (MAP2[1] == 0)
-	MPINIT();
-
     if (!oldstyle && fp == stdin)
 	fputs("> ", stdout);
     do {
@@ -747,7 +748,7 @@ void MAPLIN(FILE *fp)
 	LNLENG=0;
 	for (i=1; i<=(long)sizeof(INLINE) && INLINE[i]!=0; i++) {
 	    val=INLINE[i]+1;
-	    INLINE[i]=MAP1[val];
+	    INLINE[i]=ascii_to_advent[val];
 	    if (INLINE[i] != 0)
 		LNLENG=i;
 	}
@@ -767,49 +768,12 @@ void TYPE(void)
 	return;
     }
 
-    if (MAP2[1] == 0)
-	MPINIT();
     for (i=1; i<=LNLENG; i++) {
-	INLINE[i]=MAP2[INLINE[i]+1];
+	INLINE[i]=advent_to_ascii[INLINE[i]+1];
     }
     INLINE[LNLENG+1]=0;
     printf("%s\n", INLINE+1);
     return;
-}
-
-void MPINIT(void) 
-{
-    long first, i, j, last, val;
-    static long RUNS[7][2] = { {32,34}, {39,46}, {65,90}, {97,122}, 
-			       {37,37}, {48,57}, {0,126} };
-    for (i=1; i<=128; i++) {
-	MAP1[i]= -1;
-    }
-    val=0;
-    for (i=0; i<7; i++) {
-	first =RUNS[i][0];
-	last = RUNS[i][1];
-	for (j=first; j<=last; j++) {
-	    j++; 
-	    if (MAP1[j] < 0) {
-		MAP1[j]=val;
-		++val;
-	    }	    
-	    j--;
-	}
-    }
-    MAP1[128]=MAP1[10];
-    /*  For this version, tab (9) maps to space (32), so del (127)
-     *  uses tab's value */
-    MAP1[10]=MAP1[33];
-    MAP1[11]=MAP1[33];
-
-    for (i=0; i<=126; i++) {
-	i++; val=MAP1[i]+1; i--;
-	MAP2[val] = i*('B'-'A');
-	if (i >= 64)
-	    MAP2[val]=(i-64)*('B'-'A')+'@';
-    }
 }
 
 void fSAVEIO(long op, long in, long arr[]) 

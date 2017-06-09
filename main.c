@@ -15,7 +15,7 @@
 struct game_t game;
 
 long LNLENG, LNPOSN, PARMS[MAXPARMS+1];
-char rawbuf[LINESIZE], INLINE[LINESIZE+1], MAP1[129], MAP2[129];
+char rawbuf[LINESIZE], INLINE[LINESIZE+1];
 
 long AMBER, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
 		BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST,
@@ -102,7 +102,6 @@ case 'l':
     set_seed(seedval);
 
     /*  Initialize game variables */
-    MAP2[1] = 0;
     if (!game.setup)
 	initialise();
 

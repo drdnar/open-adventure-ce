@@ -76,7 +76,9 @@ struct game_t {
 extern struct game_t game;
 
 extern long LNLENG, LNPOSN, PARMS[];
-extern char rawbuf[LINESIZE], INLINE[LINESIZE+1], MAP1[], MAP2[];
+extern char rawbuf[LINESIZE], INLINE[LINESIZE+1];
+extern const char ascii_to_advent[];
+extern const char advent_to_ascii[];
 extern FILE *logfp;
 extern bool oldstyle;
 extern lcg_state lcgstate;
@@ -118,7 +120,6 @@ extern long RNDVOC(long,long);
 extern void BUG(long) __attribute__((noreturn));
 extern void MAPLIN(FILE *);
 extern void TYPE(void);
-extern void MPINIT(void);
 
 extern void fSAVEIO(long,long,long*);
 #define SAVEIO(OP,IN,ARR) fSAVEIO(OP,IN,ARR)
