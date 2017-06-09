@@ -143,6 +143,12 @@ static int drink(token_t obj)
 static int extinguish(int obj)
 /* Extinguish lamp or urn */
 {
+    if (obj == INTRANSITIVE) {
+	if(HERE(LAMP) && game.prop[LAMP] == 1)obj=LAMP;
+	if(HERE(URN) && game.prop[URN] == 2)obj=obj*NOBJECTS+URN;
+	if(obj == 0 || obj > NOBJECTS) return(8000);
+    }
+
     if(obj == URN) {
 	game.prop[URN]=game.prop[URN]/2;
 	SPK=210;
@@ -212,6 +218,46 @@ static int listen(void)
 	if(i == BIRD && OBJSND[i]+game.prop[i] == 8)
 	    DSTROY(BIRD);
     }
+    return(2011);
+}
+
+static int lock(token_t verb, token_t obj)
+/* Lock, unlock, no object given.  Assume various things if present. */
+{
+    int k;
+    if (obj == INTRANSITIVE) {
+	SPK=28;
+	if(HERE(CLAM))obj=CLAM;
+	if(HERE(OYSTER))obj=OYSTER;
+	if(AT(DOOR))obj=DOOR;
+	if(AT(GRATE))obj=GRATE;
+	if(obj != 0 && HERE(CHAIN)) return(8000);
+	if(HERE(CHAIN))obj=CHAIN;
+	if(obj == 0) return(2011);
+    }
+	
+    /*  Lock, unlock object.  Special stuff for opening clam/oyster
+     *  and for chain. */
+    if(obj == CLAM || obj == OYSTER)
+	return bivalve(verb, obj);
+    if(obj == DOOR)SPK=111;
+    if(obj == DOOR && game.prop[DOOR] == 1)SPK=54;
+    if(obj == CAGE)SPK=32;
+    if(obj == KEYS)SPK=55;
+    if(obj == GRATE || obj == CHAIN)SPK=31;
+    if(SPK != 31 || !HERE(KEYS)) return(2011);
+    if(obj == CHAIN)
+	return chain(verb);
+    if (game.closng) {
+	SPK=130;
+	if(!game.panic)game.clock2=15;
+	game.panic=true;
+	return(2011);
+    }
+    SPK=34+game.prop[GRATE];
+    game.prop[GRATE]=1;
+    if(verb == LOCK)game.prop[GRATE]=0;
+    SPK=SPK+2*game.prop[GRATE];
     return(2011);
 }
 
@@ -478,50 +524,12 @@ L5190:	if((verb == FIND || verb == INVENT) && WD2 <= 0) goto L5010;
  *  transitive, plus ten times the verb number.  Many intransitive verbs use the
  *  transitive code, and some verbs use code for other verbs, as noted below. */
 
-/*  Carry, no object given yet.  OK if only one object present. */
-
-L8010:	if(game.atloc[game.loc] == 0 || game.link[game.atloc[game.loc]] != 0 || ATDWRF(game.loc) > 0) return(8000);
-	obj=game.atloc[game.loc];
-
-/*  Transitive carry/drop are in separate file. */
-
+L8010: return carry(INTRANSITIVE);
 L9010: return carry(obj);
 L9020: return discard(obj, false);
-
 L9030: return say();
-
-/*  Lock, unlock, no object given.  Assume various things if present. */
-
-L8040:	SPK=28;
-	if(HERE(CLAM))obj=CLAM;
-	if(HERE(OYSTER))obj=OYSTER;
-	if(AT(DOOR))obj=DOOR;
-	if(AT(GRATE))obj=GRATE;
-	if(obj != 0 && HERE(CHAIN)) return(8000);
-	if(HERE(CHAIN))obj=CHAIN;
-	if(obj == 0) return(2011);
-
-/*  Lock, unlock object.  Special stuff for opening clam/oyster and for chain. */
-
-L9040:	if(obj == CLAM || obj == OYSTER) goto L9046;
-	if(obj == DOOR)SPK=111;
-	if(obj == DOOR && game.prop[DOOR] == 1)SPK=54;
-	if(obj == CAGE)SPK=32;
-	if(obj == KEYS)SPK=55;
-	if(obj == GRATE || obj == CHAIN)SPK=31;
-	if(SPK != 31 || !HERE(KEYS)) return(2011);
-	if(obj == CHAIN) goto L9048;
-	if (game.closng) {
-	    K=130;
-	    if(!game.panic)game.clock2=15;
-	    game.panic=true;
-	    return(2010);
-	}
-	K=34+game.prop[GRATE];
-	game.prop[GRATE]=1;
-	if(verb == LOCK)game.prop[GRATE]=0;
-	K=K+2*game.prop[GRATE];
-	 return(2010);
+L8040: return lock(verb, INTRANSITIVE);
+L9040: return lock(verb, obj);
 
 /*  Clam/Oyster. */
 L9046:	return bivalve(verb, obj);
@@ -552,9 +560,7 @@ L9073:	SPK=38;
 
 /*  Extinguish.  Lamp, urn, dragon/volcano (nice try). */
 
-L8080:	if(HERE(LAMP) && game.prop[LAMP] == 1)obj=LAMP;
-	if(HERE(URN) && game.prop[URN] == 2)obj=obj*NOBJECTS+URN;
-	if(obj == 0 || obj > NOBJECTS) return(8000);
+L8080: return extinguish(INTRANSITIVE);
 
 L9080: return extinguish(obj);
 
