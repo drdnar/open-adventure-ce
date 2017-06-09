@@ -648,7 +648,7 @@ L3000:	SETPRM(1,WD1,WD1X);
 
 L4000:	I=4000; VERB=K; goto Laction;
 L4090:	I=4090; goto Laction;
-L5000:	I=5000;
+L5000:	I=5000; obj = K;
 Laction:
 	 switch (action(cmdin, I, VERB, obj)) {
 	   case 2: return true;

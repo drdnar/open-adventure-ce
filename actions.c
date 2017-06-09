@@ -1079,40 +1079,55 @@ L4090:	switch (verb-1) {
  *  they are never actually dropped at any location, but might be here inside
  *  the bottle or urn or as a feature of the location. */
 
-L5000:	obj=K;
-    if (!HERE(K)) goto L5100;
-L5010:	if (WD2 > 0) return(2800);
-    if (verb != 0) goto L4090;
+L5000:
+    if (!HERE(obj))
+	goto L5100;
+L5010:
+    if (WD2 > 0)
+	return(2800);
+    if (verb != 0)
+	goto L4090;
     SETPRM(1,WD1,WD1X);
     RSPEAK(255);
     return(2600);
 
 L5100:
-    if (K != GRATE) goto L5110;
-    if (game.loc == 1 || game.loc == 4 || game.loc == 7)K=DPRSSN;
-    if (game.loc > 9 && game.loc < 15)K=ENTRNC;
-    if (K != GRATE) return(8);
-L5110:
-    if (K == DWARF && ATDWRF(game.loc) > 0) goto L5010;
-    if ((LIQ(0) == K && HERE(BOTTLE)) || K == LIQLOC(game.loc)) goto L5010;
-    if (obj != OIL || !HERE(URN) || game.prop[URN] == 0) goto L5120;
+    if (obj == GRATE) {
+	if (game.loc == 1 || game.loc == 4 || game.loc == 7)
+	    obj=DPRSSN;
+	if (game.loc > 9 && game.loc < 15)
+	    obj=ENTRNC;
+	if (obj != GRATE)
+	    return(8);
+    }
+
+    if (obj == DWARF && ATDWRF(game.loc) > 0)
+	goto L5010;
+    if ((LIQ(0) == obj && HERE(BOTTLE)) || obj == LIQLOC(game.loc))
+	goto L5010;
+    if (obj != OIL || !HERE(URN) || game.prop[URN] == 0)
+	goto L5120;
     obj=URN;
     goto L5010;
 L5120:
-    if (obj != PLANT || !AT(PLANT2) || game.prop[PLANT2] == 0) goto L5130;
+    if (obj != PLANT || !AT(PLANT2) || game.prop[PLANT2] == 0)
+	goto L5130;
     obj=PLANT2;
     goto L5010;
 L5130:
-    if (obj != KNIFE || game.knfloc != game.loc) goto L5140;
+    if (obj != KNIFE || game.knfloc != game.loc)
+	goto L5140;
     game.knfloc= -1;
     SPK=116;
     return(2011);
 L5140:
-    if (obj != ROD || !HERE(ROD2)) goto L5190;
+    if (obj != ROD || !HERE(ROD2))
+	goto L5190;
     obj=ROD2;
     goto L5010;
 L5190:
-    if ((verb == FIND || verb == INVENT) && WD2 <= 0) goto L5010;
+    if ((verb == FIND || verb == INVENT) && WD2 <= 0)
+	goto L5010;
     SETPRM(1,WD1,WD1X);
     RSPEAK(256);
     return(2012);
