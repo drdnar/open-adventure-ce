@@ -80,22 +80,23 @@ static int attack(FILE *input, long verb, long obj)
      *  too.  Then do a null motion to get new description. */
     RSPEAK(49);
     GETIN(input,WD1,WD1X,WD2,WD2X);
-    if (WD1 != MAKEWD(25) && WD1 != MAKEWD(250519)) return(2607);
+    if (WD1 != MAKEWD(25) && WD1 != MAKEWD(250519))
+	return(2607);
     PSPEAK(DRAGON,3);
     game.prop[DRAGON]=1;
     game.prop[RUG]=0;
-    K=(PLAC[DRAGON]+FIXD[DRAGON])/2;
+    int k=(PLAC[DRAGON]+FIXD[DRAGON])/2;
     MOVE(DRAGON+NOBJECTS,-1);
     MOVE(RUG+NOBJECTS,0);
-    MOVE(DRAGON,K);
-    MOVE(RUG,K);
-    DROP(BLOOD,K);
+    MOVE(DRAGON,k);
+    MOVE(RUG,k);
+    DROP(BLOOD,k);
     for (obj=1; obj<=NOBJECTS; obj++) {
-	if (game.place[obj] == PLAC[DRAGON] || game.place[obj] == FIXD[DRAGON])MOVE(obj,K);
-	/*etc*/ ;
-    } /* end loop */
-    game.loc=K;
-    K=NUL;
+	if (game.place[obj] == PLAC[DRAGON] || game.place[obj] == FIXD[DRAGON])
+	    MOVE(obj,k);
+    }
+    game.loc=k;
+    K=NUL;	/* FIXME: error if removed */
     return(8);
 }
 
@@ -110,7 +111,6 @@ static int bigwords(long foo)
 	if (game.foobar != 0)SPK=151;
 	return(2011);
     } else {
-
 	game.foobar=k;
 	if (k != 4) return(2009);
 	game.foobar=0;
@@ -524,7 +524,7 @@ static int find(token_t obj)
 {
     if (AT(obj) ||
        (LIQ(0) == obj && AT(BOTTLE)) ||
-       K == LIQLOC(game.loc) ||
+       obj == LIQLOC(game.loc) ||
        (obj == DWARF && ATDWRF(game.loc) > 0))
 	SPK=94;
     if (game.closed)SPK=138;
