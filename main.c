@@ -760,7 +760,20 @@ L8:	KK=KEY[game.loc];
 
 L9:	LL=labs(TRAVEL[KK]);
 	if(MOD(LL,1000) == 1 || MOD(LL,1000) == K) goto L10;
-	if(TRAVEL[KK] < 0) goto L50;
+	if(TRAVEL[KK] < 0) {
+	    /*  Non-applicable motion.  Various messages depending on
+	     *  word given. */
+	    SPK=12;
+	    if(K >= 43 && K <= 50)SPK=52;
+	    if(K == 29 || K == 30)SPK=52;
+	    if(K == 7 || K == 36 || K == 37)SPK=10;
+	    if(K == 11 || K == 19)SPK=11;
+	    if(VERB == FIND || VERB == INVENT)SPK=59;
+	    if(K == 62 || K == 65)SPK=42;
+	    if(K == 17)SPK=80;
+	    RSPEAK(SPK);
+	    return true;
+	}
 	KK=KK+1;
 	goto L9;
 
@@ -866,20 +879,6 @@ L21:	LL=MOD((labs(TRAVEL[KK])/1000),1000);
 	K=MOD(labs(TRAVEL[KK]),1000);
 	KK=KEY[game.loc];
 	goto L9;
-
-
-/*  Non-applicable motion.  Various messages depending on word given. */
-
-L50:	SPK=12;
-	if(K >= 43 && K <= 50)SPK=52;
-	if(K == 29 || K == 30)SPK=52;
-	if(K == 7 || K == 36 || K == 37)SPK=10;
-	if(K == 11 || K == 19)SPK=11;
-	if(VERB == FIND || VERB == INVENT)SPK=59;
-	if(K == 62 || K == 65)SPK=42;
-	if(K == 17)SPK=80;
-	RSPEAK(SPK);
-	return true;
 
 /*  Cave closing and scoring */
 
