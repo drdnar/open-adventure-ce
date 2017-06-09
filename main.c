@@ -844,19 +844,22 @@ L2630:
 	   goto L3000;
 	K=MOD(i,1000);
 	KQ=i/1000+1;
-	 switch (KQ-1) { case 0: goto L8; case 1: goto L5000; case 2: goto L4000;
-		case 3: goto L2010; }
+	switch (KQ-1)
+	{
+	case 0: goto L8;
+	case 1: goto L5000;
+	case 2: goto L4000;
+	case 3: goto L2010;
+	}
 	BUG(22);
 
-/*  Get second word for analysis. */
-
+       /* Get second word for analysis. */
 L2800:	WD1=WD2;
 	WD1X=WD2X;
 	WD2=0;
-	 goto L2620;
+	goto L2620;
 
-/*  Gee, I don't understand. */
-
+        /* Gee, I don't understand. */
 L3000:	SETPRM(1,WD1,WD1X);
 	 if (fallback_handler(rawbuf))
 	     return true;
@@ -887,18 +890,16 @@ Laction:
 	   }
 	BUG(99);
 
-/*  Random intransitive verbs come here.  Clear obj just in case (see "attack").
-		*/
-
+ 	/*  Random intransitive verbs come here.  Clear obj just in case
+	 *  (see attack()). */
 L8000:	SETPRM(1,WD1,WD1X);
 	RSPEAK(257);
 	obj=0;
 	goto L2600;
 
-/*  Figure out the new location */
 
-L8:
-	if (playermove(cmdin, VERB))
+	/*  Figure out the new location */
+L8:	if (playermove(cmdin, VERB))
 	    return true;
 	else
 	    goto L2000;
