@@ -1108,29 +1108,26 @@ L5100:
 	goto L5010;
     if ((LIQ(0) == obj && HERE(BOTTLE)) || obj == LIQLOC(game.loc))
 	goto L5010;
-    if (obj != OIL || !HERE(URN) || game.prop[URN] == 0)
-	goto L5120;
-    obj=URN;
-    goto L5010;
-L5120:
-    if (obj != PLANT || !AT(PLANT2) || game.prop[PLANT2] == 0)
-	goto L5130;
-    obj=PLANT2;
-    goto L5010;
-L5130:
-    if (obj != KNIFE || game.knfloc != game.loc)
-	goto L5140;
-    game.knfloc= -1;
-    SPK=116;
-    return(2011);
-L5140:
-    if (obj != ROD || !HERE(ROD2))
-	goto L5190;
-    obj=ROD2;
-    goto L5010;
-L5190:
+    if (obj == OIL && HERE(URN) && game.prop[URN] != 0) {
+	obj=URN;
+	goto L5010;
+    }
+    if (obj == PLANT && AT(PLANT2) && game.prop[PLANT2] != 0) {
+	obj=PLANT2;
+	goto L5010;
+    }
+    if (obj == KNIFE && game.knfloc == game.loc) {
+	game.knfloc= -1;
+	SPK=116;
+	return(2011);
+    }
+    if (obj == ROD && HERE(ROD2)) {
+	obj=ROD2;
+	goto L5010;
+    }
     if ((verb == FIND || verb == INVENT) && WD2 <= 0)
 	goto L5010;
+
     SETPRM(1,WD1,WD1X);
     RSPEAK(256);
     return(2012);
