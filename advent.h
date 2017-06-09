@@ -179,5 +179,5 @@ extern long AMBER, ATTACK, AXE, BACK, BATTER, BEAR,
    STEPS, STICK, STREAM, THROW, TRIDNT, TROLL, TROLL2,
    URN, VASE, VEND, VOLCAN, WATER;
 /* everything else */
-extern long I, K, SPK, WD1, WD1X, WD2, WD2X;
+extern long K, SPK, WD1, WD1X, WD2, WD2X;
 

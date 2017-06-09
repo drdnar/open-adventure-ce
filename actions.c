@@ -780,6 +780,7 @@ static int suspendresume(FILE *input, bool resume)
 /* Suspend and resume */
 {
     int kk;
+    long i;
     if (!resume) {
 	/*  Suspend.  Offer to save things in a file, but charging
 	 *  some points (so can't win by using saved games to retry
@@ -810,8 +811,8 @@ static int suspendresume(FILE *input, bool resume)
      * for I/O. All the SAV* functions can be scrapped.
      */
 
-    DATIME(&I,&K);
-    K=I+650*K;
+    DATIME(&i,&K);
+    K=i+650*K;
     SAVWRD(kk,K);
     K=VRSION;
     SAVWRD(0,K);
@@ -892,8 +893,8 @@ static int throw(FILE *cmdin, long verb, long obj)
     }
     if (obj != AXE)
 	return(discard(obj, false));
-    I=ATDWRF(game.loc);
-    if (I <= 0) {
+    int i=ATDWRF(game.loc);
+    if (i <= 0) {
         if (AT(DRAGON) && game.prop[DRAGON] == 0) {
             SPK=152;
             return throw_support(SPK);
@@ -922,8 +923,8 @@ static int throw(FILE *cmdin, long verb, long obj)
         SPK=48;
         return throw_support(SPK);
     }
-    game.dseen[I]=false;
-    game.dloc[I]=0;
+    game.dseen[i]=false;
+    game.dloc[i]=0;
     SPK=47;
     game.dkill=game.dkill+1;
     if (game.dkill == 1)SPK=149;

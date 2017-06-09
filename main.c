@@ -28,7 +28,7 @@ long AMBER, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
 		RUBY, RUG, SAPPH, SAY, SIGN, SNAKE,
     		STEPS, STREAM, THROW, TRIDNT, TROLL, TROLL2,
 		URN, VASE, VEND, VOLCAN, WATER;
-long I, K, SPK, WD1, WD1X, WD2, WD2X;
+long K, SPK, WD1, WD1X, WD2, WD2X;
 
 FILE  *logfp;
 bool oldstyle = false;
@@ -505,9 +505,9 @@ L2001:	if(TOTING(BEAR))RSPEAK(141);
 
 	if(DARK(0)) goto L2012;
 	game.abbrev[game.loc]=game.abbrev[game.loc]+1;
-	I=game.atloc[game.loc];
-L2004:	if(I == 0) goto L2012;
-	obj=I;
+	i=game.atloc[game.loc];
+L2004:	if(i == 0) goto L2012;
+	obj=i;
 	if(obj > NOBJECTS)obj=obj-NOBJECTS;
 	if(obj == STEPS && TOTING(NUGGET)) goto L2008;
 	if(game.prop[obj] >= 0) goto L2006;
@@ -529,7 +529,7 @@ L2004:	if(I == 0) goto L2012;
 L2006:	KK=game.prop[obj];
 	if(obj == STEPS && game.loc == game.fixed[STEPS])KK=1;
 	PSPEAK(obj,KK);
-L2008:	I=game.link[I];
+L2008:	i=game.link[i];
 	 goto L2004;
 
 L2009:	K=54;
@@ -621,11 +621,11 @@ L2620:	if(WD1 == MAKEWD(23051920)) {
 		RSPEAK(276);
 	}
 L2630:
-	I=VOCAB(WD1,-1);
-	if(I == -1)
+	i=VOCAB(WD1,-1);
+	if(i == -1)
 	   goto L3000;
-	K=MOD(I,1000);
-	KQ=I/1000+1;
+	K=MOD(i,1000);
+	KQ=i/1000+1;
 	 switch (KQ-1) { case 0: goto L8; case 1: goto L5000; case 2: goto L4000;
 		case 3: goto L2010; }
 	BUG(22);
@@ -647,11 +647,11 @@ L3000:	SETPRM(1,WD1,WD1X);
 
 /* Verb and object analysis moved to separate module. */
 
-L4000:	I=4000; VERB=K; goto Laction;
-L4090:	I=4090; goto Laction;
-L5000:	I=5000; obj = K;
+L4000:	i=4000; VERB=K; goto Laction;
+L4090:	i=4090; goto Laction;
+L5000:	i=5000; obj = K;
 Laction:
-	 switch (action(cmdin, I, VERB, obj)) {
+	 switch (action(cmdin, i, VERB, obj)) {
 	   case 2: return true;
 	   case 8: goto L8;
 	   case 2000: goto L2000;
@@ -951,8 +951,8 @@ L11000: game.prop[BOTTLE]=PUT(BOTTLE,115,1);
 
 /*  Leave the grate with normal (non-negative) property.  Reuse sign. */
 
-	I=PUT(GRATE,116,0);
-	I=PUT(SIGN,116,0);
+	PUT(GRATE,116,0);
+	PUT(SIGN,116,0);
 	OBJTXT[SIGN]=OBJTXT[SIGN]+1;
 	game.prop[SNAKE]=PUT(SNAKE,116,1);
 	game.prop[BIRD]=PUT(BIRD,116,1);
