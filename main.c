@@ -21,7 +21,7 @@ long AMBER, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
 		BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST,
 		CLAM, COINS, DOOR, DPRSSN, DRAGON, DWARF, EGGS,
 		EMRALD, ENTER, ENTRNC, FIND, FISSUR, FOOD,
-		GRATE, HINT, I, INVENT, J, JADE, K, KEYS,
+		GRATE, HINT, I, INVENT, JADE, K, KEYS,
 		KNIFE, L, LAMP, LOCK, LOOK, MAGZIN,
 		MESSAG, MIRROR, NUGGET, NUL, OGRE, OIL, OYSTER,
 		PEARL, PILLOW, PLANT, PLANT2, PYRAM, RESER, ROD, ROD2,
@@ -267,9 +267,9 @@ static bool dwarfmove(void)
 	    return true;
 	game.dflag=2;
 	for (I=1; I<=2; I++) {
-	    J=1+randrange(NDWARVES-1);
+	    int j=1+randrange(NDWARVES-1);
 	    if(PCT(50))
-		game.dloc[J]=0;
+		game.dloc[j]=0;
 	}
 	for (I=1; I<=NDWARVES-1; I++) {
 	    if(game.dloc[I] == game.loc)
@@ -294,7 +294,7 @@ static bool dwarfmove(void)
 	if(game.dloc[I] == 0)
 	    continue;
 	/*  Fill TK array with all the places this dwarf might go. */
-	J=1;
+	int j=1;
 	kk=KEY[game.dloc[I]];
 	if(kk != 0)
 	    do {
@@ -303,24 +303,24 @@ static bool dwarfmove(void)
 		bool avoided = (game.newloc > 300 ||
 				!INDEEP(game.newloc) ||
 				game.newloc == game.odloc[I] ||
-				(J > 1 && game.newloc == TK[J-1]) ||
-				J >= 20 ||
+				(j > 1 && game.newloc == TK[j-1]) ||
+				j >= 20 ||
 				game.newloc == game.dloc[I] ||
 				FORCED(game.newloc) ||
 				(I == PIRATE && CNDBIT(game.newloc,3)) ||
 				labs(TRAVEL[kk])/1000000 == 100);
 		if (!avoided) {
-		    TK[J++] = game.newloc;
+		    TK[j++] = game.newloc;
 		}
 		++kk;
 	    } while
 		(TRAVEL[kk-1] >= 0);
-	TK[J]=game.odloc[I];
-	if(J >= 2)
-	    --J;
-	J=1+randrange(J);
+	TK[j]=game.odloc[I];
+	if(j >= 2)
+	    --j;
+	j=1+randrange(j);
 	game.odloc[I]=game.dloc[I];
-	game.dloc[I]=TK[J];
+	game.dloc[I]=TK[j];
 	game.dseen[I]=(game.dseen[I] && INDEEP(game.loc)) || (game.dloc[I] == game.loc || game.odloc[I] == game.loc);
 	if(!game.dseen[I]) continue;
 	game.dloc[I]=game.loc;
@@ -334,16 +334,16 @@ static bool dwarfmove(void)
 	    if(game.loc == game.chloc || game.prop[CHEST] >= 0)
 		continue;
 	    K=0;
-	    for (J=MINTRS; J<=MAXTRS; J++) {
+	    for (int j=MINTRS; j<=MAXTRS; j++) {
                /*  Pirate won't take pyramid from plover room or dark
 		*  room (too easy!). */
-		if(J == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD]))
+		if(j == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD]))
 		    goto L6020;
-		if(TOTING(J)) {
+		if(TOTING(j)) {
 		    goto L6021;
 		}
 	    L6020:
-		if(HERE(J))
+		if(HERE(j))
 		    K=1;
 	    }
 	    /* Force chest placement before player finds last treasure */
@@ -368,12 +368,12 @@ static bool dwarfmove(void)
 		MOVE(MESSAG,game.chloc2);
 	    }
 	    RSPEAK(128);
-	    for (J=MINTRS; J<=MAXTRS; J++) {
-		if (!(J == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD]))) {
-		    if(AT(J) && game.fixed[J] == 0)
-			CARRY(J,game.loc);
-		    if(TOTING(J))
-			DROP(J,game.chloc);
+	    for (int j=MINTRS; j<=MAXTRS; j++) {
+		if (!(j == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD]))) {
+		    if(AT(j) && game.fixed[j] == 0)
+			CARRY(j,game.loc);
+		    if(TOTING(j))
+			DROP(j,game.chloc);
 		}
 	    }
 	    game.dloc[PIRATE]=game.chloc;
@@ -434,13 +434,13 @@ static void croak(FILE *cmdin)
 	game.place[OIL]=0;
 	if(TOTING(LAMP))
 	    game.prop[LAMP]=0;
-	for (J=1; J<=NOBJECTS; J++) {
-	    I=NOBJECTS + 1 - J;
-	    if(TOTING(I)) {
-		K=game.oldlc2;
-		if(I == LAMP)
-		    K=1;
-		DROP(I,K);
+	for (int j=1; j<=NOBJECTS; j++) {
+	    int i=NOBJECTS + 1 - j;
+	    if(TOTING(i)) {
+		int k=game.oldlc2;
+		if(i == LAMP)
+		    k=1;
+		DROP(i,k);
 	    }
 	}
 	game.loc=3;
@@ -814,21 +814,20 @@ L30310: game.newloc=PLAC[TROLL]+FIXD[TROLL]-game.loc;
 
 L21:	LL=MOD((labs(TRAVEL[KK])/1000),1000);
 	if(LL != K) {
-		if(LL <= 300) {
-			J=KEY[LL];
-			if(FORCED(LL) && MOD((labs(TRAVEL[J])/1000),1000) == K)
-				K2=KK;
-		}
-		if(TRAVEL[KK] < 0)
-		    goto L23;
-		KK=KK+1;
-		goto L21;
+	    if(LL <= 300) {
+		if(FORCED(LL) && MOD((labs(TRAVEL[KEY[LL]])/1000),1000) == K)
+		    K2=KK;
+	    }
+	    if(TRAVEL[KK] < 0)
+		goto L23;
+	    KK=KK+1;
+	    goto L21;
 
-L23:		KK=K2;
-		if(KK == 0) {
-			RSPEAK(140);
-			return true;
-		}
+	L23:		KK=K2;
+	    if(KK == 0) {
+		RSPEAK(140);
+		return true;
+	    }
 	}
 
 	K=MOD(labs(TRAVEL[KK]),1000);
