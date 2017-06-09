@@ -496,7 +496,31 @@ static bool playermove(FILE *cmdin, token_t verb)
 	K2=0;
 	if(K == game.loc)K2=91;
 	if(CNDBIT(game.loc,4))K2=274;
-	if(K2 == 0) goto L21;
+	if(K2 == 0) {
+	L21:
+	    LL=MOD((labs(TRAVEL[KK])/1000),1000);
+	    if(LL != K) {
+		if(LL <= 300) {
+		    if(FORCED(LL) && MOD((labs(TRAVEL[KEY[LL]])/1000),1000) == K)
+			K2=KK;
+		}
+		if(TRAVEL[KK] < 0)
+		    goto L23;
+		KK=KK+1;
+		goto L21;
+
+	    L23:
+		KK=K2;
+		if(KK == 0) {
+		    RSPEAK(140);
+		    return true;
+		}
+	    }
+
+	    K=MOD(labs(TRAVEL[KK]),1000);
+	    KK=KEY[game.loc];
+	    goto L9;
+	}
 	RSPEAK(K2);
 	return true;
     }
@@ -519,47 +543,55 @@ static bool playermove(FILE *cmdin, token_t verb)
     game.oldloc=game.loc;
 
 L9:
-    LL=labs(TRAVEL[KK]);
-    if(MOD(LL,1000) == 1 || MOD(LL,1000) == K)
-	goto L10;
-    if(TRAVEL[KK] < 0) {
-	/*  Non-applicable motion.  Various messages depending on
-	 *  word given. */
-	SPK=12;
-	if(K >= 43 && K <= 50)SPK=52;
-	if(K == 29 || K == 30)SPK=52;
-	if(K == 7 || K == 36 || K == 37)SPK=10;
-	if(K == 11 || K == 19)SPK=11;
-	if(verb == FIND || verb == INVENT)SPK=59;
-	if(K == 62 || K == 65)SPK=42;
-	if(K == 17)SPK=80;
-	RSPEAK(SPK);
-	return true;
+    for (;;) {
+	LL=labs(TRAVEL[KK]);
+	if(MOD(LL,1000) == 1 || MOD(LL,1000) == K)
+	    break;
+	if(TRAVEL[KK] < 0) {
+	    /*  Non-applicable motion.  Various messages depending on
+	     *  word given. */
+	    SPK=12;
+	    if(K >= 43 && K <= 50)SPK=52;
+	    if(K == 29 || K == 30)SPK=52;
+	    if(K == 7 || K == 36 || K == 37)SPK=10;
+	    if(K == 11 || K == 19)SPK=11;
+	    if(verb == FIND || verb == INVENT)SPK=59;
+	    if(K == 62 || K == 65)SPK=42;
+	    if(K == 17)SPK=80;
+	    RSPEAK(SPK);
+	    return true;
+	}
+	KK=KK+1;
     }
-    KK=KK+1;
-    goto L9;
+    LL=LL/1000;
 
-L10:	LL=LL/1000;
-L11:	game.newloc=LL/1000;
-    K=MOD(game.newloc,100);	/* ESR: an instance of NOBJECTS? */
-    if(game.newloc <= 300)
-	goto L13;
-    if(game.prop[K] != game.newloc/100-3)
+L11:
+    game.newloc=LL/1000;
+    K=MOD(game.newloc,100);
+    if(game.newloc <= 300) {
+    	if(game.newloc <= 100)
+	    goto L14;
+	if(TOTING(K) || (game.newloc > 200 && AT(K)))
+	    goto L16;
+	goto L12;
+    }
+    if (game.prop[K] != game.newloc/100-3)
 	goto L16;
-L12:	if(TRAVEL[KK] < 0)BUG(25);
-    KK=KK+1;
-    game.newloc=labs(TRAVEL[KK])/1000;
-    if(game.newloc == LL) goto L12;
+L12:
+    do {
+	if(TRAVEL[KK] < 0)BUG(25);
+	KK=KK+1;
+	game.newloc=labs(TRAVEL[KK])/1000;
+    } while
+        (game.newloc == LL);
     LL=game.newloc;
     goto L11;
 
-L13:	if(game.newloc <= 100)
-	goto L14;
-    if(TOTING(K) || (game.newloc > 200 && AT(K))) goto L16;
-    goto L12;
-
-L14:	if(game.newloc != 0 && !PCT(game.newloc)) goto L12;
-L16:	game.newloc=MOD(LL,1000);
+L14:
+    if(game.newloc != 0 && !PCT(game.newloc))
+	goto L12;
+L16:
+    game.newloc=MOD(LL,1000);
     if(game.newloc <= 300) return true;
     if(game.newloc <= 500) {
 	game.newloc=game.newloc-300;
@@ -570,8 +602,9 @@ L16:	game.newloc=MOD(LL,1000);
 	     *  emerald.  Note: travel table must include "useless"
 	     *  entries going through passage, which can never be used for
 	     *  actual motion, but can be spotted by "go back". */
-	    game.newloc=99+100-game.loc;	/* ESR: an instance of NOBJECTS? */
-	    if(game.holdng == 0 || (game.holdng == 1 && TOTING(EMRALD))) return true;
+	    game.newloc=99+100-game.loc;
+	    if(game.holdng == 0 || (game.holdng == 1 && TOTING(EMRALD)))
+		return true;
 	    game.newloc=game.loc;
 	    RSPEAK(117);
 	    return true;
@@ -620,28 +653,6 @@ L16:	game.newloc=MOD(LL,1000);
     RSPEAK(game.newloc-500);
     game.newloc=game.loc;
     return true;
-
-L21:	LL=MOD((labs(TRAVEL[KK])/1000),1000);
-    if(LL != K) {
-	if(LL <= 300) {
-	    if(FORCED(LL) && MOD((labs(TRAVEL[KEY[LL]])/1000),1000) == K)
-		K2=KK;
-	}
-	if(TRAVEL[KK] < 0)
-	    goto L23;
-	KK=KK+1;
-	goto L21;
-
-    L23:		KK=K2;
-	if(KK == 0) {
-	    RSPEAK(140);
-	    return true;
-	}
-    }
-
-    K=MOD(labs(TRAVEL[KK]),1000);
-    KK=KEY[game.loc];
-    goto L9;
 }
 
 static bool do_command(FILE *cmdin) {
