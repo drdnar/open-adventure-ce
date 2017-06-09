@@ -267,15 +267,15 @@ static bool dwarfmove(void)
 	if(!INDEEP(game.loc) || (PCT(95) && (!CNDBIT(game.loc,4) || PCT(85))))
 	    return true;
 	game.dflag=2;
-	for (I=1; I<=2; I++) {
+	for (int i=1; i<=2; i++) {
 	    int j=1+randrange(NDWARVES-1);
 	    if(PCT(50))
 		game.dloc[j]=0;
 	}
-	for (I=1; I<=NDWARVES-1; I++) {
-	    if(game.dloc[I] == game.loc)
-		game.dloc[I]=DALTLC;
-	    game.odloc[I]=game.dloc[I];
+	for (int i=1; i<=NDWARVES-1; i++) {
+	    if(game.dloc[i] == game.loc)
+		game.dloc[i]=DALTLC;
+	    game.odloc[i]=game.dloc[i];
 	}
 	RSPEAK(3);
 	DROP(AXE,game.loc);
@@ -291,24 +291,24 @@ static bool dwarfmove(void)
     game.dtotal=0;
     attack=0;
     stick=0;
-    for (I=1; I<=NDWARVES; I++) {
-	if(game.dloc[I] == 0)
+    for (int i=1; i<=NDWARVES; i++) {
+	if(game.dloc[i] == 0)
 	    continue;
 	/*  Fill TK array with all the places this dwarf might go. */
 	int j=1;
-	kk=KEY[game.dloc[I]];
+	kk=KEY[game.dloc[i]];
 	if(kk != 0)
 	    do {
 		game.newloc=MOD(labs(TRAVEL[kk])/1000,1000);
 		/* Have we avoided a dwarf enciounter? */
 		bool avoided = (game.newloc > 300 ||
 				!INDEEP(game.newloc) ||
-				game.newloc == game.odloc[I] ||
+				game.newloc == game.odloc[i] ||
 				(j > 1 && game.newloc == TK[j-1]) ||
 				j >= 20 ||
-				game.newloc == game.dloc[I] ||
+				game.newloc == game.dloc[i] ||
 				FORCED(game.newloc) ||
-				(I == PIRATE && CNDBIT(game.newloc,3)) ||
+				(i == PIRATE && CNDBIT(game.newloc,3)) ||
 				labs(TRAVEL[kk])/1000000 == 100);
 		if (!avoided) {
 		    TK[j++] = game.newloc;
@@ -316,16 +316,16 @@ static bool dwarfmove(void)
 		++kk;
 	    } while
 		(TRAVEL[kk-1] >= 0);
-	TK[j]=game.odloc[I];
+	TK[j]=game.odloc[i];
 	if(j >= 2)
 	    --j;
 	j=1+randrange(j);
-	game.odloc[I]=game.dloc[I];
-	game.dloc[I]=TK[j];
-	game.dseen[I]=(game.dseen[I] && INDEEP(game.loc)) || (game.dloc[I] == game.loc || game.odloc[I] == game.loc);
-	if(!game.dseen[I]) continue;
-	game.dloc[I]=game.loc;
-	if(I == PIRATE) {
+	game.odloc[i]=game.dloc[i];
+	game.dloc[i]=TK[j];
+	game.dseen[i]=(game.dseen[i] && INDEEP(game.loc)) || (game.dloc[i] == game.loc || game.odloc[i] == game.loc);
+	if(!game.dseen[i]) continue;
+	game.dloc[i]=game.loc;
+	if(i == PIRATE) {
 	    /*  The pirate's spotted him.  He leaves him alone once we've
 	     *  found chest.  K counts if a treasure is here.  If not, and
 	     *  tally=1 for an unseen chest, let the pirate be spotted.
@@ -385,7 +385,7 @@ static bool dwarfmove(void)
 
 	/* This threatening little dwarf is in the room with him! */
 	++game.dtotal;
-	if(game.odloc[I] == game.dloc[I]) {
+	if(game.odloc[i] == game.dloc[i]) {
 	    ++attack;
 	    if(game.knfloc >= 0)
 		game.knfloc=game.loc;
@@ -597,8 +597,8 @@ L2607:	game.foobar=(game.foobar>0 ? -game.foobar : 0);
 	if(game.clock1 < 0)game.clock2=game.clock2-1;
 	if(game.clock2 == 0) goto L11000;
 	if(game.prop[LAMP] == 1)game.limit=game.limit-1;
-	if(game.limit <= 30 && HERE(BATTER) && game.prop[BATTER] == 0 && HERE(LAMP)) goto
-		L12000;
+	if(game.limit <= 30 && HERE(BATTER) && game.prop[BATTER] == 0 && HERE(LAMP))
+	    goto L12000;
 	if(game.limit == 0) goto L12400;
 	if(game.limit <= 30) goto L12200;
 L19999: K=43;
@@ -907,10 +907,10 @@ L90:	RSPEAK(23);
 
 L10000: game.prop[GRATE]=0;
 	game.prop[FISSUR]=0;
-	for (I=1; I<=NDWARVES; I++) {
-	game.dseen[I]=false;
-	game.dloc[I]=0;
-	} /* end loop */
+	for (i=1; i<=NDWARVES; i++) {
+	    game.dseen[i]=false;
+	    game.dloc[i]=0;
+	}
 	MOVE(TROLL,0);
 	MOVE(TROLL+NOBJECTS,0);
 	MOVE(TROLL2,PLAC[TROLL]);
@@ -924,7 +924,7 @@ L10000: game.prop[GRATE]=0;
 	RSPEAK(129);
 	game.clock1= -1;
 	game.closng=true;
-	 goto L19999;
+	goto L19999;
 
 /*  Once he's panicked, and clock2 has run out, we come here to set up the
  *  storage room.  The room has two locs, hardwired as 115 (ne) and 116 (sw).
@@ -963,9 +963,9 @@ L11000: game.prop[BOTTLE]=PUT(BOTTLE,115,1);
 	game.prop[MIRROR]=PUT(MIRROR,115,0);
 	game.fixed[MIRROR]=116;
 
-	for (I=1; I<=NOBJECTS; I++) {
-		if(TOTING(I))
-			DSTROY(I);
+	for (int i=1; i<=NOBJECTS; i++) {
+		if(TOTING(i))
+			DSTROY(i);
 	} /* end loop */
 
 	RSPEAK(132);
