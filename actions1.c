@@ -334,80 +334,80 @@ L4000:
 /*  Analyse an intransitive verb (ie, no object given yet). */
 
 	switch (verb-1) {
-		case 0: goto L8010;	/* CARRY */
-		case 1: return(8000);	/* DROP */
-		case 2:	return(8000);	/* SAY */
-		case 3: goto L8040;	/* UNLOC */
-		case 4: return(2009);	/* NOTHI */
-		case 5:	goto L8040;	/* LOCK */
-		case 6: goto L8070;	/* LIGHT */
-		case 7: goto L8080;	/* EXTIN */
-		case 8: return(8000);	/* WAVE */
-		case 9: return(8000);	/* CALM */
-		case 10: return(2011);	/* WALK */
-		case 11: goto L9120;	/* ATTAC */
-		case 12: goto L9130;	/* POUR */
-		case 13: goto L8140;	/* EAT */
-		case 14: goto L9150;	/* DRINK */
-		case 15: return(8000);	/* RUB */
-		case 16: return(8000);	/* TOSS */
-		case 17: goto L8180;	/* QUIT */
-		case 18: return(8000);	/* FIND */
-		case 19: goto L8200;	/* INVEN */
-		case 20: return(8000);	/* FEED */
-		case 21: goto L9220;	/* FILL */
-		case 22: goto L9230;	/* BLAST */
-		case 23: goto L8240;	/* SCOR */
-		case 24: goto L8250;	/* FOO */
-		case 25: goto L8260;	/* BRIEF */
-		case 26: goto L8270;	/* READ */
-		case 27: return(8000);	/* BREAK */
-		case 28: return(8000);	/* WAKE */
-		case 29: goto L8300;	/* SUSP */
-		case 30: goto L8310;	/* RESU */
-		case 31: goto L8320;	/* FLY */
-		case 32: goto L8330;	/* LISTEN */
-		case 33: goto L8340;	/* ZZZZ */
+		case  0: /* CARRY */ goto L8010;
+		case  1: /* DROP  */ return(8000); 
+		case  2: /* SAY   */ return(8000); 
+		case  3: /* UNLOC */ goto L8040;    
+		case  4: /* NOTHI */ return(2009); 
+		case  5: /* LOCK  */ goto L8040;    
+		case  6: /* LIGHT */ goto L8070;    
+		case  7: /* EXTIN */ goto L8080;    
+		case  8: /* WAVE  */ return(8000); 
+		case  9: /* CALM  */ return(8000); 
+		case 10: /* WALK  */ return(2011); 
+		case 11: /* ATTAC */ goto L9120;   
+		case 12: /* POUR  */ goto L9130;   
+		case 13: /* EAT   */ goto L8140;   
+		case 14: /* DRINK */ goto L9150;   
+		case 15: /* RUB   */ return(8000); 
+		case 16: /* TOSS  */ return(8000); 
+		case 17: /* QUIT  */ goto L8180;   
+		case 18: /* FIND  */ return(8000); 
+		case 19: /* INVEN */ goto L8200;   
+		case 20: /* FEED  */ return(8000); 
+		case 21: /* FILL  */ goto L9220;   
+		case 22: /* BLAST */ goto L9230;   
+		case 23: /* SCOR  */ goto L8240;   
+		case 24: /* FOO   */ goto L8250;   
+		case 25: /* BRIEF */ goto L8260;   
+		case 26: /* READ  */ goto L8270;   
+		case 27: /* BREAK */ return(8000); 
+		case 28: /* WAKE  */ return(8000); 
+		case 29: /* SUSP  */ goto L8300;   
+		case 30: /* RESU  */ goto L8310;   
+		case 31: /* FLY   */ goto L8320;   
+		case 32: /* LISTE */ goto L8330;   
+		case 33: /* ZZZZ  */ goto L8340;   
 	}
 	BUG(23);
 
 /*  Analyse a transitive verb. */
 
 L4090:	switch (verb-1) {
-		case 0: goto L9010;	/* CARRY */
-		case 1: goto L9020;	/* DROP */
-		case 2: goto L9030;	/* SAY */
-		case 3: goto L9040;	/* UNLOC */
-		case 4: return(2009);	/* NOTHI */
-		case 5: goto L9040;	/* LOCK */
-		case 6: goto L9070;	/* LIGHT */
-		case 7: goto L9080;	/* EXTI */
-		case 8: goto L9090;	/* WAVE */
-		case 9: return(2011);	/* CALM */
-		case 10: return(2011);	/* WALK */
-		case 11: goto L9120;	/* ATTAC */
-		case 12: goto L9130;	/* POUR */
-		case 13: goto L9140;	/* EAT */
-		case 14: goto L9150;	/* DRINK */
-		case 15: goto L9160;	/* RUB */
-		case 16: goto L9170;	/* TOSS */
-		case 17: return(2011);	/* QUIT */
-		case 18: goto L9190;	/* FIND */
-		case 19: goto L9190;	/* INVEN */
-		case 20: goto L9210;	/* FEED */
-		case 21: goto L9220;	/* FILL */
-		case 22: goto L9230;	/* BLAST */
-		case 23: return(2011);	/* SCOR */
-		case 24: return(2011);	/* FOO */
-		case 25: return(2011);	/* BRIEF */
-		case 26: goto L9270;	/* READ */
-		case 27: goto L9280;	/* BREAK */
-		case 28: goto L9290;	/* WAKE */
-		case 29: return(2011);	/* SUSP */
-		case 30: return(2011);	/* RESU */
-		case 31: goto L9320;	/* FLY */
-		case 32: return(2011);	/* LISTEN */
-		case 33: goto L8340;	/* ZZZZ */
+		case  0: /* CARRY */ goto L9010;    
+		case  1: /* DROP  */ goto L9020;    
+		case  2: /* SAY   */ goto L9030;    
+		case  3: /* UNLOC */ goto L9040;    
+		case  4: /* NOTHI */ return(2009); 
+		case  5: /* LOCK  */ goto L9040;    
+		case  6: /* LIGHT */ goto L9070;    
+		case  7: /* EXTI  */ goto L9080;    
+		case  8: /* WAVE  */ goto L9090;    
+		case  9: /* CALM  */ return(2011); 
+		case 10: /* WALK  */ return(2011); 
+		case 11: /* ATTAC */ goto L9120;   
+		case 12: /* POUR  */ goto L9130;   
+		case 13: /* EAT   */ goto L9140;   
+		case 14: /* DRINK */ goto L9150;   
+		case 15: /* RUB   */ goto L9160;   
+		case 16: /* TOSS  */ goto L9170;   
+		case 17: /* QUIT  */ return(2011); 
+		case 18: /* FIND  */ goto L9190;   
+		case 19: /* INVEN */ goto L9190;   
+		case 20: /* FEED  */ goto L9210;   
+		case 21: /* FILL  */ goto L9220;   
+		case 22: /* BLAST */ goto L9230;   
+		case 23: /* SCOR  */ return(2011); 
+		case 24: /* FOO   */ return(2011); 
+		case 25: /* BRIEF */ return(2011); 
+		case 26: /* READ  */ goto L9270;   
+		case 27: /* BREAK */ goto L9280;   
+		case 28: /* WAKE  */ goto L9290;   
+		case 29: /* SUSP  */ return(2011); 
+		case 30: /* RESU  */ return(2011); 
+		case 31: /* FLY   */ goto L9320;   
+		case 32: /* LISTE */ return(2011); 
+		case 33: /* ZZZZ  */ goto L8340;   
 	}
 	BUG(24);
 
