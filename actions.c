@@ -895,11 +895,11 @@ static int wave(token_t obj)
  * similar label number for the caller to "goto".
  */
 
+int action(FILE *input, long STARTAT, long verb, long obj)
 /*  Analyse a verb.  Remember what it was, go back for object if second word
  *  unless verb is "say", which snarfs arbitrary second word.
  */
-
-int action(FILE *input, long STARTAT, long verb, long obj) {
+{
 	int kk;
 	switch(STARTAT) {
 	   case 4000: goto L4000;
@@ -917,80 +917,80 @@ L4000:
 /*  Analyse an intransitive verb (ie, no object given yet). */
 
 	switch (verb-1) {
-		case  0: /* CARRY */ goto L8010;
+		case  0: /* CARRY */ return carry(INTRANSITIVE);
 		case  1: /* DROP  */ return(8000); 
 		case  2: /* SAY   */ return(8000); 
-		case  3: /* UNLOC */ goto L8040;    
+		case  3: /* UNLOC */ return lock(verb, INTRANSITIVE);    
 		case  4: /* NOTHI */ return(2009); 
-		case  5: /* LOCK  */ goto L8040;    
-		case  6: /* LIGHT */ goto L8070;    
-		case  7: /* EXTIN */ goto L8080;    
+		case  5: /* LOCK  */ return lock(verb, INTRANSITIVE);    
+		case  6: /* LIGHT */ return light(INTRANSITIVE);    
+		case  7: /* EXTIN */ return extinguish(INTRANSITIVE);    
 		case  8: /* WAVE  */ return(8000); 
 		case  9: /* CALM  */ return(8000); 
 		case 10: /* WALK  */ return(2011); 
-		case 11: /* ATTAC */ goto L9120;   
-		case 12: /* POUR  */ goto L9130;   
-		case 13: /* EAT   */ goto L8140;   
-		case 14: /* DRINK */ goto L9150;   
+		case 11: /* ATTAC */ return attack(input, verb, obj);   
+		case 12: /* POUR  */ return pour(obj);   
+		case 13: /* EAT   */ return eat(INTRANSITIVE);   
+		case 14: /* DRINK */ return drink(obj);   
 		case 15: /* RUB   */ return(8000); 
 		case 16: /* TOSS  */ return(8000); 
-		case 17: /* QUIT  */ goto L8180;   
+		case 17: /* QUIT  */ return quit(input);   
 		case 18: /* FIND  */ return(8000); 
-		case 19: /* INVEN */ goto L8200;   
+		case 19: /* INVEN */ return inven(obj);   
 		case 20: /* FEED  */ return(8000); 
-		case 21: /* FILL  */ goto L9220;   
-		case 22: /* BLAST */ goto L9230;   
-		case 23: /* SCOR  */ goto L8240;   
-		case 24: /* FOO   */ goto L8250;   
-		case 25: /* BRIEF */ goto L8260;   
-		case 26: /* READ  */ goto L8270;   
+		case 21: /* FILL  */ return fill(obj);   
+		case 22: /* BLAST */ return blast();   
+		case 23: /* SCOR  */ return vscore();   
+		case 24: /* FOO   */ return bigwords(WD1);   
+		case 25: /* BRIEF */ return brief();   
+		case 26: /* READ  */ return read(input, INTRANSITIVE);   
 		case 27: /* BREAK */ return(8000); 
 		case 28: /* WAKE  */ return(8000); 
 		case 29: /* SUSP  */ goto L8300;   
 		case 30: /* RESU  */ goto L8310;   
-		case 31: /* FLY   */ goto L8320;   
-		case 32: /* LISTE */ goto L8330;   
-		case 33: /* ZZZZ  */ goto L8340;   
+		case 31: /* FLY   */ return fly(INTRANSITIVE);   
+		case 32: /* LISTE */ return listen();   
+		case 33: /* ZZZZ  */ return reservoir();   
 	}
 	BUG(23);
 
 /*  Analyse a transitive verb. */
 
 L4090:	switch (verb-1) {
-		case  0: /* CARRY */ goto L9010;    
-		case  1: /* DROP  */ goto L9020;    
-		case  2: /* SAY   */ goto L9030;    
-		case  3: /* UNLOC */ goto L9040;    
+		case  0: /* CARRY */ return carry(obj);    
+		case  1: /* DROP  */ return discard(obj, false);    
+		case  2: /* SAY   */ return say();    
+		case  3: /* UNLOC */ return lock(verb, obj);    
 		case  4: /* NOTHI */ return(2009); 
-		case  5: /* LOCK  */ goto L9040;    
-		case  6: /* LIGHT */ goto L9070;    
-		case  7: /* EXTI  */ goto L9080;    
-		case  8: /* WAVE  */ goto L9090;    
+		case  5: /* LOCK  */ return lock(verb, obj);    
+		case  6: /* LIGHT */ return light(obj);    
+		case  7: /* EXTI  */ return extinguish(obj);    
+		case  8: /* WAVE  */ return wave(obj);    
 		case  9: /* CALM  */ return(2011); 
 		case 10: /* WALK  */ return(2011); 
-		case 11: /* ATTAC */ goto L9120;   
-		case 12: /* POUR  */ goto L9130;   
-		case 13: /* EAT   */ goto L9140;   
-		case 14: /* DRINK */ goto L9150;   
-		case 15: /* RUB   */ goto L9160;   
-		case 16: /* TOSS  */ goto L9170;   
+		case 11: /* ATTAC */ return attack(input, verb, obj);   
+		case 12: /* POUR  */ return pour(obj);   
+		case 13: /* EAT   */ return eat(obj);   
+		case 14: /* DRINK */ return drink(obj);   
+		case 15: /* RUB   */ return rub(obj);   
+		case 16: /* TOSS  */ return throw(input, verb, obj);   
 		case 17: /* QUIT  */ return(2011); 
-		case 18: /* FIND  */ goto L9190;   
-		case 19: /* INVEN */ goto L9190;   
-		case 20: /* FEED  */ goto L9210;   
-		case 21: /* FILL  */ goto L9220;   
-		case 22: /* BLAST */ goto L9230;   
+		case 18: /* FIND  */ return find(obj);   
+		case 19: /* INVEN */ return find(obj);   
+		case 20: /* FEED  */ return feed(obj);   
+		case 21: /* FILL  */ return fill(obj);   
+		case 22: /* BLAST */ return blast();   
 		case 23: /* SCOR  */ return(2011); 
 		case 24: /* FOO   */ return(2011); 
 		case 25: /* BRIEF */ return(2011); 
-		case 26: /* READ  */ goto L9270;   
-		case 27: /* BREAK */ goto L9280;   
-		case 28: /* WAKE  */ goto L9290;   
+		case 26: /* READ  */ return read(input, obj);   
+		case 27: /* BREAK */ return vbreak(obj);   
+		case 28: /* WAKE  */ return wake(obj);   
 		case 29: /* SUSP  */ return(2011); 
 		case 30: /* RESU  */ return(2011); 
-		case 31: /* FLY   */ goto L9320;   
+		case 31: /* FLY   */ return fly(obj);   
 		case 32: /* LISTE */ return(2011); 
-		case 33: /* ZZZZ  */ goto L8340;   
+		case 33: /* ZZZZ  */ return reservoir();   
 	}
 	BUG(24);
 
@@ -1036,40 +1036,6 @@ L5190:	if ((verb == FIND || verb == INVENT) && WD2 <= 0) goto L5010;
 /*  Statement numbers in this section are 8000 for intransitive verbs, 9000 for
  *  transitive, plus ten times the verb number.  Many intransitive verbs use the
  *  transitive code, and some verbs use code for other verbs, as noted below. */
-
-L8010: return carry(INTRANSITIVE);
-L9010: return carry(obj);
-L9020: return discard(obj, false);
-L9030: return say();
-L8040: return lock(verb, INTRANSITIVE);
-L9040: return lock(verb, obj);
-L9046: return bivalve(verb, obj);
-L9048: return chain(verb);
-L8070: return light(INTRANSITIVE);
-L9070: return light(obj);
-L8080: return extinguish(INTRANSITIVE);
-L9080: return extinguish(obj);
-L9090: return wave(obj);
-L9120: return attack(input, verb, obj);
-L9130: return pour(obj);
-L8140: return eat(INTRANSITIVE);
-L9140: return eat(obj);
-L9150: return drink(obj);
-L9160: return rub(obj);
-L9170: return throw(input, verb, obj);
-L8180: return quit(input);
-L9190: return find(obj);
-L8200: return inven(obj);
-L9210: return feed(obj);
-L9220: return fill(obj);
-L9230: return blast();
-L8240: return vscore();
-L8250: return bigwords(WD1);
-L8260: return brief();
-L8270: return read(input, INTRANSITIVE);
-L9270: return read(input, obj);
-L9280: return vbreak(obj);
-L9290: return wake(obj);
 
 /*  Suspend.  Offer to save things in a file, but charging some points (so
  *  can't win by using saved games to retry battles or to start over after
@@ -1137,9 +1103,4 @@ L8312:	SETPRM(1,K/10,MOD(K,10));
 
 L8318:	RSPEAK(270);
 	exit(0);
-
-L8320: return fly(INTRANSITIVE);
-L9320: return fly(obj);
-L8330: return listen();
-L8340: return reservoir();
 }
