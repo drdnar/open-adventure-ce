@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
 
     while ((ch = getopt(argc, argv, "l:o")) != EOF) {
 	switch (ch) {
-	case 'l':
+case 'l':
 	    logfp = fopen(optarg, "w");
 	    if (logfp == NULL)
 		fprintf(stderr,
@@ -292,6 +292,7 @@ static bool dwarfmove(void)
     attack=0;
     stick=0;
     for (int i=1; i<=NDWARVES; i++) {
+	int k;
 	if(game.dloc[i] == 0)
 	    continue;
 	/*  Fill TK array with all the places this dwarf might go. */
@@ -334,21 +335,23 @@ static bool dwarfmove(void)
 	     *  (game.prop=0). */
 	    if(game.loc == game.chloc || game.prop[CHEST] >= 0)
 		continue;
-	    K=0;
+	    k=0;
 	    for (int j=MINTRS; j<=MAXTRS; j++) {
-               /*  Pirate won't take pyramid from plover room or dark
-		*  room (too easy!). */
-		if(j == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD]))
-		    goto L6020;
+		/*  Pirate won't take pyramid from plover room or dark
+		 *  room (too easy!). */
+		if(j == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD])) {
+		    if(HERE(j))
+			k=1;
+		    continue;
+		}
 		if(TOTING(j)) {
 		    goto L6021;
 		}
-	    L6020:
 		if(HERE(j))
-		    K=1;
+		    k=1;
 	    }
 	    /* Force chest placement before player finds last treasure */
-	    if(game.tally == 1 && K == 0 && game.place[CHEST] == 0 && HERE(LAMP) && game.prop[LAMP] == 1) {
+	    if(game.tally == 1 && k == 0 && game.place[CHEST] == 0 && HERE(LAMP) && game.prop[LAMP] == 1) {
 		RSPEAK(186);
 		MOVE(CHEST,game.chloc);
 		MOVE(MESSAG,game.chloc2);
