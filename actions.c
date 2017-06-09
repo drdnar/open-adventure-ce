@@ -775,6 +775,87 @@ static int say(void)
 
 }
 
+static int suspendresume(FILE *input, bool resume)
+/* Suspend and resume */
+{
+    int kk;
+    if (!resume) {
+	/*  Suspend.  Offer to save things in a file, but charging
+	 *  some points (so can't win by using saved games to retry
+	 *  battles or to start over after learning zzword). */
+	SPK=201;
+	RSPEAK(260);
+	if (!YES(input,200,54,54)) return(2012);
+	game.saved=game.saved+5;
+	kk= -1;
+    }
+    else
+    {
+	/*  Resume.  Read a suspended game back from a file. */
+	kk=1;
+	if (game.loc != 1 || game.abbrev[1] != 1) {
+	    RSPEAK(268);
+	    if (!YES(input,200,54,54)) return(2012);
+	}
+    }
+
+    /*  Suspend vs resume cases are distinguished by the value of kk
+     *  (-1 for suspend, +1 for resume). */
+
+    /* 
+     * FIXME: This is way more complicated than it needs to be in C.
+     * What we ought to do is define a save-block structure that
+     * includes a game state block and then use a single fread/fwrite
+     * for I/O. All the SAV* functions can be scrapped.
+     */
+
+    DATIME(&I,&K);
+    K=I+650*K;
+    SAVWRD(kk,K);
+    K=VRSION;
+    SAVWRD(0,K);
+    if (K != VRSION) {
+	SETPRM(1,K/10,MOD(K,10));
+	SETPRM(3,VRSION/10,MOD(VRSION,10));
+	RSPEAK(269);
+	return(2000);
+    }
+    /* Herewith are all the variables whose values can change during a game,
+     * omitting a few (such as I, J) whose values between turns are
+     * irrelevant and some whose values when a game is
+     * suspended or resumed are guaranteed to match.  If unsure whether a value
+     * needs to be saved, include it.  Overkill can't hurt.  Pad the last savwds
+     * with junk variables to bring it up to 7 values. */
+    SAVWDS(game.abbnum,game.blklin,game.bonus,game.clock1,game.clock2,game.closed,game.closng);
+    SAVWDS(game.detail,game.dflag,game.dkill,game.dtotal,game.foobar,game.holdng,game.iwest);
+    SAVWDS(game.knfloc,game.limit,K,game.lmwarn,game.loc,game.newloc,game.numdie);
+    SAVWDS(K,game.oldlc2,game.oldloc,game.oldobj,game.panic,game.saved,game.setup);
+    SAVWDS(SPK,game.tally,game.thresh,game.trndex,game.trnluz,game.turns,OBJTXT[OYSTER]);
+    SAVWDS(K,WD1,WD1X,WD2,game.wzdark,game.zzword,OBJSND[BIRD]);
+    SAVWDS(OBJTXT[SIGN],game.clshnt,game.novice,K,K,K,K);
+    SAVARR(game.abbrev,LOCSIZ);
+    SAVARR(game.atloc,LOCSIZ);
+    SAVARR(game.dloc,NDWARVES);
+    SAVARR(game.dseen,NDWARVES);
+    SAVARR(game.fixed,NOBJECTS);
+    SAVARR(game.hinted,HNTSIZ);
+    SAVARR(game.hintlc,HNTSIZ);
+    SAVARR(game.link,NOBJECTS*2);
+    SAVARR(game.odloc,NDWARVES);
+    SAVARR(game.place,NOBJECTS);
+    SAVARR(game.prop,NOBJECTS);
+    SAVWRD(kk,K);
+    if (K != 0) {
+	RSPEAK(270);
+	exit(0);
+    }
+    K=NUL;
+    game.zzword=RNDVOC(3,game.zzword);
+    if (kk > 0) return(8);
+    RSPEAK(266);
+    exit(0);
+}
+
 static int throw_support(long spk)
 {
     RSPEAK(spk);
@@ -946,8 +1027,8 @@ L4000:
 		case 26: /* READ  */ return read(input, INTRANSITIVE);   
 		case 27: /* BREAK */ return(8000); 
 		case 28: /* WAKE  */ return(8000); 
-		case 29: /* SUSP  */ goto L8300;   
-		case 30: /* RESU  */ goto L8310;   
+		case 29: /* SUSP  */ return suspendresume(input, false);   
+		case 30: /* RESU  */ return suspendresume(input, true);   
 		case 31: /* FLY   */ return fly(INTRANSITIVE);   
 		case 32: /* LISTE */ return listen();   
 		case 33: /* ZZZZ  */ return reservoir();   
@@ -1037,70 +1118,4 @@ L5190:	if ((verb == FIND || verb == INVENT) && WD2 <= 0) goto L5010;
  *  transitive, plus ten times the verb number.  Many intransitive verbs use the
  *  transitive code, and some verbs use code for other verbs, as noted below. */
 
-/*  Suspend.  Offer to save things in a file, but charging some points (so
- *  can't win by using saved games to retry battles or to start over after
- *  learning zzword). */
-
-L8300:	SPK=201;
-	RSPEAK(260);
-	if (!YES(input,200,54,54)) return(2012);
-	game.saved=game.saved+5;
-	kk= -1;
-
-/*  This next part is shared with the "resume" code.  The two cases are
- *  distinguished by the value of kk (-1 for suspend, +1 for resume). */
-
-L8305:	DATIME(&I,&K);
-	K=I+650*K;
-	SAVWRD(kk,K);
-	K=VRSION;
-	SAVWRD(0,K);
-	if (K != VRSION) goto L8312;
-/*  Herewith are all the variables whose values can change during a game,
- *  omitting a few (such as I, J, ATTACK) whose values between turns are
- *  irrelevant and some whose values when a game is
- *  suspended or resumed are guaranteed to match.  If unsure whether a value
- *  needs to be saved, include it.  Overkill can't hurt.  Pad the last savwds
- *  with junk variables to bring it up to 7 values. */
-	SAVWDS(game.abbnum,game.blklin,game.bonus,game.clock1,game.clock2,game.closed,game.closng);
-	SAVWDS(game.detail,game.dflag,game.dkill,game.dtotal,game.foobar,game.holdng,game.iwest);
-	SAVWDS(game.knfloc,game.limit,K,game.lmwarn,game.loc,game.newloc,game.numdie);
-	SAVWDS(K,game.oldlc2,game.oldloc,game.oldobj,game.panic,game.saved,game.setup);
-	SAVWDS(SPK,game.tally,game.thresh,game.trndex,game.trnluz,game.turns,OBJTXT[OYSTER]);
-	SAVWDS(K,WD1,WD1X,WD2,game.wzdark,game.zzword,OBJSND[BIRD]);
-	SAVWDS(OBJTXT[SIGN],game.clshnt,game.novice,K,K,K,K);
-	SAVARR(game.abbrev,LOCSIZ);
-	SAVARR(game.atloc,LOCSIZ);
-	SAVARR(game.dloc,NDWARVES);
-	SAVARR(game.dseen,NDWARVES);
-	SAVARR(game.fixed,NOBJECTS);
-	SAVARR(game.hinted,HNTSIZ);
-	SAVARR(game.hintlc,HNTSIZ);
-	SAVARR(game.link,NOBJECTS*2);
-	SAVARR(game.odloc,NDWARVES);
-	SAVARR(game.place,NOBJECTS);
-	SAVARR(game.prop,NOBJECTS);
-	SAVWRD(kk,K);
-	if (K != 0) goto L8318;
-	K=NUL;
-	game.zzword=RNDVOC(3,game.zzword);
-	if (kk > 0) return(8);
-	RSPEAK(266);
-	exit(0);
-
-/*  Resume.  Read a suspended game back from a file. */
-
-L8310:	kk=1;
-	if (game.loc == 1 && game.abbrev[1] == 1) goto L8305;
-	RSPEAK(268);
-	if (!YES(input,200,54,54)) return(2012);
-	 goto L8305;
-
-L8312:	SETPRM(1,K/10,MOD(K,10));
-	SETPRM(3,VRSION/10,MOD(VRSION,10));
-	RSPEAK(269);
-	 return(2000);
-
-L8318:	RSPEAK(270);
-	exit(0);
 }
