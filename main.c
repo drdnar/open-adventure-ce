@@ -345,7 +345,25 @@ static bool dwarfmove(void)
 		    continue;
 		}
 		if(TOTING(j)) {
-		    goto L6021;
+		    if(game.place[CHEST] == 0) {
+			/*  Install chest only once, to insure it is
+			 *  the last treasure in the list. */
+			MOVE(CHEST,game.chloc);
+			MOVE(MESSAG,game.chloc2);
+		    }
+		    RSPEAK(128);
+		    for (int j=MINTRS; j<=MAXTRS; j++) {
+			if (!(j == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD]))) {
+			    if(AT(j) && game.fixed[j] == 0)
+				CARRY(j,game.loc);
+			    if(TOTING(j))
+				DROP(j,game.chloc);
+			}
+		    }
+		    game.dloc[PIRATE]=game.chloc;
+		    game.odloc[PIRATE]=game.chloc;
+		    game.dseen[PIRATE]=false;
+		    goto jumpout;
 		}
 		if(HERE(j))
 		    k=1;
@@ -363,27 +381,6 @@ static bool dwarfmove(void)
 	    if(game.odloc[PIRATE] != game.dloc[PIRATE] && PCT(20))
 		RSPEAK(127);
 	    continue;
-
-	L6021:
-	    if(game.place[CHEST] == 0) {
-		/*  Install chest only once, to insure it is the last treasure in
-		 *  the list. */
-		MOVE(CHEST,game.chloc);
-		MOVE(MESSAG,game.chloc2);
-	    }
-	    RSPEAK(128);
-	    for (int j=MINTRS; j<=MAXTRS; j++) {
-		if (!(j == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD]))) {
-		    if(AT(j) && game.fixed[j] == 0)
-			CARRY(j,game.loc);
-		    if(TOTING(j))
-			DROP(j,game.chloc);
-		}
-	    }
-	    game.dloc[PIRATE]=game.chloc;
-	    game.odloc[PIRATE]=game.chloc;
-	    game.dseen[PIRATE]=false;
-	    continue;
 	}
 
 	/* This threatening little dwarf is in the room with him! */
@@ -395,6 +392,7 @@ static bool dwarfmove(void)
 	    if(randrange(1000) < 95*(game.dflag-2))
 		++stick;
 	}
+    jumpout:;
     }
 
     /*  Now we know what's happening.  Let's tell the poor sucker about it.
