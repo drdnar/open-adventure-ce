@@ -5,7 +5,7 @@ Repository head::
   Support command-line editing with arrow keys and Emacs keystrokes.
   Save format has changed.
 
-1.0: 2016-06-05::
+1.0: 2017-06-05::
   Forward port of Crowther & Woods's 430-point Adventure 2.5.
   Added -l option for logging.
   Game logs are now fully reproducible via the "seed" command.
