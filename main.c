@@ -509,7 +509,7 @@ static bool playermove(FILE *cmdin, token_t verb)
 			K2=KK;
 		}
 		if (TRAVEL[KK] >= 0) {
-		    KK=KK+1;
+		    ++KK;
 		    goto L21;
 		}
 		KK=K2;
@@ -531,7 +531,7 @@ static bool playermove(FILE *cmdin, token_t verb)
 	 *  (though it may "now" be dark) so he won't fall into a
 	 *  pit while staring into the gloom. */
 	if (game.detail < 3)RSPEAK(15);
-	game.detail=game.detail+1;
+	++game.detail;
 	game.wzdark=false;
 	game.abbrev[game.loc]=0;
 	return true;
@@ -563,7 +563,7 @@ L9:
 	    RSPEAK(SPK);
 	    return true;
 	}
-	KK=KK+1;
+	++KK;
     }
     LL=LL/1000;
 
@@ -582,7 +582,7 @@ L11:
 L12:
     do {
 	if (TRAVEL[KK] < 0)BUG(25);
-	KK=KK+1;
+	++KK;
 	game.newloc=labs(TRAVEL[KK])/1000;
     } while
         (game.newloc == LL);
@@ -726,7 +726,7 @@ L2000:	if (game.loc == 0)
 	 *  get full score. */
 
 	if (DARK(0)) goto L2012;
-	game.abbrev[game.loc]=game.abbrev[game.loc]+1;
+	++game.abbrev[game.loc];
 	i=game.atloc[game.loc];
 L2004:	if (i == 0) goto L2012;
 	obj=i;
@@ -736,7 +736,7 @@ L2004:	if (i == 0) goto L2012;
 	if (game.closed) goto L2008;
 	game.prop[obj]=0;
 	if (obj == RUG || obj == CHAIN)game.prop[obj]=1;
-	game.tally=game.tally-1;
+	--game.tally;
 /*  Note: There used to be a test here to see whether the player had blown it
  *  so badly that he could never ever see the remaining treasures, and if so
  *  the lamp was zapped to 35 turns.  But the tests were too simple-minded;
@@ -772,7 +772,7 @@ L2600:	if (COND[game.loc] >= game.conds) {
 		    continue;
 		if (!CNDBIT(game.loc,hint+10))
 		    game.hintlc[hint]= -1;
-		game.hintlc[hint] = game.hintlc[hint]+1;
+		++game.hintlc[hint];
 		if (game.hintlc[hint] >= HINTS[hint][1]) 
 		    dohint(cmdin, hint);
 	    }
@@ -803,22 +803,25 @@ L2603:	if (game.closed) {
 	 *  going on.  If pos, make neg.  If neg, he skipped a word,
 	 *  so make it zero. */
 L2607:	game.foobar=(game.foobar>0 ? -game.foobar : 0);
-	game.turns=game.turns+1;
+	++game.turns;
 	if (game.turns == game.thresh) {
 	SPEAK(TTEXT[game.trndex]);
 	game.trnluz=game.trnluz+TRNVAL[game.trndex]/100000;
-	game.trndex=game.trndex+1;
-	game.thresh= -1;
+	++game.trndex;
+	game.thresh = -1;
 	if (game.trndex <= TRNVLS)
 	    game.thresh=MOD(TRNVAL[game.trndex],100000)+1;
 	}
 	if (VERB == SAY && WD2 > 0)VERB=0;
 	if (VERB == SAY) goto L4090;
-	if (game.tally == 0 && INDEEP(game.loc) && game.loc != 33)game.clock1=game.clock1-1;
+	if (game.tally == 0 && INDEEP(game.loc) && game.loc != 33)
+	    --game.clock1;
 	if (game.clock1 == 0) goto L10000;
-	if (game.clock1 < 0)game.clock2=game.clock2-1;
+	if (game.clock1 < 0)
+	    --game.clock2;
 	if (game.clock2 == 0) goto L11000;
-	if (game.prop[LAMP] == 1)game.limit=game.limit-1;
+	if (game.prop[LAMP] == 1)
+	    --game.limit;
 	if (game.limit <= 30 && HERE(BATTER) && game.prop[BATTER] == 0 && HERE(LAMP))
 	    goto L12000;
 	if (game.limit == 0) goto L12400;
@@ -835,8 +838,8 @@ L19999: K=43;
 L2610:	if (V1 == 1000+CAGE && V2 == 1000+BIRD && HERE(CAGE) && HERE(BIRD))
 		WD1=MAKEWD(301200308);
 L2620:	if (WD1 == MAKEWD(23051920)) {
-		game.iwest=game.iwest+1;
-		if (game.iwest == 10)RSPEAK(17);
+	    ++game.iwest;
+	    if (game.iwest == 10)RSPEAK(17);
 	}
 	if (WD1 == MAKEWD( 715) && WD2 != 0) {
 	    if (++IGO == 10)
@@ -987,7 +990,7 @@ L11000: game.prop[BOTTLE]=PUT(BOTTLE,115,1);
 
 	PUT(GRATE,116,0);
 	PUT(SIGN,116,0);
-	OBJTXT[SIGN]=OBJTXT[SIGN]+1;
+	++OBJTXT[SIGN];
 	game.prop[SNAKE]=PUT(SNAKE,116,1);
 	game.prop[BIRD]=PUT(BIRD,116,1);
 	game.prop[CAGE]=PUT(CAGE,116,0);

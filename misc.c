@@ -28,7 +28,7 @@ void SPEAK(vocab_t msg)
     nparms=1;
     do {
 	nxt=labs(LINES[msg])-1;
-	msg=msg+1;
+	++msg;
 	LNLENG=0;
 	LNPOSN=1;
 	state=0;
@@ -71,7 +71,7 @@ void SPEAK(vocab_t msg)
 		    if (PARMS[nparms+1] < 0)
 			casemake=0;
 		    PUTTXT(PARMS[nparms],&state,casemake);
-		    nparms=nparms+1;
+		    ++nparms;
 		}
 		++nparms;
 		continue;
@@ -254,7 +254,7 @@ long GETTXT(bool skip, bool onewrd, bool upper)
 	    return(text);
 	if ((!skip) || INLINE[LNPOSN] != 0)
 	    break;
-	LNPOSN=LNPOSN+1;
+	++LNPOSN;
     }
 
     text=0;
@@ -268,7 +268,7 @@ long GETTXT(bool skip, bool onewrd, bool upper)
 	    if (upper && current >= 37)
 		current=current-26;
 	    text=text+current;
-	    LNPOSN=LNPOSN+1;
+	    ++LNPOSN;
 	    continue;
 	}
 	if (splitting != LNPOSN) {
@@ -279,7 +279,7 @@ long GETTXT(bool skip, bool onewrd, bool upper)
 
 	text=text+current-PERCENT;
 	splitting = -1;
-	LNPOSN=LNPOSN+1;
+	++LNPOSN;
     }
 
     return text;
@@ -342,7 +342,7 @@ void PUTTXT(token_t word, long *state, long casemake)
 	*state=*state+byte;
 	if (*state < alph2 && *state >= alph1)*state=*state-26*casemake;
 	INLINE[LNPOSN]=*state;
-	LNPOSN=LNPOSN+1;
+	++LNPOSN;
 	*state=0;
     }
 }
@@ -464,7 +464,7 @@ void CARRY(long object, long where)
 	if (game.place[object] == -1)
 	    return;
 	game.place[object]= -1;
-	game.holdng=game.holdng+1;
+	++game.holdng;
     }
     if (game.atloc[where] == object) {
 	game.atloc[where]=game.link[object];

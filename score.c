@@ -38,10 +38,10 @@ void score(long mode)
 	    if(i == CHEST)k=14;
 	    if(i > CHEST)k=16;
 	    if(game.prop[i] >= 0)
-		score=score+2;
+		score += 2;
 	    if(game.place[i] == 3 && game.prop[i] == 0)
-		score=score+k-2;
-	    mxscor=mxscor+k;
+		score += k-2;
+	    mxscor += k;
 	}
     }
 
@@ -51,34 +51,34 @@ void score(long mode)
      *  indicates whether he reached the endgame.  And if he got as far as
      *  "cave closed" (indicated by "game.closed"), then bonus is zero for
      *  mundane exits or 133, 134, 135 if he blew it (so to speak). */
-    score=score+(MAXDIE-game.numdie)*10;
-    mxscor=mxscor+MAXDIE*10;
-    if(mode == 0)score=score+4;
-    mxscor=mxscor+4;
-    if(game.dflag != 0)score=score+25;
-    mxscor=mxscor+25;
-    if(game.closng)score=score+25;
-    mxscor=mxscor+25;
+    score += (MAXDIE-game.numdie)*10;
+    mxscor += MAXDIE*10;
+    if(mode == 0)score += 4;
+    mxscor += 4;
+    if(game.dflag != 0)score += 25;
+    mxscor += 25;
+    if(game.closng)score += 25;
+    mxscor += 25;
     if(game.closed) {
 	if(game.bonus == 0)
-	    score=score+10;
+	    score += 10;
 	if(game.bonus == 135)
-	    score=score+25;
+	    score += 25;
 	if(game.bonus == 134)
-	    score=score+30;
+	    score += 30;
 	if(game.bonus == 133)
-	    score=score+45;
+	    score += 45;
     }
-    mxscor=mxscor+45;
+    mxscor += 45;
 
     /* Did he come to Witt's End as he should? */
     if(game.place[MAGZIN] == 108)
-	score=score+1;
-    mxscor=mxscor+1;
+	score += 1;
+    mxscor += 1;
 
     /* Round it off. */
-    score=score+2;
-    mxscor=mxscor+2;
+    score += 2;
+    mxscor += 2;
 
     /* Deduct for hints/turns/saves. Hints < 4 are special; see database desc. */
     for (i=1; i<=HNTMAX; i++) {
@@ -86,9 +86,9 @@ void score(long mode)
 	    score=score-HINTS[i][2];
     }
     if(game.novice)
-	score=score-5;
+	score -= 5;
     if(game.clshnt)
-	score=score-10;
+	score -= 10;
     score=score-game.trnluz-game.saved;
 
     /* Return to score command if that's where we came from. */

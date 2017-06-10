@@ -752,7 +752,7 @@ static int rub(token_t obj)
     DSTROY(URN);
     DROP(AMBER,game.loc);
     game.prop[AMBER]=1;
-    game.tally=game.tally-1;
+    --game.tally;
     DROP(CAVITY,game.loc);
     SPK=216;
     return(2011);
@@ -842,7 +842,7 @@ static int throw(FILE *cmdin, long verb, long obj)
     game.dseen[i]=false;
     game.dloc[i]=0;
     SPK=47;
-    game.dkill=game.dkill+1;
+    ++game.dkill;
     if (game.dkill == 1)SPK=149;
 
     return throw_support(SPK);
@@ -875,7 +875,7 @@ static int wave(token_t obj)
     if (SPK == 206 && game.loc == game.place[STEPS] && game.prop[JADE] < 0) {
 	DROP(JADE,game.loc);
 	game.prop[JADE]=0;
-	game.tally=game.tally-1;
+	--game.tally;
 	SPK=208;
 	return(2011);
     } else {
