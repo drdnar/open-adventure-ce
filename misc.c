@@ -8,9 +8,6 @@
 #include "database.h"
 #include "linenoise/linenoise.h"
 
-/* hack to ignore GCC Unused Result */
-#define IGNORE(r) do{if (r){}}while(0)
-
 #define PERCENT	63	/* partly hide the packed encoding */
 
 const char advent_to_ascii[] = {0, 32, 33, 34, 39, 40, 41, 42, 43, 44, 45, 46, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 37, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 1, 2, 3, 4, 5, 6, 7, 8, 0, 0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 35, 36, 38, 47, 58, 59, 60, 61, 62, 63, 64, 91, 92, 93, 94, 95, 96, 123, 124, 125, 126, 0};
@@ -382,91 +379,6 @@ void TYPE0(void)
     return;
 }
 
-/*  Suspend/resume I/O routines (SAVWDS, SAVARR, SAVWRD) */
-
-void fSAVWDS(long *W1, long *W2, long *W3, long *W4,
-	     long *W5, long *W6, long *W7)
-/* Write or read 7 variables.  See SAVWRD. */
-{
-    SAVWRD(0,(*W1));
-    SAVWRD(0,(*W2));
-    SAVWRD(0,(*W3));
-    SAVWRD(0,(*W4));
-    SAVWRD(0,(*W5));
-    SAVWRD(0,(*W6));
-    SAVWRD(0,(*W7));
-}
-
-void fSAVARR(long arr[], long n)
-/* Write or read an array of n words.  See SAVWRD. */
-{
-    long i;
-
-    for (i=1; i<=n; i++) {
-	SAVWRD(0,arr[i]);
-    }
-    return;
-}
-
-void fSAVWRD(long op, long *pword) 
-/*  If OP<0, start writing a file, using word to initialise encryption; save
- *  word in the file.  If OP>0, start reading a file; read the file to find
- *  the value with which to decrypt the rest.  In either case, if a file is
- *  already open, finish writing/reading it and don't start a new one.  If OP=0,
- *  read/write a single word.  Words are buffered in case that makes for more
- *  efficient disk use.  We also compute a simple checksum to catch elementary
- *  poking within the saved file.  When we finish reading/writing the file,
- *  we store zero into *PWORD if there's no checksum error, else nonzero. */
-{
-    static long buf[250], cksum = 0, h1, hash = 0, n = 0, state = 0;
-
-    if (op != 0)
-    {
-	long ifvar = state; 
-	switch (ifvar<0 ? -1 : (ifvar>0 ? 1 : 0)) 
-	{ 
-	case -1:
-	case 1:
-	    if (n == 250)SAVEIO(1,state > 0,buf);
-	    n=MOD(n,250)+1;
-	    if (state <= 0) {
-		n--; buf[n]=cksum; n++;
-		SAVEIO(1,false,buf);
-	    }
-	    n--; *pword=buf[n]-cksum; n++;
-	    SAVEIO(-1,state > 0,buf);
-	    state=0;
-	    break;
-	case 0:	/* FIXME: Huh? should be impossible */
-	    state=op;
-	    SAVEIO(0,state > 0,buf);
-	    n=1;
-	    if (state <= 0) {
-		hash=MOD(*pword,1048576L);
-		buf[0]=1234L*5678L-hash;
-	    }
-	    SAVEIO(1,true,buf);
-	    hash=MOD(1234L*5678L-buf[0],1048576L);
-	    cksum=buf[0];
-	    return;
-	}
-    }
-    if (state == 0)
-	return;
-    if (n == 250)
-	SAVEIO(1,state > 0,buf);
-    n=MOD(n,250)+1;
-    h1=MOD(hash*1093L+221573L,1048576L);
-    hash=MOD(h1*1093L+221573L,1048576L);
-    h1=MOD(h1,1234)*765432+MOD(hash,123);
-    n--;
-    if (state > 0)
-	*pword=buf[n]+h1;
-    buf[n]=*pword-h1;
-    n++;
-    cksum=MOD(cksum*13+*pword,1000000000L);
-}
-
 /*  Data structure  routines */
 
 long VOCAB(long id, long init) 
@@ -788,40 +700,6 @@ void TYPE(void)
     INLINE[LNLENG+1]=0;
     printf("%s\n", INLINE+1);
     return;
-}
-
-void fSAVEIO(long op, long in, long arr[]) 
-/*  If OP=0, ask for a file name and open a file.  (If IN=true, the file is for
- *  input, else output.)  If OP>0, read/write ARR from/into the previously-opened
- *  file.  (ARR is a 250-integer array.)  If OP<0, finish reading/writing the
- *  file.  (Finishing writing can be a no-op if a "stop" statement does it
- *  automatically.  Finishing reading can be a no-op as long as a subsequent
- *  SAVEIO(0,false,X) will still work.) */
-{
-    static FILE *fp = NULL;
-    char* name;
-
-    switch (op < 0 ? -1 : (op > 0 ? 1 : 0)) 
-    { 
-    case -1:
-	fclose(fp);
-	break;
-    case 0:
-	while (fp == NULL) {
-	    name = linenoise("File name: ");
-	    fp = fopen(name,(in ? READ_MODE : WRITE_MODE));
-	    if (fp == NULL)
-		printf("Can't open file %s, try again.\n", name); 
-	}
-	linenoiseFree(name);
-	break;
-    case 1: 
-	if (in)
-	    IGNORE(fread(arr,sizeof(long),250,fp));
-	else
-	    IGNORE(fwrite(arr,sizeof(long),250,fp));
-	break;
-    }
 }
 
 void DATIME(long* d, long* t)

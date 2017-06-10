@@ -98,14 +98,6 @@ extern token_t MAKEWD(long);
 extern void PUTTXT(token_t,long*,long);
 extern void SHFTXT(long,long);
 extern void TYPE0(void);
-
-extern void fSAVWDS(long*,long*,long*,long*,long*,long*,long*);
-#define SAVWDS(W1,W2,W3,W4,W5,W6,W7) fSAVWDS(&W1,&W2,&W3,&W4,&W5,&W6,&W7)
-extern void fSAVARR(long*,long);
-#define SAVARR(ARR,N) fSAVARR(ARR,N)
-extern void fSAVWRD(long,long*);
-#define SAVWRD(OP,WORD) fSAVWRD(OP,&WORD)
-
 extern long VOCAB(long,long);
 extern void DSTROY(long);
 extern void JUGGLE(long);
@@ -120,17 +112,14 @@ extern long RNDVOC(long,long);
 extern void BUG(long) __attribute__((noreturn));
 extern bool MAPLIN(FILE *);
 extern void TYPE(void);
-
-extern void fSAVEIO(long,long,long*);
-#define SAVEIO(OP,IN,ARR) fSAVEIO(OP,IN,ARR)
 extern void DATIME(long*, long*);
-
 extern long MOD(long,long);
 
 extern void set_seed(long);
 extern unsigned long get_next_lcg_value(void);
 extern long randrange(long);
 extern void score(long);
+extern int saveresume(FILE *, bool);
 
 /*  Statement functions
  *
@@ -183,3 +172,9 @@ extern long AMBER, ATTACK, AXE, BACK, BATTER, BEAR,
 extern long K, SPK, WD1, WD1X, WD2, WD2X;
 
 enum speechpart {unknown, intransitive, transitive};
+
+/* hack to ignore GCC Unused Result */
+#define IGNORE(r) do{if (r){}}while(0)
+
+/* end */
+

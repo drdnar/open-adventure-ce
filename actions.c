@@ -3,8 +3,6 @@
 #include "advent.h"
 #include "database.h"
 
-#define VRSION	25	/* bump on save format change */
-
 /*
  * Action handlers.  Eventually we'll do lookup through a method table
  * that calls these.  Absolutely nothing like the original FORTRAN.
@@ -776,88 +774,6 @@ static int say(void)
 
 }
 
-static int suspendresume(FILE *input, bool resume)
-/* Suspend and resume */
-{
-    int kk;
-    long i;
-    if (!resume) {
-	/*  Suspend.  Offer to save things in a file, but charging
-	 *  some points (so can't win by using saved games to retry
-	 *  battles or to start over after learning zzword). */
-	SPK=201;
-	RSPEAK(260);
-	if (!YES(input,200,54,54)) return(2012);
-	game.saved=game.saved+5;
-	kk= -1;
-    }
-    else
-    {
-	/*  Resume.  Read a suspended game back from a file. */
-	kk=1;
-	if (game.loc != 1 || game.abbrev[1] != 1) {
-	    RSPEAK(268);
-	    if (!YES(input,200,54,54)) return(2012);
-	}
-    }
-
-    /*  Suspend vs resume cases are distinguished by the value of kk
-     *  (-1 for suspend, +1 for resume). */
-
-    /* 
-     * FIXME: This is way more complicated than it needs to be in C.
-     * What we ought to do is define a save-block structure that
-     * includes a game state block and then use a single fread/fwrite
-     * for I/O. All the SAV* functions can be scrapped.
-     */
-
-    DATIME(&i,&K);
-    K=i+650*K;
-    SAVWRD(kk,K);
-    K=VRSION;
-    SAVWRD(0,K);
-    if (K != VRSION) {
-	SETPRM(1,K/10,MOD(K,10));
-	SETPRM(3,VRSION/10,MOD(VRSION,10));
-	RSPEAK(269);
-	return(2000);
-    }
-    /* Herewith are all the variables whose values can change during a game,
-     * omitting a few (such as I, J) whose values between turns are
-     * irrelevant and some whose values when a game is
-     * suspended or resumed are guaranteed to match.  If unsure whether a value
-     * needs to be saved, include it.  Overkill can't hurt.  Pad the last savwds
-     * with junk variables to bring it up to 7 values. */
-    SAVWDS(game.abbnum,game.blklin,game.bonus,game.clock1,game.clock2,game.closed,game.closng);
-    SAVWDS(game.detail,game.dflag,game.dkill,game.dtotal,game.foobar,game.holdng,game.iwest);
-    SAVWDS(game.knfloc,game.limit,K,game.lmwarn,game.loc,game.newloc,game.numdie);
-    SAVWDS(K,game.oldlc2,game.oldloc,game.oldobj,game.panic,game.saved,game.setup);
-    SAVWDS(SPK,game.tally,game.thresh,game.trndex,game.trnluz,game.turns,OBJTXT[OYSTER]);
-    SAVWDS(K,WD1,WD1X,WD2,game.wzdark,game.zzword,OBJSND[BIRD]);
-    SAVWDS(OBJTXT[SIGN],game.clshnt,game.novice,K,K,K,K);
-    SAVARR(game.abbrev,LOCSIZ);
-    SAVARR(game.atloc,LOCSIZ);
-    SAVARR(game.dloc,NDWARVES);
-    SAVARR(game.dseen,NDWARVES);
-    SAVARR(game.fixed,NOBJECTS);
-    SAVARR(game.hinted,HNTSIZ);
-    SAVARR(game.hintlc,HNTSIZ);
-    SAVARR(game.link,NOBJECTS*2);
-    SAVARR(game.odloc,NDWARVES);
-    SAVARR(game.place,NOBJECTS);
-    SAVARR(game.prop,NOBJECTS);
-    SAVWRD(kk,K);
-    if (K != 0) {
-	RSPEAK(270);
-	exit(0);
-    }
-    K=NUL;
-    game.zzword=RNDVOC(3,game.zzword);
-    if (kk > 0) return(8);
-    RSPEAK(266);
-    exit(0);
-}
-
 static int throw_support(long spk)
 {
     RSPEAK(spk);
@@ -1021,8 +937,8 @@ int action(FILE *input, enum speechpart part, long verb, long obj)
 		    case 26: /* READ  */ return read(input, INTRANSITIVE);   
 		    case 27: /* BREAK */ return(8000); 
 		    case 28: /* WAKE  */ return(8000); 
-		    case 29: /* SUSP  */ return suspendresume(input, false);   
-		    case 30: /* RESU  */ return suspendresume(input, true);   
+		    case 29: /* SUSP  */ return saveresume(input, false);   
+		    case 30: /* RESU  */ return saveresume(input, true);   
 		    case 31: /* FLY   */ return fly(INTRANSITIVE);   
 		    case 32: /* LISTE */ return listen();   
 		    case 33: /* ZZZZ  */ return reservoir();   
