@@ -703,6 +703,7 @@ void BUG(long num)
 bool MAPLIN(FILE *fp)
 {
     long i, val;
+    bool eof;
 
     /*  Read a line of input, from the specified input source,
      *  translate the chars to integers in the range 0-126 and store
@@ -729,13 +730,23 @@ bool MAPLIN(FILE *fp)
      *  and is not changed thereafter unless the routines on this page choose
      *  to do so. */
 
-    if (!oldstyle && fp == stdin)
-	fputs("> ", stdout);
     do {
-	IGNORE(fgets(rawbuf,sizeof(rawbuf)-1,fp));
+	if (oldstyle) {
+	    IGNORE(fgets(rawbuf,sizeof(rawbuf)-1,fp));
+	    eof = (feof(fp));
+	} else {
+	    char *cp = linenoise("> ");
+	    eof = (cp == NULL);
+	    if (!eof) {
+		strncpy(rawbuf, cp, sizeof(rawbuf)-1);
+		linenoiseHistoryAdd(rawbuf);
+		strncat(rawbuf, "\n", sizeof(rawbuf)-1);
+		linenoiseFree(cp);
+	    }
+	}
     } while
-	    (!feof(fp) && rawbuf[0] == '#');
-    if (feof(fp)) {
+	    (!eof && rawbuf[0] == '#');
+    if (eof) {
 	if (logfp && fp == stdin)
 	    fclose(logfp);
 	return false;

@@ -25,11 +25,19 @@ PDP-10 on which it originally ran limited filenames to 6 characters.
 This version is released as open source with the permission and
 encouragement of the original authors.
 
+Unlike the original, this version supports use of your arrow keys to edit
+your command line in place.  Basic Emacs keystrokes are supported, and
+your up/down arrows access a command history.
+
+To exit the game, type Ctrl-D (EOF).
+
+There have been no gameplay changes.
+
 == OPTIONS ==
 
 -l:: Log commands to specified file.
 
--o:: Old-style.  Restores original interface, no prompt.
+-o:: Old-style.  Restores original interface, no prompt or command history.
 
 == BUGS ==
 

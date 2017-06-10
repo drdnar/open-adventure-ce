@@ -2,6 +2,7 @@
 
 Repository head::
   Include tests directory in generated tarball.
+  Support command-line editing with arrow keys and Emacs keystrokes.
 
 1.0: 2016-06-05::
   Forward port of Crowther & Woods's 430-point Adventure 2.5.

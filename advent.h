@@ -118,7 +118,7 @@ extern long SETBIT(long);
 extern bool TSTBIT(long,int);
 extern long RNDVOC(long,long);
 extern void BUG(long) __attribute__((noreturn));
-extern void MAPLIN(FILE *);
+extern bool MAPLIN(FILE *);
 extern void TYPE(void);
 
 extern void fSAVEIO(long,long,long*);

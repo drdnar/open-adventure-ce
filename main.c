@@ -11,6 +11,7 @@
 #include <time.h>
 #include "advent.h"
 #include "database.h"
+#include "linenoise/linenoise.h"
 
 struct game_t game;
 
@@ -81,6 +82,8 @@ case 'l':
 	    break;
 	}
     }
+
+    linenoiseHistorySetMaxLen(350);
 
     /* Logical variables:
      *
