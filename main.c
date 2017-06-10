@@ -1,7 +1,16 @@
 /*
+ * There used to be a note that said this:
+ *
  * The author - Don Woods - apologises for the style of the code; it
  * is a result of running the original Fortran IV source through a
  * home-brew Fortran-to-C converter.)
+ *
+ * Now that the code has been restructured into idiomatic C, the following
+ * is more appropriate:
+ *
+ * ESR apologizes for the remaing gotos (now confined to two functions in this
+ * file - they used to be *everywhere*), and the offensive globals.  Applying
+ * the Structured Program Theorem can be hard.
  */
 #include <stdlib.h>
 #include <stdio.h>
