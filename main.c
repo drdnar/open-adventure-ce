@@ -476,7 +476,7 @@ static void croak(FILE *cmdin)
  *  "K", put the new location in "game.newloc".  The current loc is saved
  *  in "game.oldloc" in case he wants to retreat.  The current
  *  game.oldloc is saved in game.oldlc2, in case he dies.  (if he
- *  does, game.newloc will be limbo, and OLgame.dloc will be what killed
+ *  does, game.newloc will be limbo, and game.oldloc will be what killed
  *  him, so we need game.oldlc2, which is the last place he was
  *  safe.) */
 
@@ -488,7 +488,7 @@ static bool playermove(FILE *cmdin, token_t verb)
 	BUG(26);
     if (K == NUL)
 	return true;
-    if (K == BACK) {
+    else if (K == BACK) {
 	/*  Handle "go back".  Look for verb which goes from game.loc to
 	 *  game.oldloc, or to game.oldlc2 If game.oldloc has forced-motion.
 	 *  K2 saves entry -> forced loc -> previous loc. */
@@ -522,11 +522,12 @@ static bool playermove(FILE *cmdin, token_t verb)
 	    K=MOD(labs(TRAVEL[KK]),1000);
 	    KK=KEY[game.loc];
 	    goto L9;
+	} else {
+	    RSPEAK(K2);
+	    return true;
 	}
-	RSPEAK(K2);
-	return true;
     }
-    if (K == LOOK) {
+    else if (K == LOOK) {
 	/*  Look.  Can't give more detail.  Pretend it wasn't dark
 	 *  (though it may "now" be dark) so he won't fall into a
 	 *  pit while staring into the gloom. */
@@ -536,7 +537,7 @@ static bool playermove(FILE *cmdin, token_t verb)
 	game.abbrev[game.loc]=0;
 	return true;
     }
-    if (K == CAVE) {
+    else if (K == CAVE) {
 	/*  Cave.  Different messages depending on whether above ground. */
 	RSPEAK((OUTSID(game.loc) && game.loc != 8) ? 57 : 58);
 	return true;
