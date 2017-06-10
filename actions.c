@@ -977,158 +977,156 @@ static int wave(token_t obj)
  * "goto".
  */
 
-int action(FILE *input, long STARTAT, long verb, long obj)
+int action(FILE *input, enum speechpart part, long verb, long obj)
 /*  Analyse a verb.  Remember what it was, go back for object if second word
  *  unless verb is "say", which snarfs arbitrary second word.
  */
 {
     int kk;
-    switch(STARTAT) {
-    case 4000: goto L4000;
-    case 4090: goto L4090;
-    case 5000: goto L5000;
+    switch(part)
+    {
+	case intransitive:
+	    SPK=ACTSPK[verb];
+	    if (WD2 > 0 && verb != SAY) return(2800);
+	    if (verb == SAY)obj=WD2;
+	    if (obj == 0) {
+		/*  Analyse an intransitive verb (ie, no object given yet). */
+		switch (verb-1) {
+		    case  0: /* CARRY */ return carry(INTRANSITIVE);
+		    case  1: /* DROP  */ return(8000); 
+		    case  2: /* SAY   */ return(8000); 
+		    case  3: /* UNLOC */ return lock(verb, INTRANSITIVE);    
+		    case  4: /* NOTHI */ return(2009); 
+		    case  5: /* LOCK  */ return lock(verb, INTRANSITIVE);    
+		    case  6: /* LIGHT */ return light(INTRANSITIVE);    
+		    case  7: /* EXTIN */ return extinguish(INTRANSITIVE);    
+		    case  8: /* WAVE  */ return(8000); 
+		    case  9: /* CALM  */ return(8000); 
+		    case 10: /* WALK  */ return(2011); 
+		    case 11: /* ATTAC */ return attack(input, verb, obj);   
+		    case 12: /* POUR  */ return pour(obj);   
+		    case 13: /* EAT   */ return eat(INTRANSITIVE);   
+		    case 14: /* DRINK */ return drink(obj);   
+		    case 15: /* RUB   */ return(8000); 
+		    case 16: /* TOSS  */ return(8000); 
+		    case 17: /* QUIT  */ return quit(input);   
+		    case 18: /* FIND  */ return(8000); 
+		    case 19: /* INVEN */ return inven(obj);   
+		    case 20: /* FEED  */ return(8000); 
+		    case 21: /* FILL  */ return fill(obj);   
+		    case 22: /* BLAST */ return blast();   
+		    case 23: /* SCOR  */ return vscore();   
+		    case 24: /* FOO   */ return bigwords(WD1);   
+		    case 25: /* BRIEF */ return brief();   
+		    case 26: /* READ  */ return read(input, INTRANSITIVE);   
+		    case 27: /* BREAK */ return(8000); 
+		    case 28: /* WAKE  */ return(8000); 
+		    case 29: /* SUSP  */ return suspendresume(input, false);   
+		    case 30: /* RESU  */ return suspendresume(input, true);   
+		    case 31: /* FLY   */ return fly(INTRANSITIVE);   
+		    case 32: /* LISTE */ return listen();   
+		    case 33: /* ZZZZ  */ return reservoir();   
+		}
+		BUG(23);
+	    }
+	    /* FALLTHRU */
+	case transitive:
+	L4090:
+	    /*  Analyse a transitive verb. */
+	    switch (verb-1) {
+		case  0: /* CARRY */ return carry(obj);    
+		case  1: /* DROP  */ return discard(obj, false);    
+		case  2: /* SAY   */ return say();    
+		case  3: /* UNLOC */ return lock(verb, obj);    
+		case  4: /* NOTHI */ return(2009); 
+		case  5: /* LOCK  */ return lock(verb, obj);    
+		case  6: /* LIGHT */ return light(obj);    
+		case  7: /* EXTI  */ return extinguish(obj);    
+		case  8: /* WAVE  */ return wave(obj);    
+		case  9: /* CALM  */ return(2011); 
+		case 10: /* WALK  */ return(2011); 
+		case 11: /* ATTAC */ return attack(input, verb, obj);   
+		case 12: /* POUR  */ return pour(obj);   
+		case 13: /* EAT   */ return eat(obj);   
+		case 14: /* DRINK */ return drink(obj);   
+		case 15: /* RUB   */ return rub(obj);   
+		case 16: /* TOSS  */ return throw(input, verb, obj);   
+		case 17: /* QUIT  */ return(2011); 
+		case 18: /* FIND  */ return find(obj);   
+		case 19: /* INVEN */ return find(obj);   
+		case 20: /* FEED  */ return feed(obj);   
+		case 21: /* FILL  */ return fill(obj);   
+		case 22: /* BLAST */ return blast();   
+		case 23: /* SCOR  */ return(2011); 
+		case 24: /* FOO   */ return(2011); 
+		case 25: /* BRIEF */ return(2011); 
+		case 26: /* READ  */ return read(input, obj);   
+		case 27: /* BREAK */ return vbreak(obj);   
+		case 28: /* WAKE  */ return wake(obj);   
+		case 29: /* SUSP  */ return(2011); 
+		case 30: /* RESU  */ return(2011); 
+		case 31: /* FLY   */ return fly(obj);   
+		case 32: /* LISTE */ return(2011); 
+		case 33: /* ZZZZ  */ return reservoir();   
+	    }
+	    BUG(24);
+	case unknown:
+	    /*  Analyse an object word.  See if the thing is here, whether
+	     *  we've got a verb yet, and so on.  Object must be here
+	     *  unless verb is "find" or "invent(ory)" (and no new verb
+	     *  yet to be analysed).  Water and oil are also funny, since
+	     *  they are never actually dropped at any location, but might
+	     *  be here inside the bottle or urn or as a feature of the
+	     *  location. */
+	    if (!HERE(obj))
+		goto L5100;
+	L5010:
+	    if (WD2 > 0)
+		return(2800);
+	    if (verb != 0)
+		goto L4090;
+	    SETPRM(1,WD1,WD1X);
+	    RSPEAK(255);
+	    return(2600);
+
+	L5100:
+	    if (obj == GRATE) {
+		if (game.loc == 1 || game.loc == 4 || game.loc == 7)
+		    obj=DPRSSN;
+		if (game.loc > 9 && game.loc < 15)
+		    obj=ENTRNC;
+		if (obj != GRATE)
+		    return(8);
+	    }
+
+	    if (obj == DWARF && ATDWRF(game.loc) > 0)
+		goto L5010;
+	    if ((LIQ(0) == obj && HERE(BOTTLE)) || obj == LIQLOC(game.loc))
+		goto L5010;
+	    if (obj == OIL && HERE(URN) && game.prop[URN] != 0) {
+		obj=URN;
+		goto L5010;
+	    }
+	    if (obj == PLANT && AT(PLANT2) && game.prop[PLANT2] != 0) {
+		obj=PLANT2;
+		goto L5010;
+	    }
+	    if (obj == KNIFE && game.knfloc == game.loc) {
+		game.knfloc= -1;
+		SPK=116;
+		return(2011);
+	    }
+	    if (obj == ROD && HERE(ROD2)) {
+		obj=ROD2;
+		goto L5010;
+	    }
+	    if ((verb == FIND || verb == INVENT) && WD2 <= 0)
+		goto L5010;
+
+	    SETPRM(1,WD1,WD1X);
+	    RSPEAK(256);
+	    return(2012);
+	default:
+	    BUG(99);
     }
-    BUG(99);
-
-L4000:	
-    SPK=ACTSPK[verb];
-    if (WD2 > 0 && verb != SAY) return(2800);
-    if (verb == SAY)obj=WD2;
-    if (obj > 0) goto L4090;
-
-/*  Analyse an intransitive verb (ie, no object given yet). */
-
-    switch (verb-1) {
-    case  0: /* CARRY */ return carry(INTRANSITIVE);
-    case  1: /* DROP  */ return(8000); 
-    case  2: /* SAY   */ return(8000); 
-    case  3: /* UNLOC */ return lock(verb, INTRANSITIVE);    
-    case  4: /* NOTHI */ return(2009); 
-    case  5: /* LOCK  */ return lock(verb, INTRANSITIVE);    
-    case  6: /* LIGHT */ return light(INTRANSITIVE);    
-    case  7: /* EXTIN */ return extinguish(INTRANSITIVE);    
-    case  8: /* WAVE  */ return(8000); 
-    case  9: /* CALM  */ return(8000); 
-    case 10: /* WALK  */ return(2011); 
-    case 11: /* ATTAC */ return attack(input, verb, obj);   
-    case 12: /* POUR  */ return pour(obj);   
-    case 13: /* EAT   */ return eat(INTRANSITIVE);   
-    case 14: /* DRINK */ return drink(obj);   
-    case 15: /* RUB   */ return(8000); 
-    case 16: /* TOSS  */ return(8000); 
-    case 17: /* QUIT  */ return quit(input);   
-    case 18: /* FIND  */ return(8000); 
-    case 19: /* INVEN */ return inven(obj);   
-    case 20: /* FEED  */ return(8000); 
-    case 21: /* FILL  */ return fill(obj);   
-    case 22: /* BLAST */ return blast();   
-    case 23: /* SCOR  */ return vscore();   
-    case 24: /* FOO   */ return bigwords(WD1);   
-    case 25: /* BRIEF */ return brief();   
-    case 26: /* READ  */ return read(input, INTRANSITIVE);   
-    case 27: /* BREAK */ return(8000); 
-    case 28: /* WAKE  */ return(8000); 
-    case 29: /* SUSP  */ return suspendresume(input, false);   
-    case 30: /* RESU  */ return suspendresume(input, true);   
-    case 31: /* FLY   */ return fly(INTRANSITIVE);   
-    case 32: /* LISTE */ return listen();   
-    case 33: /* ZZZZ  */ return reservoir();   
-    }
-    BUG(23);
-
-/*  Analyse a transitive verb. */
-
-L4090:	switch (verb-1) {
-    case  0: /* CARRY */ return carry(obj);    
-    case  1: /* DROP  */ return discard(obj, false);    
-    case  2: /* SAY   */ return say();    
-    case  3: /* UNLOC */ return lock(verb, obj);    
-    case  4: /* NOTHI */ return(2009); 
-    case  5: /* LOCK  */ return lock(verb, obj);    
-    case  6: /* LIGHT */ return light(obj);    
-    case  7: /* EXTI  */ return extinguish(obj);    
-    case  8: /* WAVE  */ return wave(obj);    
-    case  9: /* CALM  */ return(2011); 
-    case 10: /* WALK  */ return(2011); 
-    case 11: /* ATTAC */ return attack(input, verb, obj);   
-    case 12: /* POUR  */ return pour(obj);   
-    case 13: /* EAT   */ return eat(obj);   
-    case 14: /* DRINK */ return drink(obj);   
-    case 15: /* RUB   */ return rub(obj);   
-    case 16: /* TOSS  */ return throw(input, verb, obj);   
-    case 17: /* QUIT  */ return(2011); 
-    case 18: /* FIND  */ return find(obj);   
-    case 19: /* INVEN */ return find(obj);   
-    case 20: /* FEED  */ return feed(obj);   
-    case 21: /* FILL  */ return fill(obj);   
-    case 22: /* BLAST */ return blast();   
-    case 23: /* SCOR  */ return(2011); 
-    case 24: /* FOO   */ return(2011); 
-    case 25: /* BRIEF */ return(2011); 
-    case 26: /* READ  */ return read(input, obj);   
-    case 27: /* BREAK */ return vbreak(obj);   
-    case 28: /* WAKE  */ return wake(obj);   
-    case 29: /* SUSP  */ return(2011); 
-    case 30: /* RESU  */ return(2011); 
-    case 31: /* FLY   */ return fly(obj);   
-    case 32: /* LISTE */ return(2011); 
-    case 33: /* ZZZZ  */ return reservoir();   
-    }
-    BUG(24);
-
-/*  Analyse an object word.  See if the thing is here, whether we've got a verb
- *  yet, and so on.  Object must be here unless verb is "find" or "invent(ory)"
- *  (and no new verb yet to be analysed).  Water and oil are also funny, since
- *  they are never actually dropped at any location, but might be here inside
- *  the bottle or urn or as a feature of the location. */
-
-L5000:
-    if (!HERE(obj))
-	goto L5100;
-L5010:
-    if (WD2 > 0)
-	return(2800);
-    if (verb != 0)
-	goto L4090;
-    SETPRM(1,WD1,WD1X);
-    RSPEAK(255);
-    return(2600);
-
-L5100:
-    if (obj == GRATE) {
-	if (game.loc == 1 || game.loc == 4 || game.loc == 7)
-	    obj=DPRSSN;
-	if (game.loc > 9 && game.loc < 15)
-	    obj=ENTRNC;
-	if (obj != GRATE)
-	    return(8);
-    }
-
-    if (obj == DWARF && ATDWRF(game.loc) > 0)
-	goto L5010;
-    if ((LIQ(0) == obj && HERE(BOTTLE)) || obj == LIQLOC(game.loc))
-	goto L5010;
-    if (obj == OIL && HERE(URN) && game.prop[URN] != 0) {
-	obj=URN;
-	goto L5010;
-    }
-    if (obj == PLANT && AT(PLANT2) && game.prop[PLANT2] != 0) {
-	obj=PLANT2;
-	goto L5010;
-    }
-    if (obj == KNIFE && game.knfloc == game.loc) {
-	game.knfloc= -1;
-	SPK=116;
-	return(2011);
-    }
-    if (obj == ROD && HERE(ROD2)) {
-	obj=ROD2;
-	goto L5010;
-    }
-    if ((verb == FIND || verb == INVENT) && WD2 <= 0)
-	goto L5010;
-
-    SETPRM(1,WD1,WD1X);
-    RSPEAK(256);
-    return(2012);
 }

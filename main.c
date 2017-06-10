@@ -659,6 +659,7 @@ static bool do_command(FILE *cmdin)
 	long KQ, VERB, KK, V1, V2;
 	long obj, i;
 	static long IGO = 0;
+	enum speechpart part;
 
 	/*  Can't leave cave once it's closing (except by main office). */
 	if (OUTSID(game.newloc) && game.newloc != 0 && game.closng) {
@@ -868,11 +869,11 @@ L3000:	SETPRM(1,WD1,WD1X);
 
 /* Verb and object analysis moved to separate module. */
 
-L4000:	i=4000; VERB=K; goto Laction;
-L4090:	i=4090; goto Laction;
-L5000:	i=5000; obj = K;
+L4000:	part=intransitive; VERB=K; goto Laction;
+L4090:	part=transitive; goto Laction;
+L5000:	part=unknown; obj = K;
 Laction:
-	 switch (action(cmdin, i, VERB, obj)) {
+	 switch (action(cmdin, part, VERB, obj)) {
 	   case 2: return true;
 	   case 8: goto L8;
 	   case 2000: goto L2000;

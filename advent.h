@@ -182,3 +182,4 @@ extern long AMBER, ATTACK, AXE, BACK, BATTER, BEAR,
 /* everything else */
 extern long K, SPK, WD1, WD1X, WD2, WD2X;
 
+enum speechpart {unknown, intransitive, transitive};
