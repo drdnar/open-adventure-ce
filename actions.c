@@ -897,56 +897,56 @@ int action(FILE *input, enum speechpart part, long verb, long obj)
 
     if (part == unknown)
     {
-	    /*  Analyse an object word.  See if the thing is here, whether
-	     *  we've got a verb yet, and so on.  Object must be here
-	     *  unless verb is "find" or "invent(ory)" (and no new verb
-	     *  yet to be analysed).  Water and oil are also funny, since
-	     *  they are never actually dropped at any location, but might
-	     *  be here inside the bottle or urn or as a feature of the
-	     *  location. */
-	    if (HERE(obj))
-		/* FALL THROUGH */;
-	    else if (obj == GRATE) {
-		if (game.loc == 1 || game.loc == 4 || game.loc == 7)
-		    obj=DPRSSN;
-		if (game.loc > 9 && game.loc < 15)
-		    obj=ENTRNC;
-		if (obj != GRATE)
-		    return(8);
-	    }
-	    else if (obj == DWARF && ATDWRF(game.loc) > 0)
-		/* FALL THROUGH */;
-	    else if ((LIQ(0) == obj && HERE(BOTTLE)) || obj == LIQLOC(game.loc))
-		/* FALL THROUGH */;
-	    else if (obj == OIL && HERE(URN) && game.prop[URN] != 0) {
-		obj=URN;
-		/* FALL THROUGH */;
-	    }
-	    else if (obj == PLANT && AT(PLANT2) && game.prop[PLANT2] != 0) {
-		obj=PLANT2;
-		/* FALL THROUGH */;
-	    }
-	    else if (obj == KNIFE && game.knfloc == game.loc) {
-		game.knfloc= -1;
-		SPK=116;
-		return(2011);
-	    }
-	    else if (obj == ROD && HERE(ROD2)) {
-		obj=ROD2;
-		/* FALL THROUGH */;
-	    }
-	    else if ((verb == FIND || verb == INVENT) && WD2 <= 0)
-		/* FALL THROUGH */;
-	    else {
-		SETPRM(1,WD1,WD1X);
-		RSPEAK(256);
-		return(2012);
-	    }
+	/*  Analyse an object word.  See if the thing is here, whether
+	 *  we've got a verb yet, and so on.  Object must be here
+	 *  unless verb is "find" or "invent(ory)" (and no new verb
+	 *  yet to be analysed).  Water and oil are also funny, since
+	 *  they are never actually dropped at any location, but might
+	 *  be here inside the bottle or urn or as a feature of the
+	 *  location. */
+	if (HERE(obj))
+	    /* FALL THROUGH */;
+	else if (obj == GRATE) {
+	    if (game.loc == 1 || game.loc == 4 || game.loc == 7)
+		obj=DPRSSN;
+	    if (game.loc > 9 && game.loc < 15)
+		obj=ENTRNC;
+	    if (obj != GRATE)
+		return(8);
+	}
+	else if (obj == DWARF && ATDWRF(game.loc) > 0)
+	    /* FALL THROUGH */;
+	else if ((LIQ(0) == obj && HERE(BOTTLE)) || obj == LIQLOC(game.loc))
+	    /* FALL THROUGH */;
+	else if (obj == OIL && HERE(URN) && game.prop[URN] != 0) {
+	    obj=URN;
+	    /* FALL THROUGH */;
+	}
+	else if (obj == PLANT && AT(PLANT2) && game.prop[PLANT2] != 0) {
+	    obj=PLANT2;
+	    /* FALL THROUGH */;
+	}
+	else if (obj == KNIFE && game.knfloc == game.loc) {
+	    game.knfloc= -1;
+	    SPK=116;
+	    return(2011);
+	}
+	else if (obj == ROD && HERE(ROD2)) {
+	    obj=ROD2;
+	    /* FALL THROUGH */;
+	}
+	else if ((verb == FIND || verb == INVENT) && WD2 <= 0)
+	    /* FALL THROUGH */;
+	else {
+	    SETPRM(1,WD1,WD1X);
+	    RSPEAK(256);
+	    return(2012);
+	}
 
-	    if (WD2 > 0)
-		return(2800);
-	    if (verb != 0)
-		part = transitive;
+	if (WD2 > 0)
+	    return(2800);
+	if (verb != 0)
+	    part = transitive;
     }
 
     switch(part)
@@ -1036,6 +1036,7 @@ int action(FILE *input, enum speechpart part, long verb, long obj)
 	    }
 	    BUG(24);
 	case unknown:
+	    /* Unknown verb, couldn't deduce object - might need hint */
 	    SETPRM(1,WD1,WD1X);
 	    RSPEAK(255);
 	    return(2600);
