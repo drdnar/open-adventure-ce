@@ -4,5 +4,5 @@
 #define NOBJECTS	100
 #define HNTSIZ		 20
 
-extern const char advent_to_ascii[129];
-extern const char ascii_to_advent[129];
+extern const char advent_to_ascii[128];
+extern const char ascii_to_advent[128];

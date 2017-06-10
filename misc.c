@@ -33,7 +33,7 @@ void SPEAK(vocab_t msg)
 	++LNPOSN;
 
 	while (LNPOSN <= LNLENG) { 
-	    if (INLINE[LNPOSN] != ascii_to_advent['%' + 1]) {
+	    if (INLINE[LNPOSN] != ascii_to_advent['%']) {
 		++LNPOSN;
 		continue;
 	    }
@@ -46,9 +46,9 @@ void SPEAK(vocab_t msg)
 	     *  lower case with first letter capitalised, 30 (T) = text ending
 	     *  with a word of -1, 65-73 (1-9) = number using that many
 	     *  characters, 12 (B) = variable number of blanks. */
-	    if (prmtyp == ascii_to_advent['!' + 1])
+	    if (prmtyp == ascii_to_advent['!'])
 		return;
-	    if (prmtyp == ascii_to_advent['S' + 1]) {
+	    if (prmtyp == ascii_to_advent['S']) {
 		SHFTXT(LNPOSN+2,-1);
 		INLINE[LNPOSN] = 55;
 		if (PARMS[nparms] == 1)
@@ -56,7 +56,7 @@ void SPEAK(vocab_t msg)
 		++nparms;
 		continue;
 	    }
-	    if (prmtyp == ascii_to_advent['T' + 1]) {
+	    if (prmtyp == ascii_to_advent['T']) {
 		SHFTXT(LNPOSN+2,-2);
 		state=0;
 		casemake=2;
@@ -70,7 +70,7 @@ void SPEAK(vocab_t msg)
 		++nparms;
 		continue;
 	    }
-	    if (prmtyp == ascii_to_advent['B' + 1]) {
+	    if (prmtyp == ascii_to_advent['B']) {
 		prmtyp=PARMS[nparms];
 		SHFTXT(LNPOSN+2,prmtyp-2);
 		if (prmtyp != 0) {
@@ -82,25 +82,25 @@ void SPEAK(vocab_t msg)
 		++nparms;
 		continue;
 	    }
-	    if (prmtyp == ascii_to_advent['W' + 1] || prmtyp == ascii_to_advent['L' + 1] || prmtyp == ascii_to_advent['U' + 1] || prmtyp == ascii_to_advent['C' + 1]) {
+	    if (prmtyp == ascii_to_advent['W'] || prmtyp == ascii_to_advent['L'] || prmtyp == ascii_to_advent['U'] || prmtyp == ascii_to_advent['C']) {
 		SHFTXT(LNPOSN+2,-2);
 		state = 0;
 		casemake = -1;
-		if (prmtyp == ascii_to_advent['U' + 1])
+		if (prmtyp == ascii_to_advent['U'])
 		    casemake=1;
-		if (prmtyp == ascii_to_advent['W' + 1])
+		if (prmtyp == ascii_to_advent['W'])
 		    casemake=0;
 		i = LNPOSN;
 		PUTTXT(PARMS[nparms],&state,casemake);
 		PUTTXT(PARMS[nparms+1],&state,casemake);
-		if (prmtyp == ascii_to_advent['C' + 1] && INLINE[i] >= ascii_to_advent['a' + 1] && INLINE[i] <= ascii_to_advent['z' + 1])
+		if (prmtyp == ascii_to_advent['C'] && INLINE[i] >= ascii_to_advent['a'] && INLINE[i] <= ascii_to_advent['z'])
 		    INLINE[i] -= 26;
 		nparms += 2;
 		continue;
 	    }
 
 	    prmtyp=prmtyp-64;
-	    if (prmtyp < ascii_to_advent['!' + 1] || prmtyp > ascii_to_advent['-' + 1]) {
+	    if (prmtyp < ascii_to_advent['!'] || prmtyp > ascii_to_advent['-']) {
 		++LNPOSN;
 		continue;
 	    }
@@ -257,21 +257,21 @@ long GETTXT(bool skip, bool onewrd, bool upper)
 	if (LNPOSN > LNLENG || (onewrd && INLINE[LNPOSN] == 0))
 	    continue;
 	char current=INLINE[LNPOSN];
-	if (current < ascii_to_advent['%' + 1]) {
+	if (current < ascii_to_advent['%']) {
 	    splitting = -1;
-	    if (upper && current >= ascii_to_advent['a' + 1])
+	    if (upper && current >= ascii_to_advent['a'])
 		current=current-26;
 	    text=text+current;
 	    ++LNPOSN;
 	    continue;
 	}
 	if (splitting != LNPOSN) {
-	    text=text+ascii_to_advent['%' + 1];
+	    text=text+ascii_to_advent['%'];
 	    splitting = LNPOSN;
 	    continue;
 	}
 
-	text=text+current-ascii_to_advent['%' + 1];
+	text=text+current-ascii_to_advent['%'];
 	splitting = -1;
 	++LNPOSN;
     }
@@ -328,8 +328,8 @@ void PUTTXT(token_t word, long *state, long casemake)
 	    return;
 	byte=w/div;
 	w=(w-byte*div)*64;
-	if (!(*state != 0 || byte != ascii_to_advent['%' + 1])) {
-	    *state=ascii_to_advent['%' + 1];
+	if (!(*state != 0 || byte != ascii_to_advent['%'])) {
+	    *state=ascii_to_advent['%'];
 	    continue;
 	}
 	SHFTXT(LNPOSN,1);
@@ -666,7 +666,7 @@ bool MAPLIN(FILE *fp)
 	strcpy(INLINE+1, rawbuf);
 	LNLENG=0;
 	for (i=1; i<=(long)sizeof(INLINE) && INLINE[i]!=0; i++) {
-	    val=INLINE[i]+1;
+	    val=INLINE[i];
 	    INLINE[i]=ascii_to_advent[val];
 	    if (INLINE[i] != 0)
 		LNLENG=i;
@@ -689,7 +689,7 @@ void TYPE(void)
     }
 
     for (i=1; i<=LNLENG; i++) {
-	INLINE[i]=advent_to_ascii[INLINE[i]+1];
+	INLINE[i]=advent_to_ascii[INLINE[i]];
     }
     INLINE[LNLENG+1]=0;
     printf("%s\n", INLINE+1);

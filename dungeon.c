@@ -200,7 +200,7 @@ void MAPLIN(FILE *OPENED) {
   LNLENG = 0;
   for (size_t i = 1; i <= sizeof(INLINE) && INLINE[i] != 0; ++i)
     {
-      char val = INLINE[i] + 1;
+      char val = INLINE[i];
       INLINE[i] = ascii_to_advent[(unsigned)val];
       if (INLINE[i] != 0)
 	LNLENG = i;
