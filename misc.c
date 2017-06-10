@@ -8,8 +8,6 @@
 #include "database.h"
 #include "linenoise/linenoise.h"
 
-#define PERCENT	63	/* partly hide the packed encoding */
-
 /*  I/O routines (SPEAK, PSPEAK, RSPEAK, SETPRM, GETIN, YES) */
 
 void SPEAK(vocab_t msg)
@@ -35,7 +33,7 @@ void SPEAK(vocab_t msg)
 	++LNPOSN;
 
 	while (LNPOSN <= LNLENG) { 
-	    if (INLINE[LNPOSN] != PERCENT) {
+	    if (INLINE[LNPOSN] != ascii_to_advent['%' + 1]) {
 		++LNPOSN;
 		continue;
 	    }
@@ -48,9 +46,9 @@ void SPEAK(vocab_t msg)
 	     *  lower case with first letter capitalised, 30 (T) = text ending
 	     *  with a word of -1, 65-73 (1-9) = number using that many
 	     *  characters, 12 (B) = variable number of blanks. */
-	    if (prmtyp == 1)
+	    if (prmtyp == ascii_to_advent['!' + 1])
 		return;
-	    if (prmtyp == 29) {
+	    if (prmtyp == ascii_to_advent['S' + 1]) {
 		SHFTXT(LNPOSN+2,-1);
 		INLINE[LNPOSN] = 55;
 		if (PARMS[nparms] == 1)
@@ -58,7 +56,7 @@ void SPEAK(vocab_t msg)
 		++nparms;
 		continue;
 	    }
-	    if (prmtyp == 30) {
+	    if (prmtyp == ascii_to_advent['T' + 1]) {
 		SHFTXT(LNPOSN+2,-2);
 		state=0;
 		casemake=2;
@@ -72,7 +70,7 @@ void SPEAK(vocab_t msg)
 		++nparms;
 		continue;
 	    }
-	    if (prmtyp == 12) {
+	    if (prmtyp == ascii_to_advent['B' + 1]) {
 		prmtyp=PARMS[nparms];
 		SHFTXT(LNPOSN+2,prmtyp-2);
 		if (prmtyp != 0) {
@@ -84,25 +82,25 @@ void SPEAK(vocab_t msg)
 		++nparms;
 		continue;
 	    }
-	    if (prmtyp == 33 || prmtyp == 22 || prmtyp == 31 || prmtyp == 13) {
+	    if (prmtyp == ascii_to_advent['W' + 1] || prmtyp == ascii_to_advent['L' + 1] || prmtyp == ascii_to_advent['U' + 1] || prmtyp == ascii_to_advent['C' + 1]) {
 		SHFTXT(LNPOSN+2,-2);
 		state = 0;
 		casemake = -1;
-		if (prmtyp == 31)
+		if (prmtyp == ascii_to_advent['U' + 1])
 		    casemake=1;
-		if (prmtyp == 33)
+		if (prmtyp == ascii_to_advent['W' + 1])
 		    casemake=0;
 		i = LNPOSN;
 		PUTTXT(PARMS[nparms],&state,casemake);
 		PUTTXT(PARMS[nparms+1],&state,casemake);
-		if (prmtyp == 13 && INLINE[i] >= 37 && INLINE[i] <= 62)
+		if (prmtyp == ascii_to_advent['C' + 1] && INLINE[i] >= ascii_to_advent['a' + 1] && INLINE[i] <= ascii_to_advent['z' + 1])
 		    INLINE[i] -= 26;
 		nparms += 2;
 		continue;
 	    }
 
 	    prmtyp=prmtyp-64;
-	    if (prmtyp < 1 || prmtyp > 9) {
+	    if (prmtyp < ascii_to_advent['!' + 1] || prmtyp > ascii_to_advent['-' + 1]) {
 		++LNPOSN;
 		continue;
 	    }
@@ -259,21 +257,21 @@ long GETTXT(bool skip, bool onewrd, bool upper)
 	if (LNPOSN > LNLENG || (onewrd && INLINE[LNPOSN] == 0))
 	    continue;
 	char current=INLINE[LNPOSN];
-	if (current < PERCENT) {
+	if (current < ascii_to_advent['%' + 1]) {
 	    splitting = -1;
-	    if (upper && current >= 37)
+	    if (upper && current >= ascii_to_advent['a' + 1])
 		current=current-26;
 	    text=text+current;
 	    ++LNPOSN;
 	    continue;
 	}
 	if (splitting != LNPOSN) {
-	    text=text+PERCENT;
+	    text=text+ascii_to_advent['%' + 1];
 	    splitting = LNPOSN;
 	    continue;
 	}
 
-	text=text+current-PERCENT;
+	text=text+current-ascii_to_advent['%' + 1];
 	splitting = -1;
 	++LNPOSN;
     }
@@ -330,8 +328,8 @@ void PUTTXT(token_t word, long *state, long casemake)
 	    return;
 	byte=w/div;
 	w=(w-byte*div)*64;
-	if (!(*state != 0 || byte != PERCENT)) {
-	    *state=PERCENT;
+	if (!(*state != 0 || byte != ascii_to_advent['%' + 1])) {
+	    *state=ascii_to_advent['%' + 1];
 	    continue;
 	}
 	SHFTXT(LNPOSN,1);
