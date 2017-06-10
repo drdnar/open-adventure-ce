@@ -41,8 +41,8 @@ There have been no gameplay changes.
 
 == BUGS ==
 
-The binary save file format is fragile and unlikely to survive
-through version bumps.
+The binary save file format is fragile, dependent on your machine word
+size and endianness, and unlikely to survive through version bumps.
 
 == REPORTING BUGS ==
 Report bugs to Eric S. Raymond <esr@thyrsus.com>.  The project page is

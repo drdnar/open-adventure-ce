@@ -14,7 +14,7 @@
 VERS=1.0
 
 CC?=gcc
-CCFLAGS+=-std=c99 -D _DEFAULT_SOURCE
+CCFLAGS+=-std=c99 -D _DEFAULT_SOURCE -g
 LIBS=
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
