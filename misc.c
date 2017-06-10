@@ -194,8 +194,7 @@ bool GETIN(FILE *input,
     for (;;) {
 	if (game.blklin)
 	    TYPE0();
-	MAPLIN(input);
-	if (feof(input))
+	if (!MAPLIN(input))
 	    return false;
 	*pword1=GETTXT(true,true,true);
 	if (game.blklin && *pword1 < 0)
@@ -701,7 +700,7 @@ void BUG(long num)
 
 /*  Machine dependent routines (MAPLIN, TYPE, SAVEIO) */
 
-void MAPLIN(FILE *fp)
+bool MAPLIN(FILE *fp)
 {
     long i, val;
 
@@ -739,6 +738,7 @@ void MAPLIN(FILE *fp)
     if (feof(fp)) {
 	if (logfp && fp == stdin)
 	    fclose(logfp);
+	return false;
     } else {
 	if (logfp && fp == stdin)
 	    IGNORE(fputs(rawbuf, logfp));
@@ -753,6 +753,7 @@ void MAPLIN(FILE *fp)
 		LNLENG=i;
 	}
 	LNPOSN=1;
+	return true;
     }
 }
 
