@@ -730,6 +730,8 @@ bool MAPLIN(FILE *fp)
      *  and is not changed thereafter unless the routines on this page choose
      *  to do so. */
 
+    if (!oldstyle && !isatty(1))
+	fputs("> ", stdout);
     do {
 	if (oldstyle) {
 	    IGNORE(fgets(rawbuf,sizeof(rawbuf)-1,fp));
