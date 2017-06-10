@@ -510,27 +510,28 @@ static bool playermove(FILE *cmdin, token_t verb)
 	if (K == game.loc)K2=91;
 	if (CNDBIT(game.loc,4))K2=274;
 	if (K2 == 0) {
-	L21:
-	    LL=MOD((labs(TRAVEL[KK])/1000),1000);
-	    if (LL != K) {
-		if (LL <= 300) {
-		    if (FORCED(LL) && MOD((labs(TRAVEL[KEY[LL]])/1000),1000) == K)
-			K2=KK;
+	    for (;;) {
+		LL=MOD((labs(TRAVEL[KK])/1000),1000);
+		if (LL != K) {
+		    if (LL <= 300) {
+			if (FORCED(LL) && MOD((labs(TRAVEL[KEY[LL]])/1000),1000) == K)
+			    K2=KK;
+		    }
+		    if (TRAVEL[KK] >= 0) {
+			++KK;
+			continue;
+		    }
+		    KK=K2;
+		    if (KK == 0) {
+			RSPEAK(140);
+			return true;
+		    }
 		}
-		if (TRAVEL[KK] >= 0) {
-		    ++KK;
-		    goto L21;
-		}
-		KK=K2;
-		if (KK == 0) {
-		    RSPEAK(140);
-		    return true;
-		}
-	    }
 
-	    K=MOD(labs(TRAVEL[KK]),1000);
-	    KK=KEY[game.loc];
-	    goto L9;
+		K=MOD(labs(TRAVEL[KK]),1000);
+		KK=KEY[game.loc];
+		break; /* fall through to ordinary travel */
+	    }
 	} else {
 	    RSPEAK(K2);
 	    return true;
@@ -551,10 +552,13 @@ static bool playermove(FILE *cmdin, token_t verb)
 	RSPEAK((OUTSID(game.loc) && game.loc != 8) ? 57 : 58);
 	return true;
     }
-    game.oldlc2=game.oldloc;
-    game.oldloc=game.loc;
+    else {
+	/* none of the specials */
+	game.oldlc2=game.oldloc;
+	game.oldloc=game.loc;
+    }
 
-L9:
+    /* ordinary travel */
     for (;;) {
 	LL=labs(TRAVEL[KK]);
 	if (MOD(LL,1000) == 1 || MOD(LL,1000) == K)
