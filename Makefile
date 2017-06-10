@@ -21,8 +21,8 @@ ifeq ($(UNAME_S),Linux)
 	LIBS=-lrt
 endif
 
-OBJS=main.o init.o actions.o score.o misc.o saveresume.o
-SOURCES=$(OBJS:.o=.c) dungeon.c advent.h sizes.h adventure.text Makefile control linenoise/linenoise.[ch]
+OBJS=main.o init.o actions.o score.o misc.o saveresume.o common.o
+SOURCES=$(OBJS:.o=.c) dungeon.c advent.h common.h adventure.text Makefile control linenoise/linenoise.[ch]
 
 .c.o:
 	$(CC) $(CCFLAGS) $(DBX) -c $<
@@ -30,19 +30,21 @@ SOURCES=$(OBJS:.o=.c) dungeon.c advent.h sizes.h adventure.text Makefile control
 advent:	$(OBJS) database.o linenoise.o
 	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) database.o linenoise.o $(LDFLAGS) $(LIBS)
 
-main.o:	 	advent.h database.h database.c sizes.h
+main.o:	 	advent.h database.h database.c common.h
 
-init.o:	 	advent.h database.h database.c sizes.h
+init.o:	 	advent.h database.h database.c common.h
 
-actions.o:	advent.h database.h database.c sizes.h
+actions.o:	advent.h database.h database.c common.h
 
-score.o:	advent.h database.h database.c sizes.h
+score.o:	advent.h database.h database.c common.h
 
-misc.o:		advent.h database.h database.c sizes.h
+misc.o:		advent.h database.h database.c common.h
 
-saveresume.o:	advent.h database.h database.c sizes.h
+saveresume.o:	advent.h database.h database.c common.h
 
-database.o:     database.c database.h sizes.h
+common.o:	common.h
+
+database.o:     database.c database.h common.h
 	$(CC) $(CCFLAGS) $(DBX) -c database.c
 
 database.c database.h: dungeon
@@ -51,8 +53,8 @@ database.c database.h: dungeon
 linenoise.o:	linenoise/linenoise.h
 	$(CC) $(CCFLAGS) $(DBX) -c linenoise/linenoise.c
 
-dungeon: dungeon.c
-	$(CC) $(CCFLAGS) -o $@ $<
+dungeon: dungeon.o common.o
+	$(CC) $(CCFLAGS) -o $@ dungeon.o common.o
 
 clean:
 	rm -f *.o advent *.html database.[ch] dungeon *.gcno *.gcda

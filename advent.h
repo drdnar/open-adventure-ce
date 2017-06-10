@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#include "sizes.h"
+#include "common.h"
 
 #define LINESIZE	100
 #define NDWARVES	6
