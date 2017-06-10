@@ -53,7 +53,9 @@ int saveresume(FILE *input, bool resume)
     }
 
     while (fp == NULL) {
-	name = linenoise("File name: ");
+	name = linenoise("\nFile name: ");
+	if (name == NULL)
+	    return(2000);
 	fp = fopen(name,(resume ? READ_MODE : WRITE_MODE));
 	if (fp == NULL)
 	    printf("Can't open file %s, try again.\n", name); 
