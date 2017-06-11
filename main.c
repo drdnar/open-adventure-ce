@@ -21,6 +21,7 @@
 #include "advent.h"
 #include "database.h"
 #include "linenoise/linenoise.h"
+#include "newdb.h"
 
 struct game_t game;
 
@@ -709,9 +710,9 @@ static bool do_command(FILE *cmdin)
 
 L2000:	if (game.loc == 0)
 	    croak(cmdin);
-	KK=STEXT[game.loc];
-	if (MOD(game.abbrev[game.loc],game.abbnum) == 0 || KK == 0)
-	    KK=LTEXT[game.loc];
+	char* msg = short_location_descriptions[game.loc];
+	if (MOD(game.abbrev[game.loc],game.abbnum) == 0 || msg == 0)
+	    msg=long_location_descriptions[game.loc];
 	if (!FORCED(game.loc) && DARK(game.loc)) {
 	    /*  The easiest way to get killed is to fall into a pit in
 	     *  pitch darkness. */
@@ -721,10 +722,10 @@ L2000:	if (game.loc == 0)
 		croak(cmdin);
 		goto L2000;
 	    }
-	    KK=RTEXT[16];
+	    msg=arbitrary_messages[16];
 	}
 	if (TOTING(BEAR))RSPEAK(141);
-	SPEAK(KK);
+	newspeak(msg);
 	K=1;
 	if (FORCED(game.loc)) {
 	    goto L8;
@@ -815,7 +816,7 @@ L2600:	if (COND[game.loc] >= game.conds) {
 L2607:	game.foobar=(game.foobar>0 ? -game.foobar : 0);
 	++game.turns;
 	if (game.turns == game.thresh) {
-	SPEAK(TTEXT[game.trndex]);
+	newspeak(turn_threshold_messages[game.trndex]);
 	game.trnluz=game.trnluz+TRNVAL[game.trndex]/100000;
 	++game.trndex;
 	game.thresh = -1;
