@@ -11,6 +11,24 @@
 
 /*  I/O routines (SPEAK, PSPEAK, RSPEAK, SETPRM, GETIN, YES) */
 
+void newspeak(char* msg)
+{
+  // Do nothing if we got a null pointer.
+  if (msg == NULL)
+    return;
+
+  // Do nothing if we got an empty string.
+  if (strlen(msg) == 0)
+    return;
+
+  // Print a newline if the global game.blklin says to.
+  if (game.blklin == true)
+    printf("\n");
+
+  // Print the message.
+  printf("%s\n", msg);
+}
+
 void SPEAK(vocab_t msg)
 /*  Print the message which starts at LINES[N].  Precede it with a blank line
  *  unless game.blklin is false. */
@@ -44,9 +62,8 @@ void SPEAK(vocab_t msg)
 	     *  If PARAM=1, else 'S' (optional plural ending), 33 (W) = word
 	     *  (two 30-bit values) with trailing spaces suppressed, 22 (L) or
 	     *  31 (U) = word but map to lower/upper case, 13 (C) = word in
-	     *  lower case with first letter capitalised, 30 (T) = text ending
-	     *  with a word of -1, 65-73 (1-9) = number using that many
-	     *  characters, 12 (B) = variable number of blanks. */
+	     *  lower case with first letter capitalised, 65-73 (1-9) =
+	     *  number using that many characters. */
 	    if (prmtyp == ascii_to_advent['!'])
 		return;
 	    if (prmtyp == ascii_to_advent['S']) {
