@@ -51,52 +51,77 @@ void newspeak(char* msg)
   char* copy = (char*) xmalloc(strlen(msg) + 1);
   strncpy(copy, msg, strlen(msg) + 1);
 
-  // Staging area for parameters.
-  char parameters[2000][5];
+  // Staging area for stringified parameters.
+  char parameters[5][100]; // FIXME: to be replaced with dynamic allocation
  
   // Handle format specifiers (including the custom %C, %L, %S) by adjusting the parameter accordingly, and replacing the specifier with %s.
-  int param_index = 0;
+  int pi = 0; // parameter index
   for (int i = 0; i < strlen(msg); ++i)
     {
       if (msg[i] == '%')
   	{
-  	  ++param_index;
+  	  ++pi;
 
-	  // Integer specifier. In order to accommodate the fact that PARMS can have both legitimate integers *and* packed tokens, stringify these. Future work may eliminate the need for this.
+	  // Integer specifier. In order to accommodate the fact that PARMS can have both legitimate integers *and* packed tokens, stringify everything. Future work may eliminate the need for this.
 	  if (msg[i + 1] == 'd')
 	    {
 	      copy[i + 1] = 's';
-	      sprintf(parameters[param_index], "%d", PARMS[param_index]);
+	      sprintf(parameters[pi], "%d", PARMS[pi]);
 	    }
 
-	  // Plain string specifier.
+	  // Unmodified string specifier.
 	  if (msg[i + 1] == 's')
 	    {
-	      packed_to_token(PARMS[param_index], parameters[param_index]);
+	      packed_to_token(PARMS[pi], parameters[pi]);
 	    }
 
-	  // Plural replacement specifier.
+	  // Singular/plural specifier.
 	  if (msg[i + 1] == 'S')
 	    {
 	      copy[i + 1] = 's';
-	      if (PARMS[param_index - 1] > 1)
+	      if (PARMS[pi - 1] > 1) // look at the *previous* parameter (which by necessity must be numeric)
 		{
-		  sprintf(parameters[param_index], "%s", "s");
+		  sprintf(parameters[pi], "%s", "s");
 		}
 	      else
 		{
-		  sprintf(parameters[param_index], "%s", "");
+		  sprintf(parameters[pi], "%s", "");
 		}
+	    }
+
+	  // All-lowercase specifier.
+	  if (msg[i + 1] == 'L')
+	    {
+	      copy[i + 1] = 's';
+	      packed_to_token(PARMS[pi], parameters[pi]);
+	      for (int i = 0; i < strlen(parameters[pi]); ++i)
+		{
+		  parameters[pi][i] = tolower(parameters[pi][i]);
+		}
+	    }
+
+	  // First char uppercase, rest lowercase.
+	  if (msg[i + 1] == 'C')
+	    {
+	      copy[i + 1] = 's';
+	      packed_to_token(PARMS[pi], parameters[pi]);
+	      for (int i = 0; i < strlen(parameters[pi]); ++i)
+		{
+		  parameters[pi][i] = tolower(parameters[pi][i]);
+		}
+	      parameters[pi][0] = toupper(parameters[pi][0]);
 	    }
   	}
     }
 
   // Render the final string.
-  char rendered[2000];
-  sprintf(&rendered, copy, parameters[1], parameters[2], parameters[3], parameters[4]);
+  char rendered[2000]; // FIXME: to be replaced with dynamic allocation
+  sprintf(&rendered, copy, parameters[1], parameters[2], parameters[3], parameters[4]); // FIXME: to be replaced with vsprintf()
 
   // Print the message.
   printf("%s\n", rendered);
+
+  free(copy);
 }
 
 void SPEAK(vocab_t msg)
