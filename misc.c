@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
+#include <ctype.h>
 
 #include "advent.h"
 #include "database.h"
@@ -50,7 +51,7 @@ void SPEAK(vocab_t msg)
 		return;
 	    if (prmtyp == ascii_to_advent['S']) {
 		SHFTXT(LNPOSN+2,-1);
-		INLINE[LNPOSN] = 55;
+		INLINE[LNPOSN] = ascii_to_advent['s'];
 		if (PARMS[nparms] == 1)
 		    SHFTXT(LNPOSN+1,-1);
 		++nparms;
@@ -94,7 +95,14 @@ void SPEAK(vocab_t msg)
 		PUTTXT(PARMS[nparms],&state,casemake);
 		PUTTXT(PARMS[nparms+1],&state,casemake);
 		if (prmtyp == ascii_to_advent['C'] && INLINE[i] >= ascii_to_advent['a'] && INLINE[i] <= ascii_to_advent['z'])
-		    INLINE[i] -= 26;
+		  {
+		    // Convert to uppercase.
+		    // Round-trip to ASCII and back so that this code doesn't break when the mapping changes.
+		    // This can be simplified when mapping goes away.
+		    char this = advent_to_ascii[INLINE[i]];
+		    char uc_this = toupper(this);
+		    INLINE[i] = ascii_to_advent[uc_this];
+		  }
 		nparms += 2;
 		continue;
 	    }
