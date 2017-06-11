@@ -830,10 +830,117 @@ L2607:	game.foobar=(game.foobar>0 ? -game.foobar : 0);
 	if (VERB == SAY) goto L4090;
 	if (game.tally == 0 && INDEEP(game.loc) && game.loc != 33)
 	    --game.clock1;
-	if (game.clock1 == 0) goto L10000;
+
+	/*  Next few sections handle the closing of the cave.  The
+	 *  cave closes "clock1" turns after the last treasure has
+	 *  been located (including the pirate's chest, which may of
+	 *  course never show up).  Note that the treasures need not
+	 *  have been taken yet, just located.  Hence clock1 must be
+	 *  large enough to get out of the cave (it only ticks while
+	 *  inside the cave).  When it hits zero, we branch to 10000
+	 *  to start closing the cave, and then sit back and wait for
+	 *  him to try to get out.  If he doesn't within clock2 turns,
+	 *  we close the cave; if he does try, we assume he panics,
+	 *  and give him a few additional turns to get frantic before
+	 *  we close.  When clock2 hits zero, we branch to 11000 to
+	 *  transport him into the final puzzle.  Note that the puzzle
+	 *  depends upon all sorts of random things.  For instance,
+	 *  there must be no water or oil, since there are beanstalks
+	 *  which we don't want to be able to water, since the code
+	 *  can't handle it.  Also, we can have no keys, since there
+	 *  is a grate (having moved the fixed object!) there
+	 *  separating him from all the treasures.  Most of these
+	 *  problems arise from the use of negative prop numbers to
+	 *  suppress the object descriptions until he's actually moved
+	 *  the objects. */
+
+	/*  When the first warning comes, we lock the grate, destroy
+	 *  the bridge, kill all the dwarves (and the pirate), remove
+	 *  the troll and bear (unless dead), and set "closng" to
+	 *  true.  Leave the dragon; too much trouble to move it.
+	 *  from now until clock2 runs out, he cannot unlock the
+	 *  grate, move to any location outside the cave, or create
+	 *  the bridge.  Nor can he be resurrected if he dies.  Note
+	 *  that the snake is already gone, since he got to the
+	 *  treasure accessible only via the hall of the mountain
+	 *  king. Also, he's been in giant room (to get eggs), so we
+	 *  can refer to it.  Also also, he's gotten the pearl, so we
+	 *  know the bivalve is an oyster.  *And*, the dwarves must
+	 *  have been activated, since we've found chest. */
+	if (game.clock1 == 0)
+	{
+	    game.prop[GRATE]=0;
+	    game.prop[FISSUR]=0;
+	    for (i=1; i<=NDWARVES; i++) {
+		game.dseen[i]=false;
+		game.dloc[i]=0;
+	    }
+	    MOVE(TROLL,0);
+	    MOVE(TROLL+NOBJECTS,0);
+	    MOVE(TROLL2,PLAC[TROLL]);
+	    MOVE(TROLL2+NOBJECTS,FIXD[TROLL]);
+	    JUGGLE(CHASM);
+	    if (game.prop[BEAR] != 3)DSTROY(BEAR);
+	    game.prop[CHAIN]=0;
+	    game.fixed[CHAIN]=0;
+	    game.prop[AXE]=0;
+	    game.fixed[AXE]=0;
+	    RSPEAK(129);
+	    game.clock1= -1;
+	    game.closng=true;
+	    goto L19999;
+	}
 	if (game.clock1 < 0)
 	    --game.clock2;
-	if (game.clock2 == 0) goto L11000;
+	if (game.clock2 == 0) {
+	    /*  Once he's panicked, and clock2 has run out, we come here
+	     *  to set up the storage room.  The room has two locs,
+	     *  hardwired as 115 (ne) and 116 (sw).  At the ne end, we
+	     *  place empty bottles, a nursery of plants, a bed of
+	     *  oysters, a pile of lamps, rods with stars, sleeping
+	     *  dwarves, and him.  At the sw end we place grate over
+	     *  treasures, snake pit, covey of caged birds, more rods, and
+	     *  pillows.  A mirror stretches across one wall.  Many of the
+	     *  objects come from known locations and/or states (e.g. the
+	     *  snake is known to have been destroyed and needn't be
+	     *  carried away from its old "place"), making the various
+	     *  objects be handled differently.  We also drop all other
+	     *  objects he might be carrying (lest he have some which
+	     *  could cause trouble, such as the keys).  We describe the
+	     *  flash of light and trundle back. */
+	    game.prop[BOTTLE]=PUT(BOTTLE,115,1);
+	    game.prop[PLANT]=PUT(PLANT,115,0);
+	    game.prop[OYSTER]=PUT(OYSTER,115,0);
+	    OBJTXT[OYSTER]=3;
+	    game.prop[LAMP]=PUT(LAMP,115,0);
+	    game.prop[ROD]=PUT(ROD,115,0);
+	    game.prop[DWARF]=PUT(DWARF,115,0);
+	    game.loc=115;
+	    game.oldloc=115;
+	    game.newloc=115;
+	    /*  Leave the grate with normal (non-negative) property.
+	     *  Reuse sign. */
+	    PUT(GRATE,116,0);
+	    PUT(SIGN,116,0);
+	    ++OBJTXT[SIGN];
+	    game.prop[SNAKE]=PUT(SNAKE,116,1);
+	    game.prop[BIRD]=PUT(BIRD,116,1);
+	    game.prop[CAGE]=PUT(CAGE,116,0);
+	    game.prop[ROD2]=PUT(ROD2,116,0);
+	    game.prop[PILLOW]=PUT(PILLOW,116,0);
+
+	    game.prop[MIRROR]=PUT(MIRROR,115,0);
+	    game.fixed[MIRROR]=116;
+
+	    for (int i=1; i<=NOBJECTS; i++) {
+		if (TOTING(i))
+		    DSTROY(i);
+	    }
+
+	    RSPEAK(132);
+	    game.closed=true;
+	    return true;
+	}
 	if (game.prop[LAMP] == 1)
 	    --game.limit;
 
@@ -954,101 +1061,7 @@ L8:	if (playermove(cmdin, VERB))
 
 /*  Cave closing and scoring */
 
-/*  These sections handle the closing of the cave.  The cave closes "clock1"
- *  turns after the last treasure has been located (including the pirate's
- *  chest, which may of course never show up).  Note that the treasures need not
- *  have been taken yet, just located.  Hence clock1 must be large enough to get
- *  out of the cave (it only ticks while inside the cave).  When it hits zero,
- *  we branch to 10000 to start closing the cave, and then sit back and wait for
- *  him to try to get out.  If he doesn't within clock2 turns, we close the
- *  cave; if he does try, we assume he panics, and give him a few additional
- *  turns to get frantic before we close.  When clock2 hits zero, we branch to
- *  11000 to transport him into the final puzzle.  Note that the puzzle depends
- *  upon all sorts of random things.  For instance, there must be no water or
- *  oil, since there are beanstalks which we don't want to be able to water,
- *  since the code can't handle it.  Also, we can have no keys, since there is a
- *  grate (having moved the fixed object!) there separating him from all the
- *  treasures.  Most of these problems arise from the use of negative prop
- *  numbers to suppress the object descriptions until he's actually moved the
- *  objects. */
 
-/*  When the first warning comes, we lock the grate, destroy the bridge, kill
- *  all the dwarves (and the pirate), remove the troll and bear (unless dead),
- *  and set "closng" to true.  Leave the dragon; too much trouble to move it.
- *  from now until clock2 runs out, he cannot unlock the grate, move to any
- *  location outside the cave, or create the bridge.  Nor can he be
- *  resurrected if he dies.  Note that the snake is already gone, since he got
- *  to the treasure accessible only via the hall of the mountain king. Also, he's
- *  been in giant room (to get eggs), so we can refer to it.  Also also, he's
- *  gotten the pearl, so we know the bivalve is an oyster.  *And*, the dwarves
- *  must have been activated, since we've found chest. */
-
-L10000: game.prop[GRATE]=0;
-	game.prop[FISSUR]=0;
-	for (i=1; i<=NDWARVES; i++) {
-	    game.dseen[i]=false;
-	    game.dloc[i]=0;
-	}
-	MOVE(TROLL,0);
-	MOVE(TROLL+NOBJECTS,0);
-	MOVE(TROLL2,PLAC[TROLL]);
-	MOVE(TROLL2+NOBJECTS,FIXD[TROLL]);
-	JUGGLE(CHASM);
-	if (game.prop[BEAR] != 3)DSTROY(BEAR);
-	game.prop[CHAIN]=0;
-	game.fixed[CHAIN]=0;
-	game.prop[AXE]=0;
-	game.fixed[AXE]=0;
-	RSPEAK(129);
-	game.clock1= -1;
-	game.closng=true;
-	goto L19999;
-
-/*  Once he's panicked, and clock2 has run out, we come here to set up the
- *  storage room.  The room has two locs, hardwired as 115 (ne) and 116 (sw).
- *  At the ne end, we place empty bottles, a nursery of plants, a bed of
- *  oysters, a pile of lamps, rods with stars, sleeping dwarves, and him.  At
- *  the sw end we place grate over treasures, snake pit, covey of caged birds,
- *  more rods, and pillows.  A mirror stretches across one wall.  Many of the
- *  objects come from known locations and/or states (e.g. the snake is known to
- *  have been destroyed and needn't be carried away from its old "place"),
- *  making the various objects be handled differently.  We also drop all other
- *  objects he might be carrying (lest he have some which could cause trouble,
- *  such as the keys).  We describe the flash of light and trundle back. */
-
-L11000: game.prop[BOTTLE]=PUT(BOTTLE,115,1);
-	game.prop[PLANT]=PUT(PLANT,115,0);
-	game.prop[OYSTER]=PUT(OYSTER,115,0);
-	OBJTXT[OYSTER]=3;
-	game.prop[LAMP]=PUT(LAMP,115,0);
-	game.prop[ROD]=PUT(ROD,115,0);
-	game.prop[DWARF]=PUT(DWARF,115,0);
-	game.loc=115;
-	game.oldloc=115;
-	game.newloc=115;
-
-/*  Leave the grate with normal (non-negative) property.  Reuse sign. */
-
-	PUT(GRATE,116,0);
-	PUT(SIGN,116,0);
-	++OBJTXT[SIGN];
-	game.prop[SNAKE]=PUT(SNAKE,116,1);
-	game.prop[BIRD]=PUT(BIRD,116,1);
-	game.prop[CAGE]=PUT(CAGE,116,0);
-	game.prop[ROD2]=PUT(ROD2,116,0);
-	game.prop[PILLOW]=PUT(PILLOW,116,0);
-
-	game.prop[MIRROR]=PUT(MIRROR,115,0);
-	game.fixed[MIRROR]=116;
-
-	for (int i=1; i<=NOBJECTS; i++) {
-	    if (TOTING(i))
-		DSTROY(i);
-	}
-
-	RSPEAK(132);
-	game.closed=true;
-	return true;
 
 /*  Oh dear, he's disturbed the dwarves. */
 
