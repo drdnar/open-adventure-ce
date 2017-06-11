@@ -867,12 +867,16 @@ L19999: K=43;
 	if (LIQLOC(game.loc) == WATER)K=70;
 	V1=VOCAB(WD1,-1);
 	V2=VOCAB(WD2,-1);
-	if (V1 == ENTER && (V2 == STREAM || V2 == 1000+WATER)) goto L2010;
-	if (V1 == ENTER && WD2 > 0) goto L2800;
-	if ((V1 != 1000+WATER && V1 != 1000+OIL) || (V2 != 1000+PLANT && V2 !=
-		1000+DOOR)) goto L2610;
-	{long x = V2-1000; if (AT(x))WD2=MAKEWD(16152118);}
-L2610:	if (V1 == 1000+CAGE && V2 == 1000+BIRD && HERE(CAGE) && HERE(BIRD))
+	if (V1 == ENTER && (V2 == STREAM || V2 == 1000+WATER))
+	    goto L2010;
+	if (V1 == ENTER && WD2 > 0)
+	    goto L2800;
+	if (!((V1 != 1000+WATER && V1 != 1000+OIL) ||
+	      (V2 != 1000+PLANT && V2 != 1000+DOOR))) {
+	    if (AT(V2-1000))
+		WD2=MAKEWD(16152118);
+	}
+	if (V1 == 1000+CAGE && V2 == 1000+BIRD && HERE(CAGE) && HERE(BIRD))
 		WD1=MAKEWD(301200308);
 L2620:	if (WD1 == MAKEWD(23051920)) {
 	    ++game.iwest;
