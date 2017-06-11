@@ -793,7 +793,7 @@ L2600:	if (COND[game.loc] >= game.conds) {
 	 *  objects won't be described until they've been picked up
 	 *  and put down separate from their respective piles.  Don't
 	 *  tick game.clock1 unless well into cave (and not at Y2). */
-L2603:	if (game.closed) {
+	if (game.closed) {
 	    if (game.prop[OYSTER] < 0 && TOTING(OYSTER))
 		PSPEAK(OYSTER,1);
 	    for (i=1; i<=NOBJECTS; i++) {
@@ -974,18 +974,23 @@ L19999: K=43;
 	    RSPEAK(K);
 	    goto L2012;
 	}
-	if (V1 == ENTER && WD2 > 0)
-	    goto L2800;
-	if (!((V1 != 1000+WATER && V1 != 1000+OIL) ||
-	      (V2 != 1000+PLANT && V2 != 1000+DOOR))) {
-	    if (AT(V2-1000))
-		WD2=MAKEWD(16152118);
-	}
-	if (V1 == 1000+CAGE && V2 == 1000+BIRD && HERE(CAGE) && HERE(BIRD))
+	if (V1 == ENTER && WD2 > 0) {
+	    WD1=WD2;
+	    WD1X=WD2X;
+	    WD2=0;
+	} else {
+	    if (!((V1 != 1000+WATER && V1 != 1000+OIL) ||
+		  (V2 != 1000+PLANT && V2 != 1000+DOOR))) {
+		if (AT(V2-1000))
+		    WD2=MAKEWD(16152118);
+	    }
+	    if (V1 == 1000+CAGE && V2 == 1000+BIRD && HERE(CAGE) && HERE(BIRD))
 		WD1=MAKEWD(301200308);
+	}
 L2620:	if (WD1 == MAKEWD(23051920)) {
 	    ++game.iwest;
-	    if (game.iwest == 10)RSPEAK(17);
+	    if (game.iwest == 10)
+		RSPEAK(17);
 	}
 	if (WD1 == MAKEWD( 715) && WD2 != 0) {
 	    if (++IGO == 10)
@@ -993,8 +998,14 @@ L2620:	if (WD1 == MAKEWD(23051920)) {
 	}
 L2630:
 	i=VOCAB(WD1,-1);
-	if (i == -1)
-	   goto L3000;
+	if (i == -1) {
+	    /* Gee, I don't understand. */
+	    if (fallback_handler(rawbuf))
+		return true;
+	    SETPRM(1,WD1,WD1X);
+	    RSPEAK(254);
+	    goto L2600;
+	}
 	K=MOD(i,1000);
 	KQ=i/1000+1;
 	switch (KQ-1)
@@ -1005,19 +1016,6 @@ L2630:
 	case 3: RSPEAK(K); goto L2012;
 	}
 	BUG(22);
-
-       /* Get second word for analysis. */
-L2800:	WD1=WD2;
-	WD1X=WD2X;
-	WD2=0;
-	goto L2620;
-
-        /* Gee, I don't understand. */
-L3000:	SETPRM(1,WD1,WD1X);
-	 if (fallback_handler(rawbuf))
-	     return true;
-	RSPEAK(254);
-	 goto L2600;
 
 /* Verb and object analysis moved to separate module. */
 
@@ -1033,7 +1031,12 @@ Laction:
 	   case 2600: goto L2600;
 	   case 2607: goto L2607;
 	   case 2630: goto L2630;
-	   case 2800: goto L2800;
+	   case 2800:
+	      /* Get second word for analysis. */
+	       WD1=WD2;
+	       WD1X=WD2X;
+	       WD2=0;
+	       goto L2620;
 	   case 8000:
 	       /*  Random intransitive verbs come here.  Clear obj just in case
 		*  (see attack()). */
