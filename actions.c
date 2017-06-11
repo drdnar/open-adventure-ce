@@ -180,8 +180,8 @@ static int vbreak(token_t obj)
 	game.fixed[VASE]= -1;
     } else {
 	if (obj == MIRROR && game.closed) {
-	    SPK=197;
-	    return(18999);
+	    RSPEAK(197);
+	    return(190000);
 	}
     }
     RSPEAK(SPK);
@@ -926,8 +926,8 @@ static int wake(token_t obj)
 /* Wake.  Only use is to disturb the dwarves. */
 {
     if (obj != DWARF || !game.closed) {RSPEAK(SPK); return 2012;}
-    SPK=199;
-    return(18999);
+    RSPEAK(199);
+    return(19000);
 }
 
 static int wave(token_t obj)
@@ -949,7 +949,10 @@ static int wave(token_t obj)
 	RSPEAK(SPK);
 	return 2012;
     } else {
-	if (game.closed) return(18999);
+	if (game.closed) {
+	    RSPEAK(SPK);	/* FIXME: How is SPK set here? */
+	    return(19000);
+	}
 	if (game.closng || !AT(FISSUR)) {RSPEAK(SPK); return 2012;}
 	if (HERE(BIRD))RSPEAK(SPK);
 	game.prop[FISSUR]=1-game.prop[FISSUR];

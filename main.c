@@ -1041,14 +1041,11 @@ Laction:
 	       RSPEAK(257);
 	       obj=0;
 	       goto L2600;
-	   case 18999:
-	       /*  Oh dear, he's disturbed the dwarves. */
-		RSPEAK(SPK);
-	       /* fall through */
 	   case 19000:
-		 RSPEAK(136);
-		 score(0);
-		 return true;
+	       /*  Oh dear, he's disturbed the dwarves. */
+	       RSPEAK(136);
+	       score(0);
+	       return true;
 	   }
 	BUG(99);
 
