@@ -1,0 +1,140 @@
+
+Welcome to Adventure!!  Would you like instructions?  
+
+> n
+
+You are standing at the end of a road before a small brick building.  
+Around you is a forest.  A small stream flows out of the building and 
+down a gully.  
+
+> seed 694608006
+Seed set to 694608006
+
+You're in front of building.  
+
+> in
+
+You are inside a building, a well house for a large spring. 
+
+There are some keys on the ground here. 
+
+There is a shiny brass lamp nearby.
+
+There is food here. 
+
+There is a bottle of water here.   
+
+> take lamp
+
+OK   
+
+> take keys
+
+OK   
+
+> out
+
+You're in front of building.  
+
+> s
+
+You are in a valley in the forest beside a stream tumbling along a    
+rocky bed.
+
+> s
+
+At your feet all the water of the stream splashes into a 2-inch slit 
+in the rock.  Downstream the streambed is bare rock.   
+
+> s
+
+You are in a 20-foot depression floored with bare dirt.  Set into the    
+dirt is a strong steel grate mounted in concrete.  A dry streambed    
+leads into the depression.    
+
+The grate is locked.
+
+> attack grate
+
+Don't be ridiculous!
+
+> unlock grate
+
+The grate is now unlocked.    
+
+> lock grate
+
+The grate is now locked. 
+
+> unlock grate
+
+The grate is now unlocked.    
+
+> down
+
+You are in a small chamber beneath a 3x3 steel grate to the surface.
+A low crawl over cobbles leads inward to the west.
+
+The grate is open.  
+
+> w
+
+You are crawling over cobbles in a low passage.  There is a dim light 
+at the east end of the passage.    
+
+There is a small wicker cage discarded nearby.    
+
+> take cage
+
+OK   
+
+> w
+
+It is now pitch dark.  If you proceed you will likely fall into a pit.
+
+> read
+
+Read what?
+
+> on lamp
+
+Your lamp is now on.
+
+You are in a debris room filled with stuff washed in from the surface.
+A low wide passage with cobbles becomes plugged with mud and debris   
+here, but an awkward canyon leads upward and west.  In the mud someone
+has scrawled, "MAGIC WORD XYZZY".  
+
+A three foot black rod with a rusty star on an end lies nearby.  
+
+> read
+
+"MAGIC WORD XYZZY"  
+
+> w
+
+You are in an awkward sloping east/west canyon.  
+
+> w
+
+You are in a splendid chamber thirty feet high.  The walls are frozen 
+rivers of orange stone.  An awkward canyon and a good passage exit    
+from east and west sides of the chamber.
+
+A cheerful little bird is sitting here singing.   
+
+> feed bird
+
+It's not hungry (it's merely pinin' for the fjords).  Besides, you    
+have no bird seed.  
+
+> attack bird
+
+The little bird is now dead.  Its body disappears.
+
+> 
+You scored  32 out of a possible 430, using   22 turns.  
+
+You are obviously a rank amateur.  Better luck next time.   
+
+To achieve the next higher rating, you need 14 more points.  

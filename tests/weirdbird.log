@@ -1,0 +1,25 @@
+## Do pointless things to the bird to test odd cases.
+n
+seed 694608006
+in
+take lamp
+take keys
+out
+s
+s
+s
+attack grate
+unlock grate
+lock grate
+unlock grate
+down
+w
+take cage
+w
+read
+on lamp
+read
+w
+w
+feed bird
+attack bird
