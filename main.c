@@ -581,34 +581,33 @@ static bool playermove(FILE *cmdin, token_t verb)
     }
     LL=LL/1000;
 
-L11:
-    game.newloc=LL/1000;
-    K=MOD(game.newloc,100);
-    if (game.newloc <= 300) {
-    	if (game.newloc <= 100)
-	    goto L14;
-	if (TOTING(K) || (game.newloc > 200 && AT(K)))
-	    goto L16;
-	goto L12;
+    for (;;) {
+	game.newloc=LL/1000;
+	K=MOD(game.newloc,100);
+	if (game.newloc <= 300) {
+	    if (game.newloc <= 100) {
+		if (game.newloc == 0 || PCT(game.newloc))
+		    break;
+		/* else fall through */
+	    } if (TOTING(K) || (game.newloc > 200 && AT(K)))
+		  break;
+	    /* else fall through */
+	}
+	else if (game.prop[K] != game.newloc/100-3)
+	    break;
+    L12:
+	do {
+	    if (TRAVEL[KK] < 0)BUG(25);
+	    ++KK;
+	    game.newloc=labs(TRAVEL[KK])/1000;
+	} while
+	    (game.newloc == LL);
+	LL=game.newloc;
     }
-    if (game.prop[K] != game.newloc/100-3)
-	goto L16;
-L12:
-    do {
-	if (TRAVEL[KK] < 0)BUG(25);
-	++KK;
-	game.newloc=labs(TRAVEL[KK])/1000;
-    } while
-        (game.newloc == LL);
-    LL=game.newloc;
-    goto L11;
 
-L14:
-    if (game.newloc != 0 && !PCT(game.newloc))
-	goto L12;
-L16:
     game.newloc=MOD(LL,1000);
-    if (game.newloc <= 300) return true;
+    if (game.newloc <= 300)
+	return true;
     if (game.newloc <= 500) {
 	game.newloc=game.newloc-300;
 	switch (game.newloc)
