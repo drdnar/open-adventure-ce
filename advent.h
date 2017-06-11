@@ -87,6 +87,7 @@ extern lcg_state lcgstate;
 #define READ_MODE "rb"
 #define WRITE_MODE "wb"
 
+extern void newspeak(char*);
 extern void SPEAK(vocab_t);
 extern void PSPEAK(vocab_t,int);
 extern void RSPEAK(vocab_t);
