@@ -727,8 +727,9 @@ L2000:	if (game.loc == 0)
 	if (TOTING(BEAR))RSPEAK(141);
 	SPEAK(KK);
 	K=1;
-	if (FORCED(game.loc))
+	if (FORCED(game.loc)) {
 	    goto L8;
+	}
 	if (game.loc == 33 && PCT(25) && !game.closng)RSPEAK(7);
 
 	/*  Print out descriptions of objects at this location.  If
@@ -889,8 +890,7 @@ L2607:	game.foobar=(game.foobar>0 ? -game.foobar : 0);
 	    game.clock1= -1;
 	    game.closng=true;
 	    goto L19999;
-	}
-	if (game.clock1 < 0)
+	} else if (game.clock1 < 0)
 	    --game.clock2;
 	if (game.clock2 == 0) {
 	    /*  Once he's panicked, and clock2 has run out, we come here
@@ -963,12 +963,13 @@ L2607:	game.foobar=(game.foobar>0 ? -game.foobar : 0);
 	    game.prop[LAMP]=0;
 	    if (HERE(LAMP))RSPEAK(184);
 	} else if (game.limit <= 30) {
-	    if (game.lmwarn || !HERE(LAMP)) goto L19999;
-	    game.lmwarn=true;
-	    SPK=187;
-	    if (game.place[BATTER] == 0)SPK=183;
-	    if (game.prop[BATTER] == 1)SPK=189;
-	    RSPEAK(SPK);
+	    if (!game.lmwarn && HERE(LAMP)) {
+		game.lmwarn=true;
+		SPK=187;
+		if (game.place[BATTER] == 0)SPK=183;
+		if (game.prop[BATTER] == 1)SPK=189;
+		RSPEAK(SPK);
+	    }
 	}
 L19999: K=43;
 	if (LIQLOC(game.loc) == WATER)K=70;
@@ -1039,34 +1040,27 @@ Laction:
 	   case 2607: goto L2607;
 	   case 2630: goto L2630;
 	   case 2800: goto L2800;
-	   case 8000: goto L8000;
-	   case 18999: goto L18999;
-	   case 19000: goto L19000;
+	   case 8000:
+	       /*  Random intransitive verbs come here.  Clear obj just in case
+		*  (see attack()). */
+	       SETPRM(1,WD1,WD1X);
+	       RSPEAK(257);
+	       obj=0;
+	       goto L2600;
+	   case 18999:
+	       /*  Oh dear, he's disturbed the dwarves. */
+		RSPEAK(SPK);
+	       /* fall through */
+	   case 19000:
+		 RSPEAK(136);
+		 score(0);
+		 return true;
 	   }
 	BUG(99);
-
- 	/*  Random intransitive verbs come here.  Clear obj just in case
-	 *  (see attack()). */
-L8000:	SETPRM(1,WD1,WD1X);
-	RSPEAK(257);
-	obj=0;
-	goto L2600;
-
 
 	/*  Figure out the new location */
 L8:	if (playermove(cmdin, VERB))
 	    return true;
 	else
 	    goto L2000;
-
-/*  Cave closing and scoring */
-
-
-
-/*  Oh dear, he's disturbed the dwarves. */
-
-L18999: RSPEAK(SPK);
-L19000: RSPEAK(136);
-	score(0);
-	return true;
 }
