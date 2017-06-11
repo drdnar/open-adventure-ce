@@ -10,6 +10,27 @@
 #include "linenoise/linenoise.h"
 #include "newdb.h"
 
+void* xmalloc(size_t size)
+{
+  void* ptr = malloc(size);
+  if (ptr == NULL)
+    {
+      fprintf(stderr, "Out of memory!\n");
+      exit(EXIT_FAILURE);
+    }
+  return(ptr);
+}
+
+void packed_to_token(long packed, char token[6])
+{
+  for (int i = 0; i < 5; ++i)
+    {
+      char advent = (packed >> i * 6) & 63;
+      token[i] = advent_to_ascii[advent];
+    }
+  token[5] = '\0';
+}
+
 /*  I/O routines (SPEAK, PSPEAK, RSPEAK, SETPRM, GETIN, YES) */
 
 void newspeak(char* msg)
@@ -26,8 +47,36 @@ void newspeak(char* msg)
   if (game.blklin == true)
     printf("\n");
 
+  // Create a copy of our string, so we can edit it.
+  char* copy = (char*) xmalloc(strlen(msg) + 1);
+  strncpy(copy, msg, strlen(msg) + 1);
+
+  // Staging area for parameters.
+  char parameters[2000][5];
+ 
+  // Handle format specifiers (including the custom %C, %L, %S) by adjusting the parameter accordingly, and replacing the specifier with %s.
+  int param_index = 0;
+  for (int i = 0; i < strlen(msg); ++i)
+    {
+      if (msg[i] == '%')
+  	{
+  	  ++param_index;
+
+	  // Integer specifier. In order to accommodate the fact that PARMS can have both legitimate integers *and* packed tokens, stringify these. Future work may eliminate the need for this.
+	  if (msg[i + 1] == 'd')
+	    {
+	      copy[i + 1] = 's';
+	      sprintf(parameters[param_index], "%d", PARMS[param_index]);
+	    }
+  	}
+    }
+
+  // Render the final string.
+  char rendered[2000];
+  sprintf(&rendered, copy, parameters[1], parameters[2], parameters[3], parameters[4]);
+
   // Print the message.
-  printf("%s\n", msg);
+  printf("%s\n", rendered);
 }
 
 void SPEAK(vocab_t msg)
