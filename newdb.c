@@ -1259,7 +1259,7 @@ char* arbitrary_messages[] = {
   "You have garnered %d out of a possible %d points, using %d turn%S.",
   "I can suspend your Adventure for you so that you can resume later, but\nit will cost you 5 points.",
   "I am prepared to give you a hint, but it will cost you %d point%S.",
-  "You scored %d out of a possible %d, using%d turn%S.",
+  "You scored %d out of a possible %d, using %d turn%S.",
   "To achieve the next higher rating, you need %d more point%S.",
   "To achieve the next higher rating would be a neat trick!\nCongratulations!!",
   "You just went off my scale!!",
