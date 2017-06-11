@@ -836,10 +836,33 @@ L2607:	game.foobar=(game.foobar>0 ? -game.foobar : 0);
 	if (game.clock2 == 0) goto L11000;
 	if (game.prop[LAMP] == 1)
 	    --game.limit;
-	if (game.limit <= 30 && HERE(BATTER) && game.prop[BATTER] == 0 && HERE(LAMP))
-	    goto L12000;
-	if (game.limit == 0) goto L12400;
-	if (game.limit <= 30) goto L12200;
+
+	/*  Another way we can force an end to things is by having the
+	 *  lamp give out.  When it gets close, we come here to warn
+	 *  him.  First following ar, if the lamp and fresh batteries are
+	 *  here, in which case we replace the batteries and continue.
+	 *  Second is for other cases of lamp dying.  12400 is when it
+	 *  goes out.  Even then, he can explore outside for a while
+	 *  if desired. */
+	if (game.limit<=30 && HERE(BATTER) && game.prop[BATTER]==0 && HERE(LAMP))
+	{
+	    RSPEAK(188);
+	    game.prop[BATTER]=1;
+	    if (TOTING(BATTER))DROP(BATTER,game.loc);
+	    game.limit=game.limit+2500;
+	    game.lmwarn=false;
+	} else if (game.limit == 0) {
+	    game.limit= -1;
+	    game.prop[LAMP]=0;
+	    if (HERE(LAMP))RSPEAK(184);
+	} else if (game.limit <= 30) {
+	    if (game.lmwarn || !HERE(LAMP)) goto L19999;
+	    game.lmwarn=true;
+	    SPK=187;
+	    if (game.place[BATTER] == 0)SPK=183;
+	    if (game.prop[BATTER] == 1)SPK=189;
+	    RSPEAK(SPK);
+	}
 L19999: K=43;
 	if (LIQLOC(game.loc) == WATER)K=70;
 	V1=VOCAB(WD1,-1);
@@ -1022,32 +1045,6 @@ L11000: game.prop[BOTTLE]=PUT(BOTTLE,115,1);
 	RSPEAK(132);
 	game.closed=true;
 	return true;
-
-/*  Another way we can force an end to things is by having the lamp give out.
- *  When it gets close, we come here to warn him.  We go to 12000 if the lamp
- *  and fresh batteries are here, in which case we replace the batteries and
- *  continue.  12200 is for other cases of lamp dying.  12400 is when it goes
- *  out.  Even then, he can explore outside for a while if desired. */
-
-L12000: RSPEAK(188);
-	game.prop[BATTER]=1;
-	if (TOTING(BATTER))DROP(BATTER,game.loc);
-	game.limit=game.limit+2500;
-	game.lmwarn=false;
-	 goto L19999;
-
-L12200: if (game.lmwarn || !HERE(LAMP)) goto L19999;
-	game.lmwarn=true;
-	SPK=187;
-	if (game.place[BATTER] == 0)SPK=183;
-	if (game.prop[BATTER] == 1)SPK=189;
-	RSPEAK(SPK);
-	 goto L19999;
-
-L12400: game.limit= -1;
-	game.prop[LAMP]=0;
-	if (HERE(LAMP))RSPEAK(184);
-	 goto L19999;
 
 /*  Oh dear, he's disturbed the dwarves. */
 
