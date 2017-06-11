@@ -68,6 +68,26 @@ void newspeak(char* msg)
 	      copy[i + 1] = 's';
 	      sprintf(parameters[param_index], "%d", PARMS[param_index]);
 	    }
+
+	  // Plain string specifier.
+	  if (msg[i + 1] == 's')
+	    {
+	      packed_to_token(PARMS[param_index], parameters[param_index]);
+	    }
+
+	  // Plural replacement specifier.
+	  if (msg[i + 1] == 'S')
+	    {
+	      copy[i + 1] = 's';
+	      if (PARMS[param_index - 1] > 1)
+		{
+		  sprintf(parameters[param_index], "%s", "s");
+		}
+	      else
+		{
+		  sprintf(parameters[param_index], "%s", "");
+		}
+	    }
   	}
     }
 
