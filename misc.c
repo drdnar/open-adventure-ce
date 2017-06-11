@@ -8,6 +8,7 @@
 #include "advent.h"
 #include "database.h"
 #include "linenoise/linenoise.h"
+#include "newdb.h"
 
 /*  I/O routines (SPEAK, PSPEAK, RSPEAK, SETPRM, GETIN, YES) */
 
@@ -137,25 +138,16 @@ void PSPEAK(vocab_t msg,int skip)
  *  the index of the inventory message for object.  (INVEN+N+1 message
  *  is game.prop=N message). */
 {
-    long i, m;
-
-    m=PTEXT[msg];
-    if (skip >= 0) {
-	for (i=0; i <=skip; i++) {
-	    do {
-		m=labs(LINES[m]);
-	    } while
-		(LINES[m] >= 0);
-	}
-    }
-    SPEAK(m);
+  if (skip >= 0)
+    newspeak(object_descriptions[msg].longs[skip]);
+  else
+    newspeak(object_descriptions[msg].inventory);
 }
 
 void RSPEAK(vocab_t i)
 /* Print the i-th "random" message (section 6 of database). */
 {
-    if (i != 0)
-	SPEAK(RTEXT[i]);
+  newspeak(arbitrary_messages[i]);
 }
 
 void SETPRM(long first, long p1, long p2)
