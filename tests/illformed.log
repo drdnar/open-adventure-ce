@@ -22,9 +22,12 @@ throw knife
 lock
 unlock
 throw
+attack
 unlock chain
 fill urn
 eat keys
+off keys
+eat food
 drink blood
 brief
 on

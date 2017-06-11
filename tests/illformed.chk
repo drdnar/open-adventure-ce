@@ -113,6 +113,10 @@ There is nothing here with a lock!
 
 Throw what?
 
+> attack
+
+There is nothing here to attack.   
+
 > unlock chain
 
 I see no chain here.  
@@ -124,6 +128,14 @@ I see no urn here.
 > eat keys
 
 Don't be ridiculous!
+
+> off keys
+
+I'm afraid I don't understand.
+
+> eat food
+
+Thank you, it was delicious!  
 
 > drink blood
 
@@ -194,8 +206,6 @@ There are some keys on the ground here.
 
 There is a lamp shining nearby.    
 
-There is food here. 
-
 There is a bottle of water here.   
 
 > fuck
@@ -212,7 +222,7 @@ Okay, "BOO".
 
 > score
 
-You have garnered  32 out of a possible 430 points, using    39 turns.  
+You have garnered  32 out of a possible 430 points, using    42 turns.  
 
 > quit
 
@@ -222,7 +232,7 @@ Do you really want to quit now?
 
 OK   
 
-You scored  32 out of a possible 430, using   40 turns.  
+You scored  32 out of a possible 430, using   43 turns.  
 
 You are obviously a rank amateur.  Better luck next time.   
 
