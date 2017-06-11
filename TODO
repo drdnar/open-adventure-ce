@@ -7,7 +7,13 @@ remain to be cleaned up:
   rather promiscuously to pass around information that ought to be function
   arguments in a modern language. K and SPK are particular offenders
 
-* Remaining unstructured gotos in playermove() and do_command().
+* Remaining unstructured gotos in playermove() and do_command(). The goto L12
+  in playermove() is particularly horrible, jumping backwards into the
+  middle of a loop.
+
+* In playermove(), why doesn't replacing the global motion number K
+  with a passed-in argument work? There's some unobvious information
+  leak here.
 
 * The way return values from handlers such as 2012 trigger side effects
   based on global state such as K and SPK is nasty.
