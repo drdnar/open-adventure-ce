@@ -86,7 +86,8 @@ extern lcg_state lcgstate;
 /* b is not needed for POSIX but harmless */
 #define READ_MODE "rb"
 #define WRITE_MODE "wb"
-
+extern void* xmalloc(size_t);
+extern void packed_to_token(long, char token[6]);
 extern void newspeak(char*);
 extern void SPEAK(vocab_t);
 extern void PSPEAK(vocab_t,int);
