@@ -89,7 +89,6 @@ extern lcg_state lcgstate;
 extern void* xmalloc(size_t);
 extern void packed_to_token(long, char token[6]);
 extern void newspeak(char*);
-extern void SPEAK(vocab_t);
 extern void PSPEAK(vocab_t,int);
 extern void RSPEAK(vocab_t);
 extern void SETPRM(long,long,long);
