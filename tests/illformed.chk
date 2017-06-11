@@ -1,39 +1,39 @@
 
-Welcome to Adventure!!  Would you like instructions?  
+Welcome to Adventure!!  Would you like instructions?
 
 > foo
 
-Please answer the question.   
+Please answer the question.
 
-Welcome to Adventure!!  Would you like instructions?  
+Welcome to Adventure!!  Would you like instructions?
 
 > n
 
-You are standing at the end of a road before a small brick building.  
-Around you is a forest.  A small stream flows out of the building and 
-down a gully.  
+You are standing at the end of a road before a small brick building.
+Around you is a forest.  A small stream flows out of the building and
+down a gully.
 
 > seed 1801426495
 Seed set to 1801426495
 
-You're in front of building.  
+You're in front of building.
 
 > cave
 
-I don't know where the cave is, but hereabouts no stream can run on   
-the surface for long.  I would try the stream.    
+I don't know where the cave is, but hereabouts no stream can run on
+the surface for long.  I would try the stream.
 
-You're in front of building.  
+You're in front of building.
 
 > listen
 
-The stream is gurgling placidly.   
+The stream is gurgling placidly.
 
 > forward
 
 I am unsure how you are facing.  Use compass points or nearby objects.
 
-You're in front of building.  
+You're in front of building.
 
 > eat
 
@@ -41,45 +41,45 @@ Eat what?
 
 > drink
 
-You have taken a drink from the stream.  The water tastes strongly of 
+You have taken a drink from the stream.  The water tastes strongly of
 minerals, but is not unpleasant.  It is extremely cold.
 
 > find keys
 
 I can only tell you what you see as you move about and manipulate
-things.  I cannot tell you where remote things are.    
+things.  I cannot tell you where remote things are.
 
 > in
 
-You are inside a building, a well house for a large spring. 
+You are inside a building, a well house for a large spring.
 
-There are some keys on the ground here. 
+There are some keys on the ground here.
 
 There is a shiny brass lamp nearby.
 
-There is food here. 
+There is food here.
 
-There is a bottle of water here.   
+There is a bottle of water here.
 
 > listen
 
-The stream is gurgling placidly.   
+The stream is gurgling placidly.
 
 > keys
 
-What do you want to do with the keys?   
+What do you want to do with the keys?
 
 > find keys
 
-I believe what you want is right here with you.   
+I believe what you want is right here with you.
 
 > unlock keys
 
-You can't unlock the keys.    
+You can't unlock the keys.
 
 > find foo
 
-Nothing happens.    
+Nothing happens.
 
 > find bar
 
@@ -91,23 +91,23 @@ Carry what?
 
 > blast
 
-Blasting requires dynamite.   
+Blasting requires dynamite.
 
 > throw axe
 
-I see no axe here.  
+I see no axe here.
 
 > throw knife
 
-I see no knife here.  
+I see no knife here.
 
 > lock
 
-There is nothing here with a lock! 
+There is nothing here with a lock!
 
 > unlock
 
-There is nothing here with a lock! 
+There is nothing here with a lock!
 
 > throw
 
@@ -115,15 +115,15 @@ Throw what?
 
 > attack
 
-There is nothing here to attack.   
+There is nothing here to attack.
 
 > unlock chain
 
-I see no chain here.  
+I see no chain here.
 
 > fill urn
 
-I see no urn here.  
+I see no urn here.
 
 > eat keys
 
@@ -135,16 +135,16 @@ I'm afraid I don't understand.
 
 > eat food
 
-Thank you, it was delicious!  
+Thank you, it was delicious!
 
 > drink blood
 
-I see no blood here.  
+I see no blood here.
 
 > brief
 
-Okay, from now on I'll only describe a place in full the first time   
-you come to it.  To get the full description, say "look".   
+Okay, from now on I'll only describe a place in full the first time
+you come to it.  To get the full description, say "look".
 
 > on
 
@@ -152,29 +152,29 @@ Your lamp is now on.
 
 > xyzzy
 
->>Foof!<<  
+>>Foof!<<
 
 It is now pitch dark.  If you proceed you will likely fall into a pit.
 
 > take rod
 
-OK   
+OK
 
 > wave rod
 
-Nothing happens.    
+Nothing happens.
 
 > listen
 
-All is silent. 
+All is silent.
 
 > quit
 
-Do you really want to quit now?   
+Do you really want to quit now?
 
 > n
 
-OK   
+OK
 
 > read
 
@@ -186,31 +186,31 @@ It is now pitch dark.  If you proceed you will likely fall into a pit.
 
 > news
 
-Open Adventure is an author-approved open-source release of 
-Version 2.5 with, as yet, no gameplay changes.  
-Version 2.5 was essentially the same as Version II; the cave and the    
-hazards therein are unchanged, and top score is still 430 points.  
-There are a few more hints, especially for some of the more obscure   
-puzzles.  There are a few minor bugfixes and cosmetic changes.  You   
-can now save a game and resume it at once (formerly you had to wait a 
+Open Adventure is an author-approved open-source release of
+Version 2.5 with, as yet, no gameplay changes.
+Version 2.5 was essentially the same as Version II; the cave and the
+hazards therein are unchanged, and top score is still 430 points.
+There are a few more hints, especially for some of the more obscure
+puzzles.  There are a few minor bugfixes and cosmetic changes.  You
+can now save a game and resume it at once (formerly you had to wait a
 while first), but it now costs you a few points each time you save the
-game.  Saved games are now stored in much smaller files than before.  
+game.  Saved games are now stored in much smaller files than before.
 
 > go back
 
->>Foof!<<  
+>>Foof!<<
 
-You're inside building.  
+You're inside building.
 
-There are some keys on the ground here. 
+There are some keys on the ground here.
 
-There is a lamp shining nearby.    
+There is a lamp shining nearby.
 
-There is a bottle of water here.   
+There is a bottle of water here.
 
 > fuck
 
-Watch it! 
+Watch it!
 
 > fly
 
@@ -218,22 +218,22 @@ Though you flap your arms furiously, it is to no avail.
 
 > say boo
 
-Okay, "BOO".   
+Okay, "BOO".
 
 > score
 
-You have garnered  32 out of a possible 430 points, using    42 turns.  
+You have garnered 32 out of a possible 430 points, using 42 turns.
 
 > quit
 
-Do you really want to quit now?   
+Do you really want to quit now?
 
 > yes
 
-OK   
+OK
 
-You scored  32 out of a possible 430, using   43 turns.  
+You scored 32 out of a possible 430, using 43 turns.
 
-You are obviously a rank amateur.  Better luck next time.   
+You are obviously a rank amateur.  Better luck next time.
 
-To achieve the next higher rating, you need 14 more points.  
+To achieve the next higher rating, you need 14 more points.
