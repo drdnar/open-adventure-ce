@@ -23,12 +23,24 @@ void* xmalloc(size_t size)
 
 void packed_to_token(long packed, char token[6])
 {
+  // Unpack and map back to ASCII.
   for (int i = 0; i < 5; ++i)
     {
       char advent = (packed >> i * 6) & 63;
-      token[i] = advent_to_ascii[advent];
+      token[4 - i] = advent_to_ascii[advent];
     }
+
+  // Ensure the last character is \0.
   token[5] = '\0';
+
+  // Replace trailing whitespace with \0.
+  for (int i = 4; i >= 0; --i)
+    {
+      if (token[i] == ' ' || token[i] == '\t')
+	token[i] = '\0';
+      else
+	break;
+    }
 }
 
 /*  I/O routines (SPEAK, PSPEAK, RSPEAK, SETPRM, GETIN, YES) */
