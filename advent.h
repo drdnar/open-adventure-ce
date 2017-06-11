@@ -125,21 +125,21 @@ extern int saveresume(FILE *, bool);
  *
  *  AT(OBJ)	= true if on either side of two-placed object
  *  CNDBIT(L,N) = true if COND(L) has bit n set (bit 0 is units bit)
- *  DARK(DUMMY) = true if location "LOC" is dark
+ *  DARK(LOC)   = true if location "LOC" is dark
  *  FORCED(LOC) = true if LOC moves without asking for input (COND=2)
- *  FOREST(LOC)  = true if LOC is part of the forest
- *  GSTONE(OBJ)  = true if OBJ is a gemstone
+ *  FOREST(LOC) = true if LOC is part of the forest
+ *  GSTONE(OBJ) = true if OBJ is a gemstone
  *  HERE(OBJ)	= true if the OBJ is at "LOC" (or is being carried)
- *  LIQ(DUMMY)	= object number of liquid in bottle
+ *  LIQUID()	= object number of liquid in bottle
  *  LIQLOC(LOC) = object number of liquid (if any) at LOC
- *  PCT(N)       = true N% of the time (N integer from 0 to 100)
+ *  PCT(N)      = true N% of the time (N integer from 0 to 100)
  *  TOTING(OBJ) = true if the OBJ is being carried */
 
 #define TOTING(OBJ)	(game.place[OBJ] == -1)
 #define AT(OBJ) (game.place[OBJ] == game.loc || game.fixed[OBJ] == game.loc)
 #define HERE(OBJ)	(AT(OBJ) || TOTING(OBJ))
 #define LIQ2(PBOTL)	((1-(PBOTL))*WATER+((PBOTL)/2)*(WATER+OIL))
-#define LIQ(DUMMY)	(LIQ2(game.prop[BOTTLE]<0 ? -1-game.prop[BOTTLE] : game.prop[BOTTLE]))
+#define LIQUID()	(LIQ2(game.prop[BOTTLE]<0 ? -1-game.prop[BOTTLE] : game.prop[BOTTLE]))
 #define LIQLOC(LOC)	(LIQ2((MOD(COND[LOC]/2*2,8)-5)*MOD(COND[LOC]/4,2)+1))
 #define CNDBIT(L,N)	(TSTBIT(COND[L],N))
 #define FORCED(LOC)	(COND[LOC] == 2)

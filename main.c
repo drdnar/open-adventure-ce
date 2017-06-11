@@ -713,7 +713,7 @@ L2000:	if (game.loc == 0)
 	KK=STEXT[game.loc];
 	if (MOD(game.abbrev[game.loc],game.abbnum) == 0 || KK == 0)
 	    KK=LTEXT[game.loc];
-	if (!FORCED(game.loc) && DARK(0)) {
+	if (!FORCED(game.loc) && DARK(game.loc)) {
 	    /*  The easiest way to get killed is to fall into a pit in
 	     *  pitch darkness. */
 	    if (game.wzdark && PCT(35)) {
@@ -740,7 +740,7 @@ L2000:	if (game.loc == 0)
 	 *  bear).  These hacks are because game.prop=0 is needed to
 	 *  get full score. */
 
-	if (DARK(0)) goto L2012;
+	if (DARK(game.loc)) goto L2012;
 	++game.abbrev[game.loc];
 	i=game.atloc[game.loc];
 L2004:	if (i == 0) goto L2012;
@@ -806,7 +806,7 @@ L2603:	if (game.closed) {
 		    game.prop[i] = -1-game.prop[i];
 	    }
 	}
-	game.wzdark=DARK(0);
+	game.wzdark=DARK(game.loc);
 	if (game.knfloc > 0 && game.knfloc != game.loc)
 	    game.knfloc=0;
 

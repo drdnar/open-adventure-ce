@@ -214,7 +214,7 @@ static int carry(long obj)
     if (game.fixed[obj] != 0)
 	return(2011);
     if (obj == WATER || obj == OIL) {
-	if (!HERE(BOTTLE) || LIQ(0) != obj) {
+	if (!HERE(BOTTLE) || LIQUID() != obj) {
 	    if (TOTING(BOTTLE) && game.prop[BOTTLE] == 1)
 		return(fill(BOTTLE));
 	    if (game.prop[BOTTLE] != 1)SPK=105;
@@ -241,8 +241,8 @@ static int carry(long obj)
     if ((obj==BIRD || obj==CAGE) && (game.prop[BIRD]==1 || -1-game.prop[BIRD]==1))
 	CARRY(BIRD+CAGE-obj,game.loc);
     CARRY(obj,game.loc);
-    if (obj == BOTTLE && LIQ(0) != 0)
-	game.place[LIQ(0)] = -1;
+    if (obj == BOTTLE && LIQUID() != 0)
+	game.place[LIQUID()] = -1;
     if (!GSTONE(obj) || game.prop[obj] == 0)
 	return(2009);
     game.prop[obj]=0;
@@ -334,7 +334,7 @@ static int discard(long obj, bool just_do_it)
             if (game.prop[VASE] != 0)game.fixed[VASE]= -1;
         }
     }
-    K=LIQ(0);
+    K=LIQUID();
     if (K == obj)obj=BOTTLE;
     if (obj == BOTTLE && K != 0)game.place[K]=0;
     if (obj == CAGE && game.prop[BIRD] == 1)DROP(BIRD,game.loc);
@@ -349,11 +349,11 @@ static int drink(token_t obj)
 /*  Drink.  If no object, assume water and look for it here.  If water is in
  *  the bottle, drink that, else must be at a water loc, so drink stream. */
 {
-    if (obj == 0 && LIQLOC(game.loc) != WATER && (LIQ(0) != WATER || !HERE(BOTTLE)))
+    if (obj == 0 && LIQLOC(game.loc) != WATER && (LIQUID() != WATER || !HERE(BOTTLE)))
 	return(8000);
     if (obj != BLOOD) {
 	if (obj != 0 && obj != WATER)SPK=110;
-	if (SPK == 110 || LIQ(0) != WATER || !HERE(BOTTLE)) return(2011);
+	if (SPK == 110 || LIQUID() != WATER || !HERE(BOTTLE)) return(2011);
 	game.prop[BOTTLE]=1;
 	game.place[WATER]=0;
 	SPK=74;
@@ -407,7 +407,7 @@ static int extinguish(int obj)
     if (obj == LAMP) {
 	game.prop[LAMP]=0;
 	RSPEAK(40);
-	if (DARK(0))
+	if (DARK(game.loc))
 	    RSPEAK(16);
 	return(2012);
     }
@@ -488,7 +488,7 @@ int fill(long obj)
 	SPK=213;
 	if (game.prop[URN] != 0) return(2011);
 	SPK=144;
-	k=LIQ(0);
+	k=LIQUID();
 	if (k == 0 || !HERE(BOTTLE)) return(2011);
 	game.place[k]=0;
 	game.prop[BOTTLE]=1;
@@ -506,12 +506,12 @@ int fill(long obj)
 	SPK=106;
     if (HERE(URN) && game.prop[URN] != 0)
 	SPK=214;
-    if (LIQ(0) != 0)
+    if (LIQUID() != 0)
 	SPK=105;
     if (SPK != 107)
 	return(2011);
     game.prop[BOTTLE]=MOD(COND[game.loc],4)/2*2;
-    k=LIQ(0);
+    k=LIQUID();
     if (TOTING(BOTTLE))
 	game.place[k]= -1;
     if (k == OIL)
@@ -523,7 +523,7 @@ static int find(token_t obj)
 /* Find.  Might be carrying it, or it might be here.  Else give caveat. */
 {
     if (AT(obj) ||
-       (LIQ(0) == obj && AT(BOTTLE)) ||
+       (LIQUID() == obj && AT(BOTTLE)) ||
        obj == LIQLOC(game.loc) ||
        (obj == DWARF && ATDWRF(game.loc) > 0))
 	SPK=94;
@@ -667,7 +667,7 @@ static int pour(token_t obj)
 /*  Pour.  If no object, or object is bottle, assume contents of bottle.
  *  special tests for pouring water or oil on plant or rusty door. */
 {
-    if (obj == BOTTLE || obj == 0)obj=LIQ(0);
+    if (obj == BOTTLE || obj == 0)obj=LIQUID();
     if (obj == 0) return(8000);
     if (!TOTING(obj)) return(2011);
     SPK=78;
@@ -713,10 +713,10 @@ static int read(FILE *input, token_t obj)
 	    if (HERE(i) && OBJTXT[i] != 0 && game.prop[i] >= 0)
 		obj = obj * NOBJECTS + i;
 	}
-	if (obj > NOBJECTS || obj == 0 || DARK(0)) return(8000);
+	if (obj > NOBJECTS || obj == 0 || DARK(game.loc)) return(8000);
     }
 	
-    if (DARK(0)) {
+    if (DARK(game.loc)) {
 	SETPRM(1,WD1,WD1X);
 	RSPEAK(256);
 	return(2012);
@@ -916,7 +916,7 @@ int action(FILE *input, enum speechpart part, long verb, long obj)
 	}
 	else if (obj == DWARF && ATDWRF(game.loc) > 0)
 	    /* FALL THROUGH */;
-	else if ((LIQ(0) == obj && HERE(BOTTLE)) || obj == LIQLOC(game.loc))
+	else if ((LIQUID() == obj && HERE(BOTTLE)) || obj == LIQLOC(game.loc))
 	    /* FALL THROUGH */;
 	else if (obj == OIL && HERE(URN) && game.prop[URN] != 0) {
 	    obj=URN;
