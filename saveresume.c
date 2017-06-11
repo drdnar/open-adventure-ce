@@ -83,13 +83,13 @@ int saveresume(FILE *input, bool resume)
 	    SETPRM(1,k/10,MOD(k,10));
 	    SETPRM(3,VRSION/10,MOD(VRSION,10));
 	    RSPEAK(269);
-	    return(2000);
+	} else {
+	    memcpy(&game, &save.game, sizeof(struct game_t));
+	    OBJSND[BIRD] = save.bird;
+	    OBJTXT[OYSTER] = save.bivalve;
+	    game.zzword=RNDVOC(3,game.zzword);
 	}
-	memcpy(&game, &save.game, sizeof(struct game_t));
-	OBJSND[BIRD] = save.bird;
-	OBJTXT[OYSTER] = save.bivalve;
-	game.zzword=RNDVOC(3,game.zzword);
-	return(2000);
+	return 2000;
     }
 }
 
