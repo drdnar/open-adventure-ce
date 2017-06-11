@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "advent.h"
 #include "database.h"
+#include "newdb.h"
 
 /*
  * scoring and wrap-up
@@ -33,7 +34,7 @@ void score(long mode)
     /*  First tally up the treasures.  Must be in building and not broken.
      *  Give the poor guy 2 points just for finding each treasure. */
     for (i=MINTRS; i<=MAXTRS; i++) {
-	if(PTEXT[i] != 0) {
+	if(object_descriptions[i].inventory != 0) {
 	    k=12;
 	    if(i == CHEST)k=14;
 	    if(i > CHEST)k=16;
@@ -109,7 +110,7 @@ void score(long mode)
     RSPEAK(262);
     for (i=1; i<=CLSSES; i++) {
 	if(CVAL[i] >= score) {
-	    SPEAK(CTEXT[i]);
+	    newspeak(class_messages[i]);
 	    i=CVAL[i]+1-score;
 	    SETPRM(1,i,i);
 	    RSPEAK(263);

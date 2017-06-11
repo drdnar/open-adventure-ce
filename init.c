@@ -5,6 +5,7 @@
 
 #include "advent.h"
 #include "database.h"
+#include "newdb.h"
 
 /*
  * Initialisation
@@ -183,7 +184,7 @@ void initialise(void)
 
     for (i=1; i<=LOCSIZ; i++) {
 	game.abbrev[i]=0;
-	if (!(LTEXT[i] == 0 || KEY[i] == 0)) {
+	if (!(long_location_descriptions[i] == 0 || KEY[i] == 0)) {
 	    k=KEY[i];
 	    if(MOD(labs(TRAVEL[k]),1000) == 1)COND[i]=2;
 	}
@@ -218,7 +219,7 @@ void initialise(void)
      *  not yet found, so we know when to close the cave. */
     game.tally=0;
     for (i=MINTRS; i<=MAXTRS; i++) {
-	if(PTEXT[i] != 0)
+	if(object_descriptions[i].inventory != 0)
 	    game.prop[i]= -1;
 	game.tally=game.tally-game.prop[i];
     }
