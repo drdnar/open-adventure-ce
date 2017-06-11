@@ -118,7 +118,10 @@ static int bigwords(long foo)
 	return 2012;
     } else {
 	game.foobar=k;
-	if (k != 4) return(2009);
+	if (k != 4) {
+	    RSPEAK(54);
+	    return 2012;
+	}
 	game.foobar=0;
 	if (game.place[EGGS]==PLAC[EGGS] || (TOTING(EGGS) && game.loc==PLAC[EGGS])) {
 	    RSPEAK(SPK);
@@ -263,11 +266,12 @@ static int carry(long obj)
     CARRY(obj,game.loc);
     if (obj == BOTTLE && LIQUID() != 0)
 	game.place[LIQUID()] = -1;
-    if (!GSTONE(obj) || game.prop[obj] == 0)
-	return(2009);
-    game.prop[obj]=0;
-    game.prop[CAVITY]=1;
-    return(2009);
+    if (GSTONE(obj) && game.prop[obj] != 0) {
+	game.prop[obj]=0;
+	game.prop[CAVITY]=1;
+    }
+    RSPEAK(54);
+    return(2012);
 }
 
 static int chain(token_t verb)
@@ -1028,7 +1032,7 @@ int action(FILE *input, enum speechpart part, long verb, long obj)
 		    case  1: /* DROP  */ return(8000); 
 		    case  2: /* SAY   */ return(8000); 
 		    case  3: /* UNLOC */ return lock(verb, INTRANSITIVE);    
-		    case  4: /* NOTHI */ return(2009); 
+		    case  4: /* NOTHI */ {RSPEAK(54); return(20012);}
 		    case  5: /* LOCK  */ return lock(verb, INTRANSITIVE);    
 		    case  6: /* LIGHT */ return light(INTRANSITIVE);    
 		    case  7: /* EXTIN */ return extinguish(INTRANSITIVE);    
@@ -1069,7 +1073,7 @@ int action(FILE *input, enum speechpart part, long verb, long obj)
 		case  1: /* DROP  */ return discard(obj, false);    
 		case  2: /* SAY   */ return say();    
 		case  3: /* UNLOC */ return lock(verb, obj);    
-		case  4: /* NOTHI */ return(2009); 
+		case  4: /* NOTHI */ {RSPEAK(54); return(20012);}
 		case  5: /* LOCK  */ return lock(verb, obj);    
 		case  6: /* LIGHT */ return light(obj);    
 		case  7: /* EXTI  */ return extinguish(obj);    

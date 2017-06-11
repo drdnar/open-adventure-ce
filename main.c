@@ -768,7 +768,6 @@ L2006:	KK=game.prop[obj];
 L2008:	i=game.link[i];
 	 goto L2004;
 
-L2009:	RSPEAK(54);
 L2012:	VERB=0;
 	game.oldobj=obj;
 	obj=0;
@@ -1030,7 +1029,6 @@ Laction:
 	   case 2: return true;
 	   case 8: goto L8;
 	   case 2000: goto L2000;
-	   case 2009: goto L2009;
 	   case 2012: goto L2012;
 	   case 2600: goto L2600;
 	   case 2607: goto L2607;
