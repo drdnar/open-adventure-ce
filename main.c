@@ -768,8 +768,7 @@ L2006:	KK=game.prop[obj];
 L2008:	i=game.link[i];
 	 goto L2004;
 
-L2009:	K=54;
-L2010:	RSPEAK(K);
+L2009:	RSPEAK(54);
 L2012:	VERB=0;
 	game.oldobj=obj;
 	obj=0;
@@ -972,8 +971,10 @@ L19999: K=43;
 	if (LIQLOC(game.loc) == WATER)K=70;
 	V1=VOCAB(WD1,-1);
 	V2=VOCAB(WD2,-1);
-	if (V1 == ENTER && (V2 == STREAM || V2 == 1000+WATER))
-	    goto L2010;
+	if (V1 == ENTER && (V2 == STREAM || V2 == 1000+WATER)) {
+	    RSPEAK(K);
+	    goto L2012;
+	}
 	if (V1 == ENTER && WD2 > 0)
 	    goto L2800;
 	if (!((V1 != 1000+WATER && V1 != 1000+OIL) ||
@@ -1002,7 +1003,7 @@ L2630:
 	case 0: goto L8;
 	case 1: goto L5000;
 	case 2: goto L4000;
-	case 3: goto L2010;
+	case 3: RSPEAK(K); goto L2012;
 	}
 	BUG(22);
 
@@ -1030,7 +1031,6 @@ Laction:
 	   case 8: goto L8;
 	   case 2000: goto L2000;
 	   case 2009: goto L2009;
-	   case 2010: goto L2010;
 	   case 2012: goto L2012;
 	   case 2600: goto L2600;
 	   case 2607: goto L2607;
