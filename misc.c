@@ -78,7 +78,7 @@ void newspeak(char* msg)
 	  if (msg[i + 1] == 'd')
 	    {
 	      copy[i + 1] = 's';
-	      sprintf(parameters[pi], "%d", PARMS[pi]);
+	      sprintf(parameters[pi], "%ld", PARMS[pi]);
 	    }
 
 	  // Unmodified string specifier.
@@ -128,7 +128,7 @@ void newspeak(char* msg)
 
   // Render the final string.
   char rendered[2000]; // FIXME: to be replaced with dynamic allocation
-  sprintf(&rendered, copy, parameters[1], parameters[2], parameters[3], parameters[4]); // FIXME: to be replaced with vsprintf()
+  sprintf((char *)&rendered, copy, parameters[1], parameters[2], parameters[3], parameters[4]); // FIXME: to be replaced with vsprintf()
 
   // Print the message.
   printf("%s\n", rendered);
