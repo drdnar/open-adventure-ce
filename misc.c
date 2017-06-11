@@ -57,32 +57,6 @@ void SPEAK(vocab_t msg)
 		++nparms;
 		continue;
 	    }
-	    if (prmtyp == ascii_to_advent['T']) {
-		SHFTXT(LNPOSN+2,-2);
-		state=0;
-		casemake=2;
-
-		while (PARMS[nparms] > 0) {
-		    if (PARMS[nparms+1] < 0)
-			casemake=0;
-		    PUTTXT(PARMS[nparms],&state,casemake);
-		    ++nparms;
-		}
-		++nparms;
-		continue;
-	    }
-	    if (prmtyp == ascii_to_advent['B']) {
-		prmtyp=PARMS[nparms];
-		SHFTXT(LNPOSN+2,prmtyp-2);
-		if (prmtyp != 0) {
-		    for (i=1; i<=prmtyp; i++) {
-			INLINE[LNPOSN]=0;
-			++LNPOSN;
-		    }
-		}
-		++nparms;
-		continue;
-	    }
 	    if (prmtyp == ascii_to_advent['W'] || prmtyp == ascii_to_advent['L'] || prmtyp == ascii_to_advent['U'] || prmtyp == ascii_to_advent['C']) {
 		SHFTXT(LNPOSN+2,-2);
 		state = 0;
