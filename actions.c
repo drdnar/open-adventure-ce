@@ -385,34 +385,37 @@ static int discard(token_t verb, long obj, bool just_do_it)
     return(2012);
 }
 
-static int drink(token_t obj)
+static int drink(token_t verb, token_t obj)
 /*  Drink.  If no object, assume water and look for it here.  If water is in
  *  the bottle, drink that, else must be at a water loc, so drink stream. */
 {
+    int spk = ACTSPK[verb];
     if (obj == 0 && LIQLOC(game.loc) != WATER && (LIQUID() != WATER || !HERE(BOTTLE)))
 	return(8000);
     if (obj != BLOOD) {
-	if (obj != 0 && obj != WATER)SPK=110;
-	if (SPK == 110 || LIQUID() != WATER || !HERE(BOTTLE)) {RSPEAK(SPK); return 2012;}
+	if (obj != 0 && obj != WATER)spk=110;
+	if (spk == 110 || LIQUID() != WATER || !HERE(BOTTLE)) {
+	    RSPEAK(spk);
+	    return 2012;
+	}
 	game.prop[BOTTLE]=1;
 	game.place[WATER]=0;
-	SPK=74;
-	RSPEAK(SPK);
-	return 2012;
+	spk=74;
     } else {
 	DSTROY(BLOOD);
 	game.prop[DRAGON]=2;
 	OBJSND[BIRD]=OBJSND[BIRD]+3;
-	SPK=240;
-	RSPEAK(SPK);
-	return 2012;
+	spk=240;
     }
+    RSPEAK(spk);
+    return 2012;
 }
 
-static int eat(token_t obj)
+static int eat(token_t verb, token_t obj)
 /*  Eat.  Intransitive: assume food if present, else ask what.  Transitive: food
  *  ok, some things lose appetite, rest are ridiculous. */
 {
+    int spk = ACTSPK[verb];
     if (obj == INTRANSITIVE) {
 	if (!HERE(FOOD))
 	    return(8000);
@@ -431,9 +434,10 @@ static int eat(token_t obj)
     return 2012;
 }
 
-static int extinguish(int obj)
+static int extinguish(token_t verb, int obj)
 /* Extinguish.  Lamp, urn, dragon/volcano (nice try). */
 {
+    int spk = ACTSPK[verb];
     if (obj == INTRANSITIVE) {
 	if (HERE(LAMP) && game.prop[LAMP] == 1)obj=LAMP;
 	if (HERE(URN) && game.prop[URN] == 2)obj=obj*NOBJECTS+URN;
@@ -442,8 +446,8 @@ static int extinguish(int obj)
 
     if (obj == URN) {
 	game.prop[URN]=game.prop[URN]/2;
-	SPK=210;
-	RSPEAK(SPK);
+	spk=210;
+	RSPEAK(spk);
 	return 2012;
     }
     else if (obj == LAMP) {
@@ -454,15 +458,16 @@ static int extinguish(int obj)
 	return(2012);
     }
     else if (obj == DRAGON || obj == VOLCAN)
-	SPK=146;
-    RSPEAK(SPK);
+	spk=146;
+    RSPEAK(spk);
     return 2012;
 }
 
-static int feed(long obj)
+static int feed(token_t verb, long obj)
 /*  Feed.  If bird, no seed.  Snake, dragon, troll: quip.  If dwarf, make him
  *  mad.  Bear, special. */
 {
+    int spk = ACTSPK[verb];
     if (obj == BIRD) {
 	RSPEAK(100);
 	return 2012;
@@ -486,7 +491,7 @@ static int feed(long obj)
     if (obj == DWARF) {
 	if (!HERE(FOOD))
 	{
-	    RSPEAK(SPK);	/* FIXME: Defaults from ACTSPK */
+	    RSPEAK(spk);
 	    return 2012;
 	}
 	game.dflag=game.dflag+2;
@@ -495,30 +500,30 @@ static int feed(long obj)
     }
 
     if (obj == BEAR) {
-	if (game.prop[BEAR] == 0)SPK=102;
-	if (game.prop[BEAR] == 3)SPK=110;
+	if (game.prop[BEAR] == 0)spk=102;
+	if (game.prop[BEAR] == 3)spk=110;
 	if (!HERE(FOOD)) {
-	    RSPEAK(SPK);
+	    RSPEAK(spk);
 	    return 2012;
 	}
 	DSTROY(FOOD);
 	game.prop[BEAR]=1;
 	game.fixed[AXE]=0;
 	game.prop[AXE]=0;
-	SPK=168;
-	RSPEAK(SPK);
+	spk=168;
+	RSPEAK(spk);
 	return 2012;
     }
 
     if (obj == OGRE) {
 	if (HERE(FOOD))
-	    SPK=202;
-	RSPEAK(SPK);
+	    spk=202;
+	RSPEAK(spk);
 	return 2012;
     }
 
-    SPK=14;
-    RSPEAK(SPK);
+    spk=14;
+    RSPEAK(spk);
     return 2012;
 }
 
@@ -894,7 +899,7 @@ static int throw(FILE *cmdin, long verb, long obj)
     if (obj == FOOD && HERE(BEAR)) {
     /* But throwing food is another story. */
         obj=BEAR;
-        return(feed(obj));
+        return(feed(verb, obj));
     }
     if (obj != AXE)
 	return(discard(verb, obj, false));
@@ -1060,14 +1065,14 @@ int action(FILE *input, enum speechpart part, long verb, long obj)
 		    case  4: /* NOTHI */ {RSPEAK(54); return(20012);}
 		    case  5: /* LOCK  */ return lock(verb, INTRANSITIVE);    
 		    case  6: /* LIGHT */ return light(INTRANSITIVE);    
-		    case  7: /* EXTIN */ return extinguish(INTRANSITIVE);    
+		    case  7: /* EXTIN */ return extinguish(verb, INTRANSITIVE);    
 		    case  8: /* WAVE  */ return(8000); 
 		    case  9: /* CALM  */ return(8000); 
 		    case 10: /* WALK  */ {RSPEAK(SPK); return 2012;} 
 		    case 11: /* ATTAC */ return attack(input, verb, obj);   
 		    case 12: /* POUR  */ return pour(verb, obj);   
-		    case 13: /* EAT   */ return eat(INTRANSITIVE);   
-		    case 14: /* DRINK */ return drink(obj);   
+		    case 13: /* EAT   */ return eat(verb, INTRANSITIVE);   
+		    case 14: /* DRINK */ return drink(verb, obj);   
 		    case 15: /* RUB   */ return(8000); 
 		    case 16: /* TOSS  */ return(8000); 
 		    case 17: /* QUIT  */ return quit(input);   
@@ -1101,20 +1106,20 @@ int action(FILE *input, enum speechpart part, long verb, long obj)
 		case  4: /* NOTHI */ {RSPEAK(54); return(20012);}
 		case  5: /* LOCK  */ return lock(verb, obj);    
 		case  6: /* LIGHT */ return light(obj);    
-		case  7: /* EXTI  */ return extinguish(obj);    
+		case  7: /* EXTI  */ return extinguish(verb, obj);    
 		case  8: /* WAVE  */ return wave(obj);    
 		case  9: /* CALM  */ {RSPEAK(SPK); return 2012;} 
 		case 10: /* WALK  */ {RSPEAK(SPK); return 2012;} 
 		case 11: /* ATTAC */ return attack(input, verb, obj);   
 		case 12: /* POUR  */ return pour(verb, obj);   
-		case 13: /* EAT   */ return eat(obj);   
-		case 14: /* DRINK */ return drink(obj);   
+       		case 13: /* EAT   */ return eat(verb, obj);   
+		case 14: /* DRINK */ return drink(verb, obj);   
 		case 15: /* RUB   */ return rub(obj);   
 		case 16: /* TOSS  */ return throw(input, verb, obj);   
 		case 17: /* QUIT  */ {RSPEAK(SPK); return 2012;} 
 		case 18: /* FIND  */ return find(obj);   
 		case 19: /* INVEN */ return find(obj);   
-		case 20: /* FEED  */ return feed(obj);   
+		case 20: /* FEED  */ return feed(verb, obj);   
 		case 21: /* FILL  */ return fill(verb, obj);   
 		case 22: /* BLAST */ return blast();   
 		case 23: /* SCOR  */ {RSPEAK(SPK); return 2012;} 
