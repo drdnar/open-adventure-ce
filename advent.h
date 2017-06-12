@@ -114,7 +114,6 @@ extern void BUG(long) __attribute__((noreturn));
 extern bool MAPLIN(FILE *);
 extern void TYPE(void);
 extern void DATIME(long*, long*);
-extern long MOD(long,long);
 
 extern void set_seed(long);
 extern unsigned long get_next_lcg_value(void);
@@ -122,8 +121,8 @@ extern long randrange(long);
 extern void score(long);
 extern int saveresume(FILE *, bool);
 
-/*  Statement functions
- *
+/*
+ *  MOD(N,M)	= Arithmetic modulus
  *  AT(OBJ)	= true if on either side of two-placed object
  *  CNDBIT(L,N) = true if COND(L) has bit n set (bit 0 is units bit)
  *  DARK(LOC)   = true if location "LOC" is dark
@@ -136,6 +135,7 @@ extern int saveresume(FILE *, bool);
  *  PCT(N)      = true N% of the time (N integer from 0 to 100)
  *  TOTING(OBJ) = true if the OBJ is being carried */
 
+#define MOD(N,M)	((N) % (M))
 #define TOTING(OBJ)	(game.place[OBJ] == -1)
 #define AT(OBJ) (game.place[OBJ] == game.loc || game.fixed[OBJ] == game.loc)
 #define HERE(OBJ)	(AT(OBJ) || TOTING(OBJ))

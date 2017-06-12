@@ -698,7 +698,4 @@ void DATIME(long* d, long* t)
     *t = (long) tv.tv_usec;
 }
 
-long MOD(long n, long m) 
-{
-    return(n%m);
-}
+/* end */
