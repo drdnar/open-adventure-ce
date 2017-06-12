@@ -494,30 +494,30 @@ static void croak(FILE *cmdin)
 
 static bool playermove(FILE *cmdin, token_t verb)
 {
-    int LL, K2, KK=KEY[game.loc];
+    int LL, K2, KK=KEY[game.loc], motion = K;
     game.newloc=game.loc;
     if (KK == 0)
 	BUG(26);
-    if (K == NUL)
+    if (motion == NUL)
 	return true;
-    else if (K == BACK) {
+    else if (motion == BACK) {
 	/*  Handle "go back".  Look for verb which goes from game.loc to
 	 *  game.oldloc, or to game.oldlc2 If game.oldloc has forced-motion.
 	 *  K2 saves entry -> forced loc -> previous loc. */
-	K=game.oldloc;
-	if (FORCED(K))
-	    K=game.oldlc2;
+	motion=game.oldloc;
+	if (FORCED(motion))
+	    motion=game.oldlc2;
 	game.oldlc2=game.oldloc;
 	game.oldloc=game.loc;
 	K2=0;
-	if (K == game.loc)K2=91;
+	if (motion == game.loc)K2=91;
 	if (CNDBIT(game.loc,4))K2=274;
 	if (K2 == 0) {
 	    for (;;) {
 		LL=MOD((labs(TRAVEL[KK])/1000),1000);
-		if (LL != K) {
+		if (LL != motion) {
 		    if (LL <= 300) {
-			if (FORCED(LL) && MOD((labs(TRAVEL[KEY[LL]])/1000),1000) == K)
+			if (FORCED(LL) && MOD((labs(TRAVEL[KEY[LL]])/1000),1000) == motion)
 			    K2=KK;
 		    }
 		    if (TRAVEL[KK] >= 0) {
@@ -531,7 +531,7 @@ static bool playermove(FILE *cmdin, token_t verb)
 		    }
 		}
 
-		K=MOD(labs(TRAVEL[KK]),1000);
+		motion=MOD(labs(TRAVEL[KK]),1000);
 		KK=KEY[game.loc];
 		break; /* fall through to ordinary travel */
 	    }
@@ -540,7 +540,7 @@ static bool playermove(FILE *cmdin, token_t verb)
 	    return true;
 	}
     }
-    else if (K == LOOK) {
+    else if (motion == LOOK) {
 	/*  Look.  Can't give more detail.  Pretend it wasn't dark
 	 *  (though it may "now" be dark) so he won't fall into a
 	 *  pit while staring into the gloom. */
@@ -550,7 +550,7 @@ static bool playermove(FILE *cmdin, token_t verb)
 	game.abbrev[game.loc]=0;
 	return true;
     }
-    else if (K == CAVE) {
+    else if (motion == CAVE) {
 	/*  Cave.  Different messages depending on whether above ground. */
 	RSPEAK((OUTSID(game.loc) && game.loc != 8) ? 57 : 58);
 	return true;
@@ -564,19 +564,19 @@ static bool playermove(FILE *cmdin, token_t verb)
     /* ordinary travel */
     for (;;) {
 	LL=labs(TRAVEL[KK]);
-	if (MOD(LL,1000) == 1 || MOD(LL,1000) == K)
+	if (MOD(LL,1000) == 1 || MOD(LL,1000) == motion)
 	    break;
 	if (TRAVEL[KK] < 0) {
 	    /*  Non-applicable motion.  Various messages depending on
 	     *  word given. */
 	    int spk=12;
-	    if (K >= 43 && K <= 50)spk=52;
-	    if (K == 29 || K == 30)spk=52;
-	    if (K == 7 || K == 36 || K == 37)spk=10;
-	    if (K == 11 || K == 19)spk=11;
+	    if (motion >= 43 && motion <= 50)spk=52;
+	    if (motion == 29 || motion == 30)spk=52;
+	    if (motion == 7 || motion == 36 || motion == 37)spk=10;
+	    if (motion == 11 || motion == 19)spk=11;
 	    if (verb == FIND || verb == INVENT)spk=59;
-	    if (K == 62 || K == 65)spk=42;
-	    if (K == 17)spk=80;
+	    if (motion == 62 || motion == 65)spk=42;
+	    if (motion == 17)spk=80;
 	    RSPEAK(spk);
 	    return true;
 	}
@@ -586,17 +586,17 @@ static bool playermove(FILE *cmdin, token_t verb)
 
     for (;;) {
 	game.newloc=LL/1000;
-	K=MOD(game.newloc,100);
+	motion=MOD(game.newloc,100);
 	if (game.newloc <= 300) {
 	    if (game.newloc <= 100) {
 		if (game.newloc == 0 || PCT(game.newloc))
 		    break;
 		/* else fall through */
-	    } if (TOTING(K) || (game.newloc > 200 && AT(K)))
+	    } if (TOTING(motion) || (game.newloc > 200 && AT(motion)))
 		  break;
 	    /* else fall through */
 	}
-	else if (game.prop[K] != game.newloc/100-3)
+	else if (game.prop[motion] != game.newloc/100-3)
 	    break;
     L12:
 	do {
