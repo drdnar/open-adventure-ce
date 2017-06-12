@@ -712,7 +712,6 @@ static bool closecheck(void)
     if (game.tally == 0 && INDEEP(game.loc) && game.loc != 33)
 	--game.clock1;
 
-
     /*  When the first warning comes, we lock the grate, destroy
      *  the bridge, kill all the dwarves (and the pirate), remove
      *  the troll and bear (unless dead), and set "closng" to
@@ -888,6 +887,7 @@ static void listobjects(void)
 }
 
 static bool do_command(FILE *cmdin)
+/* Get and execute a command */ 
 {
     long KQ, VERB, KK, V1, V2;
     long i, k, KMOD;
@@ -923,184 +923,183 @@ static bool do_command(FILE *cmdin)
 
     /*  Describe the current location and (maybe) get next command. */
 
-    /*  Print text for current loc. */
-
-L2000:
-    if (game.loc == 0)
-	croak(cmdin);
-    char* msg = short_location_descriptions[game.loc];
-    if (MOD(game.abbrev[game.loc],game.abbnum) == 0 || msg == 0)
-	msg=long_location_descriptions[game.loc];
-    if (!FORCED(game.loc) && DARK(game.loc)) {
-	/*  The easiest way to get killed is to fall into a pit in
-	 *  pitch darkness. */
-	if (game.wzdark && PCT(35)) {
-	    RSPEAK(23);
-	    game.oldlc2 = game.loc;
+    for (;;) {
+	if (game.loc == 0)
 	    croak(cmdin);
-	    goto L2000;
+	char* msg = short_location_descriptions[game.loc];
+	if (MOD(game.abbrev[game.loc],game.abbnum) == 0 || msg == 0)
+	    msg=long_location_descriptions[game.loc];
+	if (!FORCED(game.loc) && DARK(game.loc)) {
+	    /*  The easiest way to get killed is to fall into a pit in
+	     *  pitch darkness. */
+	    if (game.wzdark && PCT(35)) {
+		RSPEAK(23);
+		game.oldlc2 = game.loc;
+		croak(cmdin);
+		continue;	/* back to top of main interpreter loop */
+	    }
+	    msg=arbitrary_messages[16];
 	}
-	msg=arbitrary_messages[16];
-    }
-    if (TOTING(BEAR))RSPEAK(141);
-    newspeak(msg);
-    if (FORCED(game.loc)) {
-	if (playermove(cmdin, VERB, 1))
-	    return true;
-	else
-	    goto L2000;
-    }
-    if (game.loc == 33 && PCT(25) && !game.closng)RSPEAK(7);
-
-    listobjects();
-
-L2012:
-    VERB=0;
-    game.oldobj=obj;
-    obj=0;
-
-L2600:
-    checkhints(cmdin);
-  
-    /*  If closing time, check for any objects being toted with
-     *  game.prop < 0 and set the prop to -1-game.prop.  This way
-     *  objects won't be described until they've been picked up
-     *  and put down separate from their respective piles.  Don't
-     *  tick game.clock1 unless well into cave (and not at Y2). */
-    if (game.closed) {
-	if (game.prop[OYSTER] < 0 && TOTING(OYSTER))
-	    PSPEAK(OYSTER,1);
-	for (i=1; i<=NOBJECTS; i++) {
-	    if (TOTING(i) && game.prop[i] < 0)
-		game.prop[i] = -1-game.prop[i];
+	if (TOTING(BEAR))RSPEAK(141);
+	newspeak(msg);
+	if (FORCED(game.loc)) {
+	    if (playermove(cmdin, VERB, 1))
+		return true;
+	    else
+		continue;	/* back to top of main interpreter loop */
 	}
-    }
-    game.wzdark=DARK(game.loc);
-    if (game.knfloc > 0 && game.knfloc != game.loc)
-	game.knfloc=0;
+	if (game.loc == 33 && PCT(25) && !game.closng)RSPEAK(7);
 
-    /* This is where we get a new command from the user */
-    if (!GETIN(cmdin, &WD1,&WD1X,&WD2,&WD2X))
-	return false;
+	listobjects();
 
-    /*  Every input, check "game.foobar" flag.  If zero, nothing's
-     *  going on.  If pos, make neg.  If neg, he skipped a word,
-     *  so make it zero. */
-L2607:
-    game.foobar=(game.foobar>0 ? -game.foobar : 0);
-    ++game.turns;
-    if (game.turns == game.thresh) {
-	newspeak(turn_threshold_messages[game.trndex]);
-	game.trnluz=game.trnluz+TRNVAL[game.trndex]/100000;
-	++game.trndex;
-	game.thresh = -1;
-	if (game.trndex <= TRNVLS)
-	    game.thresh=MOD(TRNVAL[game.trndex],100000)+1;
-    }
-    if (VERB == SAY && WD2 > 0)
+    L2012:
 	VERB=0;
-    if (VERB == SAY) {
-	part=transitive;
-	goto Laction;
-    }
-    if (closecheck())
-	if (game.closed)
-	    return true;
-	else
-	    goto L19999;
-
-    lampcheck();
-
-L19999:
-    k=43;
-    if (LIQLOC(game.loc) == WATER)k=70;
-    V1=VOCAB(WD1,-1);
-    V2=VOCAB(WD2,-1);
-    if (V1 == ENTER && (V2 == STREAM || V2 == 1000+WATER)) {
-	RSPEAK(k);
-	goto L2012;
-    }
-    if (V1 == ENTER && WD2 > 0) {
-	WD1=WD2;
-	WD1X=WD2X;
-	WD2=0;
-    } else {
-	if (!((V1 != 1000+WATER && V1 != 1000+OIL) ||
-	      (V2 != 1000+PLANT && V2 != 1000+DOOR))) {
-	    if (AT(V2-1000))
-		WD2=MAKEWD(16152118);
-	}
-	if (V1 == 1000+CAGE && V2 == 1000+BIRD && HERE(CAGE) && HERE(BIRD))
-	    WD1=MAKEWD(301200308);
-    }
-L2620:
-    if (WD1 == MAKEWD(23051920)) {
-	++game.iwest;
-	if (game.iwest == 10)
-	    RSPEAK(17);
-    }
-    if (WD1 == MAKEWD( 715) && WD2 != 0) {
-	if (++igo == 10)
-	    RSPEAK(276);
-    }
-L2630:
-    i=VOCAB(WD1,-1);
-    if (i == -1) {
-	/* Gee, I don't understand. */
-	if (fallback_handler(rawbuf))
-	    return true;
-	SETPRM(1,WD1,WD1X);
-	RSPEAK(254);
-	goto L2600;
-    }
-    KMOD=MOD(i,1000);
-    KQ=i/1000+1;
-    switch (KQ-1)
-    {
-    case 0:
-	if (playermove(cmdin, VERB, KMOD))
-	    return true;
-	else
-	    goto L2000;
-    case 1: part=unknown; obj = KMOD; break;
-    case 2: part=intransitive; VERB = KMOD; break;
-    case 3: RSPEAK(KMOD); goto L2012;
-    default: BUG(22);
-    }
-
-Laction:
-    switch (action(cmdin, part, VERB, obj)) {
-    case 2:
-	return true;
-    case 8: 
-	playermove(cmdin, VERB, NUL);
-	return true;
-    case 2000: goto L2000;
-    case 2012: goto L2012;
-    case 2600: goto L2600;
-    case 2607: goto L2607;
-    case 2630: goto L2630;
-    case 2800:
-	/* Get second word for analysis. */
-	WD1=WD2;
-	WD1X=WD2X;
-	WD2=0;
-	goto L2620;
-    case 8000:
-	/*  Random intransitive verbs come here.  Clear obj just in case
-	 *  (see attack()). */
-	SETPRM(1,WD1,WD1X);
-	RSPEAK(257);
+	game.oldobj=obj;
 	obj=0;
-	goto L2600;
-    case 19000:
-	/*  Oh dear, he's disturbed the dwarves. */
-	RSPEAK(136);
-	score(0);
-	return true;
-    default:
-	BUG(99);
+
+    L2600:
+	checkhints(cmdin);
+
+	/*  If closing time, check for any objects being toted with
+	 *  game.prop < 0 and set the prop to -1-game.prop.  This way
+	 *  objects won't be described until they've been picked up
+	 *  and put down separate from their respective piles.  Don't
+	 *  tick game.clock1 unless well into cave (and not at Y2). */
+	if (game.closed) {
+	    if (game.prop[OYSTER] < 0 && TOTING(OYSTER))
+		PSPEAK(OYSTER,1);
+	    for (i=1; i<=NOBJECTS; i++) {
+		if (TOTING(i) && game.prop[i] < 0)
+		    game.prop[i] = -1-game.prop[i];
+	    }
+	}
+	game.wzdark=DARK(game.loc);
+	if (game.knfloc > 0 && game.knfloc != game.loc)
+	    game.knfloc=0;
+
+	/* This is where we get a new command from the user */
+	if (!GETIN(cmdin, &WD1,&WD1X,&WD2,&WD2X))
+	    return false;
+
+	/*  Every input, check "game.foobar" flag.  If zero, nothing's
+	 *  going on.  If pos, make neg.  If neg, he skipped a word,
+	 *  so make it zero. */
+    L2607:
+	game.foobar=(game.foobar>0 ? -game.foobar : 0);
+	++game.turns;
+	if (game.turns == game.thresh) {
+	    newspeak(turn_threshold_messages[game.trndex]);
+	    game.trnluz=game.trnluz+TRNVAL[game.trndex]/100000;
+	    ++game.trndex;
+	    game.thresh = -1;
+	    if (game.trndex <= TRNVLS)
+		game.thresh=MOD(TRNVAL[game.trndex],100000)+1;
+	}
+	if (VERB == SAY && WD2 > 0)
+	    VERB=0;
+	if (VERB == SAY) {
+	    part=transitive;
+	    goto Laction;
+	}
+	if (closecheck())
+	    if (game.closed)
+		return true;
+	    else
+		goto L19999;
+
+	lampcheck();
+
+    L19999:
+	k=43;
+	if (LIQLOC(game.loc) == WATER)k=70;
+	V1=VOCAB(WD1,-1);
+	V2=VOCAB(WD2,-1);
+	if (V1 == ENTER && (V2 == STREAM || V2 == 1000+WATER)) {
+	    RSPEAK(k);
+	    goto L2012;
+	}
+	if (V1 == ENTER && WD2 > 0) {
+	    WD1=WD2;
+	    WD1X=WD2X;
+	    WD2=0;
+	} else {
+	    if (!((V1 != 1000+WATER && V1 != 1000+OIL) ||
+		  (V2 != 1000+PLANT && V2 != 1000+DOOR))) {
+		if (AT(V2-1000))
+		    WD2=MAKEWD(16152118);
+	    }
+	    if (V1 == 1000+CAGE && V2 == 1000+BIRD && HERE(CAGE) && HERE(BIRD))
+		WD1=MAKEWD(301200308);
+	}
+    L2620:
+	if (WD1 == MAKEWD(23051920)) {
+	    ++game.iwest;
+	    if (game.iwest == 10)
+		RSPEAK(17);
+	}
+	if (WD1 == MAKEWD( 715) && WD2 != 0) {
+	    if (++igo == 10)
+		RSPEAK(276);
+	}
+    L2630:
+	i=VOCAB(WD1,-1);
+	if (i == -1) {
+	    /* Gee, I don't understand. */
+	    if (fallback_handler(rawbuf))
+		return true;
+	    SETPRM(1,WD1,WD1X);
+	    RSPEAK(254);
+	    goto L2600;
+	}
+	KMOD=MOD(i,1000);
+	KQ=i/1000+1;
+	switch (KQ-1)
+	{
+	case 0:
+	    if (playermove(cmdin, VERB, KMOD))
+		return true;
+	    else
+		continue;	/* back to top of main interpreter loop */
+	case 1: part=unknown; obj = KMOD; break;
+	case 2: part=intransitive; VERB = KMOD; break;
+	case 3: RSPEAK(KMOD); goto L2012;
+	default: BUG(22);
+	}
+
+    Laction:
+	switch (action(cmdin, part, VERB, obj)) {
+	case 2:
+	    return true;
+	case 8: 
+	    playermove(cmdin, VERB, NUL);
+	    return true;
+	case 2000: continue;	/* back to top of main interpreter loop */
+	case 2012: goto L2012;
+	case 2600: goto L2600;
+	case 2607: goto L2607;
+	case 2630: goto L2630;
+	case 2800:
+	    /* Get second word for analysis. */
+	    WD1=WD2;
+	    WD1X=WD2X;
+	    WD2=0;
+	    goto L2620;
+	case 8000:
+	    /*  Random intransitive verbs come here.  Clear obj just in case
+	     *  (see attack()). */
+	    SETPRM(1,WD1,WD1X);
+	    RSPEAK(257);
+	    obj=0;
+	    goto L2600;
+	case 19000:
+	    /*  Oh dear, he's disturbed the dwarves. */
+	    RSPEAK(136);
+	    score(0);
+	    return true;
+	default:
+	    BUG(99);
+	}
     }
 }
 
-/* EMD */
+/* end */
