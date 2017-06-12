@@ -87,6 +87,7 @@ extern lcg_state lcgstate;
 #define READ_MODE "rb"
 #define WRITE_MODE "wb"
 extern void* xmalloc(size_t);
+extern char* xstrdup(const char*);
 extern void packed_to_token(long, char token[6]);
 extern void newspeak(char*);
 extern void PSPEAK(vocab_t,int);

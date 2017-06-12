@@ -21,6 +21,17 @@ void* xmalloc(size_t size)
   return(ptr);
 }
 
+char* xstrdup(const char* s)
+{
+  char* ptr = strdup(s);
+  if (ptr == NULL)
+    {
+      fprintf(stderr, "Out of memory!\n");
+      exit(EXIT_FAILURE);
+    }
+  return(ptr);
+}
+
 void packed_to_token(long packed, char token[6])
 {
   // Unpack and map back to ASCII.
@@ -60,8 +71,7 @@ void newspeak(char* msg)
     printf("\n");
 
   // Create a copy of our string, so we can edit it.
-  char* copy = (char*) xmalloc(strlen(msg) + 1);
-  strncpy(copy, msg, strlen(msg) + 1);
+  char* copy = xstrdup(msg);
 
   // Staging area for stringified parameters.
   char parameters[5][100]; // FIXME: to be replaced with dynamic allocation
