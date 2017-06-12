@@ -39,7 +39,7 @@ long AMBER, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
 		RUBY, RUG, SAPPH, SAY, SIGN, SNAKE,
     		STEPS, STREAM, THROW, TRIDNT, TROLL, TROLL2,
 		URN, VASE, VEND, VOLCAN, WATER;
-long K, SPK, WD1, WD1X, WD2, WD2X;
+long K, WD1, WD1X, WD2, WD2X;
 
 FILE  *logfp;
 bool oldstyle = false;
@@ -567,15 +567,15 @@ static bool playermove(FILE *cmdin, token_t verb)
 	if (TRAVEL[KK] < 0) {
 	    /*  Non-applicable motion.  Various messages depending on
 	     *  word given. */
-	    SPK=12;
-	    if (K >= 43 && K <= 50)SPK=52;
-	    if (K == 29 || K == 30)SPK=52;
-	    if (K == 7 || K == 36 || K == 37)SPK=10;
-	    if (K == 11 || K == 19)SPK=11;
-	    if (verb == FIND || verb == INVENT)SPK=59;
-	    if (K == 62 || K == 65)SPK=42;
-	    if (K == 17)SPK=80;
-	    RSPEAK(SPK);
+	    int spk=12;
+	    if (K >= 43 && K <= 50)spk=52;
+	    if (K == 29 || K == 30)spk=52;
+	    if (K == 7 || K == 36 || K == 37)spk=10;
+	    if (K == 11 || K == 19)spk=11;
+	    if (verb == FIND || verb == INVENT)spk=59;
+	    if (K == 62 || K == 65)spk=42;
+	    if (K == 17)spk=80;
+	    RSPEAK(spk);
 	    return true;
 	}
 	++KK;
@@ -961,10 +961,10 @@ L2607:	game.foobar=(game.foobar>0 ? -game.foobar : 0);
 	} else if (game.limit <= 30) {
 	    if (!game.lmwarn && HERE(LAMP)) {
 		game.lmwarn=true;
-		SPK=187;
-		if (game.place[BATTER] == 0)SPK=183;
-		if (game.prop[BATTER] == 1)SPK=189;
-		RSPEAK(SPK);
+		int spk=187;
+		if (game.place[BATTER] == 0)spk=183;
+		if (game.prop[BATTER] == 1)spk=189;
+		RSPEAK(spk);
 	    }
 	}
 L19999: K=43;

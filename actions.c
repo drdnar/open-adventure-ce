@@ -4,7 +4,9 @@
 #include "database.h"
 
 /* Limit visibility of ugly globals.  Eventually these should go away. */
-extern long K, SPK, WD1, WD1X, WD2, WD2X;
+extern long K, WD1, WD1X, WD2, WD2X;
+
+static long SPK;	/* This should go away too */
 
 /*
  * Action handlers.  Eventually we'll do lookup through a method table
