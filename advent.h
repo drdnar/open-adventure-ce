@@ -169,8 +169,6 @@ extern long AMBER, ATTACK, AXE, BACK, BATTER, BEAR,
    RESER, ROD, ROD2, RUBY, RUG, SAPPH, SAY, SIGN, SNAKE,
    STEPS, STICK, STREAM, THROW, TRIDNT, TROLL, TROLL2,
    URN, VASE, VEND, VOLCAN, WATER;
-/* everything else */
-extern long K, SPK, WD1, WD1X, WD2, WD2X;
 
 enum speechpart {unknown, intransitive, transitive};
 
