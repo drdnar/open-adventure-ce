@@ -824,8 +824,12 @@ L2607:	game.foobar=(game.foobar>0 ? -game.foobar : 0);
 	if (game.trndex <= TRNVLS)
 	    game.thresh=MOD(TRNVAL[game.trndex],100000)+1;
 	}
-	if (VERB == SAY && WD2 > 0)VERB=0;
-	if (VERB == SAY) goto L4090;
+	if (VERB == SAY && WD2 > 0)
+	    VERB=0;
+	if (VERB == SAY) {
+	    part=transitive;
+	    goto Laction;
+	}
 	if (game.tally == 0 && INDEEP(game.loc) && game.loc != 33)
 	    --game.clock1;
 
@@ -1013,17 +1017,12 @@ L2630:
 	switch (KQ-1)
 	{
 	case 0: goto L8;
-	case 1: goto L5000;
-	case 2: goto L4000;
+	case 1: part=unknown; obj = KMOD; goto Laction;
+	case 2: part=intransitive; VERB = KMOD; goto Laction;
 	case 3: RSPEAK(KMOD); goto L2012;
 	}
 	BUG(22);
 
-/* Verb and object analysis moved to separate module. */
-
-L4000:	part=intransitive; VERB = KMOD; goto Laction;
-L4090:	part=transitive; goto Laction;
-L5000:	part=unknown; obj = KMOD;
 Laction:
 	 switch (action(cmdin, part, VERB, obj)) {
 	 case 2: return true;
