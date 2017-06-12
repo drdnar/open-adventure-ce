@@ -339,10 +339,10 @@ static int discard(long obj, bool just_do_it)
                 if (obj == RUBY)SPK=221;
                 RSPEAK(SPK);
                 if (SPK != 220) {
-                    K=2-game.prop[RUG];
-                    game.prop[RUG]=K;
-                    if (K == 2)K=PLAC[SAPPH];
-                    MOVE(RUG+NOBJECTS,K);
+                    int k = 2-game.prop[RUG];
+                    game.prop[RUG] = k;
+                    if (k == 2) k = PLAC[SAPPH];
+                    MOVE(RUG+NOBJECTS, k);
                 }
             }
         } else if (obj == COINS && HERE(VEND)) {
@@ -372,9 +372,10 @@ static int discard(long obj, bool just_do_it)
             if (game.prop[VASE] != 0)game.fixed[VASE]= -1;
         }
     }
-    K=LIQUID();
-    if (K == obj)obj=BOTTLE;
-    if (obj == BOTTLE && K != 0)game.place[K]=0;
+    int k = LIQUID();
+    if (k == obj)obj=BOTTLE;
+    if (obj == BOTTLE && k != 0)
+	game.place[k]=0;
     if (obj == CAGE && game.prop[BIRD] == 1)DROP(BIRD,game.loc);
     DROP(obj,game.loc);
     if (obj != BIRD) return(2012);
