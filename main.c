@@ -1068,30 +1068,30 @@ static bool do_command(FILE *cmdin)
 
     Laction:
 	switch (action(cmdin, part, VERB, obj)) {
-	case 2:
+	case GO_TERMINATE:
 	    return true;
-	case 8: 
+	case GO_MOVE: 
 	    playermove(cmdin, VERB, NUL);
 	    return true;
-	case 2000: continue;	/* back to top of main interpreter loop */
-	case 2012: goto L2012;
-	case 2600: goto L2600;
-	case 2607: goto L2607;
-	case 2630: goto L2630;
-	case 2800:
+	case GO_TOP: continue;	/* back to top of main interpreter loop */
+	case GO_CLEAROBJ: goto L2012;
+	case GO_CHECKHINT: goto L2600;
+	case GO_CHECKFOO: goto L2607;
+	case GO_LOOKUP: goto L2630;
+	case GO_WORD2:
 	    /* Get second word for analysis. */
 	    WD1=WD2;
 	    WD1X=WD2X;
 	    WD2=0;
 	    goto L2620;
-	case 8000:
+	case GO_UNKNOWN:
 	    /*  Random intransitive verbs come here.  Clear obj just in case
 	     *  (see attack()). */
 	    SETPRM(1,WD1,WD1X);
 	    RSPEAK(257);
 	    obj=0;
 	    goto L2600;
-	case 19000:
+	case GO_DWARFWAKE:
 	    /*  Oh dear, he's disturbed the dwarves. */
 	    RSPEAK(136);
 	    score(0);

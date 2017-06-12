@@ -40,7 +40,7 @@ int saveresume(FILE *input, bool resume)
 	 *  some points (so can't win by using saved games to retry
 	 *  battles or to start over after learning zzword). */
 	RSPEAK(260);
-	if (!YES(input,200,54,54)) return(2012);
+	if (!YES(input,200,54,54)) return GO_CLEAROBJ;
 	game.saved=game.saved+5;
     }
     else
@@ -48,14 +48,14 @@ int saveresume(FILE *input, bool resume)
 	/*  Resume.  Read a suspended game back from a file. */
 	if (game.loc != 1 || game.abbrev[1] != 1) {
 	    RSPEAK(268);
-	    if (!YES(input,200,54,54)) return(2012);
+	    if (!YES(input,200,54,54)) return GO_CLEAROBJ;
 	}
     }
 
     while (fp == NULL) {
 	name = linenoise("\nFile name: ");
 	if (name == NULL)
-	    return(2000);
+	    return GO_TOP;
 	fp = fopen(name,(resume ? READ_MODE : WRITE_MODE));
 	if (fp == NULL)
 	    printf("Can't open file %s, try again.\n", name); 
@@ -89,7 +89,7 @@ int saveresume(FILE *input, bool resume)
 	    OBJTXT[OYSTER] = save.bivalve;
 	    game.zzword=RNDVOC(3,game.zzword);
 	}
-	return 2000;
+	return GO_TOP;
     }
 }
 

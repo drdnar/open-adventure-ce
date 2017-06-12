@@ -172,6 +172,22 @@ extern long AMBER, ATTACK, AXE, BACK, BATTER, BEAR,
 
 enum speechpart {unknown, intransitive, transitive};
 
+/* Phase codes for action returns. 
+ * These were at one time FORTRAN line numbers.
+ */
+#define GO_TERMINATE	2
+#define GO_MOVE		8
+#define GO_TOP		2000
+#define GO_CLEAROBJ	2012
+#define GO_CHECKHINT	2600
+#define GO_CHECKFOO	2607
+#define GO_DIRECTION	2620
+#define GO_LOOKUP	2630
+#define GO_WORD2	2800
+#define GO_UNKNOWN	8000
+#define GO_DWARFWAKE	19000
+#define GO_ACTION	40000
+
 /* hack to ignore GCC Unused Result */
 #define IGNORE(r) do{if (r){}}while(0)
 
