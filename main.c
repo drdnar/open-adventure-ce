@@ -944,9 +944,11 @@ L2000:
     }
     if (TOTING(BEAR))RSPEAK(141);
     newspeak(msg);
-    KMOD=1;
     if (FORCED(game.loc)) {
-	goto L8;
+	if (playermove(cmdin, VERB, 1))
+	    return true;
+	else
+	    goto L2000;
     }
     if (game.loc == 33 && PCT(25) && !game.closng)RSPEAK(7);
 
@@ -1055,7 +1057,11 @@ L2630:
     KQ=i/1000+1;
     switch (KQ-1)
     {
-    case 0: goto L8;
+    case 0:
+	if (playermove(cmdin, VERB, KMOD))
+	    return true;
+	else
+	    goto L2000;
     case 1: part=unknown; obj = KMOD; break;
     case 2: part=intransitive; VERB = KMOD; break;
     case 3: RSPEAK(KMOD); goto L2012;
@@ -1065,7 +1071,11 @@ L2630:
 Laction:
     switch (action(cmdin, part, VERB, obj)) {
     case 2: return true;
-    case 8: KMOD=NUL; goto L8;
+    case 8: 
+	if (playermove(cmdin, VERB, NUL))
+	    return true;
+	else
+	    goto L2000;
     case 2000: goto L2000;
     case 2012: goto L2012;
     case 2600: goto L2600;
@@ -1092,12 +1102,4 @@ Laction:
     default:
 	BUG(99);
     }
-
-    /* no fallthrough here */
-	 
-    /*  Figure out the new location */
-L8:	if (playermove(cmdin, VERB, KMOD))
-	return true;
-    else
-	goto L2000;
 }
