@@ -1070,12 +1070,11 @@ L2630:
 
 Laction:
     switch (action(cmdin, part, VERB, obj)) {
-    case 2: return true;
+    case 2:
+	return true;
     case 8: 
-	if (playermove(cmdin, VERB, NUL))
-	    return true;
-	else
-	    goto L2000;
+	playermove(cmdin, VERB, NUL);
+	return true;
     case 2000: goto L2000;
     case 2012: goto L2012;
     case 2600: goto L2600;
@@ -1103,3 +1102,5 @@ Laction:
 	BUG(99);
     }
 }
+
+/* EMD */
