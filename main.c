@@ -840,6 +840,53 @@ static void lampcheck(void)
     }
 }
 
+static void listobjects(void)
+/*  Print out descriptions of objects at this location.  If
+ *  not closing and property value is negative, tally off
+ *  another treasure.  Rug is special case; once seen, its
+ *  game.prop is 1 (dragon on it) till dragon is killed.
+ *  Similarly for chain; game.prop is initially 1 (locked to
+ *  bear).  These hacks are because game.prop=0 is needed to
+ *  get full score. */
+{
+    if (!DARK(game.loc)) {
+	long obj;
+	++game.abbrev[game.loc];
+	for (int i=game.atloc[game.loc]; i != 0; i=game.link[i]) {
+	    obj=i;
+	    if (obj > NOBJECTS)obj=obj-NOBJECTS;
+	    if (obj == STEPS && TOTING(NUGGET))
+		continue;
+	    if (game.prop[obj] < 0) {
+		if (game.closed)
+		    continue;
+		game.prop[obj]=0;
+		if (obj == RUG || obj == CHAIN)
+		    game.prop[obj]=1;
+		--game.tally;
+		/*  Note: There used to be a test here to see whether the
+		 *  player had blown it so badly that he could never ever see
+		 *  the remaining treasures, and if so the lamp was zapped to
+		 *  35 turns.  But the tests were too simple-minded; things
+		 *  like killing the bird before the snake was gone (can never
+		 *  see jewelry), and doing it "right" was hopeless.  E.G.,
+		 *  could cross troll bridge several times, using up all
+		 *  available treasures, breaking vase, using coins to buy
+		 *  batteries, etc., and eventually never be able to get
+		 *  across again.  If bottle were left on far side, could then
+		 *  never get eggs or trident, and the effects propagate.  So
+		 *  the whole thing was flushed.  anyone who makes such a
+		 *  gross blunder isn't likely to find everything else anyway
+		 *  (so goes the rationalisation). */
+	    }
+	    int kk=game.prop[obj];
+	    if (obj == STEPS && game.loc == game.fixed[STEPS])
+		kk=1;
+	    PSPEAK(obj,kk);
+	}
+    }
+}
+
 static bool do_command(FILE *cmdin)
 {
     long KQ, VERB, KK, V1, V2;
@@ -903,46 +950,7 @@ L2000:
     }
     if (game.loc == 33 && PCT(25) && !game.closng)RSPEAK(7);
 
-    /*  Print out descriptions of objects at this location.  If
-     *  not closing and property value is negative, tally off
-     *  another treasure.  Rug is special case; once seen, its
-     *  game.prop is 1 (dragon on it) till dragon is killed.
-     *  Similarly for chain; game.prop is initially 1 (locked to
-     *  bear).  These hacks are because game.prop=0 is needed to
-     *  get full score. */
-
-    if (DARK(game.loc)) goto L2012;
-    ++game.abbrev[game.loc];
-    i=game.atloc[game.loc];
-L2004:
-    if (i == 0)
-	goto L2012;
-    obj=i;
-    if (obj > NOBJECTS)obj=obj-NOBJECTS;
-    if (obj == STEPS && TOTING(NUGGET)) goto L2008;
-    if (game.prop[obj] >= 0) goto L2006;
-    if (game.closed) goto L2008;
-    game.prop[obj]=0;
-    if (obj == RUG || obj == CHAIN)game.prop[obj]=1;
-    --game.tally;
-    /*  Note: There used to be a test here to see whether the player had blown it
-     *  so badly that he could never ever see the remaining treasures, and if so
-     *  the lamp was zapped to 35 turns.  But the tests were too simple-minded;
-     *  things like killing the bird before the snake was gone (can never see
-     *  jewelry), and doing it "right" was hopeless.  E.G., could cross troll
-     *  bridge several times, using up all available treasures, breaking vase,
-     *  using coins to buy batteries, etc., and eventually never be able to get
-     *  across again.  If bottle were left on far side, could then never get eggs
-     *  or trident, and the effects propagate.  So the whole thing was flushed.
-     *  anyone who makes such a gross blunder isn't likely to find everything
-     *  else anyway (so goes the rationalisation). */
-L2006:
-    KK=game.prop[obj];
-    if (obj == STEPS && game.loc == game.fixed[STEPS])KK=1;
-    PSPEAK(obj,KK);
-L2008:
-    i=game.link[i];
-    goto L2004;
+    listobjects();
 
 L2012:
     VERB=0;
