@@ -420,11 +420,11 @@ static bool dwarfmove(void)
 	return true;
     if (game.dflag == 2)game.dflag=3;
     SETPRM(1,attack,0);
-    K=6;
-    if (attack > 1)K=250;
-    RSPEAK(K);
+    int k=6;
+    if (attack > 1)k=250;
+    RSPEAK(k);
     SETPRM(1,stick,0);
-    RSPEAK(K+1+2/(1+stick));
+    RSPEAK(k+1+2/(1+stick));
     if (stick == 0)
 	return true;
     game.oldlc2=game.loc;
