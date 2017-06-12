@@ -1298,3 +1298,5 @@ char* turn_threshold_messages[] = {
   "Are you still at it?  Five points off for exceeding 1000 turns!",
   "Good grief, don\'t you *EVER* give up?  Do you realize you\'ve spent\nover 2500 turns at this?  That\'s another ten points off, a total of\ntwenty points lost for taking so long.",
 };
+
+size_t CLSSES = sizeof(class_messages) / sizeof(class_messages[0]);

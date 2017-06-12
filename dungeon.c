@@ -582,7 +582,6 @@ void write_files(FILE* c_file, FILE* header_file)
   // content variables
   write_0d(c_file, header_file, LINUSE, "LINUSE");
   write_0d(c_file, header_file, TRVS, "TRVS");
-  write_0d(c_file, header_file, CLSSES, "CLSSES");
   write_0d(c_file, header_file, TRNVLS, "TRNVLS");
   write_0d(c_file, header_file, TABNDX, "TABNDX");
   write_0d(c_file, header_file, HNTMAX, "HNTMAX");
