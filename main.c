@@ -1017,11 +1017,11 @@ L2630:
 	switch (KQ-1)
 	{
 	case 0: goto L8;
-	case 1: part=unknown; obj = KMOD; goto Laction;
-	case 2: part=intransitive; VERB = KMOD; goto Laction;
+	case 1: part=unknown; obj = KMOD; break;
+	case 2: part=intransitive; VERB = KMOD; break;
 	case 3: RSPEAK(KMOD); goto L2012;
+	default: BUG(22);
 	}
-	BUG(22);
 
 Laction:
 	 switch (action(cmdin, part, VERB, obj)) {
@@ -1050,9 +1050,12 @@ Laction:
 	     RSPEAK(136);
 	     score(0);
 	     return true;
+	 default:
+	     BUG(99);
 	     }
-	BUG(99);
 
+	 /* no fallthrough here */
+	 
 	/*  Figure out the new location */
 L8:	if (playermove(cmdin, VERB, KMOD))
 	    return true;
