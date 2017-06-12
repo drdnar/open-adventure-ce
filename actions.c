@@ -8,7 +8,7 @@ extern long WD1, WD1X, WD2, WD2X;
 
 /*
  * Action handlers.  Eventually we'll do lookup through a method table
- * that calls these.  Absolutely nothing like the original FORTRAN.
+ * that calls these.
  */
 
 static int fill(token_t verb, token_t);
@@ -648,10 +648,10 @@ static int inven(token_t obj)
     return 2012;
 }
 
-int light(token_t obj)
+int light(token_t verb, token_t obj)
 /*  Light.  Applicable only to lamp and urn. */
 {
-    int spk;
+    int spk = ACTSPK[verb];
     if (obj == INTRANSITIVE) {
 	if (HERE(LAMP) && game.prop[LAMP] == 0 && game.limit >= 0)obj=LAMP;
 	if (HERE(URN) && game.prop[URN] == 1)obj=obj*NOBJECTS+URN;
@@ -860,7 +860,7 @@ static int rub(token_t verb, token_t obj)
 }
 
 static int say(void)
-/* SAY.  Echo WD2 (or WD1 if no WD2 (SAY WHAT?, etc.).)  Magic words override. */
+/* Say.  Echo WD2 (or WD1 if no WD2 (SAY WHAT?, etc.).)  Magic words override. */
 {
     /* FIXME: ugly use of globals */
     SETPRM(1,WD2,WD2X);
@@ -1079,7 +1079,7 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj)
 		    case  3: /* UNLOC */ return lock(verb, INTRANSITIVE);    
 		    case  4: /* NOTHI */ {RSPEAK(54); return(20012);}
 		    case  5: /* LOCK  */ return lock(verb, INTRANSITIVE);    
-		    case  6: /* LIGHT */ return light(INTRANSITIVE);    
+		    case  6: /* LIGHT */ return light(verb, INTRANSITIVE);    
 		    case  7: /* EXTIN */ return extinguish(verb, INTRANSITIVE);    
 		    case  8: /* WAVE  */ return(8000); 
 		    case  9: /* CALM  */ return(8000); 
@@ -1120,7 +1120,7 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj)
 		case  3: /* UNLOC */ return lock(verb, obj);    
 		case  4: /* NOTHI */ {RSPEAK(54); return(20012);}
 		case  5: /* LOCK  */ return lock(verb, obj);    
-		case  6: /* LIGHT */ return light(obj);    
+		case  6: /* LIGHT */ return light(verb, obj);    
 		case  7: /* EXTI  */ return extinguish(verb, obj);    
 		case  8: /* WAVE  */ return wave(verb, obj);    
 		case  9: /* CALM  */ {RSPEAK(spk); return 2012;} 
