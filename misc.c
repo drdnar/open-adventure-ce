@@ -630,14 +630,14 @@ bool MAPLIN(FILE *fp)
      *  and is not changed thereafter unless the routines on this page choose
      *  to do so. */
 
-    if (!oldstyle && !isatty(1))
+    if (prompt)
 	fputs("> ", stdout);
     do {
-	if (oldstyle) {
+	if (!editline) {
 	    IGNORE(fgets(rawbuf,sizeof(rawbuf)-1,fp));
 	    eof = (feof(fp));
 	} else {
-	    char *cp = linenoise("> ");
+	    char *cp = linenoise(prompt ? "> ": "");
 	    eof = (cp == NULL);
 	    if (!eof) {
 		strncpy(rawbuf, cp, sizeof(rawbuf)-1);

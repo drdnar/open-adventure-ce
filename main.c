@@ -5,12 +5,13 @@
  * is a result of running the original Fortran IV source through a
  * home-brew Fortran-to-C converter.)
  *
- * Now that the code has been restructured into idiomatic C, the following
- * is more appropriate:
+ * Now that the code has been restructured into something much closer
+ * to idiomatic C, the following is more appropriate:
  *
- * ESR apologizes for the remaing gotos (now confined to two functions in this
- * file - they used to be *everywhere*), and the offensive globals.  Applying
- * the Structured Program Theorem can be hard.
+ * ESR apologizes for the remaing gotos (now confined to two functions
+ * in this file - there used to be hundreds of them, *everywhere*),
+ * and the offensive globals.  Applying the Structured Program Theorem
+ * can be hard.
  */
 #include <stdlib.h>
 #include <stdio.h>
@@ -43,6 +44,8 @@ long WD1, WD1X, WD2, WD2X;
 
 FILE  *logfp;
 bool oldstyle = false;
+bool editline = true;
+bool prompt = true;
 lcg_state lcgstate;
 
 extern void initialise();
@@ -77,9 +80,9 @@ int main(int argc, char *argv[])
 	
 /*  Options. */
 
-    while ((ch = getopt(argc, argv, "l:o")) != EOF) {
+    while ((ch = getopt(argc, argv, "l:os")) != EOF) {
 	switch (ch) {
-case 'l':
+	case 'l':
 	    logfp = fopen(optarg, "w");
 	    if (logfp == NULL)
 		fprintf(stderr,
@@ -89,6 +92,10 @@ case 'l':
 	    break;
 	case 'o':
 	    oldstyle = true;
+	    editline = prompt = false;
+	    break;
+	case 's':
+	    editline = false;
 	    break;
 	}
     }

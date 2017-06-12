@@ -37,7 +37,9 @@ There have been no gameplay changes.
 
 -l:: Log commands to specified file.
 
--o:: Old-style.  Restores original interface, no prompt or command history.
+-s:: Suppress Emacs-like line editing and command history.
+
+-o:: Old-style.  Restores original interface, no prompt or line editing.
 
 == BUGS ==
 

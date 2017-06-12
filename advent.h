@@ -80,7 +80,7 @@ extern char rawbuf[LINESIZE], INLINE[LINESIZE+1];
 extern const char ascii_to_advent[];
 extern const char advent_to_ascii[];
 extern FILE *logfp;
-extern bool oldstyle;
+extern bool oldstyle, editline, prompt;
 extern lcg_state lcgstate;
 
 /* b is not needed for POSIX but harmless */
@@ -174,6 +174,7 @@ enum speechpart {unknown, intransitive, transitive};
 
 /* Phase codes for action returns. 
  * These were at one time FORTRAN line numbers.
+ * The values don't matter, but perturb their order at your peril.
  */
 #define GO_TERMINATE	2
 #define GO_MOVE		8
@@ -181,12 +182,14 @@ enum speechpart {unknown, intransitive, transitive};
 #define GO_CLEAROBJ	2012
 #define GO_CHECKHINT	2600
 #define GO_CHECKFOO	2607
+#define GO_CLOSEJUMP	2610
 #define GO_DIRECTION	2620
 #define GO_LOOKUP	2630
 #define GO_WORD2	2800
+#define GO_SPECIALS	1900
 #define GO_UNKNOWN	8000
-#define GO_DWARFWAKE	19000
 #define GO_ACTION	40000
+#define GO_DWARFWAKE	19000
 
 /* hack to ignore GCC Unused Result */
 #define IGNORE(r) do{if (r){}}while(0)
