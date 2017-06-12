@@ -41,8 +41,6 @@ long AMBER, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
 		URN, VASE, VEND, VOLCAN, WATER;
 long WD1, WD1X, WD2, WD2X;
 
-static int K;	/* information leak, should go away */
-
 FILE  *logfp;
 bool oldstyle = false;
 lcg_state lcgstate;
@@ -676,7 +674,7 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
 static bool do_command(FILE *cmdin)
 {
 	long KQ, VERB, KK, V1, V2;
-	long i;
+	long i, k, KMOD;
 	static long igo = 0;
 	static long obj = 0;
 	enum speechpart part;
@@ -729,7 +727,7 @@ L2000:	if (game.loc == 0)
 	}
 	if (TOTING(BEAR))RSPEAK(141);
 	newspeak(msg);
-	K=1;
+	KMOD=1;
 	if (FORCED(game.loc)) {
 	    goto L8;
 	}
@@ -970,12 +968,12 @@ L2607:	game.foobar=(game.foobar>0 ? -game.foobar : 0);
 		RSPEAK(spk);
 	    }
 	}
-L19999: K=43;
-	if (LIQLOC(game.loc) == WATER)K=70;
+L19999: k=43;
+	if (LIQLOC(game.loc) == WATER)k=70;
 	V1=VOCAB(WD1,-1);
 	V2=VOCAB(WD2,-1);
 	if (V1 == ENTER && (V2 == STREAM || V2 == 1000+WATER)) {
-	    RSPEAK(K);
+	    RSPEAK(k);
 	    goto L2012;
 	}
 	if (V1 == ENTER && WD2 > 0) {
@@ -1010,26 +1008,26 @@ L2630:
 	    RSPEAK(254);
 	    goto L2600;
 	}
-	K=MOD(i,1000);
+	KMOD=MOD(i,1000);
 	KQ=i/1000+1;
 	switch (KQ-1)
 	{
 	case 0: goto L8;
 	case 1: goto L5000;
 	case 2: goto L4000;
-	case 3: RSPEAK(K); goto L2012;
+	case 3: RSPEAK(KMOD); goto L2012;
 	}
 	BUG(22);
 
 /* Verb and object analysis moved to separate module. */
 
-L4000:	part=intransitive; VERB=K; goto Laction;
+L4000:	part=intransitive; VERB = KMOD; goto Laction;
 L4090:	part=transitive; goto Laction;
-L5000:	part=unknown; obj = K;
+L5000:	part=unknown; obj = KMOD;
 Laction:
 	 switch (action(cmdin, part, VERB, obj)) {
 	 case 2: return true;
-	 case 8: K=NUL; goto L8;
+	 case 8: KMOD=NUL; goto L8;
 	 case 2000: goto L2000;
 	 case 2012: goto L2012;
 	 case 2600: goto L2600;
@@ -1057,7 +1055,7 @@ Laction:
 	BUG(99);
 
 	/*  Figure out the new location */
-L8:	if (playermove(cmdin, VERB, K))
+L8:	if (playermove(cmdin, VERB, KMOD))
 	    return true;
 	else
 	    goto L2000;
