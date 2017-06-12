@@ -164,83 +164,100 @@ static bool fallback_handler(char *buf)
     return false;
 }
 
-static void dohint(FILE *cmdin, int hint)
-/*  Come here if he's been long enough at required loc(s) for some
- *  unused hint. */
+/*  Check if this loc is eligible for any hints.  If been here
+ *  long enough, branch to help section (on later page).  Hints
+ *  all come back here eventually to finish the loop.  Ignore
+ *  "HINTS" < 4 (special stuff, see database notes).
+ */
+static void checkhints(FILE *cmdin)
 {
-    int i;
+    if (COND[game.loc] >= game.conds) {
+	for (int hint=1; hint<=HNTMAX; hint++) {
+	    if (game.hinted[hint])
+		continue;
+	    if (!CNDBIT(game.loc,hint+10))
+		game.hintlc[hint]= -1;
+	    ++game.hintlc[hint];
+	    /*  Come here if he's been long enough at required loc(s) for some
+	     *  unused hint. */
+	    if (game.hintlc[hint] >= HINTS[hint][1]) 
+	    {
+		int i;
 
-    switch (hint-1)
-    {
-    case 0:
-	/* cave */
-	if (game.prop[GRATE] == 0 && !HERE(KEYS))
-	    break;
-	game.hintlc[hint]=0;
-	return;
-    case 1:	/* bird */
-	if (game.place[BIRD] == game.loc && TOTING(ROD) && game.oldobj == BIRD)
-	    break;
-	return;
-    case 2:	/* snake */
-	if (HERE(SNAKE) && !HERE(BIRD))
-	    break;
-	game.hintlc[hint]=0;
-	return;
-    case 3:	/* maze */
-	if (game.atloc[game.loc] == 0 &&
-	   game.atloc[game.oldloc] == 0 &&
-	   game.atloc[game.oldlc2] == 0 &&
-	   game.holdng > 1)
-	    break;
-	game.hintlc[hint]=0;
-	return;
-    case 4:	/* dark */
-	if (game.prop[EMRALD] != -1 && game.prop[PYRAM] == -1)
-	    break;
-	game.hintlc[hint]=0;
-	return;
-    case 5:	/* witt */
-	break;
-    case 6:	/* urn */
-	if (game.dflag == 0)
-	    break;
-	game.hintlc[hint]=0;
-	return;
-    case 7:	/* woods */
-	if (game.atloc[game.loc] == 0 &&
-		   game.atloc[game.oldloc] == 0 &&
-		   game.atloc[game.oldlc2] == 0)
-		break;
-	return;
-    case 8:	/* ogre */
-	i=ATDWRF(game.loc);
-	if (i < 0) {
-	    game.hintlc[hint]=0;
-	    return;
-	    }
-	if (HERE(OGRE) && i == 0)
-	    break;
-	return;
-    case 9:	/* jade */
-	if (game.tally == 1 && game.prop[JADE] < 0)
-	    break;
-	game.hintlc[hint]=0;
-	return;
-    default:
-	BUG(27);
-	break;
-    }
+		switch (hint-1)
+		{
+		case 0:
+		    /* cave */
+		    if (game.prop[GRATE] == 0 && !HERE(KEYS))
+			break;
+		    game.hintlc[hint]=0;
+		    return;
+		case 1:	/* bird */
+		    if (game.place[BIRD] == game.loc && TOTING(ROD) && game.oldobj == BIRD)
+			break;
+		    return;
+		case 2:	/* snake */
+		    if (HERE(SNAKE) && !HERE(BIRD))
+			break;
+		    game.hintlc[hint]=0;
+		    return;
+		case 3:	/* maze */
+		    if (game.atloc[game.loc] == 0 &&
+			game.atloc[game.oldloc] == 0 &&
+			game.atloc[game.oldlc2] == 0 &&
+			game.holdng > 1)
+			break;
+		    game.hintlc[hint]=0;
+		    return;
+		case 4:	/* dark */
+		    if (game.prop[EMRALD] != -1 && game.prop[PYRAM] == -1)
+			break;
+		    game.hintlc[hint]=0;
+		    return;
+		case 5:	/* witt */
+		    break;
+		case 6:	/* urn */
+		    if (game.dflag == 0)
+			break;
+		    game.hintlc[hint]=0;
+		    return;
+		case 7:	/* woods */
+		    if (game.atloc[game.loc] == 0 &&
+			game.atloc[game.oldloc] == 0 &&
+			game.atloc[game.oldlc2] == 0)
+			break;
+		    return;
+		case 8:	/* ogre */
+		    i=ATDWRF(game.loc);
+		    if (i < 0) {
+			game.hintlc[hint]=0;
+			return;
+		    }
+		    if (HERE(OGRE) && i == 0)
+			break;
+		    return;
+		case 9:	/* jade */
+		    if (game.tally == 1 && game.prop[JADE] < 0)
+			break;
+		    game.hintlc[hint]=0;
+		    return;
+		default:
+		    BUG(27);
+		    break;
+		}
     
-    /* Fall through to hint display */
-    game.hintlc[hint]=0;
-    if (!YES(cmdin,HINTS[hint][3],0,54))
-	return;
-    SETPRM(1,HINTS[hint][2],HINTS[hint][2]);
-    RSPEAK(261);
-    game.hinted[hint]=YES(cmdin,175,HINTS[hint][4],54);
-    if (game.hinted[hint] && game.limit > 30)
-	game.limit=game.limit+30*HINTS[hint][2];
+		/* Fall through to hint display */
+		game.hintlc[hint]=0;
+		if (!YES(cmdin,HINTS[hint][3],0,54))
+		    return;
+		SETPRM(1,HINTS[hint][2],HINTS[hint][2]);
+		RSPEAK(261);
+		game.hinted[hint]=YES(cmdin,175,HINTS[hint][4],54);
+		if (game.hinted[hint] && game.limit > 30)
+		    game.limit=game.limit+30*HINTS[hint][2];
+	    }
+	}
+    }
 }
 
 static bool dwarfmove(void)
@@ -786,6 +803,42 @@ static bool closecheck(void)
     return false;
 }
 
+static void lampcheck(void)
+/* Check game limit and lamp timers */
+{
+    if (game.prop[LAMP] == 1)
+	--game.limit;
+
+    /*  Another way we can force an end to things is by having the
+     *  lamp give out.  When it gets close, we come here to warn
+     *  him.  First following ar, if the lamp and fresh batteries are
+     *  here, in which case we replace the batteries and continue.
+     *  Second is for other cases of lamp dying.  12400 is when it
+     *  goes out.  Even then, he can explore outside for a while
+     *  if desired. */
+    if (game.limit<=30 && HERE(BATTER) && game.prop[BATTER]==0 && HERE(LAMP))
+    {
+	RSPEAK(188);
+	game.prop[BATTER]=1;
+	if (TOTING(BATTER))
+	    DROP(BATTER,game.loc);
+	game.limit=game.limit+2500;
+	game.lmwarn=false;
+    } else if (game.limit == 0) {
+	game.limit= -1;
+	game.prop[LAMP]=0;
+	if (HERE(LAMP))
+	    RSPEAK(184);
+    } else if (game.limit <= 30) {
+	if (!game.lmwarn && HERE(LAMP)) {
+	    game.lmwarn=true;
+	    int spk=187;
+	    if (game.place[BATTER] == 0)spk=183;
+	    if (game.prop[BATTER] == 1)spk=189;
+	    RSPEAK(spk);
+	}
+    }
+}
 
 static bool do_command(FILE *cmdin)
 {
@@ -883,33 +936,22 @@ L2004:
      *  or trident, and the effects propagate.  So the whole thing was flushed.
      *  anyone who makes such a gross blunder isn't likely to find everything
      *  else anyway (so goes the rationalisation). */
-L2006:	KK=game.prop[obj];
+L2006:
+    KK=game.prop[obj];
     if (obj == STEPS && game.loc == game.fixed[STEPS])KK=1;
     PSPEAK(obj,KK);
-L2008:	i=game.link[i];
+L2008:
+    i=game.link[i];
     goto L2004;
 
-L2012:	VERB=0;
+L2012:
+    VERB=0;
     game.oldobj=obj;
     obj=0;
 
-    /*  Check if this loc is eligible for any hints.  If been here
-     *  long enough, branch to help section (on later page).  Hints
-     *  all come back here eventually to finish the loop.  Ignore
-     *  "HINTS" < 4 (special stuff, see database notes).
-     */
-L2600:	if (COND[game.loc] >= game.conds) {
-	for (int hint=1; hint<=HNTMAX; hint++) {
-	    if (game.hinted[hint])
-		continue;
-	    if (!CNDBIT(game.loc,hint+10))
-		game.hintlc[hint]= -1;
-	    ++game.hintlc[hint];
-	    if (game.hintlc[hint] >= HINTS[hint][1]) 
-		dohint(cmdin, hint);
-	}
-    }
-	    
+L2600:
+    checkhints(cmdin);
+  
     /*  If closing time, check for any objects being toted with
      *  game.prop < 0 and set the prop to -1-game.prop.  This way
      *  objects won't be described until they've been picked up
@@ -957,36 +999,8 @@ L2607:
 	else
 	    goto L19999;
 
-    if (game.prop[LAMP] == 1)
-	--game.limit;
+    lampcheck();
 
-    /*  Another way we can force an end to things is by having the
-     *  lamp give out.  When it gets close, we come here to warn
-     *  him.  First following ar, if the lamp and fresh batteries are
-     *  here, in which case we replace the batteries and continue.
-     *  Second is for other cases of lamp dying.  12400 is when it
-     *  goes out.  Even then, he can explore outside for a while
-     *  if desired. */
-    if (game.limit<=30 && HERE(BATTER) && game.prop[BATTER]==0 && HERE(LAMP))
-    {
-	RSPEAK(188);
-	game.prop[BATTER]=1;
-	if (TOTING(BATTER))DROP(BATTER,game.loc);
-	game.limit=game.limit+2500;
-	game.lmwarn=false;
-    } else if (game.limit == 0) {
-	game.limit= -1;
-	game.prop[LAMP]=0;
-	if (HERE(LAMP))RSPEAK(184);
-    } else if (game.limit <= 30) {
-	if (!game.lmwarn && HERE(LAMP)) {
-	    game.lmwarn=true;
-	    int spk=187;
-	    if (game.place[BATTER] == 0)spk=183;
-	    if (game.prop[BATTER] == 1)spk=189;
-	    RSPEAK(spk);
-	}
-    }
 L19999:
     k=43;
     if (LIQLOC(game.loc) == WATER)k=70;
