@@ -673,392 +673,398 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
 
 static bool do_command(FILE *cmdin)
 {
-	long KQ, VERB, KK, V1, V2;
-	long i, k, KMOD;
-	static long igo = 0;
-	static long obj = 0;
-	enum speechpart part;
+    long KQ, VERB, KK, V1, V2;
+    long i, k, KMOD;
+    static long igo = 0;
+    static long obj = 0;
+    enum speechpart part;
 
-	/*  Can't leave cave once it's closing (except by main office). */
-	if (OUTSID(game.newloc) && game.newloc != 0 && game.closng) {
-	    RSPEAK(130);
-	    game.newloc=game.loc;
-	    if (!game.panic)game.clock2=15;
-	    game.panic=true;
+    /*  Can't leave cave once it's closing (except by main office). */
+    if (OUTSID(game.newloc) && game.newloc != 0 && game.closng) {
+	RSPEAK(130);
+	game.newloc=game.loc;
+	if (!game.panic)game.clock2=15;
+	game.panic=true;
+    }
+
+    /*  See if a dwarf has seen him and has come from where he
+     *  wants to go.  If so, the dwarf's blocking his way.  If
+     *  coming from place forbidden to pirate (dwarves rooted in
+     *  place) let him get out (and attacked). */
+    if (game.newloc != game.loc && !FORCED(game.loc) && !CNDBIT(game.loc,3)) {
+	for (i=1; i<=NDWARVES-1; i++) {
+	    if (game.odloc[i] == game.newloc && game.dseen[i]) {
+		game.newloc=game.loc;
+		RSPEAK(2);
+		break;
+	    }
 	}
+    }
+    game.loc=game.newloc;
 
-	/*  See if a dwarf has seen him and has come from where he
-	 *  wants to go.  If so, the dwarf's blocking his way.  If
-	 *  coming from place forbidden to pirate (dwarves rooted in
-	 *  place) let him get out (and attacked). */
-	if (game.newloc != game.loc && !FORCED(game.loc) && !CNDBIT(game.loc,3)) {
-		for (i=1; i<=NDWARVES-1; i++) {
-		    if (game.odloc[i] == game.newloc && game.dseen[i]) {
-			game.newloc=game.loc;
-			RSPEAK(2);
-			break;
-		    }
-		}
-	}
-	game.loc=game.newloc;
+    if (!dwarfmove())
+	croak(cmdin);
 
-	if (!dwarfmove())
-	    croak(cmdin);
+    /*  Describe the current location and (maybe) get next command. */
 
-       /*  Describe the current location and (maybe) get next command. */
-
-       /*  Print text for current loc. */
+    /*  Print text for current loc. */
 
 L2000:	if (game.loc == 0)
+	croak(cmdin);
+    char* msg = short_location_descriptions[game.loc];
+    if (MOD(game.abbrev[game.loc],game.abbnum) == 0 || msg == 0)
+	msg=long_location_descriptions[game.loc];
+    if (!FORCED(game.loc) && DARK(game.loc)) {
+	/*  The easiest way to get killed is to fall into a pit in
+	 *  pitch darkness. */
+	if (game.wzdark && PCT(35)) {
+	    RSPEAK(23);
+	    game.oldlc2 = game.loc;
 	    croak(cmdin);
-	char* msg = short_location_descriptions[game.loc];
-	if (MOD(game.abbrev[game.loc],game.abbnum) == 0 || msg == 0)
-	    msg=long_location_descriptions[game.loc];
-	if (!FORCED(game.loc) && DARK(game.loc)) {
-	    /*  The easiest way to get killed is to fall into a pit in
-	     *  pitch darkness. */
-	    if (game.wzdark && PCT(35)) {
-		RSPEAK(23);
-		game.oldlc2 = game.loc;
-		croak(cmdin);
-		goto L2000;
-	    }
-	    msg=arbitrary_messages[16];
+	    goto L2000;
 	}
-	if (TOTING(BEAR))RSPEAK(141);
-	newspeak(msg);
-	KMOD=1;
-	if (FORCED(game.loc)) {
-	    goto L8;
-	}
-	if (game.loc == 33 && PCT(25) && !game.closng)RSPEAK(7);
+	msg=arbitrary_messages[16];
+    }
+    if (TOTING(BEAR))RSPEAK(141);
+    newspeak(msg);
+    KMOD=1;
+    if (FORCED(game.loc)) {
+	goto L8;
+    }
+    if (game.loc == 33 && PCT(25) && !game.closng)RSPEAK(7);
 
-	/*  Print out descriptions of objects at this location.  If
-	 *  not closing and property value is negative, tally off
-	 *  another treasure.  Rug is special case; once seen, its
-	 *  game.prop is 1 (dragon on it) till dragon is killed.
-	 *  Similarly for chain; game.prop is initially 1 (locked to
-	 *  bear).  These hacks are because game.prop=0 is needed to
-	 *  get full score. */
+    /*  Print out descriptions of objects at this location.  If
+     *  not closing and property value is negative, tally off
+     *  another treasure.  Rug is special case; once seen, its
+     *  game.prop is 1 (dragon on it) till dragon is killed.
+     *  Similarly for chain; game.prop is initially 1 (locked to
+     *  bear).  These hacks are because game.prop=0 is needed to
+     *  get full score. */
 
-	if (DARK(game.loc)) goto L2012;
-	++game.abbrev[game.loc];
-	i=game.atloc[game.loc];
-L2004:	if (i == 0) goto L2012;
-	obj=i;
-	if (obj > NOBJECTS)obj=obj-NOBJECTS;
-	if (obj == STEPS && TOTING(NUGGET)) goto L2008;
-	if (game.prop[obj] >= 0) goto L2006;
-	if (game.closed) goto L2008;
-	game.prop[obj]=0;
-	if (obj == RUG || obj == CHAIN)game.prop[obj]=1;
-	--game.tally;
-/*  Note: There used to be a test here to see whether the player had blown it
- *  so badly that he could never ever see the remaining treasures, and if so
- *  the lamp was zapped to 35 turns.  But the tests were too simple-minded;
- *  things like killing the bird before the snake was gone (can never see
- *  jewelry), and doing it "right" was hopeless.  E.G., could cross troll
- *  bridge several times, using up all available treasures, breaking vase,
- *  using coins to buy batteries, etc., and eventually never be able to get
- *  across again.  If bottle were left on far side, could then never get eggs
- *  or trident, and the effects propagate.  So the whole thing was flushed.
- *  anyone who makes such a gross blunder isn't likely to find everything
- *  else anyway (so goes the rationalisation). */
+    if (DARK(game.loc)) goto L2012;
+    ++game.abbrev[game.loc];
+    i=game.atloc[game.loc];
+L2004:
+    if (i == 0)
+	goto L2012;
+    obj=i;
+    if (obj > NOBJECTS)obj=obj-NOBJECTS;
+    if (obj == STEPS && TOTING(NUGGET)) goto L2008;
+    if (game.prop[obj] >= 0) goto L2006;
+    if (game.closed) goto L2008;
+    game.prop[obj]=0;
+    if (obj == RUG || obj == CHAIN)game.prop[obj]=1;
+    --game.tally;
+    /*  Note: There used to be a test here to see whether the player had blown it
+     *  so badly that he could never ever see the remaining treasures, and if so
+     *  the lamp was zapped to 35 turns.  But the tests were too simple-minded;
+     *  things like killing the bird before the snake was gone (can never see
+     *  jewelry), and doing it "right" was hopeless.  E.G., could cross troll
+     *  bridge several times, using up all available treasures, breaking vase,
+     *  using coins to buy batteries, etc., and eventually never be able to get
+     *  across again.  If bottle were left on far side, could then never get eggs
+     *  or trident, and the effects propagate.  So the whole thing was flushed.
+     *  anyone who makes such a gross blunder isn't likely to find everything
+     *  else anyway (so goes the rationalisation). */
 L2006:	KK=game.prop[obj];
-	if (obj == STEPS && game.loc == game.fixed[STEPS])KK=1;
-	PSPEAK(obj,KK);
+    if (obj == STEPS && game.loc == game.fixed[STEPS])KK=1;
+    PSPEAK(obj,KK);
 L2008:	i=game.link[i];
-	 goto L2004;
+    goto L2004;
 
 L2012:	VERB=0;
-	game.oldobj=obj;
-	obj=0;
+    game.oldobj=obj;
+    obj=0;
 
-/*  Check if this loc is eligible for any hints.  If been here long enough,
- *  branch to help section (on later page).  Hints all come back here eventually
- *  to finish the loop.  Ignore "HINTS" < 4 (special stuff, see database notes).
- */
+    /*  Check if this loc is eligible for any hints.  If been here
+     *  long enough, branch to help section (on later page).  Hints
+     *  all come back here eventually to finish the loop.  Ignore
+     *  "HINTS" < 4 (special stuff, see database notes).
+     */
 L2600:	if (COND[game.loc] >= game.conds) {
-	    for (int hint=1; hint<=HNTMAX; hint++) {
-		if (game.hinted[hint])
-		    continue;
-		if (!CNDBIT(game.loc,hint+10))
-		    game.hintlc[hint]= -1;
-		++game.hintlc[hint];
-		if (game.hintlc[hint] >= HINTS[hint][1]) 
-		    dohint(cmdin, hint);
-	    }
+	for (int hint=1; hint<=HNTMAX; hint++) {
+	    if (game.hinted[hint])
+		continue;
+	    if (!CNDBIT(game.loc,hint+10))
+		game.hintlc[hint]= -1;
+	    ++game.hintlc[hint];
+	    if (game.hintlc[hint] >= HINTS[hint][1]) 
+		dohint(cmdin, hint);
 	}
+    }
 	    
-	/*  If closing time, check for any objects being toted with
-	 *  game.prop < 0 and set the prop to -1-game.prop.  This way
-	 *  objects won't be described until they've been picked up
-	 *  and put down separate from their respective piles.  Don't
-	 *  tick game.clock1 unless well into cave (and not at Y2). */
-	if (game.closed) {
-	    if (game.prop[OYSTER] < 0 && TOTING(OYSTER))
-		PSPEAK(OYSTER,1);
-	    for (i=1; i<=NOBJECTS; i++) {
-		if (TOTING(i) && game.prop[i] < 0)
-		    game.prop[i] = -1-game.prop[i];
-	    }
+    /*  If closing time, check for any objects being toted with
+     *  game.prop < 0 and set the prop to -1-game.prop.  This way
+     *  objects won't be described until they've been picked up
+     *  and put down separate from their respective piles.  Don't
+     *  tick game.clock1 unless well into cave (and not at Y2). */
+    if (game.closed) {
+	if (game.prop[OYSTER] < 0 && TOTING(OYSTER))
+	    PSPEAK(OYSTER,1);
+	for (i=1; i<=NOBJECTS; i++) {
+	    if (TOTING(i) && game.prop[i] < 0)
+		game.prop[i] = -1-game.prop[i];
 	}
-	game.wzdark=DARK(game.loc);
-	if (game.knfloc > 0 && game.knfloc != game.loc)
-	    game.knfloc=0;
+    }
+    game.wzdark=DARK(game.loc);
+    if (game.knfloc > 0 && game.knfloc != game.loc)
+	game.knfloc=0;
 
-	/* This is where we get a new command from the user */
-	if (!GETIN(cmdin, &WD1,&WD1X,&WD2,&WD2X))
-	    return false;
+    /* This is where we get a new command from the user */
+    if (!GETIN(cmdin, &WD1,&WD1X,&WD2,&WD2X))
+	return false;
 
-	/*  Every input, check "game.foobar" flag.  If zero, nothing's
-	 *  going on.  If pos, make neg.  If neg, he skipped a word,
-	 *  so make it zero. */
-L2607:	game.foobar=(game.foobar>0 ? -game.foobar : 0);
-	++game.turns;
-	if (game.turns == game.thresh) {
+    /*  Every input, check "game.foobar" flag.  If zero, nothing's
+     *  going on.  If pos, make neg.  If neg, he skipped a word,
+     *  so make it zero. */
+L2607:
+    game.foobar=(game.foobar>0 ? -game.foobar : 0);
+    ++game.turns;
+    if (game.turns == game.thresh) {
 	newspeak(turn_threshold_messages[game.trndex]);
 	game.trnluz=game.trnluz+TRNVAL[game.trndex]/100000;
 	++game.trndex;
 	game.thresh = -1;
 	if (game.trndex <= TRNVLS)
 	    game.thresh=MOD(TRNVAL[game.trndex],100000)+1;
-	}
-	if (VERB == SAY && WD2 > 0)
-	    VERB=0;
-	if (VERB == SAY) {
-	    part=transitive;
-	    goto Laction;
-	}
-	if (game.tally == 0 && INDEEP(game.loc) && game.loc != 33)
-	    --game.clock1;
+    }
+    if (VERB == SAY && WD2 > 0)
+	VERB=0;
+    if (VERB == SAY) {
+	part=transitive;
+	goto Laction;
+    }
+    if (game.tally == 0 && INDEEP(game.loc) && game.loc != 33)
+	--game.clock1;
 
-	/*  Next few sections handle the closing of the cave.  The
-	 *  cave closes "clock1" turns after the last treasure has
-	 *  been located (including the pirate's chest, which may of
-	 *  course never show up).  Note that the treasures need not
-	 *  have been taken yet, just located.  Hence clock1 must be
-	 *  large enough to get out of the cave (it only ticks while
-	 *  inside the cave).  When it hits zero, we branch to 10000
-	 *  to start closing the cave, and then sit back and wait for
-	 *  him to try to get out.  If he doesn't within clock2 turns,
-	 *  we close the cave; if he does try, we assume he panics,
-	 *  and give him a few additional turns to get frantic before
-	 *  we close.  When clock2 hits zero, we branch to 11000 to
-	 *  transport him into the final puzzle.  Note that the puzzle
-	 *  depends upon all sorts of random things.  For instance,
-	 *  there must be no water or oil, since there are beanstalks
-	 *  which we don't want to be able to water, since the code
-	 *  can't handle it.  Also, we can have no keys, since there
-	 *  is a grate (having moved the fixed object!) there
-	 *  separating him from all the treasures.  Most of these
-	 *  problems arise from the use of negative prop numbers to
-	 *  suppress the object descriptions until he's actually moved
-	 *  the objects. */
+    /*  Next few sections handle the closing of the cave.  The
+     *  cave closes "clock1" turns after the last treasure has
+     *  been located (including the pirate's chest, which may of
+     *  course never show up).  Note that the treasures need not
+     *  have been taken yet, just located.  Hence clock1 must be
+     *  large enough to get out of the cave (it only ticks while
+     *  inside the cave).  When it hits zero, we branch to 10000
+     *  to start closing the cave, and then sit back and wait for
+     *  him to try to get out.  If he doesn't within clock2 turns,
+     *  we close the cave; if he does try, we assume he panics,
+     *  and give him a few additional turns to get frantic before
+     *  we close.  When clock2 hits zero, we branch to 11000 to
+     *  transport him into the final puzzle.  Note that the puzzle
+     *  depends upon all sorts of random things.  For instance,
+     *  there must be no water or oil, since there are beanstalks
+     *  which we don't want to be able to water, since the code
+     *  can't handle it.  Also, we can have no keys, since there
+     *  is a grate (having moved the fixed object!) there
+     *  separating him from all the treasures.  Most of these
+     *  problems arise from the use of negative prop numbers to
+     *  suppress the object descriptions until he's actually moved
+     *  the objects. */
 
-	/*  When the first warning comes, we lock the grate, destroy
-	 *  the bridge, kill all the dwarves (and the pirate), remove
-	 *  the troll and bear (unless dead), and set "closng" to
-	 *  true.  Leave the dragon; too much trouble to move it.
-	 *  from now until clock2 runs out, he cannot unlock the
-	 *  grate, move to any location outside the cave, or create
-	 *  the bridge.  Nor can he be resurrected if he dies.  Note
-	 *  that the snake is already gone, since he got to the
-	 *  treasure accessible only via the hall of the mountain
-	 *  king. Also, he's been in giant room (to get eggs), so we
-	 *  can refer to it.  Also also, he's gotten the pearl, so we
-	 *  know the bivalve is an oyster.  *And*, the dwarves must
-	 *  have been activated, since we've found chest. */
-	if (game.clock1 == 0)
-	{
-	    game.prop[GRATE]=0;
-	    game.prop[FISSUR]=0;
-	    for (i=1; i<=NDWARVES; i++) {
-		game.dseen[i]=false;
-		game.dloc[i]=0;
-	    }
-	    MOVE(TROLL,0);
-	    MOVE(TROLL+NOBJECTS,0);
-	    MOVE(TROLL2,PLAC[TROLL]);
-	    MOVE(TROLL2+NOBJECTS,FIXD[TROLL]);
-	    JUGGLE(CHASM);
-	    if (game.prop[BEAR] != 3)DSTROY(BEAR);
-	    game.prop[CHAIN]=0;
-	    game.fixed[CHAIN]=0;
-	    game.prop[AXE]=0;
-	    game.fixed[AXE]=0;
-	    RSPEAK(129);
-	    game.clock1= -1;
-	    game.closng=true;
-	    goto L19999;
-	} else if (game.clock1 < 0)
-	    --game.clock2;
-	if (game.clock2 == 0) {
-	    /*  Once he's panicked, and clock2 has run out, we come here
-	     *  to set up the storage room.  The room has two locs,
-	     *  hardwired as 115 (ne) and 116 (sw).  At the ne end, we
-	     *  place empty bottles, a nursery of plants, a bed of
-	     *  oysters, a pile of lamps, rods with stars, sleeping
-	     *  dwarves, and him.  At the sw end we place grate over
-	     *  treasures, snake pit, covey of caged birds, more rods, and
-	     *  pillows.  A mirror stretches across one wall.  Many of the
-	     *  objects come from known locations and/or states (e.g. the
-	     *  snake is known to have been destroyed and needn't be
-	     *  carried away from its old "place"), making the various
-	     *  objects be handled differently.  We also drop all other
-	     *  objects he might be carrying (lest he have some which
-	     *  could cause trouble, such as the keys).  We describe the
-	     *  flash of light and trundle back. */
-	    game.prop[BOTTLE]=PUT(BOTTLE,115,1);
-	    game.prop[PLANT]=PUT(PLANT,115,0);
-	    game.prop[OYSTER]=PUT(OYSTER,115,0);
-	    OBJTXT[OYSTER]=3;
-	    game.prop[LAMP]=PUT(LAMP,115,0);
-	    game.prop[ROD]=PUT(ROD,115,0);
-	    game.prop[DWARF]=PUT(DWARF,115,0);
-	    game.loc=115;
-	    game.oldloc=115;
-	    game.newloc=115;
-	    /*  Leave the grate with normal (non-negative) property.
-	     *  Reuse sign. */
-	    PUT(GRATE,116,0);
-	    PUT(SIGN,116,0);
-	    ++OBJTXT[SIGN];
-	    game.prop[SNAKE]=PUT(SNAKE,116,1);
-	    game.prop[BIRD]=PUT(BIRD,116,1);
-	    game.prop[CAGE]=PUT(CAGE,116,0);
-	    game.prop[ROD2]=PUT(ROD2,116,0);
-	    game.prop[PILLOW]=PUT(PILLOW,116,0);
+    /*  When the first warning comes, we lock the grate, destroy
+     *  the bridge, kill all the dwarves (and the pirate), remove
+     *  the troll and bear (unless dead), and set "closng" to
+     *  true.  Leave the dragon; too much trouble to move it.
+     *  from now until clock2 runs out, he cannot unlock the
+     *  grate, move to any location outside the cave, or create
+     *  the bridge.  Nor can he be resurrected if he dies.  Note
+     *  that the snake is already gone, since he got to the
+     *  treasure accessible only via the hall of the mountain
+     *  king. Also, he's been in giant room (to get eggs), so we
+     *  can refer to it.  Also also, he's gotten the pearl, so we
+     *  know the bivalve is an oyster.  *And*, the dwarves must
+     *  have been activated, since we've found chest. */
+    if (game.clock1 == 0)
+    {
+	game.prop[GRATE]=0;
+	game.prop[FISSUR]=0;
+	for (i=1; i<=NDWARVES; i++) {
+	    game.dseen[i]=false;
+	    game.dloc[i]=0;
+	}
+	MOVE(TROLL,0);
+	MOVE(TROLL+NOBJECTS,0);
+	MOVE(TROLL2,PLAC[TROLL]);
+	MOVE(TROLL2+NOBJECTS,FIXD[TROLL]);
+	JUGGLE(CHASM);
+	if (game.prop[BEAR] != 3)DSTROY(BEAR);
+	game.prop[CHAIN]=0;
+	game.fixed[CHAIN]=0;
+	game.prop[AXE]=0;
+	game.fixed[AXE]=0;
+	RSPEAK(129);
+	game.clock1= -1;
+	game.closng=true;
+	goto L19999;
+    } else if (game.clock1 < 0)
+	--game.clock2;
+    if (game.clock2 == 0) {
+	/*  Once he's panicked, and clock2 has run out, we come here
+	 *  to set up the storage room.  The room has two locs,
+	 *  hardwired as 115 (ne) and 116 (sw).  At the ne end, we
+	 *  place empty bottles, a nursery of plants, a bed of
+	 *  oysters, a pile of lamps, rods with stars, sleeping
+	 *  dwarves, and him.  At the sw end we place grate over
+	 *  treasures, snake pit, covey of caged birds, more rods, and
+	 *  pillows.  A mirror stretches across one wall.  Many of the
+	 *  objects come from known locations and/or states (e.g. the
+	 *  snake is known to have been destroyed and needn't be
+	 *  carried away from its old "place"), making the various
+	 *  objects be handled differently.  We also drop all other
+	 *  objects he might be carrying (lest he have some which
+	 *  could cause trouble, such as the keys).  We describe the
+	 *  flash of light and trundle back. */
+	game.prop[BOTTLE]=PUT(BOTTLE,115,1);
+	game.prop[PLANT]=PUT(PLANT,115,0);
+	game.prop[OYSTER]=PUT(OYSTER,115,0);
+	OBJTXT[OYSTER]=3;
+	game.prop[LAMP]=PUT(LAMP,115,0);
+	game.prop[ROD]=PUT(ROD,115,0);
+	game.prop[DWARF]=PUT(DWARF,115,0);
+	game.loc=115;
+	game.oldloc=115;
+	game.newloc=115;
+	/*  Leave the grate with normal (non-negative) property.
+	 *  Reuse sign. */
+	PUT(GRATE,116,0);
+	PUT(SIGN,116,0);
+	++OBJTXT[SIGN];
+	game.prop[SNAKE]=PUT(SNAKE,116,1);
+	game.prop[BIRD]=PUT(BIRD,116,1);
+	game.prop[CAGE]=PUT(CAGE,116,0);
+	game.prop[ROD2]=PUT(ROD2,116,0);
+	game.prop[PILLOW]=PUT(PILLOW,116,0);
 
-	    game.prop[MIRROR]=PUT(MIRROR,115,0);
-	    game.fixed[MIRROR]=116;
+	game.prop[MIRROR]=PUT(MIRROR,115,0);
+	game.fixed[MIRROR]=116;
 
-	    for (int i=1; i<=NOBJECTS; i++) {
-		if (TOTING(i))
-		    DSTROY(i);
-	    }
+	for (int i=1; i<=NOBJECTS; i++) {
+	    if (TOTING(i))
+		DSTROY(i);
+	}
 
-	    RSPEAK(132);
-	    game.closed=true;
-	    return true;
-	}
-	if (game.prop[LAMP] == 1)
-	    --game.limit;
+	RSPEAK(132);
+	game.closed=true;
+	return true;
+    }
+    if (game.prop[LAMP] == 1)
+	--game.limit;
 
-	/*  Another way we can force an end to things is by having the
-	 *  lamp give out.  When it gets close, we come here to warn
-	 *  him.  First following ar, if the lamp and fresh batteries are
-	 *  here, in which case we replace the batteries and continue.
-	 *  Second is for other cases of lamp dying.  12400 is when it
-	 *  goes out.  Even then, he can explore outside for a while
-	 *  if desired. */
-	if (game.limit<=30 && HERE(BATTER) && game.prop[BATTER]==0 && HERE(LAMP))
-	{
-	    RSPEAK(188);
-	    game.prop[BATTER]=1;
-	    if (TOTING(BATTER))DROP(BATTER,game.loc);
-	    game.limit=game.limit+2500;
-	    game.lmwarn=false;
-	} else if (game.limit == 0) {
-	    game.limit= -1;
-	    game.prop[LAMP]=0;
-	    if (HERE(LAMP))RSPEAK(184);
-	} else if (game.limit <= 30) {
-	    if (!game.lmwarn && HERE(LAMP)) {
-		game.lmwarn=true;
-		int spk=187;
-		if (game.place[BATTER] == 0)spk=183;
-		if (game.prop[BATTER] == 1)spk=189;
-		RSPEAK(spk);
-	    }
+    /*  Another way we can force an end to things is by having the
+     *  lamp give out.  When it gets close, we come here to warn
+     *  him.  First following ar, if the lamp and fresh batteries are
+     *  here, in which case we replace the batteries and continue.
+     *  Second is for other cases of lamp dying.  12400 is when it
+     *  goes out.  Even then, he can explore outside for a while
+     *  if desired. */
+    if (game.limit<=30 && HERE(BATTER) && game.prop[BATTER]==0 && HERE(LAMP))
+    {
+	RSPEAK(188);
+	game.prop[BATTER]=1;
+	if (TOTING(BATTER))DROP(BATTER,game.loc);
+	game.limit=game.limit+2500;
+	game.lmwarn=false;
+    } else if (game.limit == 0) {
+	game.limit= -1;
+	game.prop[LAMP]=0;
+	if (HERE(LAMP))RSPEAK(184);
+    } else if (game.limit <= 30) {
+	if (!game.lmwarn && HERE(LAMP)) {
+	    game.lmwarn=true;
+	    int spk=187;
+	    if (game.place[BATTER] == 0)spk=183;
+	    if (game.prop[BATTER] == 1)spk=189;
+	    RSPEAK(spk);
 	}
-L19999: k=43;
-	if (LIQLOC(game.loc) == WATER)k=70;
-	V1=VOCAB(WD1,-1);
-	V2=VOCAB(WD2,-1);
-	if (V1 == ENTER && (V2 == STREAM || V2 == 1000+WATER)) {
-	    RSPEAK(k);
-	    goto L2012;
+    }
+L19999:
+    k=43;
+    if (LIQLOC(game.loc) == WATER)k=70;
+    V1=VOCAB(WD1,-1);
+    V2=VOCAB(WD2,-1);
+    if (V1 == ENTER && (V2 == STREAM || V2 == 1000+WATER)) {
+	RSPEAK(k);
+	goto L2012;
+    }
+    if (V1 == ENTER && WD2 > 0) {
+	WD1=WD2;
+	WD1X=WD2X;
+	WD2=0;
+    } else {
+	if (!((V1 != 1000+WATER && V1 != 1000+OIL) ||
+	      (V2 != 1000+PLANT && V2 != 1000+DOOR))) {
+	    if (AT(V2-1000))
+		WD2=MAKEWD(16152118);
 	}
-	if (V1 == ENTER && WD2 > 0) {
-	    WD1=WD2;
-	    WD1X=WD2X;
-	    WD2=0;
-	} else {
-	    if (!((V1 != 1000+WATER && V1 != 1000+OIL) ||
-		  (V2 != 1000+PLANT && V2 != 1000+DOOR))) {
-		if (AT(V2-1000))
-		    WD2=MAKEWD(16152118);
-	    }
-	    if (V1 == 1000+CAGE && V2 == 1000+BIRD && HERE(CAGE) && HERE(BIRD))
-		WD1=MAKEWD(301200308);
-	}
-L2620:	if (WD1 == MAKEWD(23051920)) {
-	    ++game.iwest;
-	    if (game.iwest == 10)
-		RSPEAK(17);
-	}
-	if (WD1 == MAKEWD( 715) && WD2 != 0) {
-	    if (++igo == 10)
-		RSPEAK(276);
-	}
+	if (V1 == 1000+CAGE && V2 == 1000+BIRD && HERE(CAGE) && HERE(BIRD))
+	    WD1=MAKEWD(301200308);
+    }
+L2620:
+    if (WD1 == MAKEWD(23051920)) {
+	++game.iwest;
+	if (game.iwest == 10)
+	    RSPEAK(17);
+    }
+    if (WD1 == MAKEWD( 715) && WD2 != 0) {
+	if (++igo == 10)
+	    RSPEAK(276);
+    }
 L2630:
-	i=VOCAB(WD1,-1);
-	if (i == -1) {
-	    /* Gee, I don't understand. */
-	    if (fallback_handler(rawbuf))
-		return true;
-	    SETPRM(1,WD1,WD1X);
-	    RSPEAK(254);
-	    goto L2600;
-	}
-	KMOD=MOD(i,1000);
-	KQ=i/1000+1;
-	switch (KQ-1)
-	{
-	case 0: goto L8;
-	case 1: part=unknown; obj = KMOD; break;
-	case 2: part=intransitive; VERB = KMOD; break;
-	case 3: RSPEAK(KMOD); goto L2012;
-	default: BUG(22);
-	}
+    i=VOCAB(WD1,-1);
+    if (i == -1) {
+	/* Gee, I don't understand. */
+	if (fallback_handler(rawbuf))
+	    return true;
+	SETPRM(1,WD1,WD1X);
+	RSPEAK(254);
+	goto L2600;
+    }
+    KMOD=MOD(i,1000);
+    KQ=i/1000+1;
+    switch (KQ-1)
+    {
+    case 0: goto L8;
+    case 1: part=unknown; obj = KMOD; break;
+    case 2: part=intransitive; VERB = KMOD; break;
+    case 3: RSPEAK(KMOD); goto L2012;
+    default: BUG(22);
+    }
 
 Laction:
-	 switch (action(cmdin, part, VERB, obj)) {
-	 case 2: return true;
-	 case 8: KMOD=NUL; goto L8;
-	 case 2000: goto L2000;
-	 case 2012: goto L2012;
-	 case 2600: goto L2600;
-	 case 2607: goto L2607;
-	 case 2630: goto L2630;
-	 case 2800:
-	     /* Get second word for analysis. */
-	     WD1=WD2;
-	     WD1X=WD2X;
-	     WD2=0;
-	     goto L2620;
-	 case 8000:
-	     /*  Random intransitive verbs come here.  Clear obj just in case
-	      *  (see attack()). */
-	     SETPRM(1,WD1,WD1X);
-	     RSPEAK(257);
-	     obj=0;
-	     goto L2600;
-	 case 19000:
-	     /*  Oh dear, he's disturbed the dwarves. */
-	     RSPEAK(136);
-	     score(0);
-	     return true;
-	 default:
-	     BUG(99);
-	     }
+    switch (action(cmdin, part, VERB, obj)) {
+    case 2: return true;
+    case 8: KMOD=NUL; goto L8;
+    case 2000: goto L2000;
+    case 2012: goto L2012;
+    case 2600: goto L2600;
+    case 2607: goto L2607;
+    case 2630: goto L2630;
+    case 2800:
+	/* Get second word for analysis. */
+	WD1=WD2;
+	WD1X=WD2X;
+	WD2=0;
+	goto L2620;
+    case 8000:
+	/*  Random intransitive verbs come here.  Clear obj just in case
+	 *  (see attack()). */
+	SETPRM(1,WD1,WD1X);
+	RSPEAK(257);
+	obj=0;
+	goto L2600;
+    case 19000:
+	/*  Oh dear, he's disturbed the dwarves. */
+	RSPEAK(136);
+	score(0);
+	return true;
+    default:
+	BUG(99);
+    }
 
-	 /* no fallthrough here */
+    /* no fallthrough here */
 	 
-	/*  Figure out the new location */
+    /*  Figure out the new location */
 L8:	if (playermove(cmdin, VERB, KMOD))
-	    return true;
-	else
-	    goto L2000;
+	return true;
+    else
+	goto L2000;
 }
