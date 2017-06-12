@@ -492,9 +492,9 @@ static void croak(FILE *cmdin)
  *  him, so we need game.oldlc2, which is the last place he was
  *  safe.) */
 
-static bool playermove(FILE *cmdin, token_t verb)
+static bool playermove(FILE *cmdin, token_t verb, int motion)
 {
-    int LL, K2, KK=KEY[game.loc], motion = K;
+    int LL, K2, KK=KEY[game.loc];
     game.newloc=game.loc;
     if (KK == 0)
 	BUG(26);
@@ -1056,7 +1056,7 @@ Laction:
 	BUG(99);
 
 	/*  Figure out the new location */
-L8:	if (playermove(cmdin, VERB))
+L8:	if (playermove(cmdin, VERB, K))
 	    return true;
 	else
 	    goto L2000;

@@ -11,10 +11,6 @@ remain to be cleaned up:
   in playermove() is particularly horrible, jumping backwards into the
   middle of a loop.
 
-* In playermove(), why doesn't replacing the global motion number K
-  with a passed-in argument work? There's some unobvious information
-  leak here.
-
 * The way return values from handlers such as 2012 trigger side effects
   based on global state is nasty.
 
