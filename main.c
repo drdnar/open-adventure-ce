@@ -676,8 +676,9 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
 static bool do_command(FILE *cmdin)
 {
 	long KQ, VERB, KK, V1, V2;
-	long obj, i;
-	static long IGO = 0;
+	long i;
+	static long igo = 0;
+	static long obj = 0;
 	enum speechpart part;
 
 	/*  Can't leave cave once it's closing (except by main office). */
@@ -996,7 +997,7 @@ L2620:	if (WD1 == MAKEWD(23051920)) {
 		RSPEAK(17);
 	}
 	if (WD1 == MAKEWD( 715) && WD2 != 0) {
-	    if (++IGO == 10)
+	    if (++igo == 10)
 		RSPEAK(276);
 	}
 L2630:
