@@ -13,7 +13,7 @@ static long SPK;	/* This should go away too */
  * that calls these.  Absolutely nothing like the original FORTRAN.
  */
 
-static int fill(long);
+static int fill(token_t verb, token_t);
 
 static int attack(FILE *input, long verb, long obj)
 /*  Attack.  Assume target if unambiguous.  "Throw" also links here.
@@ -21,7 +21,8 @@ static int attack(FILE *input, long verb, long obj)
  *  dwarf, etc.)  and others (bird, clam, machine).  Ambiguous if 2
  *  enemies, or no enemies but 2 others. */
 {
-    int i =ATDWRF(game.loc);
+    int spk = ACTSPK[verb];
+    int i = ATDWRF(game.loc);
     if (obj == 0) {
 	if (i > 0)
 	    obj=DWARF;
@@ -42,15 +43,15 @@ static int attack(FILE *input, long verb, long obj)
 	}
     }
     if (obj == BIRD) {
-	SPK=137;
+	spk=137;
 	if (game.closed)
 	{
-	    RSPEAK(SPK);
+	    RSPEAK(spk);
 	    return 2012;
 	}
 	DSTROY(BIRD);
 	game.prop[BIRD]=0;
-	SPK=45;
+	spk=45;
     }
     if (obj == VEND) {
 	PSPEAK(VEND,game.prop[VEND]+2);
@@ -58,16 +59,16 @@ static int attack(FILE *input, long verb, long obj)
 	return(2012);
     }
 
-    if (obj == 0)SPK=44;
-    if (obj == CLAM || obj == OYSTER)SPK=150;
-    if (obj == SNAKE)SPK=46;
-    if (obj == DWARF)SPK=49;
+    if (obj == 0)spk=44;
+    if (obj == CLAM || obj == OYSTER)spk=150;
+    if (obj == SNAKE)spk=46;
+    if (obj == DWARF)spk=49;
     if (obj == DWARF && game.closed) return(19000);
-    if (obj == DRAGON)SPK=167;
-    if (obj == TROLL)SPK=157;
-    if (obj == OGRE)SPK=203;
+    if (obj == DRAGON)spk=167;
+    if (obj == TROLL)spk=157;
+    if (obj == OGRE)spk=203;
     if (obj == OGRE && i > 0) {
-	RSPEAK(SPK);
+	RSPEAK(spk);
 	RSPEAK(6);
 	DSTROY(OGRE);
 	int k=0;
@@ -78,12 +79,12 @@ static int attack(FILE *input, long verb, long obj)
 		game.dseen[i]=false;
 	    }
 	}
-	SPK=SPK+1+1/k;
-	RSPEAK(SPK);
+	spk=spk+1+1/k;
+	RSPEAK(spk);
 	return 2012;
     }
-    if (obj == BEAR)SPK=165+(game.prop[BEAR]+1)/2;
-    if (obj != DRAGON || game.prop[DRAGON] != 0) {RSPEAK(SPK); return 2012;}
+    if (obj == BEAR)spk=165+(game.prop[BEAR]+1)/2;
+    if (obj != DRAGON || game.prop[DRAGON] != 0) {RSPEAK(spk); return 2012;}
     /*  Fun stuff for dragon.  If he insists on attacking it, win!
      *  Set game.prop to dead, move dragon to central loc (still
      *  fixed), move rug there (not fixed), and move him there,
@@ -115,10 +116,10 @@ static int bigwords(long foo)
  *  word zips the eggs back to the giant room (unless already there). */
 {
     int k=VOCAB(foo,3);
-    SPK=42;
+    int spk=42;
     if (game.foobar != 1-k) {
-	if (game.foobar != 0)SPK=151;
-	RSPEAK(SPK);
+	if (game.foobar != 0)spk=151;
+	RSPEAK(spk);
 	return 2012;
     } else {
 	game.foobar=k;
@@ -128,7 +129,7 @@ static int bigwords(long foo)
 	}
 	game.foobar=0;
 	if (game.place[EGGS]==PLAC[EGGS] || (TOTING(EGGS) && game.loc==PLAC[EGGS])) {
-	    RSPEAK(SPK);
+	    RSPEAK(spk);
 	    return 2012;
 	}
 	/*  Bring back troll if we steal the eggs back from him before
@@ -179,23 +180,23 @@ static int blast(void)
     score(0);
 }
 
-static int vbreak(token_t obj)
+static int vbreak(token_t verb, token_t obj)
 /*  Break.  Only works for mirror in repository and, of course, the vase. */
 {
-    /* FIXME: defaults from ACTSPK */
-    if (obj == MIRROR)SPK=148;
+    int spk = ACTSPK[verb];
+    if (obj == MIRROR)spk=148;
     if (obj == VASE && game.prop[VASE] == 0) {
-	SPK=198;
 	if (TOTING(VASE))DROP(VASE,game.loc);
 	game.prop[VASE]=2;
 	game.fixed[VASE]= -1;
+	spk=198;
     } else {
 	if (obj == MIRROR && game.closed) {
 	    RSPEAK(197);
 	    return(190000);
 	}
     }
-    RSPEAK(SPK);
+    RSPEAK(spk);
     return 2012;
 }
 
@@ -208,7 +209,7 @@ static int brief(void)
     return 2012;
 }
 
-static int carry(long obj)
+static int carry(token_t verb, long obj)
 /*  Carry an object.  Special cases for bird and cage (if bird in cage, can't
  *  take one without the other).  Liquids also special, since they depend on
  *  status of bottle.  Also various side effects, etc. */
@@ -245,7 +246,7 @@ static int carry(long obj)
     if (obj == WATER || obj == OIL) {
 	if (!HERE(BOTTLE) || LIQUID() != obj) {
 	    if (TOTING(BOTTLE) && game.prop[BOTTLE] == 1)
-		return(fill(BOTTLE));
+		return(fill(verb, BOTTLE));
 	    if (game.prop[BOTTLE] != 1)spk=105;
 	    if (!TOTING(BOTTLE))spk=104;
 	    RSPEAK(spk);
@@ -312,14 +313,15 @@ static int chain(token_t verb)
     return 2012;
 }
 
-static int discard(long obj, bool just_do_it)
+static int discard(token_t verb, long obj, bool just_do_it)
 /*  Discard object.  "Throw" also comes here for most objects.  Special cases for
  *  bird (might attack snake or dragon) and cage (might contain bird) and vase.
  *  Drop coins at vending machine for extra batteries. */
 {
+    int spk = ACTSPK[verb];
     if (!just_do_it) {
         if (TOTING(ROD2) && obj == ROD && !TOTING(ROD))obj=ROD2;
-        if (!TOTING(obj)) {RSPEAK(SPK); return 2012;}
+        if (!TOTING(obj)) {RSPEAK(spk); return 2012;}
         if (obj == BIRD && HERE(SNAKE)) {
             RSPEAK(30);
             if (game.closed) return(19000);
@@ -333,11 +335,11 @@ static int discard(long obj, bool just_do_it)
             game.prop[CAVITY]=0;
             if (HERE(RUG) && ((obj == EMRALD && game.prop[RUG] != 2) || (obj == RUBY &&
 									 game.prop[RUG] == 2))) {
-                SPK=219;
-                if (TOTING(RUG))SPK=220;
-                if (obj == RUBY)SPK=221;
-                RSPEAK(SPK);
-                if (SPK != 220) {
+                spk=219;
+                if (TOTING(RUG))spk=220;
+                if (obj == RUBY)spk=221;
+                RSPEAK(spk);
+                if (spk != 220) {
                     int k = 2-game.prop[RUG];
                     game.prop[RUG] = k;
                     if (k == 2) k = PLAC[SAPPH];
@@ -520,60 +522,61 @@ static int feed(long obj)
     return 2012;
 }
 
-int fill(long obj)
+int fill(token_t verb, long obj)
 /*  Fill.  Bottle or urn must be empty, and liquid available.  (Vase
  *  is nasty.) */
 {
     int k;
+    int spk = ACTSPK[verb];
     if (obj == VASE) {
-	SPK=29;
-	if (LIQLOC(game.loc) == 0)SPK=144;
+	spk=29;
+	if (LIQLOC(game.loc) == 0)spk=144;
 	if (LIQLOC(game.loc) == 0 || !TOTING(VASE)) {
-	    RSPEAK(SPK);
+	    RSPEAK(spk);
 	    return 2012;
 	}
 	RSPEAK(145);
 	game.prop[VASE]=2;
 	game.fixed[VASE]= -1;
-	return(discard(obj, true));
+	return(discard(verb, obj, true));
     }
 
     if (obj == URN){
-	SPK=213;
-	if (game.prop[URN] != 0) {RSPEAK(SPK); return 2012;}
-	SPK=144;
+	spk=213;
+	if (game.prop[URN] != 0) {RSPEAK(spk); return 2012;}
+	spk=144;
 	k=LIQUID();
-	if (k == 0 || !HERE(BOTTLE)) {RSPEAK(SPK); return 2012;}
+	if (k == 0 || !HERE(BOTTLE)) {RSPEAK(spk); return 2012;}
 	game.place[k]=0;
 	game.prop[BOTTLE]=1;
 	if (k == OIL)game.prop[URN]=1;
-	SPK=211+game.prop[URN];
-	RSPEAK(SPK);
+	spk=211+game.prop[URN];
+	RSPEAK(spk);
 	return 2012;
     }
 
     if (obj != 0 && obj != BOTTLE) {
-	RSPEAK(SPK);
+	RSPEAK(spk);
 	return 2012;
     }
     if (obj == 0 && !HERE(BOTTLE))
 	return(8000);
-    SPK=107;
+    spk=107;
     if (LIQLOC(game.loc) == 0)
-	SPK=106;
+	spk=106;
     if (HERE(URN) && game.prop[URN] != 0)
-	SPK=214;
+	spk=214;
     if (LIQUID() != 0)
-	SPK=105;
-    if (SPK != 107)
-	{RSPEAK(SPK); return 2012;}
+	spk=105;
+    if (spk != 107)
+	{RSPEAK(spk); return 2012;}
     game.prop[BOTTLE]=MOD(COND[game.loc],4)/2*2;
     k=LIQUID();
     if (TOTING(BOTTLE))
 	game.place[k]= -1;
     if (k == OIL)
-	SPK=108;
-    RSPEAK(SPK);
+	spk=108;
+    RSPEAK(spk);
     return 2012;
 }
 
@@ -746,7 +749,7 @@ static int lock(token_t verb, token_t obj)
     return 2012;
 }
 
-static int pour(token_t obj)
+static int pour(token_t verb, token_t obj)
 /*  Pour.  If no object, or object is bottle, assume contents of bottle.
  *  special tests for pouring water or oil on plant or rusty door. */
 {
@@ -756,7 +759,7 @@ static int pour(token_t obj)
     SPK=78;
     if (obj != OIL && obj != WATER) {RSPEAK(SPK); return 2012;}
     if (HERE(URN) && game.prop[URN] == 0)
-	return fill(URN);
+	return fill(verb, URN);
     game.prop[BOTTLE]=1;
     game.place[obj]=0;
     SPK=77;
@@ -894,7 +897,7 @@ static int throw(FILE *cmdin, long verb, long obj)
         return(feed(obj));
     }
     if (obj != AXE)
-	return(discard(obj, false));
+	return(discard(verb, obj, false));
     int i=ATDWRF(game.loc);
     if (i <= 0) {
         if (AT(DRAGON) && game.prop[DRAGON] == 0) {
@@ -1050,7 +1053,7 @@ int action(FILE *input, enum speechpart part, long verb, long obj)
 	    if (obj == 0) {
 		/*  Analyse an intransitive verb (ie, no object given yet). */
 		switch (verb-1) {
-		    case  0: /* CARRY */ return carry(INTRANSITIVE);
+		case  0: /* CARRY */ return carry(verb, INTRANSITIVE);
 		    case  1: /* DROP  */ return(8000); 
 		    case  2: /* SAY   */ return(8000); 
 		    case  3: /* UNLOC */ return lock(verb, INTRANSITIVE);    
@@ -1062,7 +1065,7 @@ int action(FILE *input, enum speechpart part, long verb, long obj)
 		    case  9: /* CALM  */ return(8000); 
 		    case 10: /* WALK  */ {RSPEAK(SPK); return 2012;} 
 		    case 11: /* ATTAC */ return attack(input, verb, obj);   
-		    case 12: /* POUR  */ return pour(obj);   
+		    case 12: /* POUR  */ return pour(verb, obj);   
 		    case 13: /* EAT   */ return eat(INTRANSITIVE);   
 		    case 14: /* DRINK */ return drink(obj);   
 		    case 15: /* RUB   */ return(8000); 
@@ -1071,7 +1074,7 @@ int action(FILE *input, enum speechpart part, long verb, long obj)
 		    case 18: /* FIND  */ return(8000); 
 		    case 19: /* INVEN */ return inven(obj);   
 		    case 20: /* FEED  */ return(8000); 
-		    case 21: /* FILL  */ return fill(obj);   
+		    case 21: /* FILL  */ return fill(verb, obj);   
 		    case 22: /* BLAST */ return blast();   
 		    case 23: /* SCOR  */ return vscore();   
 		    case 24: /* FOO   */ return bigwords(WD1);   
@@ -1091,8 +1094,8 @@ int action(FILE *input, enum speechpart part, long verb, long obj)
 	case transitive:
 	    /*  Analyse a transitive verb. */
 	    switch (verb-1) {
-		case  0: /* CARRY */ return carry(obj);    
-		case  1: /* DROP  */ return discard(obj, false);    
+	    case  0: /* CARRY */ return carry(verb, obj);    
+	        case  1: /* DROP  */ return discard(verb, obj, false);    
 		case  2: /* SAY   */ return say();    
 		case  3: /* UNLOC */ return lock(verb, obj);    
 		case  4: /* NOTHI */ {RSPEAK(54); return(20012);}
@@ -1103,7 +1106,7 @@ int action(FILE *input, enum speechpart part, long verb, long obj)
 		case  9: /* CALM  */ {RSPEAK(SPK); return 2012;} 
 		case 10: /* WALK  */ {RSPEAK(SPK); return 2012;} 
 		case 11: /* ATTAC */ return attack(input, verb, obj);   
-		case 12: /* POUR  */ return pour(obj);   
+		case 12: /* POUR  */ return pour(verb, obj);   
 		case 13: /* EAT   */ return eat(obj);   
 		case 14: /* DRINK */ return drink(obj);   
 		case 15: /* RUB   */ return rub(obj);   
@@ -1112,13 +1115,13 @@ int action(FILE *input, enum speechpart part, long verb, long obj)
 		case 18: /* FIND  */ return find(obj);   
 		case 19: /* INVEN */ return find(obj);   
 		case 20: /* FEED  */ return feed(obj);   
-		case 21: /* FILL  */ return fill(obj);   
+		case 21: /* FILL  */ return fill(verb, obj);   
 		case 22: /* BLAST */ return blast();   
 		case 23: /* SCOR  */ {RSPEAK(SPK); return 2012;} 
 		case 24: /* FOO   */ {RSPEAK(SPK); return 2012;} 
 		case 25: /* BRIEF */ {RSPEAK(SPK); return 2012;} 
 		case 26: /* READ  */ return read(input, obj);   
-		case 27: /* BREAK */ return vbreak(obj);   
+		case 27: /* BREAK */ return vbreak(verb, obj);   
 		case 28: /* WAKE  */ return wake(obj);   
 		case 29: /* SUSP  */ {RSPEAK(SPK); return 2012;} 
 		case 30: /* RESU  */ {RSPEAK(SPK); return 2012;} 
