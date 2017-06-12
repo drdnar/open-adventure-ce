@@ -562,16 +562,9 @@ void write_files(FILE* c_file, FILE* header_file)
 
   // preprocessor defines for the header
   fprintf(header_file, "#include \"common.h\"\n");
-  fprintf(header_file, "#define RTXSIZ 277\n");
-  fprintf(header_file, "#define CLSMAX 12\n");
-  fprintf(header_file, "#define LINSIZ %d\n", LINSIZ);
-  fprintf(header_file, "#define TRNSIZ 5\n");
   fprintf(header_file, "#define TABSIZ 330\n");
-  fprintf(header_file, "#define VRBSIZ 35\n");
   fprintf(header_file, "#define HNTSIZ 20\n");
-  fprintf(header_file, "#define TRVSIZ 885\n");
   fprintf(header_file, "#define TOKLEN %d\n", TOKLEN);
-  fprintf(header_file, "#define HINTLEN %d\n", HINTLEN);
   fprintf(header_file, "#define MAXDIE %d\n", MAXDIE);
   fprintf(header_file, "\n");
 
@@ -580,24 +573,14 @@ void write_files(FILE* c_file, FILE* header_file)
   fprintf(c_file, "\n");
 
   // content variables
-  write_0d(c_file, header_file, LINUSE, "LINUSE");
-  write_0d(c_file, header_file, TRVS, "TRVS");
   write_0d(c_file, header_file, TRNVLS, "TRNVLS");
-  write_0d(c_file, header_file, TABNDX, "TABNDX");
   write_0d(c_file, header_file, HNTMAX, "HNTMAX");
-  write_1d(c_file, header_file, PTEXT, NOBJECTS + 1, "PTEXT");
-  write_1d(c_file, header_file, RTEXT, RTXSIZ + 1, "RTEXT");
-  write_1d(c_file, header_file, CTEXT, CLSMAX + 1, "CTEXT");
   write_1d(c_file, header_file, OBJSND, NOBJECTS + 1, "OBJSND");
   write_1d(c_file, header_file, OBJTXT, NOBJECTS + 1, "OBJTXT");
-  write_1d(c_file, header_file, STEXT, LOCSIZ + 1, "STEXT");
-  write_1d(c_file, header_file, LTEXT, LOCSIZ + 1, "LTEXT");
   write_1d(c_file, header_file, COND, LOCSIZ + 1, "COND");
   write_1d(c_file, header_file, KEY, LOCSIZ + 1, "KEY");
   write_1d(c_file, header_file, LOCSND, LOCSIZ + 1, "LOCSND");
-  write_1d(c_file, header_file, LINES, LINSIZ + 1, "LINES");
   write_1d(c_file, header_file, CVAL, CLSMAX + 1, "CVAL");
-  write_1d(c_file, header_file, TTEXT, TRNSIZ + 1, "TTEXT");
   write_1d(c_file, header_file, TRNVAL, TRNSIZ + 1, "TRNVAL");
   write_1d(c_file, header_file, TRAVEL, TRVSIZ + 1, "TRAVEL");
   write_1d(c_file, header_file, KTAB, TABSIZ + 1, "KTAB");
