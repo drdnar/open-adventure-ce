@@ -4,7 +4,7 @@
 #include "database.h"
 
 /* Limit visibility of ugly globals.  Eventually these should go away. */
-extern long K, WD1, WD1X, WD2, WD2X;
+extern long WD1, WD1X, WD2, WD2X;
 
 static long SPK;	/* This should go away too */
 
@@ -106,7 +106,6 @@ static int attack(FILE *input, long verb, long obj)
 	    MOVE(obj,k);
     }
     game.loc=k;
-    K=NUL;	/* FIXME: error if removed */
     return(8);
 }
 
@@ -769,7 +768,6 @@ static int pour(token_t obj)
 	PSPEAK(PLANT,game.prop[PLANT]+3);
 	game.prop[PLANT]=MOD(game.prop[PLANT]+1,3);
 	game.prop[PLANT2]=game.prop[PLANT];
-	K=NUL;
 	return(8);
     } else {
 	game.prop[DOOR]=0;
@@ -864,7 +862,6 @@ static int throw_support(long spk)
 {
     RSPEAK(spk);
     DROP(AXE,game.loc);
-    K=NUL;
     return(8);
 }
 

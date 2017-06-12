@@ -39,7 +39,9 @@ long AMBER, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
 		RUBY, RUG, SAPPH, SAY, SIGN, SNAKE,
     		STEPS, STREAM, THROW, TRIDNT, TROLL, TROLL2,
 		URN, VASE, VEND, VOLCAN, WATER;
-long K, WD1, WD1X, WD2, WD2X;
+long WD1, WD1X, WD2, WD2X;
+
+static int K;	/* information leak, should go away */
 
 FILE  *logfp;
 bool oldstyle = false;
@@ -1025,32 +1027,32 @@ L4090:	part=transitive; goto Laction;
 L5000:	part=unknown; obj = K;
 Laction:
 	 switch (action(cmdin, part, VERB, obj)) {
-	   case 2: return true;
-	   case 8: goto L8;
-	   case 2000: goto L2000;
-	   case 2012: goto L2012;
-	   case 2600: goto L2600;
-	   case 2607: goto L2607;
-	   case 2630: goto L2630;
-	   case 2800:
-	      /* Get second word for analysis. */
-	       WD1=WD2;
-	       WD1X=WD2X;
-	       WD2=0;
-	       goto L2620;
-	   case 8000:
-	       /*  Random intransitive verbs come here.  Clear obj just in case
-		*  (see attack()). */
-	       SETPRM(1,WD1,WD1X);
-	       RSPEAK(257);
-	       obj=0;
-	       goto L2600;
-	   case 19000:
-	       /*  Oh dear, he's disturbed the dwarves. */
-	       RSPEAK(136);
-	       score(0);
-	       return true;
-	   }
+	 case 2: return true;
+	 case 8: K=NUL; goto L8;
+	 case 2000: goto L2000;
+	 case 2012: goto L2012;
+	 case 2600: goto L2600;
+	 case 2607: goto L2607;
+	 case 2630: goto L2630;
+	 case 2800:
+	     /* Get second word for analysis. */
+	     WD1=WD2;
+	     WD1X=WD2X;
+	     WD2=0;
+	     goto L2620;
+	 case 8000:
+	     /*  Random intransitive verbs come here.  Clear obj just in case
+	      *  (see attack()). */
+	     SETPRM(1,WD1,WD1X);
+	     RSPEAK(257);
+	     obj=0;
+	     goto L2600;
+	 case 19000:
+	     /*  Oh dear, he's disturbed the dwarves. */
+	     RSPEAK(136);
+	     score(0);
+	     return true;
+	     }
 	BUG(99);
 
 	/*  Figure out the new location */
