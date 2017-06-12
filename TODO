@@ -5,7 +5,7 @@ remain to be cleaned up:
 
 * The remaining shared globals: K, WD1, WD1X, WD2, WD2X. These are used
   rather promiscuously to pass around information that ought to be function
-  arguments in a modern language. K is a particular offender
+  arguments in a modern language. K is a particular offender.
 
 * Remaining unstructured gotos in playermove() and do_command(). The goto L12
   in playermove() is particularly horrible, jumping backwards into the
@@ -16,6 +16,6 @@ remain to be cleaned up:
   leak here.
 
 * The way return values from handlers such as 2012 trigger side effects
-  based on global state such as K and SPK is nasty.
+  based on global state is nasty.
 
 
