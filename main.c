@@ -1026,15 +1026,12 @@ static bool do_command(FILE *cmdin)
 	    part=transitive;
 	    goto Laction;
 	}
-	if (closecheck())
+	if (closecheck()) {
 	    if (game.closed)
 		return true;
-	    else
-		goto L19999;
+	} else
+	    lampcheck();
 
-	lampcheck();
-
-    L19999:
 	k=43;
 	if (LIQLOC(game.loc) == WATER)k=70;
 	V1=VOCAB(WD1,-1);
