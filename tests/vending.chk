@@ -7,6 +7,11 @@ You are standing at the end of a road before a small brick building.
 Around you is a forest.  A small stream flows out of the building and
 down a gully.
 
+> seed 368611969
+Seed set to 368611969
+
+You're in front of building.
+
 > seed 1635997320
 Seed set to 1635997320
 
@@ -228,56 +233,56 @@ drives the snake away.
 
 OK
 
-> s
+> w
 
-You are in the south side chamber.
+You are in the west side chamber of the Hall of the Mountain King.
+A passage continues west and up here.
 
-There is precious jewelry here!
+There are many coins here!
 
-> take jewelry
+> take coins
 
 OK
 
-> n
+> up
 
-You're in Hall of Mt King.
+You are at a crossover of a high n/s passage and a low e/w one.
+
+> s
+
+You are at the west end of a very long featureless hall.  The hall
+joins up with a narrow north/south passage.
+
+> s
+
+You are in a maze of twisty little passages, all different.
 
 > sw
 
-You are in a secret canyon which here runs e/w.  It crosses over a
-very tight canyon 15 feet below.  If you go down you may not be able
-to get back up.
+You are in a little maze of twisty passages, all different.
 
-> w
+> se
 
-You are in a secret canyon which exits to the north and east.
+You are in a little maze of twisting passages, all different.
 
-A huge green fierce dragon bars the way!
+> s
 
-The dragon is sprawled out on a persian rug!!
+Dead end
 
-> drop bird
+There is a massive and somewhat battered vending machine here.  The
+instructions on it read: "Drop coins here to receive fresh batteries."
 
-The little bird attacks the green dragon, and in an astounding flurry
-gets burnt to a cinder.  The ashes blow away.
+> drop coins
 
-> kill dragon
+There are fresh batteries here.
 
-With what?  Your bare hands?
+> take batteries
 
-> n
-
-The dragon looks rather nasty.  You'd best not try to get by.
-
-You are in a secret canyon which exits to the north and east.
-
-A huge green fierce dragon bars the way!
-
-The dragon is sprawled out on a persian rug!!
+OK
 
 
-You scored 77 out of a possible 430, using 47 turns.
+You scored 75 out of a possible 430, using 49 turns.
 
 Your score qualifies you as a novice class adventurer.
 
-To achieve the next higher rating, you need 44 more points.
+To achieve the next higher rating, you need 46 more points.

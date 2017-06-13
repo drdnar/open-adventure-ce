@@ -1,6 +1,6 @@
-## Get to dragon, refuse to use bare hands
-# Based on walkthrough at http://www.ecsoftwareconsulting.com/node/56
+## Get batteries from the vending machine
 n
+seed 368611969
 seed 1635997320
 in
 take lamp
@@ -41,11 +41,13 @@ e
 n
 free bird
 take bird
-s
-take jewelry
-n
-sw
 w
-drop bird
-kill dragon
-n
+take coins
+up
+s
+s
+sw
+se
+s
+drop coins
+take batteries
