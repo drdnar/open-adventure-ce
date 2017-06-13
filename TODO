@@ -11,7 +11,9 @@ remain to be cleaned up:
   in playermove() is particularly horrible, jumping backwards into the
   middle of a loop.
 
-* The way return values from handlers such as 2012 trigger side effects
-  based on global state is nasty.
+* The program is still pretty much typeless - full of magic numbers being
+  sliced and diced in cryptic ways.  Some attempt has been made to introduce
+  semantic types, but the job is barely started.
+
 
 
