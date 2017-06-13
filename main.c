@@ -399,6 +399,10 @@ static bool dwarfmove(void)
 		    game.dloc[PIRATE]=game.chloc;
 		    game.odloc[PIRATE]=game.chloc;
 		    game.dseen[PIRATE]=false;
+		    /* C doesn't have what the Structured rogramming
+		     * Theorem says we need here - multi-level loop
+		     * breakout. We simulate with a goto. Irreducible, alas.
+		     */
 		    goto jumpout;
 		}
 		if (HERE(j))
@@ -606,96 +610,104 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
     }
     LL=LL/1000;
 
-    L12:
-    for (;;) {
-	game.newloc=LL/1000;
-	motion=MOD(game.newloc,100);
-	if (game.newloc <= 300) {
-	    if (game.newloc <= 100) {
-		if (game.newloc == 0 || PCT(game.newloc))
-		    break;
+    do {
+	/*
+	 * (ESR) This special-travel loop may have to be repeated if it includes
+	 * the plover passage.  Same deal for any future cases wgerw we beed to 
+	 * block travel and then redo it once the blocking condition has been
+	 * removed.
+	 */
+	for (;;) {
+	    game.newloc=LL/1000;
+	    motion=MOD(game.newloc,100);
+	    if (game.newloc <= 300) {
+		if (game.newloc <= 100) {
+		    if (game.newloc == 0 || PCT(game.newloc))
+			break;
+		    /* else fall through */
+		} if (TOTING(motion) || (game.newloc > 200 && AT(motion)))
+		      break;
 		/* else fall through */
-	    } if (TOTING(motion) || (game.newloc > 200 && AT(motion)))
-		  break;
-	    /* else fall through */
-	}
-	else if (game.prop[motion] != game.newloc/100-3)
-	    break;
-	do {
-	    if (TRAVEL[KK] < 0)BUG(25);
-	    ++KK;
-	    game.newloc=labs(TRAVEL[KK])/1000;
-	} while
-	    (game.newloc == LL);
-	LL=game.newloc;
-    }
-
-    game.newloc=MOD(LL,1000);
-    if (game.newloc <= 300)
-	return true;
-    if (game.newloc <= 500) {
-	game.newloc=game.newloc-300;
-	switch (game.newloc)
-	{
-	case 1:
-	    /*  Travel 301.  Plover-alcove passage.  Can carry only
-	     *  emerald.  Note: travel table must include "useless"
-	     *  entries going through passage, which can never be used for
-	     *  actual motion, but can be spotted by "go back". */
-	    game.newloc=99+100-game.loc;
-	    if (game.holdng == 0 || (game.holdng == 1 && TOTING(EMRALD)))
-		return true;
-	    game.newloc=game.loc;
-	    RSPEAK(117);
-	    return true;
-	case 2:
-	    /*  Travel 302.  Plover transport.  Drop the emerald (only use
-	     *  special travel if toting it), so he's forced to use the
-	     *  plover-passage to get it out.  Having dropped it, go back and
-	     *  pretend he wasn't carrying it after all. */
-	    DROP(EMRALD,game.loc);
+	    }
+	    else if (game.prop[motion] != game.newloc/100-3)
+		break;
 	    do {
 		if (TRAVEL[KK] < 0)BUG(25);
 		++KK;
 		game.newloc=labs(TRAVEL[KK])/1000;
 	    } while
 		(game.newloc == LL);
-	    goto L12;
-	case 3:
-	    /*  Travel 303.  Troll bridge.  Must be done only as special
-	     *  motion so that dwarves won't wander across and encounter
-	     *  the bear.  (They won't follow the player there because
-	     *  that region is forbidden to the pirate.)  If
-	     *  game.prop(TROLL)=1, he's crossed since paying, so step out
-	     *  and block him.  (standard travel entries check for
-	     *  game.prop(TROLL)=0.)  Special stuff for bear. */
-	    if (game.prop[TROLL] == 1) {
-		PSPEAK(TROLL,1);
-		game.prop[TROLL]=0;
-		MOVE(TROLL2,0);
-		MOVE(TROLL2+NOBJECTS,0);
-		MOVE(TROLL,PLAC[TROLL]);
-		MOVE(TROLL+NOBJECTS,FIXD[TROLL]);
-		JUGGLE(CHASM);
-		game.newloc=game.loc;
-		return true;
-	    } else {
-		game.newloc=PLAC[TROLL]+FIXD[TROLL]-game.loc;
-		if (game.prop[TROLL] == 0)game.prop[TROLL]=1;
-		if (!TOTING(BEAR)) return true;
-		RSPEAK(162);
-		game.prop[CHASM]=1;
-		game.prop[TROLL]=2;
-		DROP(BEAR,game.newloc);
-		game.fixed[BEAR]= -1;
-		game.prop[BEAR]=3;
-		game.oldlc2=game.newloc;
-		croak(cmdin);
-		return false;
-	    }
+	    LL=game.newloc;
 	}
-	BUG(20);
-    }
+
+	game.newloc=MOD(LL,1000);
+	if (game.newloc <= 300)
+	    return true;
+	if (game.newloc <= 500) {
+	    game.newloc=game.newloc-300;
+	    switch (game.newloc)
+	    {
+	    case 1:
+		/*  Travel 301.  Plover-alcove passage.  Can carry only
+		 *  emerald.  Note: travel table must include "useless"
+		 *  entries going through passage, which can never be used for
+		 *  actual motion, but can be spotted by "go back". */
+		game.newloc=99+100-game.loc;
+		if (game.holdng == 0 || (game.holdng == 1 && TOTING(EMRALD)))
+		    return true;
+		game.newloc=game.loc;
+		RSPEAK(117);
+		return true;
+	    case 2:
+		/*  Travel 302.  Plover transport.  Drop the emerald (only use
+		 *  special travel if toting it), so he's forced to use the
+		 *  plover-passage to get it out.  Having dropped it, go back and
+		 *  pretend he wasn't carrying it after all. */
+		DROP(EMRALD,game.loc);
+		do {
+		    if (TRAVEL[KK] < 0)BUG(25);
+		    ++KK;
+		    game.newloc=labs(TRAVEL[KK])/1000;
+		} while
+		    (game.newloc == LL);
+		continue;	/* back to top of do/while loop */
+	    case 3:
+		/*  Travel 303.  Troll bridge.  Must be done only as special
+		 *  motion so that dwarves won't wander across and encounter
+		 *  the bear.  (They won't follow the player there because
+		 *  that region is forbidden to the pirate.)  If
+		 *  game.prop(TROLL)=1, he's crossed since paying, so step out
+		 *  and block him.  (standard travel entries check for
+		 *  game.prop(TROLL)=0.)  Special stuff for bear. */
+		if (game.prop[TROLL] == 1) {
+		    PSPEAK(TROLL,1);
+		    game.prop[TROLL]=0;
+		    MOVE(TROLL2,0);
+		    MOVE(TROLL2+NOBJECTS,0);
+		    MOVE(TROLL,PLAC[TROLL]);
+		    MOVE(TROLL+NOBJECTS,FIXD[TROLL]);
+		    JUGGLE(CHASM);
+		    game.newloc=game.loc;
+		    return true;
+		} else {
+		    game.newloc=PLAC[TROLL]+FIXD[TROLL]-game.loc;
+		    if (game.prop[TROLL] == 0)game.prop[TROLL]=1;
+		    if (!TOTING(BEAR)) return true;
+		    RSPEAK(162);
+		    game.prop[CHASM]=1;
+		    game.prop[TROLL]=2;
+		    DROP(BEAR,game.newloc);
+		    game.fixed[BEAR]= -1;
+		    game.prop[BEAR]=3;
+		    game.oldlc2=game.newloc;
+		    croak(cmdin);
+		    return false;
+		}
+	    }
+	    BUG(20);
+	}
+    } while
+	    (false);
     RSPEAK(game.newloc-500);
     game.newloc=game.loc;
     return true;

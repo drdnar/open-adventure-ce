@@ -7,9 +7,7 @@ remain to be cleaned up:
   rather promiscuously to pass around information that ought to be function
   arguments in a modern language.
 
-* Remaining unstructured gotos in playermove() and do_command(). The goto L12
-  in playermove() is particularly horrible, jumping backwards into the
-  middle of a loop.
+* Remaining unstructured gotos in do_command().
 
 * The program is still pretty much typeless - full of magic numbers being
   sliced and diced in cryptic ways.  Some attempt has been made to introduce
