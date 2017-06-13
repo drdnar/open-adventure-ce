@@ -101,7 +101,7 @@ in favor of proper C strings.  C strings may be a weak and leaky
 abstraction, but this is one of the rare cases in which they are
 an obvious improvement over what they're displacing... 
 
-The code falls a short of being fully modern C in the following
+The code falls short of being fully modern C in the following
 ways:
 
 * We have not attempted to translate the old code to pointer-based
@@ -110,10 +110,9 @@ ways:
   and the choice to refrain will make forward translation into future
   languages easier.
 
-* There are some gotos left that resist restructuring; all of these
+* There are a few gotos left that resist restructuring; all of these
   are in the principal command interpreter function implementing its
-  state machine.  One other left in the player-movement code, a two-level
-  loop breakout, is not reducible even in principle.
+  state machine.
 
 * Linked lists (for objects at a location) are implemented using an array
   of link indices. This is a surviving FORTRANism that is quite unlike
@@ -122,7 +121,9 @@ ways:
   compromise forward-portability to other languages.
 
 * The code still has an unfortunately high density of magic numbers - in
-  particular, numeric object and room IDs.
+  particular, numeric object and room IDs.  There are plans to fix this.
+
+* Much of the code still uses FORTRAN-style uppercase names.
 
 * The code is still mostly typeless, slinging around machine longs
   like a FORTRAN or BCPL program.  Some (incomplete) effort has been made
