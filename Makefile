@@ -14,7 +14,7 @@
 VERS=1.0
 
 CC?=gcc
-CCFLAGS+=-std=c99 -D _DEFAULT_SOURCE -g
+CCFLAGS+=-std=c99 -D _DEFAULT_SOURCE -Wall -Wpedantic
 LIBS=
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
@@ -53,7 +53,7 @@ database.c database.h: dungeon
 	./dungeon
 
 linenoise.o:	linenoise/linenoise.h
-	$(CC) $(CCFLAGS) $(DBX) -c linenoise/linenoise.c
+	$(CC) -c linenoise/linenoise.c
 
 dungeon: dungeon.o common.o
 	$(CC) $(CCFLAGS) -o $@ dungeon.o common.o
@@ -99,5 +99,5 @@ refresh: advent.html
 
 dist: advent-$(VERS).tar.gz
 
-debug: CCFLAGS += -O0 --coverage
+debug: CCFLAGS += -O0 --coverage -g
 debug: advent
