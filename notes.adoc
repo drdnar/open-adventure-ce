@@ -10,7 +10,7 @@ separate link:history.html[history] describing how it came to us.
 The principal maintainers of this code are Eric S. Raymond and Jason
 Ninneman.  Eric received Don Woods's encouragement to update and ship
 the game; Jason signed on early in the process to help. The assistance
-of Peje Nilson in restructuring some particularly grotty gotos is
+of Peje Nilsson in restructuring some particularly grotty gotos is
 gratefully acknowledged.
 
 == Nomenclature ==
@@ -79,7 +79,7 @@ ugly and quite unreadable.
 
 Jason Ninneman and I have moved it to what is almost, but not quite,
 idiomatic modern C.  We refactored the right way, checking correctness
-against a comprehesive test suite that we built first and verified with
+against a comprehensive test suite that we built first and verified with
 coverage tools. This is what you are running when you do "make check".
 
 This move entailed some structural changes.  The most important was
