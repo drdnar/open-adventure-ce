@@ -8,7 +8,7 @@
  * Now that the code has been restructured into something much closer
  * to idiomatic C, the following is more appropriate:
  *
- * ESR apologizes for the remaing gotos (now confined to two functions
+ * ESR apologizes for the remaing gotos (now confined to one function
  * in this file - there used to be over 350 of them, *everywhere*),
  * and for the offensive globals.  Applying the Structured Program
  * Theorem can be hard.
