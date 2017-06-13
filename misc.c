@@ -544,31 +544,17 @@ bool MAPLIN(FILE *fp)
     long i, val;
     bool eof;
 
-    /*  Read a line of input, from the specified input source,
-     *  translate the chars to integers in the range 0-126 and store
-     *  them in the common array "INLINE".  Integer values are as follows:
-     *     0   = space [ASCII CODE 40 octal, 32 decimal]
-     *    1-2  = !" [ASCII 41-42 octal, 33-34 decimal]
-     *    3-10 = '()*+,-. [ASCII 47-56 octal, 39-46 decimal]
-     *   11-36 = upper-case letters
-     *   37-62 = lower-case letters
-     *    63   = percent (%) [ASCII 45 octal, 37 decimal]
-     *   64-73 = digits, 0 through 9
-     *  Remaining characters can be translated any way that is convenient;
-     *  The "TYPE" routine below is used to map them back to characters when
-     *  necessary.  The above mappings are required so that certain special
-     *  characters are known to fit in 6 bits and/or can be easily spotted.
-     *  Array elements beyond the end of the line should be filled with 0,
-     *  and LNLENG should be set to the index of the last character.
+    /* Read a line of input, from the specified input source.
+     * This logic is complicated partly because it has to serve 
+     * several cases with different requirements and partly because
+     * of a quirk in linenoise().
      *
-     *  If the data file uses a character other than space (e.g., tab) to
-     *  separate numbers, that character should also translate to 0.
-     *
-     *  This procedure may use the map1,map2 arrays to maintain static data for
-     *  the mapping.  MAP2(1) is set to 0 when the program starts
-     *  and is not changed thereafter unless the routines on this page choose
-     *  to do so. */
-
+     * The quirk shows up when you feed the program a test log on stdin.
+     * While fgets (as expected) consumes it a line at a time, linenoise()
+     * returns the first line and discards the rest.  Thus, there needs to
+     * be an editline (-s) option to fall back to fgets while still 
+     * prompting.
+     */
     do {
 	if (!editline) {
 	    if (prompt)
@@ -599,11 +585,34 @@ bool MAPLIN(FILE *fp)
 	    efp = stdout;
 	if (efp != NULL)
 	{
-	    if (prompt)
+	    if (prompt && efp == stdout)
 		fputs("> ", efp);
 	    IGNORE(fputs(rawbuf, efp));
 	}
 	strcpy(INLINE+1, rawbuf);
+    /*  translate the chars to integers in the range 0-126 and store
+     *  them in the common array "INLINE".  Integer values are as follows:
+     *     0   = space [ASCII CODE 40 octal, 32 decimal]
+     *    1-2  = !" [ASCII 41-42 octal, 33-34 decimal]
+     *    3-10 = '()*+,-. [ASCII 47-56 octal, 39-46 decimal]
+     *   11-36 = upper-case letters
+     *   37-62 = lower-case letters
+     *    63   = percent (%) [ASCII 45 octal, 37 decimal]
+     *   64-73 = digits, 0 through 9
+     *  Remaining characters can be translated any way that is convenient;
+     *  The "TYPE" routine below is used to map them back to characters when
+     *  necessary.  The above mappings are required so that certain special
+     *  characters are known to fit in 6 bits and/or can be easily spotted.
+     *  Array elements beyond the end of the line should be filled with 0,
+     *  and LNLENG should be set to the index of the last character.
+     *
+     *  If the data file uses a character other than space (e.g., tab) to
+     *  separate numbers, that character should also translate to 0.
+     *
+     *  This procedure may use the map1,map2 arrays to maintain static data for
+     *  the mapping.  MAP2(1) is set to 0 when the program starts
+     *  and is not changed thereafter unless the routines on this page choose
+     *  to do so. */
 	LNLENG=0;
 	for (i=1; i<=(long)sizeof(INLINE) && INLINE[i]!=0; i++) {
 	    val=INLINE[i];
