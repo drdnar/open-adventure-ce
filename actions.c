@@ -129,17 +129,18 @@ static int bigwords(long foo)
 	if (game.place[EGGS]==PLAC[EGGS] || (TOTING(EGGS) && game.loc==PLAC[EGGS])) {
 	    RSPEAK(spk);
 	    return GO_CLEAROBJ;
+	} else {
+	    /*  Bring back troll if we steal the eggs back from him before
+	     *  crossing. */
+	    if (game.place[EGGS]==0 && game.place[TROLL]==0 && game.prop[TROLL]==0)
+		game.prop[TROLL]=1;
+	    k=2;
+	    if (HERE(EGGS))k=1;
+	    if (game.loc == PLAC[EGGS])k=0;
+	    MOVE(EGGS,PLAC[EGGS]);
+	    PSPEAK(EGGS,k);
+	    return GO_CLEAROBJ;
 	}
-	/*  Bring back troll if we steal the eggs back from him before
-	 *  crossing. */
-	if (game.place[EGGS]==0 && game.place[TROLL]==0 && game.prop[TROLL]==0)
-	    game.prop[TROLL]=1;
-	k=2;
-	if (HERE(EGGS))k=1;
-	if (game.loc == PLAC[EGGS])k=0;
-	MOVE(EGGS,PLAC[EGGS]);
-	PSPEAK(EGGS,k);
-	return GO_CLEAROBJ;
     }
 }
 
