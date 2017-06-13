@@ -561,9 +561,9 @@ bool MAPLIN(FILE *fp)
      * in which you want to echo commands.  One is when shipping them to 
      * a log under the -l option, in which case you want to suppress
      * prompt generation (so test logs are unadorned command sequences).
-     * On the other hand, if you redireceted stdin and are feeding the program 
+     * On the other hand, if you redirected stdin and are feeding the program 
      * a logfile, you *do* want prompt generation - it makes checkfiles
-     * easier to read when the commands are maked by a preceding prompt.
+     * easier to read when the commands are marked by a preceding prompt.
      */
     do {
 	if (!editline) {
