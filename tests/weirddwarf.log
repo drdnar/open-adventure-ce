@@ -86,6 +86,7 @@ s
 # The actual test - rest was just setup. 
 read dwarf
 feed dwarf
+carry
 carry dwarf
 attack
 feed
