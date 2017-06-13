@@ -526,13 +526,11 @@ object_description_s object_descriptions[] = {
   },
   {
     .inventory = "Water in the bottle",
-    .longs = (char* []) {
-    },
+    .longs = NULL,
   },
   {
     .inventory = "Oil in the bottle",
-    .longs = (char* []) {
-    },
+    .longs = NULL,
   },
   {
     .inventory = "*mirror",

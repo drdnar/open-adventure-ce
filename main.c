@@ -904,7 +904,7 @@ static void listobjects(void)
 static bool do_command(FILE *cmdin)
 /* Get and execute a command */ 
 {
-    long KQ, VERB, KK, V1, V2;
+    long KQ, VERB, V1, V2;
     long i, k, KMOD;
     static long igo = 0;
     static long obj = 0;

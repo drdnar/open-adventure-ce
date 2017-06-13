@@ -694,7 +694,6 @@ static int listen(void)
 static int lock(token_t verb, token_t obj)
 /* Lock, unlock, no object given.  Assume various things if present. */
 {
-    int k;
     int spk = ACTSPK[verb];
     if (obj == INTRANSITIVE) {
 	spk=28;
@@ -989,7 +988,6 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj)
  *  unless verb is "say", which snarfs arbitrary second word.
  */
 {
-    int kk;
     token_t spk=ACTSPK[verb];
 
     if (part == unknown)

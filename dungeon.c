@@ -29,7 +29,6 @@ static long LNLENG;
 static long LNPOSN;
 static char INLINE[LINESIZE+1];
 static long OLDLOC;
-static long MAXDIE;
 
 // Storage for what comes out of the database
 long LINUSE;

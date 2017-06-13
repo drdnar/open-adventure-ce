@@ -27,7 +27,7 @@ void packed_to_token(long packed, char token[6])
   for (int i = 0; i < 5; ++i)
     {
       char advent = (packed >> i * 6) & 63;
-      token[4 - i] = advent_to_ascii[advent];
+      token[4 - i] = advent_to_ascii[(int) advent];
     }
 
   // Ensure the last character is \0.
@@ -648,7 +648,7 @@ void TYPE(void)
     }
 
     for (i=1; i<=LNLENG; i++) {
-	INLINE[i]=advent_to_ascii[INLINE[i]];
+      INLINE[i]=advent_to_ascii[(int) INLINE[i]];
     }
     INLINE[LNLENG+1]=0;
     printf("%s\n", INLINE+1);
