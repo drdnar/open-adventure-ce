@@ -80,7 +80,7 @@ check: advent
 html: advent.html history.html hints.html
 
 # README.adoc exists because that filename is magic on GitLab.
-DOCS=COPYING NEWS README.adoc TODO advent.adoc history.adoc hints.adoc advent.6
+DOCS=COPYING NEWS README.adoc TODO advent.adoc history.adoc notes.adoc hints.adoc advent.6
 TESTFILES=tests/*.log tests/*.chk tests/README tests/decheck tests/Makefile
 
 # Can't use GNU tar's --transform, needs to build under Alpine Linux.
@@ -91,7 +91,7 @@ advent-$(VERS).tar.gz: $(SOURCES) $(DOCS)
 	(tar -T MANIFEST -czvf advent-$(VERS).tar.gz)
 	@(rm advent-$(VERS))
 
-release: advent-$(VERS).tar.gz advent.html history.html hints.html
+release: advent-$(VERS).tar.gz advent.html history.html hints.html notes.html
 	shipper version=$(VERS) | sh -e -x
 
 refresh: advent.html

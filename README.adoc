@@ -6,7 +6,8 @@ development written by the original authors.  The authors have given
 permission and encouragement for this release.
 
 The file history.adoc contains a more detailed history of this game
-and its ancestors.
+and its ancestors.  The file notes.adoc is the maintainer's notes,
+describing project goals and recent changes.
 
 This project is called "Open Adventure" because it's not at all clear
 how to number Adventure past 2.5 without misleading or causing
@@ -15,5 +16,12 @@ original 6-character name on the PDP-10 has been reverted to for the
 executable in order to avoid a collision with the BSD games port of
 the ancestral 1977 version.
 
-You can run a regression test on the code with 'make check'.
+You can run a regression test on the code with 'make check'. Extreme
+care has been taken to not silently change gameplay. By policy, all
+user-visible changes from 2.5 are revertible with the -o (oldstyle)
+option.
+
+// end
+
+
 

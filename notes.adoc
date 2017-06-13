@@ -1,0 +1,125 @@
+= Open Adventure Maintainer's Notes =
+by Eric S. Raymond
+
+In which we explain what has been done to this code since Don Woods
+authorized us to ship it under an open-source license.  There's a
+separate link:history.html[history] describing how it came to us.
+
+== Who we are ==
+
+The principal maintainers of this code are Eric S. Raymond and Jason
+Ninneman.  Eric received Don Woods's encouragement to update and ship
+the game; Jason signed on early in the process to help.
+
+== Nomenclature ==
+
+This project is called "Open Adventure" because it's not at all clear
+to number Adventure past 2.5 without misleading or causing
+collisions. Various of the non-mainline versions have claimed to be
+versions 3, 4, 5, 6, 7 and for all I know higher than that.  It seems
+best just to start a new numbering series while acknowledging the
+links back.
+
+We have reverted to "advent" for the binary to avoid a name collision
+with the BSD Games version.
+
+== Philosophy ==
+
+Extreme care has been taken not to make changes that would alter the
+logic of the game as we received it from Don Woods.  By policy, all
+user-visible changes must be revertible with the -o (oldstyle) option.
+
+It is a goal of this project to exactly preserve the *behavior* of
+430-point Adventure, but the implementation of it is fair game for
+improvement. In particular, we are concerned to move it to a form that
+is (a) readable, and (b) friendly to forward translation to future
+languages.  It has already survived a move from FORTRAN to C; a future
+as a Python or Go translation seems possible, even probable.
+
+== Functional changes ==
+
+By default, advent issues "> " as a command prompt.  This feature
+became common in many variants after the original 350-point version,
+but was never backported into Crowther & Woods's main line before now.
+The "-o" (oldstyle) version reverts the behavior.
+
+A "seed" command has been added.  This is not intended for human use
+but as a way for game logs to set the PRNG (pseudorandom-number generator) so
+that random events (dwarf & pirate appearances, the bird's magic word)
+will be reproducible.
+
+A -l command-line option has been added. When this is given (with a
+file path argument) each command entered will be logged to the
+specified file.  Additionally, a generated "seed" command will be put
+early in the file capturing the randomized start state of the PRNG
+so that replays of the log will be reproducible.
+
+Using "seed" and -l, the distribution now includes a regression-test
+suite for the game.  Any log captured with -l (and thus containing
+a "seed" command) will replay reliably, including random events.
+
+The adventure.text file is no longer required at runtime.  Instead, it
+is compiled at build time to a source module containing C structures,
+which is then linked to the advent binary.
+
+The game-save format has changed.  This was done to simplify
+FORTRAN-derived code that formerly implemented these functions;
+without C's fread(3)/fwrite() and structs it was necessarily pretty
+ugly by modern standards. Encryption and checksumming have been
+discarded - it's pointless to try tamper-proofing saves when everyone
+has the source code.
+
+== Translation ==
+
+The 2.5 code was a mechanical C translation of a FORTRAN original.
+There were gotos everywhere and the code was, though functional,
+ugly and quite unreadable.
+
+Jason Ninneman and I have moved it to what is almost, but not quite,
+idiomatic modern C.  We refactored the right way, checking correctness
+against a comprehesive test suite that we built first and verified with
+coverage tools. This is what you are running when you do "make check".
+
+This move entailed some structural changes.  The most important was
+the refactoring of 354 gotos into if/loop/break structures.  We
+also abolished almost all shared globals; the main one left is a
+struct holding the game's saveable/restorable state.
+
+The original code was greatly complicated by a kind of bit-packing
+that was performed because the FORTRAN it was written in had no string
+type.  Text from the adventure.text file was compiled into sequences
+of sixbit code points in a restricted character set, packed 5 to a
+32-bit word (it seems clear from the code that words were originally
+*6* chars each packed into a PDP-10 36-bit word).  A command noun or
+verb was one of these words, and what would be string operations in a
+more recent language were all done on sequences of these words.
+
+We are still in the process of removing all this bit-packing cruft
+in favor of proper C strings.  C strings may be a weak and leaky
+abstraction, but this is one of the rare cases in which they are
+an obvious improvement over what they're displacing... 
+
+The code falls a short of being fully modern C in the following
+ways:
+
+* We have not attempted to translate the old code to pointer-based
+  idioms (as opposed, in particular, to integer-based array indexing).
+  We don't need whatever minor performance gains this might collect,
+  and the choice to refrain will make forward translation into future
+  languages easier.
+
+* There are 20 gotos left that resist restructuring; all but one of
+  these are in the principal command interpreter function implementing
+  its state machine.  A 21st, a two-level loop breakout, is not reducible
+  even in principle.
+
+* Linked lists (for objects at a location) are implemented using an array
+  of link indices. This is a surviving FORTRANism that is quite unlike
+  normal practice in C or any more modern language.  We have not tried
+  to fix it because doing so would (a) be quite difficult, and (b)
+  compromise forward-portability to other languages.
+
+* The code still has an unfortunately high density of magic numbers - in
+  particular, numeric object and room IDs.
+
+// end
