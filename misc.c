@@ -549,11 +549,21 @@ bool MAPLIN(FILE *fp)
      * several cases with different requirements and partly because
      * of a quirk in linenoise().
      *
-     * The quirk shows up when you feed the program a test log on stdin.
-     * While fgets (as expected) consumes it a line at a time, linenoise()
-     * returns the first line and discards the rest.  Thus, there needs to
-     * be an editline (-s) option to fall back to fgets while still 
-     * prompting.
+     * The quirk shows up when you paste a test log from the clipboard
+     * to the program's command prompt.  While fgets (as expected)
+     * consumes it a line at a time, linenoise() returns the first
+     * line and discards the rest.  Thus, there needs to be an
+     * editline (-s) option to fall back to fgets while still
+     * prompting.  Note that linenoise does behave properly when
+     * fed redirected stdin.
+     *
+     * The logging is a bit of a mess because there are two distinct cases
+     * in which you want to echo commands.  One is when shipping them to 
+     * a log under the -l option, in which case you want to suppress
+     * prompt generation (so test logs are unadorned command sequences).
+     * On the other hand, if you redireceted stdin and are feeding the program 
+     * a logfile, you *do* want prompt generation - it makes checkfiles
+     * easier to read when the commands are maked by a preceding prompt.
      */
     do {
 	if (!editline) {
