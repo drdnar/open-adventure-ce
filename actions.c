@@ -392,13 +392,11 @@ static int drink(token_t verb, token_t obj)
 	return(8000);
     if (obj != BLOOD) {
 	if (obj != 0 && obj != WATER)spk=110;
-	if (spk == 110 || LIQUID() != WATER || !HERE(BOTTLE)) {
-	    RSPEAK(spk);
-	    return GO_CLEAROBJ;
+	if (spk != 110 && LIQUID() == WATER && HERE(BOTTLE)) {
+	    game.prop[BOTTLE]=1;
+	    game.place[WATER]=0;
+	    spk=74;
 	}
-	game.prop[BOTTLE]=1;
-	game.place[WATER]=0;
-	spk=74;
     } else {
 	DSTROY(BLOOD);
 	game.prop[DRAGON]=2;
