@@ -1,0 +1,25 @@
+## Snake must vocally eat bird
+n
+seed 1951269982
+in
+get lamp
+get keys
+out
+down
+s
+s
+open
+in
+west
+get cage
+w
+on
+w
+w
+get bird
+w
+down
+down
+inventory
+feed snake
+inventory
