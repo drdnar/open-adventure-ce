@@ -12,6 +12,26 @@ Seed set to 2099333241
 
 You're in front of building.
 
+> in
+
+You are inside a building, a well house for a large spring.
+
+There are some keys on the ground here.
+
+There is a shiny brass lamp nearby.
+
+There is food here.
+
+There is a bottle of water here.
+
+> eat
+
+Thank you, it was delicious!
+
+> out
+
+You're in front of building.
+
 > n
 
 You are wandering aimlessly through the forest.
@@ -101,9 +121,9 @@ You are wandering aimlessly through the forest.
 
 You are wandering aimlessly through the forest.
 
-> e
+> drink
 
-You are wandering aimlessly through the forest.
+Drink what?
 
 > e
 
@@ -161,6 +181,12 @@ Please answer the question.
 
 Would you like to be shown out of the forest?
 
+> e
+
+Please answer the question.
+
+Would you like to be shown out of the forest?
+
 > y
 
 I am prepared to give you a hint, but it will cost you 2 points.
@@ -173,7 +199,7 @@ Go east ten times.  If that doesn't get you out, then go south, then
 west twice, then south.
 
 
-You scored 30 out of a possible 430, using 34 turns.
+You scored 30 out of a possible 430, using 37 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 

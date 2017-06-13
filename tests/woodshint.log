@@ -1,6 +1,10 @@
 ## Test hinting logic - elicit forest hint
+# Also some tests of intransitive-verb cases
 n
 seed 2099333241
+in
+eat
+out
 n
 e
 n
@@ -22,6 +26,7 @@ e
 e
 e
 e
+drink
 e
 e
 e
