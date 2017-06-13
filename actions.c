@@ -1054,7 +1054,7 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj)
 	    if (obj == 0) {
 		/*  Analyse an intransitive verb (ie, no object given yet). */
 		switch (verb-1) {
-		case  0: /* CARRY */ return carry(verb, INTRANSITIVE);
+		    case  0: /* CARRY */ return carry(verb, INTRANSITIVE);
 		    case  1: /* DROP  */ return(8000); 
 		    case  2: /* SAY   */ return(8000); 
 		    case  3: /* UNLOC */ return lock(verb, INTRANSITIVE);    
@@ -1099,7 +1099,7 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj)
 	        case  1: /* DROP  */ return discard(verb, obj, false);    
 		case  2: /* SAY   */ return say();    
 		case  3: /* UNLOC */ return lock(verb, obj);    
-		case  4: /* NOTHI */ {RSPEAK(54); return(20012);}
+		case  4: /* NOTHI */ {RSPEAK(54); return(GO_CLEAROBJ);}
 		case  5: /* LOCK  */ return lock(verb, obj);    
 		case  6: /* LIGHT */ return light(verb, obj);    
 		case  7: /* EXTI  */ return extinguish(verb, obj);    
