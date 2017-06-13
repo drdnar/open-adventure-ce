@@ -27,6 +27,10 @@ unlock chain
 fill urn
 eat keys
 off keys
+break keys
+wake keys
+take keys
+throw keys
 eat food
 drink blood
 brief
