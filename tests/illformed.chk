@@ -49,6 +49,11 @@ minerals, but is not unpleasant.  It is extremely cold.
 I can only tell you what you see as you move about and manipulate
 things.  I cannot tell you where remote things are.
 
+> inven keys
+
+I can only tell you what you see as you move about and manipulate
+things.  I cannot tell you where remote things are.
+
 > in
 
 You are inside a building, a well house for a large spring.
@@ -238,7 +243,7 @@ Okay, "BOO".
 
 > score
 
-You have garnered 32 out of a possible 430 points, using 46 turns.
+You have garnered 32 out of a possible 430 points, using 47 turns.
 
 > quit
 
@@ -248,7 +253,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 32 out of a possible 430, using 47 turns.
+You scored 32 out of a possible 430, using 48 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 

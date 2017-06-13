@@ -1,20 +1,43 @@
 = Notes on the test machinery = 
 
-A .tst extension means it's a game log
+== Understanding and running tests ==
+
+A .log extension means it's a game log
 A .chk extension means it's expected output from a test
 
-The test files are run in alphabetical order. This allows you to ensure certain tests are run in a particular order merely by giving them appropriate names, e.g.: test.1.log, test.2.log, test.3.log. This is useful for testing save and resume.
+The test files are run in alphabetical order. This allows you to
+ensure certain tests are run in a particular order merely by giving
+them appropriate names, e.g.: test.1.log, test.2.log, test.3.log. This
+is useful for testing save and resume.
 
-In general, a file named foo.chk is the expected output from theb game log
+In general, a file named foo.chk is the expected output from the game log
 foo.log.  To add new tests, just drop log files in this directory.
 
 To see summary lines from all tests, 'make testlist'.  The summary lines
 are those led with ##; you should have one such descriptive line at the
-head of the file.
+head of each file.
 
 To run the tests, "make regress".
 
 To remake the check files, "make buildregress".
+
+== Composing tests ==
+
+The simplest way to make a test is to simply play a game with the -l
+option giving a log path.  Commands will be captured to that log.
+
+To re-use a command sequence from an existing log, run advent -s and
+paste it to the advent command log from the clipboard.  If you don't
+use -s to disable advanced ediiting, the code used for that will consume
+the first line of the paste and discare the rest.  This is almost
+certainly not what you want.
+
+To see where we can use more tests, have a look at our test coverage
+report:
+
+http://esr.gitlab.io/open-adventure/coverage/
+
+Improvements in test coverage are always welcome.
 
 // end
 
