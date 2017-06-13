@@ -9,7 +9,9 @@ separate link:history.html[history] describing how it came to us.
 
 The principal maintainers of this code are Eric S. Raymond and Jason
 Ninneman.  Eric received Don Woods's encouragement to update and ship
-the game; Jason signed on early in the process to help.
+the game; Jason signed on early in the process to help. The assistance
+of Peje Nilson in restructuring some particularly grotty gotos is
+gratefully acknowledged.
 
 == Nomenclature ==
 
@@ -81,7 +83,7 @@ against a comprehesive test suite that we built first and verified with
 coverage tools. This is what you are running when you do "make check".
 
 This move entailed some structural changes.  The most important was
-the refactoring of 355 gotos into if/loop/break structures.  We
+the refactoring of over 350 gotos into if/loop/break structures.  We
 also abolished almost all shared globals; the main one left is a
 struct holding the game's saveable/restorable state.
 
@@ -108,10 +110,10 @@ ways:
   and the choice to refrain will make forward translation into future
   languages easier.
 
-* There are 19 gotos left that resist restructuring; all of these are
-  in the principal command interpreter function implementing its state
-  machine.  A 21st, a two-level loop breakout, is not reducible even
-  in principle.
+* There are some gotos left that resist restructuring; all of these
+  are in the principal command interpreter function implementing its
+  state machine.  One other left in the player-movement code, a two-level
+  loop breakout, is not reducible even in principle.
 
 * Linked lists (for objects at a location) are implemented using an array
   of link indices. This is a surviving FORTRANism that is quite unlike
