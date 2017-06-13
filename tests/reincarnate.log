@@ -1,4 +1,4 @@
-## Jump into a pit and die, refuse reincarnation
+## Jump into a pit and die, then be reincarnated
 n
 seed 1495774850
 in
@@ -19,4 +19,4 @@ w
 down
 w
 jump
-n
+y
