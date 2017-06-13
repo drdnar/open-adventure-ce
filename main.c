@@ -308,11 +308,8 @@ bool spotted_by_pirate(int i)
 	    game.dloc[PIRATE]=game.chloc;
 	    game.odloc[PIRATE]=game.chloc;
 	    game.dseen[PIRATE]=false;
-	    /* C doesn't have what the Structured rogramming
-	     * Theorem says we need here - multi-level loop
-	     * breakout. We simulate with a goto. Irreducible, alas.
-	     */
-	    return true; //goto jumpout;
+
+	    return true;
 	}
 	if (HERE(j))
 	    k=1;
