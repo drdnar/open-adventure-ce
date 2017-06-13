@@ -10,17 +10,6 @@
 #include "linenoise/linenoise.h"
 #include "newdb.h"
 
-void* xmalloc(size_t size)
-{
-  void* ptr = malloc(size);
-  if (ptr == NULL)
-    {
-      fprintf(stderr, "Out of memory!\n");
-      exit(EXIT_FAILURE);
-    }
-  return(ptr);
-}
-
 char* xstrdup(const char* s)
 {
   char* ptr = strdup(s);
