@@ -640,14 +640,14 @@ bool MAPLIN(FILE *fp)
      *  and is not changed thereafter unless the routines on this page choose
      *  to do so. */
 
-    if (prompt)
-	fputs("> ", stdout);
     do {
 	if (!editline) {
+	    if (prompt)
+		fputs("> ", stdout);
 	    IGNORE(fgets(rawbuf,sizeof(rawbuf)-1,fp));
 	    eof = (feof(fp));
 	} else {
-	    char *cp = linenoise(prompt ? "> ": "");
+	    char *cp = linenoise("> ");
 	    eof = (cp == NULL);
 	    if (!eof) {
 		strncpy(rawbuf, cp, sizeof(rawbuf)-1);
@@ -663,10 +663,17 @@ bool MAPLIN(FILE *fp)
 	    fclose(logfp);
 	return false;
     } else {
+	FILE *efp = NULL;
 	if (logfp && fp == stdin)
-	    IGNORE(fputs(rawbuf, logfp));
+	    efp = logfp;
 	else if (!isatty(0))
-	    IGNORE(fputs(rawbuf, stdout));
+	    efp = stdout;
+	if (efp != NULL)
+	{
+	    if (prompt)
+		fputs("> ", efp);
+	    IGNORE(fputs(rawbuf, efp));
+	}
 	strcpy(INLINE+1, rawbuf);
 	LNLENG=0;
 	for (i=1; i<=(long)sizeof(INLINE) && INLINE[i]!=0; i++) {
