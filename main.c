@@ -267,6 +267,71 @@ static void checkhints(FILE *cmdin)
     }
 }
 
+bool spotted_by_pirate(int i)
+{
+    if (i != PIRATE) 
+	return false;
+
+    /*  The pirate's spotted him.  He leaves him alone once we've
+     *  found chest.  K counts if a treasure is here.  If not, and
+     *  tally=1 for an unseen chest, let the pirate be spotted.
+     *  Note that game.place(CHEST)=0 might mean that he's thrown
+     *  it to the troll, but in that case he's seen the chest
+     *  (game.prop=0). */
+    if (game.loc == game.chloc || game.prop[CHEST] >= 0)
+	return true;
+    int k=0;
+    for (int j=MINTRS; j<=MAXTRS; j++) {
+	/*  Pirate won't take pyramid from plover room or dark
+	 *  room (too easy!). */
+	if (j == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD])) {
+	    if (HERE(j))
+		k=1;
+	    return true;
+	}
+	if (TOTING(j)) {
+	    if (game.place[CHEST] == 0) {
+		/*  Install chest only once, to insure it is
+		 *  the last treasure in the list. */
+		MOVE(CHEST,game.chloc);
+		MOVE(MESSAG,game.chloc2);
+	    }
+	    RSPEAK(128);
+	    for (int j=MINTRS; j<=MAXTRS; j++) {
+		if (!(j == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD]))) {
+		    if (AT(j) && game.fixed[j] == 0)
+			CARRY(j,game.loc);
+		    if (TOTING(j))
+			DROP(j,game.chloc);
+		}
+	    }
+	    game.dloc[PIRATE]=game.chloc;
+	    game.odloc[PIRATE]=game.chloc;
+	    game.dseen[PIRATE]=false;
+	    /* C doesn't have what the Structured rogramming
+	     * Theorem says we need here - multi-level loop
+	     * breakout. We simulate with a goto. Irreducible, alas.
+	     */
+	    return true; //goto jumpout;
+	}
+	if (HERE(j))
+	    k=1;
+    }
+    /* Force chest placement before player finds last treasure */
+    if (game.tally == 1 && k == 0 && game.place[CHEST] == 0 && HERE(LAMP) && game.prop[LAMP] == 1) {
+	RSPEAK(186);
+	MOVE(CHEST,game.chloc);
+	MOVE(MESSAG,game.chloc2);
+	game.dloc[PIRATE]=game.chloc;
+	game.odloc[PIRATE]=game.chloc;
+	game.dseen[PIRATE]=false;
+	return true;
+    }
+    if (game.odloc[PIRATE] != game.dloc[PIRATE] && PCT(20))
+	RSPEAK(127);
+    return true;
+}
+
 static bool dwarfmove(void)
 /* Dwarves move.  Return true if player survives, false if he dies. */
 {
@@ -328,7 +393,6 @@ static bool dwarfmove(void)
     attack=0;
     stick=0;
     for (int i=1; i<=NDWARVES; i++) {
-	int k;
 	if (game.dloc[i] == 0)
 	    continue;
 	/*  Fill TK array with all the places this dwarf might go. */
@@ -362,67 +426,8 @@ static bool dwarfmove(void)
 	game.dseen[i]=(game.dseen[i] && INDEEP(game.loc)) || (game.dloc[i] == game.loc || game.odloc[i] == game.loc);
 	if (!game.dseen[i]) continue;
 	game.dloc[i]=game.loc;
-	if (i == PIRATE) {
-	    /*  The pirate's spotted him.  He leaves him alone once we've
-	     *  found chest.  K counts if a treasure is here.  If not, and
-	     *  tally=1 for an unseen chest, let the pirate be spotted.
-	     *  Note that game.place(CHEST)=0 might mean that he's thrown
-	     *  it to the troll, but in that case he's seen the chest
-	     *  (game.prop=0). */
-	    if (game.loc == game.chloc || game.prop[CHEST] >= 0)
-		continue;
-	    k=0;
-	    for (int j=MINTRS; j<=MAXTRS; j++) {
-		/*  Pirate won't take pyramid from plover room or dark
-		 *  room (too easy!). */
-		if (j == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD])) {
-		    if (HERE(j))
-			k=1;
-		    continue;
-		}
-		if (TOTING(j)) {
-		    if (game.place[CHEST] == 0) {
-			/*  Install chest only once, to insure it is
-			 *  the last treasure in the list. */
-			MOVE(CHEST,game.chloc);
-			MOVE(MESSAG,game.chloc2);
-		    }
-		    RSPEAK(128);
-		    for (int j=MINTRS; j<=MAXTRS; j++) {
-			if (!(j == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD]))) {
-			    if (AT(j) && game.fixed[j] == 0)
-				CARRY(j,game.loc);
-			    if (TOTING(j))
-				DROP(j,game.chloc);
-			}
-		    }
-		    game.dloc[PIRATE]=game.chloc;
-		    game.odloc[PIRATE]=game.chloc;
-		    game.dseen[PIRATE]=false;
-		    /* C doesn't have what the Structured rogramming
-		     * Theorem says we need here - multi-level loop
-		     * breakout. We simulate with a goto. Irreducible, alas.
-		     */
-		    goto jumpout;
-		}
-		if (HERE(j))
-		    k=1;
-	    }
-	    /* Force chest placement before player finds last treasure */
-	    if (game.tally == 1 && k == 0 && game.place[CHEST] == 0 && HERE(LAMP) && game.prop[LAMP] == 1) {
-		RSPEAK(186);
-		MOVE(CHEST,game.chloc);
-		MOVE(MESSAG,game.chloc2);
-		game.dloc[PIRATE]=game.chloc;
-		game.odloc[PIRATE]=game.chloc;
-		game.dseen[PIRATE]=false;
-		continue;
-	    }
-	    if (game.odloc[PIRATE] != game.dloc[PIRATE] && PCT(20))
-		RSPEAK(127);
+	if (spotted_by_pirate(i))
 	    continue;
-	}
-
 	/* This threatening little dwarf is in the room with him! */
 	++game.dtotal;
 	if (game.odloc[i] == game.dloc[i]) {
@@ -432,7 +437,6 @@ static bool dwarfmove(void)
 	    if (randrange(1000) < 95*(game.dflag-2))
 		++stick;
 	}
-    jumpout:;
     }
 
     /*  Now we know what's happening.  Let's tell the poor sucker about it.
