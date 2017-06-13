@@ -97,8 +97,6 @@ extern bool GETIN(FILE *,token_t*,token_t*,token_t*,token_t*);
 extern long YES(FILE *,vocab_t,vocab_t,vocab_t);
 extern long GETTXT(bool,bool,bool);
 extern token_t MAKEWD(long);
-extern void PUTTXT(token_t,long*,long);
-extern void SHFTXT(long,long);
 extern void TYPE0(void);
 extern long VOCAB(long,long);
 extern void DSTROY(long);

@@ -304,66 +304,6 @@ token_t MAKEWD(long letters)
     return word;
 }
 
-void PUTTXT(token_t word, long *state, long casemake)
-/*  Unpack the 30-bit value in word to obtain up to TOKLEN (currently
- *  5) integer-encoded chars, and store them in inline starting at
- *  LNPOSN.  If LNLENG>=LNPOSN, shift existing characters to the right
- *  to make room.  STATE will be zero when puttxt is called with the
- *  first of a sequence of words, but is thereafter unchanged by the
- *  caller, so PUTTXT can use it to maintain state across calls.
- *  LNPOSN and LNLENG are incremented by the number of chars stored.
- *  If CASEMAKE=1, all letters are made uppercase; if -1, lowercase; if 0,
- *  as is.  any other value for case is the same as 0 but also causes
- *  trailing blanks to be included (in anticipation of subsequent
- *  additional text). */
-{
-    long alph1, alph2, byte, div, i, w;
-
-    alph1=13*casemake+24;
-    alph2=26*labs(casemake)+alph1;
-    if (labs(casemake) > 1)
-	alph1=alph2;
-    /*  alph1&2 define range of wrong-case chars, 11-36 or 37-62 or empty. */
-    div=64L*64L*64L*64L;
-    w=word;
-    for (i=1; i<=TOKLEN; i++) 
-    {
-	if (w <= 0 && *state == 0 && labs(casemake) <= 1)
-	    return;
-	byte=w/div;
-	w=(w-byte*div)*64;
-	if (!(*state != 0 || byte != ascii_to_advent['%'])) {
-	    *state=ascii_to_advent['%'];
-	    continue;
-	}
-	SHFTXT(LNPOSN,1);
-	*state=*state+byte;
-	if (*state < alph2 && *state >= alph1)*state=*state-26*casemake;
-	INLINE[LNPOSN]=*state;
-	++LNPOSN;
-	*state=0;
-    }
-}
-#define PUTTXT(WORD,STATE,CASE) fPUTTXT(WORD,&STATE,CASE)
-
-void SHFTXT(long from, long delta) 
-/*  Move INLINE(N) to INLINE(N+DELTA) for N=FROM,LNLENG.  Delta can be
- *  negative.  LNLENG is updated; LNPOSN is not changed. */
-{
-    long I, k, j;
-
-    if (!(LNLENG < from || delta == 0)) {
-	for (I=from; I<=LNLENG; I++) {
-	    k=I;
-	    if (delta > 0)
-		k=from+LNLENG-I;
-	    j=k+delta;
-	    INLINE[j]=INLINE[k];
-	}
-    }
-    LNLENG=LNLENG+delta;
-}
-
 void TYPE0(void)
 /*  Type a blank line.  This procedure is provided as a convenience for callers
  *  who otherwise have no use for MAPCOM. */
