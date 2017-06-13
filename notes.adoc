@@ -64,12 +64,12 @@ The adventure.text file is no longer required at runtime.  Instead, it
 is compiled at build time to a source module containing C structures,
 which is then linked to the advent binary.
 
-The game-save format has changed.  This was done to simplify
-FORTRAN-derived code that formerly implemented these functions;
-without C's fread(3)/fwrite() and structs it was necessarily pretty
-ugly by modern standards. Encryption and checksumming have been
-discarded - it's pointless to try tamper-proofing saves when everyone
-has the source code.
+The game-save format has changed.  This was done to simplify the
+FORTRAN-derived code that formerly implemented the save/restore
+functions; without C's fread(3)/fwrite() and structs it was
+necessarily pretty ugly by modern standards. Encryption and
+checksumming have been discarded - it's pointless to try
+tamper-proofing saves when everyone has the source code.
 
 == Translation ==
 
