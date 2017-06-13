@@ -141,7 +141,7 @@ extern int saveresume(FILE *, bool);
 #define LIQLOC(LOC)	(LIQ2((MOD(COND[LOC]/2*2,8)-5)*MOD(COND[LOC]/4,2)+1))
 #define CNDBIT(L,N)	(TSTBIT(COND[L],N))
 #define FORCED(LOC)	(COND[LOC] == 2)
-#define DARK(DUMMY)	((!CNDBIT(game.loc,0)) && (game.prop[LAMP] == 0 || !HERE(LAMP)))
+#define DARK(DUMMY)	((!CNDBIT(game.loc,LIGHT)) && (game.prop[LAMP] == 0 || !HERE(LAMP)))
 #define PCT(N)	(randrange(100) < (N))
 #define GSTONE(OBJ)	((OBJ) == EMRALD || (OBJ) == RUBY || (OBJ) == AMBER || (OBJ) == SAPPH)
 #define FOREST(LOC)	((LOC) >= 145 && (LOC) <= 166)
@@ -187,6 +187,25 @@ enum speechpart {unknown, intransitive, transitive};
 #define GO_UNKNOWN	8000
 #define GO_ACTION	40000
 #define GO_DWARFWAKE	19000
+
+/* Symbols for cond bits */
+#define LIGHT	0	/* Light */
+#define OILY	1	/* If bit 2 is on: on for oil, off for water */
+#define FLUID	2	/* Liquid asset, see bit 1 */
+#define NOARRR	3	/* Pirate doesn't go here unless following player */
+#define NOBACK	4	/* Cannot use "back" to move away */
+/* Bits past 10 indicate areas of interest to "hint" routines */
+#define HBASE	10	/* Base for location hint bitss */
+#define HCAVE	11	/* Trying to get into cave */
+#define HBIRD	12	/* Trying to catch bird */
+#define HSNAKE	13	/* Trying to deal with snake */
+#define HMAZE	14	/* Lost in maze */
+#define HDARK	15	/* Pondering dark room */
+#define HWITT	16	/* At Witt's End */
+#define HCLIFF	17	/* Cliff with urn */
+#define HWOODS	18	/* Lost in forest */
+#define HOGRE	19	/* Trying to deal with ogre */
+#define HJADE	20	/* Found all treasures except jade */
 
 /* hack to ignore GCC Unused Result */
 #define IGNORE(r) do{if (r){}}while(0)
