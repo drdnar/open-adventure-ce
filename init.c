@@ -383,6 +383,5 @@ void initialise(void)
     game.closed=false;
     game.clshnt=false;
     game.novice=false;
-    game.setup=1;
     game.blklin=true;
 }

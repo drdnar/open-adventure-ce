@@ -1960,8 +1960,7 @@
 199	You prod the nearest dwarf, who wakes up grumpily, takes one look at
 199	you, curses, and grabs for his axe.
 200	Is this acceptable?
-201	This adventure is already over.  To start a new adventure, or to
-201	resume an earlier adventure, please run a fresh copy of the program.
+# 201 used to be an error on restart attempt.
 202	The ogre doesn't appear to be hungry.
 203	The ogre, who despite his bulk is quite agile, easily dodges your
 203	attack.  He seems almost amused by your puny effort.

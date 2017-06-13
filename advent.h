@@ -52,7 +52,6 @@ struct game_t {
     long oldobj;
     long panic;
     long saved;
-    long setup;
     long tally;
     long thresh;
     long trndex;

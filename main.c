@@ -122,20 +122,9 @@ int main(int argc, char *argv[])
     set_seed(seedval);
 
     /*  Initialize game variables */
-    if (!game.setup)
-	initialise();
-
-    /*  Unlike earlier versions, adventure is no longer restartable.  (This
-     *  lets us get away with modifying things such as OBJSND(BIRD) without
-     *  having to be able to undo the changes later.)  If a "used" copy is
-     *  rerun, we come here and tell the player to run a fresh copy. */
-    if (game.setup <= 0) {
-	RSPEAK(201);
-	exit(0);
-    }
+    initialise();
 
     /*  Start-up, dwarf stuff */
-    game.setup= -1;
     game.zzword=RNDVOC(3,0);
     game.novice=YES(stdin, 65,1,0);
     game.newloc=1;
@@ -146,7 +135,7 @@ int main(int argc, char *argv[])
     if (logfp)
 	fprintf(logfp, "seed %ld\n", seedval);
 
-    /* interpret commands ubtil EOF or interrupt */
+    /* interpret commands until EOF or interrupt */
     for (;;) {
 	if (!do_command(stdin))
 	    break;
