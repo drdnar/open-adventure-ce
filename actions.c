@@ -470,57 +470,39 @@ static int feed(token_t verb, token_t obj)
 	RSPEAK(100);
 	return GO_CLEAROBJ;
     }
-
-    if (!(obj != SNAKE && obj != DRAGON && obj != TROLL)) {
+    else if (obj == SNAKE || obj == DRAGON || obj == TROLL) {
 	int spk=102;
 	if (obj == DRAGON && game.prop[DRAGON] != 0)spk=110;
 	if (obj == TROLL)spk=182;
-	if (obj != SNAKE || game.closed || !HERE(BIRD))
-	{
-	    RSPEAK(spk);
-	    return GO_CLEAROBJ;
+	if (obj == SNAKE && !game.closed && HERE(BIRD)) {
+	    DSTROY(BIRD);
+	    game.prop[BIRD]=0;
+	    spk = 101;
 	}
-	DSTROY(BIRD);
-	game.prop[BIRD]=0;
-	RSPEAK(101);
-	return GO_CLEAROBJ;
     }
-
-    if (obj == DWARF) {
-	if (!HERE(FOOD))
-	{
-	    RSPEAK(spk);
-	    return GO_CLEAROBJ;
+    else if (obj == DWARF) {
+	if (HERE(FOOD)) {
+	    game.dflag += 2;
+	    spk = 103;
 	}
-	game.dflag=game.dflag+2;
-	RSPEAK(103);
-	return GO_CLEAROBJ;
     }
-
-    if (obj == BEAR) {
+    else if (obj == BEAR) {
 	if (game.prop[BEAR] == 0)spk=102;
 	if (game.prop[BEAR] == 3)spk=110;
-	if (!HERE(FOOD)) {
-	    RSPEAK(spk);
-	    return GO_CLEAROBJ;
+	if (HERE(FOOD)) {
+	    DSTROY(FOOD);
+	    game.prop[BEAR]=1;
+	    game.fixed[AXE]=0;
+	    game.prop[AXE]=0;
+	    spk=168;
 	}
-	DSTROY(FOOD);
-	game.prop[BEAR]=1;
-	game.fixed[AXE]=0;
-	game.prop[AXE]=0;
-	spk=168;
-	RSPEAK(spk);
-	return GO_CLEAROBJ;
     }
-
-    if (obj == OGRE) {
+    else if (obj == OGRE) {
 	if (HERE(FOOD))
 	    spk=202;
-	RSPEAK(spk);
-	return GO_CLEAROBJ;
+    } else {
+	spk=14;
     }
-
-    spk=14;
     RSPEAK(spk);
     return GO_CLEAROBJ;
 }
