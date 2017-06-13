@@ -264,7 +264,7 @@ bool spotted_by_pirate(int i)
     /*  The pirate's spotted him.  He leaves him alone once we've
      *  found chest.  K counts if a treasure is here.  If not, and
      *  tally=1 for an unseen chest, let the pirate be spotted.
-     *  Note that game.place(CHEST)=0 might mean that he's thrown
+     *  Note that game.place[CHEST]=0 might mean that he's thrown
      *  it to the troll, but in that case he's seen the chest
      *  (game.prop=0). */
     if (game.loc == game.chloc || game.prop[CHEST] >= 0)
@@ -273,9 +273,7 @@ bool spotted_by_pirate(int i)
     for (int j=MINTRS; j<=MAXTRS; j++) {
 	/*  Pirate won't take pyramid from plover room or dark
 	 *  room (too easy!). */
-	if (j == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD])) {
-	    if (HERE(j))
-		k=1;
+	if (j==PYRAM && (game.loc==PLAC[PYRAM] || game.loc==PLAC[EMRALD])) {
 	    return true;
 	}
 	if (TOTING(j)) {
@@ -297,7 +295,6 @@ bool spotted_by_pirate(int i)
 	    game.dloc[PIRATE]=game.chloc;
 	    game.odloc[PIRATE]=game.chloc;
 	    game.dseen[PIRATE]=false;
-
 	    return true;
 	}
 	if (HERE(j))

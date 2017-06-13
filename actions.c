@@ -177,6 +177,7 @@ static int blast(void)
 	game.bonus=135;
     RSPEAK(game.bonus);
     score(0);
+    return GO_CLEAROBJ;	/* pacify compiler - we never get here */
 }
 
 static int vbreak(token_t verb, token_t obj)
@@ -234,9 +235,9 @@ static int carry(token_t verb, token_t obj)
     if (obj == RUG && game.prop[RUG] == 2)spk=222;
     if (obj == SIGN)spk=196;
     if (obj == MESSAG) {
-	spk=190;
-	return GO_CLEAROBJ;
+	RSPEAK(190);
 	DSTROY(MESSAG);
+	return GO_CLEAROBJ;
     }
     if (game.fixed[obj] != 0) {
 	RSPEAK(spk);
