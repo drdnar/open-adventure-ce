@@ -109,18 +109,6 @@ You are wandering aimlessly through the forest.
 
 You are wandering aimlessly through the forest.
 
-> e
-
-You are wandering aimlessly through the forest.
-
-> e
-
-You are wandering aimlessly through the forest.
-
-> e
-
-You are wandering aimlessly through the forest.
-
 > drop
 
 Drop what?
@@ -169,9 +157,33 @@ Break what?
 
 Wake what?
 
+> quit nagging
+
+Sorry, I don't know the word "NAGGI".
+
+> nothing doing
+
+Sorry, I don't know the word "DOING".
+
 > e
 
 You are wandering aimlessly through the forest.
+
+> e
+
+You are wandering aimlessly through the forest.
+
+Would you like to be shown out of the forest?
+
+> e
+
+Please answer the question.
+
+Would you like to be shown out of the forest?
+
+> e
+
+Please answer the question.
 
 Would you like to be shown out of the forest?
 
