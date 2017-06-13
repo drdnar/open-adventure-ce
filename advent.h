@@ -11,7 +11,8 @@
 #define MAXTRS		79
 #define MAXPARMS	25
 #define INVLIMIT	7
-#define INTRANSITIVE	-1	/* illegal object number */
+#define INTRANSITIVE	-1		/* illegal object number */
+#define SPECIALBASE	300		/* base umber of special rooms */
 
 typedef struct lcg_state
 {
@@ -146,6 +147,7 @@ extern int saveresume(FILE *, bool);
 #define GSTONE(OBJ)	((OBJ) == EMRALD || (OBJ) == RUBY || (OBJ) == AMBER || (OBJ) == SAPPH)
 #define FOREST(LOC)	((LOC) >= 145 && (LOC) <= 166)
 #define VOCWRD(LETTRS,SECT)	(VOCAB(MAKEWD(LETTRS),SECT))
+#define SPECIAL(LOC)	((LOC) > SPECIALBASE)
 
 /*  The following two functions were added to fix a bug (game.clock1 decremented
  *  while in forest).  They should probably be replaced by using another

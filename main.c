@@ -384,8 +384,8 @@ static bool dwarfmove(void)
 	if (kk != 0)
 	    do {
 		game.newloc=MOD(labs(TRAVEL[kk])/1000,1000);
-		/* Have we avoided a dwarf enciounter? */
-		bool avoided = (game.newloc > 300 ||
+		/* Have we avoided a dwarf encounter? */
+		bool avoided = (SPECIAL(game.newloc) ||
 				!INDEEP(game.newloc) ||
 				game.newloc == game.odloc[i] ||
 				(j > 1 && game.newloc == TK[j-1]) ||
@@ -529,7 +529,7 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
 	    for (;;) {
 		LL=MOD((labs(TRAVEL[KK])/1000),1000);
 		if (LL != motion) {
-		    if (LL <= 300) {
+		    if (!SPECIAL(LL)) {
 			if (FORCED(LL) && MOD((labs(TRAVEL[KEY[LL]])/1000),1000) == motion)
 			    K2=KK;
 		    }
@@ -607,7 +607,7 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
 	for (;;) {
 	    game.newloc=LL/1000;
 	    motion=MOD(game.newloc,100);
-	    if (game.newloc <= 300) {
+	    if (!SPECIAL(game.newloc)) {
 		if (game.newloc <= 100) {
 		    if (game.newloc == 0 || PCT(game.newloc))
 			break;
@@ -628,10 +628,10 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
 	}
 
 	game.newloc=MOD(LL,1000);
-	if (game.newloc <= 300)
+	if (!SPECIAL(game.newloc))
 	    return true;
 	if (game.newloc <= 500) {
-	    game.newloc=game.newloc-300;
+	    game.newloc=game.newloc-SPECIALBASE;
 	    switch (game.newloc)
 	    {
 	    case 1:

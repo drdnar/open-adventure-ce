@@ -367,7 +367,7 @@ void MOVE(long object, long where)
 	from=game.fixed[object-NOBJECTS];
     else
 	from=game.place[object];
-    if (from > 0 && from <= 300)
+    if (from > 0 && !SPECIAL(from))
 	CARRY(object,from);
     DROP(object,where);
 }
