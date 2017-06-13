@@ -470,7 +470,7 @@ static int feed(token_t verb, token_t obj)
 	return GO_CLEAROBJ;
     }
     else if (obj == SNAKE || obj == DRAGON || obj == TROLL) {
-	int spk=102;
+	spk=102;
 	if (obj == DRAGON && game.prop[DRAGON] != 0)spk=110;
 	if (obj == TROLL)spk=182;
 	if (obj == SNAKE && !game.closed && HERE(BIRD)) {
