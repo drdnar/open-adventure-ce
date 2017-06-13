@@ -606,6 +606,7 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
     }
     LL=LL/1000;
 
+    L12:
     for (;;) {
 	game.newloc=LL/1000;
 	motion=MOD(game.newloc,100);
@@ -620,7 +621,6 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
 	}
 	else if (game.prop[motion] != game.newloc/100-3)
 	    break;
-    L12:
 	do {
 	    if (TRAVEL[KK] < 0)BUG(25);
 	    ++KK;
@@ -654,6 +654,12 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
 	     *  plover-passage to get it out.  Having dropped it, go back and
 	     *  pretend he wasn't carrying it after all. */
 	    DROP(EMRALD,game.loc);
+	    do {
+		if (TRAVEL[KK] < 0)BUG(25);
+		++KK;
+		game.newloc=labs(TRAVEL[KK])/1000;
+	    } while
+		(game.newloc == LL);
 	    goto L12;
 	case 3:
 	    /*  Travel 303.  Troll bridge.  Must be done only as special
