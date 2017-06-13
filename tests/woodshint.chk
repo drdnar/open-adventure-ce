@@ -129,6 +129,10 @@ Drop what?
 
 Okay, "SAY".
 
+> nothing
+
+OK
+
 > wave
 
 Wave what?
@@ -169,9 +173,11 @@ Wake what?
 
 You are wandering aimlessly through the forest.
 
+Would you like to be shown out of the forest?
+
 > e
 
-You are wandering aimlessly through the forest.
+Please answer the question.
 
 Would you like to be shown out of the forest?
 
