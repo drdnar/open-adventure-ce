@@ -319,7 +319,7 @@ static bool dwarfmove(void)
 /* Dwarves move.  Return true if player survives, false if he dies. */
 {
     int kk, stick, attack;
-    long TK[21];
+    long tk[21];
 
 	/*  Dwarf stuff.  See earlier comments for description of
      *  variables.  Remember sixth dwarf is pirate and is thus
@@ -378,7 +378,7 @@ static bool dwarfmove(void)
     for (int i=1; i<=NDWARVES; i++) {
 	if (game.dloc[i] == 0)
 	    continue;
-	/*  Fill TK array with all the places this dwarf might go. */
+	/*  Fill tk array with all the places this dwarf might go. */
 	int j=1;
 	kk=KEY[game.dloc[i]];
 	if (kk != 0)
@@ -388,24 +388,24 @@ static bool dwarfmove(void)
 		bool avoided = (SPECIAL(game.newloc) ||
 				!INDEEP(game.newloc) ||
 				game.newloc == game.odloc[i] ||
-				(j > 1 && game.newloc == TK[j-1]) ||
+				(j > 1 && game.newloc == tk[j-1]) ||
 				j >= 20 ||
 				game.newloc == game.dloc[i] ||
 				FORCED(game.newloc) ||
 				(i == PIRATE && CNDBIT(game.newloc,NOARRR)) ||
 				labs(TRAVEL[kk])/1000000 == 100);
 		if (!avoided) {
-		    TK[j++] = game.newloc;
+		    tk[j++] = game.newloc;
 		}
 		++kk;
 	    } while
 		(TRAVEL[kk-1] >= 0);
-	TK[j]=game.odloc[i];
+	tk[j]=game.odloc[i];
 	if (j >= 2)
 	    --j;
 	j=1+randrange(j);
 	game.odloc[i]=game.dloc[i];
-	game.dloc[i]=TK[j];
+	game.dloc[i]=tk[j];
 	game.dseen[i]=(game.dseen[i] && INDEEP(game.loc)) || (game.dloc[i] == game.loc || game.odloc[i] == game.loc);
 	if (!game.dseen[i]) continue;
 	game.dloc[i]=game.loc;
@@ -507,49 +507,49 @@ static void croak(FILE *cmdin)
 
 static bool playermove(FILE *cmdin, token_t verb, int motion)
 {
-    int LL, K2, KK=KEY[game.loc];
+    int scratchloc, k2, kk=KEY[game.loc];
     game.newloc=game.loc;
-    if (KK == 0)
+    if (kk == 0)
 	BUG(26);
     if (motion == NUL)
 	return true;
     else if (motion == BACK) {
 	/*  Handle "go back".  Look for verb which goes from game.loc to
 	 *  game.oldloc, or to game.oldlc2 If game.oldloc has forced-motion.
-	 *  K2 saves entry -> forced loc -> previous loc. */
+	 *  k2 saves entry -> forced loc -> previous loc. */
 	motion=game.oldloc;
 	if (FORCED(motion))
 	    motion=game.oldlc2;
 	game.oldlc2=game.oldloc;
 	game.oldloc=game.loc;
-	K2=0;
-	if (motion == game.loc)K2=91;
-	if (CNDBIT(game.loc,NOBACK))K2=274;
-	if (K2 == 0) {
+	k2=0;
+	if (motion == game.loc)k2=91;
+	if (CNDBIT(game.loc,NOBACK))k2=274;
+	if (k2 == 0) {
 	    for (;;) {
-		LL=MOD((labs(TRAVEL[KK])/1000),1000);
-		if (LL != motion) {
-		    if (!SPECIAL(LL)) {
-			if (FORCED(LL) && MOD((labs(TRAVEL[KEY[LL]])/1000),1000) == motion)
-			    K2=KK;
+		scratchloc=MOD((labs(TRAVEL[kk])/1000),1000);
+		if (scratchloc != motion) {
+		    if (!SPECIAL(scratchloc)) {
+			if (FORCED(scratchloc) && MOD((labs(TRAVEL[KEY[scratchloc]])/1000),1000) == motion)
+			    k2=kk;
 		    }
-		    if (TRAVEL[KK] >= 0) {
-			++KK;
+		    if (TRAVEL[kk] >= 0) {
+			++kk;
 			continue;
 		    }
-		    KK=K2;
-		    if (KK == 0) {
+		    kk=k2;
+		    if (kk == 0) {
 			RSPEAK(140);
 			return true;
 		    }
 		}
 
-		motion=MOD(labs(TRAVEL[KK]),1000);
-		KK=KEY[game.loc];
+		motion=MOD(labs(TRAVEL[kk]),1000);
+		kk=KEY[game.loc];
 		break; /* fall through to ordinary travel */
 	    }
 	} else {
-	    RSPEAK(K2);
+	    RSPEAK(k2);
 	    return true;
 	}
     }
@@ -576,10 +576,10 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
 
     /* ordinary travel */
     for (;;) {
-	LL=labs(TRAVEL[KK]);
-	if (MOD(LL,1000) == 1 || MOD(LL,1000) == motion)
+	scratchloc=labs(TRAVEL[kk]);
+	if (MOD(scratchloc,1000) == 1 || MOD(scratchloc,1000) == motion)
 	    break;
-	if (TRAVEL[KK] < 0) {
+	if (TRAVEL[kk] < 0) {
 	    /*  Non-applicable motion.  Various messages depending on
 	     *  word given. */
 	    int spk=12;
@@ -593,9 +593,9 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
 	    RSPEAK(spk);
 	    return true;
 	}
-	++KK;
+	++kk;
     }
-    LL=LL/1000;
+    scratchloc=scratchloc/1000;
 
     do {
 	/*
@@ -605,7 +605,7 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
 	 * removed.
 	 */
 	for (;;) {
-	    game.newloc=LL/1000;
+	    game.newloc=scratchloc/1000;
 	    motion=MOD(game.newloc,100);
 	    if (!SPECIAL(game.newloc)) {
 		if (game.newloc <= 100) {
@@ -619,15 +619,15 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
 	    else if (game.prop[motion] != game.newloc/100-3)
 		break;
 	    do {
-		if (TRAVEL[KK] < 0)BUG(25);
-		++KK;
-		game.newloc=labs(TRAVEL[KK])/1000;
+		if (TRAVEL[kk] < 0)BUG(25);
+		++kk;
+		game.newloc=labs(TRAVEL[kk])/1000;
 	    } while
-		(game.newloc == LL);
-	    LL=game.newloc;
+		(game.newloc == scratchloc);
+	    scratchloc=game.newloc;
 	}
 
-	game.newloc=MOD(LL,1000);
+	game.newloc=MOD(scratchloc,1000);
 	if (!SPECIAL(game.newloc))
 	    return true;
 	if (game.newloc <= 500) {
@@ -652,11 +652,11 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
 		 *  pretend he wasn't carrying it after all. */
 		DROP(EMRALD,game.loc);
 		do {
-		    if (TRAVEL[KK] < 0)BUG(25);
-		    ++KK;
-		    game.newloc=labs(TRAVEL[KK])/1000;
+		    if (TRAVEL[kk] < 0)BUG(25);
+		    ++kk;
+		    game.newloc=labs(TRAVEL[kk])/1000;
 		} while
-		    (game.newloc == LL);
+		    (game.newloc == scratchloc);
 		continue;	/* back to top of do/while loop */
 	    case 3:
 		/*  Travel 303.  Troll bridge.  Must be done only as special
@@ -901,7 +901,7 @@ static void listobjects(void)
 static bool do_command(FILE *cmdin)
 /* Get and execute a command */ 
 {
-    long KQ, VERB, V1, V2;
+    long KQ, verb, V1, V2;
     long i, k, KMOD;
     static long igo = 0;
     static long obj = 0;
@@ -955,7 +955,7 @@ static bool do_command(FILE *cmdin)
 	if (TOTING(BEAR))RSPEAK(141);
 	newspeak(msg);
 	if (FORCED(game.loc)) {
-	    if (playermove(cmdin, VERB, 1))
+	    if (playermove(cmdin, verb, 1))
 		return true;
 	    else
 		continue;	/* back to top of main interpreter loop */
@@ -965,7 +965,7 @@ static bool do_command(FILE *cmdin)
 	listobjects();
 
     L2012:
-	VERB=0;
+	verb=0;
 	game.oldobj=obj;
 	obj=0;
 
@@ -1007,9 +1007,9 @@ static bool do_command(FILE *cmdin)
 	    if (game.trndex <= TRNVLS)
 		game.thresh=MOD(TRNVAL[game.trndex],100000)+1;
 	}
-	if (VERB == SAY && WD2 > 0)
-	    VERB=0;
-	if (VERB == SAY) {
+	if (verb == SAY && WD2 > 0)
+	    verb=0;
+	if (verb == SAY) {
 	    part=transitive;
 	    goto Laction;
 	}
@@ -1065,22 +1065,22 @@ static bool do_command(FILE *cmdin)
 	switch (KQ-1)
 	{
 	case 0:
-	    if (playermove(cmdin, VERB, KMOD))
+	    if (playermove(cmdin, verb, KMOD))
 		return true;
 	    else
 		continue;	/* back to top of main interpreter loop */
 	case 1: part=unknown; obj = KMOD; break;
-	case 2: part=intransitive; VERB = KMOD; break;
+	case 2: part=intransitive; verb = KMOD; break;
 	case 3: RSPEAK(KMOD); goto L2012;
 	default: BUG(22);
 	}
 
     Laction:
-	switch (action(cmdin, part, VERB, obj)) {
+	switch (action(cmdin, part, verb, obj)) {
 	case GO_TERMINATE:
 	    return true;
 	case GO_MOVE: 
-	    playermove(cmdin, VERB, NUL);
+	    playermove(cmdin, verb, NUL);
 	    return true;
 	case GO_TOP: continue;	/* back to top of main interpreter loop */
 	case GO_CLEAROBJ: goto L2012;
