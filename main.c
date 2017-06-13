@@ -3,15 +3,15 @@
  *
  * The author - Don Woods - apologises for the style of the code; it
  * is a result of running the original Fortran IV source through a
- * home-brew Fortran-to-C converter.)
+ * home-brew Fortran-to-C converter.
  *
  * Now that the code has been restructured into something much closer
  * to idiomatic C, the following is more appropriate:
  *
  * ESR apologizes for the remaing gotos (now confined to two functions
- * in this file - there used to be hundreds of them, *everywhere*),
- * and the offensive globals.  Applying the Structured Program Theorem
- * can be hard.
+ * in this file - there used to be over 350 of them, *everywhere*),
+ * and for the offensive globals.  Applying the Structured Program
+ * Theorem can be hard.
  */
 #include <stdlib.h>
 #include <stdio.h>
