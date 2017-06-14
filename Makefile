@@ -21,22 +21,22 @@ ifeq ($(UNAME_S),Linux)
 	LIBS=-lrt
 endif
 
-OBJS=main.o init.o actions.o score.o misc.o saveresume.o common.o newdb.o
+OBJS=main.o init.o actions.o score.o misc.o saveresume.o common.o
 SOURCES=$(OBJS:.o=.c) dungeon.c advent.h common.h adventure.text Makefile control linenoise/linenoise.[ch] newdungeon.py
 
 .c.o:
 	$(CC) $(CCFLAGS) $(DBX) -c $<
 
-advent:	$(OBJS) database.o linenoise.o
-	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) database.o linenoise.o $(LDFLAGS) $(LIBS)
+advent:	$(OBJS) database.o linenoise.o newdb.o
+	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) database.o newdb.o linenoise.o $(LDFLAGS) $(LIBS)
 
 main.o:	 	advent.h database.h database.c common.h newdb.h
 
-init.o:	 	advent.h database.h database.c common.h
+init.o:	 	advent.h database.h database.c common.h newdb.h
 
 actions.o:	advent.h database.h database.c common.h
 
-score.o:	advent.h database.h database.c common.h
+score.o:	advent.h database.h database.c common.h newdb.h
 
 misc.o:		advent.h database.h database.c common.h newdb.h
 
