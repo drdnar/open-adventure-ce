@@ -40,7 +40,7 @@ regress:
 	    if advent $$OPTS < $${file}.log >/tmp/regress$$$$ 2>&1; \
 	    then diff --text -u $${file}.chk /tmp/regress$$$$ || exit 1; \
 	    else echo "*** Nonzero return status on $${file}!"; exit 1; fi \
-	done
-	@rm -f /tmp/regress$$$$
+	done; \
+	rm -f /tmp/regress$$$$
 
 # end
