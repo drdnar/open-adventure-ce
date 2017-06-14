@@ -849,7 +849,7 @@ static int say(void)
     int wd=VOCAB(WD1,-1);
     if (wd == 62 || wd == 65 || wd == 71 || wd == 2025 || wd == 2034) {
 	WD2=0;
-	return(2630);
+	return GO_LOOKUP;
     }
     RSPEAK(258);
     return GO_CLEAROBJ;
