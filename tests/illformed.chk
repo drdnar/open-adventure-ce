@@ -175,6 +175,30 @@ I'm afraid I don't understand.
 Okay, from now on I'll only describe a place in full the first time
 you come to it.  To get the full description, say "look".
 
+> frob grate
+
+Sorry, I don't know the word "FROB".
+
+> read grate
+
+I'm afraid I don't understand.
+
+> grate
+
+What do you want to do with the grate?
+
+> building
+
+I don't know how to apply that word here.
+
+You're inside building.
+
+There are some keys on the ground here.
+
+There is a shiny brass lamp nearby.
+
+There is a bottle of water here.
+
 > on
 
 Your lamp is now on.
@@ -251,7 +275,7 @@ Okay, "BOO".
 
 > score
 
-You have garnered 32 out of a possible 430 points, using 49 turns.
+You have garnered 32 out of a possible 430 points, using 53 turns.
 
 > quit
 
@@ -261,7 +285,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 32 out of a possible 430, using 50 turns.
+You scored 32 out of a possible 430, using 54 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 
