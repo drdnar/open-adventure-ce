@@ -62,7 +62,7 @@ static int attack(FILE *input, long verb, token_t obj)
     if (obj == CLAM || obj == OYSTER)spk=ARB_150;
     if (obj == SNAKE)spk=ARB_46;
     if (obj == DWARF)spk=ARB_49;
-    if (obj == DWARF && game.closed) return(19000);
+    if (obj == DWARF && game.closed) return GO_DWARFWAKE;
     if (obj == DRAGON)spk=ARB_167;
     if (obj == TROLL)spk=ARB_157;
     if (obj == OGRE)spk=ARB_203;
@@ -91,7 +91,7 @@ static int attack(FILE *input, long verb, token_t obj)
     RSPEAK(ARB_49);
     GETIN(input,&WD1,&WD1X,&WD2,&WD2X);
     if (WD1 != MAKEWD(25) && WD1 != MAKEWD(250519))
-	return(2607);
+	return GO_CHECKFOO;
     PSPEAK(DRAGON,3);
     game.prop[DRAGON]=1;
     game.prop[RUG]=0;
@@ -325,7 +325,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
         if (!TOTING(obj)) {RSPEAK(spk); return GO_CLEAROBJ;}
         if (obj == BIRD && HERE(SNAKE)) {
             RSPEAK(ARB_30);
-            if (game.closed) return(19000);
+            if (game.closed) return GO_DWARFWAKE;
             DSTROY(SNAKE);
             /* Set game.prop for use by travel options */
             game.prop[SNAKE]=1;
@@ -949,7 +949,7 @@ static int wake(token_t verb, token_t obj)
 	return GO_CLEAROBJ;
     }
     RSPEAK(ARB_199);
-    return(19000);
+    return GO_DWARFWAKE;
 }
 
 static int wave(token_t verb, token_t obj)
@@ -974,7 +974,7 @@ static int wave(token_t verb, token_t obj)
     } else {
 	if (game.closed) {
 	    RSPEAK(spk);
-	    return(19000);
+	    return GO_DWARFWAKE;
 	}
 	if (game.closng || !AT(FISSUR)) {RSPEAK(spk); return GO_CLEAROBJ;}
 	if (HERE(BIRD))RSPEAK(spk);
@@ -1041,7 +1041,7 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj)
 	}
 
 	if (WD2 > 0)
-	    return(2800);
+	    return GO_WORD2;
 	if (verb != 0)
 	    part = transitive;
     }
