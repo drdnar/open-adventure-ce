@@ -467,14 +467,13 @@ static bool dwarfmove(void)
 static void croak(FILE *cmdin)
 /*  Okay, he's dead.  Let's get on with it. */
 {
+    ++game.numdie;
     if (game.closng) {
 	/*  He died during closing time.  No resurrection.  Tally up a
 	 *  death and exit. */
 	RSPEAK(131);
-	++game.numdie;
 	score(0);
     } else {
-	++game.numdie;
 	if (!YES(cmdin,79+game.numdie*2,80+game.numdie*2,54))
 	    score(0);
 	if (game.numdie == MAXDIE)
@@ -486,10 +485,8 @@ static void croak(FILE *cmdin)
 	for (int j=1; j<=NOBJECTS; j++) {
 	    int i=NOBJECTS + 1 - j;
 	    if (TOTING(i)) {
-		int k=game.oldlc2;
-		if (i == LAMP)
-		    k=1;
-		DROP(i,k);
+		/* Always leave lamp where it's accessible aboveground */
+		DROP(i, (i == LAMP) ? 1 : game.oldlc2);
 	    }
 	}
 	game.loc=3;
