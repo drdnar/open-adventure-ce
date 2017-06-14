@@ -14,7 +14,8 @@ binary:debug:
   stage: build
   before_script:
     - apk update
-    - apk add make gcc musl-dev
+    - apk add make gcc musl-dev python3 py-pip
+    - pip install PyYAML
   script: 
     - make debug
   artifacts:
@@ -31,7 +32,8 @@ binary:release:
   stage: build
   before_script:
     - apk update
-    - apk add make gcc musl-dev
+    - apk add make gcc musl-dev python3 py-pip
+    - pip install PyYAML
   script: 
     - make advent
   artifacts:
