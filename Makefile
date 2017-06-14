@@ -22,7 +22,7 @@ ifeq ($(UNAME_S),Linux)
 endif
 
 OBJS=main.o init.o actions.o score.o misc.o saveresume.o common.o newdb.o
-SOURCES=$(OBJS:.o=.c) dungeon.c advent.h common.h adventure.text Makefile control linenoise/linenoise.[ch]
+SOURCES=$(OBJS:.o=.c) dungeon.c advent.h common.h adventure.text Makefile control linenoise/linenoise.[ch] newdungeon.py
 
 .c.o:
 	$(CC) $(CCFLAGS) $(DBX) -c $<
@@ -30,7 +30,7 @@ SOURCES=$(OBJS:.o=.c) dungeon.c advent.h common.h adventure.text Makefile contro
 advent:	$(OBJS) database.o linenoise.o
 	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) database.o linenoise.o $(LDFLAGS) $(LIBS)
 
-main.o:	 	advent.h database.h database.c common.h
+main.o:	 	advent.h database.h database.c common.h newdb.h
 
 init.o:	 	advent.h database.h database.c common.h
 
@@ -47,10 +47,14 @@ common.o:	common.h
 database.o:     database.c database.h common.h
 	$(CC) $(CCFLAGS) $(DBX) -c database.c
 
-newdb.o:	newdb.h
+newdb.o:	newdb.c newdb.h
+	$(CC) $(CCFLAGS) $(DBX) -c newdb.c
 
 database.c database.h: dungeon
 	./dungeon
+
+newdb.c newdb.h:
+	./newdungeon.py
 
 linenoise.o:	linenoise/linenoise.h
 	$(CC) -c linenoise/linenoise.c
@@ -60,6 +64,7 @@ dungeon: dungeon.o common.o
 
 clean:
 	rm -f *.o advent *.html database.[ch] dungeon *.gcno *.gcda
+	rm -f newdb.c newdb.h
 	rm -f README advent.6 MANIFEST *.tar.gz
 	rm -f *~
 	cd tests; $(MAKE) --quiet clean

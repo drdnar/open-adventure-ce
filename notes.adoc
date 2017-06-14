@@ -62,7 +62,9 @@ a "seed" command) will replay reliably, including random events.
 
 The adventure.text file is no longer required at runtime.  Instead, it
 is compiled at build time to a source module containing C structures,
-which is then linked to the advent binary.
+which is then linked to the advent binary. There is an adventure.yaml file
+as well; this is also compiled to C code, and will eventually replace
+adventure.text altogether.
 
 The game-save format has changed.  This was done to simplify the
 FORTRAN-derived code that formerly implemented the save/restore

@@ -2,10 +2,10 @@
 
 # This is the new open-adventure dungeon generator. It'll eventually replace the existing dungeon.c It currently outputs a .h and .c pair for C code.
 
-import json
-import collections
+import yaml
+import sys
 
-json_name = "adventure.json"
+yaml_name = "adventure.yaml"
 h_name = "newdb.h"
 c_name = "newdb.c"
 
@@ -19,27 +19,27 @@ def c_escape(string):
 
 def write_regular_messages(name, h, c):
 
-    h += "enum {}_refs {{\n".format(name)
-    c += "char* {}[] = {{\n".format(name)
+    if name != "short_location_descriptions":
+        h += "enum {}_refs {{\n".format(name)
+        for key, text in dungeon[name]:
+            h += "  {},\n".format(key)
+        h += "};\n\n"
     
+    c += "char* {}[] = {{\n".format(name)   
     index = 0
-    for key, text in dungeon[name].items():
-        h += "  {},\n".format(key)
+    for key, text in dungeon[name]:
         if text == None:
             c += "  NULL,\n"
         else:
             text = c_escape(text)
             c += "  \"{}\",\n".format(text)
-        
         index += 1
-        
-    h += "};\n\n"
     c += "};\n\n"
     
     return (h, c)
 
-with open(json_name, "r") as f:
-    dungeon = json.load(f, object_pairs_hook = collections.OrderedDict)
+with open(yaml_name, "r") as f:
+    dungeon = yaml.load(f)
 
 h = """#include <stdio.h>
 
@@ -74,7 +74,7 @@ for name in [
 
 h += "enum object_descriptions_refs {\n"
 c += "object_description_t object_descriptions[] = {\n"
-for key, data in dungeon["object_descriptions"].items():
+for key, data in dungeon["object_descriptions"]:
     try:
         data["inventory"] = "\"{}\"".format(c_escape(data["inventory"]))
     except AttributeError:
@@ -87,7 +87,7 @@ for key, data in dungeon["object_descriptions"].items():
         c += "    .longs = (char* []) {\n"
         for l in data["longs"]:
             l = c_escape(l)
-            c += "      \"{}\"\n".format(l)
+            c += "      \"{}\",\n".format(l)
         c += "    },\n"
     except (TypeError, IndexError):
         c += "    .longs = NULL,\n"
@@ -95,6 +95,11 @@ for key, data in dungeon["object_descriptions"].items():
 h += "};"
 c += "};"
 
+c += """
+size_t CLSSES = {};
+""".format(len(dungeon["class_messages"]))
+
+# finally, write out the files
 d = {
     h_name: h,
     c_name: c,
