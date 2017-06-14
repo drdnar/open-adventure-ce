@@ -46,7 +46,6 @@ FILE  *logfp;
 bool oldstyle = false;
 bool editline = true;
 bool prompt = true;
-lcg_state lcgstate;
 
 extern void initialise();
 extern void score(long);
@@ -114,9 +113,9 @@ int main(int argc, char *argv[])
 
     /* Initialize our LCG PRNG with parameters tested against
      * Knuth vol. 2. by the original authors */
-    lcgstate.a = 1093;
-    lcgstate.c = 221587;
-    lcgstate.m = 1048576;
+    game.lcg_a = 1093;
+    game.lcg_c = 221587;
+    game.lcg_m = 1048576;
     srand(time(NULL));
     long seedval = (long)rand();
     set_seed(seedval);

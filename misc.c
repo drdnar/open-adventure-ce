@@ -460,21 +460,21 @@ bool TSTBIT(long mask, int bit)
 void set_seed(long seedval)
 /* Set the LCG seed */
 {
-    lcgstate.x = (unsigned long) seedval % lcgstate.m;
+    game.lcg_x = (unsigned long) seedval % game.lcg_m;
 }
 
 unsigned long get_next_lcg_value(void)
 /* Return the LCG's current value, and then iterate it. */
 {
-    unsigned long old_x = lcgstate.x;
-    lcgstate.x = (lcgstate.a * lcgstate.x + lcgstate.c) % lcgstate.m;
+    unsigned long old_x = game.lcg_x;
+    game.lcg_x = (game.lcg_a * game.lcg_x + game.lcg_c) % game.lcg_m;
     return old_x;
 }
 
 long randrange(long range)
 /* Return a random integer from [0, range). */
 {
-    return range * get_next_lcg_value() / lcgstate.m;
+    return range * get_next_lcg_value() / game.lcg_m;
 }
 
 long RNDVOC(long second, long force)

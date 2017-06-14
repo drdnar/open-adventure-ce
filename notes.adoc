@@ -111,7 +111,6 @@ ways:
   We don't need whatever minor performance gains this might collect,
   and the choice to refrain will make forward translation into future
   languages easier.
-
 * There are a few gotos left that resist restructuring; all of these
   are in the principal command interpreter function implementing its
   state machine.

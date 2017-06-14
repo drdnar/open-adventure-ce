@@ -14,15 +14,11 @@
 #define INTRANSITIVE	-1		/* illegal object number */
 #define SPECIALBASE	300		/* base umber of special rooms */
 
-typedef struct lcg_state
-{
-  unsigned long a, c, m, x;
-} lcg_state;
-
 typedef long token_t;	/* word token - someday this will be char[TOKLEN+1] */
 typedef long vocab_t;	/* index into a vocabulary array */
 
 struct game_t {
+    unsigned long lcg_a, lcg_c, lcg_m, lcg_x;
     long abbnum;
     long blklin;
     long bonus;
@@ -81,7 +77,6 @@ extern const char ascii_to_advent[];
 extern const char advent_to_ascii[];
 extern FILE *logfp;
 extern bool oldstyle, editline, prompt;
-extern lcg_state lcgstate;
 
 /* b is not needed for POSIX but harmless */
 #define READ_MODE "rb"
