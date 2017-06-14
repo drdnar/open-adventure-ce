@@ -292,4 +292,8 @@ in
 feed bear
 take chain
 unlock chain
+# Also tests message from bear in inventory
 lock chain
+unlock chain
+take bear
+inven

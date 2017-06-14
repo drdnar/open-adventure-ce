@@ -162,6 +162,14 @@ Thank you, it was delicious!
 
 I see no blood here.
 
+> drink keys
+
+Don't be ridiculous!
+
+> light keys
+
+I'm afraid I don't understand.
+
 > brief
 
 Okay, from now on I'll only describe a place in full the first time
@@ -243,7 +251,7 @@ Okay, "BOO".
 
 > score
 
-You have garnered 32 out of a possible 430 points, using 47 turns.
+You have garnered 32 out of a possible 430 points, using 49 turns.
 
 > quit
 
@@ -253,7 +261,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 32 out of a possible 430, using 48 turns.
+You scored 32 out of a possible 430, using 50 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 

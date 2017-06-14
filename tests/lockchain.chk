@@ -1679,8 +1679,27 @@ The chain is now unlocked.
 
 The chain is now locked.
 
+> unlock chain
 
-You scored 239 out of a possible 430, using 290 turns.
+The chain is now unlocked.
+
+> take bear
+
+OK
+
+> inven
+
+You are currently holding the following:
+Set of keys
+Brass lantern
+Small bottle
+Egg-sized emerald
+Glistening pearl
+
+You are being followed by a very large, tame bear.
+
+
+You scored 239 out of a possible 430, using 293 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 
