@@ -3,6 +3,7 @@
 
 #include "advent.h"
 #include "database.h"
+#include "newdb.h"
 #include "linenoise/linenoise.h"
 
 /*
@@ -38,7 +39,7 @@ int saveresume(FILE *input, bool resume)
 	/*  Suspend.  Offer to save things in a file, but charging
 	 *  some points (so can't win by using saved games to retry
 	 *  battles or to start over after learning zzword). */
-	RSPEAK(260);
+	RSPEAK(ARB_260);
 	if (!YES(input,200,54,54)) return GO_CLEAROBJ;
 	game.saved=game.saved+5;
     }
@@ -46,7 +47,7 @@ int saveresume(FILE *input, bool resume)
     {
 	/*  Resume.  Read a suspended game back from a file. */
 	if (game.loc != 1 || game.abbrev[1] != 1) {
-	    RSPEAK(268);
+	    RSPEAK(ARB_268);
 	    if (!YES(input,200,54,54)) return GO_CLEAROBJ;
 	}
     }
@@ -73,7 +74,7 @@ int saveresume(FILE *input, bool resume)
 	save.bivalve = OBJTXT[OYSTER];
 	IGNORE(fwrite(&save, sizeof(struct save_t), 1, fp));
 	fclose(fp);
-	RSPEAK(266);
+	RSPEAK(ARB_266);
 	exit(0);
     } else {
 	IGNORE(fread(&save, sizeof(struct save_t), 1, fp));
@@ -81,7 +82,7 @@ int saveresume(FILE *input, bool resume)
 	if (save.version != VRSION) {
 	    SETPRM(1,k/10,MOD(k,10));
 	    SETPRM(3,VRSION/10,MOD(VRSION,10));
-	    RSPEAK(269);
+	    RSPEAK(ARB_269);
 	} else {
 	    memcpy(&game, &save.game, sizeof(struct game_t));
 	    OBJSND[BIRD] = save.bird;

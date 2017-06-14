@@ -96,29 +96,29 @@ void score(long mode)
     if(mode < 0) {
 	SETPRM(1,score,mxscor);
 	SETPRM(3,game.turns,game.turns);
-	RSPEAK(259);
+	RSPEAK(ARB_259);
 	return;
     }
 
     /* that should be good enough.  Let's tell him all about it. */
     if(score+game.trnluz+1 >= mxscor && game.trnluz != 0)
-	RSPEAK(242);
+	RSPEAK(ARB_242);
     if(score+game.saved+1 >= mxscor && game.saved != 0)
-	RSPEAK(143);
+	RSPEAK(ARB_143);
     SETPRM(1,score,mxscor);
     SETPRM(3,game.turns,game.turns);
-    RSPEAK(262);
+    RSPEAK(ARB_262);
     for (i=1; i<=CLSSES; i++) {
 	if(CVAL[i] >= score) {
 	    newspeak(class_messages[i]);
 	    i=CVAL[i]+1-score;
 	    SETPRM(1,i,i);
-	    RSPEAK(263);
+	    RSPEAK(ARB_263);
 	    exit(0);
 	}
     }
-    RSPEAK(265);
-    RSPEAK(264);
+    RSPEAK(ARB_265);
+    RSPEAK(ARB_264);
     exit(0);
 
 }

@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include "advent.h"
 #include "database.h"
+#include "newdb.h"
 
 /* Limit visibility of ugly globals.  Eventually these should go away. */
 extern long WD1, WD1X, WD2, WD2X;
@@ -41,7 +42,7 @@ static int attack(FILE *input, long verb, token_t obj)
 	}
     }
     if (obj == BIRD) {
-	spk=137;
+	spk=ARB_137;
 	if (game.closed)
 	{
 	    RSPEAK(spk);
@@ -49,7 +50,7 @@ static int attack(FILE *input, long verb, token_t obj)
 	}
 	DSTROY(BIRD);
 	game.prop[BIRD]=0;
-	spk=45;
+	spk=ARB_45;
     }
     if (obj == VEND) {
 	PSPEAK(VEND,game.prop[VEND]+2);
@@ -57,17 +58,17 @@ static int attack(FILE *input, long verb, token_t obj)
 	return GO_CLEAROBJ;
     }
 
-    if (obj == 0)spk=44;
-    if (obj == CLAM || obj == OYSTER)spk=150;
-    if (obj == SNAKE)spk=46;
-    if (obj == DWARF)spk=49;
+    if (obj == 0)spk=ARB_44;
+    if (obj == CLAM || obj == OYSTER)spk=ARB_150;
+    if (obj == SNAKE)spk=ARB_46;
+    if (obj == DWARF)spk=ARB_49;
     if (obj == DWARF && game.closed) return(19000);
-    if (obj == DRAGON)spk=167;
-    if (obj == TROLL)spk=157;
-    if (obj == OGRE)spk=203;
+    if (obj == DRAGON)spk=ARB_167;
+    if (obj == TROLL)spk=ARB_157;
+    if (obj == OGRE)spk=ARB_203;
     if (obj == OGRE && i > 0) {
 	RSPEAK(spk);
-	RSPEAK(6);
+	RSPEAK(ARB_6);
 	DSTROY(OGRE);
 	int k=0;
 	for (i=1; i < PIRATE; i++) {
@@ -81,13 +82,13 @@ static int attack(FILE *input, long verb, token_t obj)
 	RSPEAK(spk);
 	return GO_CLEAROBJ;
     }
-    if (obj == BEAR)spk=165+(game.prop[BEAR]+1)/2;
+    if (obj == BEAR)spk=ARB_165+(game.prop[BEAR]+1)/2;
     if (obj != DRAGON || game.prop[DRAGON] != 0) {RSPEAK(spk); return GO_CLEAROBJ;}
     /*  Fun stuff for dragon.  If he insists on attacking it, win!
      *  Set game.prop to dead, move dragon to central loc (still
      *  fixed), move rug there (not fixed), and move him there,
      *  too.  Then do a null motion to get new description. */
-    RSPEAK(49);
+    RSPEAK(ARB_49);
     GETIN(input,&WD1,&WD1X,&WD2,&WD2X);
     if (WD1 != MAKEWD(25) && WD1 != MAKEWD(250519))
 	return(2607);
@@ -114,15 +115,15 @@ static int bigwords(long foo)
  *  word zips the eggs back to the giant room (unless already there). */
 {
     int k=VOCAB(foo,3);
-    int spk=42;
+    int spk=ARB_42;
     if (game.foobar != 1-k) {
-	if (game.foobar != 0)spk=151;
+	if (game.foobar != 0)spk=ARB_151;
 	RSPEAK(spk);
 	return GO_CLEAROBJ;
     } else {
 	game.foobar=k;
 	if (k != 4) {
-	    RSPEAK(54);
+	    RSPEAK(ARB_54);
 	    return GO_CLEAROBJ;
 	}
 	game.foobar=0;
@@ -149,10 +150,10 @@ static int bivalve(token_t verb, token_t obj)
 {
     int spk, k=0;
     if (obj == OYSTER)k=1;
-    spk=124+k;
-    if (TOTING(obj))spk=120+k;
-    if (!TOTING(TRIDNT))spk=122+k;
-    if (verb == LOCK)spk=61;
+    spk=ARB_124+k;
+    if (TOTING(obj))spk=ARB_120+k;
+    if (!TOTING(TRIDNT))spk=ARB_122+k;
+    if (verb == LOCK)spk=ARB_61;
     if (spk == 124) {
 	DSTROY(CLAM);
 	DROP(OYSTER,game.loc);
@@ -167,7 +168,7 @@ static int blast(void)
 {
     if (game.prop[ROD2] < 0 || !game.closed)
     {
-	RSPEAK(67);
+	RSPEAK(ARB_67);
 	return GO_CLEAROBJ;
     }
     game.bonus=133;
@@ -184,15 +185,15 @@ static int vbreak(token_t verb, token_t obj)
 /*  Break.  Only works for mirror in repository and, of course, the vase. */
 {
     int spk = ACTSPK[verb];
-    if (obj == MIRROR)spk=148;
+    if (obj == MIRROR)spk=ARB_148;
     if (obj == VASE && game.prop[VASE] == 0) {
 	if (TOTING(VASE))DROP(VASE,game.loc);
 	game.prop[VASE]=2;
 	game.fixed[VASE]= -1;
-	spk=198;
+	spk=ARB_198;
     } else {
 	if (obj == MIRROR && game.closed) {
-	    RSPEAK(197);
+	    RSPEAK(ARB_197);
 	    return GO_DWARFWAKE;
 	}
     }
@@ -205,7 +206,7 @@ static int brief(void)
 {
     game.abbnum=10000;
     game.detail=3;
-    RSPEAK(156);
+    RSPEAK(ARB_156);
     return GO_CLEAROBJ;
 }
 
@@ -224,18 +225,18 @@ static int carry(token_t verb, token_t obj)
 	obj=game.atloc[game.loc];
     }
 
-    if (TOTING(obj)) {RSPEAK(24); return GO_CLEAROBJ;}
-    spk=25;
-    if (obj == PLANT && game.prop[PLANT] <= 0)spk=115;
-    if (obj == BEAR && game.prop[BEAR] == 1)spk=169;
-    if (obj == CHAIN && game.prop[BEAR] != 0)spk=170;
-    if (obj == URN)spk=215;
-    if (obj == CAVITY)spk=217;
-    if (obj == BLOOD)spk=239;
-    if (obj == RUG && game.prop[RUG] == 2)spk=222;
-    if (obj == SIGN)spk=196;
+    if (TOTING(obj)) {RSPEAK(ARB_24); return GO_CLEAROBJ;}
+    spk=ARB_25;
+    if (obj == PLANT && game.prop[PLANT] <= 0)spk=ARB_115;
+    if (obj == BEAR && game.prop[BEAR] == 1)spk=ARB_169;
+    if (obj == CHAIN && game.prop[BEAR] != 0)spk=ARB_170;
+    if (obj == URN)spk=ARB_215;
+    if (obj == CAVITY)spk=ARB_217;
+    if (obj == BLOOD)spk=ARB_239;
+    if (obj == RUG && game.prop[RUG] == 2)spk=ARB_222;
+    if (obj == SIGN)spk=ARB_196;
     if (obj == MESSAG) {
-	RSPEAK(190);
+	RSPEAK(ARB_190);
 	DSTROY(MESSAG);
 	return GO_CLEAROBJ;
     }
@@ -247,15 +248,15 @@ static int carry(token_t verb, token_t obj)
 	if (!HERE(BOTTLE) || LIQUID() != obj) {
 	    if (TOTING(BOTTLE) && game.prop[BOTTLE] == 1)
 		return(fill(verb, BOTTLE));
-	    if (game.prop[BOTTLE] != 1)spk=105;
-	    if (!TOTING(BOTTLE))spk=104;
+	    if (game.prop[BOTTLE] != 1)spk=ARB_105;
+	    if (!TOTING(BOTTLE))spk=ARB_104;
 	    RSPEAK(spk);
 	    return GO_CLEAROBJ;
 	}
 	obj = BOTTLE;
     }
 
-    spk=92;
+    spk=ARB_92;
     if (game.holdng >= INVLIMIT) {
 	RSPEAK(spk);
 	return GO_CLEAROBJ;
@@ -263,11 +264,11 @@ static int carry(token_t verb, token_t obj)
     else if (obj == BIRD && game.prop[BIRD] != 1 && -1-game.prop[BIRD] != 1) {
 	if (game.prop[BIRD] == 2) {
 	    DSTROY(BIRD);
-	    RSPEAK(238);
+	    RSPEAK(ARB_238);
 	    return GO_CLEAROBJ;
 	}
-	if (!TOTING(CAGE))spk=27;
-	if (TOTING(ROD))spk=26;
+	if (!TOTING(CAGE))spk=ARB_27;
+	if (TOTING(ROD))spk=ARB_26;
 	if (spk/2 == 13) {
 	    RSPEAK(spk);
 	    return GO_CLEAROBJ;
@@ -283,7 +284,7 @@ static int carry(token_t verb, token_t obj)
 	game.prop[obj]=0;
 	game.prop[CAVITY]=1;
     }
-    RSPEAK(54);
+    RSPEAK(ARB_54);
     return GO_CLEAROBJ;
 }
 
@@ -292,18 +293,18 @@ static int chain(token_t verb)
 {
     int spk;
     if (verb != LOCK) {
-	spk=171;
-	if (game.prop[BEAR] == 0)spk=41;
-	if (game.prop[CHAIN] == 0)spk=37;
+	spk=ARB_171;
+	if (game.prop[BEAR] == 0)spk=ARB_41;
+	if (game.prop[CHAIN] == 0)spk=ARB_37;
 	if (spk != 171) {RSPEAK(spk); return GO_CLEAROBJ;}
 	game.prop[CHAIN]=0;
 	game.fixed[CHAIN]=0;
 	if (game.prop[BEAR] != 3)game.prop[BEAR]=2;
 	game.fixed[BEAR]=2-game.prop[BEAR];
     } else {
-	spk=172;
-	if (game.prop[CHAIN] != 0)spk=34;
-	if (game.loc != PLAC[CHAIN])spk=173;
+	spk=ARB_172;
+	if (game.prop[CHAIN] != 0)spk=ARB_34;
+	if (game.loc != PLAC[CHAIN])spk=ARB_173;
 	if (spk != 172) {RSPEAK(spk); return GO_CLEAROBJ;}
 	game.prop[CHAIN]=2;
 	if (TOTING(CHAIN))DROP(CHAIN,game.loc);
@@ -323,21 +324,21 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
         if (TOTING(ROD2) && obj == ROD && !TOTING(ROD))obj=ROD2;
         if (!TOTING(obj)) {RSPEAK(spk); return GO_CLEAROBJ;}
         if (obj == BIRD && HERE(SNAKE)) {
-            RSPEAK(30);
+            RSPEAK(ARB_30);
             if (game.closed) return(19000);
             DSTROY(SNAKE);
             /* Set game.prop for use by travel options */
             game.prop[SNAKE]=1;
 
         } else if ((GSTONE(obj) && AT(CAVITY) && game.prop[CAVITY] != 0)) {
-            RSPEAK(218);
+            RSPEAK(ARB_218);
             game.prop[obj]=1;
             game.prop[CAVITY]=0;
             if (HERE(RUG) && ((obj == EMRALD && game.prop[RUG] != 2) || (obj == RUBY &&
 									 game.prop[RUG] == 2))) {
-                spk=219;
-                if (TOTING(RUG))spk=220;
-                if (obj == RUBY)spk=221;
+                spk=ARB_219;
+                if (TOTING(RUG))spk=ARB_220;
+                if (obj == RUBY)spk=ARB_221;
                 RSPEAK(spk);
                 if (spk != 220) {
                     int k = 2-game.prop[RUG];
@@ -352,12 +353,12 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
             PSPEAK(BATTER,0);
             return GO_CLEAROBJ;
         } else if (obj == BIRD && AT(DRAGON) && game.prop[DRAGON] == 0) {
-            RSPEAK(154);
+            RSPEAK(ARB_154);
             DSTROY(BIRD);
             game.prop[BIRD]=0;
             return GO_CLEAROBJ;
         } else if (obj == BEAR && AT(TROLL)) {
-            RSPEAK(163);
+            RSPEAK(ARB_163);
             MOVE(TROLL,0);
             MOVE(TROLL+NOBJECTS,0);
             MOVE(TROLL2,PLAC[TROLL]);
@@ -365,7 +366,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
             JUGGLE(CHASM);
             game.prop[TROLL]=2;
         } else if (obj != VASE || game.loc == PLAC[PILLOW]) {
-            RSPEAK(54);
+            RSPEAK(ARB_54);
         } else {
             game.prop[VASE]=2;
             if (AT(PILLOW))game.prop[VASE]=0;
@@ -393,17 +394,17 @@ static int drink(token_t verb, token_t obj)
     if (obj == 0 && LIQLOC(game.loc) != WATER && (LIQUID() != WATER || !HERE(BOTTLE)))
 	return GO_UNKNOWN;
     if (obj != BLOOD) {
-	if (obj != 0 && obj != WATER)spk=110;
+	if (obj != 0 && obj != WATER)spk=ARB_110;
 	if (spk != 110 && LIQUID() == WATER && HERE(BOTTLE)) {
 	    game.prop[BOTTLE]=1;
 	    game.place[WATER]=0;
-	    spk=74;
+	    spk=ARB_74;
 	}
     } else {
 	DSTROY(BLOOD);
 	game.prop[DRAGON]=2;
 	OBJSND[BIRD]=OBJSND[BIRD]+3;
-	spk=240;
+	spk=ARB_240;
     }
     RSPEAK(spk);
     return GO_CLEAROBJ;
@@ -418,15 +419,15 @@ static int eat(token_t verb, token_t obj)
 	if (!HERE(FOOD))
 	    return GO_UNKNOWN;
 	DSTROY(FOOD);
-	spk=72;
+	spk=ARB_72;
     } else {
 	if (obj == FOOD) {
 	    DSTROY(FOOD);
-	    spk=72;
+	    spk=ARB_72;
 	}
 	if (obj == BIRD || obj == SNAKE || obj == CLAM || obj == OYSTER || obj ==
 	   DWARF || obj == DRAGON || obj == TROLL || obj == BEAR || obj ==
-	   OGRE)spk=71;
+	   OGRE)spk=ARB_71;
     }
     RSPEAK(spk);
     return GO_CLEAROBJ;
@@ -444,15 +445,15 @@ static int extinguish(token_t verb, int obj)
 
     if (obj == URN) {
 	game.prop[URN]=game.prop[URN]/2;
-	spk=210;
+	spk=ARB_210;
     }
     else if (obj == LAMP) {
 	game.prop[LAMP]=0;
-	RSPEAK(40);
+	RSPEAK(ARB_40);
 	spk = DARK(game.loc) ? 16 : 0;
     }
     else if (obj == DRAGON || obj == VOLCAN)
-	spk=146;
+	spk=ARB_146;
     RSPEAK(spk);
     return GO_CLEAROBJ;
 }
@@ -463,41 +464,41 @@ static int feed(token_t verb, token_t obj)
 {
     int spk = ACTSPK[verb];
     if (obj == BIRD) {
-	RSPEAK(100);
+	RSPEAK(ARB_100);
 	return GO_CLEAROBJ;
     }
     else if (obj == SNAKE || obj == DRAGON || obj == TROLL) {
-	spk=102;
-	if (obj == DRAGON && game.prop[DRAGON] != 0)spk=110;
-	if (obj == TROLL)spk=182;
+	spk=ARB_102;
+	if (obj == DRAGON && game.prop[DRAGON] != 0)spk=ARB_110;
+	if (obj == TROLL)spk=ARB_182;
 	if (obj == SNAKE && !game.closed && HERE(BIRD)) {
 	    DSTROY(BIRD);
 	    game.prop[BIRD]=0;
-	    spk = 101;
+	    spk = ARB_101;
 	}
     }
     else if (obj == DWARF) {
 	if (HERE(FOOD)) {
 	    game.dflag += 2;
-	    spk = 103;
+	    spk = ARB_103;
 	}
     }
     else if (obj == BEAR) {
-	if (game.prop[BEAR] == 0)spk=102;
-	if (game.prop[BEAR] == 3)spk=110;
+	if (game.prop[BEAR] == 0)spk=ARB_102;
+	if (game.prop[BEAR] == 3)spk=ARB_110;
 	if (HERE(FOOD)) {
 	    DSTROY(FOOD);
 	    game.prop[BEAR]=1;
 	    game.fixed[AXE]=0;
 	    game.prop[AXE]=0;
-	    spk=168;
+	    spk=ARB_168;
 	}
     }
     else if (obj == OGRE) {
 	if (HERE(FOOD))
-	    spk=202;
+	    spk=ARB_202;
     } else {
-	spk=14;
+	spk=ARB_14;
     }
     RSPEAK(spk);
     return GO_CLEAROBJ;
@@ -510,27 +511,27 @@ int fill(token_t verb, token_t obj)
     int k;
     int spk = ACTSPK[verb];
     if (obj == VASE) {
-	spk=29;
-	if (LIQLOC(game.loc) == 0)spk=144;
+	spk=ARB_29;
+	if (LIQLOC(game.loc) == 0)spk=ARB_144;
 	if (LIQLOC(game.loc) == 0 || !TOTING(VASE)) {
 	    RSPEAK(spk);
 	    return GO_CLEAROBJ;
 	}
-	RSPEAK(145);
+	RSPEAK(ARB_145);
 	game.prop[VASE]=2;
 	game.fixed[VASE]= -1;
 	return(discard(verb, obj, true));
     }
     else if (obj == URN) {
-	spk=213;
+	spk=ARB_213;
 	if (game.prop[URN] != 0) {RSPEAK(spk); return GO_CLEAROBJ;}
-	spk=144;
+	spk=ARB_144;
 	k=LIQUID();
 	if (k == 0 || !HERE(BOTTLE)) {RSPEAK(spk); return GO_CLEAROBJ;}
 	game.place[k]=0;
 	game.prop[BOTTLE]=1;
 	if (k == OIL)game.prop[URN]=1;
-	spk=211+game.prop[URN];
+	spk=ARB_211+game.prop[URN];
 	RSPEAK(spk);
 	return GO_CLEAROBJ;
     }
@@ -540,20 +541,20 @@ int fill(token_t verb, token_t obj)
     }
     else if (obj == 0 && !HERE(BOTTLE))
 	return GO_UNKNOWN;
-    spk=107;
+    spk=ARB_107;
     if (LIQLOC(game.loc) == 0)
-	spk=106;
+	spk=ARB_106;
     if (HERE(URN) && game.prop[URN] != 0)
-	spk=214;
+	spk=ARB_214;
     if (LIQUID() != 0)
-	spk=105;
+	spk=ARB_105;
     if (spk == 107) {
 	game.prop[BOTTLE]=MOD(COND[game.loc],4)/2*2;
 	k=LIQUID();
 	if (TOTING(BOTTLE))
 	    game.place[k]= -1;
 	if (k == OIL)
-	    spk=108;
+	    spk=ARB_108;
     }
     RSPEAK(spk);
     return GO_CLEAROBJ;
@@ -567,9 +568,9 @@ static int find(token_t verb, token_t obj)
        (LIQUID() == obj && AT(BOTTLE)) ||
        obj == LIQLOC(game.loc) ||
        (obj == DWARF && ATDWRF(game.loc) > 0))
-	spk=94;
-    if (game.closed)spk=138;
-    if (TOTING(obj))spk=24;
+	spk=ARB_94;
+    if (game.closed)spk=ARB_138;
+    if (TOTING(obj))spk=ARB_24;
     RSPEAK(spk);
     return GO_CLEAROBJ;
 }
@@ -579,8 +580,8 @@ static int fly(token_t verb, token_t obj)
 {
     int spk = ACTSPK[verb];
     if (obj == INTRANSITIVE) {
-	if (game.prop[RUG] != 2)spk=224;
-	if (!HERE(RUG))spk=225;
+	if (game.prop[RUG] != 2)spk=ARB_224;
+	if (!HERE(RUG))spk=ARB_225;
 	if (spk/2 == 112) {
 	    RSPEAK(spk);
 	    return GO_CLEAROBJ;
@@ -592,13 +593,13 @@ static int fly(token_t verb, token_t obj)
 	RSPEAK(spk);
 	return GO_CLEAROBJ;
     }
-    spk=223;
+    spk=ARB_223;
     if (game.prop[RUG] != 2) {RSPEAK(spk); return GO_CLEAROBJ;}
     game.oldlc2=game.oldloc;
     game.oldloc=game.loc;
     game.newloc=game.place[RUG]+game.fixed[RUG]-game.loc;
-    spk=226;
-    if (game.prop[SAPPH] >= 0)spk=227;
+    spk=ARB_226;
+    if (game.prop[SAPPH] >= 0)spk=ARB_227;
     RSPEAK(spk);
     return GO_TERMINATE;
 }
@@ -607,19 +608,19 @@ static int inven(token_t obj)
 /* Inventory. If object, treat same as find.  Else report on current burden. */
 {
     int i;
-    int spk=98;
+    int spk=ARB_98;
     for (i=1; i<=NOBJECTS; i++) {
 	if (i == BEAR || !TOTING(i))
 	    continue;
 	if (spk == 98)
-	    RSPEAK(99);
+	    RSPEAK(ARB_99);
 	game.blklin=false;
 	PSPEAK(i,-1);
 	game.blklin=true;
-	spk=0;
+	spk=ARB_0;
     }
     if (TOTING(BEAR))
-	spk=141;
+	spk=ARB_141;
     RSPEAK(spk);
     return GO_CLEAROBJ;
 }
@@ -635,10 +636,10 @@ int light(token_t verb, token_t obj)
     }
 
     if (obj == URN) {
-	spk=38;
+	spk=ARB_38;
 	if (game.prop[URN] == 0)
 	    {RSPEAK(spk); return GO_CLEAROBJ;}
-	spk=209;
+	spk=ARB_209;
 	game.prop[URN]=2;
 	RSPEAK(spk);
 	return GO_CLEAROBJ;
@@ -648,13 +649,13 @@ int light(token_t verb, token_t obj)
 	    RSPEAK(spk);
 	    return GO_CLEAROBJ;
 	}
-	spk=184;
+	spk=ARB_184;
 	if (game.limit < 0) {
 	    RSPEAK(spk);
 	    return GO_CLEAROBJ;
 	}
 	game.prop[LAMP]=1;
-	RSPEAK(39);
+	RSPEAK(ARB_39);
 	if (game.wzdark)
 	    return GO_TOP;
 	else
@@ -666,19 +667,19 @@ static int listen(void)
 /*  Listen.  Intransitive only.  Print stuff based on objsnd/locsnd. */
 {
     int i, k;
-    int spk=228;
+    int spk=ARB_228;
     k=LOCSND[game.loc];
     if (k != 0) {
 	RSPEAK(labs(k));
 	if (k < 0) return GO_CLEAROBJ;
-	spk=0;
+	spk=ARB_0;
     }
     SETPRM(1,game.zzword,0);
     for (i=1; i<=NOBJECTS; i++) {
 	if (!HERE(i) || OBJSND[i] == 0 || game.prop[i] < 0)
 	    continue;
 	PSPEAK(i,OBJSND[i]+game.prop[i]);
-	spk=0;
+	spk=ARB_0;
 	if (i == BIRD && OBJSND[i]+game.prop[i] == 8)
 	    DSTROY(BIRD);
     }
@@ -691,7 +692,7 @@ static int lock(token_t verb, token_t obj)
 {
     int spk = ACTSPK[verb];
     if (obj == INTRANSITIVE) {
-	spk=28;
+	spk=ARB_28;
 	if (HERE(CLAM))obj=CLAM;
 	if (HERE(OYSTER))obj=OYSTER;
 	if (AT(DOOR))obj=DOOR;
@@ -705,21 +706,21 @@ static int lock(token_t verb, token_t obj)
      *  and for chain. */
     if (obj == CLAM || obj == OYSTER)
 	return bivalve(verb, obj);
-    if (obj == DOOR)spk=111;
-    if (obj == DOOR && game.prop[DOOR] == 1)spk=54;
-    if (obj == CAGE)spk=32;
-    if (obj == KEYS)spk=55;
+    if (obj == DOOR)spk=ARB_111;
+    if (obj == DOOR && game.prop[DOOR] == 1)spk=ARB_54;
+    if (obj == CAGE)spk=ARB_32;
+    if (obj == KEYS)spk=ARB_55;
     if (obj == GRATE || obj == CHAIN) {
-	spk=31;
+	spk=ARB_31;
 	if (HERE(KEYS)) {
 	    if (obj == CHAIN)
 		return chain(verb);
 	    if (game.closng) {
-		spk=130;
+		spk=ARB_130;
 		if (!game.panic)game.clock2=15;
 		game.panic=true;
 	    } else {
-		spk=34+game.prop[GRATE];
+		spk=ARB_34+game.prop[GRATE];
 		game.prop[GRATE]=1;
 		if (verb == LOCK)game.prop[GRATE]=0;
 		spk=spk+2*game.prop[GRATE];
@@ -738,17 +739,17 @@ static int pour(token_t verb, token_t obj)
     if (obj == BOTTLE || obj == 0)obj=LIQUID();
     if (obj == 0) return GO_UNKNOWN;
     if (!TOTING(obj)) {RSPEAK(spk); return GO_CLEAROBJ;}
-    spk=78;
+    spk=ARB_78;
     if (obj != OIL && obj != WATER) {RSPEAK(spk); return GO_CLEAROBJ;}
     if (HERE(URN) && game.prop[URN] == 0)
 	return fill(verb, URN);
     game.prop[BOTTLE]=1;
     game.place[obj]=0;
-    spk=77;
+    spk=ARB_77;
     if (!(AT(PLANT) || AT(DOOR)))
 	{RSPEAK(spk); return GO_CLEAROBJ;}
     if (!AT(DOOR)) {
-	spk=112;
+	spk=ARB_112;
 	if (obj != WATER) {RSPEAK(spk); return GO_CLEAROBJ;}
 	PSPEAK(PLANT,game.prop[PLANT]+3);
 	game.prop[PLANT]=MOD(game.prop[PLANT]+1,3);
@@ -757,7 +758,7 @@ static int pour(token_t verb, token_t obj)
     } else {
 	game.prop[DOOR]=0;
 	if (obj == OIL)game.prop[DOOR]=1;
-	spk=113+game.prop[DOOR];
+	spk=ARB_113+game.prop[DOOR];
 	RSPEAK(spk);
 	return GO_CLEAROBJ;
     }
@@ -786,7 +787,7 @@ static int read(FILE *input, token_t verb, token_t obj)
 	
     if (DARK(game.loc)) {
 	SETPRM(1,WD1,WD1X);
-	RSPEAK(256);
+	RSPEAK(ARB_256);
 	return GO_CLEAROBJ;
     }
     if (OBJTXT[obj] == 0 || game.prop[obj] < 0) {
@@ -805,7 +806,7 @@ static int reservoir(void)
 /*  Z'ZZZ (word gets recomputed at startup; different each game). */
 {
     if (!AT(RESER) && game.loc != game.fixed[RESER]-1) {
-	RSPEAK(75);
+	RSPEAK(ARB_75);
 	return GO_CLEAROBJ;
     } else {
 	PSPEAK(RESER,game.prop[RESER]+1);
@@ -813,7 +814,7 @@ static int reservoir(void)
 	if (AT(RESER)) return GO_CLEAROBJ;
 	game.oldlc2=game.loc;
 	game.newloc=0;
-	RSPEAK(241);
+	RSPEAK(ARB_241);
 	return GO_TERMINATE;
     }
 }
@@ -823,14 +824,14 @@ static int rub(token_t verb, token_t obj)
 {
     int spk = ACTSPK[verb];
     if (obj != LAMP)
-	spk=76;
+	spk=ARB_76;
     if (obj == URN && game.prop[URN] == 2) {
 	DSTROY(URN);
 	DROP(AMBER,game.loc);
 	game.prop[AMBER]=1;
 	--game.tally;
 	DROP(CAVITY,game.loc);
-	spk=216;
+	spk=ARB_216;
     }
     RSPEAK(spk);
     return GO_CLEAROBJ;
@@ -850,7 +851,7 @@ static int say(void)
 	WD2=0;
 	return GO_LOOKUP;
     }
-    RSPEAK(258);
+    RSPEAK(ARB_258);
     return GO_CLEAROBJ;
 
 }
@@ -875,7 +876,7 @@ static int throw(FILE *cmdin, long verb, token_t obj)
 	return GO_CLEAROBJ;
     }
     if (obj >= 50 && obj <= MAXTRS && AT(TROLL)) {
-        spk=159;
+        spk=ARB_159;
         /*  Snarf a treasure for the troll. */
         DROP(obj,0);
         MOVE(TROLL,0);
@@ -896,20 +897,20 @@ static int throw(FILE *cmdin, long verb, token_t obj)
     int i=ATDWRF(game.loc);
     if (i <= 0) {
         if (AT(DRAGON) && game.prop[DRAGON] == 0) {
-            spk=152;
+            spk=ARB_152;
             return throw_support(spk);
         }
         if (AT(TROLL)) {
-            spk=158;
+            spk=ARB_158;
             return throw_support(spk);
         }
         if (AT(OGRE)) {
-            spk=203;
+            spk=ARB_203;
             return throw_support(spk);
         }
         if (HERE(BEAR) && game.prop[BEAR] == 0) {
             /* This'll teach him to throw the axe at the bear! */
-            spk=164;
+            spk=ARB_164;
             DROP(AXE,game.loc);
             game.fixed[AXE]= -1;
             game.prop[AXE]=1;
@@ -920,14 +921,14 @@ static int throw(FILE *cmdin, long verb, token_t obj)
     }
 
     if (randrange(NDWARVES+1) < game.dflag) {
-        spk=48;
+        spk=ARB_48;
         return throw_support(spk);
     }
     game.dseen[i]=false;
     game.dloc[i]=0;
-    spk=47;
+    spk=ARB_47;
     ++game.dkill;
-    if (game.dkill == 1)spk=149;
+    if (game.dkill == 1)spk=ARB_149;
 
     return throw_support(spk);
 }
@@ -947,7 +948,7 @@ static int wake(token_t verb, token_t obj)
 	RSPEAK(ACTSPK[verb]);
 	return GO_CLEAROBJ;
     }
-    RSPEAK(199);
+    RSPEAK(ARB_199);
     return(19000);
 }
 
@@ -955,19 +956,19 @@ static int wave(token_t verb, token_t obj)
 /* Wave.  No effect unless waving rod at fissure or at bird. */
 {
     int spk = ACTSPK[verb];
-    if ((!TOTING(obj)) && (obj != ROD || !TOTING(ROD2)))spk=29;
+    if ((!TOTING(obj)) && (obj != ROD || !TOTING(ROD2)))spk=ARB_29;
     if (obj != ROD ||
        !TOTING(obj) ||
        (!HERE(BIRD) && (game.closng || !AT(FISSUR)))) {
 	RSPEAK(spk);
 	return GO_CLEAROBJ;
     }
-    if (HERE(BIRD))spk=206+MOD(game.prop[BIRD],2);
+    if (HERE(BIRD))spk=ARB_206+MOD(game.prop[BIRD],2);
     if (spk == 206 && game.loc == game.place[STEPS] && game.prop[JADE] < 0) {
 	DROP(JADE,game.loc);
 	game.prop[JADE]=0;
 	--game.tally;
-	spk=208;
+	spk=ARB_208;
 	RSPEAK(spk);
 	return GO_CLEAROBJ;
     } else {
@@ -1023,7 +1024,7 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj)
 	}
 	else if (obj == KNIFE && game.knfloc == game.loc) {
 	    game.knfloc= -1;
-	    spk=116;
+	    spk=ARB_116;
 	    RSPEAK(spk);
 	    return GO_CLEAROBJ;
 	}
@@ -1035,7 +1036,7 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj)
 	    /* FALL THROUGH */;
 	else {
 	    SETPRM(1,WD1,WD1X);
-	    RSPEAK(256);
+	    RSPEAK(ARB_256);
 	    return GO_CLEAROBJ;
 	}
 
@@ -1057,7 +1058,7 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj)
 		    case  1: /* DROP  */ return GO_UNKNOWN; 
 		    case  2: /* SAY   */ return GO_UNKNOWN; 
 		    case  3: /* UNLOC */ return lock(verb, INTRANSITIVE);    
-		    case  4: /* NOTHI */ {RSPEAK(54); return(GO_CLEAROBJ);}
+		    case  4: /* NOTHI */ {RSPEAK(ARB_54); return(GO_CLEAROBJ);}
 		    case  5: /* LOCK  */ return lock(verb, INTRANSITIVE);    
 		    case  6: /* LIGHT */ return light(verb, INTRANSITIVE);    
 		    case  7: /* EXTIN */ return extinguish(verb, INTRANSITIVE);    
@@ -1098,7 +1099,7 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj)
 	        case  1: /* DROP  */ return discard(verb, obj, false);    
 		case  2: /* SAY   */ return say();    
 		case  3: /* UNLOC */ return lock(verb, obj);    
-		case  4: /* NOTHI */ {RSPEAK(54); return(GO_CLEAROBJ);}
+		case  4: /* NOTHI */ {RSPEAK(ARB_54); return(GO_CLEAROBJ);}
 		case  5: /* LOCK  */ return lock(verb, obj);    
 		case  6: /* LIGHT */ return light(verb, obj);    
 		case  7: /* EXTI  */ return extinguish(verb, obj);    
@@ -1133,7 +1134,7 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj)
 	case unknown:
 	    /* Unknown verb, couldn't deduce object - might need hint */
 	    SETPRM(1,WD1,WD1X);
-	    RSPEAK(255);
+	    RSPEAK(ARB_255);
 	    return GO_CHECKHINT;
     default:
 	    BUG(99);
