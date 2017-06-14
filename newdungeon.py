@@ -17,13 +17,16 @@ def c_escape(string):
     string = string.replace("'", "\\'")
     return string
 
+def quotewrap(string):
+    """Wrap a string in double quotes."""
+    return '"' + string + '"'
+
 def write_regular_messages(name, h, c):
 
-    if name != "short_location_descriptions":
-        h += "enum {}_refs {{\n".format(name)
-        for key, text in dungeon[name]:
-            h += "  {},\n".format(key)
-        h += "};\n\n"
+    h += "enum {}_refs {{\n".format(name)
+    for key, text in dungeon[name]:
+        h += "  {},\n".format(key)
+    h += "};\n\n"
     
     c += "char* {}[] = {{\n".format(name)   
     index = 0
@@ -48,8 +51,16 @@ typedef struct {
   char** longs;
 } object_description_t;
 
-extern char* long_location_descriptions[];
-extern char* short_location_descriptions[];
+typedef struct {
+  char* small;
+  char* big;
+} descriptions_t;
+
+typedef struct {
+  descriptions_t description;
+} location_t;
+
+extern location_t locations[];
 extern object_description_t object_descriptions[];
 extern char* arbitrary_messages[];
 extern char* class_messages[];
@@ -65,12 +76,35 @@ c = """#include "{}"
 
 for name in [
         "arbitrary_messages",
-        "long_location_descriptions",
-        "short_location_descriptions",
         "class_messages",
         "turn_threshold_messages",
 ]:
     h, c = write_regular_messages(name, h, c)
+
+h += "enum locations_refs {\n"
+c += "location_t locations[] = {\n"
+for key, data in dungeon["locations"]:
+    h += "  {},\n".format(key)
+
+    try:
+        short = quotewrap(c_escape(data["description"]["short"]))
+    except AttributeError:
+        short = "NULL"
+    try:
+        long = quotewrap(c_escape(data["description"]["long"]))
+    except AttributeError:
+        long = "NULL"
+
+    c += """  {{
+    .description = {{
+      .small = {},
+      .big = {},
+    }},
+  }},
+""".format(short, long)
+
+c += "};\n\n"
+h += "};\n\n"
 
 h += "enum object_descriptions_refs {\n"
 c += "object_description_t object_descriptions[] = {\n"

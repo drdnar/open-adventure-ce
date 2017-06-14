@@ -184,7 +184,7 @@ void initialise(void)
 
     for (i=1; i<=LOCSIZ; i++) {
 	game.abbrev[i]=0;
-	if (!(long_location_descriptions[i] == 0 || KEY[i] == 0)) {
+	if (!(locations[i].description.big == 0 || KEY[i] == 0)) {
 	    k=KEY[i];
 	    if(MOD(labs(TRAVEL[k]),1000) == 1)COND[i]=2;
 	}

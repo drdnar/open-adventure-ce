@@ -936,9 +936,9 @@ static bool do_command(FILE *cmdin)
     for (;;) {
 	if (game.loc == 0)
 	    croak(cmdin);
-	char* msg = short_location_descriptions[game.loc];
+	char* msg = locations[game.loc].description.small;
 	if (MOD(game.abbrev[game.loc],game.abbnum) == 0 || msg == 0)
-	    msg=long_location_descriptions[game.loc];
+	    msg=locations[game.loc].description.big;
 	if (!FORCED(game.loc) && DARK(game.loc)) {
 	    /*  The easiest way to get killed is to fall into a pit in
 	     *  pitch darkness. */
