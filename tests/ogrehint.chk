@@ -404,10 +404,6 @@ There is food here.
 
 There is a bottle of water here.
 
-> take water
-
-OK
-
 > take food
 
 OK
@@ -684,21 +680,20 @@ The ogre doesn't appear to be hungry.
 
 Do you need help dealing with the ogre?
 
-> n
+> y
 
-OK
+I am prepared to give you a hint, but it will cost you 4 points.
+
+Do you want the hint?
 
 > y
 
-Sorry, I don't know the word "Y".
-
-> y
-
-Sorry, I don't know the word "Y".
+There is nothing the presence of which will prevent you from defeating
+him; thus it can't hurt to fetch everything you possibly can.
 
 
-You scored 105 out of a possible 430, using 106 turns.
+You scored 101 out of a possible 430, using 103 turns.
 
 Your score qualifies you as a novice class adventurer.
 
-To achieve the next higher rating, you need 16 more points.
+To achieve the next higher rating, you need 20 more points.
