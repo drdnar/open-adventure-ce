@@ -10,6 +10,14 @@
 # git submodule update --recursive --remote
 #
 # but this should seldom be necessary as that library is pretty stable.
+#
+# You will also need Python 3 YAML.  Under Debian or ubuntu:
+#
+# apt-get install python3-yaml
+#
+# If you have pip installed,
+#
+# pip3 install PyYAML
 
 VERS=1.0
 

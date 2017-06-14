@@ -16,6 +16,9 @@ original 6-character name on the PDP-10 has been reverted to for the
 executable in order to avoid a collision with the BSD games port of
 the ancestral 1977 version.
 
+The distribution has three build-time depedencies: Python 3, Python 3
+YAML, and the linenoise library.  It builds a pure C executable.
+
 You can run a regression test on the code with 'make check'. Extreme
 care has been taken to not silently change gameplay. By policy, all
 user-visible changes from 2.5 are revertible with the -o (oldstyle)
