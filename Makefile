@@ -54,7 +54,7 @@ database.c database.h: dungeon
 	./dungeon
 
 newdb.c newdb.h:
-	./newdungeon.py
+	python3 newdungeon.py
 
 linenoise.o:	linenoise/linenoise.h
 	$(CC) -c linenoise/linenoise.c
