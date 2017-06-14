@@ -71,7 +71,7 @@ s
 s
 n
 in
-take water
+take food
 plugh
 on
 plover
@@ -105,6 +105,6 @@ take axe
 throw axe
 take axe
 throw axe
-n
+feed ogre
 y
 y

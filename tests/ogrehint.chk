@@ -408,6 +408,10 @@ There is a bottle of water here.
 
 OK
 
+> take food
+
+OK
+
 > plugh
 
 >>Foof!<<
@@ -674,32 +678,27 @@ There is a little axe here.
 
 A formidable ogre bars the northern exit.
 
-> n
+> feed ogre
 
-The ogre snarls and shoves you back.
-
-You are in a large chamber with passages to the west and north.
-
-There is a little axe here.
-
-A formidable ogre bars the northern exit.
+The ogre doesn't appear to be hungry.
 
 Do you need help dealing with the ogre?
 
-> y
+> n
 
-I am prepared to give you a hint, but it will cost you 4 points.
-
-Do you want the hint?
+OK
 
 > y
 
-There is nothing the presence of which will prevent you from defeating
-him; thus it can't hurt to fetch everything you possibly can.
+Sorry, I don't know the word "Y".
+
+> y
+
+Sorry, I don't know the word "Y".
 
 
-You scored 101 out of a possible 430, using 103 turns.
+You scored 105 out of a possible 430, using 106 turns.
 
 Your score qualifies you as a novice class adventurer.
 
-To achieve the next higher rating, you need 20 more points.
+To achieve the next higher rating, you need 16 more points.
