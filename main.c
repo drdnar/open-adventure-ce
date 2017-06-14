@@ -269,49 +269,52 @@ bool spotted_by_pirate(int i)
      *  (game.prop=0). */
     if (game.loc == game.chloc || game.prop[CHEST] >= 0)
 	return true;
-    int k=0;
+    int snarfed=0;
+    bool movechest = false, robplayer = false;
     for (int j=MINTRS; j<=MAXTRS; j++) {
 	/*  Pirate won't take pyramid from plover room or dark
 	 *  room (too easy!). */
 	if (j==PYRAM && (game.loc==PLAC[PYRAM] || game.loc==PLAC[EMRALD])) {
-	    return true;
+	    continue;
 	}
+	if (TOTING(j) || HERE(j))
+	    ++snarfed;
 	if (TOTING(j)) {
-	    if (game.place[CHEST] == 0) {
-		/*  Install chest only once, to insure it is
-		 *  the last treasure in the list. */
-		MOVE(CHEST,game.chloc);
-		MOVE(MESSAG,game.chloc2);
-	    }
-	    RSPEAK(128);
-	    for (int j=MINTRS; j<=MAXTRS; j++) {
-		if (!(j == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD]))) {
-		    if (AT(j) && game.fixed[j] == 0)
-			CARRY(j,game.loc);
-		    if (TOTING(j))
-			DROP(j,game.chloc);
-		}
-	    }
-	    game.dloc[PIRATE]=game.chloc;
-	    game.odloc[PIRATE]=game.chloc;
-	    game.dseen[PIRATE]=false;
-	    return true;
+	    movechest = true;
+	    robplayer = true;
 	}
-	if (HERE(j))
-	    k=1;
     }
     /* Force chest placement before player finds last treasure */
-    if (game.tally == 1 && k == 0 && game.place[CHEST] == 0 && HERE(LAMP) && game.prop[LAMP] == 1) {
+    if (game.tally == 1 && snarfed == 0 && game.place[CHEST] == 0 && HERE(LAMP) && game.prop[LAMP] == 1) {
 	RSPEAK(186);
+	movechest = true;
+    }
+    /* Do things in this order (chest move before robbery) so chest is listed
+     * last at the maze location. */
+    if (movechest) {
 	MOVE(CHEST,game.chloc);
 	MOVE(MESSAG,game.chloc2);
 	game.dloc[PIRATE]=game.chloc;
 	game.odloc[PIRATE]=game.chloc;
 	game.dseen[PIRATE]=false;
-	return true;
+    } else {
+	/* You might get a hint of the pirate's presence even if the 
+	 * chest doesn't move... */
+	if (game.odloc[PIRATE] != game.dloc[PIRATE] && PCT(20))
+	    RSPEAK(127);
     }
-    if (game.odloc[PIRATE] != game.dloc[PIRATE] && PCT(20))
-	RSPEAK(127);
+    if (robplayer) {
+	RSPEAK(128);
+	for (int j=MINTRS; j<=MAXTRS; j++) {
+	    if (!(j == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD]))) {
+		if (AT(j) && game.fixed[j] == 0)
+		    CARRY(j,game.loc);
+		if (TOTING(j))
+		    DROP(j,game.chloc);
+	    }
+	}
+    }
+
     return true;
 }
 
