@@ -197,7 +197,7 @@ void MAPLIN(FILE *OPENED) {
   while (!feof(OPENED) && INLINE[1] == '#');
 
   LNLENG = 0;
-  for (size_t i = 1; i <= sizeof(INLINE) && INLINE[i] != 0; ++i)
+  for (size_t i = 1; i < sizeof(INLINE) && INLINE[i] != 0; ++i)
     {
       char val = INLINE[i];
       INLINE[i] = ascii_to_advent[(unsigned)val];
@@ -214,7 +214,7 @@ long GETNUM(FILE *source) {
  *  scanned).  If we're at the end of the line or encounter an illegal
  *  character (not a digit, hyphen, or blank), we return 0. */
 
-  long DIGIT, GETNUM, SIGN;
+  long GETNUM, SIGN;
 
   if(source != NULL) MAPLIN(source);
   GETNUM = 0;
@@ -235,7 +235,7 @@ long GETNUM(FILE *source) {
     }
   while (!(LNPOSN > LNLENG || INLINE[LNPOSN] == 0))
     {
-      DIGIT=INLINE[LNPOSN]-64;
+      long DIGIT=INLINE[LNPOSN]-64;
       if(DIGIT < 0 || DIGIT > 9)
         {
           GETNUM=0;

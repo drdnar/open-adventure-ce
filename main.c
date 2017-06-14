@@ -860,10 +860,9 @@ static void listobjects(void)
  *  get full score. */
 {
     if (!DARK(game.loc)) {
-	long obj;
 	++game.abbrev[game.loc];
 	for (int i=game.atloc[game.loc]; i != 0; i=game.link[i]) {
-	    obj=i;
+	    long obj=i;
 	    if (obj > NOBJECTS)obj=obj-NOBJECTS;
 	    if (obj == STEPS && TOTING(NUGGET))
 		continue;

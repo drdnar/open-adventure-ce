@@ -541,7 +541,6 @@ void BUG(long num)
 
 bool MAPLIN(FILE *fp)
 {
-    long i, val;
     bool eof;
 
     /* Read a line of input, from the specified input source.
@@ -577,7 +576,7 @@ bool MAPLIN(FILE *fp)
 	    if (!eof) {
 		strncpy(rawbuf, cp, sizeof(rawbuf)-1);
 		linenoiseHistoryAdd(rawbuf);
-		strncat(rawbuf, "\n", sizeof(rawbuf)-1);
+		strncat(rawbuf, "\n", sizeof(rawbuf) - strlen(rawbuf) - 1);
 		linenoiseFree(cp);
 	    }
 	}
@@ -624,8 +623,8 @@ bool MAPLIN(FILE *fp)
      *  and is not changed thereafter unless the routines on this page choose
      *  to do so. */
 	LNLENG=0;
-	for (i=1; i<=(long)sizeof(INLINE) && INLINE[i]!=0; i++) {
-	    val=INLINE[i];
+	for (long i=1; i<=(long)sizeof(INLINE) && INLINE[i]!=0; i++) {
+	    long val=INLINE[i];
 	    INLINE[i]=ascii_to_advent[val];
 	    if (INLINE[i] != 0)
 		LNLENG=i;

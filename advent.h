@@ -82,7 +82,7 @@ extern bool oldstyle, editline, prompt;
 #define READ_MODE "rb"
 #define WRITE_MODE "wb"
 extern char* xstrdup(const char*);
-extern void packed_to_token(long, char token[6]);
+extern void packed_to_token(long, char token[]);
 extern void newspeak(char*);
 extern void PSPEAK(vocab_t,int);
 extern void RSPEAK(vocab_t);

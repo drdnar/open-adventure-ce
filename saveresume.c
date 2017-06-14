@@ -33,8 +33,7 @@ int saveresume(FILE *input, bool resume)
 {
     long i, k;
     FILE *fp = NULL;
-    char *name;
- 
+     
     if (!resume) {
 	/*  Suspend.  Offer to save things in a file, but charging
 	 *  some points (so can't win by using saved games to retry
@@ -53,7 +52,7 @@ int saveresume(FILE *input, bool resume)
     }
 
     while (fp == NULL) {
-	name = linenoise("\nFile name: ");
+	char* name = linenoise("\nFile name: ");
 	if (name == NULL)
 	    return GO_TOP;
 	fp = fopen(name,(resume ? READ_MODE : WRITE_MODE));

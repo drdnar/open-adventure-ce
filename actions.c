@@ -774,11 +774,10 @@ static int quit(FILE *input)
 static int read(FILE *input, token_t verb, token_t obj)
 /*  Read.  Print stuff based on objtxt.  Oyster (?) is special case. */
 {
-    int i;
     int spk = ACTSPK[verb];
     if (obj == INTRANSITIVE) {
 	obj = 0;
-	for (i=1; i<=NOBJECTS; i++) {
+	for (int i=1; i<=NOBJECTS; i++) {
 	    if (HERE(i) && OBJTXT[i] != 0 && game.prop[i] >= 0)
 		obj = obj * NOBJECTS + i;
 	}
