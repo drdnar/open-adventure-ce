@@ -59,8 +59,8 @@ int saveresume(FILE *input, bool resume)
 	fp = fopen(name,(resume ? READ_MODE : WRITE_MODE));
 	if (fp == NULL)
 	    printf("Can't open file %s, try again.\n", name); 
+	linenoiseFree(name);
     }
-    linenoiseFree(name);
     
     DATIME(&i,&k);
     k=i+650*k;
