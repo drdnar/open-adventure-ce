@@ -35,30 +35,27 @@ SOURCES=$(OBJS:.o=.c) dungeon.c advent.h common.h adventure.text Makefile contro
 .c.o:
 	$(CC) $(CCFLAGS) $(DBX) -c $<
 
-advent:	$(OBJS) database.o linenoise.o newdb.o
-	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) database.o newdb.o linenoise.o $(LDFLAGS) $(LIBS)
+advent:	$(OBJS) linenoise.o newdb.o
+	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) newdb.o linenoise.o $(LDFLAGS) $(LIBS)
 
-main.o:	 	advent.h database.h database.c common.h newdb.h
+main.o:	 	advent.h database.h common.h newdb.h
 
-init.o:	 	advent.h database.h database.c common.h newdb.h
+init.o:	 	advent.h database.h common.h newdb.h
 
-actions.o:	advent.h database.h database.c common.h
+actions.o:	advent.h database.h common.h
 
-score.o:	advent.h database.h database.c common.h newdb.h
+score.o:	advent.h database.h common.h newdb.h
 
-misc.o:		advent.h database.h database.c common.h newdb.h
+misc.o:		advent.h database.h common.h newdb.h
 
-saveresume.o:	advent.h database.h database.c common.h
+saveresume.o:	advent.h database.h common.h
 
 common.o:	common.h
-
-database.o:     database.c database.h common.h
-	$(CC) $(CCFLAGS) $(DBX) -c database.c
 
 newdb.o:	newdb.c newdb.h
 	$(CC) $(CCFLAGS) $(DBX) -c newdb.c
 
-database.c database.h: dungeon
+database.h: dungeon
 	./dungeon
 
 newdb.c newdb.h:
@@ -71,7 +68,7 @@ dungeon: dungeon.o common.o
 	$(CC) $(CCFLAGS) -o $@ dungeon.o common.o
 
 clean:
-	rm -f *.o advent *.html database.[ch] dungeon *.gcno *.gcda
+	rm -f *.o advent *.html database.h dungeon *.gcno *.gcda
 	rm -f newdb.c newdb.h
 	rm -f README advent.6 MANIFEST *.tar.gz
 	rm -f *~

@@ -13,6 +13,7 @@
  * and for the offensive globals.  Applying the Structured Program
  * Theorem can be hard.
  */
+#define DEFINE_GLOBALS_FROM_INCLUDES
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
