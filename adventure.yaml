@@ -3,743 +3,743 @@ locations: !!omap
     description:
       long: !!null
       short: !!null
-- LOC_1:
+- LOC_START:
     description:
       long: 'You are standing at the end of a road before a small brick building.\nAround you is a forest.  A small stream flows out of the building and\ndown a gully.'
       short: 'You''re in front of building.'
-- LOC_2:
+- LOC_HILL:
     description:
       long: 'You have walked up a hill, still in the forest.  The road slopes back\ndown the other side of the hill.  There is a building in the distance.'
       short: 'You''re at hill in road.'
-- LOC_3:
+- LOC_BUILDING:
     description:
       long: 'You are inside a building, a well house for a large spring.'
       short: 'You''re inside building.'
-- LOC_4:
+- LOC_VALLEY:
     description:
       long: 'You are in a valley in the forest beside a stream tumbling along a\nrocky bed.'
       short: 'You''re in valley.'
-- LOC_5:
+- LOC_ROADEND:
     description:
       long: 'The road, which approaches from the east, ends here amid the trees.'
       short: 'You''re at end of road.'
-- LOC_6:
+- LOC_CLIFF:
     description:
       long: 'The forest thins out here to reveal a steep cliff.  There is no way\ndown, but a small ledge can be seen to the west across the chasm.'
       short: 'You''re at cliff.'
-- LOC_7:
+- LOC_SLIT:
     description:
       long: 'At your feet all the water of the stream splashes into a 2-inch slit\nin the rock.  Downstream the streambed is bare rock.'
       short: 'You''re at slit in streambed.'
-- LOC_8:
+- LOC_GRATE:
     description:
       long: 'You are in a 20-foot depression floored with bare dirt.  Set into the\ndirt is a strong steel grate mounted in concrete.  A dry streambed\nleads into the depression.'
       short: 'You''re outside grate.'
-- LOC_9:
+- LOC_BELOWGRATE:
     description:
       long: 'You are in a small chamber beneath a 3x3 steel grate to the surface.\nA low crawl over cobbles leads inward to the west.'
       short: 'You''re below the grate.'
-- LOC_10:
+- LOC_COBBLE:
     description:
       long: 'You are crawling over cobbles in a low passage.  There is a dim light\nat the east end of the passage.'
       short: 'You''re in cobble crawl.'
-- LOC_11:
+- LOC_DEBRIS:
     description:
       long: 'You are in a debris room filled with stuff washed in from the surface.\nA low wide passage with cobbles becomes plugged with mud and debris\nhere, but an awkward canyon leads upward and west.  In the mud someone\nhas scrawled, "MAGIC WORD XYZZY".'
       short: 'You''re in debris room.'
-- LOC_12:
+- LOC_AWKWARD:
     description:
       long: 'You are in an awkward sloping east/west canyon.'
       short: !!null
-- LOC_13:
+- LOC_BIRD:
     description:
       long: 'You are in a splendid chamber thirty feet high.  The walls are frozen\nrivers of orange stone.  An awkward canyon and a good passage exit\nfrom east and west sides of the chamber.'
       short: 'You''re in bird chamber.'
-- LOC_14:
+- LOC_PITTOP:
     description:
       long: 'At your feet is a small pit breathing traces of white mist.  An east\npassage ends here except for a small crack leading on.'
       short: 'You''re at top of small pit.'
-- LOC_15:
+- LOC_MISTHALL:
     description:
       long: 'You are at one end of a vast hall stretching forward out of sight to\nthe west.  There are openings to either side.  Nearby, a wide stone\nstaircase leads downward.  The hall is filled with wisps of white mist\nswaying to and fro almost as if alive.  A cold wind blows up the\nstaircase.  There is a passage at the top of a dome behind you.'
       short: 'You''re in Hall of Mists.'
-- LOC_16:
+- LOC_CRACK:
     description:
       long: 'The crack is far too small for you to follow.  At its widest it is\nbarely wide enough to admit your foot.'
       short: !!null
-- LOC_17:
+- LOC_EASTBANK:
     description:
       long: 'You are on the east bank of a fissure slicing clear across the hall.\nThe mist is quite thick here, and the fissure is too wide to jump.'
       short: 'You''re on east bank of fissure.'
-- LOC_18:
+- LOC_NUGGET:
     description:
       long: 'This is a low room with a crude note on the wall.  The note says,\n"You won''t get it up the steps".'
       short: 'You''re in nugget-of-gold room.'
-- LOC_19:
+- LOC_KINGHALL:
     description:
       long: 'You are in the Hall of the Mountain King, with passages off in all\ndirections.'
       short: 'You''re in Hall of Mt King.'
-- LOC_20:
+- LOC_NECKBROKE:
     description:
       long: 'You are at the bottom of the pit with a broken neck.'
       short: !!null
-- LOC_21:
+- LOC_NOMAKE:
     description:
       long: 'You didn''t make it.'
       short: !!null
-- LOC_22:
+- LOC_DOME:
     description:
       long: 'The dome is unclimbable.'
       short: !!null
-- LOC_23:
+- LOC_WESTEND:
     description:
       long: 'You are at the west end of the Twopit Room.  There is a large hole in\nthe wall above the pit at this end of the room.'
       short: 'You''re at west end of Twopit Room.'
-- LOC_24:
+- LOC_EASTPIT:
     description:
       long: 'You are at the bottom of the eastern pit in the Twopit Room.  There is\na small pool of oil in one corner of the pit.'
       short: 'You''re in east pit.'
-- LOC_25:
+- LOC_WESTPIT:
     description:
       long: 'You are at the bottom of the western pit in the Twopit Room.  There is\na large hole in the wall about 25 feet above you.'
       short: 'You''re in west pit.'
-- LOC_26:
+- LOC_CLIMBSTALK:
     description:
       long: 'You clamber up the plant and scurry through the hole at the top.'
       short: !!null
-- LOC_27:
+- LOC_WESTBANK:
     description:
       long: 'You are on the west side of the fissure in the Hall of Mists.'
       short: 'You''re on west bank of fissure.'
-- LOC_28:
+- LOC_FLOORHOLE:
     description:
       long: 'You are in a low n/s passage at a hole in the floor.  The hole goes\ndown to an e/w passage.'
       short: 'You''re in n/s passage above e/w passage.'
-- LOC_29:
+- LOC_SOUTHSIDE:
     description:
       long: 'You are in the south side chamber.'
       short: !!null
-- LOC_30:
+- LOC_WESTSIDE:
     description:
       long: 'You are in the west side chamber of the Hall of the Mountain King.\nA passage continues west and up here.'
       short: 'You''re in the west side chamber.'
-- LOC_31:
+- LOC_BUILDING1:
     description:
       long: ''
       short: !!null
-- LOC_32:
+- LOC_SNAKEBLOCK:
     description:
       long: 'You can''t get by the snake.'
       short: !!null
-- LOC_33:
+- LOC_Y2:
     description:
       long: 'You are in a large room, with a passage to the south, a passage to the\nwest, and a wall of broken rock to the east.  There is a large "Y2" on\na rock in the room''s center.'
       short: 'You''re at "Y2".'
-- LOC_34:
+- LOC_JUMBLE:
     description:
       long: 'You are in a jumble of rock, with cracks everywhere.'
       short: !!null
-- LOC_35:
+- LOC_WINDOW1:
     description:
       long: 'You''re at a low window overlooking a huge pit, which extends up out of\nsight.  A floor is indistinctly visible over 50 feet below.  Traces of\nwhite mist cover the floor of the pit, becoming thicker to the right.\nMarks in the dust around the window would seem to indicate that\nsomeone has been here recently.  Directly across the pit from you and\n25 feet away there is a similar window looking into a lighted room.  A\nshadowy figure can be seen there peering back at you.'
       short: 'You''re at window on pit.'
-- LOC_36:
+- LOC_BROKEN:
     description:
       long: 'You are in a dirty broken passage.  To the east is a crawl.  To the\nwest is a large passage.  Above you is a hole to another passage.'
       short: 'You''re in dirty passage.'
-- LOC_37:
+- LOC_SMALLPITBRINK:
     description:
       long: 'You are on the brink of a small clean climbable pit.  A crawl leads\nwest.'
       short: 'You''re at brink of small pit.'
-- LOC_38:
+- LOC_SMALLPIT:
     description:
       long: 'You are in the bottom of a small pit with a little stream, which\nenters and exits through tiny slits.'
       short: 'You''re at bottom of pit with stream.'
-- LOC_39:
+- LOC_DUSTY:
     description:
       long: 'You are in a large room full of dusty rocks.  There is a big hole in\nthe floor.  There are cracks everywhere, and a passage leading east.'
       short: 'You''re in dusty rock room.'
-- LOC_40:
+- LOC_PARALLEL1:
     description:
       long: 'You have crawled through a very low wide passage parallel to and north\nof the Hall of Mists.'
       short: !!null
-- LOC_41:
+- LOC_MISTWEST:
     description:
       long: 'You are at the west end of the Hall of Mists.  A low wide crawl\ncontinues west and another goes north.  To the south is a little\npassage 6 feet off the floor.'
       short: 'You''re at west end of Hall of Mists.'
-- LOC_42:
+- LOC_ALIKE1:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-- LOC_43:
+- LOC_ALIKE2:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-- LOC_44:
+- LOC_ALIKE3:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-- LOC_45:
+- LOC_ALIKE4:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-- LOC_46:
+- LOC_DEADEND1:
     description:
       long: 'Dead end'
       short: !!null
-- LOC_47:
+- LOC_DEADEND2:
     description:
       long: 'Dead end'
       short: !!null
-- LOC_48:
+- LOC_DEADEND3:
     description:
       long: 'Dead end'
       short: !!null
-- LOC_49:
+- LOC_ALIKE5:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-- LOC_50:
+- LOC_ALIKE6:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-- LOC_51:
+- LOC_ALIKE7:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-- LOC_52:
+- LOC_ALIKE8:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-- LOC_53:
+- LOC_ALIKE9:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-- LOC_54:
+- LOC_DEADEND4:
     description:
       long: 'Dead end'
       short: !!null
-- LOC_55:
+- LOC_ALIKE10:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-- LOC_56:
+- LOC_DEADEND5:
     description:
       long: 'Dead end'
       short: !!null
-- LOC_57:
+- LOC_PITBRINK:
     description:
       long: 'You are on the brink of a thirty foot pit with a massive orange column\ndown one wall.  You could climb down here but you could not get back\nup.  The maze continues at this level.'
       short: 'You''re at brink of pit.'
-- LOC_58:
+- LOC_DEADEND6:
     description:
       long: 'Dead end'
       short: !!null
-- LOC_59:
+- LOC_PARALLEL2:
     description:
       long: 'You have crawled through a very low wide passage parallel to and north\nof the Hall of Mists.'
       short: !!null
-- LOC_60:
+- LOC_LONGEAST:
     description:
       long: 'You are at the east end of a very long hall apparently without side\nchambers.  To the east a low wide crawl slants up.  To the north a\nround two foot hole slants down.'
       short: 'You''re at east end of long hall.'
-- LOC_61:
+- LOC_LONGWEST:
     description:
       long: 'You are at the west end of a very long featureless hall.  The hall\njoins up with a narrow north/south passage.'
       short: 'You''re at west end of long hall.'
-- LOC_62:
+- LOC_CROSSOVER:
     description:
       long: 'You are at a crossover of a high n/s passage and a low e/w one.'
       short: !!null
-- LOC_63:
+- LOC_DEADEND7:
     description:
       long: 'Dead end'
       short: !!null
-- LOC_64:
+- LOC_COMPLEX:
     description:
       long: 'You are at a complex junction.  A low hands and knees passage from the\nnorth joins a higher crawl from the east to make a walking passage\ngoing west.  There is also a large room above.  The air is damp here.'
       short: 'You''re at complex junction.'
-- LOC_65:
+- LOC_BEDQUILT:
     description:
       long: 'You are in Bedquilt, a long east/west passage with holes everywhere.\nTo explore at random select north, south, up, or down.'
       short: 'You''re in Bedquilt.'
-- LOC_66:
+- LOC_SWISSCHEESE:
     description:
       long: 'You are in a room whose walls resemble swiss cheese.  Obvious passages\ngo west, east, ne, and nw.  Part of the room is occupied by a large\nbedrock block.'
       short: 'You''re in Swiss Cheese Room.'
-- LOC_67:
+- LOC_EASTEND:
     description:
       long: 'You are at the east end of the Twopit Room.  The floor here is\nlittered with thin rock slabs, which make it easy to descend the pits.\nThere is a path here bypassing the pits to connect passages from east\nand west.  There are holes all over, but the only big one is on the\nwall directly over the west pit where you can''t get to it.'
       short: 'You''re at east end of Twopit Room.'
-- LOC_68:
+- LOC_SLAB:
     description:
       long: 'You are in a large low circular chamber whose floor is an immense slab\nfallen from the ceiling (Slab Room).  East and west there once were\nlarge passages, but they are now filled with boulders.  Low small\npassages go north and south, and the south one quickly bends west\naround the boulders.'
       short: 'You''re in Slab Room.'
-- LOC_69:
+- LOC_SECRET1:
     description:
       long: 'You are in a secret n/s canyon above a large room.'
       short: !!null
-- LOC_70:
+- LOC_SECRET2:
     description:
       long: 'You are in a secret n/s canyon above a sizable passage.'
       short: !!null
-- LOC_71:
+- LOC_THREEJUNCTION:
     description:
       long: 'You are in a secret canyon at a junction of three canyons, bearing\nnorth, south, and se.  The north one is as tall as the other two\ncombined.'
       short: 'You''re at junction of three secret canyons.'
-- LOC_72:
+- LOC_LOWROOM:
     description:
       long: 'You are in a large low room.  Crawls lead north, se, and sw.'
       short: 'You''re in large low room.'
-- LOC_73:
+- LOC_DEADCRAWL:
     description:
       long: 'Dead end crawl.'
       short: !!null
-- LOC_74:
+- LOC_SECRET3:
     description:
       long: 'You are in a secret canyon which here runs e/w.  It crosses over a\nvery tight canyon 15 feet below.  If you go down you may not be able\nto get back up.'
       short: 'You''re in secret e/w canyon above tight canyon.'
-- LOC_75:
+- LOC_WIDEPLACE:
     description:
       long: 'You are at a wide place in a very tight n/s canyon.'
       short: !!null
-- LOC_76:
+- LOC_TIGHTPLACE:
     description:
       long: 'The canyon here becomes too tight to go further south.'
       short: !!null
-- LOC_77:
+- LOC_TALL:
     description:
       long: 'You are in a tall e/w canyon.  A low tight crawl goes 3 feet north and\nseems to open up.'
       short: !!null
-- LOC_78:
+- LOC_BOULDERS1:
     description:
       long: 'The canyon runs into a mass of boulders -- dead end.'
       short: !!null
-- LOC_79:
+- LOC_SEWER:
     description:
       long: 'The stream flows out through a pair of 1 foot diameter sewer pipes.\nIt would be advisable to use the exit.'
       short: !!null
-- LOC_80:
+- LOC_ALIKE11:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-- LOC_81:
+- LOC_DEADEND8:
     description:
       long: 'Dead end'
       short: !!null
-- LOC_82:
+- LOC_DEADEND9:
     description:
       long: 'Dead end'
       short: !!null
-- LOC_83:
+- LOC_ALIKE12:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-- LOC_84:
+- LOC_ALIKE13:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-- LOC_85:
+- LOC_DEADEND10:
     description:
       long: 'Dead end'
       short: !!null
-- LOC_86:
+- LOC_DEADEND11:
     description:
       long: 'Dead end'
       short: !!null
-- LOC_87:
+- LOC_ALIKE14:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-- LOC_88:
+- LOC_NARROW:
     description:
       long: 'You are in a long, narrow corridor stretching out of sight to the\nwest.  At the eastern end is a hole through which you can see a\nprofusion of leaves.'
       short: 'You''re in narrow corridor.'
-- LOC_89:
+- LOC_NOCLIMB:
     description:
       long: 'There is nothing here to climb.  Use "up" or "out" to leave the pit.'
       short: !!null
-- LOC_90:
+- LOC_PLANTTOP:
     description:
       long: 'You have climbed up the plant and out of the pit.'
       short: !!null
-- LOC_91:
+- LOC_INCLINE:
     description:
       long: 'You are at the top of a steep incline above a large room.  You could\nclimb down here, but you would not be able to climb up.  There is a\npassage leading back to the north.'
       short: 'You''re at steep incline above large room.'
-- LOC_92:
+- LOC_GIANTROOM:
     description:
       long: 'You are in the Giant Room.  The ceiling here is too high up for your\nlamp to show it.  Cavernous passages lead east, north, and south.  On\nthe west wall is scrawled the inscription, "FEE FIE FOE FOO" [sic].'
       short: 'You''re in Giant Room.'
-- LOC_93:
+- LOC_CAVEIN:
     description:
       long: 'The passage here is blocked by a recent cave-in.'
       short: !!null
-- LOC_94:
+- LOC_IMMENSE:
     description:
       long: 'You are at one end of an immense north/south passage.'
       short: !!null
-- LOC_95:
+- LOC_WATERFALL:
     description:
       long: 'You are in a magnificent cavern with a rushing stream, which cascades\nover a sparkling waterfall into a roaring whirlpool which disappears\nthrough a hole in the floor.  Passages exit to the south and west.'
       short: 'You''re in cavern with waterfall.'
-- LOC_96:
+- LOC_SOFTROOM:
     description:
       long: 'You are in the Soft Room.  The walls are covered with heavy curtains,\nthe floor with a thick pile carpet.  Moss covers the ceiling.'
       short: 'You''re in Soft Room.'
-- LOC_97:
+- LOC_ORIENTAL:
     description:
       long: 'This is the Oriental Room.  Ancient oriental cave drawings cover the\nwalls.  A gently sloping passage leads upward to the north, another\npassage leads se, and a hands and knees crawl leads west.'
       short: 'You''re in Oriental Room.'
-- LOC_98:
+- LOC_MISTY:
     description:
       long: 'You are following a wide path around the outer edge of a large cavern.\nFar below, through a heavy white mist, strange splashing noises can be\nheard.  The mist rises up through a fissure in the ceiling.  The path\nexits to the south and west.'
       short: 'You''re in misty cavern.'
-- LOC_99:
+- LOC_ALCOVE:
     description:
       long: 'You are in an alcove.  A small nw path seems to widen after a short\ndistance.  An extremely tight tunnel leads east.  It looks like a very\ntight squeeze.  An eerie light can be seen at the other end.'
       short: 'You''re in alcove.'
-- LOC_100:
+- LOC_PLOVER:
     description:
       long: 'You''re in a small chamber lit by an eerie green light.  An extremely\nnarrow tunnel exits to the west.  A dark corridor leads ne.'
       short: 'You''re in Plover Room.'
-- LOC_101:
+- LOC_DARKROOM:
     description:
       long: 'You''re in the dark-room.  A corridor leading south is the only exit.'
       short: 'You''re in dark-room.'
-- LOC_102:
+- LOC_ARCHED:
     description:
       long: 'You are in an arched hall.  A coral passage once continued up and east\nfrom here, but is now blocked by debris.  The air smells of sea water.'
       short: 'You''re in arched hall.'
-- LOC_103:
+- LOC_SHELLROOM:
     description:
       long: 'You''re in a large room carved out of sedimentary rock.  The floor and\nwalls are littered with bits of shells imbedded in the stone.  A\nshallow passage proceeds downward, and a somewhat steeper one leads\nup.  A low hands and knees passage enters from the south.'
       short: 'You''re in Shell Room.'
-- LOC_104:
+- LOC_SLOPING1:
     description:
       long: 'You are in a long sloping corridor with ragged sharp walls.'
       short: !!null
-- LOC_105:
+- LOC_CULDESAC:
     description:
       long: 'You are in a cul-de-sac about eight feet across.'
       short: !!null
-- LOC_106:
+- LOC_ANTEROOM:
     description:
       long: 'You are in an anteroom leading to a large passage to the east.  Small\npassages go west and up.  The remnants of recent digging are evident.\nA sign in midair here says "Cave under construction beyond this point.\nProceed at own risk.  [Witt Construction Company]"'
       short: 'You''re in anteroom.'
-- LOC_107:
+- LOC_DIFFERENT1:
     description:
       long: 'You are in a maze of twisty little passages, all different.'
       short: !!null
-- LOC_108:
+- LOC_WITTSEND:
     description:
       long: 'You are at Witt''s End.  Passages lead off in *ALL* directions.'
       short: 'You''re at Witt''s End.'
-- LOC_109:
+- LOC_MIRRORCANYON:
     description:
       long: 'You are in a north/south canyon about 25 feet across.  The floor is\ncovered by white mist seeping in from the north.  The walls extend\nupward for well over 100 feet.  Suspended from some unseen point far\nabove you, an enormous two-sided mirror is hanging parallel to and\nmidway between the canyon walls.  (The mirror is obviously provided\nfor the use of the dwarves who, as you know, are extremely vain.)  A\nsmall window can be seen in either wall, some fifty feet up.'
       short: 'You''re in Mirror Canyon.'
-- LOC_110:
+- LOC_WINDOW2:
     description:
       long: 'You''re at a low window overlooking a huge pit, which extends up out of\nsight.  A floor is indistinctly visible over 50 feet below.  Traces of\nwhite mist cover the floor of the pit, becoming thicker to the left.\nMarks in the dust around the window would seem to indicate that\nsomeone has been here recently.  Directly across the pit from you and\n25 feet away there is a similar window looking into a lighted room.  A\nshadowy figure can be seen there peering back at you.'
       short: 'You''re at window on pit.'
-- LOC_111:
+- LOC_TOPSTALACTITE:
     description:
       long: 'A large stalactite extends from the roof and almost reaches the floor\nbelow.  You could climb down it, and jump from it to the floor, but\nhaving done so you would be unable to reach it to climb back up.'
       short: 'You''re at top of stalactite.'
-- LOC_112:
+- LOC_DIFFERENT2:
     description:
       long: 'You are in a little maze of twisting passages, all different.'
       short: !!null
-- LOC_113:
+- LOC_RESERVOIR:
     description:
       long: 'You are at the edge of a large underground reservoir.  An opaque cloud\nof white mist fills the room and rises rapidly upward.  The lake is\nfed by a stream, which tumbles out of a hole in the wall about 10 feet\noverhead and splashes noisily into the water somewhere within the\nmist.  There is a passage going back toward the south.'
       short: 'You''re at reservoir.'
-- LOC_114:
+- LOC_DEADEND12:
     description:
       long: 'Dead end'
       short: !!null
-- LOC_115:
+- LOC_NE:
     description:
       long: 'You are at the northeast end of an immense room, even larger than the\nGiant Room.  It appears to be a repository for the "Adventure"\nprogram.  Massive torches far overhead bathe the room with smoky\nyellow light.  Scattered about you can be seen a pile of bottles (all\nof them empty), a nursery of young beanstalks murmuring quietly, a bed\nof oysters, a bundle of black rods with rusty stars on their ends, and\na collection of brass lanterns.  Off to one side a great many dwarves\nare sleeping on the floor, snoring loudly.  A notice nearby reads: "Do\nnot disturb the dwarves!"  An immense mirror is hanging against one\nwall, and stretches to the other end of the room, where various other\nsundry objects can be glimpsed dimly in the distance.'
       short: 'You''re at ne end.'
-- LOC_116:
+- LOC_SW:
     description:
       long: 'You are at the southwest end of the repository.  To one side is a pit\nfull of fierce green snakes.  On the other side is a row of small\nwicker cages, each of which contains a little sulking bird.  In one\ncorner is a bundle of black rods with rusty marks on their ends.  A\nlarge number of velvet pillows are scattered about on the floor.  A\nvast mirror stretches off to the northeast.  At your feet is a large\nsteel grate, next to which is a sign that reads, "Treasure Vault.\nKeys in main office."'
       short: 'You''re at sw end.'
-- LOC_117:
+- LOC_SWCHASM:
     description:
       long: 'You are on one side of a large, deep chasm.  A heavy white mist rising\nup from below obscures all view of the far side.  A sw path leads away\nfrom the chasm into a winding corridor.'
       short: 'You''re on sw side of chasm.'
-- LOC_118:
+- LOC_WINDING:
     description:
       long: 'You are in a long winding corridor sloping out of sight in both\ndirections.'
       short: 'You''re in sloping corridor.'
-- LOC_119:
+- LOC_SECRET4:
     description:
       long: 'You are in a secret canyon which exits to the north and east.'
       short: !!null
-- LOC_120:
+- LOC_SECRET5:
     description:
       long: 'You are in a secret canyon which exits to the north and east.'
       short: !!null
-- LOC_121:
+- LOC_SECRET6:
     description:
       long: 'You are in a secret canyon which exits to the north and east.'
       short: !!null
-- LOC_122:
+- LOC_NECHASM:
     description:
       long: 'You are on the far side of the chasm.  A ne path leads away from the\nchasm on this side.'
       short: 'You''re on ne side of chasm.'
-- LOC_123:
+- LOC_CORRIDOR:
     description:
       long: 'You''re in a long east/west corridor.  A faint rumbling noise can be\nheard in the distance.'
       short: 'You''re in corridor.'
-- LOC_124:
+- LOC_FORK:
     description:
       long: 'The path forks here.  The left fork leads northeast.  A dull rumbling\nseems to get louder in that direction.  The right fork leads southeast\ndown a gentle slope.  The main corridor enters from the west.'
       short: 'You''re at fork in path.'
-- LOC_125:
+- LOC_WARMWALLS:
     description:
       long: 'The walls are quite warm here.  From the north can be heard a steady\nroar, so loud that the entire cave seems to be trembling.  Another\npassage leads south, and a low crawl goes east.'
       short: 'You''re at junction with warm walls.'
-- LOC_126:
+- LOC_BREATHTAKING:
     description:
       long: 'You are on the edge of a breath-taking view.  Far below you is an\nactive volcano, from which great gouts of molten lava come surging\nout, cascading back down into the depths.  The glowing rock fills the\nfarthest reaches of the cavern with a blood-red glare, giving every-\nthing an eerie, macabre appearance.  The air is filled with flickering\nsparks of ash and a heavy smell of brimstone.  The walls are hot to\nthe touch, and the thundering of the volcano drowns out all other\nsounds.  Embedded in the jagged roof far overhead are myriad twisted\nformations composed of pure white alabaster, which scatter the murky\nlight into sinister apparitions upon the walls.  To one side is a deep\ngorge, filled with a bizarre chaos of tortured rock which seems to\nhave been crafted by the devil himself.  An immense river of fire\ncrashes out from the depths of the volcano, burns its way through the\ngorge, and plummets into a bottomless pit far off to your left.  To\nthe right, an immense geyser of blistering steam erupts continuously\nfrom a barren island in the center of a sulfurous lake, which bubbles\nominously.  The far right wall is aflame with an incandescence of its\nown, which lends an additional infernal splendor to the already\nhellish scene.  A dark, foreboding passage exits to the south.'
       short: 'You''re at breath-taking view.'
-- LOC_127:
+- LOC_BOULDERS2:
     description:
       long: 'You are in a small chamber filled with large boulders.  The walls are\nvery warm, causing the air in the room to be almost stifling from the\nheat.  The only exit is a crawl heading west, through which is coming\na low rumbling.'
       short: 'You''re in Chamber of Boulders.'
-- LOC_128:
+- LOC_LIMESTONE:
     description:
       long: 'You are walking along a gently sloping north/south passage lined with\noddly shaped limestone formations.'
       short: 'You''re in limestone passage.'
-- LOC_129:
+- LOC_BARRENFRONT:
     description:
       long: 'You are standing at the entrance to a large, barren room.  A notice\nabove the entrance reads:  "Caution!  Bear in room!"'
       short: 'You''re in front of Barren Room.'
-- LOC_130:
+- LOC_BARRENROOM:
     description:
       long: 'You are inside a barren room.  The center of the room is completely\nempty except for some dust.  Marks in the dust lead away toward the\nfar end of the room.  The only exit is the way you came in.'
       short: 'You''re in Barren Room.'
-- LOC_131:
+- LOC_DIFFERENT3:
     description:
       long: 'You are in a maze of twisting little passages, all different.'
       short: !!null
-- LOC_132:
+- LOC_DIFFERENT4:
     description:
       long: 'You are in a little maze of twisty passages, all different.'
       short: !!null
-- LOC_133:
+- LOC_DIFFERENT5:
     description:
       long: 'You are in a twisting maze of little passages, all different.'
       short: !!null
-- LOC_134:
+- LOC_DIFFERENT6:
     description:
       long: 'You are in a twisting little maze of passages, all different.'
       short: !!null
-- LOC_135:
+- LOC_DIFFERENT7:
     description:
       long: 'You are in a twisty little maze of passages, all different.'
       short: !!null
-- LOC_136:
+- LOC_DIFFERENT8:
     description:
       long: 'You are in a twisty maze of little passages, all different.'
       short: !!null
-- LOC_137:
+- LOC_DIFFERENT9:
     description:
       long: 'You are in a little twisty maze of passages, all different.'
       short: !!null
-- LOC_138:
+- LOC_DIFFERENT10:
     description:
       long: 'You are in a maze of little twisting passages, all different.'
       short: !!null
-- LOC_139:
+- LOC_DIFFERENT11:
     description:
       long: 'You are in a maze of little twisty passages, all different.'
       short: !!null
-- LOC_140:
+- LOC_DEADEND13:
     description:
       long: 'Dead end'
       short: !!null
-- LOC_141:
+- LOC_ROUGHHEWN:
     description:
       long: 'You are in a long, rough-hewn, north/south corridor.'
       short: !!null
-- LOC_142:
+- LOC_BADDIRECTION:
     description:
       long: 'There is no way to go that direction.'
       short: !!null
-- LOC_143:
+- LOC_LARGE:
     description:
       long: 'You are in a large chamber with passages to the west and north.'
       short: !!null
-- LOC_144:
+- LOC_SOTOREROOM:
     description:
       long: 'You are in the ogre''s storeroom.  The only exit is to the south.'
       short: !!null
-- LOC_145:
+- LOC_FOREST1:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-- LOC_146:
+- LOC_FOREST2:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-- LOC_147:
+- LOC_FOREST3:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-- LOC_148:
+- LOC_FOREST4:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-- LOC_149:
+- LOC_FOREST5:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-- LOC_150:
+- LOC_FOREST6:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-- LOC_151:
+- LOC_FOREST7:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-- LOC_152:
+- LOC_FOREST8:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-- LOC_153:
+- LOC_FOREST9:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-- LOC_154:
+- LOC_FOREST10:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-- LOC_155:
+- LOC_FOREST11:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-- LOC_156:
+- LOC_FOREST12:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-- LOC_157:
+- LOC_FOREST13:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-- LOC_158:
+- LOC_FOREST14:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-- LOC_159:
+- LOC_FOREST15:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-- LOC_160:
+- LOC_FOREST16:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-- LOC_161:
+- LOC_FOREST17:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-- LOC_162:
+- LOC_FOREST18:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-- LOC_163:
+- LOC_FOREST19:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-- LOC_164:
+- LOC_FOREST20:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-- LOC_165:
+- LOC_FOREST21:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-- LOC_166:
+- LOC_FOREST22:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-- LOC_167:
+- LOC_LEDGE:
     description:
       long: 'You are on a small ledge on one face of a sheer cliff.  There are no\npaths away from the ledge.  Across the chasm is a small clearing\nsurrounded by forest.'
       short: 'You''re on ledge.'
-- LOC_168:
+- LOC_RESBOTTOM:
     description:
       long: 'You are walking across the bottom of the reservoir.  Walls of water\nrear up on either side.  The roar of the water cascading past is\nnearly deafening, and the mist is so thick you can barely see.'
       short: 'You''re at bottom of reservoir.'
-- LOC_169:
+- LOC_RESNORTH:
     description:
       long: 'You are at the northern edge of the reservoir.  A northwest passage\nleads sharply up from here.'
       short: 'You''re north of reservoir.'
-- LOC_170:
+- LOC_TREACHEROUS:
     description:
       long: 'You are scrambling along a treacherously steep, rocky passage.'
       short: !!null
-- LOC_171:
+- LOC_STEEP:
     description:
       long: 'You are on a very steep incline, which widens at it goes upward.'
       short: !!null
-- LOC_172:
+- LOC_CLIFFBASE:
     description:
       long: 'You are at the base of a nearly vertical cliff.  There are some\nslim footholds which would enable you to climb up, but it looks\nextremely dangerous.  Here at the base of the cliff lie the remains\nof several earlier adventurers who apparently failed to make it.'
       short: 'You''re at base of cliff.'
-- LOC_173:
+- LOC_CLIFFACE:
     description:
       long: 'You are climbing along a nearly vertical cliff.'
       short: !!null
-- LOC_174:
+- LOC_FOOTSLIP:
     description:
       long: 'Just as you reach the top, your foot slips on a loose rock and you\ntumble several hundred feet to join the other unlucky adventurers.'
       short: !!null
-- LOC_175:
+- LOC_CLIFFTOP:
     description:
       long: 'Just as you reach the top, your foot slips on a loose rock and you\nmake one last desperate grab.  Your luck holds, as does your grip.\nWith an enormous heave, you lift yourself to the ledge above.'
       short: !!null
-- LOC_176:
+- LOC_CLIFFLEDGE:
     description:
       long: 'You are on a small ledge at the top of a nearly vertical cliff.\nThere is a low crawl leading off to the northeast.'
       short: 'You''re at top of cliff.'
-- LOC_177:
+- LOC_REACHDEAD:
     description:
       long: 'You have reached a dead end.'
       short: !!null
-- LOC_178:
+- LOC_GRUESOME:
     description:
       long: 'There is now one more gruesome aspect to the spectacular vista.'
       short: !!null
-- LOC_179:
+- LOC_FOOF1:
     description:
       long: '>>Foof!<<'
       short: !!null
-- LOC_180:
+- LOC_FOOF2:
     description:
       long: '>>Foof!<<'
       short: !!null
-- LOC_181:
+- LOC_FOOF3:
     description:
       long: '>>Foof!<<'
       short: !!null
-- LOC_182:
+- LOC_FOOF4:
     description:
       long: '>>Foof!<<'
       short: !!null
-- LOC_183:
+- LOC_FOOF5:
     description:
       long: '>>Foof!<<'
       short: !!null
-- LOC_184:
+- LOC_FOOF6:
     description:
       long: '>>Foof!<<'
       short: !!null
-- LOC_185:
+- LOC_NUGGET5:
     description:
       long: !!null
       short: !!null

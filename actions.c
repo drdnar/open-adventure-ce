@@ -74,7 +74,7 @@ static int attack(FILE *input, long verb, token_t obj)
 	for (int i=1; i < PIRATE; i++) {
 	    if (game.dloc[i] == game.loc) {
 		++k;
-		game.dloc[i] = LOC_61;
+		game.dloc[i] = LOC_LONGWEST;
 		game.dseen[i]=false;
 	    }
 	}
@@ -158,7 +158,7 @@ static int bivalve(token_t verb, token_t obj)
     if (spk == PEARL_FALLS) {
 	DSTROY(CLAM);
 	DROP(OYSTER,game.loc);
-	DROP(PEARL,LOC_105);
+	DROP(PEARL,LOC_CULDESAC);
     }
     RSPEAK(spk);
     return GO_CLEAROBJ;
@@ -173,7 +173,7 @@ static int blast(void)
 	return GO_CLEAROBJ;
     }
     game.bonus=133;
-    if (game.loc == LOC_115)
+    if (game.loc == LOC_NE)
 	game.bonus=134;
     if (HERE(ROD2))
 	game.bonus=135;
@@ -1003,10 +1003,10 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj)
 	if (HERE(obj))
 	    /* FALL THROUGH */;
 	else if (obj == GRATE) {
-	    if (game.loc == LOC_1 || game.loc == LOC_4 || game.loc == LOC_7)
+	    if (game.loc == LOC_START || game.loc == LOC_VALLEY || game.loc == LOC_SLIT)
 		obj=DPRSSN;
 	    /* FIXME: Arithmetic on location numbers */
-	    if (game.loc > LOC_9 && game.loc < LOC_15)
+	    if (game.loc > LOC_BELOWGRATE && game.loc < LOC_MISTHALL)
 		obj=ENTRNC;
 	    if (obj != GRATE)
 		return GO_MOVE;
