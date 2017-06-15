@@ -324,7 +324,7 @@ static bool dwarfmove(void)
     int kk, stick, attack;
     long tk[21];
 
-	/*  Dwarf stuff.  See earlier comments for description of
+    /*  Dwarf stuff.  See earlier comments for description of
      *  variables.  Remember sixth dwarf is pirate and is thus
      *  very different except for motion rules. */
 
@@ -490,7 +490,7 @@ static void croak(FILE *cmdin)
 	    int i=NOBJECTS + 1 - j;
 	    if (TOTING(i)) {
 		/* Always leave lamp where it's accessible aboveground */
-		DROP(i, (i == LAMP) ? 1 : game.oldlc2);
+		DROP(i, (i == LAMP) ? LOC_START : game.oldlc2);
 	    }
 	}
 	game.loc = LOC_BUILDING;
@@ -558,7 +558,8 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
 	/*  Look.  Can't give more detail.  Pretend it wasn't dark
 	 *  (though it may "now" be dark) so he won't fall into a
 	 *  pit while staring into the gloom. */
-	if (game.detail < 3)RSPEAK(NO_MORE_DETAIL);
+	if (game.detail < 3)
+	    RSPEAK(NO_MORE_DETAIL);
 	++game.detail;
 	game.wzdark=false;
 	game.abbrev[game.loc]=0;
@@ -640,6 +641,7 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
 		 *  emerald.  Note: travel table must include "useless"
 		 *  entries going through passage, which can never be used for
 		 *  actual motion, but can be spotted by "go back". */
+		/* FIXME: Arithmetic on location numbers */
 		game.newloc=99+100-game.loc;
 		if (game.holdng == 0 || (game.holdng == 1 && TOTING(EMRALD)))
 		    return true;
@@ -950,7 +952,7 @@ static bool do_command(FILE *cmdin)
 		croak(cmdin);
 		continue;	/* back to top of main interpreter loop */
 	    }
-	    msg=arbitrary_messages[16];
+	    msg=arbitrary_messages[PITCH_DARK];
 	}
 	if (TOTING(BEAR))RSPEAK(TAME_BEAR);
 	newspeak(msg);

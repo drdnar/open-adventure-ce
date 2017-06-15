@@ -78,12 +78,18 @@ static int attack(FILE *input, long verb, token_t obj)
 		game.dseen[i]=false;
 	    }
 	}
-	spk=spk+1+1/k;
+	spk=spk+1+1/k;	/* FIXME: Arithmetic on message numbers */
 	RSPEAK(spk);
 	return GO_CLEAROBJ;
     }
-    if (obj == BEAR)spk=BEAR_HANDS+(game.prop[BEAR]+1)/2;
-    if (obj != DRAGON || game.prop[DRAGON] != 0) {RSPEAK(spk); return GO_CLEAROBJ;}
+
+    if (obj == BEAR)
+	/* FIXME: Arithmetic on message numbers */
+	spk = BEAR_HANDS+(game.prop[BEAR]+1)/2;
+    if (obj != DRAGON || game.prop[DRAGON] != 0) {
+	RSPEAK(spk);
+	return GO_CLEAROBJ;
+    }
     /*  Fun stuff for dragon.  If he insists on attacking it, win!
      *  Set game.prop to dead, move dragon to central loc (still
      *  fixed), move rug there (not fixed), and move him there,
@@ -306,7 +312,10 @@ static int chain(token_t verb)
 	spk=CHAIN_LOCKED;
 	if (game.prop[CHAIN] != 0)spk=ALREADY_LOCKED;
 	if (game.loc != PLAC[CHAIN])spk=NO_LOCKSITE;
-	if (spk != CHAIN_LOCKED) {RSPEAK(spk); return GO_CLEAROBJ;}
+	if (spk != CHAIN_LOCKED) {
+	    RSPEAK(spk);
+	    return GO_CLEAROBJ;
+	}
 	game.prop[CHAIN]=2;
 	if (TOTING(CHAIN))DROP(CHAIN,game.loc);
 	game.fixed[CHAIN]= -1;
@@ -396,7 +405,7 @@ static int drink(token_t verb, token_t obj)
 	return GO_UNKNOWN;
     if (obj != BLOOD) {
 	if (obj != 0 && obj != WATER)spk=RIDICULOUS_ATTEMPT;
-	if (spk != 110 && LIQUID() == WATER && HERE(BOTTLE)) {
+	if (spk != RIDICULOUS_ATTEMPT && LIQUID() == WATER && HERE(BOTTLE)) {
 	    game.prop[BOTTLE]=1;
 	    game.place[WATER]=0;
 	    spk=BOTTLE_EMPTY;
@@ -519,7 +528,7 @@ int fill(token_t verb, token_t obj)
 	    return GO_CLEAROBJ;
 	}
 	RSPEAK(SHATTER_VASE);
-	game.prop[VASE]=2;
+	game.prop[VASE] = 2;
 	game.fixed[VASE]= -1;
 	return(discard(verb, obj, true));
     }
@@ -553,7 +562,7 @@ int fill(token_t verb, token_t obj)
 	game.prop[BOTTLE]=MOD(COND[game.loc],4)/2*2;
 	k=LIQUID();
 	if (TOTING(BOTTLE))
-	    game.place[k]= -1;
+	    game.place[k] = -1;
 	if (k == OIL)
 	    spk=BOTTLED_OIL;
     }
@@ -600,7 +609,8 @@ static int fly(token_t verb, token_t obj)
     game.oldloc=game.loc;
     game.newloc=game.place[RUG]+game.fixed[RUG]-game.loc;
     spk=RUG_GOES;
-    if (game.prop[SAPPH] >= 0)spk=RUG_RETURNS;
+    if (game.prop[SAPPH] >= 0)
+	spk=RUG_RETURNS;
     RSPEAK(spk);
     return GO_TERMINATE;
 }
@@ -811,11 +821,14 @@ static int reservoir(void)
     } else {
 	PSPEAK(RESER,game.prop[RESER]+1);
 	game.prop[RESER]=1-game.prop[RESER];
-	if (AT(RESER)) return GO_CLEAROBJ;
-	game.oldlc2=game.loc;
-	game.newloc=0;
-	RSPEAK(NOT_BRIGHT);
-	return GO_TERMINATE;
+	if (AT(RESER))
+	    return GO_CLEAROBJ;
+	else {
+	    game.oldlc2=game.loc;
+	    game.newloc=0;
+	    RSPEAK(NOT_BRIGHT);
+	    return GO_TERMINATE;
+	}
     }
 }
 
@@ -875,7 +888,7 @@ static int throw(FILE *cmdin, long verb, token_t obj)
 	RSPEAK(spk);
 	return GO_CLEAROBJ;
     }
-    if (obj >= 50 && obj <= MAXTRS && AT(TROLL)) {
+    if (obj >= MINTRS && obj <= MAXTRS && AT(TROLL)) {
         spk=TROLL_SATISFIED;
         /*  Snarf a treasure for the troll. */
         DROP(obj,0);
