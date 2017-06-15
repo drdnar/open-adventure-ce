@@ -8,7 +8,8 @@
  */
 
 void score(enum termination mode)
-/* mode is 'report' if scoring, 'quit' if quitting, 'end' if died or won */
+/* mode is 'scoregame' if scoring, 'quitgame' if quitting, 'endgame' if died
+ * or won */
 {
     long score = 0, mxscor = 0;
 
