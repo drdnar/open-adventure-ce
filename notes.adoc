@@ -113,6 +113,7 @@ ways:
   We don't need whatever minor performance gains this might collect,
   and the choice to refrain will make forward translation into future
   languages easier.
+
 * There are a few gotos left that resist restructuring; all of these
   are in the principal command interpreter function implementing its
   state machine.
@@ -124,7 +125,7 @@ ways:
   compromise forward-portability to other languages.
 
 * The code still has an unfortunately high density of magic numbers - in
-  particular, numeric object and room IDs.  There are plans to fix this.
+  particular, numeric object IDs.  There are plans to fix this.
 
 * Much of the code still uses FORTRAN-style uppercase names.
 
