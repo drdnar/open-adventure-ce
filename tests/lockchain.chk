@@ -256,6 +256,10 @@ A huge green fierce dragon bars the way!
 
 The dragon is sprawled out on a persian rug!!
 
+> feed dragon
+
+There's nothing here it wants to eat (except perhaps you).
+
 > kill dragon
 
 With what?  Your bare hands?
@@ -1628,6 +1632,10 @@ mist.  A notice posted on the bridge reads, "Stop! Pay troll!"
 A burly troll stands by the bridge and insists you throw him a
 treasure before you may cross.
 
+> feed troll
+
+Gluttony is not one of the troll's vices.  Avarice, however, is.
+
 > toss eggs
 
 The troll catches your treasure and scurries away out of sight.
@@ -1699,7 +1707,7 @@ Glistening pearl
 You are being followed by a very large, tame bear.
 
 
-You scored 239 out of a possible 430, using 293 turns.
+You scored 239 out of a possible 430, using 295 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 
