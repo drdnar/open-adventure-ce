@@ -39,16 +39,16 @@ int saveresume(FILE *input, bool resume)
 	/*  Suspend.  Offer to save things in a file, but charging
 	 *  some points (so can't win by using saved games to retry
 	 *  battles or to start over after learning zzword). */
-	RSPEAK(ARB_260);
-	if (!YES(input,ARB_200,ARB_54,ARB_54)) return GO_CLEAROBJ;
+	RSPEAK(SUSPEND_WARNING);
+	if (!YES(input,THIS_ACCEPTABLE,OK_MAN,OK_MAN)) return GO_CLEAROBJ;
 	game.saved=game.saved+5;
     }
     else
     {
 	/*  Resume.  Read a suspended game back from a file. */
 	if (game.loc != 1 || game.abbrev[1] != 1) {
-	    RSPEAK(ARB_268);
-	    if (!YES(input,ARB_200,ARB_54,ARB_54)) return GO_CLEAROBJ;
+	    RSPEAK(RESUME_ABANDON);
+	    if (!YES(input,THIS_ACCEPTABLE,OK_MAN,OK_MAN)) return GO_CLEAROBJ;
 	}
     }
 
@@ -74,7 +74,7 @@ int saveresume(FILE *input, bool resume)
 	save.bivalve = OBJTXT[OYSTER];
 	IGNORE(fwrite(&save, sizeof(struct save_t), 1, fp));
 	fclose(fp);
-	RSPEAK(ARB_266);
+	RSPEAK(RESUME_HELP);
 	exit(0);
     } else {
 	IGNORE(fread(&save, sizeof(struct save_t), 1, fp));
@@ -82,7 +82,7 @@ int saveresume(FILE *input, bool resume)
 	if (save.version != VRSION) {
 	    SETPRM(1,k/10,MOD(k,10));
 	    SETPRM(3,VRSION/10,MOD(VRSION,10));
-	    RSPEAK(ARB_269);
+	    RSPEAK(VERSION_SKEW);
 	} else {
 	    memcpy(&game, &save.game, sizeof(struct game_t));
 	    OBJSND[BIRD] = save.bird;

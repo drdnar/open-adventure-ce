@@ -196,7 +196,7 @@ bool GETIN(FILE *input,
 	    (junk > 0);
 	if (GETTXT(true,true,true) <= 0)
 	    return true;
-	RSPEAK(ARB_53);
+	RSPEAK(TWO_WORDS);
     }
 }
 
@@ -217,7 +217,7 @@ long YES(FILE *input, vocab_t x, vocab_t y, vocab_t z)
 	    RSPEAK(z);
 	    return false;
 	}
-	RSPEAK(ARB_185);
+	RSPEAK(PLEASE_ANSWER);
     }
 }
 
