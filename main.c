@@ -248,8 +248,8 @@ static void checkhints(FILE *cmdin)
 		SETPRM(1,HINTS[hint][2],HINTS[hint][2]);
 		RSPEAK(HINT_COST);
 		game.hinted[hint]=YES(cmdin,WANT_HINT,HINTS[hint][4],OK_MAN);
-		if (game.hinted[hint] && game.limit > 30)
-		    game.limit=game.limit+30*HINTS[hint][2];
+		if (game.hinted[hint] && game.limit > WARNTIME)
+		    game.limit += WARNTIME*HINTS[hint][2];
 	    }
 	}
     }
@@ -831,7 +831,7 @@ static void lampcheck(void)
      *  Second is for other cases of lamp dying.  12400 is when it
      *  goes out.  Even then, he can explore outside for a while
      *  if desired. */
-    if (game.limit<=30 && HERE(BATTER) && game.prop[BATTER]==0 && HERE(LAMP))
+    if (game.limit <= WARNTIME && HERE(BATTER) && game.prop[BATTER]==0 && HERE(LAMP))
     {
 	RSPEAK(REPLACE_BATTERIES);
 	game.prop[BATTER]=1;
@@ -844,7 +844,7 @@ static void lampcheck(void)
 	game.prop[LAMP]=0;
 	if (HERE(LAMP))
 	    RSPEAK(LAMP_OUT);
-    } else if (game.limit <= 30) {
+    } else if (game.limit <= WARNTIME) {
 	if (!game.lmwarn && HERE(LAMP)) {
 	    game.lmwarn=true;
 	    int spk=GET_BATTERIES;
