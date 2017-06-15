@@ -7,8 +7,8 @@
  * scoring and wrap-up
  */
 
-void score(long mode)
-/* mode is <0 if scoring, >0 if quitting, =0 if died or won */
+void score(enum termination mode)
+/* mode is 'report' if scoring, 'quit' if quitting, 'end' if died or won */
 {
     long score = 0, mxscor = 0;
 
@@ -54,7 +54,8 @@ void score(long mode)
      *  mundane exits or 133, 134, 135 if he blew it (so to speak). */
     score += (MAXDIE-game.numdie)*10;
     mxscor += MAXDIE*10;
-    if(mode == 0)score += 4;
+    if(mode == endgame)
+	score += 4;
     mxscor += 4;
     if(game.dflag != 0)score += 25;
     mxscor += 25;
@@ -93,7 +94,7 @@ void score(long mode)
     score=score-game.trnluz-game.saved;
 
     /* Return to score command if that's where we came from. */
-    if(mode < 0) {
+    if(mode == scoregame) {
 	SETPRM(1,score,mxscor);
 	SETPRM(3,game.turns,game.turns);
 	RSPEAK(GARNERED_POINTS);

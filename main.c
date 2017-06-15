@@ -49,7 +49,6 @@ bool editline = true;
 bool prompt = true;
 
 extern void initialise();
-extern void score(long);
 extern int action(FILE *, long, long, long);
 
 void sig_handler(int signo)
@@ -141,7 +140,7 @@ int main(int argc, char *argv[])
 	    break;
     }
     /* show score and exit */
-    score(1);
+    score(quitgame);
 }
 
 static bool fallback_handler(char *buf)
@@ -475,13 +474,13 @@ static void croak(FILE *cmdin)
 	/*  He died during closing time.  No resurrection.  Tally up a
 	 *  death and exit. */
 	RSPEAK(DEATH_CLOSING);
-	score(0);
+	score(endgame);
     } else {
 	/* FIXME: Arithmetic on message numbers */
 	if (!YES(cmdin,WATCH_IT+game.numdie*2,WHICH_WAY+game.numdie*2,OK_MAN))
-	    score(0);
+	    score(endgame);
 	if (game.numdie == MAXDIE)
-	    score(0);
+	    score(endgame);
 	game.place[WATER]=0;
 	game.place[OIL]=0;
 	if (TOTING(LAMP))
@@ -1107,7 +1106,7 @@ static bool do_command(FILE *cmdin)
 	case GO_DWARFWAKE:
 	    /*  Oh dear, he's disturbed the dwarves. */
 	    RSPEAK(DWARVES_AWAKEN);
-	    score(0);
+	    score(endgame);
 	    return true;
 	default:
 	    BUG(99);

@@ -183,7 +183,7 @@ static int blast(void)
     if (HERE(ROD2))
 	game.bonus=135;
     RSPEAK(game.bonus);
-    score(0);
+    score(endgame);
     return GO_CLEAROBJ;	/* pacify compiler - we never get here */
 }
 
@@ -777,7 +777,7 @@ static int quit(FILE *input)
 /*  Quit.  Intransitive only.  Verify intent and exit if that's what he wants. */
 {
     if (YES(input,REALLY_QUIT,OK_MAN,OK_MAN))
-	score(1);
+	score(quitgame);
     return GO_CLEAROBJ;
 }
 
@@ -949,7 +949,7 @@ static int throw(FILE *cmdin, long verb, token_t obj)
 static int vscore(void)
 /* Score.  Call scoring routine but tell it to return. */
 {
-    score(-1);
+    score(scoregame);
     return GO_CLEAROBJ;
 }
 

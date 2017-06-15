@@ -108,10 +108,12 @@ extern bool MAPLIN(FILE *);
 extern void TYPE(void);
 extern void DATIME(long*, long*);
 
+enum termination {endgame, quitgame, scoregame};
+
 extern void set_seed(long);
 extern unsigned long get_next_lcg_value(void);
 extern long randrange(long);
-extern void score(long);
+extern void score(enum termination);
 extern int saveresume(FILE *, bool);
 
 /*
