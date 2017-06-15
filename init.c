@@ -172,20 +172,19 @@
 
 void initialise(void)
 {
-    int i, k;
     if (oldstyle)
 	printf("Initialising...\n");
 
-    for (i=1; i<=NOBJECTS; i++) {
+    for (int i=1; i<=NOBJECTS; i++) {
 	game.place[i]=0;
 	game.prop[i]=0;
 	game.link[i+NOBJECTS]=game.link[i]=0;
     }
 
-    for (i=1; i<=LOCSIZ; i++) {
+    for (int i=1; i<=LOCSIZ; i++) {
 	game.abbrev[i]=0;
 	if (!(locations[i].description.big == 0 || KEY[i] == 0)) {
-	    k=KEY[i];
+	    int k=KEY[i];
 	    if(MOD(labs(TRAVEL[k]),1000) == 1)COND[i]=2;
 	}
 	game.atloc[i]=0;
@@ -198,16 +197,16 @@ void initialise(void)
      *  This also sets up "game.place" and "fixed" as copies of "PLAC" and
      *  "FIXD".  Also, since two-placed objects are typically best
      *  described last, we'll drop them first. */
-    for (i=1; i<=NOBJECTS; i++) {
-	k=NOBJECTS + 1 - i;
+    for (int i=1; i<=NOBJECTS; i++) {
+	int k=NOBJECTS + 1 - i;
 	if(FIXD[k] > 0) {
 	    DROP(k+NOBJECTS,FIXD[k]);
 	    DROP(k,PLAC[k]);
 	}
     }
 
-    for (i=1; i<=NOBJECTS; i++) {
-	k=NOBJECTS + 1 - i;
+    for (int i=1; i<=NOBJECTS; i++) {
+	int k=NOBJECTS + 1 - i;
 	game.fixed[k]=FIXD[k];
 	if(PLAC[k] != 0 && FIXD[k] <= 0)
 	    DROP(k,PLAC[k]);
@@ -218,7 +217,7 @@ void initialise(void)
      *  they are described.  game.tally keeps track of how many are
      *  not yet found, so we know when to close the cave. */
     game.tally=0;
-    for (i=MINTRS; i<=MAXTRS; i++) {
+    for (int i=MINTRS; i<=MAXTRS; i++) {
 	if(object_descriptions[i].inventory != 0)
 	    game.prop[i]= -1;
 	game.tally=game.tally-game.prop[i];
@@ -227,7 +226,7 @@ void initialise(void)
     /*  Clear the hint stuff.  game.hintlc[i] is how long he's been at LOC
      *  with cond bit i.  game.hinted[i] is true iff hint i has been
      *  used. */
-    for (i=1; i<=HNTMAX; i++) {
+    for (int i=1; i<=HNTMAX; i++) {
 	game.hinted[i]=false;
 	game.hintlc[i]=0;
     }
@@ -326,7 +325,7 @@ void initialise(void)
      *  loc stored in game.chloc2. */
     game.chloc = LOC_114;
     game.chloc2 = LOC_140;
-    for (i=1; i<=NDWARVES; i++) {
+    for (int i=1; i<=NDWARVES; i++) {
 	game.dseen[i]=false;
     }
     game.dflag=0;

@@ -21,9 +21,9 @@ static int attack(FILE *input, long verb, token_t obj)
  *  enemies, or no enemies but 2 others. */
 {
     int spk = ACTSPK[verb];
-    int i = ATDWRF(game.loc);
+    int d = ATDWRF(game.loc);
     if (obj == 0) {
-	if (i > 0)
+	if (d > 0)
 	    obj=DWARF;
 	if (HERE(SNAKE))obj=obj*NOBJECTS+SNAKE;
 	if (AT(DRAGON) && game.prop[DRAGON] == 0)obj=obj*NOBJECTS+DRAGON;
@@ -66,12 +66,12 @@ static int attack(FILE *input, long verb, token_t obj)
     if (obj == DRAGON)spk=ALREADY_DEAD;
     if (obj == TROLL)spk=ROCKY_TROLL;
     if (obj == OGRE)spk=OGRE_DOFGE;
-    if (obj == OGRE && i > 0) {
+    if (obj == OGRE && d > 0) {
 	RSPEAK(spk);
 	RSPEAK(KNIFE_THROWN);
 	DSTROY(OGRE);
 	int k=0;
-	for (i=1; i < PIRATE; i++) {
+	for (int i=1; i < PIRATE; i++) {
 	    if (game.dloc[i] == game.loc) {
 		++k;
 		game.dloc[i] = LOC_61;
@@ -604,13 +604,12 @@ static int fly(token_t verb, token_t obj)
     RSPEAK(spk);
     return GO_TERMINATE;
 }
-    
+
 static int inven(token_t obj)
 /* Inventory. If object, treat same as find.  Else report on current burden. */
 {
-    int i;
     int spk=NO_CARRY;
-    for (i=1; i<=NOBJECTS; i++) {
+    for (int i=1; i<=NOBJECTS; i++) {
 	if (i == BEAR || !TOTING(i))
 	    continue;
 	if (spk == NO_CARRY)
@@ -661,13 +660,13 @@ int light(token_t verb, token_t obj)
 	    return GO_TOP;
 	else
 	    return GO_CLEAROBJ;
-    }	 
+    }
 }
 
 static int listen(void)
 /*  Listen.  Intransitive only.  Print stuff based on objsnd/locsnd. */
 {
-    int i, k;
+    int k;
     int spk=ALL_SILENT;
     k=LOCSND[game.loc];
     if (k != 0) {
@@ -676,7 +675,7 @@ static int listen(void)
 	spk=ARB_0;
     }
     SETPRM(1,game.zzword,0);
-    for (i=1; i<=NOBJECTS; i++) {
+    for (int i=1; i<=NOBJECTS; i++) {
 	if (!HERE(i) || OBJSND[i] == 0 || game.prop[i] < 0)
 	    continue;
 	PSPEAK(i,OBJSND[i]+game.prop[i]);

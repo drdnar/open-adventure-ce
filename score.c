@@ -10,7 +10,7 @@
 void score(long mode)
 /* mode is <0 if scoring, >0 if quitting, =0 if died or won */
 {
-    long i, k, score = 0, mxscor = 0;
+    long score = 0, mxscor = 0;
 
     /*  The present scoring algorithm is as follows:
      *     Objective:          Points:        Present total possible:
@@ -33,9 +33,9 @@ void score(long mode)
 
     /*  First tally up the treasures.  Must be in building and not broken.
      *  Give the poor guy 2 points just for finding each treasure. */
-    for (i=MINTRS; i<=MAXTRS; i++) {
+    for (long i=MINTRS; i<=MAXTRS; i++) {
 	if(object_descriptions[i].inventory != 0) {
-	    k=12;
+	    long k=12;
 	    if(i == CHEST)k=14;
 	    if(i > CHEST)k=16;
 	    if(game.prop[i] >= 0)
@@ -82,7 +82,7 @@ void score(long mode)
     mxscor += 2;
 
     /* Deduct for hints/turns/saves. Hints < 4 are special; see database desc. */
-    for (i=1; i<=HNTMAX; i++) {
+    for (long i=1; i<=HNTMAX; i++) {
 	if(game.hinted[i])
 	    score=score-HINTS[i][2];
     }
@@ -108,7 +108,7 @@ void score(long mode)
     SETPRM(1,score,mxscor);
     SETPRM(3,game.turns,game.turns);
     RSPEAK(TOTAL_SCORE);
-    for (i=1; i<=CLSSES; i++) {
+    for (long i=1; i<=CLSSES; i++) {
 	if(CVAL[i] >= score) {
 	    newspeak(class_messages[i]);
 	    i=CVAL[i]+1-score;

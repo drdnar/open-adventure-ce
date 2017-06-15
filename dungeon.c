@@ -21,9 +21,6 @@
 #include <stdbool.h>
 #include <unistd.h>
 
-/* hard limit, will be propagated to database.h */
-#define NOBJECTS	100
-
 // Global variables for use in functions below that can gradually disappear as code is cleaned up
 static long LNLENG;
 static long LNPOSN;
@@ -149,7 +146,6 @@ static void BUG(long NUM) {
 }
 
 static void MAPLIN(FILE *OPENED) {
-	size_t i;
    /*  Read a line of input, from the specified input source,
     *  translate the chars to integers in the range 0-126 and store
     *  them in the common array "INLINE".  Integer values are as follows:
@@ -183,7 +179,7 @@ static void MAPLIN(FILE *OPENED) {
    while (!feof(OPENED) && INLINE[1] == '#');
 
    LNLENG = 0;
-   for (i = 1; i < sizeof(INLINE) && INLINE[i] != 0; ++i)
+   for (size_t i = 1; i < sizeof(INLINE) && INLINE[i] != 0; ++i)
    {
       char val = INLINE[i];
       INLINE[i] = ascii_to_advent[(unsigned)val];
@@ -529,8 +525,8 @@ static void write_hints(FILE* header_file, long matrix[][HINTLEN], long dim1, lo
 
 static void write_file(FILE* header_file)
 {
-   int i, MAXDIE;
-   for (i=0; i<=4; i++) {
+   int MAXDIE;
+   for (int i=0; i<=4; i++) {
       long x = 2*i+81;
       if(RTEXT[x] != 0)
          MAXDIE=i+1;

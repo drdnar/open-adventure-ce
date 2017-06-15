@@ -105,9 +105,9 @@ void newspeak(char* msg)
 	    {
 	      copy[i + 1] = 's';
 	      packed_to_token(PARMS[pi], parameters[pi]);
-	      for (int i = 0; i < strlen(parameters[pi]); ++i)
+	      for (int j = 0; j < strlen(parameters[pi]); ++j)
 		{
-		  parameters[pi][i] = tolower(parameters[pi][i]);
+		  parameters[pi][j] = tolower(parameters[pi][j]);
 		}
 	    }
 
@@ -116,9 +116,9 @@ void newspeak(char* msg)
 	    {
 	      copy[i + 1] = 's';
 	      packed_to_token(PARMS[pi], parameters[pi]);
-	      for (int i = 0; i < strlen(parameters[pi]); ++i)
+	      for (int j = 0; j < strlen(parameters[pi]); ++j)
 		{
-		  parameters[pi][i] = tolower(parameters[pi][i]);
+		  parameters[pi][j] = tolower(parameters[pi][j]);
 		}
 	      parameters[pi][0] = toupper(parameters[pi][0]);
 	    }
@@ -316,16 +316,16 @@ long VOCAB(long id, long init)
  *  (Thus "STEPS", which is a motion verb as well as an object, may be located
  *  as an object.)  And it also means the KTAB value is taken modulo 1000. */
 {
-    long i, lexeme;
+    long lexeme;
 
-    for (i=1; i<=TABSIZ; i++) {
+    for (long i=1; i<=TABSIZ; i++) {
 	if (KTAB[i] == -1) {
 	    lexeme= -1;
 	    if (init < 0)
 		return(lexeme);
 	    BUG(5);
 	}
-	if (init >= 0 && KTAB[i]/1000 != init) 
+	if (init >= 0 && KTAB[i]/1000 != init)
 	    continue;
 	if (ATAB[i] == id) {
 	    lexeme=KTAB[i];
@@ -427,13 +427,13 @@ long ATDWRF(long where)
  *  there (or if dwarves not active yet), -1 if all dwarves are dead.  Ignore
  *  the pirate (6th dwarf). */
 {
-    long at, i;
+    long at;
 
     at =0;
     if (game.dflag < 2)
 	return(at);
     at = -1;
-    for (i=1; i<=NDWARVES-1; i++) {
+    for (long i=1; i<=NDWARVES-1; i++) {
 	if (game.dloc[i] == where)
 	    return i;
 	if (game.dloc[i] != 0)

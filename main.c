@@ -176,7 +176,7 @@ static void checkhints(FILE *cmdin)
 	    ++game.hintlc[hint];
 	    /*  Come here if he's been long enough at required loc(s) for some
 	     *  unused hint. */
-	    if (game.hintlc[hint] >= HINTS[hint][1]) 
+	    if (game.hintlc[hint] >= HINTS[hint][1])
 	    {
 		int i;
 
