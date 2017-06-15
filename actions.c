@@ -65,7 +65,7 @@ static int attack(FILE *input, long verb, token_t obj)
     if (obj == DWARF && game.closed) return GO_DWARFWAKE;
     if (obj == DRAGON)spk=ALREADY_DEAD;
     if (obj == TROLL)spk=ROCKY_TROLL;
-    if (obj == OGRE)spk=OGRE_DOFGE;
+    if (obj == OGRE)spk=OGRE_DODGE;
     if (obj == OGRE && d > 0) {
 	RSPEAK(spk);
 	RSPEAK(KNIFE_THROWN);
@@ -860,6 +860,7 @@ static int say(void)
     if (WD2 > 0)
 	WD1=WD2;
     int wd=VOCAB(WD1,-1);
+    /* FIXME: Magic numbers */
     if (wd == 62 || wd == 65 || wd == 71 || wd == 2025 || wd == 2034) {
 	WD2=0;
 	return GO_LOOKUP;
@@ -918,7 +919,7 @@ static int throw(FILE *cmdin, long verb, token_t obj)
             return throw_support(spk);
         }
         if (AT(OGRE)) {
-            spk=OGRE_DOFGE;
+            spk=OGRE_DODGE;
             return throw_support(spk);
         }
         if (HERE(BEAR) && game.prop[BEAR] == 0) {

@@ -948,7 +948,7 @@ arbitrary_messages:  !!omap
 - THIS_ACCEPTABLE: 'Is this acceptable?'
 - ALREADY_OVER: 'This adventure is already over.  To start a new adventure, or to\nresume an earlier adventure, please run a fresh copy of the program.'
 - OGRE_FULL: 'The ogre doesn''t appear to be hungry.'
-- OGRE_DOFGE: 'The ogre, who despite his bulk is quite agile, easily dodges your\nattack.  He seems almost amused by your puny effort.'
+- OGRE_DODGE: 'The ogre, who despite his bulk is quite agile, easily dodges your\nattack.  He seems almost amused by your puny effort.'
 - OGRE_PANIC1: 'The ogre, distracted by your rush, is struck by the knife.  With a\nblood-curdling yell he turns and bounds after the dwarves, who flee\nin panic.  You are left alone in the room.'
 - OGRE_PANIC2: 'The ogre, distracted by your rush, is struck by the knife.  With a\nblood-curdling yell he turns and bounds after the dwarf, who flees\nin panic.  You are left alone in the room.'
 - FREE_FLY: 'The bird flies about agitatedly for a moment.'

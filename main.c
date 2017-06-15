@@ -499,7 +499,7 @@ static void croak(FILE *cmdin)
 }
 
 /*  Given the current location in "game.loc", and a motion verb number in
- *  "K", put the new location in "game.newloc".  The current loc is saved
+ *  "motion", put the new location in "game.newloc".  The current loc is saved
  *  in "game.oldloc" in case he wants to retreat.  The current
  *  game.oldloc is saved in game.oldlc2, in case he dies.  (if he
  *  does, game.newloc will be limbo, and game.oldloc will be what killed
@@ -556,7 +556,7 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
     }
     else if (motion == LOOK) {
 	/*  Look.  Can't give more detail.  Pretend it wasn't dark
-	 *  (though it may "now" be dark) so he won't fall into a
+	 *  (though it may now be dark) so he won't fall into a
 	 *  pit while staring into the gloom. */
 	if (game.detail < 3)
 	    RSPEAK(NO_MORE_DETAIL);
@@ -567,7 +567,7 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
     }
     else if (motion == CAVE) {
 	/*  Cave.  Different messages depending on whether above ground. */
-	RSPEAK((OUTSID(game.loc) && game.loc != 8) ? FOLLOW_STREAM : NEED_DETAIL);
+	RSPEAK((OUTSID(game.loc) && game.loc != LOC_GRATE) ? FOLLOW_STREAM : NEED_DETAIL);
 	return true;
     }
     else {
@@ -582,6 +582,7 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
 	if (MOD(scratchloc,1000) == 1 || MOD(scratchloc,1000) == motion)
 	    break;
 	if (TRAVEL[kk] < 0) {
+	    /* FIXME: Magic numbers! */
 	    /*  Non-applicable motion.  Various messages depending on
 	     *  word given. */
 	    int spk=CANT_APPLY;
@@ -697,7 +698,8 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
 	    BUG(20);
 	}
     } while
-	    (false);
+	(false);
+    /* FIXME: Arithmetic on location number, becoming a message number */
     RSPEAK(game.newloc-500);
     game.newloc=game.loc;
     return true;
@@ -903,8 +905,8 @@ static void listobjects(void)
 static bool do_command(FILE *cmdin)
 /* Get and execute a command */ 
 {
-    long KQ, verb, V1, V2;
-    long i, k, KMOD;
+    long kq, verb, V1, V2;
+    long i, k, kmod;
     static long igo = 0;
     static long obj = 0;
     enum speechpart part;
@@ -1062,18 +1064,18 @@ static bool do_command(FILE *cmdin)
 	    RSPEAK(DONT_KNOW);
 	    goto L2600;
 	}
-	KMOD=MOD(i,1000);
-	KQ=i/1000+1;
-	switch (KQ-1)
+	kmod=MOD(i,1000);
+	kq=i/1000+1;
+	switch (kq-1)
 	{
 	case 0:
-	    if (playermove(cmdin, verb, KMOD))
+	    if (playermove(cmdin, verb, kmod))
 		return true;
 	    else
 		continue;	/* back to top of main interpreter loop */
-	case 1: part=unknown; obj = KMOD; break;
-	case 2: part=intransitive; verb = KMOD; break;
-	case 3: RSPEAK(KMOD); goto L2012;
+	case 1: part=unknown; obj = kmod; break;
+	case 2: part=intransitive; verb = kmod; break;
+	case 3: RSPEAK(kmod); goto L2012;
 	default: BUG(22);
 	}
 
