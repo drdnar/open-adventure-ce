@@ -148,12 +148,11 @@ static int bigwords(long foo)
 static int bivalve(token_t verb, token_t obj)
 /* Clam/oyster actions */
 {
-    int spk, k=0;
-    if (obj == OYSTER)k=1;
-    /* FIXME: Arithmetic on message numbers in next lines */
-    spk=PEARL_FALLS+k;		
-    if (TOTING(obj))spk=DROP_CLAM+k;
-    if (!TOTING(TRIDNT))spk=CLAM_OPENER+k;
+    int spk;
+    bool is_oyster = (obj == OYSTER);
+    spk= is_oyster ? OYSTER_OPENS : PEARL_FALLS;
+    if (TOTING(obj))spk= is_oyster ? DROP_OYSTER : DROP_CLAM;
+    if (!TOTING(TRIDNT))spk= is_oyster ? OYSTER_OPENER : CLAM_OPENER;
     if (verb == LOCK)spk=HUH_MAN;
     if (spk == PEARL_FALLS) {
 	DSTROY(CLAM);
@@ -270,7 +269,7 @@ static int carry(token_t verb, token_t obj)
 	}
 	if (!TOTING(CAGE))spk=CANNOT_CARRY;
 	if (TOTING(ROD))spk=BIRD_EVADES;
-	if (spk/2 == 13) {	/* FIXME: Arithmetic on message number */
+	if (spk == CANNOT_CARRY || spk == BIRD_EVADES) {
 	    RSPEAK(spk);
 	    return GO_CLEAROBJ;
 	}
@@ -583,7 +582,7 @@ static int fly(token_t verb, token_t obj)
     if (obj == INTRANSITIVE) {
 	if (game.prop[RUG] != 2)spk=RUG_NOTHING2;
 	if (!HERE(RUG))spk=FLAP_ARMS;
-	if (spk/2 == 112) {	/* FIXME: Arithmetic on message numbers */
+	if (spk == RUG_NOTHING2 || spk == FLAP_ARMS) {
 	    RSPEAK(spk);
 	    return GO_CLEAROBJ;
 	}
@@ -720,10 +719,10 @@ static int lock(token_t verb, token_t obj)
 		if (!game.panic)game.clock2=15;
 		game.panic=true;
 	    } else {
-		spk=ALREADY_LOCKED+game.prop[GRATE];	/* FIXME: Arithmetic on message number */
+		spk=game.prop[GRATE] ? GRATE_LOCKED : ALREADY_LOCKED;
 		game.prop[GRATE]=1;
 		if (verb == LOCK)game.prop[GRATE]=0;
-		spk=spk+2*game.prop[GRATE];
+		spk=game.prop[GRATE] ? GRATE_UNLOCKED : GRATE_LOCKED;
 	    }
 	}
     }
