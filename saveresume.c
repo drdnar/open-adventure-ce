@@ -40,7 +40,7 @@ int saveresume(FILE *input, bool resume)
 	 *  some points (so can't win by using saved games to retry
 	 *  battles or to start over after learning zzword). */
 	RSPEAK(ARB_260);
-	if (!YES(input,200,54,54)) return GO_CLEAROBJ;
+	if (!YES(input,ARB_200,ARB_54,ARB_54)) return GO_CLEAROBJ;
 	game.saved=game.saved+5;
     }
     else
@@ -48,7 +48,7 @@ int saveresume(FILE *input, bool resume)
 	/*  Resume.  Read a suspended game back from a file. */
 	if (game.loc != 1 || game.abbrev[1] != 1) {
 	    RSPEAK(ARB_268);
-	    if (!YES(input,200,54,54)) return GO_CLEAROBJ;
+	    if (!YES(input,ARB_200,ARB_54,ARB_54)) return GO_CLEAROBJ;
 	}
     }
 

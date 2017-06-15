@@ -269,7 +269,7 @@ static int carry(token_t verb, token_t obj)
 	}
 	if (!TOTING(CAGE))spk=ARB_27;
 	if (TOTING(ROD))spk=ARB_26;
-	if (spk/2 == 13) {
+	if (spk/2 == 13) {	/* FIXME: Arithmetic on message number */
 	    RSPEAK(spk);
 	    return GO_CLEAROBJ;
 	}
@@ -296,7 +296,7 @@ static int chain(token_t verb)
 	spk=ARB_171;
 	if (game.prop[BEAR] == 0)spk=ARB_41;
 	if (game.prop[CHAIN] == 0)spk=ARB_37;
-	if (spk != 171) {RSPEAK(spk); return GO_CLEAROBJ;}
+	if (spk != ARB_171) {RSPEAK(spk); return GO_CLEAROBJ;}
 	game.prop[CHAIN]=0;
 	game.fixed[CHAIN]=0;
 	if (game.prop[BEAR] != 3)game.prop[BEAR]=2;
@@ -305,7 +305,7 @@ static int chain(token_t verb)
 	spk=ARB_172;
 	if (game.prop[CHAIN] != 0)spk=ARB_34;
 	if (game.loc != PLAC[CHAIN])spk=ARB_173;
-	if (spk != 172) {RSPEAK(spk); return GO_CLEAROBJ;}
+	if (spk != ARB_172) {RSPEAK(spk); return GO_CLEAROBJ;}
 	game.prop[CHAIN]=2;
 	if (TOTING(CHAIN))DROP(CHAIN,game.loc);
 	game.fixed[CHAIN]= -1;
@@ -450,7 +450,7 @@ static int extinguish(token_t verb, int obj)
     else if (obj == LAMP) {
 	game.prop[LAMP]=0;
 	RSPEAK(ARB_40);
-	spk = DARK(game.loc) ? 16 : 0;
+	spk = DARK(game.loc) ? ARB_16 : ARB_0;
     }
     else if (obj == DRAGON || obj == VOLCAN)
 	spk=ARB_146;
@@ -720,7 +720,7 @@ static int lock(token_t verb, token_t obj)
 		if (!game.panic)game.clock2=15;
 		game.panic=true;
 	    } else {
-		spk=ARB_34+game.prop[GRATE];
+		spk=ARB_34+game.prop[GRATE];	/* FIXME: Arithmetic on message number */
 		game.prop[GRATE]=1;
 		if (verb == LOCK)game.prop[GRATE]=0;
 		spk=spk+2*game.prop[GRATE];
@@ -767,7 +767,7 @@ static int pour(token_t verb, token_t obj)
 static int quit(FILE *input)
 /*  Quit.  Intransitive only.  Verify intent and exit if that's what he wants. */
 {
-    if (YES(input,22,54,54))
+    if (YES(input,ARB_22,ARB_54,ARB_54))
 	score(1);
     return GO_CLEAROBJ;
 }
@@ -795,7 +795,7 @@ static int read(FILE *input, token_t verb, token_t obj)
 	return GO_CLEAROBJ;
     }
     if (obj == OYSTER && !game.clshnt) {
-	game.clshnt=YES(input,192,193,54);
+	game.clshnt=YES(input,ARB_192,ARB_193,ARB_54);
 	return GO_CLEAROBJ;
     }
     PSPEAK(obj,OBJTXT[obj]+game.prop[obj]);

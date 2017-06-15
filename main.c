@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
 
     /*  Start-up, dwarf stuff */
     game.zzword=RNDVOC(3,0);
-    game.novice=YES(stdin, 65,1,0);
+    game.novice=YES(stdin, ARB_65,ARB_1,ARB_0);
     game.newloc=1;
     game.loc=1;
     game.limit=330;
@@ -244,11 +244,11 @@ static void checkhints(FILE *cmdin)
     
 		/* Fall through to hint display */
 		game.hintlc[hint]=0;
-		if (!YES(cmdin,HINTS[hint][3],0,54))
+		if (!YES(cmdin,HINTS[hint][3],ARB_0,ARB_54))
 		    return;
 		SETPRM(1,HINTS[hint][2],HINTS[hint][2]);
 		RSPEAK(ARB_261);
-		game.hinted[hint]=YES(cmdin,175,HINTS[hint][4],54);
+		game.hinted[hint]=YES(cmdin,ARB_175,HINTS[hint][4],ARB_54);
 		if (game.hinted[hint] && game.limit > 30)
 		    game.limit=game.limit+30*HINTS[hint][2];
 	    }
@@ -431,16 +431,16 @@ static bool dwarfmove(void)
     if (game.dtotal == 0)
 	return true;
     SETPRM(1,game.dtotal,0);
-    RSPEAK(4+1/game.dtotal);
+    RSPEAK(ARB_4+1/game.dtotal);	/* FIXME: Arithmetic on message number */
     if (attack == 0)
 	return true;
     if (game.dflag == 2)game.dflag=3;
     SETPRM(1,attack,0);
     int k=6;
-    if (attack > 1)k=250;
+    if (attack > 1)k=ARB_250;
     RSPEAK(k);
     SETPRM(1,stick,0);
-    RSPEAK(k+1+2/(1+stick));
+    RSPEAK(k+1+2/(1+stick));	/* FIXME: Arithmetic on message number */
     if (stick == 0)
 	return true;
     game.oldlc2=game.loc;
@@ -477,7 +477,8 @@ static void croak(FILE *cmdin)
 	RSPEAK(ARB_131);
 	score(0);
     } else {
-	if (!YES(cmdin,79+game.numdie*2,80+game.numdie*2,54))
+	/* FIXME: Arithmetic on message numbers */
+	if (!YES(cmdin,ARB_79+game.numdie*2,ARB_80+game.numdie*2,ARB_54))
 	    score(0);
 	if (game.numdie == MAXDIE)
 	    score(0);
@@ -523,8 +524,8 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
 	game.oldlc2=game.oldloc;
 	game.oldloc=game.loc;
 	k2=0;
-	if (motion == game.loc)k2=91;
-	if (CNDBIT(game.loc,NOBACK))k2=274;
+	if (motion == game.loc)k2=ARB_91;
+	if (CNDBIT(game.loc,NOBACK))k2=ARB_274;
 	if (k2 == 0) {
 	    for (;;) {
 		scratchloc=MOD((labs(TRAVEL[kk])/1000),1000);
@@ -565,7 +566,7 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
     }
     else if (motion == CAVE) {
 	/*  Cave.  Different messages depending on whether above ground. */
-	RSPEAK((OUTSID(game.loc) && game.loc != 8) ? 57 : 58);
+	RSPEAK((OUTSID(game.loc) && game.loc != 8) ? ARB_57 : ARB_58);
 	return true;
     }
     else {
