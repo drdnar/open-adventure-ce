@@ -74,7 +74,7 @@ static int attack(FILE *input, long verb, token_t obj)
 	for (i=1; i < PIRATE; i++) {
 	    if (game.dloc[i] == game.loc) {
 		++k;
-		game.dloc[i]=61;
+		game.dloc[i] = LOC_61;
 		game.dseen[i]=false;
 	    }
 	}
@@ -150,14 +150,15 @@ static int bivalve(token_t verb, token_t obj)
 {
     int spk, k=0;
     if (obj == OYSTER)k=1;
-    spk=PEARL_FALLS+k;
+    /* FIXME: Arithmetic on message numbers in next lines */
+    spk=PEARL_FALLS+k;		
     if (TOTING(obj))spk=DROP_CLAM+k;
     if (!TOTING(TRIDNT))spk=CLAM_OPENER+k;
     if (verb == LOCK)spk=HUH_MAN;
-    if (spk == 124) {
+    if (spk == PEARL_FALLS) {
 	DSTROY(CLAM);
 	DROP(OYSTER,game.loc);
-	DROP(PEARL,105);
+	DROP(PEARL,LOC_105);
     }
     RSPEAK(spk);
     return GO_CLEAROBJ;
@@ -172,7 +173,7 @@ static int blast(void)
 	return GO_CLEAROBJ;
     }
     game.bonus=133;
-    if (game.loc == 115)
+    if (game.loc == LOC_115)
 	game.bonus=134;
     if (HERE(ROD2))
 	game.bonus=135;
@@ -340,7 +341,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
                 if (TOTING(RUG))spk=RUG_WIGGLES;
                 if (obj == RUBY)spk=RUG_SETTLES;
                 RSPEAK(spk);
-                if (spk != 220) {
+                if (spk != RUG_WIGGLES) {
                     int k = 2-game.prop[RUG];
                     game.prop[RUG] = k;
                     if (k == 2) k = PLAC[SAPPH];
@@ -582,7 +583,7 @@ static int fly(token_t verb, token_t obj)
     if (obj == INTRANSITIVE) {
 	if (game.prop[RUG] != 2)spk=RUG_NOTHING2;
 	if (!HERE(RUG))spk=FLAP_ARMS;
-	if (spk/2 == 112) {
+	if (spk/2 == 112) {	/* FIXME: Arithmetic on message numbers */
 	    RSPEAK(spk);
 	    return GO_CLEAROBJ;
 	}
@@ -612,7 +613,7 @@ static int inven(token_t obj)
     for (i=1; i<=NOBJECTS; i++) {
 	if (i == BEAR || !TOTING(i))
 	    continue;
-	if (spk == 98)
+	if (spk == NO_CARRY)
 	    RSPEAK(NOW_HOLDING);
 	game.blklin=false;
 	PSPEAK(i,-1);
@@ -1003,9 +1004,10 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj)
 	if (HERE(obj))
 	    /* FALL THROUGH */;
 	else if (obj == GRATE) {
-	    if (game.loc == 1 || game.loc == 4 || game.loc == 7)
+	    if (game.loc == LOC_1 || game.loc == LOC_4 || game.loc == LOC_7)
 		obj=DPRSSN;
-	    if (game.loc > 9 && game.loc < 15)
+	    /* FIXME: Arithmetic on location numbers */
+	    if (game.loc > LOC_9 && game.loc < LOC_15)
 		obj=ENTRNC;
 	    if (obj != GRATE)
 		return GO_MOVE;

@@ -324,17 +324,17 @@ void initialise(void)
      *  chest's eventual location inside the maze.  This loc is saved
      *  in game.chloc for ref.  the dead end in the other maze has its
      *  loc stored in game.chloc2. */
-    game.chloc=114;
-    game.chloc2=140;
+    game.chloc = LOC_114;
+    game.chloc2 = LOC_140;
     for (i=1; i<=NDWARVES; i++) {
 	game.dseen[i]=false;
     }
     game.dflag=0;
-    game.dloc[1]=19;
-    game.dloc[2]=27;
-    game.dloc[3]=33;
-    game.dloc[4]=44;
-    game.dloc[5]=64;
+    game.dloc[1] = LOC_19;
+    game.dloc[2] = LOC_27;
+    game.dloc[3] = LOC_33;
+    game.dloc[4] = LOC_44;
+    game.dloc[5] = LOC_64;
     game.dloc[6]=game.chloc;
 
     /*  Other random flags and counters, as follows:

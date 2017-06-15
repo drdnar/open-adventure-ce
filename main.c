@@ -127,8 +127,8 @@ int main(int argc, char *argv[])
     /*  Start-up, dwarf stuff */
     game.zzword=RNDVOC(3,0);
     game.novice=YES(stdin, WELCOME_YOU,CAVE_NEARBY,ARB_0);
-    game.newloc=1;
-    game.loc=1;
+    game.newloc = LOC_1;
+    game.loc = LOC_1;
     game.limit=330;
     if (game.novice)game.limit=1000;
 
@@ -493,7 +493,7 @@ static void croak(FILE *cmdin)
 		DROP(i, (i == LAMP) ? 1 : game.oldlc2);
 	    }
 	}
-	game.loc=3;
+	game.loc = LOC_3;
 	game.oldloc=game.loc;
     }
 }
@@ -778,29 +778,29 @@ static bool closecheck(void)
 	 *  objects he might be carrying (lest he have some which
 	 *  could cause trouble, such as the keys).  We describe the
 	 *  flash of light and trundle back. */
-	game.prop[BOTTLE]=PUT(BOTTLE,115,1);
-	game.prop[PLANT]=PUT(PLANT,115,0);
-	game.prop[OYSTER]=PUT(OYSTER,115,0);
+	game.prop[BOTTLE]=PUT(BOTTLE,LOC_115,1);
+	game.prop[PLANT]=PUT(PLANT,LOC_115,0);
+	game.prop[OYSTER]=PUT(OYSTER,LOC_115,0);
 	OBJTXT[OYSTER]=3;
-	game.prop[LAMP]=PUT(LAMP,115,0);
-	game.prop[ROD]=PUT(ROD,115,0);
-	game.prop[DWARF]=PUT(DWARF,115,0);
-	game.loc=115;
-	game.oldloc=115;
-	game.newloc=115;
+	game.prop[LAMP]=PUT(LAMP,LOC_115,0);
+	game.prop[ROD]=PUT(ROD,LOC_115,0);
+	game.prop[DWARF]=PUT(DWARF,LOC_115,0);
+	game.loc = LOC_115;
+	game.oldloc = LOC_115;
+	game.newloc = LOC_115;
 	/*  Leave the grate with normal (non-negative) property.
 	 *  Reuse sign. */
-	PUT(GRATE,116,0);
-	PUT(SIGN,116,0);
+	PUT(GRATE,LOC_116,0);
+	PUT(SIGN,LOC_116,0);
 	++OBJTXT[SIGN];
-	game.prop[SNAKE]=PUT(SNAKE,116,1);
-	game.prop[BIRD]=PUT(BIRD,116,1);
-	game.prop[CAGE]=PUT(CAGE,116,0);
-	game.prop[ROD2]=PUT(ROD2,116,0);
-	game.prop[PILLOW]=PUT(PILLOW,116,0);
+	game.prop[SNAKE]=PUT(SNAKE,LOC_116,1);
+	game.prop[BIRD]=PUT(BIRD,LOC_116,1);
+	game.prop[CAGE]=PUT(CAGE,LOC_116,0);
+	game.prop[ROD2]=PUT(ROD2,LOC_116,0);
+	game.prop[PILLOW]=PUT(PILLOW,LOC_116,0);
 
-	game.prop[MIRROR]=PUT(MIRROR,115,0);
-	game.fixed[MIRROR]=116;
+	game.prop[MIRROR]=PUT(MIRROR,LOC_115,0);
+	game.fixed[MIRROR]=LOC_116;
 
 	for (int i=1; i<=NOBJECTS; i++) {
 	    if (TOTING(i))
@@ -1019,8 +1019,8 @@ static bool do_command(FILE *cmdin)
 	} else
 	    lampcheck();
 
-	k=43;
-	if (LIQLOC(game.loc) == WATER)k=70;
+	k=WHERE_QUERY;
+	if (LIQLOC(game.loc) == WATER)k=FEET_WET;
 	V1=VOCAB(WD1,-1);
 	V2=VOCAB(WD2,-1);
 	if (V1 == ENTER && (V2 == STREAM || V2 == 1000+WATER)) {
