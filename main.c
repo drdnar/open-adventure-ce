@@ -1058,7 +1058,7 @@ static bool do_command(FILE *cmdin)
 	if (i == -1) {
 	    /* Gee, I don't understand. */
 	    if (fallback_handler(rawbuf))
-		return true;
+		continue;
 	    SETPRM(1,WD1,WD1X);
 	    RSPEAK(DONT_KNOW);
 	    goto L2600;
