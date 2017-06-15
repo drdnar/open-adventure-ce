@@ -6,7 +6,7 @@
 #define LINESIZE	100
 #define NDWARVES	6
 #define PIRATE		NDWARVES	/* must be NDWARVES-1 when zero-origin */
-#define DALTLC		18		/* alternate dwarf location; low room */
+#define DALTLC		LOC_NUGGET	/* alternate dwarf location */
 #define MINTRS		50
 #define MAXTRS		79
 #define MAXPARMS	25
@@ -140,7 +140,7 @@ extern int saveresume(FILE *, bool);
 #define DARK(DUMMY)	((!CNDBIT(game.loc,LIGHT)) && (game.prop[LAMP] == 0 || !HERE(LAMP)))
 #define PCT(N)	(randrange(100) < (N))
 #define GSTONE(OBJ)	((OBJ) == EMRALD || (OBJ) == RUBY || (OBJ) == AMBER || (OBJ) == SAPPH)
-#define FOREST(LOC)	((LOC) >= 145 && (LOC) <= 166)
+#define FOREST(LOC)	((LOC) >= LOC_FOREST1 && (LOC) <= LOC_FOREST22)
 #define VOCWRD(LETTRS,SECT)	(VOCAB(MAKEWD(LETTRS),SECT))
 #define SPECIAL(LOC)	((LOC) > SPECIALBASE)
 
@@ -150,8 +150,8 @@ extern int saveresume(FILE *, bool);
  *  LOC is outside, INDEEP(LOC) is true if LOC is "deep" in the cave (hall
  *  of mists or deeper).  Note special kludges for "Foof!" locs. */
 
-#define OUTSID(LOC)	((LOC) <= 8 || FOREST(LOC) || (LOC) == PLAC[SAPPH] || (LOC) == 180 || (LOC) == 182)
-#define INDEEP(LOC)	((LOC) >= 15 && !OUTSID(LOC) && (LOC) != 179)
+#define OUTSID(LOC)	((LOC) <= LOC_GRATE || FOREST(LOC) || (LOC) == PLAC[SAPPH] || (LOC) == LOC_FOOF2 || (LOC) == LOC_FOOF4)
+#define INDEEP(LOC)	((LOC) >= LOC_MISTHALL && !OUTSID(LOC) && (LOC) != LOC_FOOF1)
 
 /* vocabulary items */ 
 extern long AMBER, ATTACK, AXE, BACK, BATTER, BEAR,
