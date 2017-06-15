@@ -110,7 +110,7 @@ void score(enum termination mode)
     SETPRM(1,score,mxscor);
     SETPRM(3,game.turns,game.turns);
     RSPEAK(TOTAL_SCORE);
-    for (long i=1; i<=CLSSES; i++) {
+    for (long i=1; i<=(long)CLSSES; i++) {
 	if(CVAL[i] >= score) {
 	    newspeak(class_messages[i]);
 	    i=CVAL[i]+1-score;

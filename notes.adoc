@@ -11,7 +11,7 @@ The principal maintainers of this code are Eric S. Raymond and Jason
 Ninneman.  Eric received Don Woods's encouragement to update and ship
 the game; Jason signed on early in the process to help. The assistance
 of Peje Nilsson in restructuring some particularly grotty gotos is
-gratefully acknowledged.
+gratefully acknowledged. Petr Voropaev contributed fuzz testing.
 
 == Nomenclature ==
 
