@@ -17,6 +17,7 @@ w
 take cage
 w
 read
+read keys
 on lamp
 read
 w

@@ -1592,6 +1592,10 @@ The way north leads through a massive, rusty, iron door.
 
 You can't carry anything more.  You'll have to drop something first.
 
+> pour bottle
+
+Bottl what?
+
 > n
 
 You're in cavern with waterfall.
@@ -1663,7 +1667,7 @@ The bear is locked to the wall with a golden chain!
 
 The axe misses and lands near the bear where you can't get at it.
 
-> feed bear
+> throw food
 
 The bear eagerly wolfs down your food, after which he seems to calm
 down considerably and even becomes rather friendly.
@@ -1699,7 +1703,7 @@ Glistening pearl
 You are being followed by a very large, tame bear.
 
 
-You scored 225 out of a possible 430, using 293 turns.
+You scored 225 out of a possible 430, using 294 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 

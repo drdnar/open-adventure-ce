@@ -276,7 +276,9 @@ climb
 w
 get eggs
 n
+# Test for "Ground wet" message
 take bottle
+pour bottle
 n
 w
 d
@@ -289,7 +291,7 @@ ne
 barren
 in
 throw axe
-feed bear
+throw food
 take chain
 unlock chain
 # Also tests message from bear in inventory
