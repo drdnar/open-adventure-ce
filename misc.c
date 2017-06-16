@@ -67,7 +67,7 @@ void newspeak(char* msg)
  
   // Handle format specifiers (including the custom %C, %L, %S) by adjusting the parameter accordingly, and replacing the specifier with %s.
   int pi = 0; // parameter index
-  for (int i = 0; i < strlen(msg); ++i)
+  for (int i = 0; i < (int)strlen(msg); ++i)
     {
       if (msg[i] == '%')
   	{
@@ -105,7 +105,7 @@ void newspeak(char* msg)
 	    {
 	      copy[i + 1] = 's';
 	      packed_to_token(PARMS[pi], parameters[pi]);
-	      for (int j = 0; j < strlen(parameters[pi]); ++j)
+	      for (int j = 0; j < (int)strlen(parameters[pi]); ++j)
 		{
 		  parameters[pi][j] = tolower(parameters[pi][j]);
 		}
@@ -116,7 +116,7 @@ void newspeak(char* msg)
 	    {
 	      copy[i + 1] = 's';
 	      packed_to_token(PARMS[pi], parameters[pi]);
-	      for (int j = 0; j < strlen(parameters[pi]); ++j)
+	      for (int j = 0; j < (int)strlen(parameters[pi]); ++j)
 		{
 		  parameters[pi][j] = tolower(parameters[pi][j]);
 		}

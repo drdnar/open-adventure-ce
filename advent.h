@@ -12,7 +12,8 @@
 #define MAXPARMS	25
 #define INVLIMIT	7
 #define INTRANSITIVE	-1		/* illegal object number */
-#define SPECIALBASE	300		/* base umber of special rooms */
+#define SPECIALBASE	300		/* base number of special rooms */
+#define WARNTIME	30		/* late game starts at game.limit-this */
 
 typedef long token_t;	/* word token - someday this will be char[TOKLEN+1] */
 typedef long vocab_t;	/* index into a vocabulary array */

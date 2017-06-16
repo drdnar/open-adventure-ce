@@ -614,7 +614,7 @@ static int fly(token_t verb, token_t obj)
     return GO_TERMINATE;
 }
 
-static int inven(token_t obj)
+static int inven(void)
 /* Inventory. If object, treat same as find.  Else report on current burden. */
 {
     int spk=NO_CARRY;
@@ -1087,7 +1087,7 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj)
 		    case 16: /* TOSS  */ return GO_UNKNOWN; 
 		    case 17: /* QUIT  */ return quit(input);   
 		    case 18: /* FIND  */ return GO_UNKNOWN; 
-		    case 19: /* INVEN */ return inven(obj);   
+		    case 19: /* INVEN */ return inven();
 		    case 20: /* FEED  */ return GO_UNKNOWN; 
 		    case 21: /* FILL  */ return fill(verb, obj);   
 		    case 22: /* BLAST */ return blast();   
