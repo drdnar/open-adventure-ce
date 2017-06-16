@@ -114,7 +114,8 @@ extern void set_seed(long);
 extern unsigned long get_next_lcg_value(void);
 extern long randrange(long);
 extern void score(enum termination);
-extern int saveresume(FILE *, bool);
+extern int suspend(FILE *);
+extern int resume(FILE *);
 
 /*
  *  MOD(N,M)	= Arithmetic modulus

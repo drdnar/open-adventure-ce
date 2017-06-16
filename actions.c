@@ -1097,8 +1097,8 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj)
 		    case 26: /* READ  */ return read(input, verb, INTRANSITIVE);
 		    case 27: /* BREAK */ return GO_UNKNOWN; 
 		    case 28: /* WAKE  */ return GO_UNKNOWN; 
-		    case 29: /* SUSP  */ return saveresume(input, false);   
-		    case 30: /* RESU  */ return saveresume(input, true);   
+		    case 29: /* SUSP  */ return suspend(input);
+		    case 30: /* RESU  */ return resume(input);
 		    case 31: /* FLY   */ return fly(verb, INTRANSITIVE);   
 		    case 32: /* LISTE */ return listen();   
 		    case 33: /* ZZZZ  */ return reservoir();   

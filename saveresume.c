@@ -29,68 +29,76 @@ struct save_t {
 };
 struct save_t save;
 
-int saveresume(FILE *input, bool resume)
 /* Suspend and resume */
+int suspend(FILE *input)
 {
     long i, k;
     FILE *fp = NULL;
-     
-    if (!resume) {
-	/*  Suspend.  Offer to save things in a file, but charging
-	 *  some points (so can't win by using saved games to retry
-	 *  battles or to start over after learning zzword). */
-	RSPEAK(SUSPEND_WARNING);
-	if (!YES(input,THIS_ACCEPTABLE,OK_MAN,OK_MAN)) return GO_CLEAROBJ;
-	game.saved=game.saved+5;
+
+    /*  Suspend.  Offer to save things in a file, but charging
+     *  some points (so can't win by using saved games to retry
+     *  battles or to start over after learning zzword). */
+    RSPEAK(SUSPEND_WARNING);
+    if (!YES(input,THIS_ACCEPTABLE,OK_MAN,OK_MAN)) return GO_CLEAROBJ;
+    game.saved=game.saved+5;
+
+    while (fp == NULL) {
+	char* name = linenoise("\nFile name: ");
+	if (name == NULL)
+	    return GO_TOP;
+	fp = fopen(name, WRITE_MODE);
+	if (fp == NULL)
+	    printf("Can't open file %s, try again.\n", name); 
+	linenoiseFree(name);
     }
-    else
-    {
-	/*  Resume.  Read a suspended game back from a file. */
-	if (game.loc != 1 || game.abbrev[1] != 1) {
-	    RSPEAK(RESUME_ABANDON);
-	    if (!YES(input,THIS_ACCEPTABLE,OK_MAN,OK_MAN)) return GO_CLEAROBJ;
-	}
+
+    DATIME(&i,&k);
+    k=i+650*k;
+    save.savetime = k;
+    save.mode = -1;
+    save.version = VRSION;
+    memcpy(&save.game, &game, sizeof(struct game_t));
+    save.bird = OBJSND[BIRD];
+    save.bivalve = OBJTXT[OYSTER];
+    IGNORE(fwrite(&save, sizeof(struct save_t), 1, fp));
+    fclose(fp);
+    RSPEAK(RESUME_HELP);
+    exit(0);
+}
+
+int resume(FILE *input)
+{
+    FILE *fp = NULL;
+     
+    /*  Resume.  Read a suspended game back from a file. */
+    if (game.loc != 1 || game.abbrev[1] != 1) {
+	RSPEAK(RESUME_ABANDON);
+	if (!YES(input,THIS_ACCEPTABLE,OK_MAN,OK_MAN)) return GO_CLEAROBJ;
     }
 
     while (fp == NULL) {
 	char* name = linenoise("\nFile name: ");
 	if (name == NULL)
 	    return GO_TOP;
-	fp = fopen(name,(resume ? READ_MODE : WRITE_MODE));
+	fp = fopen(name, READ_MODE);
 	if (fp == NULL)
 	    printf("Can't open file %s, try again.\n", name); 
 	linenoiseFree(name);
     }
-    
-    DATIME(&i,&k);
-    k=i+650*k;
-    if (!resume)
-    {
-	save.savetime = k;
-	save.mode = -1;
-	save.version = VRSION;
-	memcpy(&save.game, &game, sizeof(struct game_t));
-	save.bird = OBJSND[BIRD];
-	save.bivalve = OBJTXT[OYSTER];
-	IGNORE(fwrite(&save, sizeof(struct save_t), 1, fp));
-	fclose(fp);
-	RSPEAK(RESUME_HELP);
-	exit(0);
+
+    IGNORE(fread(&save, sizeof(struct save_t), 1, fp));
+    fclose(fp);
+    if (save.version != VRSION) {
+	SETPRM(1,save.version/10,MOD(save.version,10));
+	SETPRM(3,VRSION/10,MOD(VRSION,10));
+	RSPEAK(VERSION_SKEW);
     } else {
-	IGNORE(fread(&save, sizeof(struct save_t), 1, fp));
-	fclose(fp);
-	if (save.version != VRSION) {
-	    SETPRM(1,k/10,MOD(k,10));
-	    SETPRM(3,VRSION/10,MOD(VRSION,10));
-	    RSPEAK(VERSION_SKEW);
-	} else {
-	    memcpy(&game, &save.game, sizeof(struct game_t));
-	    OBJSND[BIRD] = save.bird;
-	    OBJTXT[OYSTER] = save.bivalve;
-	    game.zzword=RNDVOC(3,game.zzword);
-	}
-	return GO_TOP;
+	memcpy(&game, &save.game, sizeof(struct game_t));
+	OBJSND[BIRD] = save.bird;
+	OBJTXT[OYSTER] = save.bivalve;
+	game.zzword=RNDVOC(3,game.zzword);
     }
+    return GO_TOP;
 }
 
 /* end */
