@@ -644,12 +644,12 @@ int light(token_t verb, token_t obj)
     }
 
     if (obj == URN) {
-	spk=URN_EMPTY;
-	if (game.prop[URN] == 0)
-	    {RSPEAK(spk); return GO_CLEAROBJ;}
-	spk=URN_LIT;
-	game.prop[URN]=2;
-	RSPEAK(spk);
+	if (game.prop[URN] == 0) {
+	    RSPEAK(URN_EMPTY);
+	} else {
+	    game.prop[URN] = 2;
+	    RSPEAK(URN_LIT);
+	}
 	return GO_CLEAROBJ;
     } else {
 	if (obj != LAMP)
