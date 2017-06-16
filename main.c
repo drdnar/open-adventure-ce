@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
 
     /*  Start-up, dwarf stuff */
     game.zzword=RNDVOC(3,0);
-    game.novice=YES(stdin, WELCOME_YOU,CAVE_NEARBY,ARB_0);
+    game.novice=YES(stdin, WELCOME_YOU,CAVE_NEARBY,NO_MESSAGE);
     game.newloc = LOC_START;
     game.loc = LOC_START;
     game.limit=330;
@@ -243,7 +243,7 @@ static void checkhints(FILE *cmdin)
     
 		/* Fall through to hint display */
 		game.hintlc[hint]=0;
-		if (!YES(cmdin,HINTS[hint][3],ARB_0,OK_MAN))
+		if (!YES(cmdin,HINTS[hint][3],NO_MESSAGE,OK_MAN))
 		    return;
 		SETPRM(1,HINTS[hint][2],HINTS[hint][2]);
 		RSPEAK(HINT_COST);
