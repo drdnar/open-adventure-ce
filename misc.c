@@ -337,12 +337,6 @@ long VOCAB(long id, long init)
     BUG(21);
 }
 
-void DSTROY(long object)
-/*  Permanently eliminate "object" by moving to a non-existent location. */
-{
-    MOVE(object,0);
-}
-
 void JUGGLE(long object)
 /*  Juggle an object by picking it up and putting it down again, the purpose
  *  being to get the object to the front of the chain of things at its loc. */

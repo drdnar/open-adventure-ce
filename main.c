@@ -754,7 +754,7 @@ static bool closecheck(void)
 	MOVE(TROLL2,PLAC[TROLL]);
 	MOVE(TROLL2+NOBJECTS,FIXD[TROLL]);
 	JUGGLE(CHASM);
-	if (game.prop[BEAR] != 3)DSTROY(BEAR);
+	if (game.prop[BEAR] != 3)DESTROY(BEAR);
 	game.prop[CHAIN]=0;
 	game.fixed[CHAIN]=0;
 	game.prop[AXE]=0;
@@ -807,7 +807,7 @@ static bool closecheck(void)
 
 	for (int i=1; i<=NOBJECTS; i++) {
 	    if (TOTING(i))
-		DSTROY(i);
+		DESTROY(i);
 	}
 
 	RSPEAK(CAVE_CLOSED);

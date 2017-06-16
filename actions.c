@@ -48,7 +48,7 @@ static int attack(FILE *input, long verb, token_t obj)
 	    RSPEAK(spk);
 	    return GO_CLEAROBJ;
 	}
-	DSTROY(BIRD);
+	DESTROY(BIRD);
 	game.prop[BIRD]=0;
 	spk=BIRD_DEAD;
     }
@@ -69,7 +69,7 @@ static int attack(FILE *input, long verb, token_t obj)
     if (obj == OGRE && d > 0) {
 	RSPEAK(spk);
 	RSPEAK(KNIFE_THROWN);
-	DSTROY(OGRE);
+	DESTROY(OGRE);
 	int dwarves=0;
 	for (int i=1; i < PIRATE; i++) {
 	    if (game.dloc[i] == game.loc) {
@@ -159,7 +159,7 @@ static int bivalve(token_t verb, token_t obj)
     if (!TOTING(TRIDNT))spk= is_oyster ? OYSTER_OPENER : CLAM_OPENER;
     if (verb == LOCK)spk=HUH_MAN;
     if (spk == PEARL_FALLS) {
-	DSTROY(CLAM);
+	DESTROY(CLAM);
 	DROP(OYSTER,game.loc);
 	DROP(PEARL,LOC_CULDESAC);
     }
@@ -241,7 +241,7 @@ static int carry(token_t verb, token_t obj)
     if (obj == SIGN)spk=HAND_PASSTHROUGH;
     if (obj == MESSAG) {
 	RSPEAK(REMOVE_MESSAGE);
-	DSTROY(MESSAG);
+	DESTROY(MESSAG);
 	return GO_CLEAROBJ;
     }
     if (game.fixed[obj] != 0) {
@@ -267,7 +267,7 @@ static int carry(token_t verb, token_t obj)
     }
     else if (obj == BIRD && game.prop[BIRD] != 1 && -1-game.prop[BIRD] != 1) {
 	if (game.prop[BIRD] == 2) {
-	    DSTROY(BIRD);
+	    DESTROY(BIRD);
 	    RSPEAK(BIRD_CRAP);
 	    return GO_CLEAROBJ;
 	}
@@ -333,7 +333,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
         if (obj == BIRD && HERE(SNAKE)) {
             RSPEAK(BIRD_ATTACKS);
             if (game.closed) return GO_DWARFWAKE;
-            DSTROY(SNAKE);
+            DESTROY(SNAKE);
             /* Set game.prop for use by travel options */
             game.prop[SNAKE]=1;
 
@@ -355,13 +355,13 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
                 }
             }
         } else if (obj == COINS && HERE(VEND)) {
-            DSTROY(COINS);
+            DESTROY(COINS);
             DROP(BATTER,game.loc);
             PSPEAK(BATTER,0);
             return GO_CLEAROBJ;
         } else if (obj == BIRD && AT(DRAGON) && game.prop[DRAGON] == 0) {
             RSPEAK(BIRD_BURNT);
-            DSTROY(BIRD);
+            DESTROY(BIRD);
             game.prop[BIRD]=0;
             return GO_CLEAROBJ;
         } else if (obj == BEAR && AT(TROLL)) {
@@ -408,7 +408,7 @@ static int drink(token_t verb, token_t obj)
 	    spk=BOTTLE_EMPTY;
 	}
     } else {
-	DSTROY(BLOOD);
+	DESTROY(BLOOD);
 	game.prop[DRAGON]=2;
 	OBJSND[BIRD]=OBJSND[BIRD]+3;
 	spk=HEAD_BUZZES;
@@ -425,11 +425,11 @@ static int eat(token_t verb, token_t obj)
     if (obj == INTRANSITIVE) {
 	if (!HERE(FOOD))
 	    return GO_UNKNOWN;
-	DSTROY(FOOD);
+	DESTROY(FOOD);
 	spk=THANKS_DELICIOUS;
     } else {
 	if (obj == FOOD) {
-	    DSTROY(FOOD);
+	    DESTROY(FOOD);
 	    spk=THANKS_DELICIOUS;
 	}
 	if (obj == BIRD || obj == SNAKE || obj == CLAM || obj == OYSTER || obj ==
@@ -479,7 +479,7 @@ static int feed(token_t verb, token_t obj)
 	if (obj == DRAGON && game.prop[DRAGON] != 0)spk=RIDICULOUS_ATTEMPT;
 	if (obj == TROLL)spk=TROLL_VICES;
 	if (obj == SNAKE && !game.closed && HERE(BIRD)) {
-	    DSTROY(BIRD);
+	    DESTROY(BIRD);
 	    game.prop[BIRD]=0;
 	    spk = BIRD_DEVOURED;
 	}
@@ -494,7 +494,7 @@ static int feed(token_t verb, token_t obj)
 	if (game.prop[BEAR] == 0)spk=NOTHING_EDIBLE;
 	if (game.prop[BEAR] == 3)spk=RIDICULOUS_ATTEMPT;
 	if (HERE(FOOD)) {
-	    DSTROY(FOOD);
+	    DESTROY(FOOD);
 	    game.prop[BEAR]=1;
 	    game.fixed[AXE]=0;
 	    game.prop[AXE]=0;
@@ -688,7 +688,7 @@ static int listen(void)
 	PSPEAK(i,OBJSND[i]+game.prop[i]);
 	spk=ARB_0;
 	if (i == BIRD && OBJSND[i]+game.prop[i] == 8)
-	    DSTROY(BIRD);
+	    DESTROY(BIRD);
     }
     RSPEAK(spk);
     return GO_CLEAROBJ;
@@ -836,7 +836,7 @@ static int rub(token_t verb, token_t obj)
     if (obj != LAMP)
 	spk=PECULIAR_NOTHING;
     if (obj == URN && game.prop[URN] == 2) {
-	DSTROY(URN);
+	DESTROY(URN);
 	DROP(AMBER,game.loc);
 	game.prop[AMBER]=1;
 	--game.tally;

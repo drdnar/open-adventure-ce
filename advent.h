@@ -94,7 +94,6 @@ extern long GETTXT(bool,bool,bool);
 extern token_t MAKEWD(long);
 extern void TYPE0(void);
 extern long VOCAB(long,long);
-extern void DSTROY(long);
 extern void JUGGLE(long);
 extern void MOVE(long,long);
 extern long PUT(long,long,long);
@@ -131,6 +130,7 @@ extern int saveresume(FILE *, bool);
  *  PCT(N)      = true N% of the time (N integer from 0 to 100)
  *  TOTING(OBJ) = true if the OBJ is being carried */
 
+#define DESTROY(N)	MOVE(N, NOWHERE)
 #define MOD(N,M)	((N) % (M))
 #define TOTING(OBJ)	(game.place[OBJ] == CARRIED)
 #define AT(OBJ) (game.place[OBJ] == game.loc || game.fixed[OBJ] == game.loc)
@@ -141,7 +141,7 @@ extern int saveresume(FILE *, bool);
 #define CNDBIT(L,N)	(TSTBIT(COND[L],N))
 #define FORCED(LOC)	(COND[LOC] == 2)
 #define DARK(DUMMY)	((!CNDBIT(game.loc,LIGHT)) && (game.prop[LAMP] == 0 || !HERE(LAMP)))
-#define PCT(N)	(randrange(100) < (N))
+#define PCT(N)		(randrange(100) < (N))
 #define GSTONE(OBJ)	((OBJ) == EMRALD || (OBJ) == RUBY || (OBJ) == AMBER || (OBJ) == SAPPH)
 #define FOREST(LOC)	((LOC) >= LOC_FOREST1 && (LOC) <= LOC_FOREST22)
 #define VOCWRD(LETTRS,SECT)	(VOCAB(MAKEWD(LETTRS),SECT))
