@@ -223,7 +223,6 @@ u
 e
 u
 s
-drop axe
 e
 w
 w
@@ -238,7 +237,6 @@ e
 e
 nw
 inven
-take ebony
 take vase
 take trident
 take chest
@@ -251,7 +249,6 @@ e
 off
 xyzzy
 drop chest
-drop ebony
 drop pillow
 drop vase
 drop trident
@@ -291,6 +288,7 @@ ne
 ne
 barren
 in
+throw axe
 feed bear
 take chain
 unlock chain
