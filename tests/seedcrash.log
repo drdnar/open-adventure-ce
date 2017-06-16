@@ -1,4 +1,4 @@
-## This produced a crash before the control path after seed was fixed.
+## This crashed advent before the control path after seed was fixed.
 n
 seed 1635997320
 in
