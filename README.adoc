@@ -24,7 +24,7 @@ care has been taken to not silently change gameplay. By policy, all
 user-visible changes from 2.5 are revertible with the -o (oldstyle)
 option.
 
-If you encounter a bug (not likely; thuis code is old and well tested)
+If you encounter a bug (not likely; this code is old and well tested)
 please try to make a test log that reproduces it, using the -l option,
 and ship it to the maintainers.
 
