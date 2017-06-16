@@ -1,5 +1,5 @@
 n
-seed 1924231168
+seed 739688815
 seed 1071883378
 in
 take lamp
@@ -90,10 +90,8 @@ w
 throw axe
 take axe
 throw axe
-thake axe
 take axe
 throw axe
-taje axe
 take axe
 w
 w
@@ -108,4 +106,13 @@ w
 w
 w
 w
-inven
+n
+s
+e
+w
+n
+s
+e
+sw
+y
+y

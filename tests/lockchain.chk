@@ -1297,10 +1297,6 @@ You're in n/s passage above e/w passage.
 
 You're in Hall of Mt King.
 
-> drop axe
-
-OK
-
 > e
 
 You're in Hall of Mists.
@@ -1380,10 +1376,7 @@ The pirate's treasure chest is here!
 You are currently holding the following:
 Brass lantern
 Velvet pillow
-
-> take ebony
-
-OK
+Dwarf's axe
 
 > take vase
 
@@ -1454,10 +1447,6 @@ There are some keys on the ground here.
 There is food here.
 
 > drop chest
-
-OK
-
-> drop ebony
 
 OK
 
@@ -1601,7 +1590,11 @@ The way north leads through a massive, rusty, iron door.
 
 > take bottle
 
-OK
+You can't carry anything more.  You'll have to drop something first.
+
+> pour bottle
+
+Bottl what?
 
 > n
 
@@ -1670,7 +1663,11 @@ There is a ferocious cave bear eying you from the far end of the room!
 
 The bear is locked to the wall with a golden chain!
 
-> feed bear
+> throw axe
+
+The axe misses and lands near the bear where you can't get at it.
+
+> throw food
 
 The bear eagerly wolfs down your food, after which he seems to calm
 down considerably and even becomes rather friendly.
@@ -1700,15 +1697,14 @@ OK
 You are currently holding the following:
 Set of keys
 Brass lantern
-Small bottle
 Egg-sized emerald
 Glistening pearl
 
 You are being followed by a very large, tame bear.
 
 
-You scored 239 out of a possible 430, using 295 turns.
+You scored 225 out of a possible 430, using 294 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 
-To achieve the next higher rating, you need 12 more points.
+To achieve the next higher rating, you need 26 more points.

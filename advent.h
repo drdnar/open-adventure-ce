@@ -94,7 +94,6 @@ extern long GETTXT(bool,bool,bool);
 extern token_t MAKEWD(long);
 extern void TYPE0(void);
 extern long VOCAB(long,long);
-extern void DSTROY(long);
 extern void JUGGLE(long);
 extern void MOVE(long,long);
 extern long PUT(long,long,long);
@@ -131,8 +130,9 @@ extern int saveresume(FILE *, bool);
  *  PCT(N)      = true N% of the time (N integer from 0 to 100)
  *  TOTING(OBJ) = true if the OBJ is being carried */
 
+#define DESTROY(N)	MOVE(N, NOWHERE)
 #define MOD(N,M)	((N) % (M))
-#define TOTING(OBJ)	(game.place[OBJ] == -1)
+#define TOTING(OBJ)	(game.place[OBJ] == CARRIED)
 #define AT(OBJ) (game.place[OBJ] == game.loc || game.fixed[OBJ] == game.loc)
 #define HERE(OBJ)	(AT(OBJ) || TOTING(OBJ))
 #define LIQ2(PBOTL)	((1-(PBOTL))*WATER+((PBOTL)/2)*(WATER+OIL))
@@ -141,7 +141,7 @@ extern int saveresume(FILE *, bool);
 #define CNDBIT(L,N)	(TSTBIT(COND[L],N))
 #define FORCED(LOC)	(COND[LOC] == 2)
 #define DARK(DUMMY)	((!CNDBIT(game.loc,LIGHT)) && (game.prop[LAMP] == 0 || !HERE(LAMP)))
-#define PCT(N)	(randrange(100) < (N))
+#define PCT(N)		(randrange(100) < (N))
 #define GSTONE(OBJ)	((OBJ) == EMRALD || (OBJ) == RUBY || (OBJ) == AMBER || (OBJ) == SAPPH)
 #define FOREST(LOC)	((LOC) >= LOC_FOREST1 && (LOC) <= LOC_FOREST22)
 #define VOCWRD(LETTRS,SECT)	(VOCAB(MAKEWD(LETTRS),SECT))
@@ -206,6 +206,10 @@ enum speechpart {unknown, intransitive, transitive};
 #define HWOODS	18	/* Lost in forest */
 #define HOGRE	19	/* Trying to deal with ogre */
 #define HJADE	20	/* Found all treasures except jade */
+
+/* Special object statuses in game.place - can also be a location number (> 0) */
+#define CARRIED		-1	/* Player is toting it */
+#define NOWHERE	0	/* It's destroyed */
 
 /* hack to ignore GCC Unused Result */
 #define IGNORE(r) do{if (r){}}while(0)

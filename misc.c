@@ -337,12 +337,6 @@ long VOCAB(long id, long init)
     BUG(21);
 }
 
-void DSTROY(long object)
-/*  Permanently eliminate "object" by moving to a non-existent location. */
-{
-    MOVE(object,0);
-}
-
 void JUGGLE(long object)
 /*  Juggle an object by picking it up and putting it down again, the purpose
  *  being to get the object to the front of the chain of things at its loc. */
@@ -367,7 +361,7 @@ void MOVE(long object, long where)
 	from=game.fixed[object-NOBJECTS];
     else
 	from=game.place[object];
-    if (from > 0 && !SPECIAL(from))
+    if (from != NOWHERE && from != CARRIED && !SPECIAL(from))
 	CARRY(object,from);
     DROP(object,where);
 }
@@ -388,9 +382,9 @@ void CARRY(long object, long where)
     long temp;
 
     if (object <= NOBJECTS) {
-	if (game.place[object] == -1)
+	if (game.place[object] == CARRIED)
 	    return;
-	game.place[object]= -1;
+	game.place[object] = CARRIED;
 	++game.holdng;
     }
     if (game.atloc[where] == object) {
@@ -412,7 +406,7 @@ void DROP(long object, long where)
 	game.fixed[object-NOBJECTS] = where;
     else
     {
-	if (game.place[object] == -1)
+	if (game.place[object] == CARRIED)
 	    --game.holdng;
 	game.place[object] = where;
     }
