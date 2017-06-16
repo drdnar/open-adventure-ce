@@ -5,9 +5,9 @@ in
 take lamp
 take keys
 out
-s
-s
-s
+go s
+walk s
+travel s
 attack grate
 unlock grate
 lock grate
@@ -22,6 +22,7 @@ on lamp
 read
 w
 w
+listen bird
 eat bird
 feed bird
 attack bird

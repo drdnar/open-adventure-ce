@@ -67,6 +67,10 @@ things.  I cannot tell you where remote things are.
 I can only tell you what you see as you move about and manipulate
 things.  I cannot tell you where remote things are.
 
+> nothing
+
+OK
+
 > in
 
 You are inside a building, a well house for a large spring.
@@ -278,6 +282,10 @@ There is a bottle of water here.
 
 Watch it!
 
+> walk
+
+Where?
+
 > fly
 
 Though you flap your arms furiously, it is to no avail.
@@ -288,7 +296,11 @@ Okay, "BOO".
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 53 turns.
+You have garnered 27 out of a possible 430 points, using 55 turns.
+
+> quit bottle
+
+Huh?
 
 > quit
 
@@ -298,7 +310,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 27 out of a possible 430, using 54 turns.
+You scored 27 out of a possible 430, using 57 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 

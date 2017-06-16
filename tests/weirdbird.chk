@@ -36,17 +36,17 @@ OK
 
 You're in front of building.
 
-> s
+> go s
 
 You are in a valley in the forest beside a stream tumbling along a
 rocky bed.
 
-> s
+> walk s
 
 At your feet all the water of the stream splashes into a 2-inch slit
 in the rock.  Downstream the streambed is bare rock.
 
-> s
+> travel s
 
 You are in a 20-foot depression floored with bare dirt.  Set into the
 dirt is a strong steel grate mounted in concrete.  A dry streambed
@@ -127,6 +127,10 @@ from east and west sides of the chamber.
 
 A cheerful little bird is sitting here singing.
 
+> listen bird
+
+I'm afraid I don't understand.
+
 > eat bird
 
 I think I just lost my appetite.
@@ -141,7 +145,7 @@ have no bird seed.
 The little bird is now dead.  Its body disappears.
 
 
-You scored 32 out of a possible 430, using 24 turns.
+You scored 32 out of a possible 430, using 25 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 

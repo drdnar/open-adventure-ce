@@ -9,6 +9,7 @@ eat
 drink
 find keys
 inven keys
+nothing
 in
 listen
 keys
@@ -53,8 +54,10 @@ look
 news
 go back
 fuck
+walk
 fly
 say boo
 score
+quit bottle
 quit
 yes
