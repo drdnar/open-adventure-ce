@@ -70,49 +70,47 @@ static int attack(FILE *input, long verb, token_t obj)
 	RSPEAK(spk);
 	RSPEAK(KNIFE_THROWN);
 	DSTROY(OGRE);
-	int k=0;
+	int dwarves=0;
 	for (int i=1; i < PIRATE; i++) {
 	    if (game.dloc[i] == game.loc) {
-		++k;
+		++dwarves;
 		game.dloc[i] = LOC_LONGWEST;
 		game.dseen[i]=false;
 	    }
 	}
-	spk=spk+1+1/k;	/* FIXME: Arithmetic on message numbers */
-	RSPEAK(spk);
-	return GO_CLEAROBJ;
+	spk=spk+1+1/dwarves;	/* FIXME: Arithmetic on message numbers */
     }
-
-    if (obj == BEAR)
+    else if (obj == BEAR)
 	/* FIXME: Arithmetic on message numbers */
 	spk = BEAR_HANDS+(game.prop[BEAR]+1)/2;
-    if (obj != DRAGON || game.prop[DRAGON] != 0) {
-	RSPEAK(spk);
-	return GO_CLEAROBJ;
+    else if (obj == DRAGON && game.prop[DRAGON] == 0) {
+	/*  Fun stuff for dragon.  If he insists on attacking it, win!
+	 *  Set game.prop to dead, move dragon to central loc (still
+	 *  fixed), move rug there (not fixed), and move him there,
+	 *  too.  Then do a null motion to get new description. */
+	RSPEAK(BARE_HANDS_QUERY);
+	GETIN(input,&WD1,&WD1X,&WD2,&WD2X);
+	if (WD1 != MAKEWD(25) && WD1 != MAKEWD(250519))
+	    return GO_CHECKFOO;
+	PSPEAK(DRAGON,3);
+	game.prop[DRAGON]=1;
+	game.prop[RUG]=0;
+	int k=(PLAC[DRAGON]+FIXD[DRAGON])/2;
+	MOVE(DRAGON+NOBJECTS,-1);
+	MOVE(RUG+NOBJECTS,0);
+	MOVE(DRAGON,k);
+	MOVE(RUG,k);
+	DROP(BLOOD,k);
+	for (obj=1; obj<=NOBJECTS; obj++) {
+	    if (game.place[obj] == PLAC[DRAGON] || game.place[obj] == FIXD[DRAGON])
+		MOVE(obj,k);
+	}
+	game.loc=k;
+	return GO_MOVE;
     }
-    /*  Fun stuff for dragon.  If he insists on attacking it, win!
-     *  Set game.prop to dead, move dragon to central loc (still
-     *  fixed), move rug there (not fixed), and move him there,
-     *  too.  Then do a null motion to get new description. */
-    RSPEAK(BARE_HANDS_QUERY);
-    GETIN(input,&WD1,&WD1X,&WD2,&WD2X);
-    if (WD1 != MAKEWD(25) && WD1 != MAKEWD(250519))
-	return GO_CHECKFOO;
-    PSPEAK(DRAGON,3);
-    game.prop[DRAGON]=1;
-    game.prop[RUG]=0;
-    int k=(PLAC[DRAGON]+FIXD[DRAGON])/2;
-    MOVE(DRAGON+NOBJECTS,-1);
-    MOVE(RUG+NOBJECTS,0);
-    MOVE(DRAGON,k);
-    MOVE(RUG,k);
-    DROP(BLOOD,k);
-    for (obj=1; obj<=NOBJECTS; obj++) {
-	if (game.place[obj] == PLAC[DRAGON] || game.place[obj] == FIXD[DRAGON])
-	    MOVE(obj,k);
-    }
-    game.loc=k;
-    return GO_MOVE;
+
+    RSPEAK(spk);
+    return GO_CLEAROBJ;
 }
 
 static int bigwords(long foo)
