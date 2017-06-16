@@ -86,6 +86,10 @@ int resume(FILE *input)
 	linenoiseFree(name);
     }
 
+	return restore(fp);
+}
+
+int restore(FILE* fp){
     IGNORE(fread(&save, sizeof(struct save_t), 1, fp));
     fclose(fp);
     if (save.version != VRSION) {

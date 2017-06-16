@@ -43,7 +43,7 @@ long AMBER, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
 		URN, VASE, VEND, VOLCAN, WATER;
 long WD1, WD1X, WD2, WD2X;
 
-FILE  *logfp;
+FILE  *logfp = NULL, *rfp = NULL;
 bool oldstyle = false;
 bool editline = true;
 bool prompt = true;
@@ -53,9 +53,10 @@ extern int action(FILE *, long, long, long);
 
 void sig_handler(int signo)
 {
-    if (signo == SIGINT)
+    if (signo == SIGINT){
 	if (logfp != NULL)
 	    fflush(logfp);
+	}
     exit(0);
 }
 
@@ -79,7 +80,7 @@ int main(int argc, char *argv[])
 	
 /*  Options. */
 
-    while ((ch = getopt(argc, argv, "l:os")) != EOF) {
+    while ((ch = getopt(argc, argv, "l:or:s")) != EOF) {
 	switch (ch) {
 	case 'l':
 	    logfp = fopen(optarg, "w");
@@ -93,6 +94,14 @@ int main(int argc, char *argv[])
 	    oldstyle = true;
 	    editline = prompt = false;
 	    break;
+	case 'r':
+        rfp = fopen(optarg, "r");
+        if (rfp == NULL)
+        fprintf(stderr,
+            "advent: can't open save file %s for read\n",
+            optarg);
+        signal(SIGINT, sig_handler);
+        break;
 	case 's':
 	    editline = false;
 	    break;
@@ -125,11 +134,15 @@ int main(int argc, char *argv[])
 
     /*  Start-up, dwarf stuff */
     game.zzword=RNDVOC(3,0);
-    game.novice=YES(stdin, WELCOME_YOU,CAVE_NEARBY,NO_MESSAGE);
     game.newloc = LOC_START;
     game.loc = LOC_START;
     game.limit=330;
-    if (game.novice)game.limit=1000;
+    if (!rfp){
+        game.novice=YES(stdin, WELCOME_YOU,CAVE_NEARBY,NO_MESSAGE);
+        if (game.novice)game.limit=1000;
+    } else {
+        restore(rfp);
+    }
 
     if (logfp)
 	fprintf(logfp, "seed %ld\n", seedval);

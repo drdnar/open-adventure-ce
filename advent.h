@@ -116,6 +116,7 @@ extern long randrange(long);
 extern void score(enum termination);
 extern int suspend(FILE *);
 extern int resume(FILE *);
+extern int restore(FILE *);
 
 /*
  *  MOD(N,M)	= Arithmetic modulus
