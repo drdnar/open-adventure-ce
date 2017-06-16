@@ -367,7 +367,7 @@ void MOVE(long object, long where)
 	from=game.fixed[object-NOBJECTS];
     else
 	from=game.place[object];
-    if (from > 0 && !SPECIAL(from))
+    if (from > NOWHERE && !SPECIAL(from))
 	CARRY(object,from);
     DROP(object,where);
 }
@@ -388,9 +388,9 @@ void CARRY(long object, long where)
     long temp;
 
     if (object <= NOBJECTS) {
-	if (game.place[object] == -1)
+	if (game.place[object] == CARRIED)
 	    return;
-	game.place[object]= -1;
+	game.place[object] = CARRIED;
 	++game.holdng;
     }
     if (game.atloc[where] == object) {
@@ -412,7 +412,7 @@ void DROP(long object, long where)
 	game.fixed[object-NOBJECTS] = where;
     else
     {
-	if (game.place[object] == -1)
+	if (game.place[object] == CARRIED)
 	    --game.holdng;
 	game.place[object] = where;
     }

@@ -283,7 +283,7 @@ static int carry(token_t verb, token_t obj)
 	CARRY(BIRD+CAGE-obj,game.loc);
     CARRY(obj,game.loc);
     if (obj == BOTTLE && LIQUID() != 0)
-	game.place[LIQUID()] = -1;
+	game.place[LIQUID()] = CARRIED;
     if (GSTONE(obj) && game.prop[obj] != 0) {
 	game.prop[obj]=0;
 	game.prop[CAVITY]=1;
@@ -384,7 +384,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
     int k = LIQUID();
     if (k == obj)obj=BOTTLE;
     if (obj == BOTTLE && k != 0)
-	game.place[k]=0;
+	game.place[k] = NOWHERE;
     if (obj == CAGE && game.prop[BIRD] == 1)DROP(BIRD,game.loc);
     DROP(obj,game.loc);
     if (obj != BIRD) return GO_CLEAROBJ;
@@ -403,8 +403,8 @@ static int drink(token_t verb, token_t obj)
     if (obj != BLOOD) {
 	if (obj != 0 && obj != WATER)spk=RIDICULOUS_ATTEMPT;
 	if (spk != RIDICULOUS_ATTEMPT && LIQUID() == WATER && HERE(BOTTLE)) {
-	    game.prop[BOTTLE]=1;
-	    game.place[WATER]=0;
+	    game.prop[BOTTLE] = 1;
+	    game.place[WATER] = NOWHERE;
 	    spk=BOTTLE_EMPTY;
 	}
     } else {
@@ -535,8 +535,8 @@ int fill(token_t verb, token_t obj)
 	spk=FILL_INVALID;
 	k=LIQUID();
 	if (k == 0 || !HERE(BOTTLE)) {RSPEAK(spk); return GO_CLEAROBJ;}
-	game.place[k]=0;
-	game.prop[BOTTLE]=1;
+	game.place[k] = NOWHERE;
+	game.prop[BOTTLE] = 1;
 	if (k == OIL)game.prop[URN]=1;
 	spk=WATER_URN+game.prop[URN];
 	RSPEAK(spk);
@@ -559,7 +559,7 @@ int fill(token_t verb, token_t obj)
 	game.prop[BOTTLE]=MOD(COND[game.loc],4)/2*2;
 	k=LIQUID();
 	if (TOTING(BOTTLE))
-	    game.place[k] = -1;
+	    game.place[k] = CARRIED;
 	if (k == OIL)
 	    spk=BOTTLED_OIL;
     }
@@ -750,8 +750,8 @@ static int pour(token_t verb, token_t obj)
     if (obj != OIL && obj != WATER) {RSPEAK(spk); return GO_CLEAROBJ;}
     if (HERE(URN) && game.prop[URN] == 0)
 	return fill(verb, URN);
-    game.prop[BOTTLE]=1;
-    game.place[obj]=0;
+    game.prop[BOTTLE] = 1;
+    game.place[obj] = NOWHERE;
     spk=GROUND_WET;
     if (!(AT(PLANT) || AT(DOOR)))
 	{RSPEAK(spk); return GO_CLEAROBJ;}

@@ -262,8 +262,8 @@ bool spotted_by_pirate(int i)
 
     /*  The pirate's spotted him.  He leaves him alone once we've
      *  found chest.  K counts if a treasure is here.  If not, and
-     *  tally=1 for an unseen chest, let the pirate be spotted.
-     *  Note that game.place[CHEST]=0 might mean that he's thrown
+     *  tally=1 for an unseen chest, let the pirate be spotted.  Note
+     *  that game.place[CHEST] = NOWHERE might mean that he's thrown
      *  it to the troll, but in that case he's seen the chest
      *  (game.prop=0). */
     if (game.loc == game.chloc || game.prop[CHEST] >= 0)
@@ -284,7 +284,7 @@ bool spotted_by_pirate(int i)
 	}
     }
     /* Force chest placement before player finds last treasure */
-    if (game.tally == 1 && snarfed == 0 && game.place[CHEST] == 0 && HERE(LAMP) && game.prop[LAMP] == 1) {
+    if (game.tally == 1 && snarfed == 0 && game.place[CHEST] == NOWHERE && HERE(LAMP) && game.prop[LAMP] == 1) {
 	RSPEAK(PIRATE_SPOTTED);
 	movechest = true;
     }
@@ -481,8 +481,8 @@ static void croak(FILE *cmdin)
 	    score(endgame);
 	if (game.numdie == MAXDIE)
 	    score(endgame);
-	game.place[WATER]=0;
-	game.place[OIL]=0;
+	game.place[WATER] = NOWHERE;
+	game.place[OIL] = NOWHERE;
 	if (TOTING(LAMP))
 	    game.prop[LAMP]=0;
 	for (int j=1; j<=NOBJECTS; j++) {
@@ -848,7 +848,7 @@ static void lampcheck(void)
 	if (!game.lmwarn && HERE(LAMP)) {
 	    game.lmwarn=true;
 	    int spk=GET_BATTERIES;
-	    if (game.place[BATTER] == 0)spk=LAMP_DIM;
+	    if (game.place[BATTER] == NOWHERE)spk=LAMP_DIM;
 	    if (game.prop[BATTER] == 1)spk=MISSING_BATTERIES;
 	    RSPEAK(spk);
 	}

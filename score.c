@@ -41,7 +41,7 @@ void score(enum termination mode)
 	    if(i > CHEST)k=16;
 	    if(game.prop[i] >= 0)
 		score += 2;
-	    if(game.place[i] == 3 && game.prop[i] == 0)
+	    if(game.place[i] == LOC_BUILDING && game.prop[i] == 0)
 		score += k-2;
 	    mxscor += k;
 	}
@@ -75,7 +75,7 @@ void score(enum termination mode)
     mxscor += 45;
 
     /* Did he come to Witt's End as he should? */
-    if(game.place[MAGZIN] == 108)
+    if(game.place[MAGZIN] == LOC_WITTSEND)
 	score += 1;
     mxscor += 1;
 

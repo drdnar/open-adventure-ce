@@ -132,7 +132,7 @@ extern int saveresume(FILE *, bool);
  *  TOTING(OBJ) = true if the OBJ is being carried */
 
 #define MOD(N,M)	((N) % (M))
-#define TOTING(OBJ)	(game.place[OBJ] == -1)
+#define TOTING(OBJ)	(game.place[OBJ] == CARRIED)
 #define AT(OBJ) (game.place[OBJ] == game.loc || game.fixed[OBJ] == game.loc)
 #define HERE(OBJ)	(AT(OBJ) || TOTING(OBJ))
 #define LIQ2(PBOTL)	((1-(PBOTL))*WATER+((PBOTL)/2)*(WATER+OIL))
@@ -206,6 +206,10 @@ enum speechpart {unknown, intransitive, transitive};
 #define HWOODS	18	/* Lost in forest */
 #define HOGRE	19	/* Trying to deal with ogre */
 #define HJADE	20	/* Found all treasures except jade */
+
+/* Special object statuses in game.place - can also be a location number (> 0) */
+#define CARRIED		-1	/* Player is toting it */
+#define NOWHERE	0	/* It's destroyed */
 
 /* hack to ignore GCC Unused Result */
 #define IGNORE(r) do{if (r){}}while(0)
