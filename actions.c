@@ -78,7 +78,7 @@ static int attack(FILE *input, long verb, token_t obj)
 		game.dseen[i]=false;
 	    }
 	}
-	spk=spk+1+1/k;	/* FIXME: Arithmetic on message numbers */
+	spk=k == 2 ? OGRE_PANIC1 : OGRE_PANIC2;
 	RSPEAK(spk);
 	return GO_CLEAROBJ;
     }
@@ -1018,8 +1018,8 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj)
 	else if (obj == GRATE) {
 	    if (game.loc == LOC_START || game.loc == LOC_VALLEY || game.loc == LOC_SLIT)
 		obj=DPRSSN;
-	    /* FIXME: Arithmetic on location numbers */
-	    if (game.loc > LOC_BELOWGRATE && game.loc < LOC_MISTHALL)
+	    if (game.loc == LOC_COBBLE || game.loc == LOC_DEBRIS || game.loc == LOC_AWKWARD ||
+		game.loc == LOC_BIRD || game.loc == LOC_PITTOP)
 		obj=ENTRNC;
 	    if (obj != GRATE)
 		return GO_MOVE;
