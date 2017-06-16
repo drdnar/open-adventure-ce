@@ -475,14 +475,13 @@ static void croak(FILE *cmdin)
 	 *  death and exit. */
 	RSPEAK(DEATH_CLOSING);
 	score(endgame);
-    } else {
-	/* FIXME: Arithmetic on message numbers */
-	if (!YES(cmdin,WATCH_IT+game.numdie*2,WHICH_WAY+game.numdie*2,OK_MAN))
+
+    }
+    /* FIXME: Arithmetic on message numbers */
+    else if (game.numdie == MAXDIE || !YES(cmdin,WATCH_IT+game.numdie*2,WHICH_WAY+game.numdie*2,OK_MAN))
 	    score(endgame);
-	if (game.numdie == MAXDIE)
-	    score(endgame);
-	game.place[WATER] = NOWHERE;
-	game.place[OIL] = NOWHERE;
+    else {
+	game.place[WATER] = game.place[OIL] = NOWHERE;
 	if (TOTING(LAMP))
 	    game.prop[LAMP]=0;
 	for (int j=1; j<=NOBJECTS; j++) {
