@@ -105,7 +105,7 @@ advent-$(VERS).tar.gz: $(SOURCES) $(DOCS)
 	@(rm advent-$(VERS))
 
 indent:
-	astyle -n -A3 --pad-first-paren-out --min-conditional-indent=1 --pad-oper *.c
+	astyle -n -A3 --pad-header --min-conditional-indent=1 --pad-oper *.c
 
 release: advent-$(VERS).tar.gz advent.html history.html hints.html notes.html
 	shipper version=$(VERS) | sh -e -x
