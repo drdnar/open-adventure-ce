@@ -814,7 +814,7 @@ static int reservoir(void)
 /*  Z'ZZZ (word gets recomputed at startup; different each game). */
 {
     if (!AT(RESER) && game.loc != game.fixed[RESER]-1) {
-	RSPEAK(RUB_NOGO);
+	RSPEAK(NOTHING_HAPPENS);
 	return GO_CLEAROBJ;
     } else {
 	PSPEAK(RESER,game.prop[RESER]+1);
