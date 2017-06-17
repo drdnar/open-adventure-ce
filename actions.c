@@ -174,11 +174,11 @@ static void blast(void)
     if (game.prop[ROD2] < 0 || !game.closed)
 	RSPEAK(REQUIRES_DYNAMITE);
     else {
-	game.bonus=133;
+	game.bonus=VICTORY_MESSAGE;
 	if (game.loc == LOC_NE)
-	    game.bonus=134;
+	    game.bonus=DEFEAT_MESSAGE;
 	if (HERE(ROD2))
-	    game.bonus=135;
+	    game.bonus=SPLATTER_MESSAGE;
 	RSPEAK(game.bonus);
 	score(endgame);
     }

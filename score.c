@@ -65,11 +65,11 @@ void score(enum termination mode)
     if(game.closed) {
 	if(game.bonus == 0)
 	    score += 10;
-	if(game.bonus == 135)
+	if(game.bonus == SPLATTER_MESSAGE)
 	    score += 25;
-	if(game.bonus == 134)
+	if(game.bonus == DEFEAT_MESSAGE)
 	    score += 30;
-	if(game.bonus == 133)
+	if(game.bonus == VICTORY_MESSAGE)
 	    score += 45;
     }
     mxscor += 45;
