@@ -283,15 +283,15 @@ bool spotted_by_pirate(int i)
 	return true;
     int snarfed=0;
     bool movechest = false, robplayer = false;
-    for (int j=MINTRS; j<=MAXTRS; j++) {
+    for (int treasure=MINTRS; treasure<=MAXTRS; treasure++) {
 	/*  Pirate won't take pyramid from plover room or dark
 	 *  room (too easy!). */
-	if (j==PYRAM && (game.loc==PLAC[PYRAM] || game.loc==PLAC[EMRALD])) {
+	if (treasure==PYRAM && (game.loc==PLAC[PYRAM] || game.loc==PLAC[EMRALD])) {
 	    continue;
 	}
-	if (TOTING(j) || HERE(j))
+	if (TOTING(treasure) || HERE(treasure))
 	    ++snarfed;
-	if (TOTING(j)) {
+	if (TOTING(treasure)) {
 	    movechest = true;
 	    robplayer = true;
 	}
@@ -317,12 +317,12 @@ bool spotted_by_pirate(int i)
     }
     if (robplayer) {
 	RSPEAK(PIRATE_POUNCES);
-	for (int j=MINTRS; j<=MAXTRS; j++) {
-	    if (!(j == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD]))) {
-		if (AT(j) && game.fixed[j] == 0)
-		    CARRY(j,game.loc);
-		if (TOTING(j))
-		    DROP(j,game.chloc);
+	for (int treasure=MINTRS; treasure<=MAXTRS; treasure++) {
+	    if (!(treasure == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD]))) {
+		if (AT(treasure) && game.fixed[treasure] == 0)
+		    CARRY(treasure,game.loc);
+		if (TOTING(treasure))
+		    DROP(treasure,game.chloc);
 	    }
 	}
     }
@@ -916,8 +916,8 @@ static void listobjects(void)
 static bool do_command(FILE *cmdin)
 /* Get and execute a command */ 
 {
-    long kq, verb, V1, V2;
-    long i, k, kmod;
+    long verb, V1, V2;
+    long kmod, defn;
     static long igo = 0;
     static long obj = 0;
     enum speechpart part;
@@ -935,7 +935,7 @@ static bool do_command(FILE *cmdin)
      *  coming from place forbidden to pirate (dwarves rooted in
      *  place) let him get out (and attacked). */
     if (game.newloc != game.loc && !FORCED(game.loc) && !CNDBIT(game.loc,NOARRR)) {
-	for (i=1; i<=NDWARVES-1; i++) {
+	for (size_t i=1; i<=NDWARVES-1; i++) {
 	    if (game.odloc[i] == game.newloc && game.dseen[i]) {
 		game.newloc=game.loc;
 		RSPEAK(DWARF_BLOCK);
@@ -995,7 +995,7 @@ static bool do_command(FILE *cmdin)
 	if (game.closed) {
 	    if (game.prop[OYSTER] < 0 && TOTING(OYSTER))
 		PSPEAK(OYSTER,1);
-	    for (i=1; i<=NOBJECTS; i++) {
+	    for (size_t i=1; i<=NOBJECTS; i++) {
 		if (TOTING(i) && game.prop[i] < 0)
 		    game.prop[i] = -1-game.prop[i];
 	    }
@@ -1034,12 +1034,14 @@ static bool do_command(FILE *cmdin)
 	} else
 	    lampcheck();
 
-	k=WHERE_QUERY;
-	if (LIQLOC(game.loc) == WATER)k=FEET_WET;
 	V1=VOCAB(WD1,-1);
 	V2=VOCAB(WD2,-1);
 	if (V1 == ENTER && (V2 == STREAM || V2 == 1000+WATER)) {
-	    RSPEAK(k);
+		if(LIQLOC(game.loc) == WATER){
+			RSPEAK(FEET_WET);
+		} else {
+			RSPEAK(WHERE_QUERY);
+		}
 	    goto L2012;
 	}
 	if (V1 == ENTER && WD2 > 0) {
@@ -1065,9 +1067,9 @@ static bool do_command(FILE *cmdin)
 	    if (++igo == 10)
 		RSPEAK(GO_UNNEEDED);
 	}
-    L2630:
-	i=VOCAB(WD1,-1);
-	if (i == -1) {
+    Lookup:
+	defn = VOCAB(WD1,-1);
+	if (defn == -1) {
 	    /* Gee, I don't understand. */
 	    if (fallback_handler(rawbuf))
 		continue;
@@ -1075,9 +1077,8 @@ static bool do_command(FILE *cmdin)
 	    RSPEAK(DONT_KNOW);
 	    goto L2600;
 	}
-	kmod=MOD(i,1000);
-	kq=i/1000+1;
-	switch (kq-1)
+	kmod=MOD(defn,1000);
+	switch (defn/1000)
 	{
 	case 0:
 	    if (playermove(cmdin, verb, kmod))
@@ -1101,7 +1102,7 @@ static bool do_command(FILE *cmdin)
 	case GO_CLEAROBJ: goto L2012;
 	case GO_CHECKHINT: goto L2600;
 	case GO_CHECKFOO: goto L2607;
-	case GO_LOOKUP: goto L2630;
+	case GO_LOOKUP: goto Lookup;
 	case GO_WORD2:
 	    /* Get second word for analysis. */
 	    WD1=WD2;

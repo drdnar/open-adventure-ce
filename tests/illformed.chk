@@ -38,6 +38,10 @@ the surface for long.  I would try the stream.
 
 You're in front of building.
 
+> enter stream
+
+Your feet are now wet.
+
 > listen
 
 The stream is gurgling placidly.
@@ -300,7 +304,7 @@ Okay, "BOO".
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 56 turns.
+You have garnered 27 out of a possible 430 points, using 57 turns.
 
 > quit bottle
 
@@ -314,7 +318,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 27 out of a possible 430, using 58 turns.
+You scored 27 out of a possible 430, using 59 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 

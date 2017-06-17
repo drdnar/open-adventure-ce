@@ -217,10 +217,10 @@ void initialise(void)
      *  they are described.  game.tally keeps track of how many are
      *  not yet found, so we know when to close the cave. */
     game.tally=0;
-    for (int i=MINTRS; i<=MAXTRS; i++) {
-	if(object_descriptions[i].inventory != 0)
-	    game.prop[i]= -1;
-	game.tally=game.tally-game.prop[i];
+    for (int treasure=MINTRS; treasure<=MAXTRS; treasure++) {
+	if(object_descriptions[treasure].inventory != 0)
+	    game.prop[treasure]= -1;
+	game.tally=game.tally-game.prop[treasure];
     }
 
     /*  Clear the hint stuff.  game.hintlc[i] is how long he's been at LOC
