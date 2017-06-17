@@ -73,8 +73,8 @@ necessarily pretty ugly by modern standards. Encryption and
 checksumming have been discarded - it's pointless to try
 tamper-proofing saves when everyone has the source code.
 
-A -r command-line option has been added. It is functionally equivalent 
-to RESTORE command, but faster.
+A -r command-line been added. When it is given (with a file
+path argument) it is functionally equivalent to RESTORE command.
 
 == Translation ==
 

@@ -39,6 +39,8 @@ There have been no gameplay changes.
 
 -s:: Suppress Emacs-like line editing and command history.
 
+-r:: Restore game from specified file
+
 -o:: Old-style.  Restores original interface, no prompt or line editing.
 
 == BUGS ==

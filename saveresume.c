@@ -93,14 +93,14 @@ int restore(FILE* fp){
     IGNORE(fread(&save, sizeof(struct save_t), 1, fp));
     fclose(fp);
     if (save.version != VRSION) {
-	SETPRM(1,save.version/10,MOD(save.version,10));
-	SETPRM(3,VRSION/10,MOD(VRSION,10));
-	RSPEAK(VERSION_SKEW);
+        SETPRM(1,save.version/10,MOD(save.version,10));
+        SETPRM(3,VRSION/10,MOD(VRSION,10));
+        RSPEAK(VERSION_SKEW);
     } else {
-	memcpy(&game, &save.game, sizeof(struct game_t));
-	OBJSND[BIRD] = save.bird;
-	OBJTXT[OYSTER] = save.bivalve;
-	game.zzword=RNDVOC(3,game.zzword);
+        memcpy(&game, &save.game, sizeof(struct game_t));
+        OBJSND[BIRD] = save.bird;
+        OBJTXT[OYSTER] = save.bivalve;
+        game.zzword=RNDVOC(3,game.zzword);
     }
     return GO_TOP;
 }

@@ -95,13 +95,13 @@ int main(int argc, char *argv[])
 	    editline = prompt = false;
 	    break;
 	case 'r':
-        rfp = fopen(optarg, "r");
-        if (rfp == NULL)
-        fprintf(stderr,
-            "advent: can't open save file %s for read\n",
-            optarg);
-        signal(SIGINT, sig_handler);
-        break;
+	    rfp = fopen(optarg, "r");
+	    if (rfp == NULL)
+		fprintf(stderr,
+			"advent: can't open save file %s for read\n",
+			optarg);
+	    signal(SIGINT, sig_handler);
+	    break;
 	case 's':
 	    editline = false;
 	    break;
