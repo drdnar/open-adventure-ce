@@ -633,7 +633,7 @@ static int inven(void)
     return GO_CLEAROBJ;
 }
 
-int light(token_t verb, token_t obj)
+static int light(token_t verb, token_t obj)
 /*  Light.  Applicable only to lamp and urn. */
 {
     int spk = ACTSPK[verb];

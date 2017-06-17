@@ -171,6 +171,9 @@ extern long AMBER, ATTACK, AXE, BACK, BATTER, BEAR,
 
 enum speechpart {unknown, intransitive, transitive};
 
+void initialise(void);
+int action(FILE *input, enum speechpart part, long verb, token_t obj);
+
 /* Phase codes for action returns. 
  * These were at one time FORTRAN line numbers.
  * The values don't matter, but perturb their order at your peril.

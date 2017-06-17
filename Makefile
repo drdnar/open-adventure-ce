@@ -26,6 +26,8 @@ VERS=1.0
 
 CC?=gcc
 CCFLAGS+=-std=c99 -D _DEFAULT_SOURCE -Wall -Wpedantic -Wextra -g
+CCFLAGS+=-Wstrict-prototypes
+CCFLAGS+=-Wmissing-prototypes
 LIBS=
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
@@ -75,6 +77,7 @@ clean:
 	rm -f newdb.c newdb.h
 	rm -f README advent.6 MANIFEST *.tar.gz
 	rm -f *~
+	rm -f .*~
 	cd tests; $(MAKE) --quiet clean
 
 check: advent

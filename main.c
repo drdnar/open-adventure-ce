@@ -48,10 +48,7 @@ bool oldstyle = false;
 bool editline = true;
 bool prompt = true;
 
-extern void initialise();
-extern int action(FILE *, long, long, long);
-
-void sig_handler(int signo)
+static void sig_handler(int signo)
 {
     if (signo == SIGINT){
 	if (logfp != NULL)
@@ -268,7 +265,7 @@ static void checkhints(FILE *cmdin)
     }
 }
 
-bool spotted_by_pirate(int i)
+static bool spotted_by_pirate(int i)
 {
     if (i != PIRATE) 
 	return false;
