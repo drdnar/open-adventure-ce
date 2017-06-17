@@ -42,13 +42,13 @@ main.o:	 	advent.h database.h common.h newdb.h
 
 init.o:	 	advent.h database.h common.h newdb.h
 
-actions.o:	advent.h database.h common.h
+actions.o:	advent.h database.h common.h newdb.h
 
 score.o:	advent.h database.h common.h newdb.h
 
 misc.o:		advent.h database.h common.h newdb.h
 
-saveresume.o:	advent.h database.h common.h
+saveresume.o:	advent.h database.h common.h newdb.h
 
 common.o:	common.h
 
