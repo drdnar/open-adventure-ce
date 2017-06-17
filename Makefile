@@ -104,6 +104,9 @@ advent-$(VERS).tar.gz: $(SOURCES) $(DOCS)
 	(tar -T MANIFEST -czvf advent-$(VERS).tar.gz)
 	@(rm advent-$(VERS))
 
+indent:
+	astyle -n -A3 --pad-first-paren-out --min-conditional-indent=1 --pad-oper *.c
+
 release: advent-$(VERS).tar.gz advent.html history.html hints.html notes.html
 	shipper version=$(VERS) | sh -e -x
 
