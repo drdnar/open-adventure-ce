@@ -18,6 +18,9 @@
 # If you have pip installed,
 #
 # pip3 install PyYAML
+#
+# If you are using MacPorts on OS X:
+# port install py3{5,6}-yaml as appropriate for your Python 3 version.
 
 VERS=1.0
 
