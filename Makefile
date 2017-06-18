@@ -21,6 +21,8 @@
 #
 # If you are using MacPorts on OS X:
 # port install py3{5,6}-yaml as appropriate for your Python 3 version.
+#
+# To build with save/resume disabled, pass CCFLAGS="-D ADVENT_NOSAVE"
 
 VERS=1.0
 

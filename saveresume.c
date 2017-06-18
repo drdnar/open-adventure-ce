@@ -31,13 +31,17 @@ struct save_t save;
 
 /* Suspend and resume */
 int suspend(FILE *input)
-{
+{   /*  Suspend.  Offer to save things in a file, but charging
+     *  some points (so can't win by using saved games to retry
+     *  battles or to start over after learning zzword).
+     *  If ADVENT_NOSAVE is defined, do nothing instead. */
+
+#ifdef ADVENT_NOSAVE
+    return GO_UNKNOWN;
+#endif
     long i, k;
     FILE *fp = NULL;
 
-    /*  Suspend.  Offer to save things in a file, but charging
-     *  some points (so can't win by using saved games to retry
-     *  battles or to start over after learning zzword). */
     RSPEAK(SUSPEND_WARNING);
     if (!YES(input,THIS_ACCEPTABLE,OK_MAN,OK_MAN)) return GO_CLEAROBJ;
     game.saved=game.saved+5;
@@ -67,10 +71,14 @@ int suspend(FILE *input)
 }
 
 int resume(FILE *input)
-{
+{   /*  Resume.  Read a suspended game back from a file.
+     *  If ADVENT_NOSAVE is defined, do nothing instead. */
+
+#ifdef ADVENT_NOSAVE
+    return GO_UNKNOWN;
+#endif
     FILE *fp = NULL;
-     
-    /*  Resume.  Read a suspended game back from a file. */
+
     if (game.loc != 1 || game.abbrev[1] != 1) {
 	RSPEAK(RESUME_ABANDON);
 	if (!YES(input,THIS_ACCEPTABLE,OK_MAN,OK_MAN)) return GO_CLEAROBJ;
@@ -86,10 +94,17 @@ int resume(FILE *input)
 	linenoiseFree(name);
     }
 
-	return restore(fp);
+    return restore(fp);
 }
 
-int restore(FILE* fp){
+int restore(FILE* fp)
+{   /*  Read and restore game state from file, assuming
+     *  sane initial state.
+     *  If ADVENT_NOSAVE is defined, do nothing instead. */
+#ifdef ADVENT_NOSAVE
+    return GO_UNKNOWN;
+#endif
+
     IGNORE(fread(&save, sizeof(struct save_t), 1, fp));
     fclose(fp);
     if (save.version != VRSION) {

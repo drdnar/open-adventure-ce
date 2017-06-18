@@ -5,7 +5,7 @@
 advent - Colossal Cave Adventure
 
 == SYNOPSIS ==
-*advent* [-l logfile] [-o]
+*advent* [-l logfile] [-o] [-r savefile] [-s]
 
 == DESCRIPTION ==
 The original Colossal Cave Adventure from 1976-77 was the origin of all
