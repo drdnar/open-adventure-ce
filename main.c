@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
             break;
     }
     /* show score and exit */
-    score(quitgame);
+    terminate(quitgame);
 }
 
 static bool fallback_handler(char *buf)
@@ -482,12 +482,11 @@ static void croak(FILE *cmdin)
         /*  He died during closing time.  No resurrection.  Tally up a
          *  death and exit. */
         RSPEAK(DEATH_CLOSING);
-        score(endgame);
-
+        terminate(endgame);
     }
     /* FIXME: Arithmetic on message numbers */
     else if (game.numdie == MAXDIE || !YES(cmdin, WATCH_IT + game.numdie * 2, WHICH_WAY + game.numdie * 2, OK_MAN))
-        score(endgame);
+        terminate(endgame);
     else {
         game.place[WATER] = game.place[OIL] = NOWHERE;
         if (TOTING(LAMP))
@@ -1121,8 +1120,7 @@ Laction:
         case GO_DWARFWAKE:
             /*  Oh dear, he's disturbed the dwarves. */
             RSPEAK(DWARVES_AWAKEN);
-            score(endgame);
-            return true;
+            terminate(endgame);
         default:
             BUG(99);
         }

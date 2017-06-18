@@ -176,7 +176,7 @@ static void blast(void)
         if (HERE(ROD2))
             game.bonus = SPLATTER_MESSAGE;
         RSPEAK(game.bonus);
-        score(endgame);
+        terminate(endgame);
     }
 }
 
@@ -793,7 +793,7 @@ static int quit(FILE *input)
 /*  Quit.  Intransitive only.  Verify intent and exit if that's what he wants. */
 {
     if (YES(input, REALLY_QUIT, OK_MAN, OK_MAN))
-        score(quitgame);
+        terminate(quitgame);
     return GO_CLEAROBJ;
 }
 
@@ -948,13 +948,6 @@ static int throw (FILE *cmdin, long verb, token_t obj)
     game.dseen[i] = false;
     game.dloc[i] = 0;
     return throw_support((++game.dkill == 1) ? DWARF_SMOKE : KILLED_DWARF);
-}
-
-static int vscore(void)
-/* Score.  Call scoring routine but tell it to return. */
-{
-    score(scoregame);
-    return GO_CLEAROBJ;
 }
 
 static int wake(token_t verb, token_t obj)
@@ -1120,7 +1113,8 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj)
                 blast();
                 return GO_CLEAROBJ;
             case 23: /* SCOR  */
-                return vscore();
+		score(scoregame);
+		return GO_CLEAROBJ;
             case 24: /* FOO   */
                 return bigwords(WD1);
             case 25: /* BRIEF */

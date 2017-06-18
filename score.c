@@ -7,11 +7,13 @@
  * scoring and wrap-up
  */
 
-void score(enum termination mode)
+static long mxscor;	/* ugh..the price for having score() not exit. */
+
+long score(enum termination mode)
 /* mode is 'scoregame' if scoring, 'quitgame' if quitting, 'endgame' if died
  * or won */
 {
-    long score = 0, mxscor = 0;
+    long score = 0;
 
     /*  The present scoring algorithm is as follows:
      *     Objective:          Points:        Present total possible:
@@ -34,6 +36,7 @@ void score(enum termination mode)
 
     /*  First tally up the treasures.  Must be in building and not broken.
      *  Give the poor guy 2 points just for finding each treasure. */
+    mxscor = 0;
     for (long i = MINTRS; i <= MAXTRS; i++) {
         if (object_descriptions[i].inventory != 0) {
             long k = 12;
@@ -99,21 +102,27 @@ void score(enum termination mode)
         SETPRM(1, score, mxscor);
         SETPRM(3, game.turns, game.turns);
         RSPEAK(GARNERED_POINTS);
-        return;
     }
 
-    /* that should be good enough.  Let's tell him all about it. */
-    if (score + game.trnluz + 1 >= mxscor && game.trnluz != 0)
+    return score;
+}
+
+void terminate(enum termination mode)
+/* End of game.  Let's tell him all about it. */
+{
+    long points = score(mode);
+
+    if (points + game.trnluz + 1 >= mxscor && game.trnluz != 0)
         RSPEAK(TOOK_LONG);
-    if (score + game.saved + 1 >= mxscor && game.saved != 0)
+    if (points + game.saved + 1 >= mxscor && game.saved != 0)
         RSPEAK(WITHOUT_SUSPENDS);
-    SETPRM(1, score, mxscor);
+    SETPRM(1, points, mxscor);
     SETPRM(3, game.turns, game.turns);
     RSPEAK(TOTAL_SCORE);
     for (long i = 1; i <= (long)CLSSES; i++) {
-        if (CVAL[i] >= score) {
+        if (CVAL[i] >= points) {
             newspeak(class_messages[i]);
-            i = CVAL[i] + 1 - score;
+            i = CVAL[i] + 1 - points;
             SETPRM(1, i, i);
             RSPEAK(NEXT_HIGHER);
             exit(0);
@@ -122,5 +131,6 @@ void score(enum termination mode)
     RSPEAK(OFF_SCALE);
     RSPEAK(NO_HIGHER);
     exit(0);
-
 }
+
+/* end */
