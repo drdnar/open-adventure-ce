@@ -710,7 +710,7 @@ static int lock(token_t verb, token_t obj)
         if (AT(GRATE))obj = GRATE;
         if (obj != 0 && HERE(CHAIN)) return GO_UNKNOWN;
         if (HERE(CHAIN))obj = CHAIN;
-        if (obj == 0) {
+        if (obj == 0 || obj == INTRANSITIVE) {
             RSPEAK(spk);
             return GO_CLEAROBJ;
         }
@@ -731,7 +731,7 @@ static int lock(token_t verb, token_t obj)
                 return chain(verb);
             if (game.closng) {
                 spk = EXIT_CLOSED;
-                if (!game.panic)game.clock2 = 15;
+                if (!game.panic)game.clock2 = PANICTIME;
                 game.panic = true;
             } else {
                 spk = game.prop[GRATE] ? GRATE_LOCKED : ALREADY_LOCKED;

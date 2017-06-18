@@ -915,7 +915,7 @@ static bool do_command(FILE *cmdin)
     if (OUTSID(game.newloc) && game.newloc != 0 && game.closng) {
         RSPEAK(EXIT_CLOSED);
         game.newloc = game.loc;
-        if (!game.panic)game.clock2 = 15;
+        if (!game.panic)game.clock2 = PANICTIME;
         game.panic = true;
     }
 

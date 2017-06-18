@@ -36,6 +36,10 @@ You're in front of building.
 You are in a valley in the forest beside a stream tumbling along a
 rocky bed.
 
+> lock
+
+There is nothing here with a lock!
+
 > take water
 
 You have nothing in which to carry it.
@@ -345,7 +349,7 @@ Okay, "BOO".
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 67 turns.
+You have garnered 27 out of a possible 430 points, using 68 turns.
 
 > quit keys
 
@@ -359,7 +363,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 27 out of a possible 430, using 69 turns.
+You scored 27 out of a possible 430, using 70 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 
