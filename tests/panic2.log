@@ -1,4 +1,4 @@
-## Panic test - attempt to unlock grate after game closed.
+## Panic test - attempt to xyzzy out after game is closed.
 n
 seed 1838473132
 in
@@ -416,13 +416,5 @@ u
 # Cave closing announcement at this point
 e
 u
-take keys
-s
-u
-u
-e
-e
-e
-e
-e
-unlock grate
+n
+plugh
