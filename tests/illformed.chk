@@ -61,6 +61,10 @@ Eat what?
 You have taken a drink from the stream.  The water tastes strongly of
 minerals, but is not unpleasant.  It is extremely cold.
 
+> throw keys
+
+I see no keys here.
+
 > find keys
 
 I can only tell you what you see as you move about and manipulate
@@ -308,7 +312,7 @@ Okay, "BOO".
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 58 turns.
+You have garnered 27 out of a possible 430 points, using 59 turns.
 
 > quit bottle
 
@@ -322,7 +326,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 27 out of a possible 430, using 60 turns.
+You scored 27 out of a possible 430, using 61 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 

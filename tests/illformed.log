@@ -8,6 +8,7 @@ listen
 forward
 eat
 drink
+throw keys
 find keys
 inven keys
 nothing

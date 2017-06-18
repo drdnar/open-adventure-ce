@@ -925,19 +925,13 @@ static int throw (FILE *cmdin, long verb, token_t obj)
         return (discard(verb, obj, false));
     int i = ATDWRF(game.loc);
     if (i <= 0) {
-        if (AT(DRAGON) && game.prop[DRAGON] == 0) {
-            spk = DRAGON_SCALES;
-            return throw_support(spk);
-        }
-        if (AT(TROLL)) {
-            spk = TROLL_RETURNS;
-            return throw_support(spk);
-        }
-        if (AT(OGRE)) {
-            spk = OGRE_DODGE;
-            return throw_support(spk);
-        }
-        if (HERE(BEAR) && game.prop[BEAR] == 0) {
+        if (AT(DRAGON) && game.prop[DRAGON] == 0)
+            return throw_support(DRAGON_SCALES);
+        if (AT(TROLL))
+            return throw_support(TROLL_RETURNS);
+        else if (AT(OGRE))
+            return throw_support(OGRE_DODGE);
+        else if (HERE(BEAR) && game.prop[BEAR] == 0) {
             /* This'll teach him to throw the axe at the bear! */
             DROP(AXE, game.loc);
             game.fixed[AXE] = -1;
