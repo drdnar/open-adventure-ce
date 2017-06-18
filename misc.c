@@ -162,7 +162,7 @@ bool GETIN(FILE *input,
 
     for (;;) {
         if (game.blklin)
-            TYPE0();
+            fputc('\n', stdout);;
         if (!MAPLIN(input))
             return false;
         *pword1 = GETTXT(true, true, true);
@@ -206,7 +206,7 @@ long YES(FILE *input, vocab_t x, vocab_t y, vocab_t z)
     }
 }
 
-/*  Line-parsing routines (GETTXT, MAKEWD, PUTTXT, SHFTXT, TYPE0) */
+/*  Line-parsing routines (GETTXT, MAKEWD, PUTTXT, SHFTXT) */
 
 long GETTXT(bool skip, bool onewrd, bool upper)
 /*  Take characters from an input line and pack them into 30-bit words.
@@ -276,19 +276,6 @@ token_t MAKEWD(long letters)
     i = 64L * 64L * 64L * 64L * 64L / i;
     word = word * i;
     return word;
-}
-
-void TYPE0(void)
-/*  Type a blank line.  This procedure is provided as a convenience for callers
- *  who otherwise have no use for MAPCOM. */
-{
-    long temp;
-
-    temp = LNLENG;
-    LNLENG = 0;
-    TYPE();
-    LNLENG = temp;
-    return;
 }
 
 /*  Data structure  routines */
@@ -514,7 +501,7 @@ void BUG(long num)
     exit(0);
 }
 
-/*  Machine dependent routines (MAPLIN, TYPE, SAVEIO) */
+/*  Machine dependent routines (MAPLIN, SAVEIO) */
 
 bool MAPLIN(FILE *fp)
 {
@@ -585,8 +572,7 @@ bool MAPLIN(FILE *fp)
          *    63   = percent (%) [ASCII 45 octal, 37 decimal]
          *   64-73 = digits, 0 through 9
          *  Remaining characters can be translated any way that is convenient;
-         *  The "TYPE" routine below is used to map them back to characters when
-         *  necessary.  The above mappings are required so that certain special
+         *  The above mappings are required so that certain special
          *  characters are known to fit in 6 bits and/or can be easily spotted.
          *  Array elements beyond the end of the line should be filled with 0,
          *  and LNLENG should be set to the index of the last character.
@@ -608,26 +594,6 @@ bool MAPLIN(FILE *fp)
         LNPOSN = 1;
         return true;
     }
-}
-
-void TYPE(void)
-/*  Type the first "LNLENG" characters stored in inline, mapping them
- *  from integers to text per the rules described above.  INLINE
- *  may be changed by this routine. */
-{
-    long i;
-
-    if (LNLENG == 0) {
-        printf("\n");
-        return;
-    }
-
-    for (i = 1; i <= LNLENG; i++) {
-        INLINE[i] = advent_to_ascii[(int) INLINE[i]];
-    }
-    INLINE[LNLENG + 1] = 0;
-    printf("%s\n", INLINE + 1);
-    return;
 }
 
 void DATIME(long* d, long* t)

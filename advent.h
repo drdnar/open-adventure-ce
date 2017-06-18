@@ -93,7 +93,6 @@ extern bool GETIN(FILE *,token_t*,token_t*,token_t*,token_t*);
 extern long YES(FILE *,vocab_t,vocab_t,vocab_t);
 extern long GETTXT(bool,bool,bool);
 extern token_t MAKEWD(long);
-extern void TYPE0(void);
 extern long VOCAB(long,long);
 extern void JUGGLE(long);
 extern void MOVE(long,long);
@@ -106,7 +105,6 @@ extern bool TSTBIT(long,int);
 extern long RNDVOC(long,long);
 extern void BUG(long) __attribute__((noreturn));
 extern bool MAPLIN(FILE *);
-extern void TYPE(void);
 extern void DATIME(long*, long*);
 
 enum termination {endgame, quitgame, scoregame};
