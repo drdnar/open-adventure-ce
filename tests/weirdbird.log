@@ -20,10 +20,15 @@ read
 read keys
 on lamp
 read
+take rod
 w
 w
 listen bird
 eat bird
 feed bird
+take bird
+y
+y
+drop rod
 take bird
 attack bird

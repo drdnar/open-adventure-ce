@@ -115,6 +115,10 @@ A three foot black rod with a rusty star on an end lies nearby.
 
 "MAGIC WORD XYZZY"
 
+> take rod
+
+OK
+
 > w
 
 You are in an awkward sloping east/west canyon.
@@ -142,6 +146,28 @@ have no bird seed.
 
 > take bird
 
+The bird seemed unafraid at first, but as you approach it becomes
+disturbed and you cannot catch it.
+
+Are you trying to catch the bird?
+
+> y
+
+I am prepared to give you a hint, but it will cost you 2 points.
+
+Do you want the hint?
+
+> y
+
+Something about you seems to be frightening the bird.  Perhaps you
+might figure out what it is.
+
+> drop rod
+
+OK
+
+> take bird
+
 OK
 
 > attack bird
@@ -149,8 +175,8 @@ OK
 The little bird is now dead.  Its body disappears.
 
 
-You scored 32 out of a possible 430, using 26 turns.
+You scored 30 out of a possible 430, using 29 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 
-To achieve the next higher rating, you need 14 more points.
+To achieve the next higher rating, you need 16 more points.
