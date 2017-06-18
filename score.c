@@ -121,7 +121,7 @@ void terminate(enum termination mode)
     RSPEAK(TOTAL_SCORE);
     for (long i = 1; i <= (long)CLSSES; i++) {
         if (CVAL[i] >= points) {
-            newspeak(class_messages[i]);
+            speak(class_messages[i]);
             i = CVAL[i] + 1 - points;
             SETPRM(1, i, i);
             RSPEAK(NEXT_HIGHER);

@@ -956,7 +956,7 @@ static bool do_command(FILE *cmdin)
             msg = arbitrary_messages[PITCH_DARK];
         }
         if (TOTING(BEAR))RSPEAK(TAME_BEAR);
-        newspeak(msg);
+        speak(msg);
         if (FORCED(game.loc)) {
             if (playermove(cmdin, verb, 1))
                 return true;
@@ -1003,7 +1003,7 @@ L2607:
         game.foobar = (game.foobar > 0 ? -game.foobar : 0);
         ++game.turns;
         if (game.turns == game.thresh) {
-            newspeak(turn_threshold_messages[game.trndex]);
+            speak(turn_threshold_messages[game.trndex]);
             game.trnluz = game.trnluz + TRNVAL[game.trndex] / 100000;
             ++game.trndex;
             game.thresh = -1;

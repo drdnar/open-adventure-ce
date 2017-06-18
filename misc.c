@@ -42,7 +42,7 @@ void packed_to_token(long packed, char token[6])
 
 /*  I/O routines (SPEAK, PSPEAK, RSPEAK, SETPRM, GETIN, YES) */
 
-void newspeak(const char* msg)
+void speak(const char* msg)
 {
     // Do nothing if we got a null pointer.
     if (msg == NULL)
@@ -126,15 +126,15 @@ void PSPEAK(vocab_t msg, int skip)
  *  is game.prop=N message). */
 {
     if (skip >= 0)
-        newspeak(object_descriptions[msg].longs[skip]);
+        speak(object_descriptions[msg].longs[skip]);
     else
-        newspeak(object_descriptions[msg].inventory);
+        speak(object_descriptions[msg].inventory);
 }
 
 void RSPEAK(vocab_t i)
 /* Print the i-th "random" message (section 6 of database). */
 {
-    newspeak(arbitrary_messages[i]);
+    speak(arbitrary_messages[i]);
 }
 
 void SETPRM(long first, long p1, long p2)
