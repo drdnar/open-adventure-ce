@@ -1,4 +1,4 @@
-## Test access to emerald
+## Test access to emerald room and plover teleport
 # Based on walkthrough at http://www.ecsoftwareconsulting.com/node/56
 n
 seed 1495951709
@@ -188,3 +188,4 @@ drop lamp
 e
 take emerald
 inven
+plover

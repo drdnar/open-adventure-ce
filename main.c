@@ -623,6 +623,7 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
                 /* else fall through */
             } else if (game.prop[motion] != game.newloc / 100 - 3)
                 break;
+	L12:
             do {
                 if (TRAVEL[kk] < 0)BUG(25);
                 ++kk;
@@ -656,13 +657,7 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
                  *  plover-passage to get it out.  Having dropped it, go back and
                  *  pretend he wasn't carrying it after all. */
                 DROP(EMRALD, game.loc);
-                do {
-                    if (TRAVEL[kk] < 0)BUG(25);
-                    ++kk;
-                    game.newloc = labs(TRAVEL[kk]) / 1000;
-                } while
-                    (game.newloc == scratchloc);
-                continue;	/* back to top of do/while loop */
+		goto L12;
             case 3:
                 /*  Travel 303.  Troll bridge.  Must be done only as special
                  *  motion so that dwarves won't wander across and encounter

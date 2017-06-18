@@ -117,9 +117,10 @@ ways:
   and the choice to refrain will make forward translation into future
   languages easier.
 
-* There are a few gotos left that resist restructuring; all of these
+* There are a few gotos left that resist restructuring; all but of these
   are in the principal command interpreter function implementing its
-  state machine.
+  state machine. the remaining one is a truly mysterious artficat in
+  the player-movement code.
 
 * Linked lists (for objects at a location) are implemented using an array
   of link indices. This is a surviving FORTRANism that is quite unlike
