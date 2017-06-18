@@ -289,10 +289,13 @@ toss eggs
 ne
 ne
 barren
+unlock chain
 in
+attack bear
 throw axe
 throw food
 take chain
+unlock chain
 unlock chain
 # Also tests message from bear in inventory
 lock chain

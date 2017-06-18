@@ -1653,6 +1653,10 @@ heard in the distance.
 You are standing at the entrance to a large, barren room.  A notice
 above the entrance reads:  "Caution!  Bear in room!"
 
+> unlock chain
+
+I see no chain here.
+
 > in
 
 You are inside a barren room.  The center of the room is completely
@@ -1662,6 +1666,10 @@ far end of the room.  The only exit is the way you came in.
 There is a ferocious cave bear eying you from the far end of the room!
 
 The bear is locked to the wall with a golden chain!
+
+> attack bear
+
+With what?  Your bare hands?  Against *HIS* bear hands??
 
 > throw axe
 
@@ -1679,6 +1687,10 @@ The chain is still locked.
 > unlock chain
 
 The chain is now unlocked.
+
+> unlock chain
+
+It was already unlocked.
 
 > lock chain
 
@@ -1703,7 +1715,7 @@ Glistening pearl
 You are being followed by a very large, tame bear.
 
 
-You scored 225 out of a possible 430, using 294 turns.
+You scored 225 out of a possible 430, using 297 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 
