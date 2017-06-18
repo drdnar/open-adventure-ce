@@ -25,9 +25,7 @@
 VERS=1.0
 
 CC?=gcc
-CCFLAGS+=-std=c99 -D _DEFAULT_SOURCE -Wall -Wpedantic -Wextra -g
-CCFLAGS+=-Wstrict-prototypes
-CCFLAGS+=-Wmissing-prototypes
+CCFLAGS+=-std=c99 -D _DEFAULT_SOURCE -Wpedantic 
 LIBS=
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
@@ -117,6 +115,9 @@ refresh: advent.html
 	shipper -N -w version=$(VERS) | sh -e -x
 
 dist: advent-$(VERS).tar.gz
+
+linty: CCFLAGS += -W -Wall -Wextra -Wundef -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wshadow -Wfloat-equal -Wcast-align -Wwrite-strings -Waggregate-return -Wcast-qual -Wswitch-enum -Wwrite-strings -Wunreachable-code -Winit-self -Wpointer-arith -O2 
+linty: advent
 
 debug: CCFLAGS += -O0 --coverage -g
 debug: advent

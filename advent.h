@@ -84,7 +84,7 @@ extern bool oldstyle, editline, prompt;
 #define WRITE_MODE "wb"
 extern char* xstrdup(const char*);
 extern void packed_to_token(long, char token[]);
-extern void newspeak(char*);
+extern void newspeak(const char*);
 extern void PSPEAK(vocab_t,int);
 extern void RSPEAK(vocab_t);
 extern void SETPRM(long,long,long);

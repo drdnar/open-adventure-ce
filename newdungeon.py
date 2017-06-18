@@ -28,7 +28,7 @@ def write_regular_messages(name, h, c):
         h += "  {},\n".format(key)
     h += "};\n\n"
     
-    c += "char* {}[] = {{\n".format(name)   
+    c += "const char* {}[] = {{\n".format(name)   
     index = 0
     for key, text in dungeon[name]:
         if text == None:
@@ -47,13 +47,13 @@ with open(yaml_name, "r") as f:
 h = """#include <stdio.h>
 
 typedef struct {
-  char* inventory;
-  char** longs;
+  const char* inventory;
+  const char** longs;
 } object_description_t;
 
 typedef struct {
-  char* small;
-  char* big;
+  const char* small;
+  const char* big;
 } descriptions_t;
 
 typedef struct {
@@ -62,9 +62,9 @@ typedef struct {
 
 extern location_t locations[];
 extern object_description_t object_descriptions[];
-extern char* arbitrary_messages[];
-extern char* class_messages[];
-extern char* turn_threshold_messages[];
+extern const char* arbitrary_messages[];
+extern const char* class_messages[];
+extern const char* turn_threshold_messages[];
 
 extern size_t CLSSES;
 
@@ -118,7 +118,7 @@ for key, data in dungeon["object_descriptions"]:
     c += "    .inventory = {},\n".format(data["inventory"])
     try:
         data["longs"][0]
-        c += "    .longs = (char* []) {\n"
+        c += "    .longs = (const char* []) {\n"
         for l in data["longs"]:
             l = c_escape(l)
             c += "      \"{}\",\n".format(l)

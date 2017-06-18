@@ -487,12 +487,12 @@ static int read_database(FILE* database) {
  *  whether the abbreviated description is printed.  Counts modulo 5
  *  unless "LOOK" is used. */
 
-static void write_0d(FILE* header_file, long single, char* varname)
+static void write_0d(FILE* header_file, long single, const char* varname)
 {
    fprintf(header_file, "LOCATION long %s INITIALIZE(= %ld);\n", varname, single);
 }
 
-static void write_1d(FILE* header_file, long array[], long dim, char* varname)
+static void write_1d(FILE* header_file, long array[], long dim, const char* varname)
 {
    fprintf(header_file, "LOCATION long %s[] INITIALIZE(= {\n", varname);
    for (int i = 0; i < dim; ++i)
@@ -508,7 +508,7 @@ static void write_1d(FILE* header_file, long array[], long dim, char* varname)
    fprintf(header_file, "\n});\n");
 }
 
-static void write_hints(FILE* header_file, long matrix[][HINTLEN], long dim1, long dim2, char* varname)
+static void write_hints(FILE* header_file, long matrix[][HINTLEN], long dim1, long dim2, const char* varname)
 {
    fprintf(header_file, "LOCATION long %s[][%ld] INITIALIZE(= {\n", varname, dim2);
    for (int i = 0; i < dim1; ++i)

@@ -913,7 +913,7 @@ static void listobjects(void)
 static bool do_command(FILE *cmdin)
 /* Get and execute a command */ 
 {
-    long verb, V1, V2;
+    long verb=0, V1, V2;
     long kmod, defn;
     static long igo = 0;
     static long obj = 0;
@@ -950,7 +950,7 @@ static bool do_command(FILE *cmdin)
     for (;;) {
 	if (game.loc == 0)
 	    croak(cmdin);
-	char* msg = locations[game.loc].description.small;
+	const char* msg = locations[game.loc].description.small;
 	if (MOD(game.abbrev[game.loc],game.abbnum) == 0 || msg == 0)
 	    msg=locations[game.loc].description.big;
 	if (!FORCED(game.loc) && DARK(game.loc)) {

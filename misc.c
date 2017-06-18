@@ -45,7 +45,7 @@ void packed_to_token(long packed, char token[6])
 
 /*  I/O routines (SPEAK, PSPEAK, RSPEAK, SETPRM, GETIN, YES) */
 
-void newspeak(char* msg)
+void newspeak(const char* msg)
 {
   // Do nothing if we got a null pointer.
   if (msg == NULL)
