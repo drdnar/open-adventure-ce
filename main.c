@@ -645,10 +645,10 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
                  *  actual motion, but can be spotted by "go back". */
                 /* FIXME: Arithmetic on location numbers */
                 game.newloc = 99 + 100 - game.loc;
-                if (game.holdng == 0 || (game.holdng == 1 && TOTING(EMRALD)))
-                    return true;
-                game.newloc = game.loc;
-                RSPEAK(MUST_DROP);
+                if (game.holdng > 1 || (game.holdng == 1 && !TOTING(EMRALD))) {
+		    game.newloc = game.loc;
+		    RSPEAK(MUST_DROP);
+		}
                 return true;
             case 2:
                 /*  Travel 302.  Plover transport.  Drop the emerald (only use
@@ -661,7 +661,7 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
                     ++kk;
                     game.newloc = labs(TRAVEL[kk]) / 1000;
                 } while
-                (game.newloc == scratchloc);
+                    (game.newloc == scratchloc);
                 continue;	/* back to top of do/while loop */
             case 3:
                 /*  Travel 303.  Troll bridge.  Must be done only as special
@@ -693,13 +693,12 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
                     game.prop[BEAR] = 3;
                     game.oldlc2 = game.newloc;
                     croak(cmdin);
-                    return false;
                 }
             }
             BUG(20);
         }
     } while
-    (false);
+	(false);
     /* FIXME: Arithmetic on location number, becoming a message number */
     RSPEAK(game.newloc - 500);
     game.newloc = game.loc;
