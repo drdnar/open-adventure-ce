@@ -10,6 +10,17 @@
 #include "linenoise/linenoise.h"
 #include "newdb.h"
 
+void* xmalloc(size_t size)
+{
+  void* ptr = malloc(size);
+  if (ptr == NULL)
+    {
+      fprintf(stderr, "Out of memory!\n");
+      exit(EXIT_FAILURE);
+    }
+  return(ptr);
+}
+
 char* xstrdup(const char* s)
 {
     char* ptr = strdup(s);
@@ -185,25 +196,101 @@ bool GETIN(FILE *input,
     }
 }
 
-long YES(FILE *input, vocab_t x, vocab_t y, vocab_t z)
+void echo_input(FILE* destination, char* input_prompt, char* input)
+{
+  size_t len = strlen(input_prompt) + strlen(input) + 1;
+  char* prompt_and_input = (char*) xmalloc(len);
+  strcpy(prompt_and_input, input_prompt);
+  strcat(prompt_and_input, input);
+  fprintf(destination, "%s\n", prompt_and_input);
+  free(prompt_and_input);
+}
+
+char* get_input()
+{ 
+  // Set up the prompt
+  char input_prompt[] = "> ";
+  if (!prompt)
+    input_prompt[0] = '\0';
+  
+  // Print a blank line if game.blklin tells us to.
+  if (game.blklin == true)
+    printf("\n");
+
+  char* input;
+  while (true)
+    {
+      if (editline)
+	input = linenoise(input_prompt);
+      else
+	{
+	  input = NULL;
+	  size_t n = 0;
+	  if (isatty(0))
+	    printf("%s", input_prompt);
+	  getline(&input, &n, stdin);
+	}
+      
+      if (input == NULL) // Got EOF; quit.
+	exit(EXIT_SUCCESS);
+      else if (input[0] == '#') // Ignore comments.
+	continue;
+      else // We have a 'normal' line; leave the loop.
+	break;
+    }
+
+  // Strip trailing newlines from the input
+  input[strcspn(input, "\n")] = 0;
+
+  linenoiseHistoryAdd(input);
+
+  if (!isatty(0))
+    echo_input(stdout, input_prompt, input);
+
+  if (logfp)
+    echo_input(logfp, input_prompt, input);
+    
+  return(input);
+}
+
+bool YES(vocab_t question, vocab_t yes_response, vocab_t no_response)
 /*  Print message X, wait for yes/no answer.  If yes, print Y and return true;
  *  if no, print Z and return false. */
 {
-    token_t reply, junk1, junk2, junk3;
-
+    char* reply;
+    bool outcome;
+   
     for (;;) {
-        RSPEAK(x);
-        GETIN(input, &reply, &junk1, &junk2, &junk3);
-        if (reply == MAKEWD(250519) || reply == MAKEWD(25)) {
-            RSPEAK(y);
-            return true;
-        }
-        if (reply == MAKEWD(1415) || reply == MAKEWD(14)) {
-            RSPEAK(z);
-            return false;
-        }
-        RSPEAK(PLEASE_ANSWER);
+	RSPEAK(question);
+
+	reply = get_input();
+
+	char* firstword = (char*) xmalloc(strlen(reply));
+	sscanf(reply, "%s", firstword);
+
+	for (int i = 0; i < strlen(firstword); ++i)
+	    firstword[i] = tolower(firstword[i]);
+	
+	int yes = strncmp("yes", reply, sizeof("yes") - 1);
+	int y = strncmp("y", reply, sizeof("y") - 1);
+	int no = strncmp("no", reply, sizeof("no") - 1);
+	int n = strncmp("n", reply, sizeof("n") - 1);
+	
+	if (yes == 0 || y == 0) {
+	    RSPEAK(yes_response);
+	    outcome = true;
+	    break;
+	}
+	else if (no == 0 || n == 0) {
+   	    RSPEAK(no_response);
+	    outcome = false;
+	    break;
+	}
+	else
+	    RSPEAK(PLEASE_ANSWER);
     }
+    linenoiseFree(reply);
+    return(outcome);
 }
 
 /*  Line-parsing routines (GETTXT, MAKEWD, PUTTXT, SHFTXT) */

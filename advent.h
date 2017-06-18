@@ -83,6 +83,7 @@ extern bool oldstyle, editline, prompt;
 /* b is not needed for POSIX but harmless */
 #define READ_MODE "rb"
 #define WRITE_MODE "wb"
+extern void* xmalloc(size_t size);
 extern char* xstrdup(const char*);
 extern void packed_to_token(long, char token[]);
 extern void speak(const char*);
@@ -90,7 +91,9 @@ extern void PSPEAK(vocab_t,int);
 extern void RSPEAK(vocab_t);
 extern void SETPRM(long,long,long);
 extern bool GETIN(FILE *,token_t*,token_t*,token_t*,token_t*);
-extern long YES(FILE *,vocab_t,vocab_t,vocab_t);
+extern void echo_input(FILE*, char*, char*);
+extern char* get_input(void);
+extern bool YES(vocab_t, vocab_t, vocab_t);
 extern long GETTXT(bool,bool,bool);
 extern token_t MAKEWD(long);
 extern long VOCAB(long,long);

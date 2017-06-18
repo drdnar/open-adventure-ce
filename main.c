@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
     game.loc = LOC_START;
     game.limit = 330;
     if (!rfp) {
-        game.novice = YES(stdin, WELCOME_YOU, CAVE_NEARBY, NO_MESSAGE);
+        game.novice = YES(WELCOME_YOU, CAVE_NEARBY, NO_MESSAGE);
         if (game.novice)game.limit = 1000;
     } else {
         restore(rfp);
@@ -251,11 +251,11 @@ static void checkhints(FILE *cmdin)
 
                 /* Fall through to hint display */
                 game.hintlc[hint] = 0;
-                if (!YES(cmdin, HINTS[hint][3], NO_MESSAGE, OK_MAN))
+                if (!YES(HINTS[hint][3], NO_MESSAGE, OK_MAN))
                     return;
                 SETPRM(1, HINTS[hint][2], HINTS[hint][2]);
                 RSPEAK(HINT_COST);
-                game.hinted[hint] = YES(cmdin, WANT_HINT, HINTS[hint][4], OK_MAN);
+                game.hinted[hint] = YES(WANT_HINT, HINTS[hint][4], OK_MAN);
                 if (game.hinted[hint] && game.limit > WARNTIME)
                     game.limit += WARNTIME * HINTS[hint][2];
             }
@@ -485,7 +485,7 @@ static void croak(FILE *cmdin)
         terminate(endgame);
     }
     /* FIXME: Arithmetic on message numbers */
-    else if (game.numdie == MAXDIE || !YES(cmdin, WATCH_IT + game.numdie * 2, WHICH_WAY + game.numdie * 2, OK_MAN))
+    else if (game.numdie == MAXDIE || !YES(WATCH_IT + game.numdie * 2, WHICH_WAY + game.numdie * 2, OK_MAN))
         terminate(endgame);
     else {
         game.place[WATER] = game.place[OIL] = NOWHERE;
