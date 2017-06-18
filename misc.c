@@ -153,7 +153,7 @@ void SETPRM(long first, long p1, long p2)
  *  are stored into PARMS(first) and PARMS(first+1). */
 {
     if (first >= MAXPARMS)
-        BUG(29);
+        BUG(TOO_MANY_PARAMETERS_GIVEN_TO_SETPRM);
     else {
         PARMS[first] = p1;
         PARMS[first + 1] = p2;
@@ -228,7 +228,7 @@ char* get_input()
 	  size_t n = 0;
 	  if (isatty(0))
 	    printf("%s", input_prompt);
-	  getline(&input, &n, stdin);
+	  IGNORE(getline(&input, &n, stdin));
 	}
       
       if (input == NULL) // Got EOF; quit.
@@ -268,7 +268,7 @@ bool YES(vocab_t question, vocab_t yes_response, vocab_t no_response)
 	char* firstword = (char*) xmalloc(strlen(reply));
 	sscanf(reply, "%s", firstword);
 
-	for (int i = 0; i < strlen(firstword); ++i)
+	for (int i = 0; i < (int)strlen(firstword); ++i)
 	    firstword[i] = tolower(firstword[i]);
 	
 	int yes = strncmp("yes", firstword, sizeof("yes") - 1);
@@ -384,7 +384,7 @@ long VOCAB(long id, long init)
             lexeme = -1;
             if (init < 0)
                 return (lexeme);
-            BUG(5);
+            BUG(REQUIRED_VOCABULARY_WORD_NOT_FOUND);
         }
         if (init >= 0 && KTAB[i] / 1000 != init)
             continue;
@@ -395,7 +395,7 @@ long VOCAB(long id, long init)
             return (lexeme);
         }
     }
-    BUG(21);
+    BUG(RAN_OFF_END_OF_VOCABULARY_TABLE);
 }
 
 void JUGGLE(long object)
@@ -497,7 +497,7 @@ long ATDWRF(long where)
 }
 
 /*  Utility routines (SETBIT, TSTBIT, set_seed, get_next_lcg_value,
- *  randrange, RNDVOC, BUG) */
+ *  randrange, RNDVOC) */
 
 long SETBIT(long bit)
 /*  Returns 2**bit for use in constructing bit-masks. */
@@ -559,36 +559,6 @@ long RNDVOC(long second, long force)
     return rnd;
 }
 
-void BUG(long num)
-/*  The following conditions are currently considered fatal bugs.  Numbers < 20
- *  are detected while reading the database; the others occur at "run time".
- *	0	Message line > 70 characters
- *	1	Null line in message
- *	2	Too many words of messages
- *	3	Too many travel options
- *	4	Too many vocabulary words
- *	5	Required vocabulary word not found
- *	6	Too many RTEXT messages
- *	7	Too many hints
- *	8	Location has cond bit being set twice
- *	9	Invalid section number in database
- *	10	Too many locations
- *	11	Too many class or turn messages
- *	20	Special travel (500>L>300) exceeds goto list
- *	21	Ran off end of vocabulary table
- *	22	Vocabulary type (N/1000) not between 0 and 3
- *	23	Intransitive action verb exceeds goto list
- *	24	Transitive action verb exceeds goto list
- *	25	Conditional travel entry with no alternative
- *	26	Location has no travel entries
- *	27	Hint number exceeds goto list
- *	28	Invalid month returned by date function
- *	29	Too many parameters given to SETPRM */
-{
-
-    printf("Fatal error %ld.  See source code for interpretation.\n", num);
-    exit(0);
-}
 
 /*  Machine dependent routines (MAPLIN, SAVEIO) */
 

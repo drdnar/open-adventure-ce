@@ -789,7 +789,7 @@ static int pour(token_t verb, token_t obj)
     }
 }
 
-static int quit(FILE *input)
+static int quit(void)
 /*  Quit.  Intransitive only.  Verify intent and exit if that's what he wants. */
 {
     if (YES(REALLY_QUIT, OK_MAN, OK_MAN))
@@ -797,7 +797,7 @@ static int quit(FILE *input)
     return GO_CLEAROBJ;
 }
 
-static int read(FILE *input, token_t verb, token_t obj)
+static int read(token_t verb, token_t obj)
 /*  Read.  Print stuff based on objtxt.  Oyster (?) is special case. */
 {
     int spk = ACTSPK[verb];
@@ -1100,7 +1100,7 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj)
             case 16: /* TOSS  */
                 return GO_UNKNOWN;
             case 17: /* QUIT  */
-                return quit(input);
+                return quit();
             case 18: /* FIND  */
                 return GO_UNKNOWN;
             case 19: /* INVEN */
@@ -1120,15 +1120,15 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj)
             case 25: /* BRIEF */
                 return brief();
             case 26: /* READ  */
-                return read(input, verb, INTRANSITIVE);
+                return read(verb, INTRANSITIVE);
             case 27: /* BREAK */
                 return GO_UNKNOWN;
             case 28: /* WAKE  */
                 return GO_UNKNOWN;
             case 29: /* SUSP  */
-                return suspend(input);
+                return suspend();
             case 30: /* RESU  */
-                return resume(input);
+                return resume();
             case 31: /* FLY   */
                 return fly(verb, INTRANSITIVE);
             case 32: /* LISTE */
@@ -1136,7 +1136,7 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj)
             case 33: /* ZZZZ  */
                 return reservoir();
             }
-            BUG(23);
+            BUG(INTRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST);
         }
     /* FALLTHRU */
     case transitive:
@@ -1210,7 +1210,7 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj)
             return GO_CLEAROBJ;
         }
         case 26: /* READ  */
-            return read(input, verb, obj);
+            return read(verb, obj);
         case 27: /* BREAK */
             return vbreak(verb, obj);
         case 28: /* WAKE  */
@@ -1232,13 +1232,13 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj)
         case 33: /* ZZZZ  */
             return reservoir();
         }
-        BUG(24);
+        BUG(TRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST);
     case unknown:
         /* Unknown verb, couldn't deduce object - might need hint */
         SETPRM(1, WD1, WD1X);
         RSPEAK(WHAT_DO);
         return GO_CHECKHINT;
     default:
-        BUG(99);
+        BUG(SPEECHPART_NOT_TRANSITIVE_OR_INTRANSITIVE_OR_UNKNOWN);
     }
 }

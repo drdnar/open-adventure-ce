@@ -3,7 +3,6 @@
  * defining (mostly) invariant state.  A couple of slots are messed with
  * at runtime.
  */
-#include "common.h"
 
 #define LINESIZE 100
 #define RTXSIZ 277
@@ -20,6 +19,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include "common.h"
 
 // Global variables for use in functions below that can gradually disappear as code is cleaned up
 static long LNLENG;
@@ -114,38 +114,6 @@ static long GETTXT(long SKIP, long ONEWRD, long UPPER)
     return (TEXT);
 }
 
-static void BUG(long NUM)
-{
-
-    /*  The following conditions are currently considered fatal bugs.  Numbers < 20
-     *  are detected while reading the database; the others occur at "run time".
-     *	0	Message line > 70 characters
-     *	1	Null line in message
-     *	2	Too many words of messages
-     *	3	Too many travel options
-     *	4	Too many vocabulary words
-     *	5	Required vocabulary word not found
-     *	6	Too many RTEXT messages
-     *	7	Too many hints
-     *	8	Location has cond bit being set twice
-     *	9	Invalid section number in database
-     *	10	Too many locations
-     *	11	Too many class or turn messages
-     *	20	Special travel (500>L>300) exceeds goto list
-     *	21	Ran off end of vocabulary table
-     *	22	Vocabulary type (N/1000) not between 0 and 3
-     *	23	Intransitive action verb exceeds goto list
-     *	24	Transitive action verb exceeds goto list
-     *	25	Conditional travel entry with no alternative
-     *	26	Location has no travel entries
-     *	27	Hint number exceeds goto list
-     *	28	Invalid month returned by date function
-     *	29	Too many parameters given to SETPRM */
-
-    fprintf(stderr, "Fatal error %ld.  See source code for interpretation.\n", NUM);
-    exit(EXIT_FAILURE);
-}
-
 static void MAPLIN(FILE *OPENED)
 {
     /*  Read a line of input, from the specified input source,
@@ -236,12 +204,15 @@ static void read_messages(FILE* database, long sect)
         long loc;
         LINUSE = KK;
         loc = GETNUM(database);
-        if (LNLENG >= LNPOSN + 70)BUG(0);
+        if (LNLENG >= LNPOSN + 70)
+            BUG(MESSAGE_LINE_GT_70_CHARACTERS);
         if (loc == -1) return;
-        if (LNLENG < LNPOSN)BUG(1);
+        if (LNLENG < LNPOSN)
+            BUG(NULL_LINE_IN_MESSAGE);
         do {
             KK = KK + 1;
-            if (KK >= LINSIZ)BUG(2);
+            if (KK >= LINSIZ)
+                BUG(TOO_MANY_WORDS_OF_MESSAGES);
             LINES[KK] = GETTXT(false, false, false);
         } while (LINES[KK] != -1);
         LINES[LINUSE] = KK;
@@ -250,20 +221,23 @@ static void read_messages(FILE* database, long sect)
         LINES[LINUSE] = -KK;
         if (sect == 14) {
             TRNVLS = TRNVLS + 1;
-            if (TRNVLS > TRNSIZ)BUG(11);
+            if (TRNVLS > TRNSIZ)
+                BUG(TOO_MANY_CLASS_OR_TURN_MESSAGES);
             TTEXT[TRNVLS] = LINUSE;
             TRNVAL[TRNVLS] = loc;
             continue;
         }
         if (sect == 10) {
             CLSSES = CLSSES + 1;
-            if (CLSSES > CLSMAX)BUG(11);
+            if (CLSSES > CLSMAX)
+               BUG(TOO_MANY_CLASS_OR_TURN_MESSAGES);
             CTEXT[CLSSES] = LINUSE;
             CVAL[CLSSES] = loc;
             continue;
         }
         if (sect == 6) {
-            if (loc > RTXSIZ)BUG(6);
+            if (loc > RTXSIZ)
+                BUG(TOO_MANY_RTEXT_MESSAGES);
             RTEXT[loc] = LINUSE;
             continue;
         }
@@ -271,7 +245,8 @@ static void read_messages(FILE* database, long sect)
             if (loc > 0 && loc <= NOBJECTS)PTEXT[loc] = LINUSE;
             continue;
         }
-        if (loc > LOCSIZ)BUG(10);
+        if (loc > LOCSIZ)
+            BUG(TOO_MANY_LOCATIONS);
         if (sect == 1) {
             LTEXT[loc] = LINUSE;
             continue;
@@ -300,7 +275,8 @@ static void read_section3_stuff(FILE* database)
         while ((L = GETNUM(NULL)) != 0) {
             TRAVEL[TRVS] = newloc * 1000 + L;
             TRVS = TRVS + 1;
-            if (TRVS == TRVSIZ)BUG(3);
+            if (TRVS == TRVSIZ)
+                BUG(TOO_MANY_TRAVEL_OPTIONS);
         }
         TRAVEL[TRVS - 1] = -TRAVEL[TRVS - 1];
     }
@@ -316,7 +292,7 @@ static void read_vocabulary(FILE* database)
         if (KTAB[TABNDX] == -1) return;
         ATAB[TABNDX] = GETTXT(true, true, true);
     } /* end loop */
-    BUG(4);
+    BUG(TOO_MANY_VOCABULARY_WORDS);
 }
 
 /*  Read in the initial locations for each object.  Also the immovability info.
@@ -347,7 +323,8 @@ static void read_conditions(FILE* database)
     while ((K = GETNUM(database)) != -1) {
         long loc;
         while ((loc = GETNUM(NULL)) != 0) {
-            if (is_set(COND[loc], K)) BUG(8);
+            if (is_set(COND[loc], K))
+               BUG(LOCATION_HAS_CONDITION_BIT_BEING_SET_TWICE);
             COND[loc] = COND[loc] + (1l << K);
         }
     }
@@ -360,7 +337,8 @@ static void read_hints(FILE* database)
     long K;
     HNTMAX = 0;
     while ((K = GETNUM(database)) != -1) {
-        if (K <= 0 || K > HNTSIZ)BUG(7);
+        if (K <= 0 || K > HNTSIZ)
+           BUG(TOO_MANY_HINTS);
         for (int I = 1; I <= 4; I++) {
             HINTS[K][I] = GETNUM(NULL);
         } /* end loop */
@@ -473,7 +451,7 @@ static int read_database(FILE* database)
             read_messages(database, sect);
             break;
         default:
-            BUG(9);
+            BUG(INVALID_SECTION_NUMBER_IN_DATABASE);
         }
     }
 }

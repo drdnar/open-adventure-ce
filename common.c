@@ -1,3 +1,5 @@
+#include <stdlib.h>
+#include <stdio.h>
 #include "common.h"
 
 const char advent_to_ascii[] = {

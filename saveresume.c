@@ -30,7 +30,7 @@ struct save_t {
 struct save_t save;
 
 /* Suspend and resume */
-int suspend(FILE *input)
+int suspend(void)
 {
     /*  Suspend.  Offer to save things in a file, but charging
      *  some points (so can't win by using saved games to retry
@@ -71,7 +71,7 @@ int suspend(FILE *input)
     exit(0);
 }
 
-int resume(FILE *input)
+int resume(void)
 {
     /*  Resume.  Read a suspended game back from a file.
      *  If ADVENT_NOSAVE is defined, do nothing instead. */

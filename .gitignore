@@ -5,10 +5,10 @@ dungeon
 *.o
 *.html
 database.h
-database.c
 advent.6
 *.tar.gz
 MANIFEST
 *.adv
+.*~
 newdb.h
 newdb.c

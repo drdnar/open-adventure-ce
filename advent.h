@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 
 #include "common.h"
@@ -106,7 +107,6 @@ extern long ATDWRF(long);
 extern long SETBIT(long);
 extern bool TSTBIT(long,int);
 extern long RNDVOC(long,long);
-extern void BUG(long) __attribute__((noreturn));
 extern bool MAPLIN(FILE *);
 extern void DATIME(long*, long*);
 
@@ -117,8 +117,8 @@ extern unsigned long get_next_lcg_value(void);
 extern long randrange(long);
 extern long score(enum termination);
 extern void terminate(enum termination) __attribute__((noreturn));
-extern int suspend(FILE *);
-extern int resume(FILE *);
+extern int suspend(void);
+extern int resume(void);
 extern int restore(FILE *);
 
 /*

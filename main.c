@@ -66,7 +66,7 @@ static void sig_handler(int signo)
  *           15-treasure version (adventure) by Don Woods, April-June 1977
  *           20-treasure version (rev 2) by Don Woods, August 1978
  *		Errata fixed: 78/12/25
- *	     Revived 2017 as Open Advebture.
+ *	     Revived 2017 as Open Adventure.
  */
 
 static bool do_command(FILE *);
@@ -101,6 +101,19 @@ int main(int argc, char *argv[])
             break;
         case 's':
             editline = false;
+            break;
+        default:
+            fprintf(stderr,
+                  "Usage: %s [-l logfilename] [-o] [-r restorefilename] [-s] \n", argv[0]);
+            fprintf(stderr,
+                  "  where -l creates a log file of your game named as specified'\n");
+            fprintf(stderr,
+                  "        -o 'oldstyle' (no prompt, no command editing, displays 'Initialising...')\n");
+            fprintf(stderr,
+                  "        -r indicates restoring from specified saved game file\n");
+            fprintf(stderr,
+                  "        -s indicates playing with command editing suppressed\n");
+            exit(-1);
             break;
         }
     }
@@ -174,7 +187,7 @@ static bool fallback_handler(char *buf)
  *  all come back here eventually to finish the loop.  Ignore
  *  "HINTS" < 4 (special stuff, see database notes).
  */
-static void checkhints(FILE *cmdin)
+static void checkhints(void)
 {
     if (COND[game.loc] >= game.conds) {
         for (int hint = 1; hint <= HNTMAX; hint++) {
@@ -245,7 +258,7 @@ static void checkhints(FILE *cmdin)
                     game.hintlc[hint] = 0;
                     return;
                 default:
-                    BUG(27);
+                    BUG(HINT_NUMBER_EXCEEDS_GOTO_LIST);
                     break;
                 }
 
@@ -474,7 +487,7 @@ static bool dwarfmove(void)
  *  without the lamp!).  game.oldloc is zapped so he can't just
  *  "retreat". */
 
-static void croak(FILE *cmdin)
+static void croak(void)
 /*  Okay, he's dead.  Let's get on with it. */
 {
     ++game.numdie;
@@ -511,12 +524,12 @@ static void croak(FILE *cmdin)
  *  him, so we need game.oldlc2, which is the last place he was
  *  safe.) */
 
-static bool playermove(FILE *cmdin, token_t verb, int motion)
+static bool playermove(token_t verb, int motion)
 {
     int scratchloc, k2, kk = KEY[game.loc];
     game.newloc = game.loc;
     if (kk == 0)
-        BUG(26);
+        BUG(LOCATION_HAS_NO_TRAVEL_ENTRIES);
     if (motion == NUL)
         return true;
     else if (motion == BACK) {
@@ -625,7 +638,8 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
                 break;
 	L12:
             do {
-                if (TRAVEL[kk] < 0)BUG(25);
+                if (TRAVEL[kk] < 0)
+                   BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION);
                 ++kk;
                 game.newloc = labs(TRAVEL[kk]) / 1000;
             } while
@@ -687,10 +701,10 @@ static bool playermove(FILE *cmdin, token_t verb, int motion)
                     game.fixed[BEAR] = -1;
                     game.prop[BEAR] = 3;
                     game.oldlc2 = game.newloc;
-                    croak(cmdin);
+                    croak();
                 }
             }
-            BUG(20);
+            BUG(SPECIAL_TRAVEL_500_GT_L_GT_300_EXCEEDS_GOTO_LIST);
         }
     } while
 	(false);
@@ -928,13 +942,13 @@ static bool do_command(FILE *cmdin)
     game.loc = game.newloc;
 
     if (!dwarfmove())
-        croak(cmdin);
+        croak();
 
     /*  Describe the current location and (maybe) get next command. */
 
     for (;;) {
         if (game.loc == 0)
-            croak(cmdin);
+            croak();
         const char* msg = locations[game.loc].description.small;
         if (MOD(game.abbrev[game.loc], game.abbnum) == 0 || msg == 0)
             msg = locations[game.loc].description.big;
@@ -944,7 +958,7 @@ static bool do_command(FILE *cmdin)
             if (game.wzdark && PCT(35)) {
                 RSPEAK(PIT_FALL);
                 game.oldlc2 = game.loc;
-                croak(cmdin);
+                croak();
                 continue;	/* back to top of main interpreter loop */
             }
             msg = arbitrary_messages[PITCH_DARK];
@@ -952,7 +966,7 @@ static bool do_command(FILE *cmdin)
         if (TOTING(BEAR))RSPEAK(TAME_BEAR);
         speak(msg);
         if (FORCED(game.loc)) {
-            if (playermove(cmdin, verb, 1))
+            if (playermove(verb, 1))
                 return true;
             else
                 continue;	/* back to top of main interpreter loop */
@@ -967,7 +981,7 @@ L2012:
         obj = 0;
 
 L2600:
-        checkhints(cmdin);
+        checkhints();
 
         /*  If closing time, check for any objects being toted with
          *  game.prop < 0 and set the prop to -1-game.prop.  This way
@@ -1062,7 +1076,7 @@ Lookup:
         kmod = MOD(defn, 1000);
         switch (defn / 1000) {
         case 0:
-            if (playermove(cmdin, verb, kmod))
+            if (playermove(verb, kmod))
                 return true;
             else
                 continue;	/* back to top of main interpreter loop */
@@ -1078,7 +1092,7 @@ Lookup:
             RSPEAK(kmod);
             goto L2012;
         default:
-            BUG(22);
+            BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3);
         }
 
 Laction:
@@ -1086,7 +1100,7 @@ Laction:
         case GO_TERMINATE:
             return true;
         case GO_MOVE:
-            playermove(cmdin, verb, NUL);
+            playermove(verb, NUL);
             return true;
         case GO_TOP:
             continue;	/* back to top of main interpreter loop */
@@ -1116,7 +1130,7 @@ Laction:
             RSPEAK(DWARVES_AWAKEN);
             terminate(endgame);
         default:
-            BUG(99);
+            BUG(ACTION_RETURNED_PHASE_CODE_BEYOND_END_OF_SWITCH);
         }
     }
 }

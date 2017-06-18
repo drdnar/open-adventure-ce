@@ -24,6 +24,8 @@
 #
 # To build with save/resume disabled, pass CCFLAGS="-D ADVENT_NOSAVE"
 
+.PHONY: debug indent release refresh dist linty html clean
+
 VERS=1.0
 
 CC?=gcc
@@ -118,7 +120,25 @@ refresh: advent.html
 
 dist: advent-$(VERS).tar.gz
 
-linty: CCFLAGS += -W -Wall -Wextra -Wundef -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wshadow -Wfloat-equal -Wcast-align -Wwrite-strings -Waggregate-return -Wcast-qual -Wswitch-enum -Wwrite-strings -Wunreachable-code -Winit-self -Wpointer-arith -O2 
+linty: CCFLAGS += -W
+linty: CCFLAGS += -Wall
+linty: CCFLAGS += -Wextra
+linty: CCFLAGS += -Wundef
+linty: CCFLAGS += -Wstrict-prototypes
+linty: CCFLAGS += -Wmissing-prototypes
+linty: CCFLAGS += -Wmissing-declarations
+linty: CCFLAGS += -Wshadow
+linty: CCFLAGS += -Wfloat-equal
+linty: CCFLAGS += -Wcast-align
+linty: CCFLAGS += -Wwrite-strings
+linty: CCFLAGS += -Waggregate-return
+linty: CCFLAGS += -Wcast-qual
+linty: CCFLAGS += -Wswitch-enum
+linty: CCFLAGS += -Wwrite-strings
+linty: CCFLAGS += -Wunreachable-code
+linty: CCFLAGS += -Winit-self
+linty: CCFLAGS += -Wpointer-arith
+linty: CCFLAGS +=-O2 
 linty: advent
 
 debug: CCFLAGS += -O0 --coverage -g
