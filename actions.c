@@ -558,7 +558,7 @@ int fill(token_t verb, token_t obj)
         spk = URN_NOPOUR;
     if (LIQUID() != 0)
         spk = BOTTLE_FULL;
-    if (spk == 107) {
+    if (spk == BOTTLED_WATER) {
         game.prop[BOTTLE] = MOD(COND[game.loc], 4) / 2 * 2;
         k = LIQUID();
         if (TOTING(BOTTLE))
@@ -982,7 +982,7 @@ static int wave(token_t verb, token_t obj)
         return GO_CLEAROBJ;
     }
     if (HERE(BIRD))spk = FREE_FLY + MOD(game.prop[BIRD], 2);
-    if (spk == 206 && game.loc == game.place[STEPS] && game.prop[JADE] < 0) {
+    if (spk == FREE_FLY && game.loc == game.place[STEPS] && game.prop[JADE] < 0) {
         DROP(JADE, game.loc);
         game.prop[JADE] = 0;
         --game.tally;

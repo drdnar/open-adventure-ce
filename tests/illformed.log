@@ -5,6 +5,7 @@ seed 1801426495
 cave
 enter stream
 listen
+carry
 forward
 eat
 drink
@@ -36,6 +37,7 @@ break keys
 wake keys
 take keys
 feed keys
+fly keys
 throw keys
 eat food
 drink blood

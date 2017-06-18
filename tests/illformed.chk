@@ -46,6 +46,10 @@ Your feet are now wet.
 
 The stream is gurgling placidly.
 
+> carry
+
+Carry what?
+
 > forward
 
 I am unsure how you are facing.  Use compass points or nearby objects.
@@ -183,6 +187,10 @@ OK
 
 I'm game.  Would you care to explain how?
 
+> fly keys
+
+I'm game.  Would you care to explain how?
+
 > throw keys
 
 OK
@@ -312,7 +320,7 @@ Okay, "BOO".
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 59 turns.
+You have garnered 27 out of a possible 430 points, using 61 turns.
 
 > quit bottle
 
@@ -326,7 +334,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 27 out of a possible 430, using 61 turns.
+You scored 27 out of a possible 430, using 63 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 
