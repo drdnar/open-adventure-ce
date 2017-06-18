@@ -469,4 +469,4 @@ sw
 take rod
 drop rod
 ne
-blast
+blast rod

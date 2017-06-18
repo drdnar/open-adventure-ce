@@ -3,7 +3,7 @@ n
 seed 1071883378
 in
 take lamp
-xyzzy
+say xyzzy
 take rod
 e
 take cage

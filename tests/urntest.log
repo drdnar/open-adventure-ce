@@ -330,9 +330,10 @@ w
 n
 n
 n
+# Everything to here copied from endgame428
+light urn
 fill urn
 light urn
-# Everything to here copied from endgame428
 fill urn
 read urn
 extinguish urn

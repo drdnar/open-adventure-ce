@@ -228,9 +228,25 @@ I'm game.  Would you care to explain how?
 
 I'm game.  Would you care to explain how?
 
+> pour keys
+
+You can't pour that.
+
 > throw keys
 
 OK
+
+> foo up
+
+There is no way to go that direction.
+
+You're inside building.
+
+There are some keys on the ground here.
+
+There is a shiny brass lamp nearby.
+
+There is food here.
 
 > eat food
 
@@ -365,7 +381,7 @@ Okay, "BOO".
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 72 turns.
+You have garnered 27 out of a possible 430 points, using 74 turns.
 
 > quit keys
 
@@ -379,7 +395,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 27 out of a possible 430, using 74 turns.
+You scored 27 out of a possible 430, using 76 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 

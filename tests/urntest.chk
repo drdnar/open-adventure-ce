@@ -1965,6 +1965,10 @@ down, but a small ledge can be seen to the west across the chasm.
 
 A small urn is embedded in the rock.
 
+> light urn
+
+The urn is empty and will not light.
+
 > fill urn
 
 Your bottle is now empty and the urn is full of oil.
@@ -1991,7 +1995,7 @@ If you mean to use the persian rug, it does not appear inclined to
 cooperate.
 
 
-You scored 267 out of a possible 430, using 334 turns.
+You scored 267 out of a possible 430, using 335 turns.
 
 You have reached "Junior Master" status.
 
