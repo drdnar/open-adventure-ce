@@ -29,6 +29,7 @@ carry
 blast
 take bottle
 drink water
+fill bottle
 throw axe
 throw knife
 lock
@@ -55,8 +56,11 @@ brief
 frob grate
 read grate
 grate
+pour bottle
+fill bottle
 building
 on
+pour bottle
 xyzzy
 take rod
 wave rod

@@ -156,6 +156,10 @@ OK
 
 The bottle of water is now empty.
 
+> fill bottle
+
+Your bottle is now full of water.
+
 > throw axe
 
 I see no axe here.
@@ -261,6 +265,14 @@ I'm afraid I don't understand.
 
 What do you want to do with the grate?
 
+> pour bottle
+
+Your bottle is empty and the ground is wet.
+
+> fill bottle
+
+Your bottle is now full of water.
+
 > building
 
 I don't know how to apply that word here.
@@ -274,6 +286,10 @@ There is a shiny brass lamp nearby.
 > on
 
 Your lamp is now on.
+
+> pour bottle
+
+Your bottle is empty and the ground is wet.
 
 > xyzzy
 
@@ -349,7 +365,7 @@ Okay, "BOO".
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 68 turns.
+You have garnered 27 out of a possible 430 points, using 72 turns.
 
 > quit keys
 
@@ -363,7 +379,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 27 out of a possible 430, using 70 turns.
+You scored 27 out of a possible 430, using 74 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 
