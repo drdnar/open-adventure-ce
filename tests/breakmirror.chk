@@ -2898,6 +2898,23 @@ not disturb the dwarves!"  An immense mirror is hanging against one
 wall, and stretches to the other end of the room, where various other
 sundry objects can be glimpsed dimly in the distance.
 
+> take oyster
+
+OK
+
+Interesting.  There seems to be something written on the underside of
+the oyster.
+
+> read oyster
+
+Hmmm, this looks like a clue, which means it'll cost you 10 points to
+read it.  Should I go ahead and read it anyway?
+
+> y
+
+It says, "There is a way out of this place.  Do you need any more
+information to escape?  Sorry, but this initial hint is all you get."
+
 > sw
 
 You are at the southwest end of the repository.  To one side is a pit
@@ -2920,8 +2937,8 @@ The resulting ruckus has awakened the dwarves.  There are now several
 threatening little dwarves in the room with you!  Most of them throw
 knives at you!  All of them get you!
 
-You scored 393 out of a possible 430, using 463 turns.
+You scored 383 out of a possible 430, using 465 turns.
 
 Your score puts you in Master Adventurer Class B.
 
-To achieve the next higher rating, you need 18 more points.
+To achieve the next higher rating, you need 28 more points.

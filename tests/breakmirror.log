@@ -465,6 +465,9 @@ e
 e
 e
 # Everything to here is from endgame428
+take oyster
+read oyster
+y
 sw
 break mirror
 
