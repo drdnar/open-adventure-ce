@@ -21,9 +21,8 @@ static int attack(FILE *input, long verb, token_t obj)
  *  enemies, or no enemies but 2 others. */
 {
     int spk = ACTSPK[verb];
-    int d = ATDWRF(game.loc);
-    if (obj == 0) {
-        if (d > 0)
+    if (obj == 0 || obj == INTRANSITIVE) {
+        if (ATDWRF(game.loc) > 0)
             obj = DWARF;
         if (HERE(SNAKE))obj = obj * NOBJECTS + SNAKE;
         if (AT(DRAGON) && game.prop[DRAGON] == 0)obj = obj * NOBJECTS + DRAGON;
@@ -65,7 +64,7 @@ static int attack(FILE *input, long verb, token_t obj)
     if (obj == DRAGON)spk = ALREADY_DEAD;
     if (obj == TROLL)spk = ROCKY_TROLL;
     if (obj == OGRE)spk = OGRE_DODGE;
-    if (obj == OGRE && d > 0) {
+    if (obj == OGRE && ATDWRF(game.loc) > 0) {
         RSPEAK(spk);
         RSPEAK(KNIFE_THROWN);
         DESTROY(OGRE);

@@ -31,16 +31,29 @@ Seed set to 1801426495
 
 You're in front of building.
 
+> stream
+
+You are in a valley in the forest beside a stream tumbling along a
+rocky bed.
+
+> take water
+
+You have nothing in which to carry it.
+
 > cave
 
 I don't know where the cave is, but hereabouts no stream can run on
 the surface for long.  I would try the stream.
 
-You're in front of building.
+You're in valley.
 
 > enter stream
 
 Your feet are now wet.
+
+> try three words
+
+Please stick to 1- and 2-word commands.
 
 > listen
 
@@ -54,7 +67,7 @@ Carry what?
 
 I am unsure how you are facing.  Use compass points or nearby objects.
 
-You're in front of building.
+You're in valley.
 
 > eat
 
@@ -85,15 +98,10 @@ OK
 
 > in
 
-You are inside a building, a well house for a large spring.
+I don't know in from out here.  Use compass points or name something
+in the general direction you want to go.
 
-There are some keys on the ground here.
-
-There is a shiny brass lamp nearby.
-
-There is food here.
-
-There is a bottle of water here.
+You're in valley.
 
 > listen
 
@@ -101,15 +109,16 @@ The stream is gurgling placidly.
 
 > keys
 
-What do you want to do with the keys?
+I see no keys here.
 
 > find keys
 
-I believe what you want is right here with you.
+I can only tell you what you see as you move about and manipulate
+things.  I cannot tell you where remote things are.
 
 > unlock keys
 
-You can't unlock the keys.
+I see no keys here.
 
 > find foo
 
@@ -129,11 +138,12 @@ Blasting requires dynamite.
 
 > take bottle
 
-OK
+I see no bottl here.
 
 > drink water
 
-The bottle of water is now empty.
+You have taken a drink from the stream.  The water tastes strongly of
+minerals, but is not unpleasant.  It is extremely cold.
 
 > throw axe
 
@@ -169,47 +179,47 @@ I see no urn here.
 
 > eat keys
 
-Don't be ridiculous!
+I see no keys here.
 
 > discard keys
 
-You aren't carrying it!
+I see no keys here.
 
 > drink keys
 
-Don't be ridiculous!
+I see no keys here.
 
 > off keys
 
-I'm afraid I don't understand.
+I see no keys here.
 
 > break keys
 
-It is beyond your power to do that.
+I see no keys here.
 
 > wake keys
 
-Don't be ridiculous!
+I see no keys here.
 
 > take keys
 
-OK
+I see no keys here.
 
 > feed keys
 
-I'm game.  Would you care to explain how?
+I see no keys here.
 
 > fly keys
 
-I'm game.  Would you care to explain how?
+I see no keys here.
 
 > throw keys
 
-OK
+I see no keys here.
 
 > eat food
 
-Thank you, it was delicious!
+I see no food here.
 
 > drink blood
 
@@ -217,11 +227,11 @@ I see no blood here.
 
 > drink keys
 
-Don't be ridiculous!
+I see no keys here.
 
 > light keys
 
-I'm afraid I don't understand.
+I see no keys here.
 
 > brief
 
@@ -234,43 +244,37 @@ Sorry, I don't know the word "FROB".
 
 > read grate
 
-I'm afraid I don't understand.
+You're in valley.
 
 > grate
 
-What do you want to do with the grate?
+You're in valley.
 
 > building
 
-I don't know how to apply that word here.
-
-You're inside building.
-
-There are some keys on the ground here.
-
-There is a shiny brass lamp nearby.
+You're in front of building.
 
 > on
 
-Your lamp is now on.
+On what?
 
 > xyzzy
 
->>Foof!<<
+Nothing happens.
 
-It is now pitch dark.  If you proceed you will likely fall into a pit.
+You're in front of building.
 
 > take rod
 
-OK
+I see no rod here.
 
 > wave rod
 
-Nothing happens.
+I see no rod here.
 
 > listen
 
-All is silent.
+The stream is gurgling placidly.
 
 > quit
 
@@ -286,7 +290,9 @@ Read what?
 
 > look
 
-It is now pitch dark.  If you proceed you will likely fall into a pit.
+You are standing at the end of a road before a small brick building.
+Around you is a forest.  A small stream flows out of the building and
+down a gully.
 
 > news
 
@@ -302,13 +308,9 @@ game.  Saved games are now stored in much smaller files than before.
 
 > go back
 
->>Foof!<<
+Sorry, but I no longer seem to remember how it was you got here.
 
-You're inside building.
-
-There are some keys on the ground here.
-
-There is a lamp shining nearby.
+You're in front of building.
 
 > fuck
 
@@ -328,11 +330,11 @@ Okay, "BOO".
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 64 turns.
+You have garnered 27 out of a possible 430 points, using 66 turns.
 
 > quit keys
 
-Huh?
+I see no keys here.
 
 > quit
 
@@ -342,7 +344,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 27 out of a possible 430, using 66 turns.
+You scored 27 out of a possible 430, using 68 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 
