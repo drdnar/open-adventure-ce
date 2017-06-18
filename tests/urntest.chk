@@ -1109,8 +1109,6 @@ a small pool of oil in one corner of the pit.
 
 Your bottle is now full of oil.
 
-> 
-
 > u
 
 You're at east end of Twopit Room.
@@ -1975,6 +1973,10 @@ Your bottle is now empty and the urn is full of oil.
 
 The urn is now lit.
 
+> fill urn
+
+The urn is already full of oil.
+
 > read urn
 
 I'm afraid I don't understand.
@@ -1984,7 +1986,7 @@ I'm afraid I don't understand.
 The urn is now dark.
 
 
-You scored 267 out of a possible 430, using 332 turns.
+You scored 267 out of a possible 430, using 333 turns.
 
 You have reached "Junior Master" status.
 

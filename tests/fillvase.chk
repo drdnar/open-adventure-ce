@@ -1273,6 +1273,10 @@ There is a delicate, precious, ming vase here!
 
 OK
 
+> fill vase
+
+There is nothing here with which to fill it.
+
 > se
 
 There is a threatening little dwarf in the room with you!
@@ -1419,7 +1423,7 @@ I'm afraid I don't understand.
 The sudden change in temperature has delicately shattered the vase.
 
 
-You scored 191 out of a possible 430, using 233 turns.
+You scored 191 out of a possible 430, using 234 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 

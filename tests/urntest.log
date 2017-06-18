@@ -183,7 +183,6 @@ drop appendage
 e
 d
 get oil
-
 u
 w
 d
@@ -334,5 +333,6 @@ n
 fill urn
 light urn
 # Everything to here copied from endgame428
+fill urn
 read urn
 extinguish urn

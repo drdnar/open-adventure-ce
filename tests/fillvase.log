@@ -213,6 +213,8 @@ take trident
 nw
 s
 take vase
+# Inserted
+fill vase
 se
 throw axe
 take axe
@@ -232,7 +234,7 @@ n
 off
 plugh
 out
-# Everything above this from endgame428
+# Everything not marked 'Inserted' above this from endgame428
 inven
 stream
 read vase
