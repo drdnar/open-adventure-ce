@@ -341,7 +341,7 @@ drop rug
 drop emerald
 fly rug
 take sapphire
-fly rug
+fly
 take emerald
 drop ruby
 take rug

@@ -127,6 +127,14 @@ Carry what?
 
 Blasting requires dynamite.
 
+> take bottle
+
+OK
+
+> drink water
+
+The bottle of water is now empty.
+
 > throw axe
 
 I see no axe here.
@@ -162,6 +170,10 @@ I see no urn here.
 > eat keys
 
 Don't be ridiculous!
+
+> discard keys
+
+You aren't carrying it!
 
 > drink keys
 
@@ -238,8 +250,6 @@ There are some keys on the ground here.
 
 There is a shiny brass lamp nearby.
 
-There is a bottle of water here.
-
 > on
 
 Your lamp is now on.
@@ -300,8 +310,6 @@ There are some keys on the ground here.
 
 There is a lamp shining nearby.
 
-There is a bottle of water here.
-
 > fuck
 
 Watch it!
@@ -320,9 +328,9 @@ Okay, "BOO".
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 61 turns.
+You have garnered 27 out of a possible 430 points, using 64 turns.
 
-> quit bottle
+> quit keys
 
 Huh?
 
@@ -334,7 +342,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 27 out of a possible 430, using 63 turns.
+You scored 27 out of a possible 430, using 66 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 

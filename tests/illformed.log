@@ -22,6 +22,8 @@ find foo
 find bar
 carry
 blast
+take bottle
+drink water
 throw axe
 throw knife
 lock
@@ -31,6 +33,7 @@ attack
 unlock chain
 fill urn
 eat keys
+discard keys
 drink keys
 off keys
 break keys
@@ -64,6 +67,6 @@ walk
 fly
 say boo
 score
-quit bottle
+quit keys
 quit
 yes
