@@ -9,13 +9,13 @@ on
 take rod
 e
 take cage
-w
-w
-w
+go west
+go west
+go west
 drop rod
 take bird
 take rod
-w
+go west
 free bird
 wave rod
 take necklace
@@ -29,7 +29,7 @@ drop rod
 drop cage
 take cage
 take bird
-w
+go west
 take coins
 e
 s
@@ -55,7 +55,7 @@ take silver
 s
 sw
 take axe
-w
+go west
 kill dragon
 yes
 drink blood
@@ -73,7 +73,7 @@ drop rug
 drop silver
 out
 s
-w
+go west
 n
 take appendage
 free bird
@@ -95,14 +95,14 @@ s
 s
 take rod
 up
-w
+go west
 wave rod
 drop rod
 west
 take diamonds
-w
-w
-w
+go west
+go west
+go west
 s
 sw
 se
@@ -114,7 +114,7 @@ kill ogre
 n
 take ruby
 s
-w
+west
 n
 n
 n
@@ -151,7 +151,7 @@ s
 d
 water plant
 u
-w
+west
 u
 reservoir
 H'CFL
@@ -186,27 +186,27 @@ d
 get oil
 
 u
-w
+west
 d
 climb
-w
+west
 n
 oil door
 drop bottle
 n
 take trident
-w
+west
 d
 se
 n
-w
+west
 drop trident
 drop ebony
 drop axe
 drop lantern
 e
 take emerald
-w
+west
 take lamp
 take axe
 take ebony
@@ -219,7 +219,7 @@ throw axe
 take axe
 e
 take pillow
-w
+west
 drop axe
 ne
 e
@@ -243,7 +243,7 @@ plugh
 on
 s
 d
-w
+west
 d
 n
 d
@@ -252,18 +252,18 @@ take pearl
 u
 u
 s
-w
-w
-w
-w
+west
+west
+west
+west
 d
 climb
-w
+west
 get eggs
 n
 take bottle
 n
-w
+west
 d
 sw
 u
@@ -282,8 +282,8 @@ e
 take spices
 drop keys
 fork
-w
-w
+west
+west
 sw
 free bear
 inven
@@ -292,17 +292,17 @@ sw
 d
 se
 se
-w
+west
 d
 get oil
 up
 e
 take axe
-w
-w
+west
+west
 d
 climb
-w
+west
 fee
 fie
 foe
@@ -311,7 +311,7 @@ take eggs
 s
 d
 u
-w
+west
 u
 s
 e
@@ -328,7 +328,7 @@ take rug
 take ruby
 take emerald
 out
-w
+west
 n
 n
 n
@@ -362,9 +362,9 @@ on
 s
 s
 u
-w
-w
-w
+west
+west
+west
 s
 e
 s
@@ -391,7 +391,7 @@ plugh
 on
 s
 d
-w
+west
 d
 e
 take magazine

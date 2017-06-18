@@ -60,15 +60,15 @@ There is a small wicker cage discarded nearby.
 
 OK
 
-> w
+> go west
 
 You're in debris room.
 
-> w
+> go west
 
 You are in an awkward sloping east/west canyon.
 
-> w
+> go west
 
 You are in a splendid chamber thirty feet high.  The walls are frozen
 rivers of orange stone.  An awkward canyon and a good passage exit
@@ -88,7 +88,7 @@ OK
 
 OK
 
-> w
+> go west
 
 At your feet is a small pit breathing traces of white mist.  An east
 passage ends here except for a small crack leading on.
@@ -159,7 +159,7 @@ OK
 
 OK
 
-> w
+> go west
 
 You are in the west side chamber of the Hall of the Mountain King.
 A passage continues west and up here.
@@ -309,7 +309,7 @@ There is a little axe here.
 
 OK
 
-> w
+> go west
 
 You are in a secret canyon which exits to the north and east.
 
@@ -438,7 +438,7 @@ You're in front of building.
 You are in a valley in the forest beside a stream tumbling along a
 rocky bed.
 
-> w
+> go west
 
 You are wandering aimlessly through the forest.
 
@@ -574,7 +574,7 @@ You're in Hall of Mists.
 
 Rough stone steps lead up the dome.
 
-> w
+> go west
 
 You are on the east bank of a fissure slicing clear across the hall.
 The mist is quite thick here, and the fissure is too wide to jump.
@@ -599,7 +599,9 @@ A crystal bridge now spans the fissure.
 
 OK
 
-> w
+> go west
+
+If you prefer, simply type w rather than west.
 
 There is a threatening little dwarf in the room with you!
 
@@ -611,7 +613,10 @@ You are at the west end of the Hall of Mists.  A low wide crawl
 continues west and another goes north.  To the south is a little
 passage 6 feet off the floor.
 
-> w
+> go west
+
+You don't have to say "go" every time; just specify a direction or, if
+it's nearby, name the place to which you wish to move.
 
 There is a threatening little dwarf in the room with you!
 
@@ -619,7 +624,7 @@ You are at the east end of a very long hall apparently without side
 chambers.  To the east a low wide crawl slants up.  To the north a
 round two foot hole slants down.
 
-> w
+> go west
 
 There is a threatening little dwarf in the room with you!
 
@@ -697,7 +702,7 @@ OK
 
 You are in a large chamber with passages to the west and north.
 
-> w
+> west
 
 You are in a long, rough-hewn, north/south corridor.
 
@@ -930,7 +935,7 @@ You're at west end of Twopit Room.
 
 The top of a 12-foot-tall beanstalk is poking out of the west pit.
 
-> w
+> west
 
 You're in Slab Room.
 
@@ -1117,7 +1122,7 @@ You're at east end of Twopit Room.
 
 There is a huge beanstalk growing out of the west pit up to the hole.
 
-> w
+> west
 
 You're at west end of Twopit Room.
 
@@ -1139,7 +1144,7 @@ You are in a long, narrow corridor stretching out of sight to the
 west.  At the eastern end is a hole through which you can see a
 profusion of leaves.
 
-> w
+> west
 
 You are in the Giant Room.  The ceiling here is too high up for your
 lamp to show it.  Cavernous passages lead east, north, and south.  On
@@ -1174,7 +1179,7 @@ There is a jewel-encrusted trident here!
 
 OK
 
-> w
+> west
 
 You are at the top of a steep incline above a large room.  You could
 climb down here, but you would not be able to climb up.  There is a
@@ -1199,7 +1204,7 @@ Far below, through a heavy white mist, strange splashing noises can be
 heard.  The mist rises up through a fissure in the ceiling.  The path
 exits to the south and west.
 
-> w
+> west
 
 You are in an alcove.  A small nw path seems to widen after a short
 distance.  An extremely tight tunnel leads east.  It looks like a very
@@ -1231,7 +1236,7 @@ There is an emerald here the size of a plover's egg!
 
 OK
 
-> w
+> west
 
 You're in alcove.
 
@@ -1304,7 +1309,7 @@ A small velvet pillow lies on the floor.
 
 OK
 
-> w
+> west
 
 You're in Swiss Cheese Room.
 
@@ -1444,7 +1449,7 @@ You're in n/s passage above e/w passage.
 
 You're in dirty passage.
 
-> w
+> west
 
 You're in dusty rock room.
 
@@ -1486,23 +1491,23 @@ There is an enormous oyster here with its shell tightly closed.
 
 You're at complex junction.
 
-> w
+> west
 
 You're in Bedquilt.
 
-> w
+> west
 
 You're in Swiss Cheese Room.
 
 There is a little axe here.
 
-> w
+> west
 
 You're at east end of Twopit Room.
 
 There is a huge beanstalk growing out of the west pit up to the hole.
 
-> w
+> west
 
 You are at the west end of the Twopit Room.  There is a large hole in
 the wall above the pit at this end of the room.
@@ -1524,7 +1529,7 @@ You clamber up the plant and scurry through the hole at the top.
 
 You're in narrow corridor.
 
-> w
+> west
 
 You're in Giant Room.
 
@@ -1550,7 +1555,7 @@ OK
 
 You're in cavern with waterfall.
 
-> w
+> west
 
 You're at steep incline above large room.
 
@@ -1667,13 +1672,13 @@ You are being followed by a very large, tame bear.
 
 You're at fork in path.
 
-> w
+> west
 
 You are being followed by a very large, tame bear.
 
 You're in corridor.
 
-> w
+> west
 
 You are being followed by a very large, tame bear.
 
@@ -1739,7 +1744,7 @@ You're in Swiss Cheese Room.
 
 There is a little axe here.
 
-> w
+> west
 
 You're at east end of Twopit Room.
 
@@ -1771,7 +1776,7 @@ There is a little axe here.
 
 OK
 
-> w
+> west
 
 You are at the east end of the Twopit Room.  The floor here is
 littered with thin rock slabs, which make it easy to descend the pits.
@@ -1781,7 +1786,7 @@ wall directly over the west pit where you can't get to it.
 
 There is a huge beanstalk growing out of the west pit up to the hole.
 
-> w
+> west
 
 You're at west end of Twopit Room.
 
@@ -1801,7 +1806,7 @@ You clamber up the plant and scurry through the hole at the top.
 
 You're in narrow corridor.
 
-> w
+> west
 
 You're in Giant Room.
 
@@ -1843,7 +1848,7 @@ Your keen eye spots a severed leporine appendage lying on the ground.
 
 There is a huge beanstalk growing out of the west pit up to the hole.
 
-> w
+> west
 
 You're in Slab Room.
 
@@ -1947,7 +1952,7 @@ OK
 
 You're in front of building.
 
-> w
+> west
 
 You have walked up a hill, still in the forest.  The road slopes back
 down the other side of the hill.  There is a building in the distance.
@@ -2205,7 +2210,7 @@ You're in Hall of Mists.
 
 Rough stone steps lead up the dome.
 
-> w
+> west
 
 Out from the shadows behind you pounces a bearded pirate!  "Har, har,"
 he chortles, "I'll just take all this booty and hide it away with me
@@ -2218,13 +2223,13 @@ A three foot black rod with a rusty star on an end lies nearby.
 
 A crystal bridge now spans the fissure.
 
-> w
+> west
 
 You're on west bank of fissure.
 
 A crystal bridge now spans the fissure.
 
-> w
+> west
 
 You're at west end of Hall of Mists.
 
@@ -2396,7 +2401,7 @@ You're in n/s passage above e/w passage.
 
 You're in dirty passage.
 
-> w
+> west
 
 You're in dusty rock room.
 
