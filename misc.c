@@ -12,34 +12,31 @@
 
 char* xstrdup(const char* s)
 {
-  char* ptr = strdup(s);
-  if (ptr == NULL)
-    {
-      fprintf(stderr, "Out of memory!\n");
-      exit(EXIT_FAILURE);
+    char* ptr = strdup(s);
+    if (ptr == NULL) {
+        fprintf(stderr, "Out of memory!\n");
+        exit(EXIT_FAILURE);
     }
-  return(ptr);
+    return (ptr);
 }
 
 void packed_to_token(long packed, char token[6])
 {
-  // Unpack and map back to ASCII.
-  for (int i = 0; i < 5; ++i)
-    {
-      char advent = (packed >> i * 6) & 63;
-      token[4 - i] = advent_to_ascii[(int) advent];
+    // Unpack and map back to ASCII.
+    for (int i = 0; i < 5; ++i) {
+        char advent = (packed >> i * 6) & 63;
+        token[4 - i] = advent_to_ascii[(int) advent];
     }
 
-  // Ensure the last character is \0.
-  token[5] = '\0';
+    // Ensure the last character is \0.
+    token[5] = '\0';
 
-  // Replace trailing whitespace with \0.
-  for (int i = 4; i >= 0; --i)
-    {
-      if (token[i] == ' ' || token[i] == '\t')
-	token[i] = '\0';
-      else
-	break;
+    // Replace trailing whitespace with \0.
+    for (int i = 4; i >= 0; --i) {
+        if (token[i] == ' ' || token[i] == '\t')
+            token[i] = '\0';
+        else
+            break;
     }
 }
 
@@ -47,109 +44,97 @@ void packed_to_token(long packed, char token[6])
 
 void newspeak(const char* msg)
 {
-  // Do nothing if we got a null pointer.
-  if (msg == NULL)
-    return;
+    // Do nothing if we got a null pointer.
+    if (msg == NULL)
+        return;
 
-  // Do nothing if we got an empty string.
-  if (strlen(msg) == 0)
-    return;
+    // Do nothing if we got an empty string.
+    if (strlen(msg) == 0)
+        return;
 
-  // Print a newline if the global game.blklin says to.
-  if (game.blklin == true)
-    printf("\n");
+    // Print a newline if the global game.blklin says to.
+    if (game.blklin == true)
+        printf("\n");
 
-  // Create a copy of our string, so we can edit it.
-  char* copy = xstrdup(msg);
+    // Create a copy of our string, so we can edit it.
+    char* copy = xstrdup(msg);
 
-  // Staging area for stringified parameters.
-  char parameters[5][100]; // FIXME: to be replaced with dynamic allocation
- 
-  // Handle format specifiers (including the custom %C, %L, %S) by adjusting the parameter accordingly, and replacing the specifier with %s.
-  int pi = 0; // parameter index
-  for (int i = 0; i < (int)strlen(msg); ++i)
-    {
-      if (msg[i] == '%')
-  	{
-  	  ++pi;
+    // Staging area for stringified parameters.
+    char parameters[5][100]; // FIXME: to be replaced with dynamic allocation
 
-	  // Integer specifier. In order to accommodate the fact that PARMS can have both legitimate integers *and* packed tokens, stringify everything. Future work may eliminate the need for this.
-	  if (msg[i + 1] == 'd')
-	    {
-	      copy[i + 1] = 's';
-	      sprintf(parameters[pi], "%ld", PARMS[pi]);
-	    }
+    // Handle format specifiers (including the custom %C, %L, %S) by adjusting the parameter accordingly, and replacing the specifier with %s.
+    int pi = 0; // parameter index
+    for (int i = 0; i < (int)strlen(msg); ++i) {
+        if (msg[i] == '%') {
+            ++pi;
 
-	  // Unmodified string specifier.
-	  if (msg[i + 1] == 's')
-	    {
-	      packed_to_token(PARMS[pi], parameters[pi]);
-	    }
+            // Integer specifier. In order to accommodate the fact that PARMS can have both legitimate integers *and* packed tokens, stringify everything. Future work may eliminate the need for this.
+            if (msg[i + 1] == 'd') {
+                copy[i + 1] = 's';
+                sprintf(parameters[pi], "%ld", PARMS[pi]);
+            }
 
-	  // Singular/plural specifier.
-	  if (msg[i + 1] == 'S')
-	    {
-	      copy[i + 1] = 's';
-	      if (PARMS[pi - 1] > 1) // look at the *previous* parameter (which by necessity must be numeric)
-		{
-		  sprintf(parameters[pi], "%s", "s");
-		}
-	      else
-		{
-		  sprintf(parameters[pi], "%s", "");
-		}
-	    }
+            // Unmodified string specifier.
+            if (msg[i + 1] == 's') {
+                packed_to_token(PARMS[pi], parameters[pi]);
+            }
 
-	  // All-lowercase specifier.
-	  if (msg[i + 1] == 'L')
-	    {
-	      copy[i + 1] = 's';
-	      packed_to_token(PARMS[pi], parameters[pi]);
-	      for (int j = 0; j < (int)strlen(parameters[pi]); ++j)
-		{
-		  parameters[pi][j] = tolower(parameters[pi][j]);
-		}
-	    }
+            // Singular/plural specifier.
+            if (msg[i + 1] == 'S') {
+                copy[i + 1] = 's';
+                if (PARMS[pi - 1] > 1) { // look at the *previous* parameter (which by necessity must be numeric)
+                    sprintf(parameters[pi], "%s", "s");
+                } else {
+                    sprintf(parameters[pi], "%s", "");
+                }
+            }
 
-	  // First char uppercase, rest lowercase.
-	  if (msg[i + 1] == 'C')
-	    {
-	      copy[i + 1] = 's';
-	      packed_to_token(PARMS[pi], parameters[pi]);
-	      for (int j = 0; j < (int)strlen(parameters[pi]); ++j)
-		{
-		  parameters[pi][j] = tolower(parameters[pi][j]);
-		}
-	      parameters[pi][0] = toupper(parameters[pi][0]);
-	    }
-  	}
+            // All-lowercase specifier.
+            if (msg[i + 1] == 'L') {
+                copy[i + 1] = 's';
+                packed_to_token(PARMS[pi], parameters[pi]);
+                for (int j = 0; j < (int)strlen(parameters[pi]); ++j) {
+                    parameters[pi][j] = tolower(parameters[pi][j]);
+                }
+            }
+
+            // First char uppercase, rest lowercase.
+            if (msg[i + 1] == 'C') {
+                copy[i + 1] = 's';
+                packed_to_token(PARMS[pi], parameters[pi]);
+                for (int j = 0; j < (int)strlen(parameters[pi]); ++j) {
+                    parameters[pi][j] = tolower(parameters[pi][j]);
+                }
+                parameters[pi][0] = toupper(parameters[pi][0]);
+            }
+        }
     }
 
-  // Render the final string.
-  char rendered[2000]; // FIXME: to be replaced with dynamic allocation
-  sprintf(rendered, copy, parameters[1], parameters[2], parameters[3], parameters[4]); // FIXME: to be replaced with vsprintf()
+    // Render the final string.
+    char rendered[2000]; // FIXME: to be replaced with dynamic allocation
+    sprintf(rendered, copy, parameters[1], parameters[2], parameters[3], parameters[4]); // FIXME: to be replaced with vsprintf()
 
-  // Print the message.
-  printf("%s\n", rendered);
+    // Print the message.
+    printf("%s\n", rendered);
 
-  free(copy);
+    free(copy);
 }
 
-void PSPEAK(vocab_t msg,int skip)
+void PSPEAK(vocab_t msg, int skip)
 /*  Find the skip+1st message from msg and print it.  msg should be
  *  the index of the inventory message for object.  (INVEN+N+1 message
  *  is game.prop=N message). */
 {
-  if (skip >= 0)
-    newspeak(object_descriptions[msg].longs[skip]);
-  else
-    newspeak(object_descriptions[msg].inventory);
+    if (skip >= 0)
+        newspeak(object_descriptions[msg].longs[skip]);
+    else
+        newspeak(object_descriptions[msg].inventory);
 }
 
 void RSPEAK(vocab_t i)
 /* Print the i-th "random" message (section 6 of database). */
 {
-  newspeak(arbitrary_messages[i]);
+    newspeak(arbitrary_messages[i]);
 }
 
 void SETPRM(long first, long p1, long p2)
@@ -157,16 +142,16 @@ void SETPRM(long first, long p1, long p2)
  *  are stored into PARMS(first) and PARMS(first+1). */
 {
     if (first >= MAXPARMS)
-	BUG(29);
+        BUG(29);
     else {
-	PARMS[first] = p1;
-	PARMS[first+1] = p2;
+        PARMS[first] = p1;
+        PARMS[first + 1] = p2;
     }
 }
 
 bool GETIN(FILE *input,
-	    long *pword1, long *pword1x, 
-	    long *pword2, long *pword2x) 
+           long *pword1, long *pword1x,
+           long *pword2, long *pword2x)
 /*  Get a command from the adventurer.  Snarf out the first word, pad it with
  *  blanks, and return it in WORD1.  Chars 6 thru 10 are returned in WORD1X, in
  *  case we need to print out the whole word in an error message.  Any number of
@@ -176,27 +161,27 @@ bool GETIN(FILE *input,
     long junk;
 
     for (;;) {
-	if (game.blklin)
-	    TYPE0();
-	if (!MAPLIN(input))
-	    return false;
-	*pword1=GETTXT(true,true,true);
-	if (game.blklin && *pword1 < 0)
-	    continue;
-	*pword1x=GETTXT(false,true,true);
-	do {	
-	    junk=GETTXT(false,true,true);
-	} while 
-	    (junk > 0);
-	*pword2=GETTXT(true,true,true);
-	*pword2x=GETTXT(false,true,true);
-	do {
-	    junk=GETTXT(false,true,true);
-	} while 
-	    (junk > 0);
-	if (GETTXT(true,true,true) <= 0)
-	    return true;
-	RSPEAK(TWO_WORDS);
+        if (game.blklin)
+            TYPE0();
+        if (!MAPLIN(input))
+            return false;
+        *pword1 = GETTXT(true, true, true);
+        if (game.blklin && *pword1 < 0)
+            continue;
+        *pword1x = GETTXT(false, true, true);
+        do {
+            junk = GETTXT(false, true, true);
+        } while
+        (junk > 0);
+        *pword2 = GETTXT(true, true, true);
+        *pword2x = GETTXT(false, true, true);
+        do {
+            junk = GETTXT(false, true, true);
+        } while
+        (junk > 0);
+        if (GETTXT(true, true, true) <= 0)
+            return true;
+        RSPEAK(TWO_WORDS);
     }
 }
 
@@ -207,17 +192,17 @@ long YES(FILE *input, vocab_t x, vocab_t y, vocab_t z)
     token_t reply, junk1, junk2, junk3;
 
     for (;;) {
-	RSPEAK(x);
-	GETIN(input, &reply, &junk1, &junk2, &junk3);
-	if (reply == MAKEWD(250519) || reply == MAKEWD(25)) {
-	    RSPEAK(y);
-	    return true;
-	}
-	if (reply == MAKEWD(1415) || reply == MAKEWD(14)) {
-	    RSPEAK(z);
-	    return false;
-	}
-	RSPEAK(PLEASE_ANSWER);
+        RSPEAK(x);
+        GETIN(input, &reply, &junk1, &junk2, &junk3);
+        if (reply == MAKEWD(250519) || reply == MAKEWD(25)) {
+            RSPEAK(y);
+            return true;
+        }
+        if (reply == MAKEWD(1415) || reply == MAKEWD(14)) {
+            RSPEAK(z);
+            return false;
+        }
+        RSPEAK(PLEASE_ANSWER);
     }
 }
 
@@ -234,39 +219,39 @@ long GETTXT(bool skip, bool onewrd, bool upper)
     static long splitting = -1;
 
     if (LNPOSN != splitting)
-	splitting = -1;
-    text= -1;
+        splitting = -1;
+    text = -1;
     while (true) {
-	if (LNPOSN > LNLENG)
-	    return(text);
-	if ((!skip) || INLINE[LNPOSN] != 0)
-	    break;
-	++LNPOSN;
+        if (LNPOSN > LNLENG)
+            return (text);
+        if ((!skip) || INLINE[LNPOSN] != 0)
+            break;
+        ++LNPOSN;
     }
 
-    text=0;
-    for (int I=1; I<=TOKLEN; I++) {
-	text=text*64;
-	if (LNPOSN > LNLENG || (onewrd && INLINE[LNPOSN] == 0))
-	    continue;
-	char current=INLINE[LNPOSN];
-	if (current < ascii_to_advent['%']) {
-	    splitting = -1;
-	    if (upper && current >= ascii_to_advent['a'])
-		current=current-26;
-	    text=text+current;
-	    ++LNPOSN;
-	    continue;
-	}
-	if (splitting != LNPOSN) {
-	    text=text+ascii_to_advent['%'];
-	    splitting = LNPOSN;
-	    continue;
-	}
+    text = 0;
+    for (int I = 1; I <= TOKLEN; I++) {
+        text = text * 64;
+        if (LNPOSN > LNLENG || (onewrd && INLINE[LNPOSN] == 0))
+            continue;
+        char current = INLINE[LNPOSN];
+        if (current < ascii_to_advent['%']) {
+            splitting = -1;
+            if (upper && current >= ascii_to_advent['a'])
+                current = current - 26;
+            text = text + current;
+            ++LNPOSN;
+            continue;
+        }
+        if (splitting != LNPOSN) {
+            text = text + ascii_to_advent['%'];
+            splitting = LNPOSN;
+            continue;
+        }
 
-	text=text+current-ascii_to_advent['%'];
-	splitting = -1;
-	++LNPOSN;
+        text = text + current - ascii_to_advent['%'];
+        splitting = -1;
+        ++LNPOSN;
     }
 
     return text;
@@ -283,13 +268,13 @@ token_t MAKEWD(long letters)
 {
     long i = 1, word = 0;
 
-    for (long k=letters; k != 0; k=k/100) {
-	word=word+i*(MOD(k,50)+10);
-	i=i*64;
-	if (MOD(k,100) > 50)word=word+i*5;
+    for (long k = letters; k != 0; k = k / 100) {
+        word = word + i * (MOD(k, 50) + 10);
+        i = i * 64;
+        if (MOD(k, 100) > 50)word = word + i * 5;
     }
-    i=64L*64L*64L*64L*64L/i;
-    word=word*i;
+    i = 64L * 64L * 64L * 64L * 64L / i;
+    word = word * i;
     return word;
 }
 
@@ -299,16 +284,16 @@ void TYPE0(void)
 {
     long temp;
 
-    temp=LNLENG;
-    LNLENG=0;
+    temp = LNLENG;
+    LNLENG = 0;
     TYPE();
-    LNLENG=temp;
+    LNLENG = temp;
     return;
 }
 
 /*  Data structure  routines */
 
-long VOCAB(long id, long init) 
+long VOCAB(long id, long init)
 /*  Look up ID in the vocabulary (ATAB) and return its "definition" (KTAB), or
  *  -1 if not found.  If INIT is positive, this is an initialisation call setting
  *  up a keyword variable, and not finding it constitutes a bug.  It also means
@@ -318,21 +303,21 @@ long VOCAB(long id, long init)
 {
     long lexeme;
 
-    for (long i=1; i<=TABSIZ; i++) {
-	if (KTAB[i] == -1) {
-	    lexeme= -1;
-	    if (init < 0)
-		return(lexeme);
-	    BUG(5);
-	}
-	if (init >= 0 && KTAB[i]/1000 != init)
-	    continue;
-	if (ATAB[i] == id) {
-	    lexeme=KTAB[i];
-	    if (init >= 0)
-		lexeme=MOD(lexeme,1000);
-	    return(lexeme);
-	}
+    for (long i = 1; i <= TABSIZ; i++) {
+        if (KTAB[i] == -1) {
+            lexeme = -1;
+            if (init < 0)
+                return (lexeme);
+            BUG(5);
+        }
+        if (init >= 0 && KTAB[i] / 1000 != init)
+            continue;
+        if (ATAB[i] == id) {
+            lexeme = KTAB[i];
+            if (init >= 0)
+                lexeme = MOD(lexeme, 1000);
+            return (lexeme);
+        }
     }
     BUG(21);
 }
@@ -343,10 +328,10 @@ void JUGGLE(long object)
 {
     long i, j;
 
-    i=game.place[object];
-    j=game.fixed[object];
-    MOVE(object,i);
-    MOVE(object+NOBJECTS,j);
+    i = game.place[object];
+    j = game.fixed[object];
+    MOVE(object, i);
+    MOVE(object + NOBJECTS, j);
 }
 
 void MOVE(long object, long where)
@@ -357,24 +342,24 @@ void MOVE(long object, long where)
 {
     long from;
 
-    if (object > NOBJECTS) 
-	from=game.fixed[object-NOBJECTS];
+    if (object > NOBJECTS)
+        from = game.fixed[object - NOBJECTS];
     else
-	from=game.place[object];
+        from = game.place[object];
     if (from != NOWHERE && from != CARRIED && !SPECIAL(from))
-	CARRY(object,from);
-    DROP(object,where);
+        CARRY(object, from);
+    DROP(object, where);
 }
 
 long PUT(long object, long where, long pval)
 /*  PUT is the same as MOVE, except it returns a value used to set up the
  *  negated game.prop values for the repository objects. */
 {
-    MOVE(object,where);
-    return (-1)-pval;;
+    MOVE(object, where);
+    return (-1) - pval;;
 }
 
-void CARRY(long object, long where) 
+void CARRY(long object, long where)
 /*  Start toting an object, removing it from the list of things at its former
  *  location.  Incr holdng unless it was already being toted.  If object>NOBJECTS
  *  (moving "fixed" second loc), don't change game.place or game.holdng. */
@@ -382,20 +367,20 @@ void CARRY(long object, long where)
     long temp;
 
     if (object <= NOBJECTS) {
-	if (game.place[object] == CARRIED)
-	    return;
-	game.place[object] = CARRIED;
-	++game.holdng;
+        if (game.place[object] == CARRIED)
+            return;
+        game.place[object] = CARRIED;
+        ++game.holdng;
     }
     if (game.atloc[where] == object) {
-	game.atloc[where]=game.link[object];
-	return;
+        game.atloc[where] = game.link[object];
+        return;
     }
-    temp=game.atloc[where];
+    temp = game.atloc[where];
     while (game.link[temp] != object) {
-	temp=game.link[temp];
+        temp = game.link[temp];
     }
-    game.link[temp]=game.link[object];
+    game.link[temp] = game.link[object];
 }
 
 void DROP(long object, long where)
@@ -403,15 +388,14 @@ void DROP(long object, long where)
  *  game.holdng if the object was being toted. */
 {
     if (object > NOBJECTS)
-	game.fixed[object-NOBJECTS] = where;
-    else
-    {
-	if (game.place[object] == CARRIED)
-	    --game.holdng;
-	game.place[object] = where;
+        game.fixed[object - NOBJECTS] = where;
+    else {
+        if (game.place[object] == CARRIED)
+            --game.holdng;
+        game.place[object] = where;
     }
     if (where <= 0)
-	return;
+        return;
     game.link[object] = game.atloc[where];
     game.atloc[where] = object;
 }
@@ -423,17 +407,17 @@ long ATDWRF(long where)
 {
     long at;
 
-    at =0;
+    at = 0;
     if (game.dflag < 2)
-	return(at);
+        return (at);
     at = -1;
-    for (long i=1; i<=NDWARVES-1; i++) {
-	if (game.dloc[i] == where)
-	    return i;
-	if (game.dloc[i] != 0)
-	    at=0;
+    for (long i = 1; i <= NDWARVES - 1; i++) {
+        if (game.dloc[i] == where)
+            return i;
+        if (game.dloc[i] != 0)
+            at = 0;
     }
-    return(at);
+    return (at);
 }
 
 /*  Utility routines (SETBIT, TSTBIT, set_seed, get_next_lcg_value,
@@ -442,7 +426,7 @@ long ATDWRF(long where)
 long SETBIT(long bit)
 /*  Returns 2**bit for use in constructing bit-masks. */
 {
-    return(1 << bit);
+    return (1 << bit);
 }
 
 bool TSTBIT(long mask, int bit)
@@ -480,21 +464,20 @@ long RNDVOC(long second, long force)
     long rnd = force;
 
     if (rnd == 0) {
-	for (int i = 1; i <= 5; i++) {
-	    long j = 11 + randrange(26);
-	    if (i == 2)
-		j = second;
-	    rnd = rnd * 64 + j;
-	}
+        for (int i = 1; i <= 5; i++) {
+            long j = 11 + randrange(26);
+            if (i == 2)
+                j = second;
+            rnd = rnd * 64 + j;
+        }
     }
 
     long div = 64L * 64L * 64L;
     for (int i = 1; i <= TABSIZ; i++) {
-	if (MOD(ATAB[i]/div, 64L) == second)
-	{
-	    ATAB[i] = rnd;
-	    break;
-	}
+        if (MOD(ATAB[i] / div, 64L) == second) {
+            ATAB[i] = rnd;
+            break;
+        }
     }
 
     return rnd;
@@ -538,7 +521,7 @@ bool MAPLIN(FILE *fp)
     bool eof;
 
     /* Read a line of input, from the specified input source.
-     * This logic is complicated partly because it has to serve 
+     * This logic is complicated partly because it has to serve
      * several cases with different requirements and partly because
      * of a quirk in linenoise().
      *
@@ -551,80 +534,79 @@ bool MAPLIN(FILE *fp)
      * fed redirected stdin.
      *
      * The logging is a bit of a mess because there are two distinct cases
-     * in which you want to echo commands.  One is when shipping them to 
+     * in which you want to echo commands.  One is when shipping them to
      * a log under the -l option, in which case you want to suppress
      * prompt generation (so test logs are unadorned command sequences).
-     * On the other hand, if you redirected stdin and are feeding the program 
+     * On the other hand, if you redirected stdin and are feeding the program
      * a logfile, you *do* want prompt generation - it makes checkfiles
      * easier to read when the commands are marked by a preceding prompt.
      */
     do {
-	if (!editline) {
-	    if (prompt)
-		fputs("> ", stdout);
-	    IGNORE(fgets(rawbuf,sizeof(rawbuf)-1,fp));
-	    eof = (feof(fp));
-	} else {
-	    char *cp = linenoise("> ");
-	    eof = (cp == NULL);
-	    if (!eof) {
-		strncpy(rawbuf, cp, sizeof(rawbuf)-1);
-		linenoiseHistoryAdd(rawbuf);
-		strncat(rawbuf, "\n", sizeof(rawbuf) - strlen(rawbuf) - 1);
-		linenoiseFree(cp);
-	    }
-	}
+        if (!editline) {
+            if (prompt)
+                fputs("> ", stdout);
+            IGNORE(fgets(rawbuf, sizeof(rawbuf) - 1, fp));
+            eof = (feof(fp));
+        } else {
+            char *cp = linenoise("> ");
+            eof = (cp == NULL);
+            if (!eof) {
+                strncpy(rawbuf, cp, sizeof(rawbuf) - 1);
+                linenoiseHistoryAdd(rawbuf);
+                strncat(rawbuf, "\n", sizeof(rawbuf) - strlen(rawbuf) - 1);
+                linenoiseFree(cp);
+            }
+        }
     } while
-	    (!eof && rawbuf[0] == '#');
+    (!eof && rawbuf[0] == '#');
     if (eof) {
-	if (logfp && fp == stdin)
-	    fclose(logfp);
-	return false;
+        if (logfp && fp == stdin)
+            fclose(logfp);
+        return false;
     } else {
-	FILE *efp = NULL;
-	if (logfp && fp == stdin)
-	    efp = logfp;
-	else if (!isatty(0))
-	    efp = stdout;
-	if (efp != NULL)
-	{
-	    if (prompt && efp == stdout)
-		fputs("> ", efp);
-	    IGNORE(fputs(rawbuf, efp));
-	}
-	strcpy(INLINE+1, rawbuf);
-    /*  translate the chars to integers in the range 0-126 and store
-     *  them in the common array "INLINE".  Integer values are as follows:
-     *     0   = space [ASCII CODE 40 octal, 32 decimal]
-     *    1-2  = !" [ASCII 41-42 octal, 33-34 decimal]
-     *    3-10 = '()*+,-. [ASCII 47-56 octal, 39-46 decimal]
-     *   11-36 = upper-case letters
-     *   37-62 = lower-case letters
-     *    63   = percent (%) [ASCII 45 octal, 37 decimal]
-     *   64-73 = digits, 0 through 9
-     *  Remaining characters can be translated any way that is convenient;
-     *  The "TYPE" routine below is used to map them back to characters when
-     *  necessary.  The above mappings are required so that certain special
-     *  characters are known to fit in 6 bits and/or can be easily spotted.
-     *  Array elements beyond the end of the line should be filled with 0,
-     *  and LNLENG should be set to the index of the last character.
-     *
-     *  If the data file uses a character other than space (e.g., tab) to
-     *  separate numbers, that character should also translate to 0.
-     *
-     *  This procedure may use the map1,map2 arrays to maintain static data for
-     *  the mapping.  MAP2(1) is set to 0 when the program starts
-     *  and is not changed thereafter unless the routines on this page choose
-     *  to do so. */
-	LNLENG=0;
-	for (long i=1; i<=(long)sizeof(INLINE) && INLINE[i]!=0; i++) {
-	    long val=INLINE[i];
-	    INLINE[i]=ascii_to_advent[val];
-	    if (INLINE[i] != 0)
-		LNLENG=i;
-	}
-	LNPOSN=1;
-	return true;
+        FILE *efp = NULL;
+        if (logfp && fp == stdin)
+            efp = logfp;
+        else if (!isatty(0))
+            efp = stdout;
+        if (efp != NULL) {
+            if (prompt && efp == stdout)
+                fputs("> ", efp);
+            IGNORE(fputs(rawbuf, efp));
+        }
+        strcpy(INLINE + 1, rawbuf);
+        /*  translate the chars to integers in the range 0-126 and store
+         *  them in the common array "INLINE".  Integer values are as follows:
+         *     0   = space [ASCII CODE 40 octal, 32 decimal]
+         *    1-2  = !" [ASCII 41-42 octal, 33-34 decimal]
+         *    3-10 = '()*+,-. [ASCII 47-56 octal, 39-46 decimal]
+         *   11-36 = upper-case letters
+         *   37-62 = lower-case letters
+         *    63   = percent (%) [ASCII 45 octal, 37 decimal]
+         *   64-73 = digits, 0 through 9
+         *  Remaining characters can be translated any way that is convenient;
+         *  The "TYPE" routine below is used to map them back to characters when
+         *  necessary.  The above mappings are required so that certain special
+         *  characters are known to fit in 6 bits and/or can be easily spotted.
+         *  Array elements beyond the end of the line should be filled with 0,
+         *  and LNLENG should be set to the index of the last character.
+         *
+         *  If the data file uses a character other than space (e.g., tab) to
+         *  separate numbers, that character should also translate to 0.
+         *
+         *  This procedure may use the map1,map2 arrays to maintain static data for
+         *  the mapping.  MAP2(1) is set to 0 when the program starts
+         *  and is not changed thereafter unless the routines on this page choose
+         *  to do so. */
+        LNLENG = 0;
+        for (long i = 1; i <= (long)sizeof(INLINE) && INLINE[i] != 0; i++) {
+            long val = INLINE[i];
+            INLINE[i] = ascii_to_advent[val];
+            if (INLINE[i] != 0)
+                LNLENG = i;
+        }
+        LNPOSN = 1;
+        return true;
     }
 }
 
@@ -636,15 +618,15 @@ void TYPE(void)
     long i;
 
     if (LNLENG == 0) {
-	printf("\n");
-	return;
+        printf("\n");
+        return;
     }
 
-    for (i=1; i<=LNLENG; i++) {
-      INLINE[i]=advent_to_ascii[(int) INLINE[i]];
+    for (i = 1; i <= LNLENG; i++) {
+        INLINE[i] = advent_to_ascii[(int) INLINE[i]];
     }
-    INLINE[LNLENG+1]=0;
-    printf("%s\n", INLINE+1);
+    INLINE[LNLENG + 1] = 0;
+    printf("%s\n", INLINE + 1);
     return;
 }
 

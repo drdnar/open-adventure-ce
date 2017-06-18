@@ -30,7 +30,7 @@
  *	1000 non-synonymous vocabulary words
  *	300 locations
  *	100 objects
- *  Note: 
+ *  Note:
  *   - the object count limit has been abstracted as NOBJECTS
  *   - the random message limit has been abstracted as RTXSIZ
  *   - maximum locations limit has been abstracted as LOCSIZ
@@ -173,21 +173,21 @@
 void initialise(void)
 {
     if (oldstyle)
-	printf("Initialising...\n");
+        printf("Initialising...\n");
 
-    for (int i=1; i<=NOBJECTS; i++) {
-	game.place[i] = NOWHERE;
-	game.prop[i] = 0;
-	game.link[i+NOBJECTS]=game.link[i]=0;
+    for (int i = 1; i <= NOBJECTS; i++) {
+        game.place[i] = NOWHERE;
+        game.prop[i] = 0;
+        game.link[i + NOBJECTS] = game.link[i] = 0;
     }
 
-    for (int i=1; i<=LOCSIZ; i++) {
-	game.abbrev[i]=0;
-	if (!(locations[i].description.big == 0 || KEY[i] == 0)) {
-	    int k=KEY[i];
-	    if(MOD(labs(TRAVEL[k]),1000) == 1)COND[i]=2;
-	}
-	game.atloc[i]=0;
+    for (int i = 1; i <= LOCSIZ; i++) {
+        game.abbrev[i] = 0;
+        if (!(locations[i].description.big == 0 || KEY[i] == 0)) {
+            int k = KEY[i];
+            if (MOD(labs(TRAVEL[k]), 1000) == 1)COND[i] = 2;
+        }
+        game.atloc[i] = 0;
     }
 
     /*  Set up the game.atloc and game.link arrays as described above.
@@ -197,115 +197,115 @@ void initialise(void)
      *  This also sets up "game.place" and "fixed" as copies of "PLAC" and
      *  "FIXD".  Also, since two-placed objects are typically best
      *  described last, we'll drop them first. */
-    for (int i=1; i<=NOBJECTS; i++) {
-	int k=NOBJECTS + 1 - i;
-	if(FIXD[k] > 0) {
-	    DROP(k+NOBJECTS,FIXD[k]);
-	    DROP(k,PLAC[k]);
-	}
+    for (int i = 1; i <= NOBJECTS; i++) {
+        int k = NOBJECTS + 1 - i;
+        if (FIXD[k] > 0) {
+            DROP(k + NOBJECTS, FIXD[k]);
+            DROP(k, PLAC[k]);
+        }
     }
 
-    for (int i=1; i<=NOBJECTS; i++) {
-	int k=NOBJECTS + 1 - i;
-	game.fixed[k]=FIXD[k];
-	if(PLAC[k] != 0 && FIXD[k] <= 0)
-	    DROP(k,PLAC[k]);
+    for (int i = 1; i <= NOBJECTS; i++) {
+        int k = NOBJECTS + 1 - i;
+        game.fixed[k] = FIXD[k];
+        if (PLAC[k] != 0 && FIXD[k] <= 0)
+            DROP(k, PLAC[k]);
     }
 
     /*  Treasures, as noted earlier, are objects MINTRS through MAXTRS
      *  Their props are initially -1, and are set to 0 the first time
      *  they are described.  game.tally keeps track of how many are
      *  not yet found, so we know when to close the cave. */
-    game.tally=0;
-    for (int treasure=MINTRS; treasure<=MAXTRS; treasure++) {
-	if(object_descriptions[treasure].inventory != 0)
-	    game.prop[treasure]= -1;
-	game.tally=game.tally-game.prop[treasure];
+    game.tally = 0;
+    for (int treasure = MINTRS; treasure <= MAXTRS; treasure++) {
+        if (object_descriptions[treasure].inventory != 0)
+            game.prop[treasure] = -1;
+        game.tally = game.tally - game.prop[treasure];
     }
 
     /*  Clear the hint stuff.  game.hintlc[i] is how long he's been at LOC
      *  with cond bit i.  game.hinted[i] is true iff hint i has been
      *  used. */
-    for (int i=1; i<=HNTMAX; i++) {
-	game.hinted[i]=false;
-	game.hintlc[i]=0;
+    for (int i = 1; i <= HNTMAX; i++) {
+        game.hinted[i] = false;
+        game.hintlc[i] = 0;
     }
 
     /* Define some handy mnemonics.  These correspond to object numbers. */
-    AXE=VOCWRD(12405,1);
-    BATTER=VOCWRD(201202005,1);
-    BEAR=VOCWRD(2050118,1);
-    BIRD=VOCWRD(2091804,1);
-    BLOOD=VOCWRD(212151504,1);
-    BOTTLE=VOCWRD(215202012,1);
-    CAGE=VOCWRD(3010705,1);
-    CAVITY=VOCWRD(301220920,1);
-    CHASM=VOCWRD(308011913,1);
-    CLAM=VOCWRD(3120113,1);
-    DOOR=VOCWRD(4151518,1);
-    DRAGON=VOCWRD(418010715,1);
-    DWARF=VOCWRD(423011806,1);
-    FISSUR=VOCWRD(609191921,1);
-    FOOD=VOCWRD(6151504,1);
-    GRATE=VOCWRD(718012005,1);
-    KEYS=VOCWRD(11052519,1);
-    KNIFE=VOCWRD(1114090605,1);
-    LAMP=VOCWRD(12011316,1);
-    MAGZIN=VOCWRD(1301070126,1);
-    MESSAG=VOCWRD(1305191901,1);
-    MIRROR=VOCWRD(1309181815,1);
-    OGRE=VOCWRD(15071805,1);
-    OIL=VOCWRD(150912,1);
-    OYSTER=VOCWRD(1525192005,1);
-    PILLOW=VOCWRD(1609121215,1);
-    PLANT=VOCWRD(1612011420,1);
-    PLANT2=PLANT+1;
-    RESER=VOCWRD(1805190518,1);
-    ROD=VOCWRD(181504,1);
-    ROD2=ROD+1;
-    SIGN=VOCWRD(19090714,1);
-    SNAKE=VOCWRD(1914011105,1);
-    STEPS=VOCWRD(1920051619,1);
-    TROLL=VOCWRD(2018151212,1);
-    TROLL2=TROLL+1;
-    URN=VOCWRD(211814,1);
-    VEND=VOCWRD(1755140409,1);
-    VOLCAN=VOCWRD(1765120301,1);
-    WATER=VOCWRD(1851200518,1);
+    AXE = VOCWRD(12405, 1);
+    BATTER = VOCWRD(201202005, 1);
+    BEAR = VOCWRD(2050118, 1);
+    BIRD = VOCWRD(2091804, 1);
+    BLOOD = VOCWRD(212151504, 1);
+    BOTTLE = VOCWRD(215202012, 1);
+    CAGE = VOCWRD(3010705, 1);
+    CAVITY = VOCWRD(301220920, 1);
+    CHASM = VOCWRD(308011913, 1);
+    CLAM = VOCWRD(3120113, 1);
+    DOOR = VOCWRD(4151518, 1);
+    DRAGON = VOCWRD(418010715, 1);
+    DWARF = VOCWRD(423011806, 1);
+    FISSUR = VOCWRD(609191921, 1);
+    FOOD = VOCWRD(6151504, 1);
+    GRATE = VOCWRD(718012005, 1);
+    KEYS = VOCWRD(11052519, 1);
+    KNIFE = VOCWRD(1114090605, 1);
+    LAMP = VOCWRD(12011316, 1);
+    MAGZIN = VOCWRD(1301070126, 1);
+    MESSAG = VOCWRD(1305191901, 1);
+    MIRROR = VOCWRD(1309181815, 1);
+    OGRE = VOCWRD(15071805, 1);
+    OIL = VOCWRD(150912, 1);
+    OYSTER = VOCWRD(1525192005, 1);
+    PILLOW = VOCWRD(1609121215, 1);
+    PLANT = VOCWRD(1612011420, 1);
+    PLANT2 = PLANT + 1;
+    RESER = VOCWRD(1805190518, 1);
+    ROD = VOCWRD(181504, 1);
+    ROD2 = ROD + 1;
+    SIGN = VOCWRD(19090714, 1);
+    SNAKE = VOCWRD(1914011105, 1);
+    STEPS = VOCWRD(1920051619, 1);
+    TROLL = VOCWRD(2018151212, 1);
+    TROLL2 = TROLL + 1;
+    URN = VOCWRD(211814, 1);
+    VEND = VOCWRD(1755140409, 1);
+    VOLCAN = VOCWRD(1765120301, 1);
+    WATER = VOCWRD(1851200518, 1);
 
     /* Objects from MINTRS through MAXTRS are treasures.  Here are a few. */
-    AMBER=VOCWRD(113020518,1);
-    CHAIN=VOCWRD(308010914,1);
-    CHEST=VOCWRD(308051920,1);
-    COINS=VOCWRD(315091419,1);
-    EGGS=VOCWRD(5070719,1);
-    EMRALD=VOCWRD(513051801,1);
-    JADE=VOCWRD(10010405,1);
-    NUGGET=VOCWRD(7151204,1);
-    PEARL=VOCWRD(1605011812,1);
-    PYRAM=VOCWRD(1625180113,1);
-    RUBY=VOCWRD(18210225,1);
-    RUG=VOCWRD(182107,1);
-    SAPPH=VOCWRD(1901161608,1);
-    TRIDNT=VOCWRD(2018090405,1);
-    VASE=VOCWRD(22011905,1);
+    AMBER = VOCWRD(113020518, 1);
+    CHAIN = VOCWRD(308010914, 1);
+    CHEST = VOCWRD(308051920, 1);
+    COINS = VOCWRD(315091419, 1);
+    EGGS = VOCWRD(5070719, 1);
+    EMRALD = VOCWRD(513051801, 1);
+    JADE = VOCWRD(10010405, 1);
+    NUGGET = VOCWRD(7151204, 1);
+    PEARL = VOCWRD(1605011812, 1);
+    PYRAM = VOCWRD(1625180113, 1);
+    RUBY = VOCWRD(18210225, 1);
+    RUG = VOCWRD(182107, 1);
+    SAPPH = VOCWRD(1901161608, 1);
+    TRIDNT = VOCWRD(2018090405, 1);
+    VASE = VOCWRD(22011905, 1);
 
     /* These are motion-verb numbers. */
-    BACK=VOCWRD(2010311,0);
-    CAVE=VOCWRD(3012205,0);
-    DPRSSN=VOCWRD(405161805,0);
-    ENTER=VOCWRD(514200518,0);
-    ENTRNC=VOCWRD(514201801,0);
-    LOOK=VOCWRD(12151511,0);
-    NUL=VOCWRD(14211212,0);
-    STREAM=VOCWRD(1920180501,0);
+    BACK = VOCWRD(2010311, 0);
+    CAVE = VOCWRD(3012205, 0);
+    DPRSSN = VOCWRD(405161805, 0);
+    ENTER = VOCWRD(514200518, 0);
+    ENTRNC = VOCWRD(514201801, 0);
+    LOOK = VOCWRD(12151511, 0);
+    NUL = VOCWRD(14211212, 0);
+    STREAM = VOCWRD(1920180501, 0);
 
     /* And some action verbs. */
-    FIND=VOCWRD(6091404,2);
-    INVENT=VOCWRD(914220514,2);
-    LOCK=VOCWRD(12150311,2);
-    SAY=VOCWRD(190125,2);
-    THROW=VOCWRD(2008181523,2);
+    FIND = VOCWRD(6091404, 2);
+    INVENT = VOCWRD(914220514, 2);
+    LOCK = VOCWRD(12150311, 2);
+    SAY = VOCWRD(190125, 2);
+    THROW = VOCWRD(2008181523, 2);
 
     /*  Initialise the dwarves.  game.dloc is loc of dwarves,
      *  hard-wired in.  game.odloc is prior loc of each dwarf,
@@ -325,16 +325,16 @@ void initialise(void)
      *  loc stored in game.chloc2. */
     game.chloc = LOC_DEADEND12;
     game.chloc2 = LOC_DEADEND13;
-    for (int i=1; i<=NDWARVES; i++) {
-	game.dseen[i]=false;
+    for (int i = 1; i <= NDWARVES; i++) {
+        game.dseen[i] = false;
     }
-    game.dflag=0;
+    game.dflag = 0;
     game.dloc[1] = LOC_KINGHALL;
     game.dloc[2] = LOC_WESTBANK;
     game.dloc[3] = LOC_Y2;
     game.dloc[4] = LOC_ALIKE3;
     game.dloc[5] = LOC_COMPLEX;
-    game.dloc[6]=game.chloc;
+    game.dloc[6] = game.chloc;
 
     /*  Other random flags and counters, as follows:
      *	game.abbnum	How often we should print non-abbreviated descriptions
@@ -357,30 +357,30 @@ void initialise(void)
      *	game.trnluz	# points lost so far due to number of turns used
      *	game.turns	Tallies how many commands he's given (ignores yes/no)
      *	Logicals were explained earlier */
-    game.turns=0;
-    game.trndex=1;
-    game.thresh= -1;
+    game.turns = 0;
+    game.trndex = 1;
+    game.thresh = -1;
     if (TRNVLS > 0)
-	game.thresh=MOD(TRNVAL[1],100000)+1;
-    game.trnluz=0;
-    game.lmwarn=false;
-    game.iwest=0;
-    game.knfloc=0;
-    game.detail=0;
-    game.abbnum=5;
-    game.numdie=0;
-    game.holdng=0;
-    game.dkill=0;
-    game.foobar=0;
-    game.bonus=0;
-    game.clock1=30;
-    game.clock2=50;
-    game.conds=SETBIT(11);
-    game.saved=0;
-    game.closng=false;
-    game.panic=false;
-    game.closed=false;
-    game.clshnt=false;
-    game.novice=false;
-    game.blklin=true;
+        game.thresh = MOD(TRNVAL[1], 100000) + 1;
+    game.trnluz = 0;
+    game.lmwarn = false;
+    game.iwest = 0;
+    game.knfloc = 0;
+    game.detail = 0;
+    game.abbnum = 5;
+    game.numdie = 0;
+    game.holdng = 0;
+    game.dkill = 0;
+    game.foobar = 0;
+    game.bonus = 0;
+    game.clock1 = 30;
+    game.clock2 = 50;
+    game.conds = SETBIT(11);
+    game.saved = 0;
+    game.closng = false;
+    game.panic = false;
+    game.closed = false;
+    game.clshnt = false;
+    game.novice = false;
+    game.blklin = true;
 }
