@@ -271,10 +271,12 @@ bool YES(vocab_t question, vocab_t yes_response, vocab_t no_response)
 	for (int i = 0; i < strlen(firstword); ++i)
 	    firstword[i] = tolower(firstword[i]);
 	
-	int yes = strncmp("yes", reply, sizeof("yes") - 1);
-	int y = strncmp("y", reply, sizeof("y") - 1);
-	int no = strncmp("no", reply, sizeof("no") - 1);
-	int n = strncmp("n", reply, sizeof("n") - 1);
+	int yes = strncmp("yes", firstword, sizeof("yes") - 1);
+	int y = strncmp("y", firstword, sizeof("y") - 1);
+	int no = strncmp("no", firstword, sizeof("no") - 1);
+	int n = strncmp("n", firstword, sizeof("n") - 1);
+
+	free(firstword);
 	
 	if (yes == 0 || y == 0) {
 	    RSPEAK(yes_response);
