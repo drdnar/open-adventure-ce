@@ -115,7 +115,7 @@ indent:
 release: advent-$(VERS).tar.gz advent.html history.html hints.html notes.html
 	shipper version=$(VERS) | sh -e -x
 
-refresh: advent.html
+refresh: advent.html notes.html history.html
 	shipper -N -w version=$(VERS) | sh -e -x
 
 dist: advent-$(VERS).tar.gz
