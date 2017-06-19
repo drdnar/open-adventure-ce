@@ -623,89 +623,99 @@ static bool playermove(token_t verb, int motion)
          * block travel and then redo it once the blocking condition has been
          * removed.
          */
-        for (;;) {
-            game.newloc = scratchloc / 1000;
-            motion = MOD(game.newloc, 100);
-            if (!SPECIAL(game.newloc)) {
-                if (game.newloc <= 100) {
-                    if (game.newloc == 0 || PCT(game.newloc))
+        for (;;) { /* L12 loop */
+            for (;;) {
+                game.newloc = scratchloc / 1000;
+                motion = MOD(game.newloc, 100);
+                if (!SPECIAL(game.newloc)) {
+                    if (game.newloc <= 100) {
+                        if (game.newloc == 0 || PCT(game.newloc))
+                            break;
+                        /* else fall through */
+                    }
+                    if (TOTING(motion) || (game.newloc > 200 && AT(motion)))
                         break;
                     /* else fall through */
-                }
-                if (TOTING(motion) || (game.newloc > 200 && AT(motion)))
+                } else if (game.prop[motion] != game.newloc / 100 - 3)
                     break;
-                /* else fall through */
-            } else if (game.prop[motion] != game.newloc / 100 - 3)
-                break;
-L12:
-            do {
-                if (TRAVEL[kk] < 0)
-                    BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION);
-                ++kk;
-                game.newloc = labs(TRAVEL[kk]) / 1000;
-            } while
-            (game.newloc == scratchloc);
-            scratchloc = game.newloc;
-        }
-
-        game.newloc = MOD(scratchloc, 1000);
-        if (!SPECIAL(game.newloc))
-            return true;
-        if (game.newloc <= 500) {
-            game.newloc = game.newloc - SPECIALBASE;
-            switch (game.newloc) {
-            case 1:
-                /*  Travel 301.  Plover-alcove passage.  Can carry only
-                 *  emerald.  Note: travel table must include "useless"
-                 *  entries going through passage, which can never be used for
-                 *  actual motion, but can be spotted by "go back". */
-                /* FIXME: Arithmetic on location numbers */
-                game.newloc = 99 + 100 - game.loc;
-                if (game.holdng > 1 || (game.holdng == 1 && !TOTING(EMERALD))) {
-                    game.newloc = game.loc;
-                    RSPEAK(MUST_DROP);
-                }
-                return true;
-            case 2:
-                /*  Travel 302.  Plover transport.  Drop the emerald (only use
-                 *  special travel if toting it), so he's forced to use the
-                 *  plover-passage to get it out.  Having dropped it, go back and
-                 *  pretend he wasn't carrying it after all. */
-                DROP(EMERALD, game.loc);
-                goto L12;
-            case 3:
-                /*  Travel 303.  Troll bridge.  Must be done only as special
-                 *  motion so that dwarves won't wander across and encounter
-                 *  the bear.  (They won't follow the player there because
-                 *  that region is forbidden to the pirate.)  If
-                 *  game.prop(TROLL)=1, he's crossed since paying, so step out
-                 *  and block him.  (standard travel entries check for
-                 *  game.prop(TROLL)=0.)  Special stuff for bear. */
-                if (game.prop[TROLL] == 1) {
-                    PSPEAK(TROLL, 1);
-                    game.prop[TROLL] = 0;
-                    MOVE(TROLL2, 0);
-                    MOVE(TROLL2 + NOBJECTS, 0);
-                    MOVE(TROLL, PLAC[TROLL]);
-                    MOVE(TROLL + NOBJECTS, FIXD[TROLL]);
-                    JUGGLE(CHASM);
-                    game.newloc = game.loc;
-                    return true;
-                } else {
-                    game.newloc = PLAC[TROLL] + FIXD[TROLL] - game.loc;
-                    if (game.prop[TROLL] == 0)game.prop[TROLL] = 1;
-                    if (!TOTING(BEAR)) return true;
-                    RSPEAK(BRIDGE_COLLAPSE);
-                    game.prop[CHASM] = 1;
-                    game.prop[TROLL] = 2;
-                    DROP(BEAR, game.newloc);
-                    game.fixed[BEAR] = -1;
-                    game.prop[BEAR] = 3;
-                    game.oldlc2 = game.newloc;
-                    croak();
-                }
+                do {
+                    if (TRAVEL[kk] < 0)
+                        BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION);
+                    ++kk;
+                    game.newloc = labs(TRAVEL[kk]) / 1000;
+                } while
+                    (game.newloc == scratchloc);
+                scratchloc = game.newloc;
             }
-            BUG(SPECIAL_TRAVEL_500_GT_L_GT_300_EXCEEDS_GOTO_LIST);
+
+            game.newloc = MOD(scratchloc, 1000);
+            if (!SPECIAL(game.newloc))
+                return true;
+            if (game.newloc <= 500) {
+                game.newloc = game.newloc - SPECIALBASE;
+                switch (game.newloc) {
+                case 1:
+                    /*  Travel 301.  Plover-alcove passage.  Can carry only
+                     *  emerald.  Note: travel table must include "useless"
+                     *  entries going through passage, which can never be used for
+                     *  actual motion, but can be spotted by "go back". */
+                    /* FIXME: Arithmetic on location numbers */
+                    game.newloc = 99 + 100 - game.loc;
+                    if (game.holdng > 1 || (game.holdng == 1 && !TOTING(EMERALD))) {
+                        game.newloc = game.loc;
+                        RSPEAK(MUST_DROP);
+                    }
+                    return true;
+                case 2:
+                    /*  Travel 302.  Plover transport.  Drop the emerald (only use
+                     *  special travel if toting it), so he's forced to use the
+                     *  plover-passage to get it out.  Having dropped it, go back and
+                     *  pretend he wasn't carrying it after all. */
+                    DROP(EMERALD, game.loc);
+                    do {
+                        if (TRAVEL[kk] < 0)
+                            BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION);
+                        ++kk;
+                        game.newloc = labs(TRAVEL[kk]) / 1000;
+                    } while
+                        (game.newloc == scratchloc);
+                    scratchloc = game.newloc;
+                    continue; /* goto L12 */
+                case 3:
+                    /*  Travel 303.  Troll bridge.  Must be done only as special
+                     *  motion so that dwarves won't wander across and encounter
+                     *  the bear.  (They won't follow the player there because
+                     *  that region is forbidden to the pirate.)  If
+                     *  game.prop(TROLL)=1, he's crossed since paying, so step out
+                     *  and block him.  (standard travel entries check for
+                     *  game.prop(TROLL)=0.)  Special stuff for bear. */
+                    if (game.prop[TROLL] == 1) {
+                        PSPEAK(TROLL, 1);
+                        game.prop[TROLL] = 0;
+                        MOVE(TROLL2, 0);
+                        MOVE(TROLL2 + NOBJECTS, 0);
+                        MOVE(TROLL, PLAC[TROLL]);
+                        MOVE(TROLL + NOBJECTS, FIXD[TROLL]);
+                        JUGGLE(CHASM);
+                        game.newloc = game.loc;
+                        return true;
+                    } else {
+                        game.newloc = PLAC[TROLL] + FIXD[TROLL] - game.loc;
+                        if (game.prop[TROLL] == 0)game.prop[TROLL] = 1;
+                        if (!TOTING(BEAR)) return true;
+                        RSPEAK(BRIDGE_COLLAPSE);
+                        game.prop[CHASM] = 1;
+                        game.prop[TROLL] = 2;
+                        DROP(BEAR, game.newloc);
+                        game.fixed[BEAR] = -1;
+                        game.prop[BEAR] = 3;
+                        game.oldlc2 = game.newloc;
+                        croak();
+                    }
+                }
+                BUG(SPECIAL_TRAVEL_500_GT_L_GT_300_EXCEEDS_GOTO_LIST);
+            }
+            break; /* Leave L12 loop */
         }
     } while
     (false);
