@@ -826,16 +826,16 @@ arbitrary_messages:  !!omap
 - CANT_POUR: 'You can''t pour that.'
 - WATCH_IT: 'Watch it!'
 - WHICH_WAY: 'Which way?'
-- REINCARNATE_QUERY: 'Oh dear, you seem to have gotten yourself killed.  I might be able to\nhelp you out, but I''ve never really done this before.  Do you want me\nto try to reincarnate you?'
-- DONT_BLAME: 'All right.  But don''t blame me if something goes wr......\n                    --- POOF!! ---\nYou are engulfed in a cloud of orange smoke.  Coughing and gasping,\nyou emerge from the smoke and find....'
-- CLUMSY_OAF: 'You clumsy oaf, you''ve done it again!  I don''t know how long I can\nkeep this up.  Do you want me to try reincarnating you again?'
-- ORANGE_SMOKE: 'Okay, now where did I put my orange smoke?....  >POOF!<\nEverything disappears in a dense cloud of orange smoke.'
-- SMOKE_OUT: 'Now you''ve really done it!  I''m out of orange smoke!  You don''t expect\nme to do a decent reincarnation without any orange smoke, do you?'
-- DOIT_YOURSELF: 'Okay, if you''re so smart, do it yourself!  I''m leaving!'
-- GETS_YOU7: !!null
-- GETS_YOU8: !!null
-- GETS_YOU9: !!null
-- MISSES_YOU0: '>>> messages 81 thru 90 are reserved for "obituaries". <<<'
+- ARB_81: !!null
+- ARB_82: !!null
+- ARB_83: !!null
+- ARB_84: !!null
+- ARB_85: !!null
+- ARB_86: !!null
+- ARB_87: !!null
+- ARB_88: !!null
+- ARB_89: !!null
+- ARB_90: !!null
 - FORGOT_PATH: 'Sorry, but I no longer seem to remember how it was you got here.'
 - CARRY_LIMIT: 'You can''t carry anything more.  You''ll have to drop something first.'
 - GRATE_NOWAY: 'You can''t go through a locked steel grate!'
