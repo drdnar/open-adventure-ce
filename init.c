@@ -350,7 +350,7 @@ void initialise(void)
      *	game.iwest	How many times he's said "west" instead of "w"
      *	game.knfloc	0 if no knife here, loc if knife here, -1 after caveat
      *	game.limit	Lifetime of lamp (not set here)
-     *	MAXDIE		Number of reincarnation messages available (up to 5)
+     *	maximum_deaths		Number of reincarnation messages available (up to 5)
      *	game.numdie	Number of times killed so far
      *	game.thresh	Next #turns threshhold (-1 if none)
      *	game.trndex	Index in TRNVAL of next threshold (db section 14)

@@ -470,7 +470,7 @@ static bool dwarfmove(void)
 /*  "You're dead, Jim."
  *
  *  If the current loc is zero, it means the clown got himself killed.
- *  We'll allow this maxdie times.  MAXDIE is automatically set based
+ *  We'll allow this maxdie times.  maximum_deaths is automatically set based
  *  on the number of snide messages available.  Each death results in
  *  a message (81, 83, etc.)  which offers reincarnation; if accepted,
  *  this results in message 82, 84, etc.  The last time, if he wants

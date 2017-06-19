@@ -502,14 +502,6 @@ static void write_hints(FILE* header_file, long matrix[][HINTLEN], long dim1, lo
 
 static void write_file(FILE* header_file)
 {
-    int MAXDIE;
-    for (int i = 0; i <= 4; i++) {
-        long x = 2 * i + 81;
-        if (RTEXT[x] != 0)
-            MAXDIE = i + 1;
-    }
-
-
     fprintf(header_file, "#ifndef DATABASE_H\n");
     fprintf(header_file, "#define DATABASE_H\n");
     fprintf(header_file, "\n");
@@ -518,7 +510,6 @@ static void write_file(FILE* header_file)
     fprintf(header_file, "#define TABSIZ 330\n");
     fprintf(header_file, "#define HNTSIZ 20\n");
     fprintf(header_file, "#define TOKLEN %d\n", TOKLEN);
-    fprintf(header_file, "#define MAXDIE %d\n", MAXDIE);
     fprintf(header_file, "\n");
 
     fprintf(header_file, "\n");

@@ -50,14 +50,14 @@ long score(enum termination mode)
         }
     }
 
-    /*  Now look at how he finished and how far he got.  MAXDIE and
+    /*  Now look at how he finished and how far he got.  maximum_deaths and
      *  game.numdie tell us how well he survived.  game.dflag will tell us
      *  if he ever got suitably deep into the cave.  game.closng still
      *  indicates whether he reached the endgame.  And if he got as far as
      *  "cave closed" (indicated by "game.closed"), then bonus is zero for
      *  mundane exits or 133, 134, 135 if he blew it (so to speak). */
-    score += (MAXDIE - game.numdie) * 10;
-    mxscor += MAXDIE * 10;
+    score += (maximum_deaths - game.numdie) * 10;
+    mxscor += maximum_deaths * 10;
     if (mode == endgame)
         score += 4;
     mxscor += 4;
