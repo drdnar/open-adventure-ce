@@ -1,0 +1,116 @@
+## Test throwing axe at non-dwarves.
+n
+seed 1838473132
+in
+take lamp
+xyzzy
+on
+take rod
+e
+take cage
+w
+w
+w
+drop rod
+take bird
+take rod
+w
+free bird
+wave rod
+take necklace
+drop rod
+take bird
+take rod
+d
+d
+free bird
+drop rod
+drop cage
+take cage
+take bird
+take rod
+w
+e
+s
+take jewelry
+n
+up
+s
+take gold
+n
+d
+n
+n
+plugh
+extinguish lamp
+drop coins
+drop jewelry
+drop necklace
+drop gold
+plugh
+on
+s
+take silver
+s
+sw
+take axe
+w
+throw axe
+take axe
+kill dragon
+y
+inven
+e
+e
+u
+# Go to vending machine and ogre from Hall of Mists
+w
+wave rod
+w
+w
+w
+w
+s
+sw
+se
+s
+throw axe
+kill machine
+s
+s
+throw axe
+take axe
+# Return to Hall of Mists
+w
+n
+n
+n
+# Vending machine
+nw
+d
+e
+e
+e
+e
+e
+# Hall of Mists
+n
+n
+take knife
+throw axe
+take axe
+d
+w
+d
+w
+# Bedquilt
+n
+throw axe
+take axe
+n
+n
+sw
+up
+# Troll bridge
+throw axe
+
