@@ -117,19 +117,15 @@ ways:
   and the choice to refrain will make forward translation into future
   languages easier.
 
-* There are a few gotos left that resist restructuring; all but of these
-  are in the principal command interpreter function implementing its
-  state machine. the remaining one is a truly mysterious artficat in
-  the player-movement code.
+* There are a few gotos left that resist restructuring; all are in the
+  principal command interpreter function implementing its state
+  machine.
 
 * Linked lists (for objects at a location) are implemented using an array
   of link indices. This is a surviving FORTRANism that is quite unlike
   normal practice in C or any more modern language.  We have not tried
   to fix it because doing so would (a) be quite difficult, and (b)
   compromise forward-portability to other languages.
-
-* The code still has an unfortunately high density of magic numbers - in
-  particular, numeric object IDs.  There are plans to fix this.
 
 * Much of the code still uses FORTRAN-style uppercase names.
 
