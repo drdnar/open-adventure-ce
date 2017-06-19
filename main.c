@@ -490,6 +490,8 @@ static bool dwarfmove(void)
 static void croak(void)
 /*  Okay, he's dead.  Let's get on with it. */
 {
+    const char* query = obituaries[game.numdie].query;
+    const char* yes_response = obituaries[game.numdie].yes_response;
     ++game.numdie;
     if (game.closng) {
         /*  He died during closing time.  No resurrection.  Tally up a
@@ -497,8 +499,7 @@ static void croak(void)
         RSPEAK(DEATH_CLOSING);
         terminate(endgame);
     }
-    /* FIXME: Arithmetic on message numbers */
-    else if (game.numdie == MAXDIE || !YES(arbitrary_messages[WATCH_IT + game.numdie * 2], arbitrary_messages[WHICH_WAY + game.numdie * 2], arbitrary_messages[OK_MAN]))
+    else if (game.numdie == maximum_deaths || !YES(query, yes_response, arbitrary_messages[OK_MAN]))
         terminate(endgame);
     else {
         game.place[WATER] = game.place[OIL] = NOWHERE;
