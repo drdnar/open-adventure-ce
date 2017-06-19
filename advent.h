@@ -90,7 +90,7 @@ extern bool oldstyle, editline, prompt;
 extern void* xmalloc(size_t size);
 extern char* xstrdup(const char*);
 extern void packed_to_token(long, char token[]);
-extern void token_to_packed(char token[], long);
+extern void token_to_packed(char token[], long*);
 extern void speak(const char*);
 extern bool wordeq(token_t, token_t);
 extern bool wordempty(token_t);

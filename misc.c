@@ -57,7 +57,7 @@ void token_to_packed(char token[6], long* packed)
     {
       if (token[4 - i] == '\0')
 	continue;	
-      char mapped = ascii_to_advent[token[4 - i]];
+      char mapped = ascii_to_advent[(int) token[4 - i]];
       *packed |= (mapped << (6 * i));
     }
 }
