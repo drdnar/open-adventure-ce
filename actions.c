@@ -134,7 +134,7 @@ static int bigwords(long foo)
         } else {
             /*  Bring back troll if we steal the eggs back from him before
              *  crossing. */
-            if (game.place[EGGS] == 0 && game.place[TROLL] == 0 && game.prop[TROLL] == 0)
+            if (game.place[EGGS] == LOC_NOWHERE && game.place[TROLL] == LOC_NOWHERE && game.prop[TROLL] == 0)
                 game.prop[TROLL] = 1;
             k = 2;
             if (HERE(EGGS))k = 1;
@@ -389,7 +389,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
     int k = LIQUID();
     if (k == obj)obj = BOTTLE;
     if (obj == BOTTLE && k != 0)
-        game.place[k] = NOWHERE;
+        game.place[k] = LOC_NOWHERE;
     if (obj == CAGE && game.prop[BIRD] == 1)DROP(BIRD, game.loc);
     DROP(obj, game.loc);
     if (obj != BIRD) return GO_CLEAROBJ;
@@ -409,7 +409,7 @@ static int drink(token_t verb, token_t obj)
         if (obj != 0 && obj != WATER)spk = RIDICULOUS_ATTEMPT;
         if (spk != RIDICULOUS_ATTEMPT && LIQUID() == WATER && HERE(BOTTLE)) {
             game.prop[BOTTLE] = 1;
-            game.place[WATER] = NOWHERE;
+            game.place[WATER] = LOC_NOWHERE;
             spk = BOTTLE_EMPTY;
         }
     } else {
@@ -539,7 +539,7 @@ int fill(token_t verb, token_t obj)
             RSPEAK(spk);
             return GO_CLEAROBJ;
         }
-        game.place[k] = NOWHERE;
+        game.place[k] = LOC_NOWHERE;
         game.prop[BOTTLE] = 1;
         if (k == OIL)game.prop[URN] = 1;
         spk = WATER_URN + game.prop[URN];
@@ -764,7 +764,7 @@ static int pour(token_t verb, token_t obj)
     if (HERE(URN) && game.prop[URN] == 0)
         return fill(verb, URN);
     game.prop[BOTTLE] = 1;
-    game.place[obj] = NOWHERE;
+    game.place[obj] = LOC_NOWHERE;
     spk = GROUND_WET;
     if (!(AT(PLANT) || AT(DOOR))) {
         RSPEAK(spk);
@@ -800,7 +800,6 @@ static int quit(void)
 static int read(token_t verb, token_t obj)
 /*  Read.  Print stuff based on objtxt.  Oyster (?) is special case. */
 {
-    int spk = ACTSPK[verb];
     if (obj == INTRANSITIVE) {
         obj = 0;
         for (int i = 1; i <= NOBJECTS; i++) {
@@ -816,7 +815,7 @@ static int read(token_t verb, token_t obj)
         return GO_CLEAROBJ;
     }
     if (OBJTXT[obj] == 0 || game.prop[obj] < 0) {
-        RSPEAK(spk);
+        RSPEAK(ACTSPK[verb]);
         return GO_CLEAROBJ;
     }
     if (obj == OYSTER && !game.clshnt) {
@@ -891,7 +890,7 @@ static int throw_support(long spk)
     return GO_MOVE;
 }
 
-static int throw(FILE *cmdin, long verb, token_t obj)
+static int throw (FILE *cmdin, long verb, token_t obj)
 /*  Throw.  Same as discard unless axe.  Then same as attack except
  *  ignore bird, and if dwarf is present then one might be killed.
  *  (Only way to do so!)  Axe also special for dragon, bear, and
@@ -923,34 +922,34 @@ static int throw(FILE *cmdin, long verb, token_t obj)
     if (obj != AXE)
         return (discard(verb, obj, false));
     else {
-	int i = ATDWRF(game.loc);
-	if (i <= 0) {
-	    if (AT(DRAGON) && game.prop[DRAGON] == 0)
-		return throw_support(DRAGON_SCALES);
-	    if (AT(TROLL))
-		return throw_support(TROLL_RETURNS);
-	    else if (AT(OGRE))
-		return throw_support(OGRE_DODGE);
-	    else if (HERE(BEAR) && game.prop[BEAR] == 0) {
-		/* This'll teach him to throw the axe at the bear! */
-		DROP(AXE, game.loc);
-		game.fixed[AXE] = -1;
-		game.prop[AXE] = 1;
-		JUGGLE(BEAR);
-		RSPEAK(AXE_LOST);
-		return GO_CLEAROBJ;
-	    }
-	    return (attack(cmdin, verb, 0));
-	}
+        int i = ATDWRF(game.loc);
+        if (i <= 0) {
+            if (AT(DRAGON) && game.prop[DRAGON] == 0)
+                return throw_support(DRAGON_SCALES);
+            if (AT(TROLL))
+                return throw_support(TROLL_RETURNS);
+            else if (AT(OGRE))
+                return throw_support(OGRE_DODGE);
+            else if (HERE(BEAR) && game.prop[BEAR] == 0) {
+                /* This'll teach him to throw the axe at the bear! */
+                DROP(AXE, game.loc);
+                game.fixed[AXE] = -1;
+                game.prop[AXE] = 1;
+                JUGGLE(BEAR);
+                RSPEAK(AXE_LOST);
+                return GO_CLEAROBJ;
+            }
+            return (attack(cmdin, verb, 0));
+        }
 
-	if (randrange(NDWARVES + 1) < game.dflag) {
-	    return throw_support(DWARF_DODGES);
-	} else {
-	    game.dseen[i] = false;
-	    game.dloc[i] = 0;
-	    return throw_support((++game.dkill == 1)
-				 ? DWARF_SMOKE : KILLED_DWARF);
-	}
+        if (randrange(NDWARVES + 1) < game.dflag) {
+            return throw_support(DWARF_DODGES);
+        } else {
+            game.dseen[i] = false;
+            game.dloc[i] = 0;
+            return throw_support((++game.dkill == 1)
+                                 ? DWARF_SMOKE : KILLED_DWARF);
+        }
     }
 }
 

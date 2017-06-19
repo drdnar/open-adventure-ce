@@ -176,7 +176,7 @@ void initialise(void)
         printf("Initialising...\n");
 
     for (int i = 1; i <= NOBJECTS; i++) {
-        game.place[i] = NOWHERE;
+        game.place[i] = LOC_NOWHERE;
         game.prop[i] = 0;
         game.link[i + NOBJECTS] = game.link[i] = 0;
     }

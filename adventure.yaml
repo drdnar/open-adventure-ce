@@ -1,5 +1,5 @@
 locations: !!omap
-- LOC_0:
+- LOC_NOWHERE:
     description:
       long: !!null
       short: !!null

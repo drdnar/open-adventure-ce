@@ -78,11 +78,11 @@ int main(int argc, char *argv[])
     /*  Options. */
 
 #ifndef ADVENT_NOSAVE
-    char* opts = "l:or:s";
-    char* usage = "Usage: %s [-l logfilename] [-o] [-r restorefilename] [-s] \n";
+    const char* opts = "l:or:s";
+    const char* usage = "Usage: %s [-l logfilename] [-o] [-r restorefilename] [-s] \n";
 #else
-    char* opts = "l:os";
-    char* usage = "Usage: %s [-l logfilename] [-o] [-s] \n";
+    const char* opts = "l:os";
+    const char* usage = "Usage: %s [-l logfilename] [-o] [-s] \n";
 #endif
     while ((ch = getopt(argc, argv, opts)) != EOF) {
         switch (ch) {
@@ -157,10 +157,11 @@ int main(int argc, char *argv[])
     game.zzword = RNDVOC(3, 0);
     game.newloc = LOC_START;
     game.loc = LOC_START;
-    game.limit = 330;
+    game.limit = GAMELIMIT;
     if (!rfp) {
         game.novice = YES(arbitrary_messages[WELCOME_YOU], arbitrary_messages[CAVE_NEARBY], arbitrary_messages[NO_MESSAGE]);
-        if (game.novice)game.limit = 1000;
+        if (game.novice)
+            game.limit = NOVICELIMIT;
     } else {
         restore(rfp);
     }
@@ -295,7 +296,7 @@ static bool spotted_by_pirate(int i)
     /*  The pirate's spotted him.  He leaves him alone once we've
      *  found chest.  K counts if a treasure is here.  If not, and
      *  tally=1 for an unseen chest, let the pirate be spotted.  Note
-     *  that game.place[CHEST] = NOWHERE might mean that he's thrown
+     *  that game.place[CHEST] = LOC_NOWHERE might mean that he's thrown
      *  it to the troll, but in that case he's seen the chest
      *  (game.prop=0). */
     if (game.loc == game.chloc || game.prop[CHEST] >= 0)
@@ -316,7 +317,7 @@ static bool spotted_by_pirate(int i)
         }
     }
     /* Force chest placement before player finds last treasure */
-    if (game.tally == 1 && snarfed == 0 && game.place[CHEST] == NOWHERE && HERE(LAMP) && game.prop[LAMP] == 1) {
+    if (game.tally == 1 && snarfed == 0 && game.place[CHEST] == LOC_NOWHERE && HERE(LAMP) && game.prop[LAMP] == 1) {
         RSPEAK(PIRATE_SPOTTED);
         movechest = true;
     }
@@ -512,7 +513,7 @@ static void croak(void)
     } else if (game.numdie == maximum_deaths || !YES(query, yes_response, arbitrary_messages[OK_MAN]))
         terminate(endgame);
     else {
-        game.place[WATER] = game.place[OIL] = NOWHERE;
+        game.place[WATER] = game.place[OIL] = LOC_NOWHERE;
         if (TOTING(LAMP))
             game.prop[LAMP] = 0;
         for (int j = 1; j <= NOBJECTS; j++) {
@@ -878,7 +879,7 @@ static void lampcheck(void)
         if (!game.lmwarn && HERE(LAMP)) {
             game.lmwarn = true;
             int spk = GET_BATTERIES;
-            if (game.place[BATTERY] == NOWHERE)spk = LAMP_DIM;
+            if (game.place[BATTERY] == LOC_NOWHERE)spk = LAMP_DIM;
             if (game.prop[BATTERY] == 1)spk = MISSING_BATTERYIES;
             RSPEAK(spk);
         }

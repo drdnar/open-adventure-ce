@@ -547,8 +547,8 @@ static void write_file(FILE* header_file)
 
 void bug(enum bugtype num, const char *error_string)
 {
-   fprintf(stderr, "Fatal error %d, %s.\n", num, error_string);
-   exit(EXIT_FAILURE);
+    fprintf(stderr, "Fatal error %d, %s.\n", num, error_string);
+    exit(EXIT_FAILURE);
 }
 
 int main(void)

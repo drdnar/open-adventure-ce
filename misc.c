@@ -417,7 +417,7 @@ void MOVE(long object, long where)
         from = game.fixed[object - NOBJECTS];
     else
         from = game.place[object];
-    if (from != NOWHERE && from != CARRIED && !SPECIAL(from))
+    if (from != LOC_NOWHERE && from != CARRIED && !SPECIAL(from))
         CARRY(object, from);
     DROP(object, where);
 }
@@ -660,8 +660,8 @@ void DATIME(long* d, long* t)
 
 void bug(enum bugtype num, const char *error_string)
 {
-   fprintf(stderr, "Fatal error %d, %s.\n", num, error_string);
-   exit(EXIT_FAILURE);
+    fprintf(stderr, "Fatal error %d, %s.\n", num, error_string);
+    exit(EXIT_FAILURE);
 }
 
 /* end */

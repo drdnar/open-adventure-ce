@@ -14,6 +14,8 @@
 #define INVLIMIT	7		/* inverntory limit (# of objects) */
 #define INTRANSITIVE	-1		/* illegal object number */
 #define SPECIALBASE	300		/* base number of special rooms */
+#define GAMELIMIT	330		/* base limit of turns */
+#define NOVICELIMIT	1000	/* limit of turns for novice */
 #define WARNTIME	30		/* late game starts at game.limit-this */
 #define PANICTIME	15		/* time left after closing */
 #define BATTERYLIFE	2500		/* turn limit increment from batteries */
@@ -60,23 +62,23 @@ struct game_t {
     long turns;
     long wzdark;
     long zzword;
-    long abbrev[LOCSIZ+1];
-    long atloc[LOCSIZ+1];
-    long dseen[NDWARVES+1];
-    long dloc[NDWARVES+1];
-    long odloc[NDWARVES+1];
-    long fixed[NOBJECTS+1];
-    long link[NOBJECTS*2 + 1];
-    long place[NOBJECTS+1];
-    long hinted[HNTSIZ+1];
-    long hintlc[HNTSIZ+1];
-    long prop[NOBJECTS+1];
+    long abbrev[LOCSIZ + 1];
+    long atloc[LOCSIZ + 1];
+    long dseen[NDWARVES + 1];
+    long dloc[NDWARVES + 1];
+    long odloc[NDWARVES + 1];
+    long fixed[NOBJECTS + 1];
+    long link[NOBJECTS * 2 + 1];
+    long place[NOBJECTS + 1];
+    long hinted[HNTSIZ + 1];
+    long hintlc[HNTSIZ + 1];
+    long prop[NOBJECTS + 1];
 };
 
 extern struct game_t game;
 
 extern long LNLENG, LNPOSN, PARMS[];
-extern char rawbuf[LINESIZE], INLINE[LINESIZE+1];
+extern char rawbuf[LINESIZE], INLINE[LINESIZE + 1];
 extern const char ascii_to_advent[];
 extern const char advent_to_ascii[];
 extern FILE *logfp;
@@ -89,25 +91,25 @@ extern void* xmalloc(size_t size);
 extern char* xstrdup(const char*);
 extern void packed_to_token(long, char token[]);
 extern void speak(const char*);
-extern void PSPEAK(vocab_t,int);
+extern void PSPEAK(vocab_t, int);
 extern void RSPEAK(vocab_t);
-extern void SETPRM(long,long,long);
-extern bool GETIN(FILE *,token_t*,token_t*,token_t*,token_t*);
+extern void SETPRM(long, long, long);
+extern bool GETIN(FILE *, token_t*, token_t*, token_t*, token_t*);
 extern void echo_input(FILE*, char*, char*);
 extern char* get_input(void);
 extern bool YES(const char*, const char*, const char*);
-extern long GETTXT(bool,bool,bool);
+extern long GETTXT(bool, bool, bool);
 extern token_t MAKEWD(long);
-extern long VOCAB(long,long);
+extern long VOCAB(long, long);
 extern void JUGGLE(long);
-extern void MOVE(long,long);
-extern long PUT(long,long,long);
-extern void CARRY(long,long);
-extern void DROP(long,long);
+extern void MOVE(long, long);
+extern long PUT(long, long, long);
+extern void CARRY(long, long);
+extern void DROP(long, long);
 extern long ATDWRF(long);
 extern long SETBIT(long);
-extern bool TSTBIT(long,int);
-extern long RNDVOC(long,long);
+extern bool TSTBIT(long, int);
+extern long RNDVOC(long, long);
 extern bool MAPLIN(FILE *);
 extern void DATIME(long*, long*);
 
@@ -136,7 +138,7 @@ extern int restore(FILE *);
  *  PCT(N)      = true N% of the time (N integer from 0 to 100)
  *  TOTING(OBJ) = true if the OBJ is being carried */
 
-#define DESTROY(N)	MOVE(N, NOWHERE)
+#define DESTROY(N)	MOVE(N, LOC_NOWHERE)
 #define MOD(N,M)	((N) % (M))
 #define TOTING(OBJ)	(game.place[OBJ] == CARRIED)
 #define AT(OBJ) (game.place[OBJ] == game.loc || game.fixed[OBJ] == game.loc)
@@ -162,23 +164,23 @@ extern int restore(FILE *);
 #define OUTSID(LOC)	((LOC) <= LOC_GRATE || FOREST(LOC) || (LOC) == PLAC[SAPPH] || (LOC) == LOC_FOOF2 || (LOC) == LOC_FOOF4)
 #define INDEEP(LOC)	((LOC) >= LOC_MISTHALL && !OUTSID(LOC) && (LOC) != LOC_FOOF1)
 
-/* vocabulary items */ 
+/* vocabulary items */
 extern long AMBER, ATTACK, AXE, BACK, BATTERY, BEAR,
-   BIRD, BLOOD, BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST,
-   CLAM, COINS, DOOR, DPRSSN, DRAGON, DWARF, EGGS,
-   EMERALD, ENTER, ENTRNC, FIND, FISSURE, FOOD, GRATE, HINT, INVENT,
-   JADE, KEYS, KNIFE, LAMP, LOCK, LOOK, MAGAZINE, MESSAG, MIRROR, NUGGET, NUL,
-   OGRE, OIL, OYSTER, PANIC, PEARL, PILLOW, PLANT, PLANT2, PYRAMID,
-   RESER, ROD, ROD2, RUBY, RUG, SAPPH, SAY, SIGN, SNAKE,
-   STEPS, STICK, STREAM, THROW, TRIDENT, TROLL, TROLL2,
-   URN, VASE, VEND, VOLCANO, WATER;
+       BIRD, BLOOD, BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST,
+       CLAM, COINS, DOOR, DPRSSN, DRAGON, DWARF, EGGS,
+       EMERALD, ENTER, ENTRNC, FIND, FISSURE, FOOD, GRATE, HINT, INVENT,
+       JADE, KEYS, KNIFE, LAMP, LOCK, LOOK, MAGAZINE, MESSAG, MIRROR, NUGGET, NUL,
+       OGRE, OIL, OYSTER, PANIC, PEARL, PILLOW, PLANT, PLANT2, PYRAMID,
+       RESER, ROD, ROD2, RUBY, RUG, SAPPH, SAY, SIGN, SNAKE,
+       STEPS, STICK, STREAM, THROW, TRIDENT, TROLL, TROLL2,
+       URN, VASE, VEND, VOLCANO, WATER;
 
 enum speechpart {unknown, intransitive, transitive};
 
 void initialise(void);
 int action(FILE *input, enum speechpart part, long verb, token_t obj);
 
-/* Phase codes for action returns. 
+/* Phase codes for action returns.
  * These were at one time FORTRAN line numbers.
  * The values don't matter, but perturb their order at your peril.
  */
@@ -203,7 +205,7 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj);
 #define NOARRR	3	/* Pirate doesn't go here unless following player */
 #define NOBACK	4	/* Cannot use "back" to move away */
 /* Bits past 10 indicate areas of interest to "hint" routines */
-#define HBASE	10	/* Base for location hint bitss */
+#define HBASE	10	/* Base for location hint bits */
 #define HCAVE	11	/* Trying to get into cave */
 #define HBIRD	12	/* Trying to catch bird */
 #define HSNAKE	13	/* Trying to deal with snake */
@@ -217,7 +219,6 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj);
 
 /* Special object statuses in game.place - can also be a location number (> 0) */
 #define CARRIED		-1	/* Player is toting it */
-#define NOWHERE	0	/* It's destroyed */
 
 /* hack to ignore GCC Unused Result */
 #define IGNORE(r) do{if (r){}}while(0)
