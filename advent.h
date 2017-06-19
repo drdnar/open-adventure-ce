@@ -5,17 +5,18 @@
 #include "common.h"
 
 #define LINESIZE	100
-#define NDWARVES	6
+#define NDWARVES	6		/* number of dwarves */
 #define PIRATE		NDWARVES	/* must be NDWARVES-1 when zero-origin */
 #define DALTLC		LOC_NUGGET	/* alternate dwarf location */
-#define MINTRS		50
-#define MAXTRS		79
-#define MAXPARMS	25
-#define INVLIMIT	7
+#define MINTRS		50		/* index of lowest reasure */
+#define MAXTRS		79		/* index of highest reasure */
+#define MAXPARMS	25		/* Max parameters for speak() */
+#define INVLIMIT	7		/* inverntory limit (# of objects) */
 #define INTRANSITIVE	-1		/* illegal object number */
 #define SPECIALBASE	300		/* base number of special rooms */
 #define WARNTIME	30		/* late game starts at game.limit-this */
 #define PANICTIME	15		/* time left after closing */
+#define BATTERYLIFE	2500		/* turn limit increment from batteries */
 
 typedef long token_t;	/* word token - someday this will be char[TOKLEN+1] */
 typedef long vocab_t;	/* index into a vocabulary array */

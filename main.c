@@ -619,7 +619,7 @@ static bool playermove(token_t verb, int motion)
     do {
         /*
          * (ESR) This special-travel loop may have to be repeated if it includes
-         * the plover passage.  Same deal for any future cases wgerw we beed to
+         * the plover passage.  Same deal for any future cases where we need to
          * block travel and then redo it once the blocking condition has been
          * removed.
          */
@@ -652,7 +652,7 @@ static bool playermove(token_t verb, int motion)
             if (!SPECIAL(game.newloc))
                 return true;
             if (game.newloc <= 500) {
-                game.newloc = game.newloc - SPECIALBASE;
+                game.newloc -= SPECIALBASE;
                 switch (game.newloc) {
                 case 1:
                     /*  Travel 301.  Plover-alcove passage.  Can carry only
@@ -711,6 +711,7 @@ static bool playermove(token_t verb, int motion)
                         game.prop[BEAR] = 3;
                         game.oldlc2 = game.newloc;
                         croak();
+			return true;
                     }
                 }
                 BUG(SPECIAL_TRAVEL_500_GT_L_GT_300_EXCEEDS_GOTO_LIST);
@@ -856,7 +857,7 @@ static void lampcheck(void)
         game.prop[BATTERY] = 1;
         if (TOTING(BATTERY))
             DROP(BATTERY, game.loc);
-        game.limit = game.limit + 2500;
+        game.limit += BATTERYLIFE;
         game.lmwarn = false;
     } else if (game.limit == 0) {
         game.limit = -1;
