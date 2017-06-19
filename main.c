@@ -77,7 +77,14 @@ int main(int argc, char *argv[])
 
     /*  Options. */
 
-    while ((ch = getopt(argc, argv, "l:or:s")) != EOF) {
+#ifndef ADVENT_NOSAVE
+    char* opts = "l:or:s";
+    char* usage = "Usage: %s [-l logfilename] [-o] [-r restorefilename] [-s] \n";
+#else
+    char* opts = "l:os";
+    char* usage = "Usage: %s [-l logfilename] [-o] [-s] \n";
+#endif
+    while ((ch = getopt(argc, argv, opts)) != EOF) {
         switch (ch) {
         case 'l':
             logfp = fopen(optarg, "w");
@@ -106,7 +113,7 @@ int main(int argc, char *argv[])
             break;
         default:
             fprintf(stderr,
-                    "Usage: %s [-l logfilename] [-o] [-r restorefilename] [-s] \n", argv[0]);
+                    usage, argv[0]);
             fprintf(stderr,
                     "  where -l creates a log file of your game named as specified'\n");
             fprintf(stderr,
@@ -502,8 +509,7 @@ static void croak(void)
          *  death and exit. */
         RSPEAK(DEATH_CLOSING);
         terminate(endgame);
-    }
-    else if (game.numdie == maximum_deaths || !YES(query, yes_response, arbitrary_messages[OK_MAN]))
+    } else if (game.numdie == maximum_deaths || !YES(query, yes_response, arbitrary_messages[OK_MAN]))
         terminate(endgame);
     else {
         game.place[WATER] = game.place[OIL] = NOWHERE;
@@ -648,7 +654,7 @@ static bool playermove(token_t verb, int motion)
                     ++kk;
                     game.newloc = labs(TRAVEL[kk]) / 1000;
                 } while
-                    (game.newloc == scratchloc);
+                (game.newloc == scratchloc);
                 scratchloc = game.newloc;
             }
 
@@ -682,7 +688,7 @@ static bool playermove(token_t verb, int motion)
                         ++kk;
                         game.newloc = labs(TRAVEL[kk]) / 1000;
                     } while
-                        (game.newloc == scratchloc);
+                    (game.newloc == scratchloc);
                     scratchloc = game.newloc;
                     continue; /* goto L12 */
                 case 3:
@@ -715,7 +721,7 @@ static bool playermove(token_t verb, int motion)
                         game.prop[BEAR] = 3;
                         game.oldlc2 = game.newloc;
                         croak();
-			return true;
+                        return true;
                     }
                 }
                 BUG(SPECIAL_TRAVEL_500_GT_L_GT_300_EXCEEDS_GOTO_LIST);
@@ -988,7 +994,7 @@ static bool do_command(FILE *cmdin)
                 continue;	/* back to top of main interpreter loop */
         }
         if (game.loc == LOC_Y2 && PCT(25) && !game.closng)
-	    RSPEAK(SAYS_PLUGH);
+            RSPEAK(SAYS_PLUGH);
 
         listobjects();
 
