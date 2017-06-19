@@ -10,6 +10,7 @@ ECHO := /bin/echo
 
 all: regress
 	@echo "=== No diff output is good news."
+	@-advent -x 2>/dev/null	# Get usage message into coverage tests
 
 .SUFFIXES: .chk
 
