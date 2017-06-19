@@ -50,6 +50,18 @@ void packed_to_token(long packed, char token[6])
     }
 }
 
+void token_to_packed(char token[6], long* packed)
+{
+  *packed = 0;
+  for (size_t i = 0; i < 5; ++i)
+    {
+      if (token[4 - i] == '\0')
+	continue;	
+      char mapped = ascii_to_advent[(int) token[4 - i]];
+      *packed |= (mapped << (6 * i));
+    }
+}
+
 /* Hide the fact that wods are corrently packed longs */
 
 bool wordeq(token_t a, token_t b)
