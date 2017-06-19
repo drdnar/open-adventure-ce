@@ -891,7 +891,7 @@ static int throw_support(long spk)
     return GO_MOVE;
 }
 
-static int throw (FILE *cmdin, long verb, token_t obj)
+static int throw(FILE *cmdin, long verb, token_t obj)
 /*  Throw.  Same as discard unless axe.  Then same as attack except
  *  ignore bird, and if dwarf is present then one might be killed.
  *  (Only way to do so!)  Axe also special for dragon, bear, and
@@ -922,32 +922,36 @@ static int throw (FILE *cmdin, long verb, token_t obj)
     }
     if (obj != AXE)
         return (discard(verb, obj, false));
-    int i = ATDWRF(game.loc);
-    if (i <= 0) {
-        if (AT(DRAGON) && game.prop[DRAGON] == 0)
-            return throw_support(DRAGON_SCALES);
-        if (AT(TROLL))
-            return throw_support(TROLL_RETURNS);
-        else if (AT(OGRE))
-            return throw_support(OGRE_DODGE);
-        else if (HERE(BEAR) && game.prop[BEAR] == 0) {
-            /* This'll teach him to throw the axe at the bear! */
-            DROP(AXE, game.loc);
-            game.fixed[AXE] = -1;
-            game.prop[AXE] = 1;
-            JUGGLE(BEAR);
-            RSPEAK(AXE_LOST);
-            return GO_CLEAROBJ;
-        }
-        return (attack(cmdin, verb, 0));
-    }
+    else {
+	int i = ATDWRF(game.loc);
+	if (i <= 0) {
+	    if (AT(DRAGON) && game.prop[DRAGON] == 0)
+		return throw_support(DRAGON_SCALES);
+	    if (AT(TROLL))
+		return throw_support(TROLL_RETURNS);
+	    else if (AT(OGRE))
+		return throw_support(OGRE_DODGE);
+	    else if (HERE(BEAR) && game.prop[BEAR] == 0) {
+		/* This'll teach him to throw the axe at the bear! */
+		DROP(AXE, game.loc);
+		game.fixed[AXE] = -1;
+		game.prop[AXE] = 1;
+		JUGGLE(BEAR);
+		RSPEAK(AXE_LOST);
+		return GO_CLEAROBJ;
+	    }
+	    return (attack(cmdin, verb, 0));
+	}
 
-    if (randrange(NDWARVES + 1) < game.dflag) {
-        return throw_support(DWARF_DODGES);
+	if (randrange(NDWARVES + 1) < game.dflag) {
+	    return throw_support(DWARF_DODGES);
+	} else {
+	    game.dseen[i] = false;
+	    game.dloc[i] = 0;
+	    return throw_support((++game.dkill == 1)
+				 ? DWARF_SMOKE : KILLED_DWARF);
+	}
     }
-    game.dseen[i] = false;
-    game.dloc[i] = 0;
-    return throw_support((++game.dkill == 1) ? DWARF_SMOKE : KILLED_DWARF);
 }
 
 static int wake(token_t verb, token_t obj)
