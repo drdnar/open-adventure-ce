@@ -250,7 +250,7 @@ char* get_input()
     return (input);
 }
 
-bool YES(vocab_t question, vocab_t yes_response, vocab_t no_response)
+bool YES(const char* question, const char* yes_response, const char* no_response)
 /*  Print message X, wait for yes/no answer.  If yes, print Y and return true;
  *  if no, print Z and return false. */
 {
@@ -258,7 +258,7 @@ bool YES(vocab_t question, vocab_t yes_response, vocab_t no_response)
     bool outcome;
 
     for (;;) {
-        RSPEAK(question);
+        speak(question);
 
         reply = get_input();
 
@@ -276,11 +276,11 @@ bool YES(vocab_t question, vocab_t yes_response, vocab_t no_response)
         free(firstword);
 
         if (yes == 0 || y == 0) {
-            RSPEAK(yes_response);
+            speak(yes_response);
             outcome = true;
             break;
         } else if (no == 0 || n == 0) {
-            RSPEAK(no_response);
+            speak(no_response);
             outcome = false;
             break;
         } else

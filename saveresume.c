@@ -44,7 +44,7 @@ int suspend(void)
     FILE *fp = NULL;
 
     RSPEAK(SUSPEND_WARNING);
-    if (!YES(THIS_ACCEPTABLE, OK_MAN, OK_MAN)) return GO_CLEAROBJ;
+    if (!YES(arbitrary_messages[THIS_ACCEPTABLE], arbitrary_messages[OK_MAN], arbitrary_messages[OK_MAN])) return GO_CLEAROBJ;
     game.saved = game.saved + 5;
 
     while (fp == NULL) {
@@ -83,7 +83,7 @@ int resume(void)
 
     if (game.loc != 1 || game.abbrev[1] != 1) {
         RSPEAK(RESUME_ABANDON);
-        if (!YES(THIS_ACCEPTABLE, OK_MAN, OK_MAN)) return GO_CLEAROBJ;
+        if (!YES(arbitrary_messages[THIS_ACCEPTABLE], arbitrary_messages[OK_MAN], arbitrary_messages[OK_MAN])) return GO_CLEAROBJ;
     }
 
     while (fp == NULL) {

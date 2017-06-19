@@ -792,7 +792,7 @@ static int pour(token_t verb, token_t obj)
 static int quit(void)
 /*  Quit.  Intransitive only.  Verify intent and exit if that's what he wants. */
 {
-    if (YES(REALLY_QUIT, OK_MAN, OK_MAN))
+    if (YES(arbitrary_messages[REALLY_QUIT], arbitrary_messages[OK_MAN], arbitrary_messages[OK_MAN]))
         terminate(quitgame);
     return GO_CLEAROBJ;
 }
@@ -820,7 +820,7 @@ static int read(token_t verb, token_t obj)
         return GO_CLEAROBJ;
     }
     if (obj == OYSTER && !game.clshnt) {
-        game.clshnt = YES(CLUE_QUERY, WAYOUT_CLUE, OK_MAN);
+        game.clshnt = YES(arbitrary_messages[CLUE_QUERY], arbitrary_messages[WAYOUT_CLUE], arbitrary_messages[OK_MAN]);
         return GO_CLEAROBJ;
     }
     PSPEAK(obj, OBJTXT[obj] + game.prop[obj]);

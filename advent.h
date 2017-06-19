@@ -94,7 +94,7 @@ extern void SETPRM(long,long,long);
 extern bool GETIN(FILE *,token_t*,token_t*,token_t*,token_t*);
 extern void echo_input(FILE*, char*, char*);
 extern char* get_input(void);
-extern bool YES(vocab_t, vocab_t, vocab_t);
+extern bool YES(const char*, const char*, const char*);
 extern long GETTXT(bool,bool,bool);
 extern token_t MAKEWD(long);
 extern long VOCAB(long,long);
