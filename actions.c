@@ -5,16 +5,11 @@
 #include "newdb.h"
 
 /* Limit visibility of ugly globals.  Eventually these should go away. */
-extern long WD1, WD1X, WD2, WD2X;
+extern token_t WD1, WD1X, WD2, WD2X;
 
-/*
- * Action handlers.  Eventually we'll do lookup through a method table
- * that calls these.
- */
+static int fill(token_t, token_t);
 
-static int fill(token_t verb, token_t);
-
-static int attack(FILE *input, long verb, token_t obj)
+static int attack(FILE *input, token_t verb, token_t obj)
 /*  Attack.  Assume target if unambiguous.  "Throw" also links here.
  *  Attackable objects fall into two categories: enemies (snake,
  *  dwarf, etc.)  and others (bird, clam, machine).  Ambiguous if 2
@@ -110,7 +105,7 @@ static int attack(FILE *input, long verb, token_t obj)
     return GO_CLEAROBJ;
 }
 
-static int bigwords(long foo)
+static int bigwords(token_t foo)
 /*  FEE FIE FOE FOO (AND FUM).  Advance to next state if given in proper order.
  *  Look up WD1 in section 3 of vocab to determine which word we've got.  Last
  *  word zips the eggs back to the giant room (unless already there). */
@@ -1000,7 +995,7 @@ static int wave(token_t verb, token_t obj)
     }
 }
 
-int action(FILE *input, enum speechpart part, long verb, token_t obj)
+int action(FILE *input, enum speechpart part, token_t verb, token_t obj)
 /*  Analyse a verb.  Remember what it was, go back for object if second word
  *  unless verb is "say", which snarfs arbitrary second word.
  */

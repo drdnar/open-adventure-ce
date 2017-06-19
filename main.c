@@ -41,7 +41,7 @@ long AMBER, AXE, BACK, BATTERY, BEAR, BIRD, BLOOD,
      RUBY, RUG, SAPPH, SAY, SIGN, SNAKE,
      STEPS, STREAM, THROW, TRIDENT, TROLL, TROLL2,
      URN, VASE, VEND, VOLCANO, WATER;
-long WD1, WD1X, WD2, WD2X;
+token_t WD1, WD1X, WD2, WD2X;
 
 FILE  *logfp = NULL, *rfp = NULL;
 bool oldstyle = false;
