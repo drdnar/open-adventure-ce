@@ -578,7 +578,7 @@ static int find(token_t verb, token_t obj)
         obj == LIQLOC(game.loc) ||
         (obj == DWARF && ATDWRF(game.loc) > 0))
         spk = YOU_HAVEIT;
-    if (game.closed)spk = NEEDED_NEreplace;
+    if (game.closed)spk = NEEDED_NEARBY;
     if (TOTING(obj))spk = ALREADY_CARRYING;
     RSPEAK(spk);
     return GO_CLEAROBJ;
