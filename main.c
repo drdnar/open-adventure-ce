@@ -131,16 +131,6 @@ int main(int argc, char *argv[])
 
     linenoiseHistorySetMaxLen(350);
 
-    /* Logical variables:
-     *
-     *  game.closed says whether we're all the way closed
-     *  game.closng says whether it's closing time yet
-     *  game.clshnt says whether he's read the clue in the endgame
-     *  game.lmwarn says whether he's been warned about lamp going dim
-     *  game.novice says whether he asked for instructions at start-up
-     *  game.panic says whether he's found out he's trapped in the cave
-     *  game.wzdark says whether the loc he's leaving was dark */
-
     /* Initialize our LCG PRNG with parameters tested against
      * Knuth vol. 2. by the original authors */
     game.lcg_a = 1093;

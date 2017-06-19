@@ -32,9 +32,9 @@ struct game_t {
     long chloc2;
     long clock1;
     long clock2;
-    long clshnt;
-    long closed;
-    long closng;
+    bool clshnt;	/* has player read the clue in the endgame? */
+    bool closed;	/* whether we're all the way closed */
+    bool closng;	/* whether it's closing time yet */
     long conds;
     long detail;
     long dflag;
@@ -45,22 +45,22 @@ struct game_t {
     long iwest;
     long knfloc;
     long limit;
-    long lmwarn;
+    bool lmwarn;	/* has player been warned about lamp going dim? */
     long loc;
     long newloc;
-    long novice;
+    bool novice;	/* asked for instructions at start-up? */
     long numdie;
     long oldloc;
     long oldlc2;
     long oldobj;
-    long panic;
+    bool panic;		/* has player found out he's trapped in the cave? */
     long saved;
     long tally;
     long thresh;
     long trndex;
     long trnluz;
     long turns;
-    long wzdark;
+    bool wzdark;	/* whether the loc he's leaving was dark */
     long zzword;
     long abbrev[LOCSIZ + 1];
     long atloc[LOCSIZ + 1];
