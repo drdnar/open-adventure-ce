@@ -1,0 +1,6 @@
+## Resume input from /dev/random, inducing a version mismatch error
+n
+seed 1240742801
+resume
+y
+/dev/random
