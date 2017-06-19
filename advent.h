@@ -188,7 +188,6 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj);
 #define GO_CLEAROBJ	2012
 #define GO_CHECKHINT	2600
 #define GO_CHECKFOO	2607
-#define GO_CLOSEJUMP	2610
 #define GO_DIRECTION	2620
 #define GO_LOOKUP	2630
 #define GO_WORD2	2800

@@ -983,7 +983,8 @@ static bool do_command(FILE *cmdin)
             else
                 continue;	/* back to top of main interpreter loop */
         }
-        if (game.loc == 33 && PCT(25) && !game.closng)RSPEAK(SAYS_PLUGH);
+        if (game.loc == LOC_Y2 && PCT(25) && !game.closng)
+	    RSPEAK(SAYS_PLUGH);
 
         listobjects();
 
