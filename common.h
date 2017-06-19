@@ -35,12 +35,8 @@ enum bugtype {
    ACTION_RETURNED_PHASE_CODE_BEYOND_END_OF_SWITCH,       // 100
 };
 
-static inline void bug(enum bugtype num, const char *error_string) __attribute__((__noreturn__));
-static inline void bug(enum bugtype num, const char *error_string)
-{
-   fprintf(stderr, "Fatal error %d, %s.\n", num, error_string);
-   exit(EXIT_FAILURE);
-}
+/* Alas, declaring this static confuses the coverage analyzer */
+void bug(enum bugtype, const char *) __attribute__((__noreturn__));
 
 #define BUG(x) bug(x, #x)
 

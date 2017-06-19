@@ -658,4 +658,10 @@ void DATIME(long* d, long* t)
     *t = (long) tv.tv_usec;
 }
 
+void bug(enum bugtype num, const char *error_string)
+{
+   fprintf(stderr, "Fatal error %d, %s.\n", num, error_string);
+   exit(EXIT_FAILURE);
+}
+
 /* end */

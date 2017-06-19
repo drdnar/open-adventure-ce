@@ -554,6 +554,12 @@ static void write_file(FILE* header_file)
     fprintf(header_file, "#endif\n");
 }
 
+void bug(enum bugtype num, const char *error_string)
+{
+   fprintf(stderr, "Fatal error %d, %s.\n", num, error_string);
+   exit(EXIT_FAILURE);
+}
+
 int main(void)
 {
     FILE* database = fopen("adventure.text", "r");
