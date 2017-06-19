@@ -23,4 +23,6 @@ XBS-Project-Tags: Games/Entertainment
 
 XBS-VC-Tag-Template: %(version)s
 
+XBS-Logo: lamp.png
+
 XBS-Validate: make check
