@@ -85,7 +85,7 @@ ugly and quite unreadable.
 Jason Ninneman and I have moved it to what is almost, but not quite,
 idiomatic modern C.  We refactored the right way, checking correctness
 against a comprehensive test suite that we built first and verified
-with coverage tools (we have 88% coverage, with the remaining 12%
+with coverage tools (we have over 90% coverage, with the remaining
 confined to exception cases that are difficult to reach). This is
 what you are running when you do "make check".
 
