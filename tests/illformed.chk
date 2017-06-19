@@ -31,6 +31,54 @@ Seed set to 1801426495
 
 You're in front of building.
 
+> in
+
+You are inside a building, a well house for a large spring.
+
+There are some keys on the ground here.
+
+There is a shiny brass lamp nearby.
+
+There is food here.
+
+There is a bottle of water here.
+
+> nothing food
+
+OK
+
+> calm food
+
+I'm game.  Would you care to explain how?
+
+> walk food
+
+Where?
+
+> score food
+
+Huh?
+
+> foo food
+
+I don't know how.
+
+> brief food
+
+On what?
+
+> suspend food
+
+Huh?
+
+> resume food
+
+Huh?
+
+> out
+
+You're in front of building.
+
 > stream
 
 You are in a valley in the forest beside a stream tumbling along a
@@ -75,7 +123,9 @@ Carry what?
 
 I am unsure how you are facing.  Use compass points or nearby objects.
 
-You're in front of building.
+You are standing at the end of a road before a small brick building.
+Around you is a forest.  A small stream flows out of the building and
+down a gully.
 
 > eat
 
@@ -106,7 +156,7 @@ OK
 
 > in
 
-You are inside a building, a well house for a large spring.
+You're inside building.
 
 There are some keys on the ground here.
 
@@ -381,7 +431,7 @@ Okay, "BOO".
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 74 turns.
+You have garnered 27 out of a possible 430 points, using 84 turns.
 
 > quit keys
 
@@ -395,7 +445,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 27 out of a possible 430, using 76 turns.
+You scored 27 out of a possible 430, using 86 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 
