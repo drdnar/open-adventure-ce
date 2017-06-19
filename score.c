@@ -78,7 +78,7 @@ long score(enum termination mode)
     mxscor += 45;
 
     /* Did he come to Witt's End as he should? */
-    if (game.place[MAGZIN] == LOC_WITTSEND)
+    if (game.place[MAGAZINE] == LOC_WITTSEND)
         score += 1;
     mxscor += 1;
 

@@ -153,7 +153,7 @@ static int bivalve(token_t verb, token_t obj)
     bool is_oyster = (obj == OYSTER);
     spk = is_oyster ? OYSTER_OPENS : PEARL_FALLS;
     if (TOTING(obj))spk = is_oyster ? DROP_OYSTER : DROP_CLAM;
-    if (!TOTING(TRIDNT))spk = is_oyster ? OYSTER_OPENER : CLAM_OPENER;
+    if (!TOTING(TRIDENT))spk = is_oyster ? OYSTER_OPENER : CLAM_OPENER;
     if (verb == LOCK)spk = HUH_MAN;
     if (spk == PEARL_FALLS) {
         DESTROY(CLAM);
@@ -346,7 +346,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
             RSPEAK(GEM_FITS);
             game.prop[obj] = 1;
             game.prop[CAVITY] = 0;
-            if (HERE(RUG) && ((obj == EMRALD && game.prop[RUG] != 2) || (obj == RUBY &&
+            if (HERE(RUG) && ((obj == EMERALD && game.prop[RUG] != 2) || (obj == RUBY &&
                               game.prop[RUG] == 2))) {
                 spk = RUG_RISES;
                 if (TOTING(RUG))spk = RUG_WIGGLES;
@@ -361,8 +361,8 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
             }
         } else if (obj == COINS && HERE(VEND)) {
             DESTROY(COINS);
-            DROP(BATTER, game.loc);
-            PSPEAK(BATTER, 0);
+            DROP(BATTERY, game.loc);
+            PSPEAK(BATTERY, 0);
             return GO_CLEAROBJ;
         } else if (obj == BIRD && AT(DRAGON) && game.prop[DRAGON] == 0) {
             RSPEAK(BIRD_BURNT);
@@ -462,7 +462,7 @@ static int extinguish(token_t verb, int obj)
         game.prop[LAMP] = 0;
         RSPEAK(LAMP_OFF);
         spk = DARK(game.loc) ? PITCH_DARK : NO_MESSAGE;
-    } else if (obj == DRAGON || obj == VOLCAN)
+    } else if (obj == DRAGON || obj == VOLCANO)
         spk = BEYOND_POWER;
     RSPEAK(spk);
     return GO_CLEAROBJ;
@@ -969,7 +969,7 @@ static int wave(token_t verb, token_t obj)
     if ((!TOTING(obj)) && (obj != ROD || !TOTING(ROD2)))spk = ARENT_CARRYING;
     if (obj != ROD ||
         !TOTING(obj) ||
-        (!HERE(BIRD) && (game.closng || !AT(FISSUR)))) {
+        (!HERE(BIRD) && (game.closng || !AT(FISSURE)))) {
         RSPEAK(spk);
         return GO_CLEAROBJ;
     }
@@ -986,13 +986,13 @@ static int wave(token_t verb, token_t obj)
             RSPEAK(spk);
             return GO_DWARFWAKE;
         }
-        if (game.closng || !AT(FISSUR)) {
+        if (game.closng || !AT(FISSURE)) {
             RSPEAK(spk);
             return GO_CLEAROBJ;
         }
         if (HERE(BIRD))RSPEAK(spk);
-        game.prop[FISSUR] = 1 - game.prop[FISSUR];
-        PSPEAK(FISSUR, 2 - game.prop[FISSUR]);
+        game.prop[FISSURE] = 1 - game.prop[FISSURE];
+        PSPEAK(FISSURE, 2 - game.prop[FISSURE]);
         return GO_CLEAROBJ;
     }
 }

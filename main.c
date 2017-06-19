@@ -30,17 +30,17 @@ struct game_t game;
 long LNLENG, LNPOSN, PARMS[MAXPARMS + 1];
 char rawbuf[LINESIZE], INLINE[LINESIZE + 1];
 
-long AMBER, AXE, BACK, BATTER, BEAR, BIRD, BLOOD,
+long AMBER, AXE, BACK, BATTERY, BEAR, BIRD, BLOOD,
      BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST,
      CLAM, COINS, DOOR, DPRSSN, DRAGON, DWARF, EGGS,
-     EMRALD, ENTER, ENTRNC, FIND, FISSUR, FOOD,
+     EMERALD, ENTER, ENTRNC, FIND, FISSURE, FOOD,
      GRATE, HINT, INVENT, JADE, KEYS,
-     KNIFE, LAMP, LOCK, LOOK, MAGZIN,
+     KNIFE, LAMP, LOCK, LOOK, MAGAZINE,
      MESSAG, MIRROR, NUGGET, NUL, OGRE, OIL, OYSTER,
-     PEARL, PILLOW, PLANT, PLANT2, PYRAM, RESER, ROD, ROD2,
+     PEARL, PILLOW, PLANT, PLANT2, PYRAMID, RESER, ROD, ROD2,
      RUBY, RUG, SAPPH, SAY, SIGN, SNAKE,
-     STEPS, STREAM, THROW, TRIDNT, TROLL, TROLL2,
-     URN, VASE, VEND, VOLCAN, WATER;
+     STEPS, STREAM, THROW, TRIDENT, TROLL, TROLL2,
+     URN, VASE, VEND, VOLCANO, WATER;
 long WD1, WD1X, WD2, WD2X;
 
 FILE  *logfp = NULL, *rfp = NULL;
@@ -226,7 +226,7 @@ static void checkhints(void)
                     game.hintlc[hint] = 0;
                     return;
                 case 4:	/* dark */
-                    if (game.prop[EMRALD] != -1 && game.prop[PYRAM] == -1)
+                    if (game.prop[EMERALD] != -1 && game.prop[PYRAMID] == -1)
                         break;
                     game.hintlc[hint] = 0;
                     return;
@@ -294,7 +294,7 @@ static bool spotted_by_pirate(int i)
     for (int treasure = MINTRS; treasure <= MAXTRS; treasure++) {
         /*  Pirate won't take pyramid from plover room or dark
          *  room (too easy!). */
-        if (treasure == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD])) {
+        if (treasure == PYRAMID && (game.loc == PLAC[PYRAMID] || game.loc == PLAC[EMERALD])) {
             continue;
         }
         if (TOTING(treasure) || HERE(treasure))
@@ -326,7 +326,7 @@ static bool spotted_by_pirate(int i)
     if (robplayer) {
         RSPEAK(PIRATE_POUNCES);
         for (int treasure = MINTRS; treasure <= MAXTRS; treasure++) {
-            if (!(treasure == PYRAM && (game.loc == PLAC[PYRAM] || game.loc == PLAC[EMRALD]))) {
+            if (!(treasure == PYRAMID && (game.loc == PLAC[PYRAMID] || game.loc == PLAC[EMERALD]))) {
                 if (AT(treasure) && game.fixed[treasure] == 0)
                     CARRY(treasure, game.loc);
                 if (TOTING(treasure))
@@ -660,7 +660,7 @@ L12:
                  *  actual motion, but can be spotted by "go back". */
                 /* FIXME: Arithmetic on location numbers */
                 game.newloc = 99 + 100 - game.loc;
-                if (game.holdng > 1 || (game.holdng == 1 && !TOTING(EMRALD))) {
+                if (game.holdng > 1 || (game.holdng == 1 && !TOTING(EMERALD))) {
                     game.newloc = game.loc;
                     RSPEAK(MUST_DROP);
                 }
@@ -670,7 +670,7 @@ L12:
                  *  special travel if toting it), so he's forced to use the
                  *  plover-passage to get it out.  Having dropped it, go back and
                  *  pretend he wasn't carrying it after all. */
-                DROP(EMRALD, game.loc);
+                DROP(EMERALD, game.loc);
                 goto L12;
             case 3:
                 /*  Travel 303.  Troll bridge.  Must be done only as special
@@ -753,7 +753,7 @@ static bool closecheck(void)
      *  have been activated, since we've found chest. */
     if (game.clock1 == 0) {
         game.prop[GRATE] = 0;
-        game.prop[FISSUR] = 0;
+        game.prop[FISSURE] = 0;
         for (int i = 1; i <= NDWARVES; i++) {
             game.dseen[i] = false;
             game.dloc[i] = 0;
@@ -840,11 +840,11 @@ static void lampcheck(void)
      *  Second is for other cases of lamp dying.  12400 is when it
      *  goes out.  Even then, he can explore outside for a while
      *  if desired. */
-    if (game.limit <= WARNTIME && HERE(BATTER) && game.prop[BATTER] == 0 && HERE(LAMP)) {
-        RSPEAK(REPLACE_BATTERIES);
-        game.prop[BATTER] = 1;
-        if (TOTING(BATTER))
-            DROP(BATTER, game.loc);
+    if (game.limit <= WARNTIME && HERE(BATTERY) && game.prop[BATTERY] == 0 && HERE(LAMP)) {
+        RSPEAK(REPLACE_BATTERYIES);
+        game.prop[BATTERY] = 1;
+        if (TOTING(BATTERY))
+            DROP(BATTERY, game.loc);
         game.limit = game.limit + 2500;
         game.lmwarn = false;
     } else if (game.limit == 0) {
@@ -855,9 +855,9 @@ static void lampcheck(void)
     } else if (game.limit <= WARNTIME) {
         if (!game.lmwarn && HERE(LAMP)) {
             game.lmwarn = true;
-            int spk = GET_BATTERIES;
-            if (game.place[BATTER] == NOWHERE)spk = LAMP_DIM;
-            if (game.prop[BATTER] == 1)spk = MISSING_BATTERIES;
+            int spk = GET_BATTERYIES;
+            if (game.place[BATTERY] == NOWHERE)spk = LAMP_DIM;
+            if (game.prop[BATTERY] == 1)spk = MISSING_BATTERYIES;
             RSPEAK(spk);
         }
     }
