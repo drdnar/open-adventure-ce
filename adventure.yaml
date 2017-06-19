@@ -449,7 +449,7 @@ locations: !!omap
       short: 'You''re at top of stalactite.'
 - LOC_DIFFERENT2:
     description:
-      long: '1You are in a little maze of twisting passages, all different.'
+      long: 'You are in a little maze of twisting passages, all different.'
       short: !!null
 - LOC_RESERVOIR:
     description:
