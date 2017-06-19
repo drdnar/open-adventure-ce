@@ -223,5 +223,83 @@ int action(FILE *input, enum speechpart part, token_t verb, token_t obj);
 /* hack to ignore GCC Unused Result */
 #define IGNORE(r) do{if (r){}}while(0)
 
+/*
+ * FIXME: These constants should be replaced by strings, at their usage sites.
+ * They are sixbit-packed representations of vocabulary words.  This, and code
+ * left in misc.c, is the only place left in the runtime that knows about 
+ * word packing.
+ */
+#define WORD_AXE	12405
+#define WORD_BATTERY	201202005
+#define WORD_BEAR	2050118
+#define WORD_BIRD	2091804
+#define WORD_BLOOD	212151504
+#define WORD_BOTTLE	215202012
+#define WORD_CAGE	3010705
+#define WORD_CATCH	301200308
+#define WORD_CAVITY	301220920
+#define WORD_CHASM	308011913
+#define WORD_CLAM	3120113
+#define WORD_DOOR	4151518
+#define WORD_DRAGON	418010715
+#define WORD_DWARF	423011806
+#define WORD_FISSURE	609191921
+#define WORD_FOOD	6151504
+#define WORD_GO		715
+#define WORD_GRATE	718012005
+#define WORD_KEYS	11052519
+#define WORD_KNIFE	1114090605
+#define WORD_LAMP	12011316
+#define WORD_MAGAZINE	1301070126
+#define WORD_MESSAG	1305191901
+#define WORD_MIRROR	1309181815
+#define WORD_OGRE	15071805
+#define WORD_OIL	150912
+#define WORD_OYSTER	1525192005
+#define WORD_PILLOW	1609121215
+#define WORD_PLANT	1612011420
+#define WORD_POUR	16152118
+#define WORD_RESER	1805190518
+#define WORD_ROD	181504
+#define WORD_SIGN	19090714
+#define WORD_SNAKE	1914011105
+#define WORD_STEPS	1920051619
+#define WORD_TROLL	2018151212
+#define WORD_URN	211814
+#define WORD_VEND	1755140409
+#define WORD_VOLCANO	1765120301
+#define WORD_WATER	1851200518
+#define WORD_AMBER	113020518
+#define WORD_CHAIN	308010914
+#define WORD_CHEST	308051920
+#define WORD_COINS	315091419
+#define WORD_EGGS	5070719
+#define WORD_EMERALD	513051801
+#define WORD_JADE	10010405
+#define WORD_NUGGET	7151204
+#define WORD_PEARL	1605011812
+#define WORD_PYRAMID	1625180113
+#define WORD_RUBY	18210225
+#define WORD_RUG	182107
+#define WORD_SAPPH	1901161608
+#define WORD_TRIDENT	2018090405
+#define WORD_VASE	22011905
+#define WORD_BACK	2010311
+#define WORD_CAVE	3012205
+#define WORD_DPRSSN	405161805
+#define WORD_ENTER	514200518
+#define WORD_ENTRNC	514201801
+#define WORD_LOOK	12151511
+#define WORD_NUL	14211212
+#define WORD_STREAM	1920180501
+#define WORD_FIND	6091404
+#define WORD_INVENT	914220514
+#define WORD_LOCK	12150311
+#define WORD_SAY	190125
+#define WORD_THROW	2008181523
+#define WORD_WEST	23051920
+#define WORD_YES	250519
+#define WORD_YINIT	25
+
 /* end */
 

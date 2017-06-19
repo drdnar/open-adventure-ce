@@ -82,7 +82,7 @@ static int attack(FILE *input, token_t verb, token_t obj)
          *  too.  Then do a null motion to get new description. */
         RSPEAK(BARE_HANDS_QUERY);
         GETIN(input, &WD1, &WD1X, &WD2, &WD2X);
-        if (WD1 != MAKEWD(25) && WD1 != MAKEWD(250519))
+        if (WD1 != MAKEWD(WORD_YINIT) && WD1 != MAKEWD(WORD_YES))
             return GO_CHECKFOO;
         PSPEAK(DRAGON, 3);
         game.prop[DRAGON] = 1;

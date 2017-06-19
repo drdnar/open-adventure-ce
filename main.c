@@ -1062,18 +1062,18 @@ L2607:
             if (!((V1 != 1000 + WATER && V1 != 1000 + OIL) ||
                   (V2 != 1000 + PLANT && V2 != 1000 + DOOR))) {
                 if (AT(V2 - 1000))
-                    WD2 = MAKEWD(16152118);
+                    WD2 = MAKEWD(WORD_POUR);
             }
             if (V1 == 1000 + CAGE && V2 == 1000 + BIRD && HERE(CAGE) && HERE(BIRD))
-                WD1 = MAKEWD(301200308);
+                WD1 = MAKEWD(WORD_CATCH);
         }
 L2620:
-        if (WD1 == MAKEWD(23051920)) {
+        if (WD1 == MAKEWD(WORD_WEST)) {
             ++game.iwest;
             if (game.iwest == 10)
                 RSPEAK(W_IS_WEST);
         }
-        if (WD1 == MAKEWD( 715) && WD2 != 0) {
+        if (WD1 == MAKEWD(WORD_GO) && WD2 != 0) {
             if (++igo == 10)
                 RSPEAK(GO_UNNEEDED);
         }
