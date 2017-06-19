@@ -1054,7 +1054,8 @@ int action(FILE *input, enum speechpart part, token_t verb, token_t obj)
 
     switch (part) {
     case intransitive:
-        if (WD2 > 0 && verb != SAY) return (2800);
+        if (WD2 > 0 && verb != SAY)
+	    return GO_WORD2;
         if (verb == SAY)obj = WD2;
         if (obj == 0 || obj == INTRANSITIVE) {
             /*  Analyse an intransitive verb (ie, no object given yet). */

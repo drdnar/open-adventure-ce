@@ -131,7 +131,7 @@
  *	apply to players whose scores are higher than the previous N but not
  *	higher than this N.  Note that these scores probably change with every
  *	modification (and particularly expansion) of the program.
- *  SECTION 11: Hints.  Each line contains a hint number (add 10 to get cond
+ *  Section 11: Hints.  Each line contains a hint number (add 10 to get cond
  *	bit; see section 9), the number of turns he must be at the right loc(s)
  *	before triggering the hint, the points deducted for taking the hint,
  *	the message number (section 6) of the question, and the message number

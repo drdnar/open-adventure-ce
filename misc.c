@@ -50,6 +50,23 @@ void packed_to_token(long packed, char token[6])
     }
 }
 
+/* Hide the fact that wods are corrently packed longs */
+
+bool wordeq(token_t a, token_t b)
+{
+    return a == b;
+}
+
+bool wordempty(token_t a)
+{
+    return a == 0;
+}
+
+void wordclear(token_t *v)
+{
+    *v = 0;
+}
+
 /*  I/O routines (SPEAK, PSPEAK, RSPEAK, SETPRM, GETIN, YES) */
 
 void speak(const char* msg)

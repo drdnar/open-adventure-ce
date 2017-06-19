@@ -1060,8 +1060,9 @@ L2607:
         if (V1 == ENTER && WD2 > 0) {
             WD1 = WD2;
             WD1X = WD2X;
-            WD2 = 0;
+            wordclear(&WD2);
         } else {
+	    /* FIXME: Magic numbers */
             if (!((V1 != 1000 + WATER && V1 != 1000 + OIL) ||
                   (V2 != 1000 + PLANT && V2 != 1000 + DOOR))) {
                 if (AT(V2 - 1000))
@@ -1071,12 +1072,12 @@ L2607:
                 WD1 = MAKEWD(WORD_CATCH);
         }
 L2620:
-        if (WD1 == MAKEWD(WORD_WEST)) {
+        if (wordeq(WD1, MAKEWD(WORD_WEST))) {
             ++game.iwest;
             if (game.iwest == 10)
                 RSPEAK(W_IS_WEST);
         }
-        if (WD1 == MAKEWD(WORD_GO) && WD2 != 0) {
+        if (wordeq(WD1, MAKEWD(WORD_GO)) && !wordempty(WD2)) {
             if (++igo == 10)
                 RSPEAK(GO_UNNEEDED);
         }
@@ -1133,7 +1134,7 @@ Laction:
             /* Get second word for analysis. */
             WD1 = WD2;
             WD1X = WD2X;
-            WD2 = 0;
+            wordclear(&WD2);
             goto L2620;
         case GO_UNKNOWN:
             /*  Random intransitive verbs come here.  Clear obj just in case
