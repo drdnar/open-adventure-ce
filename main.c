@@ -91,6 +91,7 @@ int main(int argc, char *argv[])
             oldstyle = true;
             editline = prompt = false;
             break;
+#ifndef ADVENT_NOSAVE
         case 'r':
             rfp = fopen(optarg, "r");
             if (rfp == NULL)
@@ -99,6 +100,7 @@ int main(int argc, char *argv[])
                         optarg);
             signal(SIGINT, sig_handler);
             break;
+#endif
         case 's':
             editline = false;
             break;
@@ -109,8 +111,10 @@ int main(int argc, char *argv[])
                     "  where -l creates a log file of your game named as specified'\n");
             fprintf(stderr,
                     "        -o 'oldstyle' (no prompt, no command editing, displays 'Initialising...')\n");
+#ifndef ADVENT_NOSAVE
             fprintf(stderr,
                     "        -r indicates restoring from specified saved game file\n");
+#endif
             fprintf(stderr,
                     "        -s indicates playing with command editing suppressed\n");
             exit(-1);
