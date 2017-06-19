@@ -29,7 +29,7 @@
 VERS=1.0
 
 CC?=gcc
-CCFLAGS+=-std=c99 -D _DEFAULT_SOURCE -Wpedantic -g
+CCFLAGS+=-std=c99 -D _DEFAULT_SOURCE -Wpedantic -O2
 LIBS=
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
@@ -138,8 +138,7 @@ linty: CCFLAGS += -Wwrite-strings
 linty: CCFLAGS += -Wunreachable-code
 linty: CCFLAGS += -Winit-self
 linty: CCFLAGS += -Wpointer-arith
-linty: CCFLAGS +=-O2 
 linty: advent
 
-debug: CCFLAGS += -O0 --coverage -g
-debug: advent
+debug: CCFLAGS += -O0 --coverage -ggdb
+debug: linty
