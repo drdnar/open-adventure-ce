@@ -1492,3 +1492,10 @@ object_descriptions: !!omap
     inventory: !!null
     longs: !!null
 
+obituaries:
+  - query: 'Oh dear, you seem to have gotten yourself killed.  I might be able to\nhelp you out, but I''ve never really done this before.  Do you want me\nto try to reincarnate you?'
+    yes_response: 'All right.  But don''t blame me if something goes wr......\n                    --- POOF!! ---\nYou are engulfed in a cloud of orange smoke.  Coughing and gasping,\nyou emerge from the smoke and find....'
+  - query: 'You clumsy oaf, you''ve done it again!  I don''t know how long I can\nkeep this up.  Do you want me to try reincarnating you again?'
+    yes_response: 'Okay, now where did I put my orange smoke?....  >POOF!<\nEverything disappears in a dense cloud of orange smoke.'
+  - query: 'Now you''ve really done it!  I''m out of orange smoke!  You don''t expect\nme to do a decent reincarnation without any orange smoke, do you?'
+    yes_response: 'Okay, if you''re so smart, do it yourself!  I''m leaving!'

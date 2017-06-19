@@ -60,14 +60,20 @@ typedef struct {
   descriptions_t description;
 } location_t;
 
+typedef struct {
+  const char* query;
+  const char* yes_response;
+} obituary_t;
+
 extern location_t locations[];
 extern object_description_t object_descriptions[];
 extern const char* arbitrary_messages[];
 extern const char* class_messages[];
 extern const char* turn_threshold_messages[];
+extern obituary_t obituaries[];
 
 extern size_t CLSSES;
-
+extern int maximum_deaths;
 """
 
 c = """#include "{}"
@@ -126,12 +132,31 @@ for key, data in dungeon["object_descriptions"]:
     except (TypeError, IndexError):
         c += "    .longs = NULL,\n"
     c += "  },\n"
-h += "};"
-c += "};"
+h += "};\n\n"
+c += "};\n\n"
+
+c += "obituary_t obituaries[] = {\n"
+for obit in dungeon["obituaries"]:
+
+    query = quotewrap(c_escape(obit["query"]))
+    yes_response = quotewrap(c_escape(obit["yes_response"]))
+
+    c += """  {{
+    .query = {},
+    .yes_response = {},
+  }},
+""".format(query, yes_response)
+
+c += "};\n"
 
 c += """
 size_t CLSSES = {};
 """.format(len(dungeon["class_messages"]))
+
+c += """
+int maximum_deaths = {};
+""".format(len(dungeon["obituaries"]))
+
 
 # finally, write out the files
 d = {
