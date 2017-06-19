@@ -457,12 +457,15 @@ static bool dwarfmove(void)
     if (attack == 0)
         return true;
     if (game.dflag == 2)game.dflag = 3;
-    SETPRM(1, attack, 0);
-    int k = 6;
-    if (attack > 1)k = THROWN_KNIVES;
-    RSPEAK(k);
-    SETPRM(1, stick, 0);
-    RSPEAK(k + 1 + 2 / (1 + stick));	/* FIXME: Arithmetic on message number */
+    if (attack > 1){
+	SETPRM(1, attack, 0);
+	RSPEAK(THROWN_KNIVES);
+	SETPRM(1, stick, 0);
+	RSPEAK(stick > 1 ? MULTIPLE_HITS : (stick == 1 ? ONE_HIT : NONE_HIT));
+    } else {
+	RSPEAK(KNIFE_THROWN);
+	RSPEAK(MISSES_YOU);
+    }
     if (stick == 0)
         return true;
     game.oldlc2 = game.loc;
