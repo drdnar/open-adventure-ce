@@ -1113,8 +1113,8 @@ int action(FILE *input, enum speechpart part, long verb, token_t obj)
                 blast();
                 return GO_CLEAROBJ;
             case 23: /* SCOR  */
-		score(scoregame);
-		return GO_CLEAROBJ;
+                score(scoregame);
+                return GO_CLEAROBJ;
             case 24: /* FOO   */
                 return bigwords(WD1);
             case 25: /* BRIEF */

@@ -104,15 +104,15 @@ int main(int argc, char *argv[])
             break;
         default:
             fprintf(stderr,
-                  "Usage: %s [-l logfilename] [-o] [-r restorefilename] [-s] \n", argv[0]);
+                    "Usage: %s [-l logfilename] [-o] [-r restorefilename] [-s] \n", argv[0]);
             fprintf(stderr,
-                  "  where -l creates a log file of your game named as specified'\n");
+                    "  where -l creates a log file of your game named as specified'\n");
             fprintf(stderr,
-                  "        -o 'oldstyle' (no prompt, no command editing, displays 'Initialising...')\n");
+                    "        -o 'oldstyle' (no prompt, no command editing, displays 'Initialising...')\n");
             fprintf(stderr,
-                  "        -r indicates restoring from specified saved game file\n");
+                    "        -r indicates restoring from specified saved game file\n");
             fprintf(stderr,
-                  "        -s indicates playing with command editing suppressed\n");
+                    "        -s indicates playing with command editing suppressed\n");
             exit(-1);
             break;
         }
@@ -636,10 +636,10 @@ static bool playermove(token_t verb, int motion)
                 /* else fall through */
             } else if (game.prop[motion] != game.newloc / 100 - 3)
                 break;
-	L12:
+L12:
             do {
                 if (TRAVEL[kk] < 0)
-                   BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION);
+                    BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION);
                 ++kk;
                 game.newloc = labs(TRAVEL[kk]) / 1000;
             } while
@@ -661,9 +661,9 @@ static bool playermove(token_t verb, int motion)
                 /* FIXME: Arithmetic on location numbers */
                 game.newloc = 99 + 100 - game.loc;
                 if (game.holdng > 1 || (game.holdng == 1 && !TOTING(EMRALD))) {
-		    game.newloc = game.loc;
-		    RSPEAK(MUST_DROP);
-		}
+                    game.newloc = game.loc;
+                    RSPEAK(MUST_DROP);
+                }
                 return true;
             case 2:
                 /*  Travel 302.  Plover transport.  Drop the emerald (only use
@@ -671,7 +671,7 @@ static bool playermove(token_t verb, int motion)
                  *  plover-passage to get it out.  Having dropped it, go back and
                  *  pretend he wasn't carrying it after all. */
                 DROP(EMRALD, game.loc);
-		goto L12;
+                goto L12;
             case 3:
                 /*  Travel 303.  Troll bridge.  Must be done only as special
                  *  motion so that dwarves won't wander across and encounter
@@ -707,7 +707,7 @@ static bool playermove(token_t verb, int motion)
             BUG(SPECIAL_TRAVEL_500_GT_L_GT_300_EXCEEDS_GOTO_LIST);
         }
     } while
-	(false);
+    (false);
     /* FIXME: Arithmetic on location number, becoming a message number */
     RSPEAK(game.newloc - 500);
     game.newloc = game.loc;

@@ -230,7 +230,7 @@ static void read_messages(FILE* database, long sect)
         if (sect == 10) {
             CLSSES = CLSSES + 1;
             if (CLSSES > CLSMAX)
-               BUG(TOO_MANY_CLASS_OR_TURN_MESSAGES);
+                BUG(TOO_MANY_CLASS_OR_TURN_MESSAGES);
             CTEXT[CLSSES] = LINUSE;
             CVAL[CLSSES] = loc;
             continue;
@@ -324,7 +324,7 @@ static void read_conditions(FILE* database)
         long loc;
         while ((loc = GETNUM(NULL)) != 0) {
             if (is_set(COND[loc], K))
-               BUG(LOCATION_HAS_CONDITION_BIT_BEING_SET_TWICE);
+                BUG(LOCATION_HAS_CONDITION_BIT_BEING_SET_TWICE);
             COND[loc] = COND[loc] + (1l << K);
         }
     }
@@ -338,7 +338,7 @@ static void read_hints(FILE* database)
     HNTMAX = 0;
     while ((K = GETNUM(database)) != -1) {
         if (K <= 0 || K > HNTSIZ)
-           BUG(TOO_MANY_HINTS);
+            BUG(TOO_MANY_HINTS);
         for (int I = 1; I <= 4; I++) {
             HINTS[K][I] = GETNUM(NULL);
         } /* end loop */

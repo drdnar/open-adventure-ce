@@ -9,7 +9,7 @@
 extern const char advent_to_ascii[128];
 extern const char ascii_to_advent[128];
 
-enum bug_e {
+enum bugtype {
    MESSAGE_LINE_GT_70_CHARACTERS,                         // 0
    NULL_LINE_IN_MESSAGE,                                  // 1
    TOO_MANY_WORDS_OF_MESSAGES,                            // 2
@@ -30,14 +30,13 @@ enum bug_e {
    CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION,           // 25
    LOCATION_HAS_NO_TRAVEL_ENTRIES,                        // 26
    HINT_NUMBER_EXCEEDS_GOTO_LIST,                         // 27
-   INVALID_MOTH_RETURNED_BY_DATA_FUNCTION,                // 28
-   TOO_MANY_PARAMETERS_GIVEN_TO_SETPRM,                   // 29
+   TOO_MANY_PARAMETERS_GIVEN_TO_SETPRM,                   // 28
    SPEECHPART_NOT_TRANSITIVE_OR_INTRANSITIVE_OR_UNKNOWN=99, // 99
    ACTION_RETURNED_PHASE_CODE_BEYOND_END_OF_SWITCH,       // 100
 };
 
-static inline void bug(enum bug_e num, const char *error_string) __attribute__((__noreturn__));
-static inline void bug(enum bug_e num, const char *error_string)
+static inline void bug(enum bugtype num, const char *error_string) __attribute__((__noreturn__));
+static inline void bug(enum bugtype num, const char *error_string)
 {
    fprintf(stderr, "Fatal error %d, %s.\n", num, error_string);
    exit(EXIT_FAILURE);
