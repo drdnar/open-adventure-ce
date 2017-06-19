@@ -449,7 +449,7 @@ locations: !!omap
       short: 'You''re at top of stalactite.'
 - LOC_DIFFERENT2:
     description:
-      long: 'You are in a little maze of twisting passages, all different.'
+      long: '1You are in a little maze of twisting passages, all different.'
       short: !!null
 - LOC_RESERVOIR:
     description:
@@ -932,8 +932,8 @@ arbitrary_messages:  !!omap
 - LAMP_OUT: 'Your lamp has run out of power.'
 - PLEASE_ANSWER: 'Please answer the question.'
 - PIRATE_SPOTTED: 'There are faint rustling noises from the darkness behind you.  As you\nturn toward them, the beam of your lamp falls across a bearded pirate.\nHe is carrying a large chest.  "Shiver me timbers!" he cries, "I''ve\nbeen spotted!  I''d best hie meself off to the maze to hide me chest!"\nWith that, he vanishes into the gloom.'
-- GET_BATTERYIES: 'Your lamp is getting dim.  You''d best go back for those batteries.'
-- REPLACE_BATTERYIES: 'Your lamp is getting dim.  I''m taking the liberty of replacing the\nbatteries.'
+- GET_BATTERIES: 'Your lamp is getting dim.  You''d best go back for those batteries.'
+- REPLACE_BATTERIES: 'Your lamp is getting dim.  I''m taking the liberty of replacing the\nbatteries.'
 - MISSING_BATTERYIES: 'Your lamp is getting dim, and you''re out of spare batteries.  You''d\nbest start wrapping this up.'
 - REMOVE_MESSAGE: 'You sift your fingers through the dust, but succeed only in\nobliterating the cryptic message.'
 - OGRE_QUERY: 'Do you need help dealing with the ogre?'

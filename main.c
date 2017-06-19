@@ -841,7 +841,7 @@ static void lampcheck(void)
      *  goes out.  Even then, he can explore outside for a while
      *  if desired. */
     if (game.limit <= WARNTIME && HERE(BATTERY) && game.prop[BATTERY] == 0 && HERE(LAMP)) {
-        RSPEAK(REPLACE_BATTERYIES);
+        RSPEAK(REPLACE_BATTERIES);
         game.prop[BATTERY] = 1;
         if (TOTING(BATTERY))
             DROP(BATTERY, game.loc);
@@ -855,7 +855,7 @@ static void lampcheck(void)
     } else if (game.limit <= WARNTIME) {
         if (!game.lmwarn && HERE(LAMP)) {
             game.lmwarn = true;
-            int spk = GET_BATTERYIES;
+            int spk = GET_BATTERIES;
             if (game.place[BATTERY] == NOWHERE)spk = LAMP_DIM;
             if (game.prop[BATTERY] == 1)spk = MISSING_BATTERYIES;
             RSPEAK(spk);
