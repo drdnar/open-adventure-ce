@@ -184,11 +184,9 @@ static bool fallback_handler(char *buf)
     return false;
 }
 
-/*  Check if this loc is eligible for any hints.  If been here
- *  long enough, branch to help section (on later page).  Hints
- *  all come back here eventually to finish the loop.  Ignore
- *  "HINTS" < 4 (special stuff, see database notes).
- */
+/*  Check if this loc is eligible for any hints.  If been here long
+ *  enough, display.  Ignore "HINTS" < 4 (special stuff, see database
+ *  notes). */
 static void checkhints(void)
 {
     if (COND[game.loc] >= game.conds) {
@@ -850,12 +848,11 @@ static void lampcheck(void)
         --game.limit;
 
     /*  Another way we can force an end to things is by having the
-     *  lamp give out.  When it gets close, we come here to warn
-     *  him.  First following ar, if the lamp and fresh batteries are
+     *  lamp give out.  When it gets close, we come here to warn him.
+     *  First following arm checks if the lamp and fresh batteries are
      *  here, in which case we replace the batteries and continue.
-     *  Second is for other cases of lamp dying.  12400 is when it
-     *  goes out.  Even then, he can explore outside for a while
-     *  if desired. */
+     *  Second is for other cases of lamp dying.  Eve after it goes
+     *  out, he can explore outside for a while if desired. */
     if (game.limit <= WARNTIME && HERE(BATTERY) && game.prop[BATTERY] == 0 && HERE(LAMP)) {
         RSPEAK(REPLACE_BATTERIES);
         game.prop[BATTERY] = 1;

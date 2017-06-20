@@ -663,10 +663,10 @@ bool MAPLIN(FILE *fp)
          *  If the data file uses a character other than space (e.g., tab) to
          *  separate numbers, that character should also translate to 0.
          *
-         *  This procedure may use the map1,map2 arrays to maintain static data for
-         *  the mapping.  MAP2(1) is set to 0 when the program starts
-         *  and is not changed thereafter unless the routines on this page choose
-         *  to do so. */
+         *  This procedure may use the map1,map2 arrays to maintain
+         *  static data for he mapping.  MAP2(1) is set to 0 when the
+         *  program starts and is not changed thereafter unless the
+         *  routines in this module choose to do so. */
         LNLENG = 0;
         for (long i = 1; i <= (long)sizeof(INLINE) && INLINE[i] != 0; i++) {
             long val = INLINE[i];
