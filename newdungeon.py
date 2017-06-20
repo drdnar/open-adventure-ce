@@ -3,67 +3,31 @@
 # This is the new open-adventure dungeon generator. It'll eventually replace the existing dungeon.c It currently outputs a .h and .c pair for C code.
 
 import yaml
-import sys
 
 yaml_name = "adventure.yaml"
 h_name = "newdb.h"
 c_name = "newdb.c"
 
-def c_escape(string):
-    """Add C escape sequences to a string."""
-    string = string.replace("\n", "\\n")
-    string = string.replace("\t", "\\t")
-    string = string.replace('"', '\\"')
-    string = string.replace("'", "\\'")
-    return string
+h_template = """#include <stdio.h>
 
-def quotewrap(string):
-    """Wrap a string in double quotes."""
-    return '"' + string + '"'
-
-def write_regular_messages(name, h, c):
-
-    h += "enum {}_refs {{\n".format(name)
-    for key, text in dungeon[name]:
-        h += "  {},\n".format(key)
-    h += "};\n\n"
-    
-    c += "const char* {}[] = {{\n".format(name)   
-    index = 0
-    for key, text in dungeon[name]:
-        if text == None:
-            c += "  NULL,\n"
-        else:
-            text = c_escape(text)
-            c += "  \"{}\",\n".format(text)
-        index += 1
-    c += "};\n\n"
-    
-    return (h, c)
-
-with open(yaml_name, "r") as f:
-    dungeon = yaml.load(f)
-
-h = """#include <stdio.h>
-
-typedef struct {
+typedef struct {{
   const char* inventory;
   const char** longs;
-} object_description_t;
+}} object_description_t;
 
-typedef struct {
+typedef struct {{
   const char* small;
   const char* big;
-} descriptions_t;
+}} descriptions_t;
 
-typedef struct {
+typedef struct {{
   descriptions_t description;
-} location_t;
+}} location_t;
 
-typedef struct {
+typedef struct {{
   const char* query;
   const char* yes_response;
-} obituary_t;
+}} obituary_t;
 
 extern location_t locations[];
 extern object_description_t object_descriptions[];
@@ -74,96 +38,181 @@ extern obituary_t obituaries[];
 
 extern size_t CLSSES;
 extern int maximum_deaths;
+
+enum arbitrary_messages_refs {{
+{}
+}};
+
+enum class_messages_refs {{
+{}
+}};
+
+enum turn_threshold_messages_refs {{
+{}
+}};
+
+enum locations_refs {{
+{}
+}};
+
+enum object_descriptions_refs {{
+{}
+}};
 """
 
-c = """#include "{}"
+c_template = """#include "{}"
 
-""".format(h_name)
+const char* arbitrary_messages[] = {{
+{}
+}};
 
-for name in [
-        "arbitrary_messages",
-        "class_messages",
-        "turn_threshold_messages",
-]:
-    h, c = write_regular_messages(name, h, c)
+const char* class_messages[] = {{
+{}
+}};
 
-h += "enum locations_refs {\n"
-c += "location_t locations[] = {\n"
-for key, data in dungeon["locations"]:
-    h += "  {},\n".format(key)
+const char* turn_threshold_messages[] = {{
+{}
+}};
 
-    try:
-        short = quotewrap(c_escape(data["description"]["short"]))
-    except AttributeError:
-        short = "NULL"
-    try:
-        long = quotewrap(c_escape(data["description"]["long"]))
-    except AttributeError:
-        long = "NULL"
+location_t locations[] = {{
+{}
+}};
 
-    c += """  {{
-    .description = {{
-      .small = {},
-      .big = {},
-    }},
-  }},
-""".format(short, long)
+object_description_t object_descriptions[] = {{
+{}
+}};
 
-c += "};\n\n"
-h += "};\n\n"
+obituary_t obituaries[] = {{
+{}
+}};
 
-h += "enum object_descriptions_refs {\n"
-c += "object_description_t object_descriptions[] = {\n"
-for key, data in dungeon["object_descriptions"]:
-    try:
-        data["inventory"] = "\"{}\"".format(c_escape(data["inventory"]))
-    except AttributeError:
-        data["inventory"] = "NULL"
-    h += "  {},\n".format(key)
-    c += "  {\n"
-    c += "    .inventory = {},\n".format(data["inventory"])
-    try:
-        data["longs"][0]
-        c += "    .longs = (const char* []) {\n"
-        for l in data["longs"]:
-            l = c_escape(l)
-            c += "      \"{}\",\n".format(l)
-        c += "    },\n"
-    except (TypeError, IndexError):
-        c += "    .longs = NULL,\n"
-    c += "  },\n"
-h += "};\n\n"
-c += "};\n\n"
-
-c += "obituary_t obituaries[] = {\n"
-for obit in dungeon["obituaries"]:
-
-    query = quotewrap(c_escape(obit["query"]))
-    yes_response = quotewrap(c_escape(obit["yes_response"]))
-
-    c += """  {{
-    .query = {},
-    .yes_response = {},
-  }},
-""".format(query, yes_response)
-
-c += "};\n"
-
-c += """
 size_t CLSSES = {};
-""".format(len(dungeon["class_messages"]))
-
-c += """
 int maximum_deaths = {};
-""".format(len(dungeon["obituaries"]))
+"""
 
+def make_c_string(string):
+    """Render a Python string into C string literal format."""
+    if string == None:
+        return "NULL"
+    string = string.replace("\n", "\\n")
+    string = string.replace("\t", "\\t")
+    string = string.replace('"', '\\"')
+    string = string.replace("'", "\\'")
+    string = '"' + string + '"'
+    return string
 
-# finally, write out the files
-d = {
-    h_name: h,
-    c_name: c,
-}
-for filename, string in d.items():
-    with open(filename, "w") as f:
-        f.write(string)
+def get_refs(l):
+    reflist = [x[0] for x in l]
+    ref_str = ""
+    for ref in reflist:
+        ref_str += "    {},\n".format(ref)
+    ref_str = ref_str[:-1] # trim trailing newline
+    return ref_str
 
+def get_arbitrary_messages(arb):
+    template = """    {},
+"""
+    arb_str = ""
+    for item in arb:
+        arb_str += template.format(make_c_string(item[1]))
+    arb_str = arb_str[:-1] # trim trailing newline
+    return arb_str
+
+def get_class_messages(cls):
+    template = """    {},
+"""
+    cls_str = ""
+    for item in cls:
+        cls_str += template.format(make_c_string(item[1]))
+    cls_str = cls_str[:-1] # trim trailing newline
+    return cls_str    
+
+def get_turn_threshold_messages(trn):
+    template = """    {},
+"""
+    trn_str = ""
+    for item in trn:
+        trn_str += template.format(make_c_string(item[1]))
+    trn_str = trn_str[:-1] # trim trailing newline
+    return trn_str
+
+def get_locations(loc):
+    template = """    {{
+        .description = {{
+            .small = {},
+            .big = {},
+        }},
+    }},
+"""
+    loc_str = ""
+    for item in loc:
+        short_d = make_c_string(item[1]["description"]["short"])
+        long_d = make_c_string(item[1]["description"]["long"])
+        loc_str += template.format(short_d, long_d)
+    loc_str = loc_str[:-1] # trim trailing newline
+    return loc_str
+
+def get_object_descriptions(obj):
+    template = """    {{
+        .inventory = {},
+        .longs = (const char* []) {{
+{}
+        }},
+    }},
+"""
+    obj_str = ""
+    for item in obj:
+        i_msg = make_c_string(item[1]["inventory"])
+        longs_str = ""
+        if item[1]["longs"] == None:
+            longs_str = " " * 12 + "NULL,"
+        else:
+            for l_msg in item[1]["longs"]:
+                longs_str += " " * 12 + make_c_string(l_msg) + ",\n"
+            longs_str = longs_str[:-1] # trim trailing newline
+        obj_str += template.format(i_msg, longs_str)
+    obj_str = obj_str[:-1] # trim trailing newline
+    return obj_str
+
+def get_obituaries(obit):
+    template = """    {{
+        .query = {},
+        .yes_response = {},
+    }},
+"""
+    obit_str = ""
+    for o in obit:
+        query = make_c_string(o["query"])
+        yes = make_c_string(o["yes_response"])
+        obit_str += template.format(query, yes)
+    obit_str = obit_str[:-1] # trim trailing newline
+    return obit_str
+
+with open(yaml_name, "r") as f:
+    db = yaml.load(f)
+
+h = h_template.format(
+    get_refs(db["arbitrary_messages"]),
+    get_refs(db["class_messages"]),
+    get_refs(db["turn_threshold_messages"]),
+    get_refs(db["locations"]),
+    get_refs(db["object_descriptions"]),
+)
+
+c = c_template.format(
+    h_name,
+    get_arbitrary_messages(db["arbitrary_messages"]),
+    get_class_messages(db["class_messages"]),
+    get_turn_threshold_messages(db["turn_threshold_messages"]),
+    get_locations(db["locations"]),
+    get_object_descriptions(db["object_descriptions"]),
+    get_obituaries(db["obituaries"]),
+    len(db["class_messages"]),
+    len(db["obituaries"]),
+)
+
+with open(h_name, "w") as hf:
+    hf.write(h)
+
+with open(c_name, "w") as cf:
+    cf.write(c)
