@@ -1037,12 +1037,19 @@ class_messages: !!omap
 - CLS_9: 'All of Adventuredom gives tribute to you, Adventurer Grandmaster!'
 - CLS_10: 'Adventuredom stands in awe -- you have now joined the ranks of the\n       W O R L D   C H A M P I O N   A D V E N T U R E R S !\nIt may interest you to know that the Dungeon-Master himself has, to\nmy knowledge, never achieved this threshhold in fewer than 330 turns.'
 
-turn_threshold_messages: !!omap
-- TURN_0: !!null
-- TURN_1: 'Tsk!  A wizard wouldn''t have to take 350 turns.  This is going to cost\nyou a couple of points.'
-- TURN_2: 500 turns?  That's another few points you've lost.
-- TURN_3: 'Are you still at it?  Five points off for exceeding 1000 turns!'
-- TURN_4: 'Good grief, don''t you *EVER* give up?  Do you realize you''ve spent\nover 2500 turns at this?  That''s another ten points off, a total of\ntwenty points lost for taking so long.'
+turn_thresholds:
+- threshold: 350
+  point_loss: 2
+  message: 'Tsk!  A wizard wouldn''t have to take 350 turns.  This is going to cost\nyou a couple of points.' 
+- threshold: 500
+  point_loss: 3
+  message: '500 turns?  That''s another few points you''ve lost.'  
+- threshold: 1000
+  point_loss: 5
+  message: 'Are you still at it?  Five points off for exceeding 1000 turns!'  
+- threshold: 2500
+  point_loss: 10
+  message: 'Good grief, don''t you *EVER* give up?  Do you realize you''ve spent\nover 2500 turns at this?  That''s another ten points off, a total of\ntwenty points lost for taking so long.'
   
 object_descriptions: !!omap
 - OBJ_0:

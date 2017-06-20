@@ -1024,14 +1024,25 @@ L2600:
 L2607:
         game.foobar = (game.foobar > 0 ? -game.foobar : 0);
         ++game.turns;
-        if (game.turns == game.thresh) {
-            speak(turn_threshold_messages[game.trndex]);
-            game.trnluz = game.trnluz + TRNVAL[game.trndex] / 100000;
-            ++game.trndex;
-            game.thresh = -1;
-            if (game.trndex <= TRNVLS)
-                game.thresh = MOD(TRNVAL[game.trndex], 100000) + 1;
-        }
+
+	/* If a turn threshold has been met, apply penalties and tell
+	 * the player about it. */
+	for (int i = turn_threshold_count; i >= 0; --i)
+	  {
+	    if (game.turns == turn_thresholds[i].threshold)
+	      {
+		game.trnluz += turn_thresholds[i].point_loss;
+		speak(turn_thresholds[i].message);
+	      }
+	  }
+        /* if (game.turns == game.thresh) { */
+        /*     speak(turn_threshold_messages[game.trndex]); */
+        /*     game.trnluz = game.trnluz + TRNVAL[game.trndex] / 100000; */
+        /*     ++game.trndex; */
+        /*     game.thresh = -1; */
+        /*     if (game.trndex <= TRNVLS) */
+        /*         game.thresh = MOD(TRNVAL[game.trndex], 100000) + 1; */
+        /* } */
         if (command.verb == SAY && WD2 > 0)
             command.verb = 0;
         if (command.verb == SAY) {

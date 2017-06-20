@@ -29,25 +29,28 @@ typedef struct {{
   const char* yes_response;
 }} obituary_t;
 
+typedef struct {{
+  const int threshold;
+  const int point_loss;
+  const char* message;
+}} turn_threshold_t;
+
 extern location_t locations[];
 extern object_description_t object_descriptions[];
 extern const char* arbitrary_messages[];
 extern const char* class_messages[];
-extern const char* turn_threshold_messages[];
+extern turn_threshold_t turn_thresholds[];
 extern obituary_t obituaries[];
 
 extern size_t CLSSES;
 extern int maximum_deaths;
+extern int turn_threshold_count;
 
 enum arbitrary_messages_refs {{
 {}
 }};
 
 enum class_messages_refs {{
-{}
-}};
-
-enum turn_threshold_messages_refs {{
 {}
 }};
 
@@ -70,7 +73,7 @@ const char* class_messages[] = {{
 {}
 }};
 
-const char* turn_threshold_messages[] = {{
+turn_threshold_t turn_thresholds[] = {{
 {}
 }};
 
@@ -88,6 +91,7 @@ obituary_t obituaries[] = {{
 
 size_t CLSSES = {};
 int maximum_deaths = {};
+int turn_threshold_count = {};
 """
 
 def make_c_string(string):
@@ -127,12 +131,19 @@ def get_class_messages(cls):
     cls_str = cls_str[:-1] # trim trailing newline
     return cls_str    
 
-def get_turn_threshold_messages(trn):
-    template = """    {},
+def get_turn_thresholds(trn):
+    template = """    {{
+        .threshold = {},
+        .point_loss = {},
+        .message = {},
+}},
 """
     trn_str = ""
     for item in trn:
-        trn_str += template.format(make_c_string(item[1]))
+        threshold = item["threshold"]
+        point_loss = item["point_loss"]
+        message = make_c_string(item["message"])
+        trn_str += template.format(threshold, point_loss, message)
     trn_str = trn_str[:-1] # trim trailing newline
     return trn_str
 
@@ -194,7 +205,6 @@ with open(yaml_name, "r") as f:
 h = h_template.format(
     get_refs(db["arbitrary_messages"]),
     get_refs(db["class_messages"]),
-    get_refs(db["turn_threshold_messages"]),
     get_refs(db["locations"]),
     get_refs(db["object_descriptions"]),
 )
@@ -203,12 +213,13 @@ c = c_template.format(
     h_name,
     get_arbitrary_messages(db["arbitrary_messages"]),
     get_class_messages(db["class_messages"]),
-    get_turn_threshold_messages(db["turn_threshold_messages"]),
+    get_turn_thresholds(db["turn_thresholds"]),
     get_locations(db["locations"]),
     get_object_descriptions(db["object_descriptions"]),
     get_obituaries(db["obituaries"]),
     len(db["class_messages"]),
     len(db["obituaries"]),
+    len(db["turn_thresholds"]),
 )
 
 with open(h_name, "w") as hf:
