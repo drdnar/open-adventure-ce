@@ -12,14 +12,14 @@ w
 w
 w
 drop rod
-take bird
+cage bird
 take rod
 w
 free bird
 wave rod
 take necklace
 drop rod
-take bird
+cage bird
 take rod
 d
 d
@@ -27,7 +27,7 @@ free bird
 drop rod
 drop cage
 take cage
-take bird
+cage bird
 take rod
 w
 e
