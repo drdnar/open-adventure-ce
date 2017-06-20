@@ -1152,14 +1152,13 @@ object_descriptions: !!omap
     - 'There is a bottle of oil here.'
 - OBJ_21:
     inventory: 'Water in the bottle'
-    longs: []
+    longs: !!null
 - OBJ_22:
     inventory: 'Oil in the bottle'
-    longs: []
+    longs: !!null
 - OBJ_23:
     inventory: '*mirror'
-    longs:
-    - ''
+    longs: !!null
 - OBJ_24:
     inventory: '*plant'
     longs:
@@ -1193,12 +1192,10 @@ object_descriptions: !!omap
     - 'There is a little axe lying beside the bear.'
 - OBJ_29:
     inventory: '*cave drawings'
-    longs:
-    - ''
+    longs: !!null
 - OBJ_30:
     inventory: '*pirate/genie'
-    longs:
-    - '' # never present
+    longs: !!null # never present
 - OBJ_31:
     inventory: '*dragon'
     longs:
@@ -1219,14 +1216,14 @@ object_descriptions: !!omap
     longs:
     - 'A burly troll stands by the bridge and insists you throw him a\ntreasure before you may cross.'
     - 'The troll steps out from beneath the bridge and blocks your way.'
-    - '  (chased away)'
+    - '' # chased away
     - 'The troll sounds quite adamant in his demand for a treasure.'
 - OBJ_34:
     inventory: '*phony troll'
     longs:
     - 'The troll is nowhere to be seen.'
 - OBJ_35:
-    inventory: '' # bear uses rtext 141
+    inventory: !!null # bear uses rtext 141
     longs:
     - 'There is a ferocious cave bear eying you from the far end of the room!'
     - 'There is a gentle cave bear sitting placidly in one corner.'
@@ -1239,8 +1236,7 @@ object_descriptions: !!omap
     - '"This is not the maze where the pirate leaves his treasure chest."'
 - OBJ_37:
     inventory: '*volcano and/or geyser'
-    longs:
-    - ''
+    longs: !!null
 - OBJ_38:
     inventory: '*vending machine'
     longs:
@@ -1257,8 +1253,7 @@ object_descriptions: !!omap
     - 'Some worn-out batteries have been discarded nearby.'
 - OBJ_40:
     inventory: '*carpet and/or moss and/or curtains'
-    longs:
-    - ''
+    longs: !!null
 - OBJ_41:
     inventory: '*ogre'
     longs:
