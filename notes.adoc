@@ -73,8 +73,8 @@ necessarily pretty ugly by modern standards. Encryption and
 checksumming have been discarded - it's pointless to try
 tamper-proofing saves when everyone has the source code.
 
-A -r command-line been added. When it is given (with a file
-path argument) it is functionally equivalent to RESTORE command.
+A -r command-line been added. When it is given (with a file path
+argument) it is functionally equivalent to a RESTORE command.
 
 == Translation ==
 
@@ -85,14 +85,14 @@ ugly and quite unreadable.
 Jason Ninneman and I have moved it to what is almost, but not quite,
 idiomatic modern C.  We refactored the right way, checking correctness
 against a comprehensive test suite that we built first and verified
-with coverage tools (we have over 90% coverage, with the remaining
-confined to exception cases that are difficult to reach). This is
+with coverage tools (we now have over 90% coverage, with the remaining
+confined to exception cases that are very difficult to reach). This is
 what you are running when you do "make check".
 
-This move entailed some structural changes.  The most important was
-the refactoring of over 350 gotos into if/loop/break structures.  We
-also abolished almost all shared globals; the main one left is a
-struct holding the game's saveable/restorable state.
+The move to modern C entailed some structural changes.  The most
+important was the refactoring of over 350 gotos into if/loop/break
+structures.  We also abolished almost all shared globals; the main one
+left is a struct holding the game's saveable/restorable state.
 
 The original code was greatly complicated by a kind of bit-packing
 that was performed because the FORTRAN it was written in had no string
@@ -107,6 +107,11 @@ We are still in the process of removing all this bit-packing cruft
 in favor of proper C strings.  C strings may be a weak and leaky
 abstraction, but this is one of the rare cases in which they are
 an obvious improvement over what they're displacing... 
+
+We have also conducted extensive fuzz testing on the game using
+afl (American Fuzzy Lop).  We've found and fixed some crashers in
+our new code (which occasionally uses malloc(3)) but none as yet
+in Don's old code (which didn't).
 
 The code falls short of being fully modern C in the following
 ways:
