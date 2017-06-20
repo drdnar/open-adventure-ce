@@ -257,8 +257,8 @@ char* get_input()
             IGNORE(getline(&input, &n, stdin));
         }
 
-        if (input == NULL) // Got EOF; quit.
-            exit(EXIT_SUCCESS);
+        if (input == NULL) // Got EOF; return with it.
+	    return(input);
         else if (input[0] == '#') // Ignore comments.
             continue;
         else // We have a 'normal' line; leave the loop.
@@ -290,6 +290,10 @@ bool YES(const char* question, const char* yes_response, const char* no_response
         speak(question);
 
         reply = get_input();
+	if (reply == NULL) {
+	  linenoiseFree(reply);
+	  exit(EXIT_SUCCESS);
+	}
 
         char* firstword = (char*) xmalloc(strlen(reply)+1);
         sscanf(reply, "%s", firstword);
