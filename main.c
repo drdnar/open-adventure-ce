@@ -1029,7 +1029,7 @@ L2607:
 	 * the player about it. */
 	for (int i = turn_threshold_count; i >= 0; --i)
 	  {
-	    if (game.turns == turn_thresholds[i].threshold)
+	    if (game.turns == turn_thresholds[i].threshold + 1)
 	      {
 		game.trnluz += turn_thresholds[i].point_loss;
 		speak(turn_thresholds[i].message);
