@@ -1,4 +1,4 @@
-## Try (and fail) to carry message at vending machine
+## Test filling urn when you have no bottle
 n
 seed 1838473132
 in
@@ -183,7 +183,6 @@ drop appendage
 e
 d
 get oil
-
 u
 w
 d
@@ -330,100 +329,6 @@ out
 w
 n
 n
-n
-inven
-fill urn
-light urn
-rub urn
-take amber
-drop rug
-drop emerald
-fly rug
-take sapphire
-fly rug
-take emerald
-drop ruby
-take rug
 drop bottle
-take ruby
-e
-s
-e
-e
-in
-drop ruby
-drop sapphire
-drop amber
-drop rug
-look
-plugh
-on
-s
-s
-u
-w
-w
-w
-s
-e
-s
-throw axe
-take axe
-s
-s
 n
-e
-e
-nw
-take emerald
-take chest
-se
-n
-d
-e
-e
-off
-xyzzy
-drop emerald
-drop chest
-take coins
-plugh
-on
-s
-s
-u
-# Go to vending machine and get batteries.
-w
-wave rod
-w
-w
-w
-w
-s
-sw
-se
-s
-carry message
-n
-s
-n
-s
-n
-s
-n
-s
-n
-s
-n
-s
-n
-s
-n
-s
-n
-s
-n
-s
-n
-s
-lamp on
+fill urn

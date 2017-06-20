@@ -31,6 +31,10 @@ Seed set to 1801426495
 
 You're in front of building.
 
+> eat grate
+
+You're in front of building.
+
 > in
 
 You are inside a building, a well house for a large spring.
@@ -105,7 +109,9 @@ You're in front of building.
 I don't know where the cave is, but hereabouts no stream can run on
 the surface for long.  I would try the stream.
 
-You're in front of building.
+You are standing at the end of a road before a small brick building.
+Around you is a forest.  A small stream flows out of the building and
+down a gully.
 
 > enter stream
 
@@ -127,9 +133,7 @@ Carry what?
 
 I am unsure how you are facing.  Use compass points or nearby objects.
 
-You are standing at the end of a road before a small brick building.
-Around you is a forest.  A small stream flows out of the building and
-down a gully.
+You're in front of building.
 
 > eat
 
@@ -435,7 +439,7 @@ Okay, "BOO".
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 85 turns.
+You have garnered 27 out of a possible 430 points, using 86 turns.
 
 > quit keys
 
@@ -449,7 +453,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 27 out of a possible 430, using 87 turns.
+You scored 27 out of a possible 430, using 88 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 
