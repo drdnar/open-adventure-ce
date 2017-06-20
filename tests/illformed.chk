@@ -43,6 +43,10 @@ There is food here.
 
 There is a bottle of water here.
 
+> throw food
+
+You aren't carrying it!
+
 > nothing food
 
 OK
@@ -431,7 +435,7 @@ Okay, "BOO".
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 84 turns.
+You have garnered 27 out of a possible 430 points, using 85 turns.
 
 > quit keys
 
@@ -445,7 +449,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 27 out of a possible 430, using 86 turns.
+You scored 27 out of a possible 430, using 87 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 
