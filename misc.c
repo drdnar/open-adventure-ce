@@ -291,7 +291,7 @@ bool YES(const char* question, const char* yes_response, const char* no_response
 
         reply = get_input();
 
-        char* firstword = (char*) xmalloc(strlen(reply));
+        char* firstword = (char*) xmalloc(strlen(reply)+1);
         sscanf(reply, "%s", firstword);
 
         for (int i = 0; i < (int)strlen(firstword); ++i)
