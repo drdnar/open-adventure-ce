@@ -1027,7 +1027,7 @@ L2607:
 
 	/* If a turn threshold has been met, apply penalties and tell
 	 * the player about it. */
-	for (int i = turn_threshold_count; i >= 0; --i)
+	for (int i = 0; i < turn_threshold_count; ++i)
 	  {
 	    if (game.turns == turn_thresholds[i].threshold + 1)
 	      {
