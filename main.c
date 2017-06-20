@@ -115,15 +115,15 @@ int main(int argc, char *argv[])
             fprintf(stderr,
                     usage, argv[0]);
             fprintf(stderr,
-                    "  where -l creates a log file of your game named as specified'\n");
+                    "        -l create a log file of your game named as specified'\n");
             fprintf(stderr,
                     "        -o 'oldstyle' (no prompt, no command editing, displays 'Initialising...')\n");
 #ifndef ADVENT_NOSAVE
             fprintf(stderr,
-                    "        -r indicates restoring from specified saved game file\n");
+                    "        -r restore from specified saved game file\n");
 #endif
             fprintf(stderr,
-                    "        -s indicates playing with command editing suppressed\n");
+                    "        -s suppress command editing\n");
             exit(-1);
             break;
         }
