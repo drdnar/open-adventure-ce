@@ -523,7 +523,6 @@ static void write_file(FILE* header_file)
     fprintf(header_file, "\n");
 
     // content variables
-    write_0d(header_file, TRNVLS, "TRNVLS");
     write_0d(header_file, HNTMAX, "HNTMAX");
     write_1d(header_file, OBJSND, NOBJECTS + 1, "OBJSND");
     write_1d(header_file, OBJTXT, NOBJECTS + 1, "OBJTXT");
@@ -531,7 +530,6 @@ static void write_file(FILE* header_file)
     write_1d(header_file, KEY, LOCSIZ + 1, "KEY");
     write_1d(header_file, LOCSND, LOCSIZ + 1, "LOCSND");
     write_1d(header_file, CVAL, CLSMAX + 1, "CVAL");
-    write_1d(header_file, TRNVAL, TRNSIZ + 1, "TRNVAL");
     write_1d(header_file, TRAVEL, TRVSIZ + 1, "TRAVEL");
     write_1d(header_file, KTAB, TABSIZ + 1, "KTAB");
     write_1d(header_file, ATAB, TABSIZ + 1, "ATAB");

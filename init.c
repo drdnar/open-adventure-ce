@@ -352,16 +352,10 @@ void initialise(void)
      *	game.limit	Lifetime of lamp (not set here)
      *	maximum_deaths		Number of reincarnation messages available (up to 5)
      *	game.numdie	Number of times killed so far
-     *	game.thresh	Next #turns threshhold (-1 if none)
-     *	game.trndex	Index in TRNVAL of next threshold (db section 14)
      *	game.trnluz	# points lost so far due to number of turns used
      *	game.turns	Tallies how many commands he's given (ignores yes/no)
      *	Logicals were explained earlier */
     game.turns = 0;
-    game.trndex = 1;
-    game.thresh = -1;
-    if (TRNVLS > 0)
-        game.thresh = MOD(TRNVAL[1], 100000) + 1;
     game.trnluz = 0;
     game.lmwarn = false;
     game.iwest = 0;

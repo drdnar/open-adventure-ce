@@ -1035,14 +1035,7 @@ L2607:
 		speak(turn_thresholds[i].message);
 	      }
 	  }
-        /* if (game.turns == game.thresh) { */
-        /*     speak(turn_threshold_messages[game.trndex]); */
-        /*     game.trnluz = game.trnluz + TRNVAL[game.trndex] / 100000; */
-        /*     ++game.trndex; */
-        /*     game.thresh = -1; */
-        /*     if (game.trndex <= TRNVLS) */
-        /*         game.thresh = MOD(TRNVAL[game.trndex], 100000) + 1; */
-        /* } */
+
         if (command.verb == SAY && WD2 > 0)
             command.verb = 0;
         if (command.verb == SAY) {
