@@ -925,11 +925,11 @@ static void listobjects(void)
 static bool do_command(FILE *cmdin)
 /* Get and execute a command */
 {
-    long verb = 0, V1, V2;
+    long V1, V2;
     long kmod, defn;
     static long igo = 0;
-    static long obj = 0;
-    enum speechpart part;
+    static struct command_t command;
+    command.verb = 0;
 
     /*  Can't leave cave once it's closing (except by main office). */
     if (OUTSID(game.newloc) && game.newloc != 0 && game.closng) {
@@ -979,7 +979,7 @@ static bool do_command(FILE *cmdin)
         if (TOTING(BEAR))RSPEAK(TAME_BEAR);
         speak(msg);
         if (FORCED(game.loc)) {
-            if (playermove(verb, 1))
+            if (playermove(command.verb, 1))
                 return true;
             else
                 continue;	/* back to top of main interpreter loop */
@@ -990,9 +990,9 @@ static bool do_command(FILE *cmdin)
         listobjects();
 
 L2012:
-        verb = 0;
-        game.oldobj = obj;
-        obj = 0;
+        command.verb = 0;
+        game.oldobj = command.obj;
+        command.obj = 0;
 
 L2600:
         checkhints();
@@ -1032,10 +1032,10 @@ L2607:
             if (game.trndex <= TRNVLS)
                 game.thresh = MOD(TRNVAL[game.trndex], 100000) + 1;
         }
-        if (verb == SAY && WD2 > 0)
-            verb = 0;
-        if (verb == SAY) {
-            part = transitive;
+        if (command.verb == SAY && WD2 > 0)
+            command.verb = 0;
+        if (command.verb == SAY) {
+            command.part = transitive;
             goto Laction;
         }
         if (closecheck()) {
@@ -1091,17 +1091,17 @@ Lookup:
         kmod = MOD(defn, 1000);
         switch (defn / 1000) {
         case 0:
-            if (playermove(verb, kmod))
+            if (playermove(command.verb, kmod))
                 return true;
             else
                 continue;	/* back to top of main interpreter loop */
         case 1:
-            part = unknown;
-            obj = kmod;
+            command.part = unknown;
+            command.obj = kmod;
             break;
         case 2:
-            part = intransitive;
-            verb = kmod;
+            command.part = intransitive;
+            command.verb = kmod;
             break;
         case 3:
             RSPEAK(kmod);
@@ -1111,11 +1111,11 @@ Lookup:
         }
 
 Laction:
-        switch (action(cmdin, part, verb, obj)) {
+        switch (action(cmdin, command)) {
         case GO_TERMINATE:
             return true;
         case GO_MOVE:
-            playermove(verb, NUL);
+            playermove(command.verb, NUL);
             return true;
         case GO_TOP:
             continue;	/* back to top of main interpreter loop */
@@ -1138,7 +1138,7 @@ Laction:
              *  (see attack()). */
             SETPRM(1, WD1, WD1X);
             RSPEAK(DO_WHAT);
-            obj = 0;
+            command.obj = 0;
             goto L2600;
         case GO_DWARFWAKE:
             /*  Oh dear, he's disturbed the dwarves. */

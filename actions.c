@@ -995,14 +995,14 @@ static int wave(token_t verb, token_t obj)
     }
 }
 
-int action(FILE *input, enum speechpart part, token_t verb, token_t obj)
+int action(FILE *input, struct command_t command)
 /*  Analyse a verb.  Remember what it was, go back for object if second word
  *  unless verb is "say", which snarfs arbitrary second word.
  */
 {
-    token_t spk = ACTSPK[verb];
+    token_t spk = ACTSPK[command.verb];
 
-    if (part == unknown) {
+    if (command.part == unknown) {
         /*  Analyse an object word.  See if the thing is here, whether
          *  we've got a verb yet, and so on.  Object must be here
          *  unless verb is "find" or "invent(ory)" (and no new verb
@@ -1010,35 +1010,35 @@ int action(FILE *input, enum speechpart part, token_t verb, token_t obj)
          *  they are never actually dropped at any location, but might
          *  be here inside the bottle or urn or as a feature of the
          *  location. */
-        if (HERE(obj))
+        if (HERE(command.obj))
             /* FALL THROUGH */;
-        else if (obj == GRATE) {
+        else if (command.obj == GRATE) {
             if (game.loc == LOC_START || game.loc == LOC_VALLEY || game.loc == LOC_SLIT)
-                obj = DPRSSN;
+                command.obj = DPRSSN;
             if (game.loc == LOC_COBBLE || game.loc == LOC_DEBRIS || game.loc == LOC_AWKWARD ||
                 game.loc == LOC_BIRD || game.loc == LOC_PITTOP)
-                obj = ENTRNC;
-            if (obj != GRATE)
+                command.obj = ENTRNC;
+            if (command.obj != GRATE)
                 return GO_MOVE;
-        } else if (obj == DWARF && ATDWRF(game.loc) > 0)
+        } else if (command.obj == DWARF && ATDWRF(game.loc) > 0)
             /* FALL THROUGH */;
-        else if ((LIQUID() == obj && HERE(BOTTLE)) || obj == LIQLOC(game.loc))
+        else if ((LIQUID() == command.obj && HERE(BOTTLE)) || command.obj == LIQLOC(game.loc))
             /* FALL THROUGH */;
-        else if (obj == OIL && HERE(URN) && game.prop[URN] != 0) {
-            obj = URN;
+        else if (command.obj == OIL && HERE(URN) && game.prop[URN] != 0) {
+            command.obj = URN;
             /* FALL THROUGH */;
-        } else if (obj == PLANT && AT(PLANT2) && game.prop[PLANT2] != 0) {
-            obj = PLANT2;
+        } else if (command.obj == PLANT && AT(PLANT2) && game.prop[PLANT2] != 0) {
+            command.obj = PLANT2;
             /* FALL THROUGH */;
-        } else if (obj == KNIFE && game.knfloc == game.loc) {
+        } else if (command.obj == KNIFE && game.knfloc == game.loc) {
             game.knfloc = -1;
             spk = KNIVES_VANISH;
             RSPEAK(spk);
             return GO_CLEAROBJ;
-        } else if (obj == ROD && HERE(ROD2)) {
-            obj = ROD2;
+        } else if (command.obj == ROD && HERE(ROD2)) {
+            command.obj = ROD2;
             /* FALL THROUGH */;
-        } else if ((verb == FIND || verb == INVENT) && WD2 <= 0)
+        } else if ((command.verb == FIND || command.verb == INVENT) && WD2 <= 0)
             /* FALL THROUGH */;
         else {
             SETPRM(1, WD1, WD1X);
@@ -1048,36 +1048,36 @@ int action(FILE *input, enum speechpart part, token_t verb, token_t obj)
 
         if (WD2 > 0)
             return GO_WORD2;
-        if (verb != 0)
-            part = transitive;
+        if (command.verb != 0)
+            command.part = transitive;
     }
 
-    switch (part) {
+    switch (command.part) {
     case intransitive:
-        if (WD2 > 0 && verb != SAY)
+        if (WD2 > 0 && command.verb != SAY)
 	    return GO_WORD2;
-        if (verb == SAY)obj = WD2;
-        if (obj == 0 || obj == INTRANSITIVE) {
+        if (command.verb == SAY)command.obj = WD2;
+        if (command.obj == 0 || command.obj == INTRANSITIVE) {
             /*  Analyse an intransitive verb (ie, no object given yet). */
-            switch (verb - 1) {
+            switch (command.verb - 1) {
             case  0: /* CARRY */
-                return carry(verb, INTRANSITIVE);
+                return carry(command.verb, INTRANSITIVE);
             case  1: /* DROP  */
                 return GO_UNKNOWN;
             case  2: /* SAY   */
                 return GO_UNKNOWN;
             case  3: /* UNLOC */
-                return lock(verb, INTRANSITIVE);
+                return lock(command.verb, INTRANSITIVE);
             case  4: { /* NOTHI */
                 RSPEAK(OK_MAN);
                 return (GO_CLEAROBJ);
             }
             case  5: /* LOCK  */
-                return lock(verb, INTRANSITIVE);
+                return lock(command.verb, INTRANSITIVE);
             case  6: /* LIGHT */
-                return light(verb, INTRANSITIVE);
+                return light(command.verb, INTRANSITIVE);
             case  7: /* EXTIN */
-                return extinguish(verb, INTRANSITIVE);
+                return extinguish(command.verb, INTRANSITIVE);
             case  8: /* WAVE  */
                 return GO_UNKNOWN;
             case  9: /* CALM  */
@@ -1087,13 +1087,13 @@ int action(FILE *input, enum speechpart part, token_t verb, token_t obj)
                 return GO_CLEAROBJ;
             }
             case 11: /* ATTAC */
-                return attack(input, verb, obj);
+                return attack(input, command.verb, command.obj);
             case 12: /* POUR  */
-                return pour(verb, obj);
+                return pour(command.verb, command.obj);
             case 13: /* EAT   */
-                return eat(verb, INTRANSITIVE);
+                return eat(command.verb, INTRANSITIVE);
             case 14: /* DRINK */
-                return drink(verb, obj);
+                return drink(command.verb, command.obj);
             case 15: /* RUB   */
                 return GO_UNKNOWN;
             case 16: /* TOSS  */
@@ -1107,7 +1107,7 @@ int action(FILE *input, enum speechpart part, token_t verb, token_t obj)
             case 20: /* FEED  */
                 return GO_UNKNOWN;
             case 21: /* FILL  */
-                return fill(verb, obj);
+                return fill(command.verb, command.obj);
             case 22: /* BLAST */
                 blast();
                 return GO_CLEAROBJ;
@@ -1119,7 +1119,7 @@ int action(FILE *input, enum speechpart part, token_t verb, token_t obj)
             case 25: /* BRIEF */
                 return brief();
             case 26: /* READ  */
-                return read(verb, INTRANSITIVE);
+                return read(command.verb, INTRANSITIVE);
             case 27: /* BREAK */
                 return GO_UNKNOWN;
             case 28: /* WAKE  */
@@ -1129,7 +1129,7 @@ int action(FILE *input, enum speechpart part, token_t verb, token_t obj)
             case 30: /* RESU  */
                 return resume();
             case 31: /* FLY   */
-                return fly(verb, INTRANSITIVE);
+                return fly(command.verb, INTRANSITIVE);
             case 32: /* LISTE */
                 return listen();
             case 33: /* ZZZZ  */
@@ -1140,27 +1140,27 @@ int action(FILE *input, enum speechpart part, token_t verb, token_t obj)
     /* FALLTHRU */
     case transitive:
         /*  Analyse a transitive verb. */
-        switch (verb - 1) {
+        switch (command.verb - 1) {
         case  0: /* CARRY */
-            return carry(verb, obj);
+            return carry(command.verb, command.obj);
         case  1: /* DROP  */
-            return discard(verb, obj, false);
+            return discard(command.verb, command.obj, false);
         case  2: /* SAY   */
             return say();
         case  3: /* UNLOC */
-            return lock(verb, obj);
+            return lock(command.verb, command.obj);
         case  4: { /* NOTHI */
             RSPEAK(OK_MAN);
             return (GO_CLEAROBJ);
         }
         case  5: /* LOCK  */
-            return lock(verb, obj);
+            return lock(command.verb, command.obj);
         case  6: /* LIGHT */
-            return light(verb, obj);
+            return light(command.verb, command.obj);
         case  7: /* EXTI  */
-            return extinguish(verb, obj);
+            return extinguish(command.verb, command.obj);
         case  8: /* WAVE  */
-            return wave(verb, obj);
+            return wave(command.verb, command.obj);
         case  9: { /* CALM  */
             RSPEAK(spk);
             return GO_CLEAROBJ;
@@ -1170,29 +1170,29 @@ int action(FILE *input, enum speechpart part, token_t verb, token_t obj)
             return GO_CLEAROBJ;
         }
         case 11: /* ATTAC */
-            return attack(input, verb, obj);
+            return attack(input, command.verb, command.obj);
         case 12: /* POUR  */
-            return pour(verb, obj);
+            return pour(command.verb, command.obj);
         case 13: /* EAT   */
-            return eat(verb, obj);
+            return eat(command.verb, command.obj);
         case 14: /* DRINK */
-            return drink(verb, obj);
+            return drink(command.verb, command.obj);
         case 15: /* RUB   */
-            return rub(verb, obj);
+            return rub(command.verb, command.obj);
         case 16: /* TOSS  */
-            return throw (input, verb, obj);
+            return throw (input, command.verb, command.obj);
         case 17: { /* QUIT  */
             RSPEAK(spk);
             return GO_CLEAROBJ;
         }
         case 18: /* FIND  */
-            return find(verb, obj);
+            return find(command.verb, command.obj);
         case 19: /* INVEN */
-            return find(verb, obj);
+            return find(command.verb, command.obj);
         case 20: /* FEED  */
-            return feed(verb, obj);
+            return feed(command.verb, command.obj);
         case 21: /* FILL  */
-            return fill(verb, obj);
+            return fill(command.verb, command.obj);
         case 22: /* BLAST */
             blast();
             return GO_CLEAROBJ;
@@ -1209,11 +1209,11 @@ int action(FILE *input, enum speechpart part, token_t verb, token_t obj)
             return GO_CLEAROBJ;
         }
         case 26: /* READ  */
-            return read(verb, obj);
+            return read(command.verb, command.obj);
         case 27: /* BREAK */
-            return vbreak(verb, obj);
+            return vbreak(command.verb, command.obj);
         case 28: /* WAKE  */
-            return wake(verb, obj);
+            return wake(command.verb, command.obj);
         case 29: { /* SUSP  */
             RSPEAK(spk);
             return GO_CLEAROBJ;
@@ -1223,7 +1223,7 @@ int action(FILE *input, enum speechpart part, token_t verb, token_t obj)
             return GO_CLEAROBJ;
         }
         case 31: /* FLY   */
-            return fly(verb, obj);
+            return fly(command.verb, command.obj);
         case 32: { /* LISTE */
             RSPEAK(spk);
             return GO_CLEAROBJ;
