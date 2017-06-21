@@ -728,9 +728,7 @@ static int lock(token_t verb, token_t obj)
                 if (!game.panic)game.clock2 = PANICTIME;
                 game.panic = true;
             } else {
-                spk = game.prop[GRATE] ? GRATE_LOCKED : ALREADY_LOCKED;
-                game.prop[GRATE] = 1;
-                if (verb == LOCK)game.prop[GRATE] = 0;
+                game.prop[GRATE] = (verb == LOCK) ? 0 : 1;
                 spk = game.prop[GRATE] ? GRATE_UNLOCKED : GRATE_LOCKED;
             }
         }
