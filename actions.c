@@ -798,23 +798,19 @@ static int read(struct command_t command)
             if (HERE(i) && OBJTXT[i] != 0 && game.prop[i] >= 0)
                 command.obj = command.obj * NOBJECTS + i;
         }
-        if (command.obj > NOBJECTS || command.obj == 0 || DARK(game.loc)) return GO_UNKNOWN;
+        if (command.obj > NOBJECTS || command.obj == 0 || DARK(game.loc))
+	    return GO_UNKNOWN;
     }
 
     if (DARK(game.loc)) {
         SETPRM(1, command.wd1, command.wd1x);
         RSPEAK(NO_SEE);
-        return GO_CLEAROBJ;
-    }
-    if (OBJTXT[command.obj] == 0 || game.prop[command.obj] < 0) {
+    } else if (OBJTXT[command.obj] == 0 || game.prop[command.obj] < 0) {
         RSPEAK(ACTSPK[command.verb]);
-        return GO_CLEAROBJ;
-    }
-    if (command.obj == OYSTER && !game.clshnt) {
+    } else if (command.obj == OYSTER && !game.clshnt) {
         game.clshnt = YES(arbitrary_messages[CLUE_QUERY], arbitrary_messages[WAYOUT_CLUE], arbitrary_messages[OK_MAN]);
-        return GO_CLEAROBJ;
-    }
-    PSPEAK(command.obj, OBJTXT[command.obj] + game.prop[command.obj]);
+    } else
+	PSPEAK(command.obj, OBJTXT[command.obj] + game.prop[command.obj]);
     return GO_CLEAROBJ;
 }
 
