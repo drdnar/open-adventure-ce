@@ -54,7 +54,7 @@ long ACTSPK[VRBSIZ + 1];
 
 static bool is_set(long var, long position)
 {
-    long mask = 1l << position;
+    long mask = 1L << position;
     bool result = (var & mask) == mask;
     return (result);
 }
@@ -308,7 +308,7 @@ static void read_conditions(FILE* database)
         while ((loc = GETNUM(NULL)) != 0) {
             if (is_set(COND[loc], K))
                 BUG(LOCATION_HAS_CONDITION_BIT_BEING_SET_TWICE);
-            COND[loc] = COND[loc] + (1l << K);
+            COND[loc] = COND[loc] + (1L << K);
         }
     }
 }
