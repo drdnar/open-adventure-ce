@@ -112,7 +112,7 @@ static int bigwords(token_t foo)
     int k = VOCAB(foo, 3);
     int spk = NOTHING_HAPPENS;
     if (game.foobar != 1 - k) {
-        if (game.foobar != 0)spk = START_OVER;
+        if (game.foobar != 0 && game.loc == LOC_GIANTROOM)spk = START_OVER;
         rspeak(spk);
         return GO_CLEAROBJ;
     } else {
