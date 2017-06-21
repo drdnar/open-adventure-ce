@@ -4,17 +4,16 @@
 #include "database.h"
 #include "newdb.h"
 
-/* Limit visibility of ugly globals.  Eventually these should go away. */
-extern token_t WD1, WD1X, WD2, WD2X;
-
 static int fill(token_t, token_t);
 
-static int attack(FILE *input, token_t verb, token_t obj)
+static int attack(FILE *input, struct command_t *command)
 /*  Attack.  Assume target if unambiguous.  "Throw" also links here.
  *  Attackable objects fall into two categories: enemies (snake,
  *  dwarf, etc.)  and others (bird, clam, machine).  Ambiguous if 2
  *  enemies, or no enemies but 2 others. */
 {
+    vocab_t verb = command->verb;
+    vocab_t obj = command->obj;
     int spk = ACTSPK[verb];
     if (obj == 0 || obj == INTRANSITIVE) {
         if (ATDWRF(game.loc) > 0)
@@ -81,8 +80,8 @@ static int attack(FILE *input, token_t verb, token_t obj)
          *  fixed), move rug there (not fixed), and move him there,
          *  too.  Then do a null motion to get new description. */
         RSPEAK(BARE_HANDS_QUERY);
-        GETIN(input, &WD1, &WD1X, &WD2, &WD2X);
-        if (WD1 != MAKEWD(WORD_YINIT) && WD1 != MAKEWD(WORD_YES))
+        GETIN(input, &command->wd1, &command->wd1x, &command->wd2, &command->wd2x);
+        if (command->wd1 != MAKEWD(WORD_YINIT) && command->wd1 != MAKEWD(WORD_YES))
             return GO_CHECKFOO;
         PSPEAK(DRAGON, 3);
         game.prop[DRAGON] = 1;
@@ -107,7 +106,7 @@ static int attack(FILE *input, token_t verb, token_t obj)
 
 static int bigwords(token_t foo)
 /*  FEE FIE FOE FOO (AND FUM).  Advance to next state if given in proper order.
- *  Look up WD1 in section 3 of vocab to determine which word we've got.  Last
+ *  Look up foo in section 3 of vocab to determine which word we've got.  Last
  *  word zips the eggs back to the giant room (unless already there). */
 {
     int k = VOCAB(foo, 3);
@@ -792,32 +791,32 @@ static int quit(void)
     return GO_CLEAROBJ;
 }
 
-static int read(token_t verb, token_t obj)
+static int read(struct command_t *command)
 /*  Read.  Print stuff based on objtxt.  Oyster (?) is special case. */
 {
-    if (obj == INTRANSITIVE) {
-        obj = 0;
+    if (command->obj == INTRANSITIVE) {
+        command->obj = 0;
         for (int i = 1; i <= NOBJECTS; i++) {
             if (HERE(i) && OBJTXT[i] != 0 && game.prop[i] >= 0)
-                obj = obj * NOBJECTS + i;
+                command->obj = command->obj * NOBJECTS + i;
         }
-        if (obj > NOBJECTS || obj == 0 || DARK(game.loc)) return GO_UNKNOWN;
+        if (command->obj > NOBJECTS || command->obj == 0 || DARK(game.loc)) return GO_UNKNOWN;
     }
 
     if (DARK(game.loc)) {
-        SETPRM(1, WD1, WD1X);
+        SETPRM(1, command->wd1, command->wd1x);
         RSPEAK(NO_SEE);
         return GO_CLEAROBJ;
     }
-    if (OBJTXT[obj] == 0 || game.prop[obj] < 0) {
-        RSPEAK(ACTSPK[verb]);
+    if (OBJTXT[command->obj] == 0 || game.prop[command->obj] < 0) {
+        RSPEAK(ACTSPK[command->verb]);
         return GO_CLEAROBJ;
     }
-    if (obj == OYSTER && !game.clshnt) {
+    if (command->obj == OYSTER && !game.clshnt) {
         game.clshnt = YES(arbitrary_messages[CLUE_QUERY], arbitrary_messages[WAYOUT_CLUE], arbitrary_messages[OK_MAN]);
         return GO_CLEAROBJ;
     }
-    PSPEAK(obj, OBJTXT[obj] + game.prop[obj]);
+    PSPEAK(command->obj, OBJTXT[command->obj] + game.prop[command->obj]);
     return GO_CLEAROBJ;
 }
 
@@ -859,19 +858,19 @@ static int rub(token_t verb, token_t obj)
     return GO_CLEAROBJ;
 }
 
-static int say(void)
+static int say(struct command_t *command)
 /* Say.  Echo WD2 (or WD1 if no WD2 (SAY WHAT?, etc.).)  Magic words override. */
 {
     /* FIXME: ugly use of globals */
-    SETPRM(1, WD2, WD2X);
-    if (WD2 <= 0)
-        SETPRM(1, WD1, WD1X);
-    if (WD2 > 0)
-        WD1 = WD2;
-    int wd = VOCAB(WD1, -1);
+    SETPRM(1, command->wd2, command->wd2x);
+    if (command->wd2 <= 0)
+        SETPRM(1, command->wd1, command->wd1x);
+    if (command->wd2 > 0)
+        command->wd1 = command->wd2;
+    int wd = VOCAB(command->wd1, -1);
     /* FIXME: Magic numbers */
     if (wd == 62 || wd == 65 || wd == 71 || wd == 2025 || wd == 2034) {
-        WD2 = 0;
+        command->wd2 = 0;
         return GO_LOOKUP;
     }
     RSPEAK(OKEY_DOKEY);
@@ -885,22 +884,22 @@ static int throw_support(long spk)
     return GO_MOVE;
 }
 
-static int throw (FILE *cmdin, long verb, token_t obj)
+static int throw (FILE *cmdin, struct command_t *command)
 /*  Throw.  Same as discard unless axe.  Then same as attack except
  *  ignore bird, and if dwarf is present then one might be killed.
  *  (Only way to do so!)  Axe also special for dragon, bear, and
  *  troll.  Treasures special for troll. */
 {
-    int spk = ACTSPK[verb];
-    if (TOTING(ROD2) && obj == ROD && !TOTING(ROD))obj = ROD2;
-    if (!TOTING(obj)) {
+    int spk = ACTSPK[command->verb];
+    if (TOTING(ROD2) && command->obj == ROD && !TOTING(ROD))command->obj = ROD2;
+    if (!TOTING(command->obj)) {
         RSPEAK(spk);
         return GO_CLEAROBJ;
     }
-    if (obj >= MINTRS && obj <= MAXTRS && AT(TROLL)) {
+    if (command->obj >= MINTRS && command->obj <= MAXTRS && AT(TROLL)) {
         spk = TROLL_SATISFIED;
         /*  Snarf a treasure for the troll. */
-        DROP(obj, 0);
+        DROP(command->obj, 0);
         MOVE(TROLL, 0);
         MOVE(TROLL + NOBJECTS, 0);
         DROP(TROLL2, PLAC[TROLL]);
@@ -909,13 +908,13 @@ static int throw (FILE *cmdin, long verb, token_t obj)
         RSPEAK(spk);
         return GO_CLEAROBJ;
     }
-    if (obj == FOOD && HERE(BEAR)) {
+    if (command->obj == FOOD && HERE(BEAR)) {
         /* But throwing food is another story. */
-        obj = BEAR;
-        return (feed(verb, obj));
+        command->obj = BEAR;
+        return (feed(command->verb, command->obj));
     }
-    if (obj != AXE)
-        return (discard(verb, obj, false));
+    if (command->obj != AXE)
+        return (discard(command->verb, command->obj, false));
     else {
         int i = ATDWRF(game.loc);
         if (i <= 0) {
@@ -934,7 +933,8 @@ static int throw (FILE *cmdin, long verb, token_t obj)
                 RSPEAK(AXE_LOST);
                 return GO_CLEAROBJ;
             }
-            return (attack(cmdin, verb, 0));
+	    command->obj = 0;
+            return (attack(cmdin, command));
         }
 
         if (randrange(NDWARVES + 1) < game.dflag) {
@@ -995,14 +995,14 @@ static int wave(token_t verb, token_t obj)
     }
 }
 
-int action(FILE *input, struct command_t command)
+int action(FILE *input, struct command_t *command)
 /*  Analyse a verb.  Remember what it was, go back for object if second word
  *  unless verb is "say", which snarfs arbitrary second word.
  */
 {
-    token_t spk = ACTSPK[command.verb];
+    token_t spk = ACTSPK[command->verb];
 
-    if (command.part == unknown) {
+    if (command->part == unknown) {
         /*  Analyse an object word.  See if the thing is here, whether
          *  we've got a verb yet, and so on.  Object must be here
          *  unless verb is "find" or "invent(ory)" (and no new verb
@@ -1010,74 +1010,74 @@ int action(FILE *input, struct command_t command)
          *  they are never actually dropped at any location, but might
          *  be here inside the bottle or urn or as a feature of the
          *  location. */
-        if (HERE(command.obj))
+        if (HERE(command->obj))
             /* FALL THROUGH */;
-        else if (command.obj == GRATE) {
+        else if (command->obj == GRATE) {
             if (game.loc == LOC_START || game.loc == LOC_VALLEY || game.loc == LOC_SLIT)
-                command.obj = DPRSSN;
+                command->obj = DPRSSN;
             if (game.loc == LOC_COBBLE || game.loc == LOC_DEBRIS || game.loc == LOC_AWKWARD ||
                 game.loc == LOC_BIRD || game.loc == LOC_PITTOP)
-                command.obj = ENTRNC;
-            if (command.obj != GRATE)
+                command->obj = ENTRNC;
+            if (command->obj != GRATE)
                 return GO_MOVE;
-        } else if (command.obj == DWARF && ATDWRF(game.loc) > 0)
+        } else if (command->obj == DWARF && ATDWRF(game.loc) > 0)
             /* FALL THROUGH */;
-        else if ((LIQUID() == command.obj && HERE(BOTTLE)) || command.obj == LIQLOC(game.loc))
+        else if ((LIQUID() == command->obj && HERE(BOTTLE)) || command->obj == LIQLOC(game.loc))
             /* FALL THROUGH */;
-        else if (command.obj == OIL && HERE(URN) && game.prop[URN] != 0) {
-            command.obj = URN;
+        else if (command->obj == OIL && HERE(URN) && game.prop[URN] != 0) {
+            command->obj = URN;
             /* FALL THROUGH */;
-        } else if (command.obj == PLANT && AT(PLANT2) && game.prop[PLANT2] != 0) {
-            command.obj = PLANT2;
+        } else if (command->obj == PLANT && AT(PLANT2) && game.prop[PLANT2] != 0) {
+            command->obj = PLANT2;
             /* FALL THROUGH */;
-        } else if (command.obj == KNIFE && game.knfloc == game.loc) {
+        } else if (command->obj == KNIFE && game.knfloc == game.loc) {
             game.knfloc = -1;
             spk = KNIVES_VANISH;
             RSPEAK(spk);
             return GO_CLEAROBJ;
-        } else if (command.obj == ROD && HERE(ROD2)) {
-            command.obj = ROD2;
+        } else if (command->obj == ROD && HERE(ROD2)) {
+            command->obj = ROD2;
             /* FALL THROUGH */;
-        } else if ((command.verb == FIND || command.verb == INVENT) && WD2 <= 0)
+        } else if ((command->verb == FIND || command->verb == INVENT) && command->wd2 <= 0)
             /* FALL THROUGH */;
         else {
-            SETPRM(1, WD1, WD1X);
+            SETPRM(1, command->wd1, command->wd1x);
             RSPEAK(NO_SEE);
             return GO_CLEAROBJ;
         }
 
-        if (WD2 > 0)
+        if (command->wd2 > 0)
             return GO_WORD2;
-        if (command.verb != 0)
-            command.part = transitive;
+        if (command->verb != 0)
+            command->part = transitive;
     }
 
-    switch (command.part) {
+    switch (command->part) {
     case intransitive:
-        if (WD2 > 0 && command.verb != SAY)
+        if (command->wd2 > 0 && command->verb != SAY)
 	    return GO_WORD2;
-        if (command.verb == SAY)command.obj = WD2;
-        if (command.obj == 0 || command.obj == INTRANSITIVE) {
+        if (command->verb == SAY)command->obj = command->wd2;
+        if (command->obj == 0 || command->obj == INTRANSITIVE) {
             /*  Analyse an intransitive verb (ie, no object given yet). */
-            switch (command.verb - 1) {
+            switch (command->verb - 1) {
             case  0: /* CARRY */
-                return carry(command.verb, INTRANSITIVE);
+                return carry(command->verb, INTRANSITIVE);
             case  1: /* DROP  */
                 return GO_UNKNOWN;
             case  2: /* SAY   */
                 return GO_UNKNOWN;
             case  3: /* UNLOC */
-                return lock(command.verb, INTRANSITIVE);
+                return lock(command->verb, INTRANSITIVE);
             case  4: { /* NOTHI */
                 RSPEAK(OK_MAN);
                 return (GO_CLEAROBJ);
             }
             case  5: /* LOCK  */
-                return lock(command.verb, INTRANSITIVE);
+                return lock(command->verb, INTRANSITIVE);
             case  6: /* LIGHT */
-                return light(command.verb, INTRANSITIVE);
+                return light(command->verb, INTRANSITIVE);
             case  7: /* EXTIN */
-                return extinguish(command.verb, INTRANSITIVE);
+                return extinguish(command->verb, INTRANSITIVE);
             case  8: /* WAVE  */
                 return GO_UNKNOWN;
             case  9: /* CALM  */
@@ -1087,13 +1087,13 @@ int action(FILE *input, struct command_t command)
                 return GO_CLEAROBJ;
             }
             case 11: /* ATTAC */
-                return attack(input, command.verb, command.obj);
+                return attack(input, command);
             case 12: /* POUR  */
-                return pour(command.verb, command.obj);
+                return pour(command->verb, command->obj);
             case 13: /* EAT   */
-                return eat(command.verb, INTRANSITIVE);
+                return eat(command->verb, INTRANSITIVE);
             case 14: /* DRINK */
-                return drink(command.verb, command.obj);
+                return drink(command->verb, command->obj);
             case 15: /* RUB   */
                 return GO_UNKNOWN;
             case 16: /* TOSS  */
@@ -1107,7 +1107,7 @@ int action(FILE *input, struct command_t command)
             case 20: /* FEED  */
                 return GO_UNKNOWN;
             case 21: /* FILL  */
-                return fill(command.verb, command.obj);
+                return fill(command->verb, command->obj);
             case 22: /* BLAST */
                 blast();
                 return GO_CLEAROBJ;
@@ -1115,11 +1115,12 @@ int action(FILE *input, struct command_t command)
                 score(scoregame);
                 return GO_CLEAROBJ;
             case 24: /* FOO   */
-                return bigwords(WD1);
+                return bigwords(command->wd1);
             case 25: /* BRIEF */
                 return brief();
             case 26: /* READ  */
-                return read(command.verb, INTRANSITIVE);
+		command->obj = INTRANSITIVE;
+                return read(command);
             case 27: /* BREAK */
                 return GO_UNKNOWN;
             case 28: /* WAKE  */
@@ -1129,7 +1130,7 @@ int action(FILE *input, struct command_t command)
             case 30: /* RESU  */
                 return resume();
             case 31: /* FLY   */
-                return fly(command.verb, INTRANSITIVE);
+                return fly(command->verb, INTRANSITIVE);
             case 32: /* LISTE */
                 return listen();
             case 33: /* ZZZZ  */
@@ -1140,27 +1141,27 @@ int action(FILE *input, struct command_t command)
     /* FALLTHRU */
     case transitive:
         /*  Analyse a transitive verb. */
-        switch (command.verb - 1) {
+        switch (command->verb - 1) {
         case  0: /* CARRY */
-            return carry(command.verb, command.obj);
+            return carry(command->verb, command->obj);
         case  1: /* DROP  */
-            return discard(command.verb, command.obj, false);
+            return discard(command->verb, command->obj, false);
         case  2: /* SAY   */
-            return say();
+            return say(command);
         case  3: /* UNLOC */
-            return lock(command.verb, command.obj);
+            return lock(command->verb, command->obj);
         case  4: { /* NOTHI */
             RSPEAK(OK_MAN);
             return (GO_CLEAROBJ);
         }
         case  5: /* LOCK  */
-            return lock(command.verb, command.obj);
+            return lock(command->verb, command->obj);
         case  6: /* LIGHT */
-            return light(command.verb, command.obj);
+            return light(command->verb, command->obj);
         case  7: /* EXTI  */
-            return extinguish(command.verb, command.obj);
+            return extinguish(command->verb, command->obj);
         case  8: /* WAVE  */
-            return wave(command.verb, command.obj);
+            return wave(command->verb, command->obj);
         case  9: { /* CALM  */
             RSPEAK(spk);
             return GO_CLEAROBJ;
@@ -1170,29 +1171,29 @@ int action(FILE *input, struct command_t command)
             return GO_CLEAROBJ;
         }
         case 11: /* ATTAC */
-            return attack(input, command.verb, command.obj);
+            return attack(input, command);
         case 12: /* POUR  */
-            return pour(command.verb, command.obj);
+            return pour(command->verb, command->obj);
         case 13: /* EAT   */
-            return eat(command.verb, command.obj);
+            return eat(command->verb, command->obj);
         case 14: /* DRINK */
-            return drink(command.verb, command.obj);
+            return drink(command->verb, command->obj);
         case 15: /* RUB   */
-            return rub(command.verb, command.obj);
+            return rub(command->verb, command->obj);
         case 16: /* TOSS  */
-            return throw (input, command.verb, command.obj);
+            return throw(input, command);
         case 17: { /* QUIT  */
             RSPEAK(spk);
             return GO_CLEAROBJ;
         }
         case 18: /* FIND  */
-            return find(command.verb, command.obj);
+            return find(command->verb, command->obj);
         case 19: /* INVEN */
-            return find(command.verb, command.obj);
+            return find(command->verb, command->obj);
         case 20: /* FEED  */
-            return feed(command.verb, command.obj);
+            return feed(command->verb, command->obj);
         case 21: /* FILL  */
-            return fill(command.verb, command.obj);
+            return fill(command->verb, command->obj);
         case 22: /* BLAST */
             blast();
             return GO_CLEAROBJ;
@@ -1209,11 +1210,11 @@ int action(FILE *input, struct command_t command)
             return GO_CLEAROBJ;
         }
         case 26: /* READ  */
-            return read(command.verb, command.obj);
+            return read(command);
         case 27: /* BREAK */
-            return vbreak(command.verb, command.obj);
+            return vbreak(command->verb, command->obj);
         case 28: /* WAKE  */
-            return wake(command.verb, command.obj);
+            return wake(command->verb, command->obj);
         case 29: { /* SUSP  */
             RSPEAK(spk);
             return GO_CLEAROBJ;
@@ -1223,7 +1224,7 @@ int action(FILE *input, struct command_t command)
             return GO_CLEAROBJ;
         }
         case 31: /* FLY   */
-            return fly(command.verb, command.obj);
+            return fly(command->verb, command->obj);
         case 32: { /* LISTE */
             RSPEAK(spk);
             return GO_CLEAROBJ;
@@ -1234,7 +1235,7 @@ int action(FILE *input, struct command_t command)
         BUG(TRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST);
     case unknown:
         /* Unknown verb, couldn't deduce object - might need hint */
-        SETPRM(1, WD1, WD1X);
+        SETPRM(1, command->wd1, command->wd1x);
         RSPEAK(WHAT_DO);
         return GO_CHECKHINT;
     default:

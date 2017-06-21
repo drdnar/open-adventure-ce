@@ -185,10 +185,12 @@ struct command_t {
     enum speechpart part;
     vocab_t verb;
     vocab_t obj;
+    token_t wd1, wd1x;
+    token_t wd2, wd2x;
 };
 
 void initialise(void);
-int action(FILE *input, struct command_t command);
+int action(FILE *input, struct command_t *command);
 
 /* Phase codes for action returns.
  * These were at one time FORTRAN line numbers.

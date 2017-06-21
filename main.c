@@ -41,7 +41,6 @@ long AMBER, AXE, BACK, BATTERY, BEAR, BIRD, BLOOD,
      RUBY, RUG, SAPPH, SAY, SIGN, SNAKE,
      STEPS, STREAM, THROW, TRIDENT, TROLL, TROLL2,
      URN, VASE, VEND, VOLCANO, WATER;
-token_t WD1, WD1X, WD2, WD2X;
 
 FILE  *logfp = NULL, *rfp = NULL;
 bool oldstyle = false;
@@ -1015,7 +1014,7 @@ L2600:
             game.knfloc = 0;
 
         /* This is where we get a new command from the user */
-        if (!GETIN(cmdin, &WD1, &WD1X, &WD2, &WD2X))
+        if (!GETIN(cmdin, &command.wd1, &command.wd1x, &command.wd2, &command.wd2x))
             return false;
 
         /*  Every input, check "game.foobar" flag.  If zero, nothing's
@@ -1036,7 +1035,7 @@ L2607:
 	      }
 	  }
 
-        if (command.verb == SAY && WD2 > 0)
+        if (command.verb == SAY && command.wd2 > 0)
             command.verb = 0;
         if (command.verb == SAY) {
             command.part = transitive;
@@ -1048,8 +1047,8 @@ L2607:
         } else
             lampcheck();
 
-        V1 = VOCAB(WD1, -1);
-        V2 = VOCAB(WD2, -1);
+        V1 = VOCAB(command.wd1, -1);
+        V2 = VOCAB(command.wd2, -1);
         if (V1 == ENTER && (V2 == STREAM || V2 == 1000 + WATER)) {
             if (LIQLOC(game.loc) == WATER) {
                 RSPEAK(FEET_WET);
@@ -1058,37 +1057,37 @@ L2607:
             }
             goto L2012;
         }
-        if (V1 == ENTER && WD2 > 0) {
-            WD1 = WD2;
-            WD1X = WD2X;
-            wordclear(&WD2);
+        if (V1 == ENTER && command.wd2 > 0) {
+            command.wd1 = command.wd2;
+            command.wd1x = command.wd2x;
+            wordclear(&command.wd2);
         } else {
 	    /* FIXME: Magic numbers */
             if (!((V1 != 1000 + WATER && V1 != 1000 + OIL) ||
                   (V2 != 1000 + PLANT && V2 != 1000 + DOOR))) {
                 if (AT(V2 - 1000))
-                    WD2 = MAKEWD(WORD_POUR);
+                    command.wd2 = MAKEWD(WORD_POUR);
             }
             if (V1 == 1000 + CAGE && V2 == 1000 + BIRD && HERE(CAGE) && HERE(BIRD))
-                WD1 = MAKEWD(WORD_CATCH);
+                command.wd1 = MAKEWD(WORD_CATCH);
         }
 L2620:
-        if (wordeq(WD1, MAKEWD(WORD_WEST))) {
+        if (wordeq(command.wd1, MAKEWD(WORD_WEST))) {
             ++game.iwest;
             if (game.iwest == 10)
                 RSPEAK(W_IS_WEST);
         }
-        if (wordeq(WD1, MAKEWD(WORD_GO)) && !wordempty(WD2)) {
+        if (wordeq(command.wd1, MAKEWD(WORD_GO)) && !wordempty(command.wd2)) {
             if (++igo == 10)
                 RSPEAK(GO_UNNEEDED);
         }
 Lookup:
-        defn = VOCAB(WD1, -1);
+        defn = VOCAB(command.wd1, -1);
         if (defn == -1) {
             /* Gee, I don't understand. */
             if (fallback_handler(rawbuf))
                 continue;
-            SETPRM(1, WD1, WD1X);
+            SETPRM(1, command.wd1, command.wd1x);
             RSPEAK(DONT_KNOW);
             goto L2600;
         }
@@ -1115,7 +1114,7 @@ Lookup:
         }
 
 Laction:
-        switch (action(cmdin, command)) {
+        switch (action(cmdin, &command)) {
         case GO_TERMINATE:
             return true;
         case GO_MOVE:
@@ -1133,14 +1132,14 @@ Laction:
             goto Lookup;
         case GO_WORD2:
             /* Get second word for analysis. */
-            WD1 = WD2;
-            WD1X = WD2X;
-            wordclear(&WD2);
+            command.wd1 = command.wd2;
+            command.wd1x = command.wd2x;
+            wordclear(&command.wd2);
             goto L2620;
         case GO_UNKNOWN:
             /*  Random intransitive verbs come here.  Clear obj just in case
              *  (see attack()). */
-            SETPRM(1, WD1, WD1X);
+            SETPRM(1, command.wd1, command.wd1x);
             RSPEAK(DO_WHAT);
             command.obj = 0;
             goto L2600;
