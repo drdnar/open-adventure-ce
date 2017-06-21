@@ -8,7 +8,9 @@ yaml_name = "adventure.yaml"
 h_name = "newdb.h"
 c_name = "newdb.c"
 
-h_template = """#include <stdio.h>
+h_template = """/* Generated from adventure.yaml - do not hand-hack! */
+
+#include <stdio.h>
 
 typedef struct {{
   const char* inventory;
@@ -56,9 +58,9 @@ extern turn_threshold_t turn_thresholds[];
 extern obituary_t obituaries[];
 extern hint_t hints[];
 
-extern size_t CLSSES;
-extern int maximum_deaths;
-extern int turn_threshold_count;
+extern const size_t CLSSES;
+extern const int maximum_deaths;
+extern const int turn_threshold_count;
 
 enum arbitrary_messages_refs {{
 {}
@@ -71,9 +73,13 @@ enum locations_refs {{
 enum object_descriptions_refs {{
 {}
 }};
+
+/* end */
 """
 
-c_template = """#include "{}"
+c_template = """/* Generated from adventure.yaml - do not hand-hack! */
+
+#include "{}"
 
 const char* arbitrary_messages[] = {{
 {}
@@ -103,9 +109,11 @@ hint_t hints[] = {{
 {}
 }};
 
-size_t CLSSES = {};
-int maximum_deaths = {};
-int turn_threshold_count = {};
+const size_t CLSSES = {};
+const int maximum_deaths = {};
+const int turn_threshold_count = {};
+
+/* end */
 """
 
 def make_c_string(string):
@@ -269,3 +277,5 @@ if __name__ == "__main__":
 
     with open(c_name, "w") as cf:
         cf.write(c)
+
+# end

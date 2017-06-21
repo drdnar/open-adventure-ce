@@ -33,6 +33,10 @@
 #    If the inventory desription begins with "*" the object is dungeon
 #    furniture that cannot be taken or carried.
 #
+# obituaries: Death messages abd reincarnation queries.  Order is
+#    significant, they're used in succession as the player racks up
+#    deaths.
+#
 # hints: Each item contains a hint number (add 10 to get cond bit),
 #    the number of turns he must be at the right loc(s) before
 #    triggering the hint, the points deducted for taking the hint, the
