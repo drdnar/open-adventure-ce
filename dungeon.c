@@ -30,7 +30,6 @@ static long OLDLOC;
 // Storage for what comes out of the database
 long LINUSE;
 long TRVS;
-long CLSSES;
 long TRNVLS;
 long TABNDX;
 long HNTMAX;
@@ -45,7 +44,6 @@ long COND[LOCSIZ + 1];
 long KEY[LOCSIZ + 1];
 long LOCSND[LOCSIZ + 1];
 long LINES[LINSIZ + 1];
-long CVAL[CLSMAX + 1];
 long TTEXT[TRNSIZ + 1];
 long TRNVAL[TRNSIZ + 1];
 long TRAVEL[TRVSIZ + 1];
@@ -228,11 +226,7 @@ static void read_messages(FILE* database, long sect)
             continue;
         }
         if (sect == 10) {
-            CLSSES = CLSSES + 1;
-            if (CLSSES > CLSMAX)
-                BUG(TOO_MANY_CLASS_OR_TURN_MESSAGES);
-            CTEXT[CLSSES] = LINUSE;
-            CVAL[CLSSES] = loc;
+	    /* now parsed from YAML */
             continue;
         }
         if (sect == 6) {
@@ -398,7 +392,6 @@ static int read_database(FILE* database)
 
     LINUSE = 1;
     TRVS = 1;
-    CLSSES = 0;
     TRNVLS = 0;
 
     /*  Start new data section.  Sect is the section number. */
@@ -529,7 +522,6 @@ static void write_file(FILE* header_file)
     write_1d(header_file, COND, LOCSIZ + 1, "COND");
     write_1d(header_file, KEY, LOCSIZ + 1, "KEY");
     write_1d(header_file, LOCSND, LOCSIZ + 1, "LOCSND");
-    write_1d(header_file, CVAL, CLSMAX + 1, "CVAL");
     write_1d(header_file, TRAVEL, TRVSIZ + 1, "TRAVEL");
     write_1d(header_file, KTAB, TABSIZ + 1, "KTAB");
     write_1d(header_file, ATAB, TABSIZ + 1, "ATAB");

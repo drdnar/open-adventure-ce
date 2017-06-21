@@ -35,10 +35,15 @@ typedef struct {{
   const char* message;
 }} turn_threshold_t;
 
+typedef struct {{
+  const int threshold;
+  const char* message;
+}} class_t;
+
 extern location_t locations[];
 extern object_description_t object_descriptions[];
 extern const char* arbitrary_messages[];
-extern const char* class_messages[];
+extern const class_t classes[];
 extern turn_threshold_t turn_thresholds[];
 extern obituary_t obituaries[];
 
@@ -47,10 +52,6 @@ extern int maximum_deaths;
 extern int turn_threshold_count;
 
 enum arbitrary_messages_refs {{
-{}
-}};
-
-enum class_messages_refs {{
 {}
 }};
 
@@ -69,7 +70,7 @@ const char* arbitrary_messages[] = {{
 {}
 }};
 
-const char* class_messages[] = {{
+const class_t classes[] = {{
 {}
 }};
 
@@ -123,20 +124,25 @@ def get_arbitrary_messages(arb):
     return arb_str
 
 def get_class_messages(cls):
-    template = """    {},
+    template = """    {{
+        .threshold = {},
+        .message = {},
+    }},
 """
     cls_str = ""
     for item in cls:
-        cls_str += template.format(make_c_string(item[1]))
+        threshold = item["threshold"]
+        message = make_c_string(item["message"])
+        cls_str += template.format(threshold, message)
     cls_str = cls_str[:-1] # trim trailing newline
-    return cls_str    
+    return cls_str
 
 def get_turn_thresholds(trn):
     template = """    {{
         .threshold = {},
         .point_loss = {},
         .message = {},
-}},
+    }},
 """
     trn_str = ""
     for item in trn:
@@ -204,7 +210,6 @@ with open(yaml_name, "r") as f:
 
 h = h_template.format(
     get_refs(db["arbitrary_messages"]),
-    get_refs(db["class_messages"]),
     get_refs(db["locations"]),
     get_refs(db["object_descriptions"]),
 )
@@ -212,12 +217,12 @@ h = h_template.format(
 c = c_template.format(
     h_name,
     get_arbitrary_messages(db["arbitrary_messages"]),
-    get_class_messages(db["class_messages"]),
+    get_class_messages(db["classes"]),
     get_turn_thresholds(db["turn_thresholds"]),
     get_locations(db["locations"]),
     get_object_descriptions(db["object_descriptions"]),
     get_obituaries(db["obituaries"]),
-    len(db["class_messages"]),
+    len(db["classes"]),
     len(db["obituaries"]),
     len(db["turn_thresholds"]),
 )

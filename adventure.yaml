@@ -1024,18 +1024,29 @@ arbitrary_messages:  !!omap
 - GO_UNNEEDED: 'You don''t have to say "go" every time; just specify a direction or, if\nit''s nearby, name the place to which you wish to move.'
 - CANNOT_CARRY7: !!null
   
-class_messages: !!omap
-- CLS_0: !!null
-- CLS_1: 'You are obviously a rank amateur.  Better luck next time.'
-- CLS_2: 'Your score qualifies you as a novice class adventurer.'
-- CLS_3: 'You have achieved the rating: "Experienced Adventurer".'
-- CLS_4: 'You may now consider yourself a "Seasoned Adventurer".'
-- CLS_5: 'You have reached "Junior Master" status.'
-- CLS_6: 'Your score puts you in Master Adventurer Class C.'
-- CLS_7: 'Your score puts you in Master Adventurer Class B.'
-- CLS_8: 'Your score puts you in Master Adventurer Class A.'
-- CLS_9: 'All of Adventuredom gives tribute to you, Adventurer Grandmaster!'
-- CLS_10: 'Adventuredom stands in awe -- you have now joined the ranks of the\n       W O R L D   C H A M P I O N   A D V E N T U R E R S !\nIt may interest you to know that the Dungeon-Master himself has, to\nmy knowledge, never achieved this threshhold in fewer than 330 turns.'
+classes: 
+- threshold: 0
+  message: !!null
+- threshold: 45
+  message: 'You are obviously a rank amateur.  Better luck next time.'
+- threshold: 120
+  message: 'Your score qualifies you as a novice class adventurer.'
+- threshold: 170
+  message: 'You have achieved the rating: "Experienced Adventurer".'
+- threshold: 250
+  message: 'You may now consider yourself a "Seasoned Adventurer".'
+- threshold: 320
+  message: 'You have reached "Junior Master" status.'
+- threshold: 375
+  message: 'Your score puts you in Master Adventurer Class C.'
+- threshold: 410
+  message: 'Your score puts you in Master Adventurer Class B.'
+- threshold: 426
+  message: 'Your score puts you in Master Adventurer Class A.'
+- threshold: 429
+  message: 'All of Adventuredom gives tribute to you, Adventurer Grandmaster!'
+- threshold: 9999
+  message: 'Adventuredom stands in awe -- you have now joined the ranks of the\n       W O R L D   C H A M P I O N   A D V E N T U R E R S !\nIt may interest you to know that the Dungeon-Master himself has, to\nmy knowledge, never achieved this threshhold in fewer than 330 turns.'
 
 turn_thresholds:
 - threshold: 350

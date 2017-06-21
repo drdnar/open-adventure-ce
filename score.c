@@ -120,9 +120,9 @@ void terminate(enum termination mode)
     SETPRM(3, game.turns, game.turns);
     RSPEAK(TOTAL_SCORE);
     for (long i = 1; i <= (long)CLSSES; i++) {
-        if (CVAL[i] >= points) {
-            speak(class_messages[i]);
-            i = CVAL[i] + 1 - points;
+        if (classes[i].threshold >= points) {
+            speak(classes[i].message);
+            i = classes[i].threshold + 1 - points;
             SETPRM(1, i, i);
             RSPEAK(NEXT_HIGHER);
             exit(0);
