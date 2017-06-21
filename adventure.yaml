@@ -1,3 +1,38 @@
+# This YAML file gets processed into a collection of data structure and
+# variable initializers describing Colossal Cave.  It replaces an ad-hoc
+# text database shipped with Adventure versions up to 2.6.  The format
+# change enabled a lot of use of symbolic names where there were previously
+# inscrutable numeric literals.
+#
+# We define a bunch of YAML structures:
+#
+# locations: Each item contains a long and short description.  Some
+#    short descriptions are empty.  Order of these locations is significant;
+#    see the macros OUTSID and INDEEP.
+#
+# arbitrary_messages: These are arguments to RSPEAK(). Some spans of
+#    these messages need to be kept adjacent and ordered.  To see which,
+#    grep for RSPEAK calls containing expressions with arithmetic.
+#
+# classes: Each item contains a point threshold and a message
+#    describing a classification of player.  point thresholds must be
+#    in ascending order. The scoring code selects the appropriate
+#    message, where each message is considered to apply to players
+#    whose scores are higher than the previous N but not higher than
+#    this N.  Note that these scores probably change with every
+#    modification (and particularly expansion) of the program.
+#
+# turn_thresholds:  Each item contains a number and a message
+#    berating the player for taking so many turns.  The messages must
+#    be in the proper (ascending) order.  The message gets printed if
+#    the player exceeds N % 100000 turns, at which time N/100000
+#    points get deducted from his score.
+#
+# objects: Each item contains a description for use in the inventory command
+#    and one or more messages describing the object in different states.
+#    If the inventory desription begins with "*" the object is dungeon
+#    furniture that cannot be taken or carried.
+#
 locations: !!omap
 - LOC_NOWHERE:
     description:
@@ -575,7 +610,7 @@ locations: !!omap
     description:
       long: 'You are in a large chamber with passages to the west and north.'
       short: !!null
-- LOC_SOTOREROOM:
+- LOC_STOREROOM:
     description:
       long: 'You are in the ogre''s storeroom.  The only exit is to the south.'
       short: !!null

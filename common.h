@@ -21,7 +21,6 @@ enum bugtype {
    LOCATION_HAS_CONDITION_BIT_BEING_SET_TWICE,            // 8
    INVALID_SECTION_NUMBER_IN_DATABASE,                    // 9
    TOO_MANY_LOCATIONS,                                    // 10
-   TOO_MANY_CLASS_OR_TURN_MESSAGES,                       // 11
    SPECIAL_TRAVEL_500_GT_L_GT_300_EXCEEDS_GOTO_LIST = 20, // 20
    RAN_OFF_END_OF_VOCABULARY_TABLE,                       // 21
    VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3,       // 22

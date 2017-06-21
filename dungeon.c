@@ -35,7 +35,6 @@ long TABNDX;
 long HNTMAX;
 long PTEXT[NOBJECTS + 1];
 long RTEXT[RTXSIZ + 1];
-long CTEXT[CLSMAX + 1];
 long OBJSND[NOBJECTS + 1];
 long OBJTXT[NOBJECTS + 1];
 long STEXT[LOCSIZ + 1];
@@ -217,15 +216,7 @@ static void read_messages(FILE* database, long sect)
         if (loc == OLDLOC) continue;
         OLDLOC = loc;
         LINES[LINUSE] = -KK;
-        if (sect == 14) {
-            TRNVLS = TRNVLS + 1;
-            if (TRNVLS > TRNSIZ)
-                BUG(TOO_MANY_CLASS_OR_TURN_MESSAGES);
-            TTEXT[TRNVLS] = LINUSE;
-            TRNVAL[TRNVLS] = loc;
-            continue;
-        }
-        if (sect == 10) {
+        if (sect == 10 || sect == 14) {
 	    /* now parsed from YAML */
             continue;
         }
@@ -360,17 +351,17 @@ static void read_sound_text(FILE* database)
 
 static int read_database(FILE* database)
 {
-
-    /*  Clear out the various text-pointer arrays.  All text is stored in array
-     *  lines; each line is preceded by a word pointing to the next pointer (i.e.
-     *  the word following the end of the line).  The pointer is negative if this is
-     *  first line of a message.  The text-pointer arrays contain indices of
-     *  pointer-words in lines.  STEXT(N) is short description of location N.
-     *  LTEXT(N) is long description.  PTEXT(N) points to message for game.prop(N)=0.
-     *  Successive prop messages are found by chasing pointers.  RTEXT contains
-     *  section 6's stuff.  CTEXT(N) points to a player-class message.  TTEXT is for
-     *  section 14.  We also clear COND (see description of section 9 for details). */
-
+    /*  Clear out the various text-pointer arrays.  All text is stored
+     *  in array lines; each line is preceded by a word pointing to
+     *  the next pointer (i.e.  the word following the end of the
+     *  line).  The pointer is negative if this is first line of a
+     *  message.  The text-pointer arrays contain indices of
+     *  pointer-words in lines.  STEXT(N) is short description of
+     *  location N.  LTEXT(N) is long description.  PTEXT(N) points to
+     *  message for game.prop(N)=0.  Successive prop messages are
+     *  found by chasing pointers.  RTEXT contains section 6's stuff.
+     *  TTEXT is for section 14.  We also clear COND (see description
+     *  of section 9 for details). */
     for (int I = 1; I <= NOBJECTS; I++) {
         PTEXT[I] = 0;
         OBJSND[I] = 0;
@@ -378,9 +369,6 @@ static int read_database(FILE* database)
     }
     for (int I = 1; I <= RTXSIZ; I++) {
         RTEXT[I] = 0;
-    }
-    for (int I = 1; I <= CLSMAX; I++) {
-        CTEXT[I] = 0;
     }
     for (int I = 1; I <= LOCSIZ; I++) {
         STEXT[I] = 0;
