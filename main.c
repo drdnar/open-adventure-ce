@@ -189,18 +189,18 @@ static bool fallback_handler(char *buf)
 static void checkhints(void)
 {
     if (COND[game.loc] >= game.conds) {
-        for (int hint = 1; hint <= HINT_COUNT; hint++) {
+        for (int hint = 0; hint < HINT_COUNT; hint++) {
             if (game.hinted[hint])
                 continue;
-            if (!CNDBIT(game.loc, hint + HBASE))
+            if (!CNDBIT(game.loc, hint + 1 + HBASE))
                 game.hintlc[hint] = -1;
             ++game.hintlc[hint];
             /*  Come here if he's been long enough at required loc(s) for some
              *  unused hint. */
-            if (game.hintlc[hint] >= hints[hint-1].turns) {
+            if (game.hintlc[hint] >= hints[hint].turns) {
                 int i;
 
-                switch (hint - 1) {
+                switch (hint) {
                 case 0:
                     /* cave */
                     if (game.prop[GRATE] == 0 && !HERE(KEYS))
@@ -263,12 +263,12 @@ static void checkhints(void)
 
                 /* Fall through to hint display */
                 game.hintlc[hint] = 0;
-                if (!YES(hints[hint-1].question, arbitrary_messages[NO_MESSAGE], arbitrary_messages[OK_MAN]))
+                if (!YES(hints[hint].question, arbitrary_messages[NO_MESSAGE], arbitrary_messages[OK_MAN]))
                     return;
-                rspeak(HINT_COST, hints[hint-1].penalty, hints[hint-1].penalty);
-                game.hinted[hint] = YES(arbitrary_messages[WANT_HINT], hints[hint-1].hint, arbitrary_messages[OK_MAN]);
+                rspeak(HINT_COST, hints[hint].penalty, hints[hint].penalty);
+                game.hinted[hint] = YES(arbitrary_messages[WANT_HINT], hints[hint].hint, arbitrary_messages[OK_MAN]);
                 if (game.hinted[hint] && game.limit > WARNTIME)
-                    game.limit += WARNTIME * hints[hint-1].penalty;
+                    game.limit += WARNTIME * hints[hint].penalty;
             }
         }
     }
