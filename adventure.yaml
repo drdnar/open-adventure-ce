@@ -1,6 +1,6 @@
 # This YAML file gets processed into a collection of data structure and
 # variable initializers describing Colossal Cave.  It replaces an ad-hoc
-# text database shipped with Adventure versions up to 2.6.  The format
+# text database shipped with Adventure versions up to 2.5.  The format
 # change enabled a lot of use of symbolic names where there were previously
 # inscrutable numeric literals.
 #
@@ -33,7 +33,7 @@
 #    If the inventory desription begins with "*" the object is dungeon
 #    furniture that cannot be taken or carried.
 #
-# obituaries: Death messages abd reincarnation queries.  Order is
+# obituaries: Death messages and reincarnation queries.  Order is
 #    significant, they're used in succession as the player racks up
 #    deaths.
 #
@@ -43,6 +43,10 @@
 #    message number (section 6) of the question, and the message
 #    number of the hint.  These values are stashed in the "hints"
 #    array.
+#
+# These correspond to sections 1, 2, 5, 6, 10, 11, and 14 in the old
+# adventure.text format.  Sections 3, 4, 7, 8, and 9 haven't moved yet.
+# Section 12 was obsolete.
 
 locations: !!omap
 - LOC_NOWHERE:
@@ -1611,3 +1615,5 @@ hints:
   penalty: 4
   question: MISSING_ONE
   hint: NO_LOCATE
+
+# end
