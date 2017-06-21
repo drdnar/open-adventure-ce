@@ -332,7 +332,10 @@ n
 n
 # Everything to here copied from endgame428
 light urn
-fill urn
+# Changed below from "fill urn" in order to test more code
+pour bottle
+fill bottle
+drink oil
 light urn
 fill urn
 read urn

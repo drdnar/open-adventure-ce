@@ -7,8 +7,8 @@ You are standing at the end of a road before a small brick building.
 Around you is a forest.  A small stream flows out of the building and
 down a gully.
 
-> seed 1838473132
-Seed set to 1838473132
+> seed 1495951709
+Seed set to 1495951709
 
 You're in front of building.
 
@@ -28,15 +28,13 @@ There is a bottle of water here.
 
 OK
 
-> xyzzy
-
->>Foof!<<
-
-It is now pitch dark.  If you proceed you will likely fall into a pit.
-
 > on
 
 Your lamp is now on.
+
+> xyzzy
+
+>>Foof!<<
 
 You are in a debris room filled with stuff washed in from the surface.
 A low wide passage with cobbles becomes plugged with mud and debris
@@ -105,7 +103,7 @@ The bird flies about agitatedly for a moment, then disappears through
 the crack.  It reappears shortly, carrying in its beak a jade
 necklace, which it drops at your feet.
 
-> take necklace
+> take jade
 
 OK
 
@@ -131,7 +129,28 @@ staircase.  There is a passage at the top of a dome behind you.
 
 Rough stone steps lead up the dome.
 
-> d
+> w
+
+You are on the east bank of a fissure slicing clear across the hall.
+The mist is quite thick here, and the fissure is too wide to jump.
+
+> wave rod
+
+The bird flies agitatedly about the cage.
+
+A crystal bridge now spans the fissure.
+
+> drop rod
+
+OK
+
+> e
+
+You're in Hall of Mists.
+
+Rough stone steps lead up the dome.
+
+> n
 
 You are in the Hall of the Mountain King, with passages off in all
 directions.
@@ -143,38 +162,9 @@ A huge green fierce snake bars the way!
 The little bird attacks the green snake, and in an astounding flurry
 drives the snake away.
 
-> drop rod
-
-OK
-
-> drop cage
-
-OK
-
-> take cage
-
-OK
-
 > take bird
 
 OK
-
-> w
-
-You are in the west side chamber of the Hall of the Mountain King.
-A passage continues west and up here.
-
-There are many coins here!
-
-> take coins
-
-OK
-
-> e
-
-You're in Hall of Mt King.
-
-A three foot black rod with a rusty star on an end lies nearby.
 
 > s
 
@@ -190,124 +180,11 @@ OK
 
 You're in Hall of Mt King.
 
-A three foot black rod with a rusty star on an end lies nearby.
-
-> up
-
-You're in Hall of Mists.
-
-Rough stone steps lead up the dome.
-
-> s
-
-This is a low room with a crude note on the wall.  The note says,
-"You won't get it up the steps".
-
-There is a large sparkling nugget of gold here!
-
-> take gold
-
-OK
-
-> n
-
-You're in Hall of Mists.
-
-> d
-
-You're in Hall of Mt King.
-
-A three foot black rod with a rusty star on an end lies nearby.
-
-> n
-
-You are in a low n/s passage at a hole in the floor.  The hole goes
-down to an e/w passage.
-
-There are bars of silver here!
-
-> n
-
-You are in a large room, with a passage to the south, a passage to the
-west, and a wall of broken rock to the east.  There is a large "Y2" on
-a rock in the room's center.
-
-A hollow voice says "PLUGH".
-
-> plugh
-
->>Foof!<<
-
-You're inside building.
-
-There are some keys on the ground here.
-
-There is food here.
-
-There is a bottle of water here.
-
-> extinguish lamp
-
-Your lamp is now off.
-
-> drop coins
-
-OK
-
-> drop jewelry
-
-OK
-
-> drop necklace
-
-OK
-
-> drop gold
-
-OK
-
-> plugh
-
->>Foof!<<
-
-It is now pitch dark.  If you proceed you will likely fall into a pit.
-
-> on
-
-Your lamp is now on.
-
-You're at "Y2".
-
-> s
-
-You're in n/s passage above e/w passage.
-
-There are bars of silver here!
-
-> take silver
-
-OK
-
-> s
-
-You're in Hall of Mt King.
-
-A three foot black rod with a rusty star on an end lies nearby.
-
 > sw
-
-A little dwarf just walked around a corner, saw you, threw a little
-axe at you which missed, cursed, and ran away.
 
 You are in a secret canyon which here runs e/w.  It crosses over a
 very tight canyon 15 feet below.  If you go down you may not be able
 to get back up.
-
-There is a little axe here.
-
-> take axe
-
-OK
 
 > w
 
@@ -346,50 +223,24 @@ You're in secret e/w canyon above tight canyon.
 
 > e
 
-You are in the Hall of the Mountain King, with passages off in all
-directions.
-
-A three foot black rod with a rusty star on an end lies nearby.
-
-> up
-
-There is a threatening little dwarf in the room with you!
-
-One sharp nasty knife is thrown at you!
-
-It misses!
-
-You're in Hall of Mists.
-
-Rough stone steps lead up the dome.
-
-> d
-
-There is a threatening little dwarf in the room with you!
-
 You're in Hall of Mt King.
 
-A three foot black rod with a rusty star on an end lies nearby.
+> n
+
+You are in a low n/s passage at a hole in the floor.  The hole goes
+down to an e/w passage.
+
+There are bars of silver here!
+
+> take silver
+
+OK
 
 > n
 
-There is a threatening little dwarf in the room with you!
-
-You're in n/s passage above e/w passage.
-
-> n
-
-There is a threatening little dwarf in the room with you!
-
-You're at "Y2".
-
-A hollow voice says "PLUGH".
-
-> off
-
-Your lamp is now off.
-
-It is now pitch dark.  If you proceed you will likely fall into a pit.
+You are in a large room, with a passage to the south, a passage to the
+west, and a wall of broken rock to the east.  There is a large "Y2" on
+a rock in the room's center.
 
 > plugh
 
@@ -397,35 +248,25 @@ It is now pitch dark.  If you proceed you will likely fall into a pit.
 
 You're inside building.
 
-There is a large sparkling nugget of gold here!
-
-A precious jade necklace has been dropped here!
-
-There is precious jewelry here!
-
-There are many coins here!
-
 There are some keys on the ground here.
 
 There is food here.
 
 There is a bottle of water here.
 
-> inven
-
-You are currently holding the following:
-Brass lantern
-Wicker cage
-Little bird in cage
-Dwarf's axe
-Bars of silver
-Persian rug
-
-> drop rug
+> drop silver
 
 OK
 
-> drop silver
+> drop jewelry
+
+OK
+
+> drop jade
+
+OK
+
+> drop rug
 
 OK
 
@@ -456,16 +297,12 @@ OK
 
 OK
 
-> drop cage
-
-OK
-
 > listen
 
 The bird is singing to you in gratitude for your having returned it to
 its home.  In return, it informs you of a magic word which it thinks
 you may find useful somewhere near the Hall of Mists.  The magic word
-changes frequently, but for now the bird believes it is "H'CFL".  You
+changes frequently, but for now the bird believes it is "Q'IBJ".  You
 thank the bird for this information, and it flies off into the forest.
 
 > s
@@ -484,17 +321,13 @@ You're in front of building.
 
 You're inside building.
 
-There are bars of silver here!
-
 There is a persian rug spread out on the floor!
-
-There is a large sparkling nugget of gold here!
 
 A precious jade necklace has been dropped here!
 
 There is precious jewelry here!
 
-There are many coins here!
+There are bars of silver here!
 
 There are some keys on the ground here.
 
@@ -510,12 +343,6 @@ OK
 
 >>Foof!<<
 
-It is now pitch dark.  If you proceed you will likely fall into a pit.
-
-> on
-
-Your lamp is now on.
-
 You're at "Y2".
 
 > plover
@@ -529,12 +356,21 @@ There is an emerald here the size of a plover's egg!
 
 > ne
 
+A little dwarf just walked around a corner, saw you, threw a little
+axe at you which missed, cursed, and ran away.
+
 You're in the dark-room.  A corridor leading south is the only exit.
+
+There is a little axe here.
 
 A massive stone tablet imbedded in the wall reads:
 "Congratulations on bringing light into the dark-room!"
 
 There is a platinum pyramid here, 8 inches on a side!
+
+> take axe
+
+OK
 
 > take pyramid
 
@@ -550,25 +386,126 @@ There is an emerald here the size of a plover's egg!
 
 >>Foof!<<
 
+There is a threatening little dwarf in the room with you!
+
 You're at "Y2".
 
 A hollow voice says "PLUGH".
 
 > s
 
+There is a threatening little dwarf in the room with you!
+
 You're in n/s passage above e/w passage.
 
-> s
+> d
 
-You're in Hall of Mt King.
+There is a threatening little dwarf in the room with you!
 
-A three foot black rod with a rusty star on an end lies nearby.
+You are in a dirty broken passage.  To the east is a crawl.  To the
+west is a large passage.  Above you is a hole to another passage.
 
-> take rod
+> u
+
+A little dwarf with a big knife blocks your way.
+
+There is a threatening little dwarf in the room with you!
+
+One sharp nasty knife is thrown at you!
+
+It misses!
+
+You're in dirty passage.
+
+> u
+
+There are 2 threatening little dwarves in the room with you.
+
+You're in n/s passage above e/w passage.
+
+> throw axe
+
+You attack a little dwarf, but he dodges out of the way.
+
+There are 2 threatening little dwarves in the room with you.
+
+2 of them throw knives at you!
+
+None of them hits you!
+
+You're in n/s passage above e/w passage.
+
+There is a little axe here.
+
+> take axe
 
 OK
 
-> up
+> throw axe
+
+You attack a little dwarf, but he dodges out of the way.
+
+There are 2 threatening little dwarves in the room with you.
+
+2 of them throw knives at you!
+
+None of them hits you!
+
+You're in n/s passage above e/w passage.
+
+There is a little axe here.
+
+> take axe
+
+OK
+
+> throw axe
+
+You attack a little dwarf, but he dodges out of the way.
+
+There are 2 threatening little dwarves in the room with you.
+
+2 of them throw knives at you!
+
+None of them hits you!
+
+You are in a low n/s passage at a hole in the floor.  The hole goes
+down to an e/w passage.
+
+There is a little axe here.
+
+> take axe
+
+OK
+
+> throw axe
+
+You killed a little dwarf.  The body vanishes in a cloud of greasy
+black smoke.
+
+There is a threatening little dwarf in the room with you!
+
+One sharp nasty knife is thrown at you!
+
+It misses!
+
+You're in n/s passage above e/w passage.
+
+There is a little axe here.
+
+> take axe
+
+OK
+
+> s
+
+There is a threatening little dwarf in the room with you!
+
+You're in Hall of Mt King.
+
+> e
+
+There is a threatening little dwarf in the room with you!
 
 You're in Hall of Mists.
 
@@ -576,26 +513,15 @@ Rough stone steps lead up the dome.
 
 > w
 
-You are on the east bank of a fissure slicing clear across the hall.
-The mist is quite thick here, and the fissure is too wide to jump.
+There is a threatening little dwarf in the room with you!
 
-> wave rod
+You're on east bank of fissure.
 
-A crystal bridge now spans the fissure.
-
-> drop rod
-
-OK
-
-> west
-
-You are on the west side of the fissure in the Hall of Mists.
-
-There are diamonds here!
+A three foot black rod with a rusty star on an end lies nearby.
 
 A crystal bridge now spans the fissure.
 
-> take diamonds
+> drop cage
 
 OK
 
@@ -603,9 +529,15 @@ OK
 
 There is a threatening little dwarf in the room with you!
 
-One sharp nasty knife is thrown at you!
+You are on the west side of the fissure in the Hall of Mists.
 
-It misses!
+There are diamonds here!
+
+A crystal bridge now spans the fissure.
+
+> w
+
+There is a threatening little dwarf in the room with you!
 
 You are at the west end of the Hall of Mists.  A low wide crawl
 continues west and another goes north.  To the south is a little
@@ -736,11 +668,19 @@ You're at west end of Hall of Mists.
 
 You're on west bank of fissure.
 
+There are diamonds here!
+
 A crystal bridge now spans the fissure.
+
+> take diamonds
+
+OK
 
 > e
 
 You're on east bank of fissure.
+
+There is a small wicker cage discarded nearby.
 
 A three foot black rod with a rusty star on an end lies nearby.
 
@@ -748,56 +688,34 @@ A crystal bridge now spans the fissure.
 
 > e
 
-There is a threatening little dwarf in the room with you!
-
-One sharp nasty knife is thrown at you!
-
-It misses!
-
-You are at one end of a vast hall stretching forward out of sight to
-the west.  There are openings to either side.  Nearby, a wide stone
-staircase leads downward.  The hall is filled with wisps of white mist
-swaying to and fro almost as if alive.  A cold wind blows up the
-staircase.  There is a passage at the top of a dome behind you.
+You're in Hall of Mists.
 
 Rough stone steps lead up the dome.
 
-> throw axe
+> s
 
-You killed a little dwarf.  The body vanishes in a cloud of greasy
-black smoke.
+This is a low room with a crude note on the wall.  The note says,
+"You won't get it up the steps".
+
+There is a large sparkling nugget of gold here!
+
+> take gold
+
+You can't carry anything more.  You'll have to drop something first.
+
+> n
 
 You're in Hall of Mists.
 
-There is a little axe here.
-
 Rough stone steps lead up the dome.
 
-> take axe
+> y2
 
-OK
+You are in a jumble of rock, with cracks everywhere.
 
-> n
+> d
 
-You're in Hall of Mt King.
-
-> n
-
-You're in n/s passage above e/w passage.
-
-> n
-
-You are in a large room, with a passage to the south, a passage to the
-west, and a wall of broken rock to the east.  There is a large "Y2" on
-a rock in the room's center.
-
-A hollow voice says "PLUGH".
-
-> off
-
-Your lamp is now off.
-
-It is now pitch dark.  If you proceed you will likely fall into a pit.
+You're at "Y2".
 
 > plugh
 
@@ -805,25 +723,17 @@ It is now pitch dark.  If you proceed you will likely fall into a pit.
 
 You're inside building.
 
-There are bars of silver here!
-
 There is a persian rug spread out on the floor!
-
-There is a large sparkling nugget of gold here!
 
 A precious jade necklace has been dropped here!
 
 There is precious jewelry here!
 
-There are many coins here!
+There are bars of silver here!
 
 There are some keys on the ground here.
 
 There is food here.
-
-> drop ruby
-
-OK
 
 > drop diamonds
 
@@ -833,67 +743,66 @@ OK
 
 OK
 
+> drop ruby
+
+OK
+
 > plugh
 
 >>Foof!<<
-
-It is now pitch dark.  If you proceed you will likely fall into a pit.
-
-> on
-
-Your lamp is now on.
 
 You're at "Y2".
 
 A hollow voice says "PLUGH".
 
+> plugh
+
+>>Foof!<<
+
+You're inside building.
+
+There is an enormous ruby here!
+
+There is a platinum pyramid here, 8 inches on a side!
+
+There are diamonds here!
+
+There is a persian rug spread out on the floor!
+
+A precious jade necklace has been dropped here!
+
+There is precious jewelry here!
+
+There are bars of silver here!
+
+There are some keys on the ground here.
+
+There is food here.
+
+> drop coins
+
+I see no coins here.
+
+> plugh
+
+>>Foof!<<
+
+You are in a large room, with a passage to the south, a passage to the
+west, and a wall of broken rock to the east.  There is a large "Y2" on
+a rock in the room's center.
+
 > s
-
-You are in a low n/s passage at a hole in the floor.  The hole goes
-down to an e/w passage.
-
-> s
-
-You're in Hall of Mt King.
-
-> u
-
-You're in Hall of Mists.
-
-Rough stone steps lead up the dome.
-
-> n
-
-You are in the Hall of the Mountain King, with passages off in all
-directions.
-
-> n
 
 You're in n/s passage above e/w passage.
 
 > d
 
-You are in a dirty broken passage.  To the east is a crawl.  To the
-west is a large passage.  Above you is a hole to another passage.
+You're in dirty passage.
 
 > bedquilt
 
-There is a threatening little dwarf in the room with you!
-
 You are in Bedquilt, a long east/west passage with holes everywhere.
 To explore at random select north, south, up, or down.
-
-> throw axe
-
-You killed a little dwarf.
-
-You're in Bedquilt.
-
-There is a little axe here.
-
-> take axe
-
-OK
 
 > slab
 
@@ -924,10 +833,6 @@ You're in west pit.
 There is a 12-foot-tall beanstalk stretching up out of the pit,
 bellowing "WATER!! WATER!!"
 
-> drink plant
-
-Don't be ridiculous!
-
 > u
 
 You're at west end of Twopit Room.
@@ -950,7 +855,7 @@ fed by a stream, which tumbles out of a hole in the wall about 10 feet
 overhead and splashes noisily into the water somewhere within the
 mist.  There is a passage going back toward the south.
 
-> H'CFL
+> Q'IBJ
 
 The waters have parted to form a narrow path across the reservoir.
 
@@ -1025,15 +930,11 @@ You are on a very steep incline, which widens at it goes upward.
 
 You are scrambling along a treacherously steep, rocky passage.
 
-> d
+> se
 
 You're north of reservoir.
 
 The waters have parted to form a narrow path across the reservoir.
-
-> take water
-
-Your bottle is now full of water.
 
 > s
 
@@ -1044,6 +945,10 @@ You're at bottom of reservoir.
 You're at reservoir.
 
 The waters have parted to form a narrow path across the reservoir.
+
+> take water
+
+Your bottle is now full of water.
 
 > s
 
@@ -1084,19 +989,11 @@ You're in west pit.
 
 There is a gigantic beanstalk stretching all the way up to the hole.
 
-> oil plant
-
-I see no oil here.
-
 > u
 
 You're at west end of Twopit Room.
 
 There is a huge beanstalk growing out of the west pit up to the hole.
-
-> drop appendage
-
-OK
 
 > e
 
@@ -1113,7 +1010,7 @@ There is a huge beanstalk growing out of the west pit up to the hole.
 You are at the bottom of the eastern pit in the Twopit Room.  There is
 a small pool of oil in one corner of the pit.
 
-> get oil
+> take oil
 
 Your bottle is now full of oil.
 
@@ -1126,8 +1023,6 @@ There is a huge beanstalk growing out of the west pit up to the hole.
 > w
 
 You're at west end of Twopit Room.
-
-Your keen eye spots a severed leporine appendage lying on the ground.
 
 There is a huge beanstalk growing out of the west pit up to the hole.
 
@@ -1163,10 +1058,6 @@ The way north is barred by a massive, rusty, iron door.
 
 The oil has freed up the hinges so that the door will now move,
 although it requires some effort.
-
-> drop bottle
-
-OK
 
 > n
 
@@ -1215,15 +1106,23 @@ tight squeeze.  An eerie light can be seen at the other end.
 
 OK
 
-> drop ebony
-
-OK
-
 > drop axe
 
 OK
 
-> drop lantern
+> drop ebony
+
+OK
+
+> drop bottle
+
+OK
+
+> drop appendage
+
+OK
+
+> drop lamp
 
 OK
 
@@ -1243,9 +1142,13 @@ You're in alcove.
 
 There is a lamp shining nearby.
 
-There is a little axe here.
+Your keen eye spots a severed leporine appendage lying on the ground.
+
+There is an empty bottle here.
 
 There is a richly-carved ebony statuette here!
+
+There is a little axe here.
 
 There is a jewel-encrusted trident here!
 
@@ -1253,11 +1156,15 @@ There is a jewel-encrusted trident here!
 
 OK
 
-> take axe
+> take bottle
 
 OK
 
 > take ebony
+
+OK
+
+> take axe
 
 OK
 
@@ -1279,25 +1186,17 @@ There is a delicate, precious, ming vase here!
 
 OK
 
-> se
+> e
 
-There is a threatening little dwarf in the room with you!
+There is no way to go that direction.
+
+You're in Oriental Room.
+
+> se
 
 You are in a room whose walls resemble swiss cheese.  Obvious passages
 go west, east, ne, and nw.  Part of the room is occupied by a large
 bedrock block.
-
-> throw axe
-
-You killed a little dwarf.
-
-You're in Swiss Cheese Room.
-
-There is a little axe here.
-
-> take axe
-
-OK
 
 > e
 
@@ -1308,15 +1207,11 @@ A small velvet pillow lies on the floor.
 
 > take pillow
 
-OK
+You can't carry anything more.  You'll have to drop something first.
 
 > w
 
 You're in Swiss Cheese Room.
-
-> drop axe
-
-OK
 
 > ne
 
@@ -1362,13 +1257,13 @@ You're in n/s passage above e/w passage.
 
 > n
 
+There is a threatening little dwarf in the room with you!
+
+One sharp nasty knife is thrown at you!
+
+It misses!
+
 You're at "Y2".
-
-> off
-
-Your lamp is now off.
-
-It is now pitch dark.  If you proceed you will likely fall into a pit.
 
 > plugh
 
@@ -1376,41 +1271,33 @@ It is now pitch dark.  If you proceed you will likely fall into a pit.
 
 You are inside a building, a well house for a large spring.
 
+There is an enormous ruby here!
+
 There is a platinum pyramid here, 8 inches on a side!
 
 There are diamonds here!
 
-There is an enormous ruby here!
-
-There are bars of silver here!
-
 There is a persian rug spread out on the floor!
-
-There is a large sparkling nugget of gold here!
 
 A precious jade necklace has been dropped here!
 
 There is precious jewelry here!
 
-There are many coins here!
+There are bars of silver here!
 
 There are some keys on the ground here.
 
 There is food here.
 
-> drop pillow
+> drop pillo
 
-OK
+I see no pillo here.
 
 > drop vase
 
-The vase is now resting, delicately, on a velvet pillow.
+The ming vase drops with a delicate crash.
 
 > drop trident
-
-OK
-
-> drop emerald
 
 OK
 
@@ -1418,7 +1305,7 @@ OK
 
 OK
 
-> take keys
+> drop emerald
 
 OK
 
@@ -1426,25 +1313,44 @@ OK
 
 OK
 
+> take keys
+
+OK
+
 > plugh
 
 >>Foof!<<
 
-It is now pitch dark.  If you proceed you will likely fall into a pit.
-
-A hollow voice says "PLUGH".
-
-> on
-
-Your lamp is now on.
-
 You're at "Y2".
-
-A hollow voice says "PLUGH".
 
 > s
 
 You're in n/s passage above e/w passage.
+
+> s
+
+You're in Hall of Mt King.
+
+> w
+
+You are in the west side chamber of the Hall of the Mountain King.
+A passage continues west and up here.
+
+There are many coins here!
+
+> take coins
+
+OK
+
+> e
+
+You are in the Hall of the Mountain King, with passages off in all
+directions.
+
+> n
+
+You are in a low n/s passage at a hole in the floor.  The hole goes
+down to an e/w passage.
 
 > d
 
@@ -1478,7 +1384,7 @@ Off to one side lies a glistening pearl!
 
 OK
 
-> u
+> up
 
 You are in a long sloping corridor with ragged sharp walls.
 
@@ -1494,15 +1400,65 @@ You're at complex junction.
 
 > w
 
+There is a threatening little dwarf in the room with you!
+
+One sharp nasty knife is thrown at you!
+
+It misses!
+
 You're in Bedquilt.
 
+> throw axe
+
+You attack a little dwarf, but he dodges out of the way.
+
+There is a threatening little dwarf in the room with you!
+
+One sharp nasty knife is thrown at you!
+
+It misses!
+
+You're in Bedquilt.
+
+There is a little axe here.
+
+> take axe
+
+OK
+
 > w
+
+There is a threatening little dwarf in the room with you!
+
+You're in Swiss Cheese Room.
+
+> throw axe
+
+You killed a little dwarf.
 
 You're in Swiss Cheese Room.
 
 There is a little axe here.
 
+> take axe
+
+OK
+
 > w
+
+You're at east end of Twopit Room.
+
+There is a huge beanstalk growing out of the west pit up to the hole.
+
+> d
+
+You're in east pit.
+
+> get oil
+
+Your bottle is now full of oil.
+
+> u
 
 You're at east end of Twopit Room.
 
@@ -1512,8 +1468,6 @@ There is a huge beanstalk growing out of the west pit up to the hole.
 
 You are at the west end of the Twopit Room.  There is a large hole in
 the wall above the pit at this end of the room.
-
-Your keen eye spots a severed leporine appendage lying on the ground.
 
 There is a huge beanstalk growing out of the west pit up to the hole.
 
@@ -1538,21 +1492,29 @@ There is a large nest here, full of golden eggs!
 
 > get eggs
 
+You can't carry anything more.  You'll have to drop something first.
+
+> drop coins
+
+OK
+
+> get eggs
+
 OK
 
 > n
 
 You are at one end of an immense north/south passage.
 
-There is an empty bottle here.
-
 The way north leads through a massive, rusty, iron door.
 
-> take bottle
-
-OK
-
 > n
+
+You're in cavern with waterfall.
+
+> d
+
+There is no way to go that direction.
 
 You're in cavern with waterfall.
 
@@ -1569,7 +1531,7 @@ You're in large low room.
 You are in a long winding corridor sloping out of sight in both
 directions.
 
-> u
+> up
 
 You are on one side of a large, deep chasm.  A heavy white mist rising
 up from below obscures all view of the far side.  A sw path leads away
@@ -1624,366 +1586,17 @@ down considerably and even becomes rather friendly.
 
 The chain is now unlocked.
 
-> take chain
+> lock chain
 
-OK
+The chain is now locked.
 
-> take bear
+> lock chain
 
-OK
+It was already locked.
 
-> fork
 
-You are being followed by a very large, tame bear.
+You scored 217 out of a possible 430, using 264 turns.
 
-The path forks here.  The left fork leads northeast.  A dull rumbling
-seems to get louder in that direction.  The right fork leads southeast
-down a gentle slope.  The main corridor enters from the west.
+You may now consider yourself a "Seasoned Adventurer".
 
-> ne
-
-You are being followed by a very large, tame bear.
-
-The walls are quite warm here.  From the north can be heard a steady
-roar, so loud that the entire cave seems to be trembling.  Another
-passage leads south, and a low crawl goes east.
-
-> e
-
-You are being followed by a very large, tame bear.
-
-You are in a small chamber filled with large boulders.  The walls are
-very warm, causing the air in the room to be almost stifling from the
-heat.  The only exit is a crawl heading west, through which is coming
-a low rumbling.
-
-There are rare spices here!
-
-> take spices
-
-OK
-
-> drop keys
-
-OK
-
-> fork
-
-You are being followed by a very large, tame bear.
-
-You're at fork in path.
-
-> w
-
-You are being followed by a very large, tame bear.
-
-You're in corridor.
-
-> w
-
-You are being followed by a very large, tame bear.
-
-You're on ne side of chasm.
-
-A rickety wooden bridge extends across the chasm, vanishing into the
-mist.  A notice posted on the bridge reads, "Stop! Pay troll!"
-
-The troll is nowhere to be seen.
-
-> sw
-
-The troll steps out from beneath the bridge and blocks your way.
-
-You are being followed by a very large, tame bear.
-
-You're on ne side of chasm.
-
-A rickety wooden bridge extends across the chasm, vanishing into the
-mist.  A notice posted on the bridge reads, "Stop! Pay troll!"
-
-A burly troll stands by the bridge and insists you throw him a
-treasure before you may cross.
-
-> free bear
-
-The bear lumbers toward the troll, who lets out a startled shriek and
-scurries away.  The bear soon gives up the pursuit and wanders back.
-
-> inven
-
-You are currently holding the following:
-Brass lantern
-Small bottle
-Glistening pearl
-Rare spices
-Golden chain
-
-> sw
-
-You're on sw side of chasm.
-
-A rickety wooden bridge extends across the chasm, vanishing into the
-mist.  A notice posted on the bridge reads, "Stop! Pay troll!"
-
-The troll is nowhere to be seen.
-
-> sw
-
-You're in sloping corridor.
-
-> d
-
-You're in large low room.
-
-> se
-
-You're in Oriental Room.
-
-> se
-
-You're in Swiss Cheese Room.
-
-There is a little axe here.
-
-> w
-
-You're at east end of Twopit Room.
-
-There is a huge beanstalk growing out of the west pit up to the hole.
-
-> d
-
-You're in east pit.
-
-> get oil
-
-Your bottle is now full of oil.
-
-> up
-
-You're at east end of Twopit Room.
-
-There is a huge beanstalk growing out of the west pit up to the hole.
-
-> e
-
-You are in a room whose walls resemble swiss cheese.  Obvious passages
-go west, east, ne, and nw.  Part of the room is occupied by a large
-bedrock block.
-
-There is a little axe here.
-
-> take axe
-
-OK
-
-> w
-
-You are at the east end of the Twopit Room.  The floor here is
-littered with thin rock slabs, which make it easy to descend the pits.
-There is a path here bypassing the pits to connect passages from east
-and west.  There are holes all over, but the only big one is on the
-wall directly over the west pit where you can't get to it.
-
-There is a huge beanstalk growing out of the west pit up to the hole.
-
-> w
-
-You're at west end of Twopit Room.
-
-Your keen eye spots a severed leporine appendage lying on the ground.
-
-There is a huge beanstalk growing out of the west pit up to the hole.
-
-> d
-
-You're in west pit.
-
-There is a gigantic beanstalk stretching all the way up to the hole.
-
-> climb
-
-You clamber up the plant and scurry through the hole at the top.
-
-You're in narrow corridor.
-
-> w
-
-You're in Giant Room.
-
-> fee
-
-OK
-
-> fie
-
-OK
-
-> foe
-
-OK
-
-> foo
-
-There is a large nest here, full of golden eggs!
-
-> take eggs
-
-OK
-
-> s
-
-You're in narrow corridor.
-
-> d
-
-You're in west pit.
-
-There is a gigantic beanstalk stretching all the way up to the hole.
-
-> u
-
-You're at west end of Twopit Room.
-
-Your keen eye spots a severed leporine appendage lying on the ground.
-
-There is a huge beanstalk growing out of the west pit up to the hole.
-
-> w
-
-You're in Slab Room.
-
-> u
-
-You are in a secret n/s canyon above a large room.
-
-> s
-
-You are in a secret canyon which exits to the north and east.
-
-The body of a huge green dead dragon is lying off to one side.
-
-> e
-
-You're in secret e/w canyon above tight canyon.
-
-> e
-
-You're in Hall of Mt King.
-
-> n
-
-You're in n/s passage above e/w passage.
-
-> n
-
-You're at "Y2".
-
-A hollow voice says "PLUGH".
-
-> off
-
-Your lamp is now off.
-
-It is now pitch dark.  If you proceed you will likely fall into a pit.
-
-> plugh
-
->>Foof!<<
-
-You're inside building.
-
-There is a richly-carved ebony statuette here!
-
-There is an emerald here the size of a plover's egg!
-
-There is a jewel-encrusted trident here!
-
-There is a delicate, precious, ming vase here!
-
-A small velvet pillow lies on the floor.
-
-There is a platinum pyramid here, 8 inches on a side!
-
-There are diamonds here!
-
-There is an enormous ruby here!
-
-There are bars of silver here!
-
-There is a persian rug spread out on the floor!
-
-There is a large sparkling nugget of gold here!
-
-A precious jade necklace has been dropped here!
-
-There is precious jewelry here!
-
-There are many coins here!
-
-> drop eggs
-
-OK
-
-> drop pearl
-
-OK
-
-> drop spices
-
-OK
-
-> drop chain
-
-OK
-
-> take rug
-
-OK
-
-> take ruby
-
-OK
-
-> take emerald
-
-OK
-
-> out
-
-You're in front of building.
-
-> w
-
-You have walked up a hill, still in the forest.  The road slopes back
-down the other side of the hill.  There is a building in the distance.
-
-> n
-
-You are wandering aimlessly through the forest.
-
-> n
-
-You are wandering aimlessly through the forest.
-
-> drop bottle
-
-OK
-
-> n
-
-The forest thins out here to reveal a steep cliff.  There is no way
-down, but a small ledge can be seen to the west across the chasm.
-
-A small urn is embedded in the rock.
-
-> fill urn
-
-There is nothing here with which to fill it.
-
-
-You scored 267 out of a possible 430, using 332 turns.
-
-You have reached "Junior Master" status.
-
-To achieve the next higher rating, you need 54 more points.
+To achieve the next higher rating, you need 34 more points.

@@ -1969,9 +1969,17 @@ A small urn is embedded in the rock.
 
 The urn is empty and will not light.
 
-> fill urn
+> pour bottle
 
 Your bottle is now empty and the urn is full of oil.
+
+> fill bottle
+
+There's no way to get the oil out of the urn.
+
+> drink oil
+
+Don't be ridiculous!
 
 > light urn
 
@@ -1995,7 +2003,7 @@ If you mean to use the persian rug, it does not appear inclined to
 cooperate.
 
 
-You scored 267 out of a possible 430, using 335 turns.
+You scored 267 out of a possible 430, using 337 turns.
 
 You have reached "Junior Master" status.
 

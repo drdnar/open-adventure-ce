@@ -1,4 +1,4 @@
-## Test filling urn when you have no bottle
+## Attempt to oil the beanstalk after watering it
 n
 seed 1838473132
 in
@@ -149,7 +149,6 @@ slab
 s
 d
 water plant
-drink plant
 u
 w
 u
@@ -163,7 +162,6 @@ u
 u
 u
 ne
-take ebony
 sw
 d
 d
@@ -179,7 +177,6 @@ d
 s
 d
 water plant
-oil plant
 u
 drop appendage
 e
@@ -187,150 +184,5 @@ d
 get oil
 u
 w
-d
-climb
-w
-n
-oil door
-drop bottle
-n
-take trident
-w
-d
-se
-n
-w
-drop trident
-drop ebony
-drop axe
-drop lantern
-e
-take emerald
-w
-take lamp
-take axe
-take ebony
-take trident
-nw
-s
-take vase
-se
-throw axe
-take axe
-e
-take pillow
-w
-drop axe
-ne
-e
-n
-open clam
-s
 u
-e
-u
-n
-off
-plugh
-drop pillow
-drop vase
-drop trident
-drop emerald
-drop ebony
-take keys
-take food
-plugh
-on
-s
-d
-w
-d
-n
-d
-d
-take pearl
-u
-u
-s
-w
-w
-w
-w
-d
-climb
-w
-get eggs
-n
-take bottle
-n
-w
-d
-sw
-u
-toss eggs
-ne
-ne
-barren
-in
-feed bear
-unlock chain
-take chain
-take bear
-fork
-ne
-e
-take spices
-drop keys
-fork
-w
-w
-sw
-free bear
-inven
-sw
-sw
-d
-se
-se
-w
-d
-get oil
-up
-e
-take axe
-w
-w
-d
-climb
-w
-fee
-fie
-foe
-foo
-take eggs
-s
-d
-u
-w
-u
-s
-e
-e
-n
-n
-off
-plugh
-drop eggs
-drop pearl
-drop spices
-drop chain
-take rug
-take ruby
-take emerald
-out
-w
-n
-n
-drop bottle
-n
-fill urn
+oil plant
