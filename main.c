@@ -197,7 +197,7 @@ static void checkhints(void)
             ++game.hintlc[hint];
             /*  Come here if he's been long enough at required loc(s) for some
              *  unused hint. */
-            if (game.hintlc[hint] >= HINTS[hint][1]) {
+            if (game.hintlc[hint] >= hints[hint-1].turns) {
                 int i;
 
                 switch (hint - 1) {
@@ -263,13 +263,13 @@ static void checkhints(void)
 
                 /* Fall through to hint display */
                 game.hintlc[hint] = 0;
-                if (!YES(arbitrary_messages[HINTS[hint][3]], arbitrary_messages[NO_MESSAGE], arbitrary_messages[OK_MAN]))
+                if (!YES(hints[hint-1].question, arbitrary_messages[NO_MESSAGE], arbitrary_messages[OK_MAN]))
                     return;
-                SETPRM(1, HINTS[hint][2], HINTS[hint][2]);
+                SETPRM(1, hints[hint-1].penalty, hints[hint-1].penalty);
                 RSPEAK(HINT_COST);
-                game.hinted[hint] = YES(arbitrary_messages[WANT_HINT], arbitrary_messages[HINTS[hint][4]], arbitrary_messages[OK_MAN]);
+                game.hinted[hint] = YES(arbitrary_messages[WANT_HINT], hints[hint-1].hint, arbitrary_messages[OK_MAN]);
                 if (game.hinted[hint] && game.limit > WARNTIME)
-                    game.limit += WARNTIME * HINTS[hint][2];
+                    game.limit += WARNTIME * hints[hint-1].penalty;
             }
         }
     }

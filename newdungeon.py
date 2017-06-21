@@ -40,12 +40,21 @@ typedef struct {{
   const char* message;
 }} class_t;
 
+typedef struct {{
+  const int number;
+  const int turns;
+  const int penalty;
+  const char* question;
+  const char* hint;
+}} hint_t;
+
 extern location_t locations[];
 extern object_description_t object_descriptions[];
 extern const char* arbitrary_messages[];
 extern const class_t classes[];
 extern turn_threshold_t turn_thresholds[];
 extern obituary_t obituaries[];
+extern hint_t hints[];
 
 extern size_t CLSSES;
 extern int maximum_deaths;
@@ -87,6 +96,10 @@ object_description_t object_descriptions[] = {{
 }};
 
 obituary_t obituaries[] = {{
+{}
+}};
+
+hint_t hints[] = {{
 {}
 }};
 
@@ -205,30 +218,54 @@ def get_obituaries(obit):
     obit_str = obit_str[:-1] # trim trailing newline
     return obit_str
 
-with open(yaml_name, "r") as f:
-    db = yaml.load(f)
+def get_hints(hnt, arb):
+    template = """    {{
+        .number = {},
+        .penalty = {},
+        .turns = {},
+        .question = {},
+        .hint = {},
+    }},
+"""
+    hnt_str = ""
+    md = dict(arb)
+    for item in hnt:
+        number = item["number"]
+        penalty = item["penalty"]
+        turns = item["turns"]
+        question = make_c_string(md[item["question"]])
+        hint = make_c_string(md[item["hint"]])
+        hnt_str += template.format(number, penalty, turns, question, hint)
+    hnt_str = hnt_str[:-1] # trim trailing newline
+    return hnt_str
 
-h = h_template.format(
-    get_refs(db["arbitrary_messages"]),
-    get_refs(db["locations"]),
-    get_refs(db["object_descriptions"]),
-)
 
-c = c_template.format(
-    h_name,
-    get_arbitrary_messages(db["arbitrary_messages"]),
-    get_class_messages(db["classes"]),
-    get_turn_thresholds(db["turn_thresholds"]),
-    get_locations(db["locations"]),
-    get_object_descriptions(db["object_descriptions"]),
-    get_obituaries(db["obituaries"]),
-    len(db["classes"]),
-    len(db["obituaries"]),
-    len(db["turn_thresholds"]),
-)
+if __name__ == "__main__":
+    with open(yaml_name, "r") as f:
+        db = yaml.load(f)
 
-with open(h_name, "w") as hf:
-    hf.write(h)
+    h = h_template.format(
+        get_refs(db["arbitrary_messages"]),
+        get_refs(db["locations"]),
+        get_refs(db["object_descriptions"]),
+    )
 
-with open(c_name, "w") as cf:
-    cf.write(c)
+    c = c_template.format(
+        h_name,
+        get_arbitrary_messages(db["arbitrary_messages"]),
+        get_class_messages(db["classes"]),
+        get_turn_thresholds(db["turn_thresholds"]),
+        get_locations(db["locations"]),
+        get_object_descriptions(db["object_descriptions"]),
+        get_obituaries(db["obituaries"]),
+        get_hints(db["hints"], db["arbitrary_messages"]),
+        len(db["classes"]),
+        len(db["obituaries"]),
+        len(db["turn_thresholds"]),
+    )
+
+    with open(h_name, "w") as hf:
+        hf.write(h)
+
+    with open(c_name, "w") as cf:
+        cf.write(c)

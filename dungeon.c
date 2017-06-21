@@ -51,8 +51,6 @@ long ATAB[TABSIZ + 1];
 long PLAC[NOBJECTS + 1];
 long FIXD[NOBJECTS + 1];
 long ACTSPK[VRBSIZ + 1];
-long HINTS[HNTSIZ + 1][HINTLEN];
-
 
 static bool is_set(long var, long position)
 {
@@ -325,7 +323,8 @@ static void read_hints(FILE* database)
         if (K <= 0 || K > HNTSIZ)
             BUG(TOO_MANY_HINTS);
         for (int I = 1; I <= 4; I++) {
-            HINTS[K][I] = GETNUM(NULL);
+	    /* consume - actual arrqy-building now done in YAML. */
+            GETNUM(NULL);
         } /* end loop */
         HNTMAX = (HNTMAX > K ? HNTMAX : K);
     }
@@ -468,19 +467,6 @@ static void write_1d(FILE* header_file, long array[], long dim, const char* varn
     fprintf(header_file, "\n});\n");
 }
 
-static void write_hints(FILE* header_file, long matrix[][HINTLEN], long dim1, long dim2, const char* varname)
-{
-    fprintf(header_file, "LOCATION long %s[][%ld] INITIALIZE(= {\n", varname, dim2);
-    for (int i = 0; i < dim1; ++i) {
-        fprintf(header_file, "  {");
-        for (int j = 0; j < dim2; ++j) {
-            fprintf(header_file, "%ld, ", matrix[i][j]);
-        }
-        fprintf(header_file, "},\n");
-    }
-    fprintf(header_file, "});\n");
-}
-
 static void write_file(FILE* header_file)
 {
     fprintf(header_file, "#ifndef DATABASE_H\n");
@@ -516,7 +502,6 @@ static void write_file(FILE* header_file)
     write_1d(header_file, PLAC, NOBJECTS + 1, "PLAC");
     write_1d(header_file, FIXD, NOBJECTS + 1, "FIXD");
     write_1d(header_file, ACTSPK, VRBSIZ + 1, "ACTSPK");
-    write_hints(header_file, HINTS, HNTSIZ + 1, 5, "HINTS");
 
     fprintf(header_file, "#undef LOCATION\n");
     fprintf(header_file, "#undef INITIALIZE\n");

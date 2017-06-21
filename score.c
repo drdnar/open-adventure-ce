@@ -89,7 +89,7 @@ long score(enum termination mode)
     /* Deduct for hints/turns/saves. Hints < 4 are special; see database desc. */
     for (long i = 1; i <= HNTMAX; i++) {
         if (game.hinted[i])
-            score = score - HINTS[i][2];
+            score = score - hints[i-1].penalty;
     }
     if (game.novice)
         score -= 5;

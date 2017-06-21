@@ -33,6 +33,13 @@
 #    If the inventory desription begins with "*" the object is dungeon
 #    furniture that cannot be taken or carried.
 #
+# hints: Each item contains a hint number (add 10 to get cond bit),
+#    the number of turns he must be at the right loc(s) before
+#    triggering the hint, the points deducted for taking the hint, the
+#    message number (section 6) of the question, and the message
+#    number of the hint.  These values are stashed in the "hints"
+#    array.
+
 locations: !!omap
 - LOC_NOWHERE:
     description:
@@ -1547,3 +1554,56 @@ obituaries:
     yes_response: 'Okay, now where did I put my orange smoke?....  >POOF!<\nEverything disappears in a dense cloud of orange smoke.'
   - query: 'Now you''ve really done it!  I''m out of orange smoke!  You don''t expect\nme to do a decent reincarnation without any orange smoke, do you?'
     yes_response: 'Okay, if you''re so smart, do it yourself!  I''m leaving!'
+
+# FIXME: Hint texts shouldn't be in arbitrary_messages, but inlined here
+hints:
+- number: 1
+  turns: 4
+  penalty: 2
+  question: ENTRY_QUERY
+  hint: HARD_GRATE
+- number: 2
+  turns: 5
+  penalty: 2
+  question: BIRD_QUERY
+  hint: SKITTISH_BIRD
+- number: 3
+  turns: 8
+  penalty: 2
+  question: SNAKE_QUERY
+  hint: SNAKE_HINT
+- number: 4
+  turns: 75
+  penalty: 4
+  question: MAZE_HELP
+  hint: DROP_THINGS
+- number: 5
+  turns: 25
+  penalty: 5
+  question: PLOVER_QUERY
+  hint: EXPLORE_HINT
+- number: 6
+  turns: 20
+  penalty: 3
+  question: HELP_LEAVING
+  hint: NOGO_WEST
+- number: 7
+  turns: 8
+  penalty: 2
+  question: WONDERING_QUERY
+  hint: ADVANCED_SECTION
+- number: 8
+  turns: 25
+  penalty: 2
+  question: FOREST_QUERY
+  hint: GO_EAST
+- number: 9
+  turns: 10
+  penalty: 4
+  question: OGRE_QUERY
+  hint: OGRE_CLUE
+- number: 10
+  turns: 1
+  penalty: 4
+  question: MISSING_ONE
+  hint: NO_LOCATE
