@@ -791,32 +791,32 @@ static int quit(void)
     return GO_CLEAROBJ;
 }
 
-static int read(struct command_t *command)
+static int read(struct command_t command)
 /*  Read.  Print stuff based on objtxt.  Oyster (?) is special case. */
 {
-    if (command->obj == INTRANSITIVE) {
-        command->obj = 0;
+    if (command.obj == INTRANSITIVE) {
+        command.obj = 0;
         for (int i = 1; i <= NOBJECTS; i++) {
             if (HERE(i) && OBJTXT[i] != 0 && game.prop[i] >= 0)
-                command->obj = command->obj * NOBJECTS + i;
+                command.obj = command.obj * NOBJECTS + i;
         }
-        if (command->obj > NOBJECTS || command->obj == 0 || DARK(game.loc)) return GO_UNKNOWN;
+        if (command.obj > NOBJECTS || command.obj == 0 || DARK(game.loc)) return GO_UNKNOWN;
     }
 
     if (DARK(game.loc)) {
-        SETPRM(1, command->wd1, command->wd1x);
+        SETPRM(1, command.wd1, command.wd1x);
         RSPEAK(NO_SEE);
         return GO_CLEAROBJ;
     }
-    if (OBJTXT[command->obj] == 0 || game.prop[command->obj] < 0) {
-        RSPEAK(ACTSPK[command->verb]);
+    if (OBJTXT[command.obj] == 0 || game.prop[command.obj] < 0) {
+        RSPEAK(ACTSPK[command.verb]);
         return GO_CLEAROBJ;
     }
-    if (command->obj == OYSTER && !game.clshnt) {
+    if (command.obj == OYSTER && !game.clshnt) {
         game.clshnt = YES(arbitrary_messages[CLUE_QUERY], arbitrary_messages[WAYOUT_CLUE], arbitrary_messages[OK_MAN]);
         return GO_CLEAROBJ;
     }
-    PSPEAK(command->obj, OBJTXT[command->obj] + game.prop[command->obj]);
+    PSPEAK(command.obj, OBJTXT[command.obj] + game.prop[command.obj]);
     return GO_CLEAROBJ;
 }
 
@@ -861,7 +861,6 @@ static int rub(token_t verb, token_t obj)
 static int say(struct command_t *command)
 /* Say.  Echo WD2 (or WD1 if no WD2 (SAY WHAT?, etc.).)  Magic words override. */
 {
-    /* FIXME: ugly use of globals */
     SETPRM(1, command->wd2, command->wd2x);
     if (command->wd2 <= 0)
         SETPRM(1, command->wd1, command->wd1x);
@@ -870,7 +869,8 @@ static int say(struct command_t *command)
     int wd = VOCAB(command->wd1, -1);
     /* FIXME: Magic numbers */
     if (wd == 62 || wd == 65 || wd == 71 || wd == 2025 || wd == 2034) {
-        command->wd2 = 0;
+	/* FIXME: scribbles on the interpreter's command block */
+        wordclear(&command->wd2);
         return GO_LOOKUP;
     }
     RSPEAK(OKEY_DOKEY);
@@ -1120,7 +1120,7 @@ int action(FILE *input, struct command_t *command)
                 return brief();
             case 26: /* READ  */
 		command->obj = INTRANSITIVE;
-                return read(command);
+                return read(*command);
             case 27: /* BREAK */
                 return GO_UNKNOWN;
             case 28: /* WAKE  */
@@ -1210,7 +1210,7 @@ int action(FILE *input, struct command_t *command)
             return GO_CLEAROBJ;
         }
         case 26: /* READ  */
-            return read(command);
+            return read(*command);
         case 27: /* BREAK */
             return vbreak(command->verb, command->obj);
         case 28: /* WAKE  */
