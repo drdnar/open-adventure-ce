@@ -89,7 +89,6 @@ extern bool oldstyle, editline, prompt;
 #define READ_MODE "rb"
 #define WRITE_MODE "wb"
 extern void* xmalloc(size_t size);
-extern char* xstrdup(const char*);
 extern void packed_to_token(long, char token[]);
 extern void token_to_packed(char token[], long*);
 extern void vspeak(const char*, va_list);
