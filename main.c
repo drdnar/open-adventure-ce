@@ -27,7 +27,7 @@
 
 struct game_t game;
 
-long LNLENG, LNPOSN, PARMS[MAXPARMS + 1];
+long LNLENG, LNPOSN;
 char rawbuf[LINESIZE], INLINE[LINESIZE + 1];
 
 long AMBER, AXE, BACK, BATTERY, BEAR, BIRD, BLOOD,
@@ -265,8 +265,7 @@ static void checkhints(void)
                 game.hintlc[hint] = 0;
                 if (!YES(hints[hint-1].question, arbitrary_messages[NO_MESSAGE], arbitrary_messages[OK_MAN]))
                     return;
-                SETPRM(1, hints[hint-1].penalty, hints[hint-1].penalty);
-                RSPEAK(HINT_COST);
+                rspeak(HINT_COST, hints[hint-1].penalty, hints[hint-1].penalty);
                 game.hinted[hint] = YES(arbitrary_messages[WANT_HINT], hints[hint-1].hint, arbitrary_messages[OK_MAN]);
                 if (game.hinted[hint] && game.limit > WARNTIME)
                     game.limit += WARNTIME * hints[hint-1].penalty;
@@ -305,7 +304,7 @@ static bool spotted_by_pirate(int i)
     }
     /* Force chest placement before player finds last treasure */
     if (game.tally == 1 && snarfed == 0 && game.place[CHEST] == LOC_NOWHERE && HERE(LAMP) && game.prop[LAMP] == 1) {
-        RSPEAK(PIRATE_SPOTTED);
+        rspeak(PIRATE_SPOTTED);
         movechest = true;
     }
     /* Do things in this order (chest move before robbery) so chest is listed
@@ -320,10 +319,10 @@ static bool spotted_by_pirate(int i)
         /* You might get a hint of the pirate's presence even if the
          * chest doesn't move... */
         if (game.odloc[PIRATE] != game.dloc[PIRATE] && PCT(20))
-            RSPEAK(PIRATE_RUSTLES);
+            rspeak(PIRATE_RUSTLES);
     }
     if (robplayer) {
-        RSPEAK(PIRATE_POUNCES);
+        rspeak(PIRATE_POUNCES);
         for (int treasure = MINTRS; treasure <= MAXTRS; treasure++) {
             if (!(treasure == PYRAMID && (game.loc == PLAC[PYRAMID] || game.loc == PLAC[EMERALD]))) {
                 if (AT(treasure) && game.fixed[treasure] == 0)
@@ -383,7 +382,7 @@ static bool dwarfmove(void)
                 game.dloc[i] = DALTLC;
             game.odloc[i] = game.dloc[i];
         }
-        RSPEAK(DWARF_RAN);
+        rspeak(DWARF_RAN);
         DROP(AXE, game.loc);
         return true;
     }
@@ -446,22 +445,19 @@ static bool dwarfmove(void)
 
     /*  Now we know what's happening.  Let's tell the poor sucker about it.
      *  Note that various of the "knife" messages must have specific relative
-     *  positions in the RSPEAK database. */
+     *  positions in the rspeak database. */
     if (game.dtotal == 0)
         return true;
-    SETPRM(1, game.dtotal, 0);
-    RSPEAK(game.dtotal == 1 ? DWARF_SINGLE : DWARF_PACK);
+    rspeak(game.dtotal == 1 ? DWARF_SINGLE : DWARF_PACK, game.dtotal);
     if (attack == 0)
         return true;
     if (game.dflag == 2)game.dflag = 3;
-    if (attack > 1){
-	SETPRM(1, attack, 0);
-	RSPEAK(THROWN_KNIVES);
-	SETPRM(1, stick, 0);
-	RSPEAK(stick > 1 ? MULTIPLE_HITS : (stick == 1 ? ONE_HIT : NONE_HIT));
+    if (attack > 1) {
+        rspeak(THROWN_KNIVES, attack);
+        rspeak(stick > 1 ? MULTIPLE_HITS : (stick == 1 ? ONE_HIT : NONE_HIT), stick);
     } else {
-	RSPEAK(KNIFE_THROWN);
-	RSPEAK(MISSES_YOU);
+        rspeak(KNIFE_THROWN);
+        rspeak(MISSES_YOU);
     }
     if (stick == 0)
         return true;
@@ -498,7 +494,7 @@ static void croak(void)
     if (game.closng) {
         /*  He died during closing time.  No resurrection.  Tally up a
          *  death and exit. */
-        RSPEAK(DEATH_CLOSING);
+        rspeak(DEATH_CLOSING);
         terminate(endgame);
     } else if (game.numdie == maximum_deaths || !YES(query, yes_response, arbitrary_messages[OK_MAN]))
         terminate(endgame);
@@ -560,7 +556,7 @@ static bool playermove(token_t verb, int motion)
                     }
                     kk = k2;
                     if (kk == 0) {
-                        RSPEAK(NOT_CONNECTED);
+                        rspeak(NOT_CONNECTED);
                         return true;
                     }
                 }
@@ -570,7 +566,7 @@ static bool playermove(token_t verb, int motion)
                 break; /* fall through to ordinary travel */
             }
         } else {
-            RSPEAK(k2);
+            rspeak(k2);
             return true;
         }
     } else if (motion == LOOK) {
@@ -578,14 +574,14 @@ static bool playermove(token_t verb, int motion)
          *  (though it may now be dark) so he won't fall into a
          *  pit while staring into the gloom. */
         if (game.detail < 3)
-            RSPEAK(NO_MORE_DETAIL);
+            rspeak(NO_MORE_DETAIL);
         ++game.detail;
         game.wzdark = false;
         game.abbrev[game.loc] = 0;
         return true;
     } else if (motion == CAVE) {
         /*  Cave.  Different messages depending on whether above ground. */
-        RSPEAK((OUTSID(game.loc) && game.loc != LOC_GRATE) ? FOLLOW_STREAM : NEED_DETAIL);
+        rspeak((OUTSID(game.loc) && game.loc != LOC_GRATE) ? FOLLOW_STREAM : NEED_DETAIL);
         return true;
     } else {
         /* none of the specials */
@@ -610,7 +606,7 @@ static bool playermove(token_t verb, int motion)
             if (verb == FIND || verb == INVENT)spk = NEARBY;
             if (motion == 62 || motion == 65)spk = NOTHING_HAPPENS;
             if (motion == 17)spk = WHICH_WAY;
-            RSPEAK(spk);
+            rspeak(spk);
             return true;
         }
         ++kk;
@@ -664,7 +660,7 @@ static bool playermove(token_t verb, int motion)
                     game.newloc = 99 + 100 - game.loc;
                     if (game.holdng > 1 || (game.holdng == 1 && !TOTING(EMERALD))) {
                         game.newloc = game.loc;
-                        RSPEAK(MUST_DROP);
+                        rspeak(MUST_DROP);
                     }
                     return true;
                 case 2:
@@ -691,7 +687,7 @@ static bool playermove(token_t verb, int motion)
                      *  and block him.  (standard travel entries check for
                      *  game.prop(TROLL)=0.)  Special stuff for bear. */
                     if (game.prop[TROLL] == 1) {
-                        PSPEAK(TROLL, 1);
+                        pspeak(TROLL, 1);
                         game.prop[TROLL] = 0;
                         MOVE(TROLL2, 0);
                         MOVE(TROLL2 + NOBJECTS, 0);
@@ -704,7 +700,7 @@ static bool playermove(token_t verb, int motion)
                         game.newloc = PLAC[TROLL] + FIXD[TROLL] - game.loc;
                         if (game.prop[TROLL] == 0)game.prop[TROLL] = 1;
                         if (!TOTING(BEAR)) return true;
-                        RSPEAK(BRIDGE_COLLAPSE);
+                        rspeak(BRIDGE_COLLAPSE);
                         game.prop[CHASM] = 1;
                         game.prop[TROLL] = 2;
                         DROP(BEAR, game.newloc);
@@ -722,7 +718,7 @@ static bool playermove(token_t verb, int motion)
     } while
     (false);
     /* FIXME: Arithmetic on location number, becoming a message number */
-    RSPEAK(game.newloc - 500);
+    rspeak(game.newloc - 500);
     game.newloc = game.loc;
     return true;
 }
@@ -781,7 +777,7 @@ static bool closecheck(void)
         game.fixed[CHAIN] = 0;
         game.prop[AXE] = 0;
         game.fixed[AXE] = 0;
-        RSPEAK(CAVE_CLOSING);
+        rspeak(CAVE_CLOSING);
         game.clock1 = -1;
         game.closng = true;
         return true;
@@ -832,7 +828,7 @@ static bool closecheck(void)
                 DESTROY(i);
         }
 
-        RSPEAK(CAVE_CLOSED);
+        rspeak(CAVE_CLOSED);
         game.closed = true;
         return true;
     }
@@ -853,7 +849,7 @@ static void lampcheck(void)
      *  Second is for other cases of lamp dying.  Eve after it goes
      *  out, he can explore outside for a while if desired. */
     if (game.limit <= WARNTIME && HERE(BATTERY) && game.prop[BATTERY] == 0 && HERE(LAMP)) {
-        RSPEAK(REPLACE_BATTERIES);
+        rspeak(REPLACE_BATTERIES);
         game.prop[BATTERY] = 1;
         if (TOTING(BATTERY))
             DROP(BATTERY, game.loc);
@@ -863,14 +859,14 @@ static void lampcheck(void)
         game.limit = -1;
         game.prop[LAMP] = 0;
         if (HERE(LAMP))
-            RSPEAK(LAMP_OUT);
+            rspeak(LAMP_OUT);
     } else if (game.limit <= WARNTIME) {
         if (!game.lmwarn && HERE(LAMP)) {
             game.lmwarn = true;
             int spk = GET_BATTERIES;
             if (game.place[BATTERY] == LOC_NOWHERE)spk = LAMP_DIM;
             if (game.prop[BATTERY] == 1)spk = MISSING_BATTERYIES;
-            RSPEAK(spk);
+            rspeak(spk);
         }
     }
 }
@@ -916,7 +912,7 @@ static void listobjects(void)
             int kk = game.prop[obj];
             if (obj == STEPS && game.loc == game.fixed[STEPS])
                 kk = 1;
-            PSPEAK(obj, kk);
+            pspeak(obj, kk);
         }
     }
 }
@@ -932,7 +928,7 @@ static bool do_command(FILE *cmdin)
 
     /*  Can't leave cave once it's closing (except by main office). */
     if (OUTSID(game.newloc) && game.newloc != 0 && game.closng) {
-        RSPEAK(EXIT_CLOSED);
+        rspeak(EXIT_CLOSED);
         game.newloc = game.loc;
         if (!game.panic)game.clock2 = PANICTIME;
         game.panic = true;
@@ -946,7 +942,7 @@ static bool do_command(FILE *cmdin)
         for (size_t i = 1; i <= NDWARVES - 1; i++) {
             if (game.odloc[i] == game.newloc && game.dseen[i]) {
                 game.newloc = game.loc;
-                RSPEAK(DWARF_BLOCK);
+                rspeak(DWARF_BLOCK);
                 break;
             }
         }
@@ -968,14 +964,14 @@ static bool do_command(FILE *cmdin)
             /*  The easiest way to get killed is to fall into a pit in
              *  pitch darkness. */
             if (game.wzdark && PCT(35)) {
-                RSPEAK(PIT_FALL);
+                rspeak(PIT_FALL);
                 game.oldlc2 = game.loc;
                 croak();
                 continue;	/* back to top of main interpreter loop */
             }
             msg = arbitrary_messages[PITCH_DARK];
         }
-        if (TOTING(BEAR))RSPEAK(TAME_BEAR);
+        if (TOTING(BEAR))rspeak(TAME_BEAR);
         speak(msg);
         if (FORCED(game.loc)) {
             if (playermove(command.verb, 1))
@@ -984,7 +980,7 @@ static bool do_command(FILE *cmdin)
                 continue;	/* back to top of main interpreter loop */
         }
         if (game.loc == LOC_Y2 && PCT(25) && !game.closng)
-            RSPEAK(SAYS_PLUGH);
+            rspeak(SAYS_PLUGH);
 
         listobjects();
 
@@ -1003,7 +999,7 @@ L2600:
          *  tick game.clock1 unless well into cave (and not at Y2). */
         if (game.closed) {
             if (game.prop[OYSTER] < 0 && TOTING(OYSTER))
-                PSPEAK(OYSTER, 1);
+                pspeak(OYSTER, 1);
             for (size_t i = 1; i <= NOBJECTS; i++) {
                 if (TOTING(i) && game.prop[i] < 0)
                     game.prop[i] = -1 - game.prop[i];
@@ -1051,9 +1047,9 @@ L2607:
         V2 = VOCAB(command.wd2, -1);
         if (V1 == ENTER && (V2 == STREAM || V2 == 1000 + WATER)) {
             if (LIQLOC(game.loc) == WATER) {
-                RSPEAK(FEET_WET);
+                rspeak(FEET_WET);
             } else {
-                RSPEAK(WHERE_QUERY);
+                rspeak(WHERE_QUERY);
             }
             goto L2012;
         }
@@ -1062,7 +1058,7 @@ L2607:
             command.wd1x = command.wd2x;
             wordclear(&command.wd2);
         } else {
-	    /* FIXME: Magic numbers */
+            /* FIXME: Magic numbers */
             if (!((V1 != 1000 + WATER && V1 != 1000 + OIL) ||
                   (V2 != 1000 + PLANT && V2 != 1000 + DOOR))) {
                 if (AT(V2 - 1000))
@@ -1075,11 +1071,11 @@ L2620:
         if (wordeq(command.wd1, MAKEWD(WORD_WEST))) {
             ++game.iwest;
             if (game.iwest == 10)
-                RSPEAK(W_IS_WEST);
+                rspeak(W_IS_WEST);
         }
         if (wordeq(command.wd1, MAKEWD(WORD_GO)) && !wordempty(command.wd2)) {
             if (++igo == 10)
-                RSPEAK(GO_UNNEEDED);
+                rspeak(GO_UNNEEDED);
         }
 Lookup:
         defn = VOCAB(command.wd1, -1);
@@ -1087,8 +1083,7 @@ Lookup:
             /* Gee, I don't understand. */
             if (fallback_handler(rawbuf))
                 continue;
-            SETPRM(1, command.wd1, command.wd1x);
-            RSPEAK(DONT_KNOW);
+            rspeak(DONT_KNOW, command.wd1, command.wd1x);
             goto L2600;
         }
         kmod = MOD(defn, 1000);
@@ -1107,7 +1102,7 @@ Lookup:
             command.verb = kmod;
             break;
         case 3:
-            RSPEAK(kmod);
+            rspeak(kmod);
             goto L2012;
         default:
             BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3);
@@ -1139,13 +1134,12 @@ Laction:
         case GO_UNKNOWN:
             /*  Random intransitive verbs come here.  Clear obj just in case
              *  (see attack()). */
-            SETPRM(1, command.wd1, command.wd1x);
-            RSPEAK(DO_WHAT);
+            rspeak(DO_WHAT, command.wd1, command.wd1x);
             command.obj = 0;
             goto L2600;
         case GO_DWARFWAKE:
             /*  Oh dear, he's disturbed the dwarves. */
-            RSPEAK(DWARVES_AWAKEN);
+            rspeak(DWARVES_AWAKEN);
             terminate(endgame);
         default:
             BUG(ACTION_RETURNED_PHASE_CODE_BEYOND_END_OF_SWITCH);

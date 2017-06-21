@@ -43,7 +43,7 @@ int suspend(void)
     long i, k;
     FILE *fp = NULL;
 
-    RSPEAK(SUSPEND_WARNING);
+    rspeak(SUSPEND_WARNING);
     if (!YES(arbitrary_messages[THIS_ACCEPTABLE], arbitrary_messages[OK_MAN], arbitrary_messages[OK_MAN])) return GO_CLEAROBJ;
     game.saved = game.saved + 5;
 
@@ -67,7 +67,7 @@ int suspend(void)
     save.bivalve = OBJTXT[OYSTER];
     IGNORE(fwrite(&save, sizeof(struct save_t), 1, fp));
     fclose(fp);
-    RSPEAK(RESUME_HELP);
+    rspeak(RESUME_HELP);
     exit(0);
 }
 
@@ -82,7 +82,7 @@ int resume(void)
     FILE *fp = NULL;
 
     if (game.loc != 1 || game.abbrev[1] != 1) {
-        RSPEAK(RESUME_ABANDON);
+        rspeak(RESUME_ABANDON);
         if (!YES(arbitrary_messages[THIS_ACCEPTABLE], arbitrary_messages[OK_MAN], arbitrary_messages[OK_MAN])) return GO_CLEAROBJ;
     }
 
@@ -111,9 +111,7 @@ int restore(FILE* fp)
     IGNORE(fread(&save, sizeof(struct save_t), 1, fp));
     fclose(fp);
     if (save.version != VRSION) {
-        SETPRM(1, save.version / 10, MOD(save.version, 10));
-        SETPRM(3, VRSION / 10, MOD(VRSION, 10));
-        RSPEAK(VERSION_SKEW);
+        rspeak(VERSION_SKEW, save.version / 10, MOD(save.version, 10), VRSION / 10, MOD(VRSION, 10));
     } else {
         memcpy(&game, &save.game, sizeof(struct game_t));
         OBJSND[BIRD] = save.bird;

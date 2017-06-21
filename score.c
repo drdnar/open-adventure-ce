@@ -99,9 +99,7 @@ long score(enum termination mode)
 
     /* Return to score command if that's where we came from. */
     if (mode == scoregame) {
-        SETPRM(1, score, mxscor);
-        SETPRM(3, game.turns, game.turns);
-        RSPEAK(GARNERED_POINTS);
+        rspeak(GARNERED_POINTS, score, mxscor, game.turns, game.turns);
     }
 
     return score;
@@ -113,23 +111,20 @@ void terminate(enum termination mode)
     long points = score(mode);
 
     if (points + game.trnluz + 1 >= mxscor && game.trnluz != 0)
-        RSPEAK(TOOK_LONG);
+        rspeak(TOOK_LONG);
     if (points + game.saved + 1 >= mxscor && game.saved != 0)
-        RSPEAK(WITHOUT_SUSPENDS);
-    SETPRM(1, points, mxscor);
-    SETPRM(3, game.turns, game.turns);
-    RSPEAK(TOTAL_SCORE);
+        rspeak(WITHOUT_SUSPENDS);
+    rspeak(TOTAL_SCORE, points, mxscor, game.turns, game.turns);
     for (long i = 1; i <= (long)CLSSES; i++) {
         if (classes[i].threshold >= points) {
             speak(classes[i].message);
             i = classes[i].threshold + 1 - points;
-            SETPRM(1, i, i);
-            RSPEAK(NEXT_HIGHER);
+            rspeak(NEXT_HIGHER, i, i);
             exit(0);
         }
     }
-    RSPEAK(OFF_SCALE);
-    RSPEAK(NO_HIGHER);
+    rspeak(OFF_SCALE);
+    rspeak(NO_HIGHER);
     exit(0);
 }
 

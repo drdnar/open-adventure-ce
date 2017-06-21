@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdarg.h>
 #include <sys/time.h>
 #include <ctype.h>
 
@@ -79,9 +80,9 @@ void wordclear(token_t *v)
     *v = 0;
 }
 
-/*  I/O routines (SPEAK, PSPEAK, RSPEAK, SETPRM, GETIN, YES) */
+/*  I/O routines (speak, pspeak, rspeak, GETIN, YES) */
 
-void speak(const char* msg)
+void vspeak(const char* msg, va_list ap)
 {
     // Do nothing if we got a null pointer.
     if (msg == NULL)
@@ -95,97 +96,100 @@ void speak(const char* msg)
     if (game.blklin == true)
         printf("\n");
 
-    // Create a copy of our string, so we can edit it.
-    char* copy = xstrdup(msg);
+    int msglen = strlen(msg);
 
-    // Staging area for stringified parameters.
-    char parameters[5][100]; // FIXME: to be replaced with dynamic allocation
+    // Rendered string
+    ssize_t size = 2000; /* msglen > 50 ? msglen*2 : 100; */
+    char* rendered = xmalloc(size);
+    char* renderp = rendered;
 
     // Handle format specifiers (including the custom %C, %L, %S) by adjusting the parameter accordingly, and replacing the specifier with %s.
-    int pi = 0; // parameter index
-    for (int i = 0; i < (int)strlen(msg); ++i) {
-        if (msg[i] == '%') {
-            ++pi;
-
+    long previous_arg = 0;
+    for (int i = 0; i < msglen; i++) {
+        if (msg[i] != '%') {
+            *renderp++ = msg[i];
+            size--;
+        } else {
+            long arg = va_arg(ap, long);
+            i++;
             // Integer specifier. In order to accommodate the fact that PARMS can have both legitimate integers *and* packed tokens, stringify everything. Future work may eliminate the need for this.
-            if (msg[i + 1] == 'd') {
-                copy[i + 1] = 's';
-                sprintf(parameters[pi], "%ld", PARMS[pi]);
+            if (msg[i] == 'd') {
+                int ret = snprintf(renderp, size, "%ld", arg);
+                if (ret < size) {
+                    renderp += ret;
+                    size -= ret;
+                }
             }
 
             // Unmodified string specifier.
-            if (msg[i + 1] == 's') {
-                packed_to_token(PARMS[pi], parameters[pi]);
+            if (msg[i] == 's') {
+                packed_to_token(arg, renderp); /* unpack directly to destination */
+                size_t len = strlen(renderp);
+                renderp += len;
+                size -= len;
             }
 
             // Singular/plural specifier.
-            if (msg[i + 1] == 'S') {
-                copy[i + 1] = 's';
-                if (PARMS[pi - 1] > 1) { // look at the *previous* parameter (which by necessity must be numeric)
-                    sprintf(parameters[pi], "%s", "s");
-                } else {
-                    sprintf(parameters[pi], "%s", "");
+            if (msg[i] == 'S') {
+                if (previous_arg > 1) { // look at the *previous* parameter (which by necessity must be numeric)
+                    *renderp++ = 's';
+                    size--;
                 }
             }
 
             // All-lowercase specifier.
-            if (msg[i + 1] == 'L') {
-                copy[i + 1] = 's';
-                packed_to_token(PARMS[pi], parameters[pi]);
-                for (int j = 0; j < (int)strlen(parameters[pi]); ++j) {
-                    parameters[pi][j] = tolower(parameters[pi][j]);
+            if (msg[i] == 'L' || msg[i] == 'C') {
+                packed_to_token(arg, renderp); /* unpack directly to destination */
+                int len = strlen(renderp);
+                for (int j = 0; j < len; ++j) {
+                    renderp[j] = tolower(renderp[j]);
                 }
+                if (msg[i] == 'C') // First char uppercase, rest lowercase.
+                    renderp[0] = toupper(renderp[0]);
+                renderp += len;
+                size -= len;
             }
 
-            // First char uppercase, rest lowercase.
-            if (msg[i + 1] == 'C') {
-                copy[i + 1] = 's';
-                packed_to_token(PARMS[pi], parameters[pi]);
-                for (int j = 0; j < (int)strlen(parameters[pi]); ++j) {
-                    parameters[pi][j] = tolower(parameters[pi][j]);
-                }
-                parameters[pi][0] = toupper(parameters[pi][0]);
-            }
+            previous_arg = arg;
         }
     }
-
-    // Render the final string.
-    char rendered[2000]; // FIXME: to be replaced with dynamic allocation
-    sprintf(rendered, copy, parameters[1], parameters[2], parameters[3], parameters[4]); // FIXME: to be replaced with vsprintf()
+    *renderp = 0;
 
     // Print the message.
     printf("%s\n", rendered);
 
-    free(copy);
+    free(rendered);
 }
 
-void PSPEAK(vocab_t msg, int skip)
+void speak(const char* msg, ...)
+{
+    va_list ap;
+    va_start(ap, msg);
+    vspeak(msg, ap);
+    va_end(ap);
+}
+
+void pspeak(vocab_t msg, int skip, ...)
 /*  Find the skip+1st message from msg and print it.  msg should be
  *  the index of the inventory message for object.  (INVEN+N+1 message
  *  is game.prop=N message). */
 {
+    va_list ap;
+    va_start(ap, skip);
     if (skip >= 0)
-        speak(object_descriptions[msg].longs[skip]);
+        vspeak(object_descriptions[msg].longs[skip], ap);
     else
-        speak(object_descriptions[msg].inventory);
+        vspeak(object_descriptions[msg].inventory, ap);
+    va_end(ap);
 }
 
-void RSPEAK(vocab_t i)
+void rspeak(vocab_t i, ...)
 /* Print the i-th "random" message (section 6 of database). */
 {
-    speak(arbitrary_messages[i]);
-}
-
-void SETPRM(long first, long p1, long p2)
-/*  Stores parameters into the PRMCOM parms array for use by speak.  P1 and P2
- *  are stored into PARMS(first) and PARMS(first+1). */
-{
-    if (first >= MAXPARMS)
-        BUG(TOO_MANY_PARAMETERS_GIVEN_TO_SETPRM);
-    else {
-        PARMS[first] = p1;
-        PARMS[first + 1] = p2;
-    }
+    va_list ap;
+    va_start(ap, i);
+    vspeak(arbitrary_messages[i], ap);
+    va_end(ap);
 }
 
 bool GETIN(FILE *input,
@@ -220,7 +224,7 @@ bool GETIN(FILE *input,
         (junk > 0);
         if (GETTXT(true, true, true) <= 0)
             return true;
-        RSPEAK(TWO_WORDS);
+        rspeak(TWO_WORDS);
     }
 }
 
@@ -317,7 +321,7 @@ bool YES(const char* question, const char* yes_response, const char* no_response
             outcome = false;
             break;
         } else
-            RSPEAK(PLEASE_ANSWER);
+            rspeak(PLEASE_ANSWER);
     }
     linenoiseFree(reply);
     return (outcome);

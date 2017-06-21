@@ -77,7 +77,7 @@ struct game_t {
 
 extern struct game_t game;
 
-extern long LNLENG, LNPOSN, PARMS[];
+extern long LNLENG, LNPOSN;
 extern char rawbuf[LINESIZE], INLINE[LINESIZE + 1];
 extern const char ascii_to_advent[];
 extern const char advent_to_ascii[];
@@ -91,13 +91,13 @@ extern void* xmalloc(size_t size);
 extern char* xstrdup(const char*);
 extern void packed_to_token(long, char token[]);
 extern void token_to_packed(char token[], long*);
-extern void speak(const char*);
+extern void vspeak(const char*, va_list);
 extern bool wordeq(token_t, token_t);
 extern bool wordempty(token_t);
 extern void wordclear(token_t *);
-extern void PSPEAK(vocab_t, int);
-extern void RSPEAK(vocab_t);
-extern void SETPRM(long, long, long);
+extern void speak(const char*, ...);
+extern void pspeak(vocab_t, int, ...);
+extern void rspeak(vocab_t, ...);
 extern bool GETIN(FILE *, token_t*, token_t*, token_t*, token_t*);
 extern void echo_input(FILE*, char*, char*);
 extern char* get_input(void);
