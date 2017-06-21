@@ -87,7 +87,7 @@ long score(enum termination mode)
     mxscor += 2;
 
     /* Deduct for hints/turns/saves. Hints < 4 are special; see database desc. */
-    for (long i = 1; i <= HNTMAX; i++) {
+    for (long i = 1; i <= HINT_COUNT; i++) {
         if (game.hinted[i])
             score = score - hints[i-1].penalty;
     }

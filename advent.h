@@ -3,6 +3,7 @@
 #include <stdbool.h>
 
 #include "common.h"
+#include "newdb.h"
 
 #define LINESIZE	100
 #define NDWARVES	6		/* number of dwarves */
@@ -70,8 +71,8 @@ struct game_t {
     long fixed[NOBJECTS + 1];
     long link[NOBJECTS * 2 + 1];
     long place[NOBJECTS + 1];
-    long hinted[HNTSIZ + 1];
-    long hintlc[HNTSIZ + 1];
+    long hinted[HINT_COUNT];
+    long hintlc[HINT_COUNT];
     long prop[NOBJECTS + 1];
 };
 

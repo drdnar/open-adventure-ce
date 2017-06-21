@@ -14,6 +14,7 @@
 #define TRVSIZ 885
 #define TOKLEN 5
 #define HINTLEN 5
+#define HNTSIZ 20
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -448,11 +449,6 @@ static int read_database(FILE* database)
  *  whether the abbreviated description is printed.  Counts modulo 5
  *  unless "LOOK" is used. */
 
-static void write_0d(FILE* header_file, long single, const char* varname)
-{
-    fprintf(header_file, "LOCATION long %s INITIALIZE(= %ld);\n", varname, single);
-}
-
 static void write_1d(FILE* header_file, long array[], long dim, const char* varname)
 {
     fprintf(header_file, "LOCATION long %s[] INITIALIZE(= {\n", varname);
@@ -490,7 +486,6 @@ static void write_file(FILE* header_file)
     fprintf(header_file, "\n");
 
     // content variables
-    write_0d(header_file, HNTMAX, "HNTMAX");
     write_1d(header_file, OBJSND, NOBJECTS + 1, "OBJSND");
     write_1d(header_file, OBJTXT, NOBJECTS + 1, "OBJTXT");
     write_1d(header_file, COND, LOCSIZ + 1, "COND");

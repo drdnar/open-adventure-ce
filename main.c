@@ -189,7 +189,7 @@ static bool fallback_handler(char *buf)
 static void checkhints(void)
 {
     if (COND[game.loc] >= game.conds) {
-        for (int hint = 1; hint <= HNTMAX; hint++) {
+        for (int hint = 1; hint <= HINT_COUNT; hint++) {
             if (game.hinted[hint])
                 continue;
             if (!CNDBIT(game.loc, hint + HBASE))

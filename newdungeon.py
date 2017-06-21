@@ -9,6 +9,8 @@ h_name = "newdb.h"
 c_name = "newdb.c"
 
 h_template = """/* Generated from adventure.yaml - do not hand-hack! */
+#ifndef NEWDB_H
+#define NEWDB_H
 
 #include <stdio.h>
 
@@ -61,6 +63,7 @@ extern hint_t hints[];
 extern const size_t CLSSES;
 extern const int maximum_deaths;
 extern const int turn_threshold_count;
+#define HINT_COUNT {}
 
 enum arbitrary_messages_refs {{
 {}
@@ -74,7 +77,7 @@ enum object_descriptions_refs {{
 {}
 }};
 
-/* end */
+#endif /* end NEWDB_H */
 """
 
 c_template = """/* Generated from adventure.yaml - do not hand-hack! */
@@ -253,6 +256,7 @@ if __name__ == "__main__":
         db = yaml.load(f)
 
     h = h_template.format(
+        len(db["hints"]),
         get_refs(db["arbitrary_messages"]),
         get_refs(db["locations"]),
         get_refs(db["object_descriptions"]),

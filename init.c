@@ -5,7 +5,6 @@
 
 #include "advent.h"
 #include "database.h"
-#include "newdb.h"
 
 /*
  * Initialisation
@@ -226,7 +225,7 @@ void initialise(void)
     /*  Clear the hint stuff.  game.hintlc[i] is how long he's been at LOC
      *  with cond bit i.  game.hinted[i] is true iff hint i has been
      *  used. */
-    for (int i = 1; i <= HNTMAX; i++) {
+    for (int i = 1; i <= HINT_COUNT; i++) {
         game.hinted[i] = false;
         game.hintlc[i] = 0;
     }
