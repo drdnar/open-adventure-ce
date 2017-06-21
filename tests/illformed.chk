@@ -33,7 +33,7 @@ You're in front of building.
 
 > eat grate
 
-You're in front of building.
+Don't be ridiculous!
 
 > in
 
@@ -109,9 +109,7 @@ You're in front of building.
 I don't know where the cave is, but hereabouts no stream can run on
 the surface for long.  I would try the stream.
 
-You are standing at the end of a road before a small brick building.
-Around you is a forest.  A small stream flows out of the building and
-down a gully.
+You're in front of building.
 
 > enter stream
 
@@ -133,7 +131,9 @@ Carry what?
 
 I am unsure how you are facing.  Use compass points or nearby objects.
 
-You're in front of building.
+You are standing at the end of a road before a small brick building.
+Around you is a forest.  A small stream flows out of the building and
+down a gully.
 
 > eat
 
