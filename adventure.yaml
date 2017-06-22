@@ -6,6 +6,13 @@
 #
 # We define a bunch of YAML structures:
 #
+# hints: Each item contains a hint number (add 10 to get cond bit),
+#    the number of turns he must be at the right loc(s) before
+#    triggering the hint, the points deducted for taking the hint, the
+#    message number (section 6) of the question, and the message
+#    number of the hint.  These values are stashed in the "hints"
+#    array.
+#
 # locations: Each item contains a long and short description.  Some
 #    short descriptions are empty.  Order of these locations is significant;
 #    see the macros OUTSID and INDEEP.  Location conditions can be read
@@ -55,16 +62,72 @@
 #    significant, they're used in succession as the player racks up
 #    deaths.
 #
-# hints: Each item contains a hint number (add 10 to get cond bit),
-#    the number of turns he must be at the right loc(s) before
-#    triggering the hint, the points deducted for taking the hint, the
-#    message number (section 6) of the question, and the message
-#    number of the hint.  These values are stashed in the "hints"
-#    array.
-#
 # These correspond to sections 1, 2, 5, 6, 10, 11, and 14 in the old
 # adventure.text format.  Sections 3, 4, 7, 8, and 9 haven't moved yet.
 # Section 12 was obsolete.
+
+# FIXME: Hint texts shouldn't be in arbitrary_messages, but inlined here
+hints:
+  - hint: &grate
+      number: 1
+      turns: 4
+      penalty: 2
+      question: ENTRY_QUERY
+      hint: HARD_GRATE
+  - hint: &bird
+      number: 2
+      turns: 5
+      penalty: 2
+      question: BIRD_QUERY
+      hint: SKITTISH_BIRD
+  - hint: &snake
+      number: 3
+      turns: 8
+      penalty: 2
+      question: SNAKE_QUERY
+      hint: SNAKE_HINT
+  - hint: &maze
+      number: 4
+      turns: 75
+      penalty: 4
+      question: MAZE_HELP
+      hint: DROP_THINGS
+  - hint: &dark
+      number: 5
+      turns: 25
+      penalty: 5
+      question: PLOVER_QUERY
+      hint: EXPLORE_HINT
+  - hint: &witt
+      number: 6
+      turns: 20
+      penalty: 3
+      question: HELP_LEAVING
+      hint: NOGO_WEST
+  - hint: &cliff
+      number: 7
+      turns: 8
+      penalty: 2
+      question: WONDERING_QUERY
+      hint: ADVANCED_SECTION
+  - hint: &forest
+      number: 8
+      turns: 25
+      penalty: 2
+      question: FOREST_QUERY
+      hint: GO_EAST
+  - hint: &ogre
+      number: 9
+      turns: 10
+      penalty: 4
+      question: OGRE_QUERY
+      hint: OGRE_CLUE
+  - hint: &jade
+      number: 10
+      turns: 1
+      penalty: 4
+      question: MISSING_ONE
+      hint: NO_LOCATE
 
 locations: !!omap
 - LOC_NOWHERE:
@@ -101,7 +164,8 @@ locations: !!omap
     description:
       long: 'The forest thins out here to reveal a steep cliff.  There is no way\ndown, but a small ledge can be seen to the west across the chasm.'
       short: 'You''re at cliff.'
-    conditions: {HCLIFF: true, ABOVE: true, NOBACK: true, LIT: true}
+    conditions: {ABOVE: true, NOBACK: true, LIT: true}
+    hints: [*cliff]
 - LOC_SLIT:
     description:
       long: 'At your feet all the water of the stream splashes into a 2-inch slit\nin the rock.  Downstream the streambed is bare rock.'
@@ -111,7 +175,8 @@ locations: !!omap
     description:
       long: 'You are in a 20-foot depression floored with bare dirt.  Set into the\ndirt is a strong steel grate mounted in concrete.  A dry streambed\nleads into the depression.'
       short: 'You''re outside grate.'
-    conditions: {HJADE: true, ABOVE: true, HCAVE: true, LIT: true}
+    conditions: {ABOVE: true, LIT: true}
+    hints: [*grate, *jade]
 - LOC_BELOWGRATE:
     description:
       long: 'You are in a small chamber beneath a 3x3 steel grate to the surface.\nA low crawl over cobbles leads inward to the west.'
@@ -136,7 +201,8 @@ locations: !!omap
     description:
       long: 'You are in a splendid chamber thirty feet high.  The walls are frozen\nrivers of orange stone.  An awkward canyon and a good passage exit\nfrom east and west sides of the chamber.'
       short: 'You''re in bird chamber.'
-    conditions: {HBIRD: true}
+    conditions: {}
+    hints: [*bird] 
 - LOC_PITTOP:
     description:
       long: 'At your feet is a small pit breathing traces of white mist.  An east\npassage ends here except for a small crack leading on.'
@@ -146,7 +212,8 @@ locations: !!omap
     description:
       long: 'You are at one end of a vast hall stretching forward out of sight to\nthe west.  There are openings to either side.  Nearby, a wide stone\nstaircase leads downward.  The hall is filled with wisps of white mist\nswaying to and fro almost as if alive.  A cold wind blows up the\nstaircase.  There is a passage at the top of a dome behind you.'
       short: 'You''re in Hall of Mists.'
-    conditions: {HJADE: true}
+    conditions: {}
+    hints: [*jade]
 - LOC_CRACK:
     description:
       long: 'The crack is far too small for you to follow.  At its widest it is\nbarely wide enough to admit your foot.'
@@ -166,7 +233,8 @@ locations: !!omap
     description:
       long: 'You are in the Hall of the Mountain King, with passages off in all\ndirections.'
       short: 'You''re in Hall of Mt King.'
-    conditions: {DEEP: true, HSNAKE: true}
+    conditions: {DEEP: true}
+    hints: [*snake]
 - LOC_NECKBROKE:
     description:
       long: 'You are at the bottom of the pit with a broken neck.'
@@ -281,77 +349,92 @@ locations: !!omap
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-    conditions: {DEEP: true, NOBACK: true, HMAZE: true}
+    conditions: {DEEP: true, NOBACK: true}
+    hints: [*maze]
 - LOC_ALIKE2:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-    conditions: {DEEP: true, NOBACK: true, HMAZE: true}
+    conditions: {DEEP: true, NOBACK: true}
+    hints: [*maze]
 - LOC_ALIKE3:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-    conditions: {DEEP: true, NOBACK: true, HMAZE: true}
+    conditions: {DEEP: true, NOBACK: true}
+    hints: [*maze]
 - LOC_ALIKE4:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-    conditions: {DEEP: true, NOBACK: true, HMAZE: true}
+    conditions: {DEEP: true, NOBACK: true}
+    hints: [*maze]
 - LOC_DEADEND1:
     description:
       long: 'Dead end'
       short: !!null
-    conditions: {DEEP: true, NOARRR: true, HMAZE: true}
+    conditions: {DEEP: true, NOARRR: true}
+    hints: [*maze]
 - LOC_DEADEND2:
     description:
       long: 'Dead end'
       short: !!null
-    conditions: {DEEP: true, NOARRR: true, HMAZE: true}
+    conditions: {DEEP: true, NOARRR: true}
+    hints: [*maze]
 - LOC_DEADEND3:
     description:
       long: 'Dead end'
       short: !!null
-    conditions: {DEEP: true, NOARRR: true, HMAZE: true}
+    conditions: {DEEP: true, NOARRR: true}
+    hints: [*maze]
 - LOC_ALIKE5:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-    conditions: {DEEP: true, NOBACK: true, HMAZE: true}
+    conditions: {DEEP: true, NOBACK: true}
+    hints: [*maze]
 - LOC_ALIKE6:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-    conditions: {DEEP: true, NOBACK: true, HMAZE: true}
+    conditions: {DEEP: true, NOBACK: true}
+    hints: [*maze]
 - LOC_ALIKE7:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-    conditions: {DEEP: true, NOBACK: true, HMAZE: true}
+    conditions: {DEEP: true, NOBACK: true}
+    hints: [*maze]
 - LOC_ALIKE8:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-    conditions: {DEEP: true, NOBACK: true, HMAZE: true}
+    conditions: {DEEP: true, NOBACK: true}
+    hints: [*maze]
 - LOC_ALIKE9:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-    conditions: {DEEP: true, NOBACK: true, HMAZE: true}
+    conditions: {DEEP: true, NOBACK: true}
+    hints: [*maze]
 - LOC_DEADEND4:
     description:
       long: 'Dead end'
       short: !!null
-    conditions: {DEEP: true, NOARRR: true, HMAZE: true}
+    conditions: {DEEP: true, NOARRR: true}
+    hints: [*maze]
 - LOC_ALIKE10:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-    conditions: {DEEP: true, NOBACK: true, HMAZE: true}
+    conditions: {DEEP: true, NOBACK: true}
+    hints: [*maze]
 - LOC_DEADEND5:
     description:
       long: 'Dead end'
       short: !!null
-    conditions: {DEEP: true, NOARRR: true, HMAZE: true}
+    conditions: {DEEP: true, NOARRR: true}
+    hints: [*maze]
 - LOC_PITBRINK:
     description:
       long: 'You are on the brink of a thirty foot pit with a massive orange column\ndown one wall.  You could climb down here but you could not get back\nup.  The maze continues at this level.'
@@ -391,7 +474,8 @@ locations: !!omap
     description:
       long: 'You are at a complex junction.  A low hands and knees passage from the\nnorth joins a higher crawl from the east to make a walking passage\ngoing west.  There is also a large room above.  The air is damp here.'
       short: 'You''re at complex junction.'
-    conditions: {DEEP: true, HJADE: true}
+    conditions: {DEEP: true}
+    hints: [*jade]
 - LOC_BEDQUILT:
     description:
       long: 'You are in Bedquilt, a long east/west passage with holes everywhere.\nTo explore at random select north, south, up, or down.'
@@ -471,17 +555,20 @@ locations: !!omap
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-    conditions: {DEEP: true, NOBACK: true, HMAZE: true}
+    conditions: {DEEP: true, NOBACK: true}
+    hints: [*maze]
 - LOC_DEADEND8:
     description:
       long: 'Dead end'
       short: !!null
-    conditions: {DEEP: true, HMAZE: true}
+    conditions: {DEEP: true}
+    hints: [*maze]
 - LOC_DEADEND9:
     description:
       long: 'Dead end'
       short: !!null
-    conditions: {DEEP: true, NOARRR: true, HMAZE: true}
+    conditions: {DEEP: true, NOARRR: true}
+    hints: [*maze]
 - LOC_ALIKE12:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
@@ -501,12 +588,14 @@ locations: !!omap
     description:
       long: 'Dead end'
       short: !!null
-    conditions: {DEEP: true, NOARRR: true, HMAZE: true}
+    conditions: {DEEP: true, NOARRR: true}
+    hints: [*maze]
 - LOC_ALIKE14:
     description:
       long: 'You are in a maze of twisty little passages, all alike.'
       short: !!null
-    conditions: {DEEP: true, NOBACK: true, HMAZE: true}
+    conditions: {DEEP: true, NOBACK: true}
+    hints: [*maze]
 - LOC_NARROW:
     description:
       long: 'You are in a long, narrow corridor stretching out of sight to the\nwest.  At the eastern end is a hole through which you can see a\nprofusion of leaves.'
@@ -566,17 +655,20 @@ locations: !!omap
     description:
       long: 'You are in an alcove.  A small nw path seems to widen after a short\ndistance.  An extremely tight tunnel leads east.  It looks like a very\ntight squeeze.  An eerie light can be seen at the other end.'
       short: 'You''re in alcove.'
-    conditions: {DEEP: true, HDARK: true}
+    conditions: {DEEP: true}
+    hits: [*dark]
 - LOC_PLOVER:
     description:
       long: 'You''re in a small chamber lit by an eerie green light.  An extremely\nnarrow tunnel exits to the west.  A dark corridor leads ne.'
       short: 'You''re in Plover Room.'
-    conditions: {DEEP: true, HDARK: true, LIT: true}
+    conditions: {DEEP: true, LIT: true}
+    hits: [*dark]
 - LOC_DARKROOM:
     description:
       long: 'You''re in the dark-room.  A corridor leading south is the only exit.'
       short: 'You''re in dark-room.'
-    conditions: {DEEP: true, HDARK: true}
+    conditions: {DEEP: true}
+    hits: [*dark]
 - LOC_ARCHED:
     description:
       long: 'You are in an arched hall.  A coral passage once continued up and east\nfrom here, but is now blocked by debris.  The air smells of sea water.'
@@ -611,12 +703,14 @@ locations: !!omap
     description:
       long: 'You are at Witt''s End.  Passages lead off in *ALL* directions.'
       short: 'You''re at Witt''s End.'
-    conditions: {DEEP: true, HWITT: true, NOBACK: true}
+    conditions: {DEEP: true, NOBACK: true}
+    hints: [*witt]
 - LOC_MIRRORCANYON:
     description:
       long: 'You are in a north/south canyon about 25 feet across.  The floor is\ncovered by white mist seeping in from the north.  The walls extend\nupward for well over 100 feet.  Suspended from some unseen point far\nabove you, an enormous two-sided mirror is hanging parallel to and\nmidway between the canyon walls.  (The mirror is obviously provided\nfor the use of the dwarves who, as you know, are extremely vain.)  A\nsmall window can be seen in either wall, some fifty feet up.'
       short: 'You''re in Mirror Canyon.'
-    conditions: {DEEP: true, HJADE: true}
+    conditions: {DEEP: true}
+    hints: [*jade]
 - LOC_WINDOW2:
     description:
       long: 'You''re at a low window overlooking a huge pit, which extends up out of\nsight.  A floor is indistinctly visible over 50 feet below.  Traces of\nwhite mist cover the floor of the pit, becoming thicker to the left.\nMarks in the dust around the window would seem to indicate that\nsomeone has been here recently.  Directly across the pit from you and\n25 feet away there is a similar window looking into a lighted room.  A\nshadowy figure can be seen there peering back at you.'
@@ -701,7 +795,8 @@ locations: !!omap
     description:
       long: 'You are on the edge of a breath-taking view.  Far below you is an\nactive volcano, from which great gouts of molten lava come surging\nout, cascading back down into the depths.  The glowing rock fills the\nfarthest reaches of the cavern with a blood-red glare, giving every-\nthing an eerie, macabre appearance.  The air is filled with flickering\nsparks of ash and a heavy smell of brimstone.  The walls are hot to\nthe touch, and the thundering of the volcano drowns out all other\nsounds.  Embedded in the jagged roof far overhead are myriad twisted\nformations composed of pure white alabaster, which scatter the murky\nlight into sinister apparitions upon the walls.  To one side is a deep\ngorge, filled with a bizarre chaos of tortured rock which seems to\nhave been crafted by the devil himself.  An immense river of fire\ncrashes out from the depths of the volcano, burns its way through the\ngorge, and plummets into a bottomless pit far off to your left.  To\nthe right, an immense geyser of blistering steam erupts continuously\nfrom a barren island in the center of a sulfurous lake, which bubbles\nominously.  The far right wall is aflame with an incandescence of its\nown, which lends an additional infernal splendor to the already\nhellish scene.  A dark, foreboding passage exits to the south.'
       short: 'You''re at breath-taking view.'
-    conditions: {NOARRR: true, HJADE: true, LIT: true, DEEP: true}
+    conditions: {NOARRR: true, LIT: true, DEEP: true}
+    hints: [*jade]
 - LOC_BOULDERS2:
     description:
       long: 'You are in a small chamber filled with large boulders.  The walls are\nvery warm, causing the air in the room to be almost stifling from the\nheat.  The only exit is a crawl heading west, through which is coming\na low rumbling.'
@@ -786,7 +881,8 @@ locations: !!omap
     description:
       long: 'You are in a large chamber with passages to the west and north.'
       short: !!null
-    conditions: {HOGRE: true, DEEP: true}
+    conditions: {DEEP: true}
+    hits: [*ogre]
 - LOC_STOREROOM:
     description:
       long: 'You are in the ogre''s storeroom.  The only exit is to the south.'
@@ -796,112 +892,134 @@ locations: !!omap
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {HWOODS: true, FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    hints: [*forest]
 - LOC_FOREST2:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {HWOODS: true, FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true}
+    hits: [*forest]
 - LOC_FOREST3:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {HWOODS: true, FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    hits: [*forest]
 - LOC_FOREST4:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {HWOODS: true, FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: { FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    hits: [*forest]
 - LOC_FOREST5:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {HWOODS: true, FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    hints: [*forest]
 - LOC_FOREST6:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {HWOODS: true, FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true}
+    hits: [*forest]
 - LOC_FOREST7:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {HWOODS: true, FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    hits: [*forest]
 - LOC_FOREST8:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {HWOODS: true, FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    hits: [*forest]
 - LOC_FOREST9:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {HWOODS: true, FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    hints: [*forest]
 - LOC_FOREST10:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {HWOODS: true, FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true}
+    hits: [*forest]
 - LOC_FOREST11:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {HWOODS: true, FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    hits: [*forest]
 - LOC_FOREST12:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {HWOODS: true, FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    hits: [*forest]
 - LOC_FOREST13:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {HWOODS: true, FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    hints: [*forest]
 - LOC_FOREST14:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {HWOODS: true, FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true}
+    hits: [*forest]
 - LOC_FOREST15:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {HWOODS: true, FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    hits: [*forest]
 - LOC_FOREST16:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {HWOODS: true, FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    hits: [*forest]
 - LOC_FOREST17:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {HWOODS: true, FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    hints: [*forest]
 - LOC_FOREST18:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {HWOODS: true, FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true}
+    hits: [*forest]
 - LOC_FOREST19:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {HWOODS: true, FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    hits: [*forest]
 - LOC_FOREST20:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {HWOODS: true, FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    hits: [*forest]
 - LOC_FOREST21:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {HWOODS: true, FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    hints: [*forest]
 - LOC_FOREST22:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {HWOODS: true, FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true}
+    hits: [*forest]
 - LOC_LEDGE:
     description:
       long: 'You are on a small ledge on one face of a sheer cliff.  There are no\npaths away from the ledge.  Across the chasm is a small clearing\nsurrounded by forest.'
@@ -1765,58 +1883,5 @@ obituaries:
     yes_response: 'Okay, now where did I put my orange smoke?....  >POOF!<\nEverything disappears in a dense cloud of orange smoke.'
   - query: 'Now you''ve really done it!  I''m out of orange smoke!  You don''t expect\nme to do a decent reincarnation without any orange smoke, do you?'
     yes_response: 'Okay, if you''re so smart, do it yourself!  I''m leaving!'
-
-# FIXME: Hint texts shouldn't be in arbitrary_messages, but inlined here
-hints:
-- number: 1
-  turns: 4
-  penalty: 2
-  question: ENTRY_QUERY
-  hint: HARD_GRATE
-- number: 2
-  turns: 5
-  penalty: 2
-  question: BIRD_QUERY
-  hint: SKITTISH_BIRD
-- number: 3
-  turns: 8
-  penalty: 2
-  question: SNAKE_QUERY
-  hint: SNAKE_HINT
-- number: 4
-  turns: 75
-  penalty: 4
-  question: MAZE_HELP
-  hint: DROP_THINGS
-- number: 5
-  turns: 25
-  penalty: 5
-  question: PLOVER_QUERY
-  hint: EXPLORE_HINT
-- number: 6
-  turns: 20
-  penalty: 3
-  question: HELP_LEAVING
-  hint: NOGO_WEST
-- number: 7
-  turns: 8
-  penalty: 2
-  question: WONDERING_QUERY
-  hint: ADVANCED_SECTION
-- number: 8
-  turns: 25
-  penalty: 2
-  question: FOREST_QUERY
-  hint: GO_EAST
-- number: 9
-  turns: 10
-  penalty: 4
-  question: OGRE_QUERY
-  hint: OGRE_CLUE
-- number: 10
-  turns: 1
-  penalty: 4
-  question: MISSING_ONE
-  hint: NO_LOCATE
 
 # end

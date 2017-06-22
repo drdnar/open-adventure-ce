@@ -240,7 +240,8 @@ def get_hints(hnt, arb):
 """
     hnt_str = ""
     md = dict(arb)
-    for item in hnt:
+    for member in hnt:
+        item = member["hint"]
         number = item["number"]
         penalty = item["penalty"]
         turns = item["turns"]
