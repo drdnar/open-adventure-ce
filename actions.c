@@ -552,7 +552,7 @@ int fill(token_t verb, token_t obj)
     if (LIQUID() != 0)
         spk = BOTTLE_FULL;
     if (spk == BOTTLED_WATER) {
-        game.prop[BOTTLE] = MOD(COND[game.loc], 4) / 2 * 2;
+        game.prop[BOTTLE] = MOD(conditions[game.loc], 4) / 2 * 2;
         k = LIQUID();
         if (TOTING(BOTTLE))
             game.place[k] = CARRIED;

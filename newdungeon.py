@@ -59,7 +59,7 @@ extern const class_t classes[];
 extern turn_threshold_t turn_thresholds[];
 extern obituary_t obituaries[];
 extern hint_t hints[];
-extern const long conditions[];
+extern long conditions[];
 
 extern const size_t CLSSES;
 extern const int maximum_deaths;
@@ -114,7 +114,7 @@ hint_t hints[] = {{
 {}
 }};
 
-const long conditions[] = {{
+long conditions[] = {{
 {}
 }};
 

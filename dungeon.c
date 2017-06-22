@@ -40,7 +40,6 @@ long OBJSND[NOBJECTS + 1];
 long OBJTXT[NOBJECTS + 1];
 long STEXT[LOCSIZ + 1];
 long LTEXT[LOCSIZ + 1];
-long COND[LOCSIZ + 1];
 long KEY[LOCSIZ + 1];
 long LOCSND[LOCSIZ + 1];
 long LINES[LINSIZ + 1];
@@ -300,16 +299,14 @@ static void read_action_verb_message_nr(FILE* database)
     }
 }
 
-/*  Read info about available liquids and other conditions, store in COND. */
+/*  Read info about available liquids and other conditions. */
 static void read_conditions(FILE* database)
 {
     long K;
     while ((K = GETNUM(database)) != -1) {
         long loc;
         while ((loc = GETNUM(NULL)) != 0) {
-            if (is_set(COND[loc], K))
-                BUG(LOCATION_HAS_CONDITION_BIT_BEING_SET_TWICE);
-            COND[loc] = COND[loc] + (1L << K);
+	    continue;	/* COND is no longer used */
         }
     }
 }
@@ -360,8 +357,7 @@ static int read_database(FILE* database)
      *  location N.  LTEXT(N) is long description.  PTEXT(N) points to
      *  message for game.prop(N)=0.  Successive prop messages are
      *  found by chasing pointers.  RTEXT contains section 6's stuff.
-     *  TTEXT is for section 14.  We also clear COND (see description
-     *  of section 9 for details). */
+     *  TTEXT is for section 14. */
     for (int I = 1; I <= NOBJECTS; I++) {
         PTEXT[I] = 0;
         OBJSND[I] = 0;
@@ -373,7 +369,6 @@ static int read_database(FILE* database)
     for (int I = 1; I <= LOCSIZ; I++) {
         STEXT[I] = 0;
         LTEXT[I] = 0;
-        COND[I] = 0;
         KEY[I] = 0;
         LOCSND[I] = 0;
     }
@@ -440,8 +435,7 @@ static int read_database(FILE* database)
 /*  Finish constructing internal data format */
 
 /*  Having read in the database, certain things are now constructed.
- *  game.propS are set to zero.  We finish setting up COND by checking for
- *  forced-motion travel entries.  The PLAC and FIXD arrays are used
+ *  game.propS are set to zero.    The PLAC and FIXD arrays are used
  *  to set up game.atloc(N) as the first object at location N, and
  *  game.link(OBJ) as the next object at the same location as OBJ.
  *  (OBJ>NOBJECTS indicates that game.fixed(OBJ-NOBJECTS)=LOC; game.link(OBJ) is
@@ -488,7 +482,6 @@ static void write_file(FILE* header_file)
     // content variables
     write_1d(header_file, OBJSND, NOBJECTS + 1, "OBJSND");
     write_1d(header_file, OBJTXT, NOBJECTS + 1, "OBJTXT");
-    write_1d(header_file, COND, LOCSIZ + 1, "COND");
     write_1d(header_file, KEY, LOCSIZ + 1, "KEY");
     write_1d(header_file, LOCSND, LOCSIZ + 1, "LOCSND");
     write_1d(header_file, TRAVEL, TRVSIZ + 1, "TRAVEL");

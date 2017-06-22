@@ -188,7 +188,7 @@ static bool fallback_handler(char *buf)
  *  notes). */
 static void checkhints(void)
 {
-    if (COND[game.loc] >= game.conds) {
+    if (conditions[game.loc] >= game.conds) {
         for (int hint = 0; hint < HINT_COUNT; hint++) {
             if (game.hinted[hint])
                 continue;
