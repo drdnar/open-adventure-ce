@@ -8,8 +8,6 @@
 #
 # When in doubt, make the code dumber and the data smarter.
 #
-# It bothers me that I don't know why FORCED is checking the fluid bit.
-#
 import sys, yaml
 
 # This is the original location-attribute data from section 9 of adventure.text
@@ -52,7 +50,7 @@ attrnames = (
     "FLUID",	# 2
     "NOARRR",	# 3
     "NOBACK",	# 4
-    "FORCED",	# 5	# New
+    "",		# 5
     "FOREST",	# 6	# New
     "ABOVE",	# 7	# New
     "DEEP",	# 8	# New
@@ -96,10 +94,7 @@ def genline(loc):
             if props[0] not in attrs:
                 attrs.append(props[0])
     # Adod new attributes.  These are computed the same way as the
-    # INDEEP(), OUTSID(), and FORCED macros in advent.h.
-    # FORCED is on only if COND == 2
-    if attrs == [2]:
-        attrs.append(5)	# FORCED
+    # INDEEP(), OUTSID(), and FOREST() macros in advent.h.
     if "FOREST" in name:
         attrs.append(6)	# FOREST
     # 167 is the sapphire's start location
