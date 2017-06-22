@@ -16,7 +16,8 @@ extern const char ascii_to_advent[128];
 #define COND_NOBACK	4	/* Cannot use "back" to move away */
 #define COND_ABOVE	5
 #define COND_DEEP	6	/* Deep - e.g where dwarves are active */
-#define COND_FOREST	7	/* in the forest */
+#define COND_FOREST	7	/* In the forest */
+#define COND_FORCED	8	/* Only one way in or out of here */
 /* Bits past 10 indicate areas of interest to "hint" routines */
 #define COND_HBASE	10	/* Base for location hint bits */
 #define COND_HCAVE	11	/* Trying to get into cave */

@@ -185,7 +185,7 @@ void initialise(void)
         if (!(locations[i].description.big == 0 || KEY[i] == 0)) {
             int k = KEY[i];
             if (MOD(labs(TRAVEL[k]), 1000) == 1)
-		conditions[i] = 2;
+		conditions[i] |= (1 << COND_FORCED);
         }
         game.atloc[i] = 0;
     }

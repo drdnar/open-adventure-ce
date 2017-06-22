@@ -52,13 +52,6 @@ long PLAC[NOBJECTS + 1];
 long FIXD[NOBJECTS + 1];
 long ACTSPK[VRBSIZ + 1];
 
-static bool is_set(long var, long position)
-{
-    long mask = 1L << position;
-    bool result = (var & mask) == mask;
-    return (result);
-}
-
 static long GETTXT(long SKIP, long ONEWRD, long UPPER)
 {
     /*  Take characters from an input line and pack them into 30-bit words.
