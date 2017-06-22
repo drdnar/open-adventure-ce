@@ -3,6 +3,8 @@
 # Enhance adventure.yaml entries with explicit properties based on Section 9
 # of adventure.text and the kludgy macro definitions in advent.h.
 #
+# The FORCED bit can't be set here.  That has to be done fom the travel arrays.
+#
 # This script is meant to be gotten right, used once, and then discarded.
 # We'll leave a copy in the repository history for reference 
 #
@@ -75,7 +77,6 @@ sapphireloc = 167
 
 # For reference from advent.h:
 #
-# define FORCED(LOC)	(COND[LOC] == 2)
 # define FOREST(LOC)	((LOC) >= LOC_FOREST1 && (LOC) <= LOC_FOREST22)
 #
 #/*  The following two functions were added to fix a bug (game.clock1 decremented
@@ -87,22 +88,22 @@ sapphireloc = 167
 # define INDEEP(LOC)	((LOC) >= LOC_MISTHALL && !OUTSID(LOC) && (LOC) != LOC_FOOF1)
 
 def genline(loc):
-    attrs = []
+    attrs = {}
     name = locnames[loc]
     for props in section12:
         if loc in props[1:]:
             if props[0] not in attrs:
-                attrs.append(props[0])
+                attrs[attrnames[props[0]]] = True
     # Adod new attributes.  These are computed the same way as the
     # INDEEP(), OUTSID(), and FOREST() macros in advent.h.
     if "FOREST" in name:
-        attrs.append(6)	# FOREST
+        attrs["FOREST"] = True
     # 167 is the sapphire's start location
     if loc in range(1, grate+1) or name in ("FOOF2", "FOOF4") or name == sapphireloc:
-        attrs.append(7)	# ABOVE
+        attrs["ABOVE"] = True
     if not loc in range(0, misthall+1) and name != "FOOF1" and 6 not in attrs:
-        attrs.append(8)	# DEEP
-    names = str([attrnames[n] for n in attrs]).replace("'", "")
+        attrs["DEEP"] = True
+    naqmes = str(attrs).replace("'", "").replace("True", "true").replace("False", "false")
     return "    conditions: %s\n" % (names,)
 
 if __name__ == "__main__":
