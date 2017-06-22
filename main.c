@@ -192,7 +192,7 @@ static void checkhints(void)
         for (int hint = 0; hint < HINT_COUNT; hint++) {
             if (game.hinted[hint])
                 continue;
-            if (!CNDBIT(game.loc, hint + 1 + HBASE))
+            if (!CNDBIT(game.loc, hint + 1 + COND_HBASE))
                 game.hintlc[hint] = -1;
             ++game.hintlc[hint];
             /*  Come here if he's been long enough at required loc(s) for some
@@ -355,7 +355,7 @@ static bool dwarfmove(void)
      *  means dwarves won't follow him into dead end in maze, but
      *  c'est la vie.  They'll wait for him outside the dead
      *  end. */
-    if (game.loc == 0 || FORCED(game.loc) || CNDBIT(game.newloc, NOARRR))
+    if (game.loc == 0 || FORCED(game.loc) || CNDBIT(game.newloc, COND_NOARRR))
         return true;
 
     /* Dwarf activity level ratchets up */
@@ -369,7 +369,7 @@ static bool dwarfmove(void)
      *  the 5 dwarves.  If any of the survivors is at loc,
      *  replace him with the alternate. */
     if (game.dflag == 1) {
-        if (!INDEEP(game.loc) || (PCT(95) && (!CNDBIT(game.loc, NOBACK) || PCT(85))))
+        if (!INDEEP(game.loc) || (PCT(95) && (!CNDBIT(game.loc, COND_NOBACK) || PCT(85))))
             return true;
         game.dflag = 2;
         for (int i = 1; i <= 2; i++) {
@@ -413,7 +413,7 @@ static bool dwarfmove(void)
                                 j >= 20 ||
                                 game.newloc == game.dloc[i] ||
                                 FORCED(game.newloc) ||
-                                (i == PIRATE && CNDBIT(game.newloc, NOARRR)) ||
+                                (i == PIRATE && CNDBIT(game.newloc, COND_NOARRR)) ||
                                 labs(TRAVEL[kk]) / 1000000 == 100);
                 if (!avoided) {
                     tk[j++] = game.newloc;
@@ -541,7 +541,7 @@ static bool playermove(token_t verb, int motion)
         game.oldloc = game.loc;
         k2 = 0;
         if (motion == game.loc)k2 = FORGOT_PATH;
-        if (CNDBIT(game.loc, NOBACK))k2 = TWIST_TURN;
+        if (CNDBIT(game.loc, COND_NOBACK))k2 = TWIST_TURN;
         if (k2 == 0) {
             for (;;) {
                 scratchloc = MOD((labs(TRAVEL[kk]) / 1000), 1000);
@@ -938,7 +938,7 @@ static bool do_command(FILE *cmdin)
      *  wants to go.  If so, the dwarf's blocking his way.  If
      *  coming from place forbidden to pirate (dwarves rooted in
      *  place) let him get out (and attacked). */
-    if (game.newloc != game.loc && !FORCED(game.loc) && !CNDBIT(game.loc, NOARRR)) {
+    if (game.newloc != game.loc && !FORCED(game.loc) && !CNDBIT(game.loc, COND_NOARRR)) {
         for (size_t i = 1; i <= NDWARVES - 1; i++) {
             if (game.odloc[i] == game.newloc && game.dseen[i]) {
                 game.newloc = game.loc;
