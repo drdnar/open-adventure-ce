@@ -1,4 +1,4 @@
-# This YAML file gets processed into a collection of data structure and
+# This YAML file gets processed into a collection of data structures and
 # variable initializers describing Colossal Cave.  It replaces an ad-hoc
 # text database shipped with Adventure versions up to 2.5.  The format
 # change enabled a lot of use of symbolic names where there were previously
@@ -26,12 +26,14 @@
 #        HOGRE		Trying to deal with ogre
 #        HJADE		Found all treasures except jade
 #
-# arbitrary_messages: These are arguments to RSPEAK(). Some spans of
-#    these messages need to be kept adjacent and ordered.  To see which,
-#    grep for RSPEAK calls containing expressions with arithmetic.
+# arbitrary_messages: These are arguments to rspeak(). Some spans of
+#    these messages need to be kept adjacent and ordered (for now).
+#    To see which, grep for rspeak() calls containing expressions with
+#    arithmetic.  Eventually, these will be pulled out into more appropriate
+#    data structures. Then ordering can be dropped, and gaps removed.
 #
 # classes: Each item contains a point threshold and a message
-#    describing a classification of player.  point thresholds must be
+#    describing a classification of player.  Point thresholds must be
 #    in ascending order. The scoring code selects the appropriate
 #    message, where each message is considered to apply to players
 #    whose scores are higher than the previous N but not higher than
@@ -39,10 +41,10 @@
 #    modification (and particularly expansion) of the program.
 #
 # turn_thresholds:  Each item contains a number and a message
-#    berating the player for taking so many turns.  The messages must
-#    be in the proper (ascending) order.  The message gets printed if
-#    the player exceeds N % 100000 turns, at which time N/100000
-#    points get deducted from his score.
+#    berating the player for taking so many turns.  When the turn count
+#    matches one of the thresholds, the corresponding message is shown.
+#    Order doesn't matter; the logic simply tests every threshold on
+#    the assumption that turn counts never decrease nor skip values.
 #
 # objects: Each item contains a description for use in the inventory command
 #    and one or more messages describing the object in different states.
