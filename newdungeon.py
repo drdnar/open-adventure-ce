@@ -59,6 +59,7 @@ extern const class_t classes[];
 extern turn_threshold_t turn_thresholds[];
 extern obituary_t obituaries[];
 extern hint_t hints[];
+extern const long conditions[];
 
 extern const size_t CLSSES;
 extern const int maximum_deaths;
@@ -82,6 +83,7 @@ enum object_descriptions_refs {{
 
 c_template = """/* Generated from adventure.yaml - do not hand-hack! */
 
+#include "common.h"
 #include "{}"
 
 const char* arbitrary_messages[] = {{
@@ -109,6 +111,10 @@ obituary_t obituaries[] = {{
 }};
 
 hint_t hints[] = {{
+{}
+}};
+
+const long conditions[] = {{
 {}
 }};
 
@@ -251,6 +257,25 @@ def get_hints(hnt, arb):
     hnt_str = hnt_str[:-1] # trim trailing newline
     return hnt_str
 
+def get_condbits(locations):
+    cnd_str = ""
+    for (name, loc) in locations:
+        conditions = loc["conditions"]
+        hints = loc.get("hints") or []
+        flaglist = []
+        for flag in conditions:
+            if conditions[flag]:
+                flaglist.append(flag)
+        line = "|".join([("(1<<COND_%s)" % f) for f in flaglist])
+        trail = "|".join([("(1<<COND_H%s)" % f['name']) for f in hints])
+        if trail:
+            line += "|" + trail
+        if line.startswith("|"):
+            line = line[1:]
+        if not line:
+            line = "0"
+        cnd_str += "    " + line + ",\t// " + name + "\n"
+    return cnd_str
 
 if __name__ == "__main__":
     with open(yaml_name, "r") as f:
@@ -272,6 +297,7 @@ if __name__ == "__main__":
         get_object_descriptions(db["object_descriptions"]),
         get_obituaries(db["obituaries"]),
         get_hints(db["hints"], db["arbitrary_messages"]),
+        get_condbits(db["locations"]),
         len(db["classes"]),
         len(db["obituaries"]),
         len(db["turn_thresholds"]),

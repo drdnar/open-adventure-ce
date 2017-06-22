@@ -65,7 +65,7 @@ newdb.o:	newdb.c newdb.h
 database.h: dungeon
 	./dungeon
 
-newdb.c newdb.h:
+newdb.c newdb.h: newdungeon.py adventure.yaml
 	python3 newdungeon.py
 
 linenoise.o:	linenoise/linenoise.h

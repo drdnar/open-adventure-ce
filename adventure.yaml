@@ -69,60 +69,70 @@
 # FIXME: Hint texts shouldn't be in arbitrary_messages, but inlined here
 hints:
   - hint: &grate
+      name: CAVE
       number: 1
       turns: 4
       penalty: 2
       question: ENTRY_QUERY
       hint: HARD_GRATE
   - hint: &bird
+      name: BIRD
       number: 2
       turns: 5
       penalty: 2
       question: BIRD_QUERY
       hint: SKITTISH_BIRD
   - hint: &snake
+      name: SNAKE
       number: 3
       turns: 8
       penalty: 2
       question: SNAKE_QUERY
       hint: SNAKE_HINT
   - hint: &maze
+      name: MAZE
       number: 4
       turns: 75
       penalty: 4
       question: MAZE_HELP
       hint: DROP_THINGS
   - hint: &dark
+      name: DARK
       number: 5
       turns: 25
       penalty: 5
       question: PLOVER_QUERY
       hint: EXPLORE_HINT
   - hint: &witt
+      name: WITT
       number: 6
       turns: 20
       penalty: 3
       question: HELP_LEAVING
       hint: NOGO_WEST
-  - hint: &cliff
+  - hint: &urn
+      name: CLIFF
       number: 7
       turns: 8
       penalty: 2
       question: WONDERING_QUERY
       hint: ADVANCED_SECTION
   - hint: &forest
+      name: WOODS
       number: 8
       turns: 25
       penalty: 2
       question: FOREST_QUERY
       hint: GO_EAST
   - hint: &ogre
+      name: OGRE
       number: 9
       turns: 10
       penalty: 4
       question: OGRE_QUERY
       hint: OGRE_CLUE
   - hint: &jade
+      name: JADE
       number: 10
       turns: 1
       penalty: 4
@@ -165,7 +175,7 @@ locations: !!omap
       long: 'The forest thins out here to reveal a steep cliff.  There is no way\ndown, but a small ledge can be seen to the west across the chasm.'
       short: 'You''re at cliff.'
     conditions: {ABOVE: true, NOBACK: true, LIT: true}
-    hints: [*cliff]
+    hints: [*urn]
 - LOC_SLIT:
     description:
       long: 'At your feet all the water of the stream splashes into a 2-inch slit\nin the rock.  Downstream the streambed is bare rock.'
@@ -656,19 +666,19 @@ locations: !!omap
       long: 'You are in an alcove.  A small nw path seems to widen after a short\ndistance.  An extremely tight tunnel leads east.  It looks like a very\ntight squeeze.  An eerie light can be seen at the other end.'
       short: 'You''re in alcove.'
     conditions: {DEEP: true}
-    hits: [*dark]
+    hints: [*dark]
 - LOC_PLOVER:
     description:
       long: 'You''re in a small chamber lit by an eerie green light.  An extremely\nnarrow tunnel exits to the west.  A dark corridor leads ne.'
       short: 'You''re in Plover Room.'
     conditions: {DEEP: true, LIT: true}
-    hits: [*dark]
+    hints: [*dark]
 - LOC_DARKROOM:
     description:
       long: 'You''re in the dark-room.  A corridor leading south is the only exit.'
       short: 'You''re in dark-room.'
     conditions: {DEEP: true}
-    hits: [*dark]
+    hints: [*dark]
 - LOC_ARCHED:
     description:
       long: 'You are in an arched hall.  A coral passage once continued up and east\nfrom here, but is now blocked by debris.  The air smells of sea water.'
@@ -882,7 +892,7 @@ locations: !!omap
       long: 'You are in a large chamber with passages to the west and north.'
       short: !!null
     conditions: {DEEP: true}
-    hits: [*ogre]
+    hints: [*ogre]
 - LOC_STOREROOM:
     description:
       long: 'You are in the ogre''s storeroom.  The only exit is to the south.'
@@ -899,19 +909,19 @@ locations: !!omap
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
     conditions: {FOREST: true, NOBACK: true, LIT: true}
-    hits: [*forest]
+    hints: [*forest]
 - LOC_FOREST3:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
     conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
-    hits: [*forest]
+    hints: [*forest]
 - LOC_FOREST4:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
     conditions: { FOREST: true, NOBACK: true, LIT: true, DEEP: true}
-    hits: [*forest]
+    hints: [*forest]
 - LOC_FOREST5:
     description:
       long: 'You are wandering aimlessly through the forest.'
@@ -923,19 +933,19 @@ locations: !!omap
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
     conditions: {FOREST: true, NOBACK: true, LIT: true}
-    hits: [*forest]
+    hints: [*forest]
 - LOC_FOREST7:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
     conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
-    hits: [*forest]
+    hints: [*forest]
 - LOC_FOREST8:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
     conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
-    hits: [*forest]
+    hints: [*forest]
 - LOC_FOREST9:
     description:
       long: 'You are wandering aimlessly through the forest.'
@@ -947,19 +957,19 @@ locations: !!omap
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
     conditions: {FOREST: true, NOBACK: true, LIT: true}
-    hits: [*forest]
+    hints: [*forest]
 - LOC_FOREST11:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
     conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
-    hits: [*forest]
+    hints: [*forest]
 - LOC_FOREST12:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
     conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
-    hits: [*forest]
+    hints: [*forest]
 - LOC_FOREST13:
     description:
       long: 'You are wandering aimlessly through the forest.'
@@ -971,19 +981,19 @@ locations: !!omap
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
     conditions: {FOREST: true, NOBACK: true, LIT: true}
-    hits: [*forest]
+    hints: [*forest]
 - LOC_FOREST15:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
     conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
-    hits: [*forest]
+    hints: [*forest]
 - LOC_FOREST16:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
     conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
-    hits: [*forest]
+    hints: [*forest]
 - LOC_FOREST17:
     description:
       long: 'You are wandering aimlessly through the forest.'
@@ -995,19 +1005,19 @@ locations: !!omap
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
     conditions: {FOREST: true, NOBACK: true, LIT: true}
-    hits: [*forest]
+    hints: [*forest]
 - LOC_FOREST19:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
     conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
-    hits: [*forest]
+    hints: [*forest]
 - LOC_FOREST20:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
     conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
-    hits: [*forest]
+    hints: [*forest]
 - LOC_FOREST21:
     description:
       long: 'You are wandering aimlessly through the forest.'
@@ -1019,7 +1029,7 @@ locations: !!omap
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
     conditions: {FOREST: true, NOBACK: true, LIT: true}
-    hits: [*forest]
+    hints: [*forest]
 - LOC_LEDGE:
     description:
       long: 'You are on a small ledge on one face of a sheer cliff.  There are no\npaths away from the ledge.  Across the chasm is a small clearing\nsurrounded by forest.'
@@ -1110,10 +1120,6 @@ locations: !!omap
       long: '>>Foof!<<'
       short: !!null
     conditions: {DEEP: true}
-- LOC_NUGGET5:
-    description:
-      long: !!null
-      short: !!null
 
 arbitrary_messages:  !!omap
 - NO_MESSAGE: !!null
