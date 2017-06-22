@@ -377,17 +377,4 @@ void initialise(void)
     game.clshnt = false;
     game.novice = false;
     game.blklin = true;
-
-#ifdef ODEBUG
-# define NEWFLAGS	((1<<COND_ABOVE)|(1<<COND_FOREST)|(1<<COND_DEEP));
-    int mismatches = 0;
-    for (int i = 0; i < LOCSIZ; i++) {
-	long condbits = conditions[i] & ~NEWFLAGS;
-	if (condbits == COND[i] || COND[i] == 2 && condbits == 0)
-	    continue;
-	++mismatches;
-	printf("Mismatch at %ld: COND=%x consitions=%x\n", COND[i], condbits);
-    }
-    printf("%d condbit mismatches\n", mismatches);
-#endif
 }

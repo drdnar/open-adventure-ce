@@ -14,9 +14,8 @@
 #    array.
 #
 # locations: Each item contains a long and short description.  Some
-#    short descriptions are empty.  Order of these locations is significant;
-#    see the macros OUTSID and INDEEP.  Location conditions can be read
-#    as follows:
+#    short descriptions are empty.  Order of these locations is not significant.
+#    Location conditions can be read as follows:
 #        LIT		Light
 #        OILY		If FLUID flag is on: true for oil, false for water
 #        FLUID		Liquid asset
@@ -222,7 +221,7 @@ locations: !!omap
     description:
       long: 'You are at one end of a vast hall stretching forward out of sight to\nthe west.  There are openings to either side.  Nearby, a wide stone\nstaircase leads downward.  The hall is filled with wisps of white mist\nswaying to and fro almost as if alive.  A cold wind blows up the\nstaircase.  There is a passage at the top of a dome behind you.'
       short: 'You''re in Hall of Mists.'
-    conditions: {}
+    conditions: {DEEP: true}
     hints: [*jade]
 - LOC_CRACK:
     description:
@@ -902,7 +901,7 @@ locations: !!omap
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true}
     hints: [*forest]
 - LOC_FOREST2:
     description:
@@ -914,19 +913,19 @@ locations: !!omap
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true}
     hints: [*forest]
 - LOC_FOREST4:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: { FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true}
     hints: [*forest]
 - LOC_FOREST5:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true}
     hints: [*forest]
 - LOC_FOREST6:
     description:
@@ -938,19 +937,19 @@ locations: !!omap
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true}
     hints: [*forest]
 - LOC_FOREST8:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true}
     hints: [*forest]
 - LOC_FOREST9:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true}
     hints: [*forest]
 - LOC_FOREST10:
     description:
@@ -962,19 +961,19 @@ locations: !!omap
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true}
     hints: [*forest]
 - LOC_FOREST12:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true}
     hints: [*forest]
 - LOC_FOREST13:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true}
     hints: [*forest]
 - LOC_FOREST14:
     description:
@@ -986,19 +985,19 @@ locations: !!omap
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true}
     hints: [*forest]
 - LOC_FOREST16:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true}
     hints: [*forest]
 - LOC_FOREST17:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true}
     hints: [*forest]
 - LOC_FOREST18:
     description:
@@ -1010,19 +1009,19 @@ locations: !!omap
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true}
     hints: [*forest]
 - LOC_FOREST20:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true}
     hints: [*forest]
 - LOC_FOREST21:
     description:
       long: 'You are wandering aimlessly through the forest.'
       short: !!null
-    conditions: {FOREST: true, NOBACK: true, LIT: true, DEEP: true}
+    conditions: {FOREST: true, NOBACK: true, LIT: true}
     hints: [*forest]
 - LOC_FOREST22:
     description:
@@ -1034,7 +1033,7 @@ locations: !!omap
     description:
       long: 'You are on a small ledge on one face of a sheer cliff.  There are no\npaths away from the ledge.  Across the chasm is a small clearing\nsurrounded by forest.'
       short: 'You''re on ledge.'
-    conditions: {DEEP: true, LIT: true}
+    conditions: {ABOVE: true, LIT: true}
 - LOC_RESBOTTOM:
     description:
       long: 'You are walking across the bottom of the reservoir.  Walls of water\nrear up on either side.  The roar of the water cascading past is\nnearly deafening, and the mist is so thick you can barely see.'
@@ -1094,12 +1093,12 @@ locations: !!omap
     description:
       long: '>>Foof!<<'
       short: !!null
-    conditions: {DEEP: true}
+    conditions: {}
 - LOC_FOOF2:
     description:
       long: '>>Foof!<<'
       short: !!null
-    conditions: {DEEP: true}
+    conditions: {ABOVE: true}
 - LOC_FOOF3:
     description:
       long: '>>Foof!<<'
@@ -1109,7 +1108,7 @@ locations: !!omap
     description:
       long: '>>Foof!<<'
       short: !!null
-    conditions: {DEEP: true}
+    conditions: {ABOVE: true}
 - LOC_FOOF5:
     description:
       long: '>>Foof!<<'

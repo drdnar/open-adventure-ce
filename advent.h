@@ -155,18 +155,12 @@ extern int restore(FILE *);
 #define DARK(DUMMY)	((!TSTBIT(conditions[game.loc],COND_LIT)) && (game.prop[LAMP] == 0 || !HERE(LAMP)))
 #define PCT(N)		(randrange(100) < (N))
 #define GSTONE(OBJ)	((OBJ) == EMERALD || (OBJ) == RUBY || (OBJ) == AMBER || (OBJ) == SAPPH)
-#define FOREST(LOC)	((LOC) >= LOC_FOREST1 && (LOC) <= LOC_FOREST22)
+#define FOREST(LOC)	CNDBIT(LOC, COND_FOREST)
 #define VOCWRD(LETTRS,SECT)	(VOCAB(MAKEWD(LETTRS),SECT))
 #define SPECIAL(LOC)	((LOC) > SPECIALBASE)
+#define OUTSID(LOC)	(CNDBIT(LOC, COND_ABOVE) || FOREST(LOC))
 
-/*  The following two functions were added to fix a bug (game.clock1 decremented
- *  while in forest).  They should probably be replaced by using another
- *  "cond" bit.  For now, however, a quick fix...  OUTSID(LOC) is true if
- *  LOC is outside, INDEEP(LOC) is true if LOC is "deep" in the cave (hall
- *  of mists or deeper).  Note special kludges for "Foof!" locs. */
-
-#define OUTSID(LOC)	((LOC) <= LOC_GRATE || FOREST(LOC) || (LOC) == PLAC[SAPPH] || (LOC) == LOC_FOOF2 || (LOC) == LOC_FOOF4)
-#define INDEEP(LOC)	((LOC) >= LOC_MISTHALL && !OUTSID(LOC) && (LOC) != LOC_FOOF1)
+#define INDEEP(LOC)	((LOC) >= LOC_MISTHALL && !OUTSID(LOC))
 
 /* vocabulary items */
 extern long AMBER, ATTACK, AXE, BACK, BATTERY, BEAR,
