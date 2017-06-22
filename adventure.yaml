@@ -1050,8 +1050,8 @@ arbitrary_messages:  !!omap
 - ONE_HIT: 'One of them gets you!'
 - NONE_HIT: 'None of them hits you!'
 - DONT_KNOW: 'Sorry, I don''t know the word "%s".'
-- WHAT_DO: 'What do you want to do with the %L?'
-- NO_SEE: 'I see no %L here.'
+- WHAT_DO: 'What do you want to do with the %L%L?' # FIXME: %L%L should become %L once parsing no longer depends on packed tokens
+- NO_SEE: 'I see no %L%L here.' # FIXME: %L%L should become %L once parsing no longer depends on packed tokens
 - DO_WHAT: '%C what?'
 - OKEY_DOKEY: 'Okay, "%s".'
 - GARNERED_POINTS: 'You have garnered %d out of a possible %d points, using %d turn%S.'

@@ -101,6 +101,8 @@ void vspeak(const char* msg, va_list ap)
             size--;
         } else {
             long arg = va_arg(ap, long);
+	    if (arg == -1)
+	      arg = 0;
             i++;
             // Integer specifier. In order to accommodate the fact that PARMS can have both legitimate integers *and* packed tokens, stringify everything. Future work may eliminate the need for this.
             if (msg[i] == 'd') {
