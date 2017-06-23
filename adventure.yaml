@@ -1484,13 +1484,13 @@ object_descriptions: !!omap
 - OBJ_2:
     inventory: 'Brass lantern'
     longs:
-    - 'There is a shiny brass lamp nearby.'
-    - 'There is a lamp shining nearby.'
+    - [LAMP_DARK, 'There is a shiny brass lamp nearby.']
+    - [LAMP_BRIGHT, 'There is a lamp shining nearby.']
 - OBJ_3:
     inventory: '*grate'
     longs:
-    - 'The grate is locked.'
-    - 'The grate is open.'
+    - [GRATE_CLOSED, 'The grate is locked.']
+    - [GRATE_OPEN, 'The grate is open.']
 - OBJ_4:
     inventory: 'Wicker cage'
     longs:
@@ -1511,9 +1511,9 @@ object_descriptions: !!omap
 - OBJ_8:
     inventory: 'Little bird in cage'
     longs:
-    - 'A cheerful little bird is sitting here singing.'
-    - 'There is a little bird in the cage.'
-    - 'A cheerful little bird is sitting here singing.'
+    - [BIRD_UNCAGED, 'A cheerful little bird is sitting here singing.']
+    - [BIRD_CAGED, 'There is a little bird in the cage.']
+    - [BIRD_FOREST_UNCAGED, 'A cheerful little bird is sitting here singing.']
     - 'The bird''s singing is quite melodious.'
     - 'The bird does not seem inclined to sing while in the cage.'
     - 'It almost seems as though the bird is trying to tell you something.'

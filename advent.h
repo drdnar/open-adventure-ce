@@ -152,7 +152,7 @@ extern int restore(FILE *);
 #define LIQLOC(LOC)	(LIQ2((MOD(conditions[LOC]/2*2,8)-5)*MOD(conditions[LOC]/4,2)+1))
 #define CNDBIT(L,N)	(TSTBIT(conditions[L],N))
 #define FORCED(LOC)	CNDBIT(LOC, COND_FORCED)
-#define DARK(DUMMY)	((!TSTBIT(conditions[game.loc],COND_LIT)) && (game.prop[LAMP] == 0 || !HERE(LAMP)))
+#define DARK(DUMMY)	((!TSTBIT(conditions[game.loc],COND_LIT)) && (game.prop[LAMP] == LAMP_DARK || !HERE(LAMP)))
 #define PCT(N)		(randrange(100) < (N))
 #define GSTONE(OBJ)	((OBJ) == EMERALD || (OBJ) == RUBY || (OBJ) == AMBER || (OBJ) == SAPPH)
 #define FOREST(LOC)	CNDBIT(LOC, COND_FOREST)

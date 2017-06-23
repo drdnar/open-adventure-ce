@@ -42,7 +42,6 @@ static int attack(FILE *input, struct command_t *command)
             return GO_CLEAROBJ;
         }
         DESTROY(BIRD);
-        game.prop[BIRD] = 0;
         spk = BIRD_DEAD;
     } else if (obj == VEND) {
         pspeak(VEND, game.prop[VEND] + 2);
@@ -259,8 +258,8 @@ static int carry(token_t verb, token_t obj)
     if (game.holdng >= INVLIMIT) {
         rspeak(spk);
         return GO_CLEAROBJ;
-    } else if (obj == BIRD && game.prop[BIRD] != 1 && -1 - game.prop[BIRD] != 1) {
-        if (game.prop[BIRD] == 2) {
+    } else if (obj == BIRD && game.prop[BIRD] != BIRD_CAGED && -1 - game.prop[BIRD] != BIRD_CAGED) {
+        if (game.prop[BIRD] == BIRD_FOREST_UNCAGED) {
             DESTROY(BIRD);
             rspeak(BIRD_CRAP);
             return GO_CLEAROBJ;
@@ -271,9 +270,9 @@ static int carry(token_t verb, token_t obj)
             rspeak(spk);
             return GO_CLEAROBJ;
         }
-        game.prop[BIRD] = 1;
+        game.prop[BIRD] = BIRD_CAGED;
     }
-    if ((obj == BIRD || obj == CAGE) && (game.prop[BIRD] == 1 || -1 - game.prop[BIRD] == 1))
+    if ((obj == BIRD || obj == CAGE) && (game.prop[BIRD] == BIRD_CAGED || -1 - game.prop[BIRD] == 1))
         CARRY(BIRD + CAGE - obj, game.loc);
     CARRY(obj, game.loc);
     if (obj == BOTTLE && LIQUID() != 0)
@@ -362,7 +361,6 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
         } else if (obj == BIRD && AT(DRAGON) && game.prop[DRAGON] == 0) {
             rspeak(BIRD_BURNT);
             DESTROY(BIRD);
-            game.prop[BIRD] = 0;
             return GO_CLEAROBJ;
         } else if (obj == BEAR && AT(TROLL)) {
             rspeak(TROLL_SCAMPERS);
@@ -385,11 +383,13 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
     if (k == obj)obj = BOTTLE;
     if (obj == BOTTLE && k != 0)
         game.place[k] = LOC_NOWHERE;
-    if (obj == CAGE && game.prop[BIRD] == 1)DROP(BIRD, game.loc);
+    if (obj == CAGE && game.prop[BIRD] == BIRD_CAGED)
+	DROP(BIRD, game.loc);
     DROP(obj, game.loc);
     if (obj != BIRD) return GO_CLEAROBJ;
-    game.prop[BIRD] = 0;
-    if (FOREST(game.loc))game.prop[BIRD] = 2;
+    game.prop[BIRD] = BIRD_UNCAGED;
+    if (FOREST(game.loc))
+	game.prop[BIRD] = BIRD_FOREST_UNCAGED;
     return GO_CLEAROBJ;
 }
 
@@ -445,7 +445,8 @@ static int extinguish(token_t verb, int obj)
 {
     int spk = ACTSPK[verb];
     if (obj == INTRANSITIVE) {
-        if (HERE(LAMP) && game.prop[LAMP] == 1)obj = LAMP;
+        if (HERE(LAMP) && game.prop[LAMP] == LAMP_BRIGHT)
+	    obj = LAMP;
         if (HERE(URN) && game.prop[URN] == 2)obj = obj * NOBJECTS + URN;
         if (obj == INTRANSITIVE || obj == 0 || obj > NOBJECTS) return GO_UNKNOWN;
     }
@@ -454,7 +455,7 @@ static int extinguish(token_t verb, int obj)
         game.prop[URN] = game.prop[URN] / 2;
         spk = URN_DARK;
     } else if (obj == LAMP) {
-        game.prop[LAMP] = 0;
+        game.prop[LAMP] = LAMP_DARK;
         rspeak(LAMP_OFF);
         spk = DARK(game.loc) ? PITCH_DARK : NO_MESSAGE;
     } else if (obj == DRAGON || obj == VOLCANO)
@@ -477,7 +478,6 @@ static int feed(token_t verb, token_t obj)
         if (obj == TROLL)spk = TROLL_VICES;
         if (obj == SNAKE && !game.closed && HERE(BIRD)) {
             DESTROY(BIRD);
-            game.prop[BIRD] = 0;
             spk = BIRD_DEVOURED;
         }
     } else if (obj == DWARF) {
@@ -638,7 +638,8 @@ static int light(token_t verb, token_t obj)
 {
     int spk = ACTSPK[verb];
     if (obj == INTRANSITIVE) {
-        if (HERE(LAMP) && game.prop[LAMP] == 0 && game.limit >= 0)obj = LAMP;
+        if (HERE(LAMP) && game.prop[LAMP] == LAMP_DARK && game.limit >= 0)
+	    obj = LAMP;
         if (HERE(URN) && game.prop[URN] == 1)obj = obj * NOBJECTS + URN;
         if (obj == INTRANSITIVE || obj == 0 || obj > NOBJECTS) return GO_UNKNOWN;
     }
@@ -661,7 +662,7 @@ static int light(token_t verb, token_t obj)
             rspeak(spk);
             return GO_CLEAROBJ;
         }
-        game.prop[LAMP] = 1;
+        game.prop[LAMP] = LAMP_BRIGHT;
         rspeak(LAMP_ON);
         if (game.wzdark)
             return GO_TOP;
@@ -731,7 +732,7 @@ static int lock(token_t verb, token_t obj)
                 if (!game.panic)game.clock2 = PANICTIME;
                 game.panic = true;
             } else {
-                game.prop[GRATE] = (verb == LOCK) ? 0 : 1;
+                game.prop[GRATE] = (verb == LOCK) ? GRATE_CLOSED : GRATE_OPEN;
                 spk = game.prop[GRATE] ? GRATE_UNLOCKED : GRATE_LOCKED;
             }
         }
@@ -968,7 +969,9 @@ static int wave(token_t verb, token_t obj)
         rspeak(spk);
         return GO_CLEAROBJ;
     }
-    if (HERE(BIRD))spk = FREE_FLY + MOD(game.prop[BIRD], 2);
+    /* FIXME: Arithemetic on proprty values */
+    if (HERE(BIRD))
+	spk = FREE_FLY + MOD(game.prop[BIRD], 2);
     if (spk == FREE_FLY && game.loc == game.place[STEPS] && game.prop[JADE] < 0) {
         DROP(JADE, game.loc);
         game.prop[JADE] = 0;

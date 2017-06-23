@@ -203,7 +203,7 @@ static void checkhints(void)
                 switch (hint) {
                 case 0:
                     /* cave */
-                    if (game.prop[GRATE] == 0 && !HERE(KEYS))
+                    if (game.prop[GRATE] == GRATE_CLOSED && !HERE(KEYS))
                         break;
                     game.hintlc[hint] = 0;
                     return;
@@ -303,7 +303,7 @@ static bool spotted_by_pirate(int i)
         }
     }
     /* Force chest placement before player finds last treasure */
-    if (game.tally == 1 && snarfed == 0 && game.place[CHEST] == LOC_NOWHERE && HERE(LAMP) && game.prop[LAMP] == 1) {
+    if (game.tally == 1 && snarfed == 0 && game.place[CHEST] == LOC_NOWHERE && HERE(LAMP) && game.prop[LAMP] == LAMP_BRIGHT) {
         rspeak(PIRATE_SPOTTED);
         movechest = true;
     }
@@ -501,7 +501,7 @@ static void croak(void)
     else {
         game.place[WATER] = game.place[OIL] = LOC_NOWHERE;
         if (TOTING(LAMP))
-            game.prop[LAMP] = 0;
+            game.prop[LAMP] = LAMP_DARK;
         for (int j = 1; j <= NOBJECTS; j++) {
             int i = NOBJECTS + 1 - j;
             if (TOTING(i)) {
@@ -761,7 +761,7 @@ static bool closecheck(void)
      *  know the bivalve is an oyster.  *And*, the dwarves must
      *  have been activated, since we've found chest. */
     if (game.clock1 == 0) {
-        game.prop[GRATE] = 0;
+        game.prop[GRATE] = GRATE_CLOSED;
         game.prop[FISSURE] = 0;
         for (int i = 1; i <= NDWARVES; i++) {
             game.dseen[i] = false;
@@ -839,7 +839,7 @@ static bool closecheck(void)
 static void lampcheck(void)
 /* Check game limit and lamp timers */
 {
-    if (game.prop[LAMP] == 1)
+    if (game.prop[LAMP] == LAMP_BRIGHT)
         --game.limit;
 
     /*  Another way we can force an end to things is by having the
@@ -857,7 +857,7 @@ static void lampcheck(void)
         game.lmwarn = false;
     } else if (game.limit == 0) {
         game.limit = -1;
-        game.prop[LAMP] = 0;
+        game.prop[LAMP] = LAMP_DARK;
         if (HERE(LAMP))
             rspeak(LAMP_OUT);
     } else if (game.limit <= WARNTIME) {
