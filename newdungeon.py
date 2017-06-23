@@ -13,6 +13,7 @@ h_template = """/* Generated from adventure.yaml - do not hand-hack! */
 #define NEWDB_H
 
 #include <stdio.h>
+#include <stdbool.h>
 
 #define SILENT	-1	/* no sound */
 
@@ -29,6 +30,7 @@ typedef struct {{
 typedef struct {{
   descriptions_t description;
   const long sound;
+  const bool loud;
 }} location_t;
 
 typedef struct {{
@@ -193,6 +195,7 @@ def get_locations(loc):
             .big = {},
         }},
         .sound = {},
+        .loud = {},
     }},
 """
     loc_str = ""
@@ -200,7 +203,8 @@ def get_locations(loc):
         short_d = make_c_string(item[1]["description"]["short"])
         long_d = make_c_string(item[1]["description"]["long"])
         sound = item[1].get("sound", "SILENT")
-        loc_str += template.format(short_d, long_d, sound)
+        loud = "true" if item[1].get("loud") else "false"
+        loc_str += template.format(short_d, long_d, sound, loud)
     loc_str = loc_str[:-1] # trim trailing newline
     return loc_str
 

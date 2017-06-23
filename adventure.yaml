@@ -35,7 +35,8 @@
 #    The optional hints field is a list of YAML references to hints
 #    that may be available at this location. (This is why locations
 #    has to follow hints.)  The "sound" attribute, if present, is s
-#    label for a location sound.
+#    label for a location sound. If there is a "loud" attribute and
+#    it is true, object sounds are drowned out at this location.
 #
 # arbitrary_messages: These are arguments to rspeak(). Some spans of
 #    these messages need to be kept adjacent and ordered (for now).
@@ -829,6 +830,7 @@ locations: !!omap
     conditions: {NOARRR: true, LIT: true, DEEP: true}
     hints: [*jade]
     sound: TOTAL_ROAR
+    loud: true
 - LOC_BOULDERS2:
     description:
       long: 'You are in a small chamber filled with large boulders.  The walls are\nvery warm, causing the air in the room to be almost stifling from the\nheat.  The only exit is a crawl heading west, through which is coming\na low rumbling.'
@@ -1064,6 +1066,7 @@ locations: !!omap
       short: 'You''re at bottom of reservoir.'
     conditions: {FLUID: true, DEEP: true}
     sound: TOTAL_ROAR
+    loud: true
 - LOC_RESNORTH:
     description:
       long: 'You are at the northern edge of the reservoir.  A northwest passage\nleads sharply up from here.'

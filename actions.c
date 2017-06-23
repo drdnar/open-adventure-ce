@@ -675,9 +675,11 @@ static int listen(void)
     int spk = ALL_SILENT;
     k = locations[game.loc].sound;
     if (k != SILENT) {
-        rspeak(labs(k));
-        if (k < 0) return GO_CLEAROBJ;
-        spk = NO_MESSAGE;
+        rspeak(k);
+        if (locations[game.loc].loud)
+	    return GO_CLEAROBJ;
+	else
+	    spk = NO_MESSAGE;
     }
     for (int i = 1; i <= NOBJECTS; i++) {
         if (!HERE(i) || OBJSND[i] == 0 || game.prop[i] < 0)
