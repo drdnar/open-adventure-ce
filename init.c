@@ -14,15 +14,13 @@
  *     12600 words of message text (LINES, LINSIZ).
  *	885 travel options (TRAVEL, TRVSIZ).
  *	330 vocabulary words (KTAB, ATAB, TABSIZ).
- *	185 locations (LTEXT, STEXT, KEY, COND, game.abbrev, game.atloc,
- *                   LOCSND, LOCSIZ).
+ *	185 locations (KEY, COND, game.abbrev, game.atloc, LOCSND, LOCSIZ).
  *	100 objects (PLAC, game.place, FIXD, game.fixed, game.link (twice),
- *                   PTEXT, game.prop, OBJSND, OBJTXT).
+ *                   ogame.prop, OBJSND, OBJTXT).
  *	 35 "action" verbs (ACTSPK, VRBSIZ).
- *	277 random messages (RTEXT, RTXSIZ).
  *	 12 different player classifications (CTEXT, CVAL, CLSMAX).
  *	 20 hints (game.hintlc, game.hinted, HINTS, HNTSIZ).
- *        5 "# of turns" threshholds (TTEXT, TRNVAL, TRNSIZ).
+ *        5 "# of turns" threshholds (TRNSIZ).
  *  There are also limits which cannot be exceeded due to the structure of
  *  the database.  (E.G., The vocabulary uses n/1000 to determine word type,
  *  so there can't be more than 1000 words.)  These upper limits are:
@@ -134,8 +132,7 @@
  *	bit; see section 9), the number of turns he must be at the right loc(s)
  *	before triggering the hint, the points deducted for taking the hint,
  *	the message number (section 6) of the question, and the message number
- *	of the hint.  These values are stashed in the "hints" array.  HNTMAX is
- *	set to the max hint number (<= HNTSIZ).
+ *	of the hint.  These values are stashed in the "hints" array.
  *  Section 12: Unused in this version.
  *  Section 13: Sounds and text.  Each line contains either 2 or 3 numbers.  If
  *	2 (call them N and S), N is a location and message ABS(S) from section

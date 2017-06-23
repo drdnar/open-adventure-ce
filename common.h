@@ -38,11 +38,7 @@ enum bugtype {
    TOO_MANY_TRAVEL_OPTIONS,                               // 3
    TOO_MANY_VOCABULARY_WORDS,                             // 4
    REQUIRED_VOCABULARY_WORD_NOT_FOUND,                    // 5
-   TOO_MANY_RTEXT_MESSAGES,                               // 6
-   TOO_MANY_HINTS,                                        // 7
-   LOCATION_HAS_CONDITION_BIT_BEING_SET_TWICE,            // 8
    INVALID_SECTION_NUMBER_IN_DATABASE,                    // 9
-   TOO_MANY_LOCATIONS,                                    // 10
    SPECIAL_TRAVEL_500_GT_L_GT_300_EXCEEDS_GOTO_LIST = 20, // 20
    RAN_OFF_END_OF_VOCABULARY_TABLE,                       // 21
    VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3,       // 22

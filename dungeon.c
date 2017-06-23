@@ -5,7 +5,6 @@
  */
 
 #define LINESIZE 100
-#define RTXSIZ 277
 #define CLSMAX 12
 #define LINSIZ 12600
 #define TRNSIZ 5
@@ -13,8 +12,6 @@
 #define VRBSIZ 35
 #define TRVSIZ 885
 #define TOKLEN 5
-#define HINTLEN 5
-#define HNTSIZ 20
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,18 +30,11 @@ long LINUSE;
 long TRVS;
 long TRNVLS;
 long TABNDX;
-long HNTMAX;
-long PTEXT[NOBJECTS + 1];
-long RTEXT[RTXSIZ + 1];
 long OBJSND[NOBJECTS + 1];
 long OBJTXT[NOBJECTS + 1];
-long STEXT[LOCSIZ + 1];
-long LTEXT[LOCSIZ + 1];
 long KEY[LOCSIZ + 1];
 long LOCSND[LOCSIZ + 1];
 long LINES[LINSIZ + 1];
-long TTEXT[TRNSIZ + 1];
-long TRNVAL[TRNSIZ + 1];
 long TRAVEL[TRVSIZ + 1];
 long KTAB[TABSIZ + 1];
 long ATAB[TABSIZ + 1];
@@ -211,24 +201,18 @@ static void read_messages(FILE* database, long sect)
 	    /* now parsed from YAML */
             continue;
         }
-        if (sect == 6) {
-            if (loc > RTXSIZ)
-                BUG(TOO_MANY_RTEXT_MESSAGES);
-            RTEXT[loc] = LINUSE;
-            continue;
-        }
         if (sect == 5) {
-            if (loc > 0 && loc <= NOBJECTS)PTEXT[loc] = LINUSE;
+	    /* Now handled in YAML */	
             continue;
         }
-        if (loc > LOCSIZ)
-            BUG(TOO_MANY_LOCATIONS);
+        if (sect == 6) {
+	    /* Now handled in YAML */
+            continue;
+        }
         if (sect == 1) {
-            LTEXT[loc] = LINUSE;
+	    /* Now handled in YAML */
             continue;
         }
-
-        STEXT[loc] = LINUSE;
     }
 }
 
@@ -309,15 +293,11 @@ static void read_conditions(FILE* database)
 static void read_hints(FILE* database)
 {
     long K;
-    HNTMAX = 0;
     while ((K = GETNUM(database)) != -1) {
-        if (K <= 0 || K > HNTSIZ)
-            BUG(TOO_MANY_HINTS);
         for (int I = 1; I <= 4; I++) {
-	    /* consume - actual arrqy-building now done in YAML. */
+	    /* consume - actual array-building now done in YAML. */
             GETNUM(NULL);
         } /* end loop */
-        HNTMAX = (HNTMAX > K ? HNTMAX : K);
     }
 }
 
@@ -346,22 +326,14 @@ static int read_database(FILE* database)
      *  the next pointer (i.e.  the word following the end of the
      *  line).  The pointer is negative if this is first line of a
      *  message.  The text-pointer arrays contain indices of
-     *  pointer-words in lines.  STEXT(N) is short description of
-     *  location N.  LTEXT(N) is long description.  PTEXT(N) points to
+     *  pointer-words in lines. PTEXT(N) points to
      *  message for game.prop(N)=0.  Successive prop messages are
-     *  found by chasing pointers.  RTEXT contains section 6's stuff.
-     *  TTEXT is for section 14. */
+     *  found by chasing pointers. */
     for (int I = 1; I <= NOBJECTS; I++) {
-        PTEXT[I] = 0;
         OBJSND[I] = 0;
         OBJTXT[I] = 0;
     }
-    for (int I = 1; I <= RTXSIZ; I++) {
-        RTEXT[I] = 0;
-    }
     for (int I = 1; I <= LOCSIZ; I++) {
-        STEXT[I] = 0;
-        LTEXT[I] = 0;
         KEY[I] = 0;
         LOCSND[I] = 0;
     }
@@ -458,7 +430,6 @@ static void write_file(FILE* header_file)
 
     fprintf(header_file, "#include \"common.h\"\n");
     fprintf(header_file, "#define TABSIZ 330\n");
-    fprintf(header_file, "#define HNTSIZ 20\n");
     fprintf(header_file, "#define TOKLEN %d\n", TOKLEN);
     fprintf(header_file, "\n");
 
