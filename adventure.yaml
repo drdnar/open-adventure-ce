@@ -14,9 +14,11 @@
 #    number of the hint.  These values are stashed in the "hints"
 #    array.
 #
-# locations: Each item contains a long and short description.  Some
-#    short descriptions are empty.  Order of these locations is not significant.
-#    Location conditions can be read as follows:
+# locations: They have attributes as follows...
+#
+#    long:         Long description, always shown on first encounter.
+#    short:        Short description. If none, use long description.
+#    conditions:   A dictionary of attributes
 #        LIT		Light
 #        OILY		If FLUID flag is on: true for oil, false for water
 #        FLUID		Liquid asset
@@ -32,11 +34,13 @@
 #        HWOODS		Lost in forest
 #        HOGRE		Trying to deal with ogre
 #        HJADE		Found all treasures except jade
-#    The optional hints field is a list of YAML references to hints
-#    that may be available at this location. (This is why locations
-#    has to follow hints.)  The "sound" attribute, if present, is s
-#    label for a location sound. If there is a "loud" attribute and
-#    it is true, object sounds are drowned out at this location.
+#    hints:        A list of YAML references to hints that may be available at
+#                  this location. (This is why locations has to follow hints.)
+#    sound:        Label for a location sound.
+#    loud:         If true, object sounds are drowned out at this location.
+#
+#    All attributes are optional except the long description. Order of
+#    locations is not significant.
 #
 # arbitrary_messages: These are arguments to rspeak(). Some spans of
 #    these messages need to be kept adjacent and ordered (for now).
