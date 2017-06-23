@@ -7,6 +7,7 @@
 # We define a bunch of YAML structures:
 #
 # hints: Each item contains a hint number (add 10 to get cond bit),
+#    a hint label (used to generate the value macro for the hint) 
 #    the number of turns he must be at the right loc(s) before
 #    triggering the hint, the points deducted for taking the hint, the
 #    message number (section 6) of the question, and the message
@@ -31,6 +32,10 @@
 #        HWOODS		Lost in forest
 #        HOGRE		Trying to deal with ogre
 #        HJADE		Found all treasures except jade
+#    The optional hints field is a list of YAML references to hints
+#    that may be available at this location. (This is why locations
+#    has to follow hints.)  The "sound" attribute, if present, is s
+#    label for a location sound.
 #
 # arbitrary_messages: These are arguments to rspeak(). Some spans of
 #    these messages need to be kept adjacent and ordered (for now).
@@ -61,8 +66,8 @@
 #    significant, they're used in succession as the player racks up
 #    deaths.
 #
-# These correspond to sections 1, 2, 5, 6, 10, 11, and 14 in the old
-# adventure.text format.  Sections 3, 4, 7, 8, and 9 haven't moved yet.
+# These correspond to sections 1, 2, 5, 6, 9, 10, 11, 13, and 14 in the old
+# adventure.text format.  Sections 3, 4, 7, and 8 haven't moved yet.
 # Section 12 was obsolete.
 
 # FIXME: Hint texts shouldn't be in arbitrary_messages, but inlined here
@@ -149,6 +154,7 @@ locations: !!omap
       long: 'You are standing at the end of a road before a small brick building.\nAround you is a forest.  A small stream flows out of the building and\ndown a gully.'
       short: 'You''re in front of building.'
     conditions: {FLUID: true, ABOVE: true, LIT: true}
+    sound: STREAM_GURGLES
 - LOC_HILL:
     description:
       long: 'You have walked up a hill, still in the forest.  The road slopes back\ndown the other side of the hill.  There is a building in the distance.'
@@ -159,11 +165,13 @@ locations: !!omap
       long: 'You are inside a building, a well house for a large spring.'
       short: 'You''re inside building.'
     conditions: {FLUID: true, ABOVE: true, LIT: true}
+    sound: STREAM_GURGLES
 - LOC_VALLEY:
     description:
       long: 'You are in a valley in the forest beside a stream tumbling along a\nrocky bed.'
       short: 'You''re in valley.'
     conditions: {FLUID: true, ABOVE: true, LIT: true}
+    sound: STREAM_GURGLES
 - LOC_ROADEND:
     description:
       long: 'The road, which approaches from the east, ends here amid the trees.'
@@ -180,6 +188,7 @@ locations: !!omap
       long: 'At your feet all the water of the stream splashes into a 2-inch slit\nin the rock.  Downstream the streambed is bare rock.'
       short: 'You''re at slit in streambed.'
     conditions: {FLUID: true, ABOVE: true, LIT: true}
+    sound: STREAM_GURGLES
 - LOC_GRATE:
     description:
       long: 'You are in a 20-foot depression floored with bare dirt.  Set into the\ndirt is a strong steel grate mounted in concrete.  A dry streambed\nleads into the depression.'
@@ -223,6 +232,7 @@ locations: !!omap
       short: 'You''re in Hall of Mists.'
     conditions: {DEEP: true}
     hints: [*jade]
+    sound: WIND_WHISTLES
 - LOC_CRACK:
     description:
       long: 'The crack is far too small for you to follow.  At its widest it is\nbarely wide enough to admit your foot.'
@@ -339,6 +349,7 @@ locations: !!omap
       long: 'You are in the bottom of a small pit with a little stream, which\nenters and exits through tiny slits.'
       short: 'You''re at bottom of pit with stream.'
     conditions: {FLUID: true, DEEP: true}
+    sound: STREAM_GURGLES
 - LOC_DUSTY:
     description:
       long: 'You are in a large room full of dusty rocks.  There is a big hole in\nthe floor.  There are cracks everywhere, and a passage leading east.'
@@ -485,6 +496,7 @@ locations: !!omap
       short: 'You''re at complex junction.'
     conditions: {DEEP: true}
     hints: [*jade]
+    sound: WIND_WHISTLES
 - LOC_BEDQUILT:
     description:
       long: 'You are in Bedquilt, a long east/west passage with holes everywhere.\nTo explore at random select north, south, up, or down.'
@@ -640,11 +652,13 @@ locations: !!omap
       long: 'You are at one end of an immense north/south passage.'
       short: !!null
     conditions: {DEEP: true}
+    sound: WIND_WHISTLES
 - LOC_WATERFALL:
     description:
       long: 'You are in a magnificent cavern with a rushing stream, which cascades\nover a sparkling waterfall into a roaring whirlpool which disappears\nthrough a hole in the floor.  Passages exit to the south and west.'
       short: 'You''re in cavern with waterfall.'
     conditions: {FLUID: true, DEEP: true}
+    sound: STREAM_SPLASHES
 - LOC_SOFTROOM:
     description:
       long: 'You are in the Soft Room.  The walls are covered with heavy curtains,\nthe floor with a thick pile carpet.  Moss covers the ceiling.'
@@ -660,6 +674,7 @@ locations: !!omap
       long: 'You are following a wide path around the outer edge of a large cavern.\nFar below, through a heavy white mist, strange splashing noises can be\nheard.  The mist rises up through a fissure in the ceiling.  The path\nexits to the south and west.'
       short: 'You''re in misty cavern.'
     conditions: {DEEP: true}
+    sound: NO_MEANING
 - LOC_ALCOVE:
     description:
       long: 'You are in an alcove.  A small nw path seems to widen after a short\ndistance.  An extremely tight tunnel leads east.  It looks like a very\ntight squeeze.  An eerie light can be seen at the other end.'
@@ -720,6 +735,7 @@ locations: !!omap
       short: 'You''re in Mirror Canyon.'
     conditions: {DEEP: true}
     hints: [*jade]
+    sound: WIND_WHISTLES
 - LOC_WINDOW2:
     description:
       long: 'You''re at a low window overlooking a huge pit, which extends up out of\nsight.  A floor is indistinctly visible over 50 feet below.  Traces of\nwhite mist cover the floor of the pit, becoming thicker to the left.\nMarks in the dust around the window would seem to indicate that\nsomeone has been here recently.  Directly across the pit from you and\n25 feet away there is a similar window looking into a lighted room.  A\nshadowy figure can be seen there peering back at you.'
@@ -740,6 +756,7 @@ locations: !!omap
       long: 'You are at the edge of a large underground reservoir.  An opaque cloud\nof white mist fills the room and rises rapidly upward.  The lake is\nfed by a stream, which tumbles out of a hole in the wall about 10 feet\noverhead and splashes noisily into the water somewhere within the\nmist.  There is a passage going back toward the south.'
       short: 'You''re at reservoir.'
     conditions: {FLUID: true, DEEP: true}
+    sound: STREAM_SPLASHES
 - LOC_DEADEND12:
     description:
       long: 'Dead end'
@@ -750,11 +767,13 @@ locations: !!omap
       long: 'You are at the northeast end of an immense room, even larger than the\nGiant Room.  It appears to be a repository for the "Adventure"\nprogram.  Massive torches far overhead bathe the room with smoky\nyellow light.  Scattered about you can be seen a pile of bottles (all\nof them empty), a nursery of young beanstalks murmuring quietly, a bed\nof oysters, a bundle of black rods with rusty stars on their ends, and\na collection of brass lanterns.  Off to one side a great many dwarves\nare sleeping on the floor, snoring loudly.  A notice nearby reads: "Do\nnot disturb the dwarves!"  An immense mirror is hanging against one\nwall, and stretches to the other end of the room, where various other\nsundry objects can be glimpsed dimly in the distance.'
       short: 'You''re at ne end.'
     conditions: {DEEP: true, LIT: true}
+    sound: MURMURING_SNORING
 - LOC_SW:
     description:
       long: 'You are at the southwest end of the repository.  To one side is a pit\nfull of fierce green snakes.  On the other side is a row of small\nwicker cages, each of which contains a little sulking bird.  In one\ncorner is a bundle of black rods with rusty marks on their ends.  A\nlarge number of velvet pillows are scattered about on the floor.  A\nvast mirror stretches off to the northeast.  At your feet is a large\nsteel grate, next to which is a sign that reads, "Treasure Vault.\nKeys in main office."'
       short: 'You''re at sw end.'
     conditions: {DEEP: true, LIT: true}
+    sound: SNAKES_HISSING
 - LOC_SWCHASM:
     description:
       long: 'You are on one side of a large, deep chasm.  A heavy white mist rising\nup from below obscures all view of the far side.  A sw path leads away\nfrom the chasm into a winding corridor.'
@@ -790,27 +809,32 @@ locations: !!omap
       long: 'You''re in a long east/west corridor.  A faint rumbling noise can be\nheard in the distance.'
       short: 'You''re in corridor.'
     conditions: {NOARRR: true, DEEP: true}
+    sound: DULL_RUMBLING
 - LOC_FORK:
     description:
       long: 'The path forks here.  The left fork leads northeast.  A dull rumbling\nseems to get louder in that direction.  The right fork leads southeast\ndown a gentle slope.  The main corridor enters from the west.'
       short: 'You''re at fork in path.'
     conditions: {NOARRR: true, DEEP: true}
+    sound: DULL_RUMBLING
 - LOC_WARMWALLS:
     description:
       long: 'The walls are quite warm here.  From the north can be heard a steady\nroar, so loud that the entire cave seems to be trembling.  Another\npassage leads south, and a low crawl goes east.'
       short: 'You''re at junction with warm walls.'
     conditions: {NOARRR: true, DEEP: true}
+    sound: LOUD_ROAR
 - LOC_BREATHTAKING:
     description:
       long: 'You are on the edge of a breath-taking view.  Far below you is an\nactive volcano, from which great gouts of molten lava come surging\nout, cascading back down into the depths.  The glowing rock fills the\nfarthest reaches of the cavern with a blood-red glare, giving every-\nthing an eerie, macabre appearance.  The air is filled with flickering\nsparks of ash and a heavy smell of brimstone.  The walls are hot to\nthe touch, and the thundering of the volcano drowns out all other\nsounds.  Embedded in the jagged roof far overhead are myriad twisted\nformations composed of pure white alabaster, which scatter the murky\nlight into sinister apparitions upon the walls.  To one side is a deep\ngorge, filled with a bizarre chaos of tortured rock which seems to\nhave been crafted by the devil himself.  An immense river of fire\ncrashes out from the depths of the volcano, burns its way through the\ngorge, and plummets into a bottomless pit far off to your left.  To\nthe right, an immense geyser of blistering steam erupts continuously\nfrom a barren island in the center of a sulfurous lake, which bubbles\nominously.  The far right wall is aflame with an incandescence of its\nown, which lends an additional infernal splendor to the already\nhellish scene.  A dark, foreboding passage exits to the south.'
       short: 'You''re at breath-taking view.'
     conditions: {NOARRR: true, LIT: true, DEEP: true}
     hints: [*jade]
+    sound: TOTAL_ROAR
 - LOC_BOULDERS2:
     description:
       long: 'You are in a small chamber filled with large boulders.  The walls are\nvery warm, causing the air in the room to be almost stifling from the\nheat.  The only exit is a crawl heading west, through which is coming\na low rumbling.'
       short: 'You''re in Chamber of Boulders.'
     conditions: {NOARRR: true, DEEP: true}
+    sound: DULL_RUMBLING
 - LOC_LIMESTONE:
     description:
       long: 'You are walking along a gently sloping north/south passage lined with\noddly shaped limestone formations.'
@@ -1039,11 +1063,13 @@ locations: !!omap
       long: 'You are walking across the bottom of the reservoir.  Walls of water\nrear up on either side.  The roar of the water cascading past is\nnearly deafening, and the mist is so thick you can barely see.'
       short: 'You''re at bottom of reservoir.'
     conditions: {FLUID: true, DEEP: true}
+    sound: TOTAL_ROAR
 - LOC_RESNORTH:
     description:
       long: 'You are at the northern edge of the reservoir.  A northwest passage\nleads sharply up from here.'
       short: 'You''re north of reservoir.'
     conditions: {FLUID: true, DEEP: true}
+    sound: WATERS_CRASHING
 - LOC_TREACHEROUS:
     description:
       long: 'You are scrambling along a treacherously steep, rocky passage.'
