@@ -64,8 +64,10 @@
 #
 # objects: Each item contains a description for use in the inventory command
 #    and one or more messages describing the object in different states.
-#    If the inventory desription begins with "*" the object is dungeon
-#    furniture that cannot be taken or carried.
+#    If a state message is a tuple then the first element is made the name
+#    of a #define viible to the code for the associayed state, numbered
+#    from zero upwards. If the inventory desription begins with "*" the
+#    object is dungeon furniture that cannot be taken or carried.
 #
 # obituaries: Death messages and reincarnation queries.  Order is
 #    significant, they're used in succession as the player racks up
@@ -1343,7 +1345,7 @@ arbitrary_messages:  !!omap
 - PIRATE_SPOTTED: 'There are faint rustling noises from the darkness behind you.  As you\nturn toward them, the beam of your lamp falls across a bearded pirate.\nHe is carrying a large chest.  "Shiver me timbers!" he cries, "I''ve\nbeen spotted!  I''d best hie meself off to the maze to hide me chest!"\nWith that, he vanishes into the gloom.'
 - GET_BATTERIES: 'Your lamp is getting dim.  You''d best go back for those batteries.'
 - REPLACE_BATTERIES: 'Your lamp is getting dim.  I''m taking the liberty of replacing the\nbatteries.'
-- MISSING_BATTERYIES: 'Your lamp is getting dim, and you''re out of spare batteries.  You''d\nbest start wrapping this up.'
+- MISSING_BATTERIES: 'Your lamp is getting dim, and you''re out of spare batteries.  You''d\nbest start wrapping this up.'
 - REMOVE_MESSAGE: 'You sift your fingers through the dust, but succeed only in\nobliterating the cryptic message.'
 - OGRE_QUERY: 'Do you need help dealing with the ogre?'
 - CLUE_QUERY: 'Hmmm, this looks like a clue, which means it''ll cost you 10 points to\nread it.  Should I go ahead and read it anyway?'
@@ -1574,9 +1576,9 @@ object_descriptions: !!omap
 - OBJ_20:
     inventory: 'Small bottle'
     longs:
-    - 'There is a bottle of water here.'
-    - 'There is an empty bottle here.'
-    - 'There is a bottle of oil here.'
+    - [WATER_BOTTLE, 'There is a bottle of water here.']
+    - [EMPTY_BOTTLE, 'There is an empty bottle here.']
+    - [OIL_BOTTLE, 'There is a bottle of oil here.']
 - OBJ_21:
     inventory: 'Water in the bottle'
     longs: !!null
@@ -1676,8 +1678,8 @@ object_descriptions: !!omap
 - OBJ_39:
     inventory: 'Batteries'
     longs:
-    - 'There are fresh batteries here.'
-    - 'Some worn-out batteries have been discarded nearby.'
+    - [FRESH_BATTERIES, 'There are fresh batteries here.']
+    - [DEAD_BATTERIES, 'Some worn-out batteries have been discarded nearby.']
 - OBJ_40:
     inventory: '*carpet and/or moss and/or curtains'
     longs: !!null
@@ -1764,10 +1766,10 @@ object_descriptions: !!omap
 - OBJ_58:
     inventory: 'Ming vase'
     longs:
-    - 'There is a delicate, precious, ming vase here!'
-    - 'The vase is now resting, delicately, on a velvet pillow.'
-    - 'The floor is littered with worthless shards of pottery.'
-    - 'The ming vase drops with a delicate crash.'
+    - [VASE_WHOLE, 'There is a delicate, precious, ming vase here!']
+    - [VASE_RESTING, 'The vase is now resting, delicately, on a velvet pillow.']
+    - [VASE_BROKEN, 'The floor is littered with worthless shards of pottery.']
+    - [VASE_DROPS, 'The ming vase drops with a delicate crash.']
 - OBJ_59:
     inventory: 'Egg-sized emerald'
     longs:

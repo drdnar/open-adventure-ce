@@ -799,7 +799,7 @@ static bool closecheck(void)
          *  objects he might be carrying (lest he have some which
          *  could cause trouble, such as the keys).  We describe the
          *  flash of light and trundle back. */
-        game.prop[BOTTLE] = PUT(BOTTLE, LOC_NE, 1);
+        game.prop[BOTTLE] = PUT(BOTTLE, LOC_NE, EMPTY_BOTTLE);
         game.prop[PLANT] = PUT(PLANT, LOC_NE, 0);
         game.prop[OYSTER] = PUT(OYSTER, LOC_NE, 0);
         OBJTXT[OYSTER] = 3;
@@ -848,9 +848,9 @@ static void lampcheck(void)
      *  here, in which case we replace the batteries and continue.
      *  Second is for other cases of lamp dying.  Eve after it goes
      *  out, he can explore outside for a while if desired. */
-    if (game.limit <= WARNTIME && HERE(BATTERY) && game.prop[BATTERY] == 0 && HERE(LAMP)) {
+    if (game.limit <= WARNTIME && HERE(BATTERY) && game.prop[BATTERY] == FRESH_BATTERIES && HERE(LAMP)) {
         rspeak(REPLACE_BATTERIES);
-        game.prop[BATTERY] = 1;
+        game.prop[BATTERY] = DEAD_BATTERIES;
         if (TOTING(BATTERY))
             DROP(BATTERY, game.loc);
         game.limit += BATTERYLIFE;
@@ -865,7 +865,8 @@ static void lampcheck(void)
             game.lmwarn = true;
             int spk = GET_BATTERIES;
             if (game.place[BATTERY] == LOC_NOWHERE)spk = LAMP_DIM;
-            if (game.prop[BATTERY] == 1)spk = MISSING_BATTERYIES;
+            if (game.prop[BATTERY] == DEAD_BATTERIES)
+		spk = MISSING_BATTERIES;
             rspeak(spk);
         }
     }

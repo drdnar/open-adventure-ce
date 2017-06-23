@@ -8,6 +8,8 @@ yaml_name = "adventure.yaml"
 h_name = "newdb.h"
 c_name = "newdb.c"
 
+statedefines = ""
+
 h_template = """/* Generated from adventure.yaml - do not hand-hack! */
 #ifndef NEWDB_H
 #define NEWDB_H
@@ -65,7 +67,6 @@ extern turn_threshold_t turn_thresholds[];
 extern obituary_t obituaries[];
 extern hint_t hints[];
 extern long conditions[];
-
 extern const size_t CLSSES;
 extern const int maximum_deaths;
 extern const int turn_threshold_count;
@@ -83,6 +84,9 @@ enum object_descriptions_refs {{
 {}
 }};
 
+/* State definitions */
+
+{}
 #endif /* end NEWDB_H */
 """
 
@@ -223,9 +227,21 @@ def get_object_descriptions(obj):
         if item[1]["longs"] == None:
             longs_str = " " * 12 + "NULL,"
         else:
+            labels = []
             for l_msg in item[1]["longs"]:
+                if not isinstance(l_msg, str):
+                    labels.append(l_msg)
+                    l_msg = l_msg[1]
                 longs_str += " " * 12 + make_c_string(l_msg) + ",\n"
             longs_str = longs_str[:-1] # trim trailing newline
+            if labels:
+                global statedefines
+                statedefines += "/* States for %s */\n" % item[0]
+                for (i, (label, message)) in enumerate(labels):
+                    if len(message) >= 45:
+                        message = message[:45] + "..."
+                    statedefines += "#define %s\t%d /* %s */\n" % (label, i, message)
+                statedefines += "\n"
         obj_str += template.format(i_msg, longs_str)
     obj_str = obj_str[:-1] # trim trailing newline
     return obj_str
@@ -290,13 +306,6 @@ if __name__ == "__main__":
     with open(yaml_name, "r") as f:
         db = yaml.load(f)
 
-    h = h_template.format(
-        len(db["hints"]),
-        get_refs(db["arbitrary_messages"]),
-        get_refs(db["locations"]),
-        get_refs(db["object_descriptions"]),
-    )
-
     c = c_template.format(
         h_name,
         get_arbitrary_messages(db["arbitrary_messages"]),
@@ -310,6 +319,14 @@ if __name__ == "__main__":
         len(db["classes"]),
         len(db["obituaries"]),
         len(db["turn_thresholds"]),
+    )
+
+    h = h_template.format(
+        len(db["hints"]),
+        get_refs(db["arbitrary_messages"]),
+        get_refs(db["locations"]),
+        get_refs(db["object_descriptions"]),
+        statedefines,
     )
 
     with open(h_name, "w") as hf:

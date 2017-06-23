@@ -242,10 +242,11 @@ static int carry(token_t verb, token_t obj)
     }
     if (obj == WATER || obj == OIL) {
         if (!HERE(BOTTLE) || LIQUID() != obj) {
-            if (TOTING(BOTTLE) && game.prop[BOTTLE] == 1)
+            if (TOTING(BOTTLE) && game.prop[BOTTLE] == EMPTY_BOTTLE)
                 return (fill(verb, BOTTLE));
             else {
-                if (game.prop[BOTTLE] != 1)spk = BOTTLE_FULL;
+                if (game.prop[BOTTLE] != EMPTY_BOTTLE)
+		    spk = BOTTLE_FULL;
                 if (!TOTING(BOTTLE))spk = NO_CONTAINER;
                 rspeak(spk);
                 return GO_CLEAROBJ;
@@ -356,7 +357,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
         } else if (obj == COINS && HERE(VEND)) {
             DESTROY(COINS);
             DROP(BATTERY, game.loc);
-            pspeak(BATTERY, 0);
+            pspeak(BATTERY, FRESH_BATTERIES);
             return GO_CLEAROBJ;
         } else if (obj == BIRD && AT(DRAGON) && game.prop[DRAGON] == 0) {
             rspeak(BIRD_BURNT);
@@ -402,7 +403,7 @@ static int drink(token_t verb, token_t obj)
     if (obj != BLOOD) {
         if (obj != 0 && obj != WATER)spk = RIDICULOUS_ATTEMPT;
         if (spk != RIDICULOUS_ATTEMPT && LIQUID() == WATER && HERE(BOTTLE)) {
-            game.prop[BOTTLE] = 1;
+            game.prop[BOTTLE] = EMPTY_BOTTLE;
             game.place[WATER] = LOC_NOWHERE;
             spk = BOTTLE_EMPTY;
         }
@@ -534,7 +535,7 @@ int fill(token_t verb, token_t obj)
             return GO_CLEAROBJ;
         }
         game.place[k] = LOC_NOWHERE;
-        game.prop[BOTTLE] = 1;
+        game.prop[BOTTLE] = EMPTY_BOTTLE;
         if (k == OIL)game.prop[URN] = 1;
         spk = WATER_URN + game.prop[URN];
         rspeak(spk);
@@ -552,6 +553,7 @@ int fill(token_t verb, token_t obj)
     if (LIQUID() != 0)
         spk = BOTTLE_FULL;
     if (spk == BOTTLED_WATER) {
+	/* FIXME: Arithmetic on property values */
         game.prop[BOTTLE] = MOD(conditions[game.loc], 4) / 2 * 2;
         k = LIQUID();
         if (TOTING(BOTTLE))
@@ -756,7 +758,7 @@ static int pour(token_t verb, token_t obj)
     }
     if (HERE(URN) && game.prop[URN] == 0)
         return fill(verb, URN);
-    game.prop[BOTTLE] = 1;
+    game.prop[BOTTLE] = EMPTY_BOTTLE;
     game.place[obj] = LOC_NOWHERE;
     spk = GROUND_WET;
     if (!(AT(PLANT) || AT(DOOR))) {
