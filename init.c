@@ -14,7 +14,7 @@
  *     12600 words of message text (LINES, LINSIZ).
  *	885 travel options (TRAVEL, TRVSIZ).
  *	330 vocabulary words (KTAB, ATAB, TABSIZ).
- *	185 locations (KEY, COND, game.abbrev, game.atloc, LOCSND, LOCSIZ).
+ *	185 locations (KEY, COND, game.abbrev, game.atloc, LOCSIZ).
  *	100 objects (PLAC, game.place, FIXD, game.fixed, game.link (twice),
  *                   ogame.prop, OBJSND, OBJTXT).
  *	 35 "action" verbs (ACTSPK, VRBSIZ).

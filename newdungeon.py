@@ -14,6 +14,8 @@ h_template = """/* Generated from adventure.yaml - do not hand-hack! */
 
 #include <stdio.h>
 
+#define SILENT	-1	/* no sound */
+
 typedef struct {{
   const char* inventory;
   const char** longs;
@@ -26,6 +28,7 @@ typedef struct {{
 
 typedef struct {{
   descriptions_t description;
+  const long sound;
 }} location_t;
 
 typedef struct {{
@@ -189,13 +192,15 @@ def get_locations(loc):
             .small = {},
             .big = {},
         }},
+        .sound = {},
     }},
 """
     loc_str = ""
     for item in loc:
         short_d = make_c_string(item[1]["description"]["short"])
         long_d = make_c_string(item[1]["description"]["long"])
-        loc_str += template.format(short_d, long_d)
+        sound = item[1].get("sound", "SILENT")
+        loc_str += template.format(short_d, long_d, sound)
     loc_str = loc_str[:-1] # trim trailing newline
     return loc_str
 

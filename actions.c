@@ -671,10 +671,10 @@ static int light(token_t verb, token_t obj)
 static int listen(void)
 /*  Listen.  Intransitive only.  Print stuff based on objsnd/locsnd. */
 {
-    int k;
+    long k;
     int spk = ALL_SILENT;
-    k = LOCSND[game.loc];
-    if (k != 0) {
+    k = locations[game.loc].sound;
+    if (k != SILENT) {
         rspeak(labs(k));
         if (k < 0) return GO_CLEAROBJ;
         spk = NO_MESSAGE;

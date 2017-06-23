@@ -33,7 +33,6 @@ long TABNDX;
 long OBJSND[NOBJECTS + 1];
 long OBJTXT[NOBJECTS + 1];
 long KEY[LOCSIZ + 1];
-long LOCSND[LOCSIZ + 1];
 long LINES[LINSIZ + 1];
 long TRAVEL[TRVSIZ + 1];
 long KTAB[TABSIZ + 1];
@@ -301,7 +300,7 @@ static void read_hints(FILE* database)
     }
 }
 
-/*  Read the sound/text info, store in OBJSND, OBJTXT, LOCSND. */
+/*  Read the sound/text info, store in OBJSND, OBJTXT */
 static void read_sound_text(FILE* database)
 {
     long K;
@@ -313,8 +312,6 @@ static void read_sound_text(FILE* database)
             OBJTXT[K] = (I > 0 ? I : 0);
             continue;
         }
-
-        LOCSND[K] = KK;
     }
 }
 
@@ -335,7 +332,6 @@ static int read_database(FILE* database)
     }
     for (int I = 1; I <= LOCSIZ; I++) {
         KEY[I] = 0;
-        LOCSND[I] = 0;
     }
 
     LINUSE = 1;
@@ -447,7 +443,6 @@ static void write_file(FILE* header_file)
     write_1d(header_file, OBJSND, NOBJECTS + 1, "OBJSND");
     write_1d(header_file, OBJTXT, NOBJECTS + 1, "OBJTXT");
     write_1d(header_file, KEY, LOCSIZ + 1, "KEY");
-    write_1d(header_file, LOCSND, LOCSIZ + 1, "LOCSND");
     write_1d(header_file, TRAVEL, TRVSIZ + 1, "TRAVEL");
     write_1d(header_file, KTAB, TABSIZ + 1, "KTAB");
     write_1d(header_file, ATAB, TABSIZ + 1, "ATAB");
