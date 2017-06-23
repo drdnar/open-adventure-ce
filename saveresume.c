@@ -24,8 +24,6 @@ struct save_t {
     long mode;		/* not used, must be present for version detection */
     long version;
     struct game_t game;
-    long bird;
-    long bivalve;
 };
 struct save_t save;
 
@@ -63,7 +61,6 @@ int suspend(void)
     save.mode = -1;
     save.version = VRSION;
     memcpy(&save.game, &game, sizeof(struct game_t));
-    save.bivalve = OBJTXT[OYSTER];
     IGNORE(fwrite(&save, sizeof(struct save_t), 1, fp));
     fclose(fp);
     rspeak(RESUME_HELP);
@@ -113,7 +110,6 @@ int restore(FILE* fp)
         rspeak(VERSION_SKEW, save.version / 10, MOD(save.version, 10), VRSION / 10, MOD(VRSION, 10));
     } else {
         memcpy(&game, &save.game, sizeof(struct game_t));
-        OBJTXT[OYSTER] = save.bivalve;
         game.zzword = RNDVOC(3, game.zzword);
     }
     return GO_TOP;

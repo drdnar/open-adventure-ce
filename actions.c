@@ -689,7 +689,6 @@ static int listen(void)
             continue;
 	int mi =  OBJSND[i] + game.prop[i];
 	if (i == BIRD)
-	    /* FIXME: Arithmetic on state values */
 	    mi += 3 * game.blooded;
         pspeak(i, mi, game.zzword);
         spk = NO_MESSAGE;
@@ -812,10 +811,10 @@ static int read(struct command_t command)
 
     if (DARK(game.loc)) {
         rspeak(NO_SEE, command.wd1, command.wd1x);
+    } else if (command.obj == OYSTER && !game.clshnt && game.closed) {
+        game.clshnt = YES(arbitrary_messages[CLUE_QUERY], arbitrary_messages[WAYOUT_CLUE], arbitrary_messages[OK_MAN]);
     } else if (OBJTXT[command.obj] == 0 || game.prop[command.obj] < 0) {
         rspeak(ACTSPK[command.verb]);
-    } else if (command.obj == OYSTER && !game.clshnt) {
-        game.clshnt = YES(arbitrary_messages[CLUE_QUERY], arbitrary_messages[WAYOUT_CLUE], arbitrary_messages[OK_MAN]);
     } else
         pspeak(command.obj, OBJTXT[command.obj] + game.prop[command.obj]);
     return GO_CLEAROBJ;

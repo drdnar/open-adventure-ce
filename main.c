@@ -802,7 +802,6 @@ static bool closecheck(void)
         game.prop[BOTTLE] = PUT(BOTTLE, LOC_NE, EMPTY_BOTTLE);
         game.prop[PLANT] = PUT(PLANT, LOC_NE, 0);
         game.prop[OYSTER] = PUT(OYSTER, LOC_NE, 0);
-        OBJTXT[OYSTER] = 3;
         game.prop[LAMP] = PUT(LAMP, LOC_NE, 0);
         game.prop[ROD] = PUT(ROD, LOC_NE, 0);
         game.prop[DWARF] = PUT(DWARF, LOC_NE, 0);
