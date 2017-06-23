@@ -63,7 +63,6 @@ int suspend(void)
     save.mode = -1;
     save.version = VRSION;
     memcpy(&save.game, &game, sizeof(struct game_t));
-    save.bird = OBJSND[BIRD];
     save.bivalve = OBJTXT[OYSTER];
     IGNORE(fwrite(&save, sizeof(struct save_t), 1, fp));
     fclose(fp);
@@ -114,7 +113,6 @@ int restore(FILE* fp)
         rspeak(VERSION_SKEW, save.version / 10, MOD(save.version, 10), VRSION / 10, MOD(VRSION, 10));
     } else {
         memcpy(&game, &save.game, sizeof(struct game_t));
-        OBJSND[BIRD] = save.bird;
         OBJTXT[OYSTER] = save.bivalve;
         game.zzword = RNDVOC(3, game.zzword);
     }

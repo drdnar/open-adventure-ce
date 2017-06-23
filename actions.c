@@ -410,7 +410,7 @@ static int drink(token_t verb, token_t obj)
     } else {
         DESTROY(BLOOD);
         game.prop[DRAGON] = 2;
-        OBJSND[BIRD] = OBJSND[BIRD] + 3;
+        game.blooded = true;
         spk = HEAD_BUZZES;
     }
     rspeak(spk);
@@ -687,7 +687,11 @@ static int listen(void)
     for (int i = 1; i <= NOBJECTS; i++) {
         if (!HERE(i) || OBJSND[i] == 0 || game.prop[i] < 0)
             continue;
-        pspeak(i, OBJSND[i] + game.prop[i], game.zzword);
+	int mi =  OBJSND[i] + game.prop[i];
+	if (i == BIRD)
+	    /* FIXME: Arithmetic on state values */
+	    mi += 3 * game.blooded;
+        pspeak(i, mi, game.zzword);
         spk = NO_MESSAGE;
         if (i == BIRD && OBJSND[i] + game.prop[i] == 8)
             DESTROY(BIRD);
