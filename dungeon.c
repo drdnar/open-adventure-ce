@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include "newdb.h"
 #include "common.h"
 
 // Global variables for use in functions below that can gradually disappear as code is cleaned up

@@ -14,23 +14,13 @@
  *     12600 words of message text (LINES, LINSIZ).
  *	885 travel options (TRAVEL, TRVSIZ).
  *	330 vocabulary words (KTAB, ATAB, TABSIZ).
- *	185 locations (KEY, COND, game.abbrev, game.atloc, LOCSIZ).
- *	100 objects (PLAC, game.place, FIXD, game.fixed, game.link (twice),
- *                   ogame.prop).
  *	 35 "action" verbs (ACTSPK, VRBSIZ).
- *	 12 different player classifications (CTEXT, CVAL, CLSMAX).
- *	 20 hints (game.hintlc, game.hinted, HINTS, HNTSIZ).
- *        5 "# of turns" threshholds (TRNSIZ).
  *  There are also limits which cannot be exceeded due to the structure of
  *  the database.  (E.G., The vocabulary uses n/1000 to determine word type,
  *  so there can't be more than 1000 words.)  These upper limits are:
  *	1000 non-synonymous vocabulary words
  *	300 locations
  *	100 objects
- *  Note:
- *   - the object count limit has been abstracted as NOBJECTS
- *   - the random message limit has been abstracted as RTXSIZ
- *   - maximum locations limit has been abstracted as LOCSIZ
  */
 
 /*  Description of the database format
@@ -347,11 +337,10 @@ void initialise(void)
      *	game.iwest	How many times he's said "west" instead of "w"
      *	game.knfloc	0 if no knife here, loc if knife here, -1 after caveat
      *	game.limit	Lifetime of lamp (not set here)
-     *	NDEATHS		Number of reincarnation messages available (up to 5)
      *	game.numdie	Number of times killed so far
      *	game.trnluz	# points lost so far due to number of turns used
      *	game.turns	Tallies how many commands he's given (ignores yes/no)
-     *	Logicals were explained earlier */
+     */
     game.turns = 0;
     game.trnluz = 0;
     game.lmwarn = false;

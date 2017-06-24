@@ -59,6 +59,8 @@ saveresume.o:	advent.h database.h common.h newdb.h
 
 common.o:	common.h
 
+dungeon.o:	common.h newdb.h
+
 newdb.o:	newdb.c newdb.h
 	$(CC) $(CCFLAGS) $(DBX) -c newdb.c
 

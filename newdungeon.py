@@ -70,6 +70,8 @@ extern obituary_t obituaries[];
 extern hint_t hints[];
 extern long conditions[];
 
+#define LOCSIZ		{}
+#define NOBJECTS	{}
 #define NHINTS		{}
 #define NCLASSES	{}
 #define NDEATHS		{}
@@ -338,6 +340,8 @@ if __name__ == "__main__":
     )
 
     h = h_template.format(
+        len(db["locations"]),
+        len(db["object_descriptions"]),
         len(db["hints"]),
         len(db["classes"]),
         len(db["obituaries"]),
