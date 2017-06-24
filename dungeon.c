@@ -71,23 +71,6 @@
  *
  * Other sections are obsolete and ignored */
 
-/*  The various messages (sections 1, 2, 5, 6, etc.) may include certain
- *  special character sequences to denote that the program must provide
- *  parameters to insert into a message when the message is printed.  These
- *  sequences are:
- *	%S = The letter 'S' or nothing (if a given value is exactly 1)
- *	%W = A word (up to 10 characters)
- *	%L = A word mapped to lower-case letters
- *	%U = A word mapped to upper-case letters
- *	%C = A word mapped to lower-case, first letter capitalised
- *	%T = Several words of text, ending with a word of -1
- *	%1 = A 1-digit number
- *	%2 = A 2-digit number
- *	...
- *	%9 = A 9-digit number
- *	%B = Variable number of blanks
- *	%! = The entire message should be suppressed */
-
 #define LINESIZE 100
 #define CLSMAX 12
 #define LINSIZ 12600
