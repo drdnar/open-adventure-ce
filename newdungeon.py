@@ -70,7 +70,7 @@ extern obituary_t obituaries[];
 extern hint_t hints[];
 extern long conditions[];
 
-#define LOCSIZ		{}
+#define NLOCATIONS		{}
 #define NOBJECTS	{}
 #define NHINTS		{}
 #define NCLASSES	{}

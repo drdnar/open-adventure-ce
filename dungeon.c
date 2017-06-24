@@ -31,7 +31,7 @@ long LINUSE;
 long TRVS;
 long TRNVLS;
 long TABNDX;
-long KEY[LOCSIZ + 1];
+long KEY[NLOCATIONS + 1];
 long LINES[LINSIZ + 1];
 long TRAVEL[TRVSIZ + 1];
 long KTAB[TABSIZ + 1];
@@ -321,7 +321,7 @@ static int read_database(FILE* database)
      *  pointer-words in lines. PTEXT(N) points to
      *  message for game.prop(N)=0.  Successive prop messages are
      *  found by chasing pointers. */
-    for (int I = 1; I <= LOCSIZ; I++) {
+    for (int I = 1; I <= NLOCATIONS; I++) {
         KEY[I] = 0;
     }
 
@@ -431,7 +431,7 @@ static void write_file(FILE* header_file)
     fprintf(header_file, "\n");
 
     // content variables
-    write_1d(header_file, KEY, LOCSIZ + 1, "KEY");
+    write_1d(header_file, KEY, NLOCATIONS + 1, "KEY");
     write_1d(header_file, TRAVEL, TRVSIZ + 1, "TRAVEL");
     write_1d(header_file, KTAB, TABSIZ + 1, "KTAB");
     write_1d(header_file, ATAB, TABSIZ + 1, "ATAB");

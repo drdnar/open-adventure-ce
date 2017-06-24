@@ -64,8 +64,8 @@ struct game_t {
     bool wzdark;	/* whether the loc he's leaving was dark */
     long zzword;
     bool blooded;	/* has player drunk of dragon's blood? */
-    long abbrev[LOCSIZ + 1];
-    long atloc[LOCSIZ + 1];
+    long abbrev[NLOCATIONS + 1];
+    long atloc[NLOCATIONS + 1];
     long dseen[NDWARVES + 1];
     long dloc[NDWARVES + 1];
     long odloc[NDWARVES + 1];

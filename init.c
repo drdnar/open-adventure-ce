@@ -167,7 +167,7 @@ void initialise(void)
         game.link[i + NOBJECTS] = game.link[i] = 0;
     }
 
-    for (int i = 1; i <= LOCSIZ; i++) {
+    for (int i = 1; i <= NLOCATIONS; i++) {
         game.abbrev[i] = 0;
         if (!(locations[i].description.big == 0 || KEY[i] == 0)) {
             int k = KEY[i];
