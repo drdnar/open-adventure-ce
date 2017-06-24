@@ -53,3 +53,6 @@ drop coins
 take batteries
 read machine
 throw batteries
+take machine
+kill machine
+attack machine
