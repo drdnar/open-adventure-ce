@@ -60,6 +60,11 @@
  *	or "attack").  Else, if M=3, the word is a special case verb (such as
  *	"dig") and N % 1000 is an index into section 6.  Objects from 50 to
  *	(currently, anyway) 79 are considered treasures (for pirate, closeout).
+ *  Section 7: Object locations.  Each line contains an object number and its
+ *	initial location (zero (or omitted) if none).  If the object is
+ *	immovable, the location is followed by a "-1".  If it has two locations
+ *	(e.g. the grate) the first location is followed with the second, and
+ *	the object is assumed to be immovable.
  *  Section 8: Action defaults.  Each line contains an "action-verb" number and
  *	the index (in section 6) of the default message for the verb.
  *  Section 0: End of database.
@@ -96,6 +101,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include <string.h>
 #include "newdb.h"
 #include "common.h"
 
@@ -251,45 +257,18 @@ static long GETNUM(FILE *source)
     return (GETNUM);
 }
 
-/*  Sections 1, 2, 5, 6, 10, 14.  Read messages and set up pointers. */
+/*  Sections 1, 2, 5, 6, 10, 14.  Skip these, they're all in YAML now. */
 static void read_messages(FILE* database, long sect)
 {
     long KK = LINUSE;
     while (true) {
-        long loc;
-        LINUSE = KK;
-        loc = GETNUM(database);
-        if (LNLENG >= LNPOSN + 70)
-            BUG(MESSAGE_LINE_GT_70_CHARACTERS);
-        if (loc == -1) return;
-        if (LNLENG < LNPOSN)
-            BUG(NULL_LINE_IN_MESSAGE);
-        do {
-            KK = KK + 1;
-            if (KK >= LINSIZ)
-                BUG(TOO_MANY_WORDS_OF_MESSAGES);
-            LINES[KK] = GETTXT(false, false, false);
-        } while (LINES[KK] != -1);
-        LINES[LINUSE] = KK;
-        if (loc == OLDLOC) continue;
-        OLDLOC = loc;
-        LINES[LINUSE] = -KK;
-        if (sect == 10 || sect == 14) {
-	    /* now parsed from YAML */
-            continue;
-        }
-        if (sect == 5) {
-	    /* Now handled in YAML */	
-            continue;
-        }
-        if (sect == 6) {
-	    /* Now handled in YAML */
-            continue;
-        }
-        if (sect == 1) {
-	    /* Now handled in YAML */
-            continue;
-        }
+	do {
+	    if (NULL == fgets(INLINE + 1, sizeof(INLINE) - 1, database)) {
+		printf("Failed fgets()\n");
+	    }
+	} while (!feof(database) && INLINE[1] == '#');
+	if (strncmp(INLINE + 1, "-1\n", 3) == 0)
+	    break;
     }
 }
 
