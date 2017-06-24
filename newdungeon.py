@@ -19,6 +19,29 @@ h_template = """/* Generated from adventure.yaml - do not hand-hack! */
 
 #define SILENT	-1	/* no sound */
 
+/* Symbols for cond bits */
+#define COND_LIT	0	/* Light */
+#define COND_OILY	1	/* If bit 2 is on: on for oil, off for water */
+#define COND_FLUID	2	/* Liquid asset, see bit 1 */
+#define COND_NOARRR	3	/* Pirate doesn't go here unless following */
+#define COND_NOBACK	4	/* Cannot use "back" to move away */
+#define COND_ABOVE	5
+#define COND_DEEP	6	/* Deep - e.g where dwarves are active */
+#define COND_FOREST	7	/* In the forest */
+#define COND_FORCED	8	/* Only one way in or out of here */
+/* Bits past 10 indicate areas of interest to "hint" routines */
+#define COND_HBASE	10	/* Base for location hint bits */
+#define COND_HCAVE	11	/* Trying to get into cave */
+#define COND_HBIRD	12	/* Trying to catch bird */
+#define COND_HSNAKE	13	/* Trying to deal with snake */
+#define COND_HMAZE	14	/* Lost in maze */
+#define COND_HDARK	15	/* Pondering dark room */
+#define COND_HWITT	16	/* At Witt's End */
+#define COND_HCLIFF	17	/* Cliff with urn */
+#define COND_HWOODS	18	/* Lost in forest */
+#define COND_HOGRE	19	/* Trying to deal with ogre */
+#define COND_HJADE	20	/* Found all treasures except jade */
+
 typedef struct {{
   const char* inventory;
   bool is_treasure;
