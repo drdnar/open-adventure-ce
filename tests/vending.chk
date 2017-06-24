@@ -267,6 +267,10 @@ Dead end
 There is a massive and somewhat battered vending machine here.  The
 instructions on it read: "Drop coins here to receive fresh batteries."
 
+> read machine
+
+"Drop coins here to receive fresh batteries."
+
 > drop coins
 
 There are fresh batteries here.
@@ -275,12 +279,16 @@ There are fresh batteries here.
 
 OK
 
+> read machine
+
+"Drop coins here to receive fresh batteries."
+
 > throw batteries
 
 OK
 
 
-You scored 75 out of a possible 430, using 50 turns.
+You scored 75 out of a possible 430, using 52 turns.
 
 Your score qualifies you as a novice class adventurer.
 

@@ -48,6 +48,8 @@ s
 sw
 se
 s
+read machine
 drop coins
 take batteries
+read machine
 throw batteries
