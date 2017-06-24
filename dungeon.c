@@ -30,7 +30,6 @@ long LINUSE;
 long TRVS;
 long TRNVLS;
 long TABNDX;
-long OBJTXT[NOBJECTS + 1];
 long KEY[LOCSIZ + 1];
 long LINES[LINSIZ + 1];
 long TRAVEL[TRVSIZ + 1];
@@ -299,17 +298,14 @@ static void read_hints(FILE* database)
     }
 }
 
-/*  Read the sound/text info, store in OBJSND, OBJTXT */
+/*  Read the sound/text info */
 static void read_sound_text(FILE* database)
 {
     long K;
     while ((K = GETNUM(database)) != -1) {
         long KK = GETNUM(NULL);
         long I = GETNUM(NULL);
-        if (I != 0) {
-            OBJTXT[K] = (I > 0 ? I : 0);
-            continue;
-        }
+	/* this stuff is in YAML now */
     }
 }
 
@@ -324,9 +320,6 @@ static int read_database(FILE* database)
      *  pointer-words in lines. PTEXT(N) points to
      *  message for game.prop(N)=0.  Successive prop messages are
      *  found by chasing pointers. */
-    for (int I = 1; I <= NOBJECTS; I++) {
-        OBJTXT[I] = 0;
-    }
     for (int I = 1; I <= LOCSIZ; I++) {
         KEY[I] = 0;
     }
@@ -437,7 +430,6 @@ static void write_file(FILE* header_file)
     fprintf(header_file, "\n");
 
     // content variables
-    write_1d(header_file, OBJTXT, NOBJECTS + 1, "OBJTXT");
     write_1d(header_file, KEY, LOCSIZ + 1, "KEY");
     write_1d(header_file, TRAVEL, TRVSIZ + 1, "TRAVEL");
     write_1d(header_file, KTAB, TABSIZ + 1, "KTAB");

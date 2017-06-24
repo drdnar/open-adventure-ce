@@ -804,7 +804,7 @@ static int read(struct command_t command)
     if (command.obj == INTRANSITIVE) {
         command.obj = 0;
         for (int i = 1; i <= NOBJECTS; i++) {
-            if (HERE(i) && OBJTXT[i] != 0 && game.prop[i] >= 0)
+            if (HERE(i) && object_descriptions[i].texts[0] != NULL && game.prop[i] >= 0)
                 command.obj = command.obj * NOBJECTS + i;
         }
         if (command.obj > NOBJECTS || command.obj == 0 || DARK(game.loc))
@@ -815,7 +815,7 @@ static int read(struct command_t command)
         rspeak(NO_SEE, command.wd1, command.wd1x);
     } else if (command.obj == OYSTER && !game.clshnt && game.closed) {
         game.clshnt = YES(arbitrary_messages[CLUE_QUERY], arbitrary_messages[WAYOUT_CLUE], arbitrary_messages[OK_MAN]);
-    } else if (OBJTXT[command.obj] == 0 || game.prop[command.obj] < 0) {
+    } else if (object_descriptions[command.obj].texts[0] == NULL || game.prop[command.obj] < 0) {
         rspeak(ACTSPK[command.verb]);
     } else
         pspeak(command.obj, study, game.prop[command.obj]);
