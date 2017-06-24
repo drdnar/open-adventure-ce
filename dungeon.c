@@ -1,8 +1,87 @@
 /*
  * The dungeon compiler. Turns adventure.text into a set of C initializers
- * defining (mostly) invariant state.  A couple of slots are messed with
- * at runtime.
+ * defining invariant state.
  */
+
+/*  Current limits:
+ *     12600 words of message text (LINES, LINSIZ).
+ *	885 travel options (TRAVEL, TRVSIZ).
+ *	330 vocabulary words (KTAB, ATAB, TABSIZ).
+ *	 35 "action" verbs (ACTSPK, VRBSIZ).
+ *  There are also limits which cannot be exceeded due to the structure of
+ *  the database.  (E.G., The vocabulary uses n/1000 to determine word type,
+ *  so there can't be more than 1000 words.)  These upper limits are:
+ *	1000 non-synonymous vocabulary words
+ *	300 locations
+ *	100 objects
+ */
+
+/*  Description of the database format
+ *
+ *
+ *  The data file contains several sections.  Each begins with a line containing
+ *  a number identifying the section, and ends with a line containing "-1".
+ *
+ *  Section 3: Travel table.  Each line contains a location number (X), a second
+ *	location number (Y), and a list of motion numbers (see section 4).
+ *	each motion represents a verb which will go to Y if currently at X.
+ *	Y, in turn, is interpreted as follows.  Let M=Y/1000, N=Y mod 1000.
+ *		If N<=300	it is the location to go to.
+ *		If 300<N<=500	N-300 is used in a computed goto to
+ *					a section of special code.
+ *		If N>500	message N-500 from section 6 is printed,
+ *					and he stays wherever he is.
+ *	Meanwhile, M specifies the conditions on the motion.
+ *		If M=0		it's unconditional.
+ *		If 0<M<100	it is done with M% probability.
+ *		If M=100	unconditional, but forbidden to dwarves.
+ *		If 100<M<=200	he must be carrying object M-100.
+ *		If 200<M<=300	must be carrying or in same room as M-200.
+ *		If 300<M<=400	game.prop(M % 100) must *not* be 0.
+ *		If 400<M<=500	game.prop(M % 100) must *not* be 1.
+ *		If 500<M<=600	game.prop(M % 100) must *not* be 2, etc.
+ *	If the condition (if any) is not met, then the next *different*
+ *	"destination" value is used (unless it fails to meet *its* conditions,
+ *	in which case the next is found, etc.).  Typically, the next dest will
+ *	be for one of the same verbs, so that its only use is as the alternate
+ *	destination for those verbs.  For instance:
+ *		15	110022	29	31	34	35	23	43
+ *		15	14	29
+ *	This says that, from loc 15, any of the verbs 29, 31, etc., will take
+ *	him to 22 if he's carrying object 10, and otherwise will go to 14.
+ *		11	303008	49
+ *		11	9	50
+ *	This says that, from 11, 49 takes him to 8 unless game.prop(3)=0, in which
+ *	case he goes to 9.  Verb 50 takes him to 9 regardless of game.prop(3).
+ *  Section 4: Vocabulary.  Each line contains a number (n), a tab, and a
+ *	five-letter word.  Call M=N/1000.  If M=0, then the word is a motion
+ *	verb for use in travelling (see section 3).  Else, if M=1, the word is
+ *	an object.  Else, if M=2, the word is an action verb (such as "carry"
+ *	or "attack").  Else, if M=3, the word is a special case verb (such as
+ *	"dig") and N % 1000 is an index into section 6.  Objects from 50 to
+ *	(currently, anyway) 79 are considered treasures (for pirate, closeout).
+ *  Section 8: Action defaults.  Each line contains an "action-verb" number and
+ *	the index (in section 6) of the default message for the verb.
+ *  Section 0: End of database.
+ *
+ * Other sections are obsolete and ignored */
+
+/*  The various messages (sections 1, 2, 5, 6, etc.) may include certain
+ *  special character sequences to denote that the program must provide
+ *  parameters to insert into a message when the message is printed.  These
+ *  sequences are:
+ *	%S = The letter 'S' or nothing (if a given value is exactly 1)
+ *	%W = A word (up to 10 characters)
+ *	%L = A word mapped to lower-case letters
+ *	%U = A word mapped to upper-case letters
+ *	%C = A word mapped to lower-case, first letter capitalised
+ *	%T = Several words of text, ending with a word of -1
+ *	%1 = A 1-digit number
+ *	%2 = A 2-digit number
+ *	...
+ *	%9 = A 9-digit number
+ *	%B = Variable number of blanks
+ *	%! = The entire message should be suppressed */
 
 #define LINESIZE 100
 #define CLSMAX 12
@@ -25,9 +104,9 @@ static long LNLENG;
 static long LNPOSN;
 static char INLINE[LINESIZE + 1];
 static long OLDLOC;
+static long LINUSE;
 
 // Storage for what comes out of the database
-long LINUSE;
 long TRVS;
 long TRNVLS;
 long TABNDX;

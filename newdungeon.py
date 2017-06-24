@@ -62,13 +62,13 @@ typedef struct {{
   const char* hint;
 }} hint_t;
 
-extern location_t locations[];
-extern object_description_t object_descriptions[];
-extern const char* arbitrary_messages[];
-extern const class_t classes[];
-extern turn_threshold_t turn_thresholds[];
-extern obituary_t obituaries[];
-extern hint_t hints[];
+extern const location_t locations[];
+extern const object_description_t object_descriptions[];
+extern const const char* arbitrary_messages[];
+extern const const class_t classes[];
+extern const turn_threshold_t turn_thresholds[];
+extern const obituary_t obituaries[];
+extern const hint_t hints[];
 extern long conditions[];
 
 #define NLOCATIONS		{}
@@ -109,23 +109,23 @@ const class_t classes[] = {{
 {}
 }};
 
-turn_threshold_t turn_thresholds[] = {{
+const turn_threshold_t turn_thresholds[] = {{
 {}
 }};
 
-location_t locations[] = {{
+const location_t locations[] = {{
 {}
 }};
 
-object_description_t object_descriptions[] = {{
+const object_description_t object_descriptions[] = {{
 {}
 }};
 
-obituary_t obituaries[] = {{
+const obituary_t obituaries[] = {{
 {}
 }};
 
-hint_t hints[] = {{
+const hint_t hints[] = {{
 {}
 }};
 
