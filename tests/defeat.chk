@@ -2422,6 +2422,12 @@ Proceed at own risk.  [Witt Construction Company]"
 
 There are a few recent issues of "Spelunker Today" magazine here.
 
+> read sign
+
+Cave under construction beyond this point.
+           Proceed at own risk.
+       [Witt Construction Company]
+
 > take magazine
 
 OK
@@ -2575,14 +2581,14 @@ You're in anteroom.
 
 > u
 
+A sepulchral voice reverberating through the cave, says, "Cave closing
+soon.  All adventurers exit immediately through main office."
+
 You are at a complex junction.  A low hands and knees passage from the
 north joins a higher crawl from the east to make a walking passage
 going west.  There is also a large room above.  The air is damp here.
 
 > u
-
-A sepulchral voice reverberating through the cave, says, "Cave closing
-soon.  All adventurers exit immediately through main office."
 
 You're in dusty rock room.
 
@@ -2631,12 +2637,6 @@ You're in Plover Room.
 
 > e
 
-There is no way to go that direction.
-
-You're in Plover Room.
-
-> e
-
 Your lamp has run out of power.
 
 There is no way to go that direction.
@@ -2647,31 +2647,6 @@ You're in Plover Room.
 
 There is no way to go that direction.
 
-You're in a small chamber lit by an eerie green light.  An extremely
-narrow tunnel exits to the west.  A dark corridor leads ne.
-
-> e
-
-There is no way to go that direction.
-
-You're in Plover Room.
-
-> e
-
-There is no way to go that direction.
-
-You're in Plover Room.
-
-> e
-
-There is no way to go that direction.
-
-You're in Plover Room.
-
-> e
-
-There is no way to go that direction.
-
 You're in Plover Room.
 
 > e
@@ -2872,6 +2847,31 @@ narrow tunnel exits to the west.  A dark corridor leads ne.
 There is no way to go that direction.
 
 You're in Plover Room.
+
+> e
+
+There is no way to go that direction.
+
+You're in Plover Room.
+
+> e
+
+There is no way to go that direction.
+
+You're in Plover Room.
+
+> e
+
+There is no way to go that direction.
+
+You're in Plover Room.
+
+> e
+
+There is no way to go that direction.
+
+You're in a small chamber lit by an eerie green light.  An extremely
+narrow tunnel exits to the west.  A dark corridor leads ne.
 
 > e
 
@@ -2903,6 +2903,12 @@ not disturb the dwarves!"  An immense mirror is hanging against one
 wall, and stretches to the other end of the room, where various other
 sundry objects can be glimpsed dimly in the distance.
 
+> e
+
+There is no way to go that direction.
+
+You're at ne end.
+
 > sw
 
 You are at the southwest end of the repository.  To one side is a pit
@@ -2918,9 +2924,7 @@ The grate is locked.
 
 > read sign
 
-Cave under construction beyond this point.
-           Proceed at own risk.
-       [Witt Construction Company]
+"Treasure Vault.  Keys in main office."
 
 > take rod
 
@@ -2940,7 +2944,7 @@ There is a loud explosion, and a twenty-foot hole appears in the far
 wall, burying the snakes in the rubble.  A river of molten lava pours
 in through the hole, destroying everything in its path, including you!
 
-You scored 413 out of a possible 430, using 467 turns.
+You scored 413 out of a possible 430, using 468 turns.
 
 Your score puts you in Master Adventurer Class A.
 

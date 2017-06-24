@@ -1742,7 +1742,8 @@ object_descriptions: !!omap
 - OBJ_49:
     inventory: '*sign'
     longs:
-    - ''
+    - [INGAME_SIGN, '']
+    - [ENDGAME_SIGN, '']
     texts:
     - 'Cave under construction beyond this point.\n           Proceed at own risk.\n       [Witt Construction Company]'
     - '"Treasure Vault.  Keys in main office."'

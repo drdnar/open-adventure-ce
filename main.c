@@ -812,7 +812,7 @@ static bool closecheck(void)
          *  Reuse sign. */
         PUT(GRATE, LOC_SW, 0);
         PUT(SIGN, LOC_SW, 0);
-        ++OBJTXT[SIGN];
+        game.prop[SIGN] = ENDGAME_SIGN;
         game.prop[SNAKE] = PUT(SNAKE, LOC_SW, 1);
         game.prop[BIRD] = PUT(BIRD, LOC_SW, 1);
         game.prop[CAGE] = PUT(CAGE, LOC_SW, 0);
