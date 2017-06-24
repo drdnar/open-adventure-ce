@@ -21,6 +21,7 @@ h_template = """/* Generated from adventure.yaml - do not hand-hack! */
 
 typedef struct {{
   const char* inventory;
+  bool is_treasure;
   const char** longs;
   const char** sounds;
   const char** texts;
@@ -216,6 +217,7 @@ def get_locations(loc):
 def get_object_descriptions(obj):
     template = """    {{
         .inventory = {},
+        .is_treasure = {},
         .longs = (const char* []) {{
 {}
         }},
@@ -263,7 +265,8 @@ def get_object_descriptions(obj):
              for l_msg in item[1]["texts"]:
                  texts_str += " " * 12 + make_c_string(l_msg) + ",\n"
              texts_str = texts_str[:-1] # trim trailing newline
-        obj_str += template.format(i_msg, longs_str, sounds_str, texts_str)
+        treasure = "true" if item[1].get("treasure") else "false"
+        obj_str += template.format(i_msg, treasure, longs_str, sounds_str, texts_str)
     obj_str = obj_str[:-1] # trim trailing newline
     return obj_str
 

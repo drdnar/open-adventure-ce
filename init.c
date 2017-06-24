@@ -199,15 +199,16 @@ void initialise(void)
             DROP(k, PLAC[k]);
     }
 
-    /*  Treasures, as noted earlier, are objects MINTRS through MAXTRS
-     *  Their props are initially -1, and are set to 0 the first time
+    /*  Treasure props are initially -1, and are set to 0 the first time
      *  they are described.  game.tally keeps track of how many are
      *  not yet found, so we know when to close the cave. */
     game.tally = 0;
-    for (int treasure = MINTRS; treasure <= MAXTRS; treasure++) {
-        if (object_descriptions[treasure].inventory != 0)
-            game.prop[treasure] = -1;
-        game.tally = game.tally - game.prop[treasure];
+    for (int treasure = 1; treasure <= NOBJECTS; treasure++) {
+	if (object_descriptions[treasure].is_treasure) {
+	    if (object_descriptions[treasure].inventory != 0)
+		game.prop[treasure] = -1;
+	    game.tally = game.tally - game.prop[treasure];
+	}
     }
 
     /*  Clear the hint stuff.  game.hintlc[i] is how long he's been at LOC
@@ -260,7 +261,7 @@ void initialise(void)
     VOLCANO = VOCWRD(WORD_VOLCANO, 1);
     WATER = VOCWRD(WORD_WATER, 1);
 
-    /* Objects from MINTRS through MAXTRS are treasures.  Here are a few. */
+    /* Vocabulary for treasures */
     AMBER = VOCWRD(WORD_AMBER, 1);
     CHAIN = VOCWRD(WORD_CHAIN, 1);
     CHEST = VOCWRD(WORD_CHEST, 1);

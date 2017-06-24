@@ -9,8 +9,6 @@
 #define NDWARVES	6		/* number of dwarves */
 #define PIRATE		NDWARVES	/* must be NDWARVES-1 when zero-origin */
 #define DALTLC		LOC_NUGGET	/* alternate dwarf location */
-#define MINTRS		50		/* index of lowest reasure */
-#define MAXTRS		79		/* index of highest reasure */
 #define MAXPARMS	25		/* Max parameters for speak() */
 #define INVLIMIT	7		/* inverntory limit (# of objects) */
 #define INTRANSITIVE	-1		/* illegal object number */

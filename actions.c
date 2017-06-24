@@ -899,7 +899,7 @@ static int throw (FILE *cmdin, struct command_t *command)
         rspeak(spk);
         return GO_CLEAROBJ;
     }
-    if (command->obj >= MINTRS && command->obj <= MAXTRS && AT(TROLL)) {
+    if (object_descriptions[command->obj].is_treasure && AT(TROLL)) {
         spk = TROLL_SATISFIED;
         /*  Snarf a treasure for the troll. */
         DROP(command->obj, 0);

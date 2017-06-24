@@ -64,6 +64,7 @@
 #
 # objects: Each item contains a description for use in the inventory command
 #    and one or more messages describing the object in different states.
+#    There is also a boolean "treasure" attribute, deaykting to false.
 #    If a state message is a tuple then the first element is made the name
 #    of a #define viible to the code for the associayed state, numbered
 #    from zero upwards. If the inventory desription begins with "*" the
@@ -1749,40 +1750,49 @@ object_descriptions: !!omap
     - '"Treasure Vault.  Keys in main office."'
 - OBJ_50:
     inventory: 'Large gold nugget'
+    treasure: true
     longs:
     - 'There is a large sparkling nugget of gold here!'
 - OBJ_51:
     inventory: 'Several diamonds'
+    treasure: true
     longs:
     - 'There are diamonds here!'
 - OBJ_52:
     inventory: 'Bars of silver'
+    treasure: true
     longs:
     - 'There are bars of silver here!'
 - OBJ_53:
     inventory: 'Precious jewelry'
+    treasure: true
     longs:
     - 'There is precious jewelry here!'
 - OBJ_54:
     inventory: 'Rare coins'
+    treasure: true
     longs:
     - 'There are many coins here!'
 - OBJ_55:
     inventory: 'Treasure chest'
+    treasure: true
     longs:
     - 'The pirate''s treasure chest is here!'
 - OBJ_56:
     inventory: 'Golden eggs'
+    treasure: true
     longs:
     - 'There is a large nest here, full of golden eggs!'
     - 'The nest of golden eggs has vanished!'
     - 'Done!'
 - OBJ_57:
     inventory: 'Jeweled trident'
+    treasure: true
     longs:
     - 'There is a jewel-encrusted trident here!'
 - OBJ_58:
     inventory: 'Ming vase'
+    treasure: true
     longs:
     - [VASE_WHOLE, 'There is a delicate, precious, ming vase here!']
     - [VASE_RESTING, 'The vase is now resting, delicately, on a velvet pillow.']
@@ -1790,149 +1800,67 @@ object_descriptions: !!omap
     - [VASE_DROPS, 'The ming vase drops with a delicate crash.']
 - OBJ_59:
     inventory: 'Egg-sized emerald'
+    treasure: true
     longs:
     - 'There is an emerald here the size of a plover''s egg!'
     - 'There is an emerald resting in a small cavity in the rock!'
 - OBJ_60:
     inventory: 'Platinum pyramid'
+    treasure: true
     longs:
     - 'There is a platinum pyramid here, 8 inches on a side!'
 - OBJ_61:
     inventory: 'Glistening pearl'
+    treasure: true
     longs:
     - 'Off to one side lies a glistening pearl!'
 - OBJ_62:
     inventory: 'Persian rug'
+    treasure: true
     longs:
     - 'There is a persian rug spread out on the floor!'
     - 'The dragon is sprawled out on a persian rug!!'
     - 'There is a persian rug here, hovering in mid-air!'
 - OBJ_63:
     inventory: 'Rare spices'
+    treasure: true
     longs:
     - 'There are rare spices here!'
 - OBJ_64:
     inventory: 'Golden chain'
+    treasure: true
     longs:
     - 'There is a golden chain lying in a heap on the floor!'
     - 'The bear is locked to the wall with a golden chain!'
     - 'There is a golden chain locked to the wall!'
 - OBJ_65:
     inventory: 'Giant ruby'
+    treasure: true
     longs:
     - 'There is an enormous ruby here!'
     - 'There is a ruby resting in a small cavity in the rock!'
 - OBJ_66:
     inventory: 'Jade necklace'
+    treasure: true
     longs:
     - 'A precious jade necklace has been dropped here!'
 - OBJ_67:
     inventory: 'Amber gemstone'
+    treasure: true
     longs:
     - 'There is a rare amber gemstone here!'
     - 'There is an amber gemstone resting in a small cavity in the rock!'
 - OBJ_68:
     inventory: 'Star sapphire'
+    treasure: true
     longs:
     - 'A brilliant blue star sapphire is here!'
     - 'There is a star sapphire resting in a small cavity in the rock!'
 - OBJ_69:
     inventory: 'Ebony statuette'
+    treasure: true
     longs:
     - 'There is a richly-carved ebony statuette here!'
-- OBJ_70:
-    inventory: !!null
-    longs: !!null
-- OBJ_71:
-    inventory: !!null
-    longs: !!null
-- OBJ_72:
-    inventory: !!null
-    longs: !!null
-- OBJ_73:
-    inventory: !!null
-    longs: !!null
-- OBJ_74:
-    inventory: !!null
-    longs: !!null
-- OBJ_75:
-    inventory: !!null
-    longs: !!null
-- OBJ_76:
-    inventory: !!null
-    longs: !!null
-- OBJ_77:
-    inventory: !!null
-    longs: !!null
-- OBJ_78:
-    inventory: !!null
-    longs: !!null
-- OBJ_79:
-    inventory: !!null
-    longs: !!null
-- OBJ_80:
-    inventory: !!null
-    longs: !!null
-- OBJ_81:
-    inventory: !!null
-    longs: !!null
-- OBJ_82:
-    inventory: !!null
-    longs: !!null
-- OBJ_83:
-    inventory: !!null
-    longs: !!null
-- OBJ_84:
-    inventory: !!null
-    longs: !!null
-- OBJ_85:
-    inventory: !!null
-    longs: !!null
-- OBJ_86:
-    inventory: !!null
-    longs: !!null
-- OBJ_87:
-    inventory: !!null
-    longs: !!null
-- OBJ_88:
-    inventory: !!null
-    longs: !!null
-- OBJ_89:
-    inventory: !!null
-    longs: !!null
-- OBJ_90:
-    inventory: !!null
-    longs: !!null
-- OBJ_91:
-    inventory: !!null
-    longs: !!null
-- OBJ_92:
-    inventory: !!null
-    longs: !!null
-- OBJ_93:
-    inventory: !!null
-    longs: !!null
-- OBJ_94:
-    inventory: !!null
-    longs: !!null
-- OBJ_95:
-    inventory: !!null
-    longs: !!null
-- OBJ_96:
-    inventory: !!null
-    longs: !!null
-- OBJ_97:
-    inventory: !!null
-    longs: !!null
-- OBJ_98:
-    inventory: !!null
-    longs: !!null
-- OBJ_99:
-    inventory: !!null
-    longs: !!null
-- OBJ_100:
-    inventory: !!null
-    longs: !!null
 
 obituaries:
   - query: 'Oh dear, you seem to have gotten yourself killed.  I might be able to\nhelp you out, but I''ve never really done this before.  Do you want me\nto try to reincarnate you?'

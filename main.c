@@ -289,7 +289,9 @@ static bool spotted_by_pirate(int i)
         return true;
     int snarfed = 0;
     bool movechest = false, robplayer = false;
-    for (int treasure = MINTRS; treasure <= MAXTRS; treasure++) {
+    for (int treasure = 1; treasure <= NOBJECTS; treasure++) {
+	if (!object_descriptions[treasure].is_treasure)
+	    continue;
         /*  Pirate won't take pyramid from plover room or dark
          *  room (too easy!). */
         if (treasure == PYRAMID && (game.loc == PLAC[PYRAMID] || game.loc == PLAC[EMERALD])) {
@@ -323,7 +325,9 @@ static bool spotted_by_pirate(int i)
     }
     if (robplayer) {
         rspeak(PIRATE_POUNCES);
-        for (int treasure = MINTRS; treasure <= MAXTRS; treasure++) {
+	for (int treasure = 1; treasure <= NOBJECTS; treasure++) {
+	    if (!object_descriptions[treasure].is_treasure)
+		continue;
             if (!(treasure == PYRAMID && (game.loc == PLAC[PYRAMID] || game.loc == PLAC[EMERALD]))) {
                 if (AT(treasure) && game.fixed[treasure] == 0)
                     CARRY(treasure, game.loc);

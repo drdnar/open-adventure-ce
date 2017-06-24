@@ -37,7 +37,9 @@ long score(enum termination mode)
     /*  First tally up the treasures.  Must be in building and not broken.
      *  Give the poor guy 2 points just for finding each treasure. */
     mxscor = 0;
-    for (long i = MINTRS; i <= MAXTRS; i++) {
+    for (int i = 1; i <= NOBJECTS; i++) {
+	if (!object_descriptions[i].is_treasure)
+	    continue;
         if (object_descriptions[i].inventory != 0) {
             long k = 12;
             if (i == CHEST)k = 14;
