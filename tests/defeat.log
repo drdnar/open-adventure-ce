@@ -466,6 +466,7 @@ e
 e
 e
 sw
+read sign
 take rod
 drop rod
 ne
