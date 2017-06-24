@@ -44,8 +44,9 @@ static int attack(FILE *input, struct command_t *command)
         DESTROY(BIRD);
         spk = BIRD_DEAD;
     } else if (obj == VEND) {
-        pspeak(VEND, game.prop[VEND] + 2);
-        game.prop[VEND] = 3 - game.prop[VEND];
+	bool blocking = (game.prop[VEND] == VEND_BLOCKS);
+        game.prop[VEND] = blocking ? VEND_UNBLOCKS : VEND_BLOCKS;
+        rspeak(blocking ? MACHINE_SWINGOUT : MACHINE_SWINGBACK);
         return GO_CLEAROBJ;
     }
 
@@ -82,7 +83,7 @@ static int attack(FILE *input, struct command_t *command)
         GETIN(input, &command->wd1, &command->wd1x, &command->wd2, &command->wd2x);
         if (command->wd1 != MAKEWD(WORD_YINIT) && command->wd1 != MAKEWD(WORD_YES))
             return GO_CHECKFOO;
-        pspeak(DRAGON, 3);
+        pspeak(DRAGON, look, 3);
         game.prop[DRAGON] = 1;
         game.prop[RUG] = 0;
         int k = (PLAC[DRAGON] + FIXD[DRAGON]) / 2;
@@ -133,7 +134,7 @@ static int bigwords(token_t foo)
             if (HERE(EGGS))k = 1;
             if (game.loc == PLAC[EGGS])k = 0;
             MOVE(EGGS, PLAC[EGGS]);
-            pspeak(EGGS, k);
+            pspeak(EGGS, look, k);
             return GO_CLEAROBJ;
         }
     }
@@ -356,7 +357,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
         } else if (obj == COINS && HERE(VEND)) {
             DESTROY(COINS);
             DROP(BATTERY, game.loc);
-            pspeak(BATTERY, FRESH_BATTERIES);
+            pspeak(BATTERY, look, FRESH_BATTERIES);
             return GO_CLEAROBJ;
         } else if (obj == BIRD && AT(DRAGON) && game.prop[DRAGON] == 0) {
             rspeak(BIRD_BURNT);
@@ -375,7 +376,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
         } else {
             game.prop[VASE] = 2;
             if (AT(PILLOW))game.prop[VASE] = 0;
-            pspeak(VASE, game.prop[VASE] + 1);
+            pspeak(VASE, look, game.prop[VASE] + 1);
             if (game.prop[VASE] != 0)game.fixed[VASE] = -1;
         }
     }
@@ -623,7 +624,7 @@ static int inven(void)
         if (spk == NO_CARRY)
             rspeak(NOW_HOLDING);
         game.blklin = false;
-        pspeak(i, -1);
+        pspeak(i, touch, -1);
         game.blklin = true;
         spk = NO_MESSAGE;
     }
@@ -685,14 +686,15 @@ static int listen(void)
 	    spk = NO_MESSAGE;
     }
     for (int i = 1; i <= NOBJECTS; i++) {
-        if (!HERE(i) || OBJSND[i] == 0 || game.prop[i] < 0)
+        if (!HERE(i) || object_descriptions[i].sounds[0] == NULL || game.prop[i] < 0)
             continue;
-	int mi =  OBJSND[i] + game.prop[i];
+	int mi =  game.prop[i];
 	if (i == BIRD)
 	    mi += 3 * game.blooded;
-        pspeak(i, mi, game.zzword);
+        pspeak(i, hear, mi, game.zzword);
         spk = NO_MESSAGE;
-        if (i == BIRD && OBJSND[i] + game.prop[i] == 8)
+	/* FIXME: Magic number, sensitive to bird state logic */
+	if (i == BIRD && game.prop[i] == 5)
             DESTROY(BIRD);
     }
     rspeak(spk);
@@ -775,7 +777,7 @@ static int pour(token_t verb, token_t obj)
             rspeak(spk);
             return GO_CLEAROBJ;
         }
-        pspeak(PLANT, game.prop[PLANT] + 3);
+        pspeak(PLANT, look, game.prop[PLANT] + 3);
         game.prop[PLANT] = MOD(game.prop[PLANT] + 1, 3);
         game.prop[PLANT2] = game.prop[PLANT];
         return GO_MOVE;
@@ -816,7 +818,7 @@ static int read(struct command_t command)
     } else if (OBJTXT[command.obj] == 0 || game.prop[command.obj] < 0) {
         rspeak(ACTSPK[command.verb]);
     } else
-        pspeak(command.obj, OBJTXT[command.obj] + game.prop[command.obj]);
+        pspeak(command.obj, study, game.prop[command.obj]);
     return GO_CLEAROBJ;
 }
 
@@ -827,7 +829,7 @@ static int reservoir(void)
         rspeak(NOTHING_HAPPENS);
         return GO_CLEAROBJ;
     } else {
-        pspeak(RESER, game.prop[RESER] + 1);
+        pspeak(RESER, look, game.prop[RESER] + 1);
         game.prop[RESER] = 1 - game.prop[RESER];
         if (AT(RESER))
             return GO_CLEAROBJ;
@@ -993,7 +995,7 @@ static int wave(token_t verb, token_t obj)
         }
         if (HERE(BIRD))rspeak(spk);
         game.prop[FISSURE] = 1 - game.prop[FISSURE];
-        pspeak(FISSURE, 2 - game.prop[FISSURE]);
+        pspeak(FISSURE, look, 2 - game.prop[FISSURE]);
         return GO_CLEAROBJ;
     }
 }

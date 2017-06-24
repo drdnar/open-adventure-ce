@@ -16,7 +16,7 @@
  *	330 vocabulary words (KTAB, ATAB, TABSIZ).
  *	185 locations (KEY, COND, game.abbrev, game.atloc, LOCSIZ).
  *	100 objects (PLAC, game.place, FIXD, game.fixed, game.link (twice),
- *                   ogame.prop, OBJSND, OBJTXT).
+ *                   ogame.prop).
  *	 35 "action" verbs (ACTSPK, VRBSIZ).
  *	 12 different player classifications (CTEXT, CVAL, CLSMAX).
  *	 20 hints (game.hintlc, game.hinted, HINTS, HNTSIZ).

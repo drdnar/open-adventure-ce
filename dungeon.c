@@ -30,7 +30,6 @@ long LINUSE;
 long TRVS;
 long TRNVLS;
 long TABNDX;
-long OBJSND[NOBJECTS + 1];
 long OBJTXT[NOBJECTS + 1];
 long KEY[LOCSIZ + 1];
 long LINES[LINSIZ + 1];
@@ -308,7 +307,6 @@ static void read_sound_text(FILE* database)
         long KK = GETNUM(NULL);
         long I = GETNUM(NULL);
         if (I != 0) {
-            OBJSND[K] = (KK > 0 ? KK : 0);
             OBJTXT[K] = (I > 0 ? I : 0);
             continue;
         }
@@ -327,7 +325,6 @@ static int read_database(FILE* database)
      *  message for game.prop(N)=0.  Successive prop messages are
      *  found by chasing pointers. */
     for (int I = 1; I <= NOBJECTS; I++) {
-        OBJSND[I] = 0;
         OBJTXT[I] = 0;
     }
     for (int I = 1; I <= LOCSIZ; I++) {
@@ -440,7 +437,6 @@ static void write_file(FILE* header_file)
     fprintf(header_file, "\n");
 
     // content variables
-    write_1d(header_file, OBJSND, NOBJECTS + 1, "OBJSND");
     write_1d(header_file, OBJTXT, NOBJECTS + 1, "OBJTXT");
     write_1d(header_file, KEY, LOCSIZ + 1, "KEY");
     write_1d(header_file, TRAVEL, TRVSIZ + 1, "TRAVEL");

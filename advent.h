@@ -86,6 +86,8 @@ extern const char advent_to_ascii[];
 extern FILE *logfp;
 extern bool oldstyle, editline, prompt;
 
+enum speaktype {touch, look, hear, study};
+
 /* b is not needed for POSIX but harmless */
 #define READ_MODE "rb"
 #define WRITE_MODE "wb"
@@ -97,7 +99,7 @@ extern bool wordeq(token_t, token_t);
 extern bool wordempty(token_t);
 extern void wordclear(token_t *);
 extern void speak(const char*, ...);
-extern void pspeak(vocab_t, int, ...);
+extern void pspeak(vocab_t, enum speaktype, int, ...);
 extern void rspeak(vocab_t, ...);
 extern bool GETIN(FILE *, token_t*, token_t*, token_t*, token_t*);
 extern void echo_input(FILE*, char*, char*);

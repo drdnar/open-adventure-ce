@@ -161,17 +161,29 @@ void speak(const char* msg, ...)
     va_end(ap);
 }
 
-void pspeak(vocab_t msg, int skip, ...)
-/*  Find the skip+1st message from msg and print it.  msg should be
- *  the index of the inventory message for object.  (INVEN+N+1 message
- *  is game.prop=N message). */
+void pspeak(vocab_t msg, enum speaktype mode, int skip, ...)
+/* Find the skip+1st message from msg and print it.  Modes are:
+ * feel = for inventory, what you can touch
+ * look = the long description for the state the object is in
+ * listen = the sound for the state the object is in
+ * study = text on the object. */
 {
     va_list ap;
     va_start(ap, skip);
-    if (skip >= 0)
-        vspeak(object_descriptions[msg].longs[skip], ap);
-    else
+    switch (mode) {
+    case touch:
         vspeak(object_descriptions[msg].inventory, ap);
+	break;
+    case look: 
+        vspeak(object_descriptions[msg].longs[skip], ap);
+	break;
+    case hear:
+        vspeak(object_descriptions[msg].sounds[skip], ap);
+	break;
+    case study:
+        vspeak(object_descriptions[msg].texts[skip], ap);
+	break;
+    }
     va_end(ap);
 }
 

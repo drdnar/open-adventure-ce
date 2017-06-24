@@ -22,6 +22,8 @@ h_template = """/* Generated from adventure.yaml - do not hand-hack! */
 typedef struct {{
   const char* inventory;
   const char** longs;
+  const char** sounds;
+  const char** texts;
 }} object_description_t;
 
 typedef struct {{
@@ -218,6 +220,12 @@ def get_object_descriptions(obj):
         .longs = (const char* []) {{
 {}
         }},
+        .sounds = (const char* []) {{
+{}
+        }},
+        .texts = (const char* []) {{
+{}
+        }},
     }},
 """
     obj_str = ""
@@ -242,7 +250,21 @@ def get_object_descriptions(obj):
                         message = message[:45] + "..."
                     statedefines += "#define %s\t%d /* %s */\n" % (label, i, message)
                 statedefines += "\n"
-        obj_str += template.format(i_msg, longs_str)
+        sounds_str = ""
+        if item[1].get("sounds") == None:
+            sounds_str = " " * 12 + "NULL,"
+        else:
+             for l_msg in item[1]["sounds"]:
+                 sounds_str += " " * 12 + make_c_string(l_msg) + ",\n"
+             sounds_str = sounds_str[:-1] # trim trailing newline
+        texts_str = ""
+        if item[1].get("texts") == None:
+            texts_str = " " * 12 + "NULL,"
+        else:
+             for l_msg in item[1]["texts"]:
+                 texts_str += " " * 12 + make_c_string(l_msg) + ",\n"
+             texts_str = texts_str[:-1] # trim trailing newline
+        obj_str += template.format(i_msg, longs_str, sounds_str, texts_str)
     obj_str = obj_str[:-1] # trim trailing newline
     return obj_str
 

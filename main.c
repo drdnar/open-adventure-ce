@@ -687,7 +687,7 @@ static bool playermove(token_t verb, int motion)
                      *  and block him.  (standard travel entries check for
                      *  game.prop(TROLL)=0.)  Special stuff for bear. */
                     if (game.prop[TROLL] == 1) {
-                        pspeak(TROLL, 1);
+                        pspeak(TROLL,look, 1);
                         game.prop[TROLL] = 0;
                         MOVE(TROLL2, 0);
                         MOVE(TROLL2 + NOBJECTS, 0);
@@ -912,7 +912,7 @@ static void listobjects(void)
             int kk = game.prop[obj];
             if (obj == STEPS && game.loc == game.fixed[STEPS])
                 kk = 1;
-            pspeak(obj, kk);
+            pspeak(obj, look, kk);
         }
     }
 }
@@ -999,7 +999,7 @@ L2600:
          *  tick game.clock1 unless well into cave (and not at Y2). */
         if (game.closed) {
             if (game.prop[OYSTER] < 0 && TOTING(OYSTER))
-                pspeak(OYSTER, 1);
+                pspeak(OYSTER, look, 1);
             for (size_t i = 1; i <= NOBJECTS; i++) {
                 if (TOTING(i) && game.prop[i] < 0)
                     game.prop[i] = -1 - game.prop[i];

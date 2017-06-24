@@ -1357,6 +1357,7 @@ arbitrary_messages:  !!omap
 - BREAK_VASE: 'You have taken the vase and hurled it delicately to the ground.'
 - PROD_DWARF: 'You prod the nearest dwarf, who wakes up grumpily, takes one look at\nyou, curses, and grabs for his axe.'
 - THIS_ACCEPTABLE: 'Is this acceptable?'
+# This message is not currently used
 - ALREADY_OVER: 'This adventure is already over.  To start a new adventure, or to\nresume an earlier adventure, please run a fresh copy of the program.'
 - OGRE_FULL: 'The ogre doesn''t appear to be hungry.'
 - OGRE_DODGE: 'The ogre, who despite his bulk is quite agile, easily dodges your\nattack.  He seems almost amused by your puny effort.'
@@ -1426,7 +1427,8 @@ arbitrary_messages:  !!omap
 - TABLE_SPACE: 'Table space used:\n%d of %d words of messages   %d of %d travel options\n%d of %d vocabulary words    %d of %d locations\n%d of %d objects             %d of %d action verbs\n%d of %d "random" messages   %d of %d "class" messages\n%d of %d hints               %d of %d turn threshholds'
 - RESUME_ABANDON: 'To resume an earlier Adventure, you must abandon the current one.'
 - VERSION_SKEW: 'I''m sorry, but that Adventure was begun using Version%d.%d of the\nprogram, and this is Version%d.%d.  You must find the other version\nin order to resume that Adventure.'
-- DAVE_TAMPERING: 'A dark fog creeps in to surround you.  From somewhere in the fog you\nhear a stern voice.  "This Adventure has been tampered with!  You have\nbeen dabbling in magic, knowing not the havoc you might cause thereby.\nLeave at once, before you do irrevocable harm!"  The fog thickens,\nuntil at last you can see nothing at all.  Your vision then clears,\nand you find yourself back in The Real World.'
+# This message is not currently used
+- SAVE_TAMPERING: 'A dark fog creeps in to surround you.  From somewhere in the fog you\nhear a stern voice.  "This Adventure has been tampered with!  You have\nbeen dabbling in magic, knowing not the havoc you might cause thereby.\nLeave at once, before you do irrevocable harm!"  The fog thickens,\nuntil at last you can see nothing at all.  Your vision then clears,\nand you find yourself back in The Real World.'
 - GUESS_AGAIN: 'Guess again.'
 - MISSING_ONE: 'You''re missing only one other treasure.  Do you need help finding it?'
 - NO_LOCATE: 'Once you''ve found all the other treasures, it is no longer possible to\nlocate the one you''re now missing.'
@@ -1434,6 +1436,8 @@ arbitrary_messages:  !!omap
 - ADVENTURE_NEWS: 'Open Adventure is an author-approved open-source release of\nVersion 2.5 with, as yet, no gameplay changes.\nVersion 2.5 was essentially the same as Version II; the cave and the\nhazards therein are unchanged, and top score is still 430 points.\nThere are a few more hints, especially for some of the more obscure\npuzzles.  There are a few minor bugfixes and cosmetic changes.  You\ncan now save a game and resume it at once (formerly you had to wait a\nwhile first), but it now costs you a few points each time you save the\ngame.  Saved games are now stored in much smaller files than before.'
 - GO_UNNEEDED: 'You don''t have to say "go" every time; just specify a direction or, if\nit''s nearby, name the place to which you wish to move.'
 - CANNOT_CARRY7: !!null
+- MACHINE_SWINGOUT: 'As you strike the vending machine, it pivots backward along with a\nsection of wall, revealing a dark passage leading south.'
+- MACHINE_SWINGBACK: 'The vending machine swings back to block the passage.'
   
 classes: 
 - threshold: 0
@@ -1514,6 +1518,7 @@ object_descriptions: !!omap
     - [BIRD_UNCAGED, 'A cheerful little bird is sitting here singing.']
     - [BIRD_CAGED, 'There is a little bird in the cage.']
     - [BIRD_FOREST_UNCAGED, 'A cheerful little bird is sitting here singing.']
+    sounds:
     - 'The bird''s singing is quite melodious.'
     - 'The bird does not seem inclined to sing while in the cage.'
     - 'It almost seems as though the bird is trying to tell you something.'
@@ -1534,6 +1539,7 @@ object_descriptions: !!omap
     longs:
     - 'A huge green fierce snake bars the way!'
     - '' # chased away
+    sounds:
     - 'The snake is hissing venomously.'
 - OBJ_12:
     inventory: '*fissure'
@@ -1545,23 +1551,27 @@ object_descriptions: !!omap
     inventory: '*stone tablet'
     longs:
     - 'A massive stone tablet imbedded in the wall reads:\n"Congratulations on bringing light into the dark-room!"'
+    texts:
     - '"Congratulations on bringing light into the dark-room!"'
 - OBJ_14:
     inventory: 'Giant clam  >GRUNT!<'
     longs:
     - 'There is an enormous clam here with its shell tightly closed.'
+    sounds:
     - 'The clam is as tight-mouthed as a, er, clam.'
 - OBJ_15:
     inventory: 'Giant oyster  >GROAN!<'
     longs:
     - 'There is an enormous oyster here with its shell tightly closed.'
     - 'Interesting.  There seems to be something written on the underside of\nthe oyster.'
+    sounds:
     - 'Even though it''s an oyster, the critter''s as tight-mouthed as a clam.'
     - 'It says the same thing it did before.  Hm, maybe it''s a pun?'
 - OBJ_16:
     inventory: '"Spelunker Today"'
     longs:
     - 'There are a few recent issues of "Spelunker Today" magazine here.'
+    texts:
     - 'I''m afraid the magazine is written in dwarvish.  But pencilled on one\ncover you see, "Please leave the magazines at the construction site."'
 - OBJ_17:
     inventory: !!null
@@ -1597,6 +1607,7 @@ object_descriptions: !!omap
     - 'The plant spurts into furious growth for a few seconds.'
     - 'The plant grows explosively, almost filling the bottom of the pit.'
     - 'You''ve over-watered the plant!  It''s shriveling up!  And now . . .'
+    sounds:
     - 'The plant continues to ask plaintively for water.'
     - 'The plant continues to demand water.'
     - 'The plant now maintains a contented silence.'
@@ -1632,6 +1643,7 @@ object_descriptions: !!omap
     - 'The blood-specked body of a huge green dead dragon lies to one side.'
     - 'The body of a huge green dead dragon is lying off to one side.'
     - 'Congratulations!  You have just vanquished a dragon with your bare\nhands!  (Unbelievable, isn''t it?)'
+    sounds:
     - 'The dragon''s ominous hissing does not bode well for you.'
     - 'The dragon is, not surprisingly, silent.'
     - 'The dragon is, not surprisingly, silent.'
@@ -1646,6 +1658,7 @@ object_descriptions: !!omap
     - 'A burly troll stands by the bridge and insists you throw him a\ntreasure before you may cross.'
     - 'The troll steps out from beneath the bridge and blocks your way.'
     - '' # chased away
+    sounds:
     - 'The troll sounds quite adamant in his demand for a treasure.'
 - OBJ_34:
     inventory: '*phony troll'
@@ -1662,6 +1675,7 @@ object_descriptions: !!omap
     inventory: '*message in second maze'
     longs:
     - 'There is a message scrawled in the dust in a flowery script, reading:\n"This is not the maze where the pirate leaves his treasure chest."'
+    texts:
     - '"This is not the maze where the pirate leaves his treasure chest."'
 - OBJ_37:
     inventory: '*volcano and/or geyser'
@@ -1669,12 +1683,11 @@ object_descriptions: !!omap
 - OBJ_38:
     inventory: '*vending machine'
     longs:
-    - 'There is a massive and somewhat battered vending machine here.  The\ninstructions on it read: "Drop coins here to receive fresh batteries."'
+    - [VEND_BLOCKS, 'There is a massive and somewhat battered vending machine here.  The\ninstructions on it read: "Drop coins here to receive fresh batteries."']
+    - [VEND_UNBLOCKS, 'There is a massive vending machine here, swung back to reveal a\nsouthward passage.']
+    texts:
     - '"Drop coins here to receive fresh batteries."'
-    - 'As you strike the vending machine, it pivots backward along with a\nsection of wall, revealing a dark passage leading south.'
-    - 'There is a massive vending machine here, swung back to reveal a\nsouthward passage.'
     - '"Drop coins here to receive fresh batteries."'
-    - 'The vending machine swings back to block the passage.'
 - OBJ_39:
     inventory: 'Batteries'
     longs:
@@ -1687,6 +1700,7 @@ object_descriptions: !!omap
     inventory: '*ogre'
     longs:
     - 'A formidable ogre bars the northern exit.'
+    sounds:
     - 'The ogre is apparently the strong, silent type.'
 - OBJ_42:
     inventory: '*urn'
@@ -1717,16 +1731,19 @@ object_descriptions: !!omap
     inventory: '*mud'
     longs:
     - ''
+    texts:
     - '"MAGIC WORD XYZZY"'
 - OBJ_48:
     inventory: '*note'
     longs:
     - ''
+    texts:
     - '"You won''t get it up the steps"'
 - OBJ_49:
     inventory: '*sign'
     longs:
     - ''
+    texts:
     - 'Cave under construction beyond this point.\n           Proceed at own risk.\n       [Witt Construction Company]'
     - '"Treasure Vault.  Keys in main office."'
 - OBJ_50:
