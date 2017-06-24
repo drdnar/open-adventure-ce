@@ -31,7 +31,7 @@ void initialise(void)
         game.atloc[i] = 0;
     }
 
-    /*  Set up the game.atloc and game.link arrays as described above.
+    /*  Set up the game.atloc and game.link arrays.
      *  We'll use the DROP subroutine, which prefaces new objects on the
      *  lists.  Since we want things in the other order, we'll run the
      *  loop backwards.  If the object is in two locs, we drop it twice.
@@ -178,24 +178,6 @@ void initialise(void)
     game.dloc[5] = LOC_COMPLEX;
     game.dloc[6] = game.chloc;
 
-    /*  Other random flags and counters, as follows:
-     *	game.abbnum	How often we should print non-abbreviated descriptions
-     *	game.bonus	Used to determine amount of bonus if he reaches closing
-     *	game.clock1	Number of turns from finding last treasure till closing
-     *	game.clock2	Number of turns from first warning till blinding flash
-     *	game.conds	Min value for cond(loc) if loc has any hints
-     *	game.detail	How often we've said "not allowed to give more detail"
-     *	game.dkill	# of dwarves killed (unused in scoring, needed for msg)
-     *	game.foobar	Current progress in saying "FEE FIE FOE FOO".
-     *	game.holdng	Number of objects being carried
-     *	igo		How many times he's said "go XXX" instead of "XXX"
-     *	game.iwest	How many times he's said "west" instead of "w"
-     *	game.knfloc	0 if no knife here, loc if knife here, -1 after caveat
-     *	game.limit	Lifetime of lamp (not set here)
-     *	game.numdie	Number of times killed so far
-     *	game.trnluz	# points lost so far due to number of turns used
-     *	game.turns	Tallies how many commands he's given (ignores yes/no)
-     */
     game.turns = 0;
     game.trnluz = 0;
     game.lmwarn = false;
@@ -208,8 +190,8 @@ void initialise(void)
     game.dkill = 0;
     game.foobar = 0;
     game.bonus = 0;
-    game.clock1 = 30;
-    game.clock2 = 50;
+    game.clock1 = WARNTIME;
+    game.clock2 = FLASHTIME;
     game.conds = SETBIT(11);
     game.saved = 0;
     game.closng = false;

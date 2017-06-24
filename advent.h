@@ -16,6 +16,7 @@
 #define GAMELIMIT	330		/* base limit of turns */
 #define NOVICELIMIT	1000	/* limit of turns for novice */
 #define WARNTIME	30		/* late game starts at game.limit-this */
+#define FLASHTIME	50	/*turns from first warning till blinding flash */
 #define PANICTIME	15		/* time left after closing */
 #define BATTERYLIFE	2500		/* turn limit increment from batteries */
 
@@ -24,41 +25,41 @@ typedef long vocab_t;	/* index into a vocabulary array */
 
 struct game_t {
     unsigned long lcg_a, lcg_c, lcg_m, lcg_x;
-    long abbnum;
+    long abbnum;	/* How often to print non-abbreviated descriptions */
     long blklin;
     long bonus;
     long chloc;
     long chloc2;
-    long clock1;
-    long clock2;
+    long clock1;	/* # turns from finding last treasure till closing */
+    long clock2;	/* # turns from first warning till blinding flash */
     bool clshnt;	/* has player read the clue in the endgame? */
     bool closed;	/* whether we're all the way closed */
     bool closng;	/* whether it's closing time yet */
-    long conds;
+    long conds;		/* min value for cond(loc) if loc has any hints */
     long detail;
     long dflag;
     long dkill;
     long dtotal;
-    long foobar;
-    long holdng;
-    long iwest;
-    long knfloc;
-    long limit;
+    long foobar;	/* current progress in saying "FEE FIE FOE FOO". */
+    long holdng;	/* number of objects being carried */
+    long iwest;		/* How many times he's said "west" instead of "w" */
+    long knfloc;	/* 0 if no knife here, loc if knife , -1 after caveat */
+    long limit;		/* lifetime of lamp (not set here) */
     bool lmwarn;	/* has player been warned about lamp going dim? */
     long loc;
     long newloc;
     bool novice;	/* asked for instructions at start-up? */
-    long numdie;
+    long numdie;	/* number of times killed so far */
     long oldloc;
     long oldlc2;
     long oldobj;
     bool panic;		/* has player found out he's trapped in the cave? */
-    long saved;
+    long saved;		/* point penalty for saves */
     long tally;
     long thresh;
     long trndex;
-    long trnluz;
-    long turns;
+    long trnluz;	/* # points lost so far due to number of turns used */
+    long turns;		/* how many commands he's given (ignores yes/no) */
     bool wzdark;	/* whether the loc he's leaving was dark */
     long zzword;
     bool blooded;	/* has player drunk of dragon's blood? */
