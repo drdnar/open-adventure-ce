@@ -72,8 +72,8 @@ struct game_t {
     long fixed[NOBJECTS + 1];
     long link[NOBJECTS * 2 + 1];
     long place[NOBJECTS + 1];
-    long hinted[HINT_COUNT];
-    long hintlc[HINT_COUNT];
+    long hinted[NHINTS];
+    long hintlc[NHINTS];
     long prop[NOBJECTS + 1];
 };
 

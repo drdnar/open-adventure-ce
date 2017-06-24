@@ -223,7 +223,7 @@ void initialise(void)
     /*  Clear the hint stuff.  game.hintlc[i] is how long he's been at LOC
      *  with cond bit i.  game.hinted[i] is true iff hint i has been
      *  used. */
-    for (int i = 0; i < HINT_COUNT; i++) {
+    for (int i = 0; i < NHINTS; i++) {
         game.hinted[i] = false;
         game.hintlc[i] = 0;
     }
@@ -347,7 +347,7 @@ void initialise(void)
      *	game.iwest	How many times he's said "west" instead of "w"
      *	game.knfloc	0 if no knife here, loc if knife here, -1 after caveat
      *	game.limit	Lifetime of lamp (not set here)
-     *	maximum_deaths		Number of reincarnation messages available (up to 5)
+     *	NDEATHS		Number of reincarnation messages available (up to 5)
      *	game.numdie	Number of times killed so far
      *	game.trnluz	# points lost so far due to number of turns used
      *	game.turns	Tallies how many commands he's given (ignores yes/no)

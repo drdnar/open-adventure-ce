@@ -50,14 +50,14 @@ long score(enum termination mode)
         }
     }
 
-    /*  Now look at how he finished and how far he got.  maximum_deaths and
+    /*  Now look at how he finished and how far he got.  NDEATHS and
      *  game.numdie tell us how well he survived.  game.dflag will tell us
      *  if he ever got suitably deep into the cave.  game.closng still
      *  indicates whether he reached the endgame.  And if he got as far as
      *  "cave closed" (indicated by "game.closed"), then bonus is zero for
      *  mundane exits or 133, 134, 135 if he blew it (so to speak). */
-    score += (maximum_deaths - game.numdie) * 10;
-    mxscor += maximum_deaths * 10;
+    score += (NDEATHS - game.numdie) * 10;
+    mxscor += NDEATHS * 10;
     if (mode == endgame)
         score += 4;
     mxscor += 4;
@@ -87,7 +87,7 @@ long score(enum termination mode)
     mxscor += 2;
 
     /* Deduct for hints/turns/saves. Hints < 4 are special; see database desc. */
-    for (long i = 0; i < HINT_COUNT; i++) {
+    for (long i = 0; i < NHINTS; i++) {
         if (game.hinted[i])
             score = score - hints[i].penalty;
     }
@@ -115,7 +115,7 @@ void terminate(enum termination mode)
     if (points + game.saved + 1 >= mxscor && game.saved != 0)
         rspeak(WITHOUT_SUSPENDS);
     rspeak(TOTAL_SCORE, points, mxscor, game.turns, game.turns);
-    for (long i = 1; i <= (long)CLSSES; i++) {
+    for (long i = 1; i <= (long)NCLASSES; i++) {
         if (classes[i].threshold >= points) {
             speak(classes[i].message);
             i = classes[i].threshold + 1 - points;

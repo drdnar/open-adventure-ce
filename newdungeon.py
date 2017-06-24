@@ -69,10 +69,11 @@ extern turn_threshold_t turn_thresholds[];
 extern obituary_t obituaries[];
 extern hint_t hints[];
 extern long conditions[];
-extern const size_t CLSSES;
-extern const int maximum_deaths;
-extern const int turn_threshold_count;
-#define HINT_COUNT {}
+
+#define NHINTS		{}
+#define NCLASSES	{}
+#define NDEATHS		{}
+#define NTHRESHOLDS	{}
 
 enum arbitrary_messages_refs {{
 {}
@@ -128,10 +129,6 @@ hint_t hints[] = {{
 long conditions[] = {{
 {}
 }};
-
-const size_t CLSSES = {};
-const int maximum_deaths = {};
-const int turn_threshold_count = {};
 
 /* end */
 """
@@ -338,13 +335,13 @@ if __name__ == "__main__":
         get_obituaries(db["obituaries"]),
         get_hints(db["hints"], db["arbitrary_messages"]),
         get_condbits(db["locations"]),
-        len(db["classes"]),
-        len(db["obituaries"]),
-        len(db["turn_thresholds"]),
     )
 
     h = h_template.format(
         len(db["hints"]),
+        len(db["classes"]),
+        len(db["obituaries"]),
+        len(db["turn_thresholds"]),
         get_refs(db["arbitrary_messages"]),
         get_refs(db["locations"]),
         get_refs(db["object_descriptions"]),

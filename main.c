@@ -189,7 +189,7 @@ static bool fallback_handler(char *buf)
 static void checkhints(void)
 {
     if (conditions[game.loc] >= game.conds) {
-        for (int hint = 0; hint < HINT_COUNT; hint++) {
+        for (int hint = 0; hint < NHINTS; hint++) {
             if (game.hinted[hint])
                 continue;
             if (!CNDBIT(game.loc, hint + 1 + COND_HBASE))
@@ -468,7 +468,7 @@ static bool dwarfmove(void)
 /*  "You're dead, Jim."
  *
  *  If the current loc is zero, it means the clown got himself killed.
- *  We'll allow this maxdie times.  maximum_deaths is automatically set based
+ *  We'll allow this maxdie times.  NDEATHS is automatically set based
  *  on the number of snide messages available.  Each death results in
  *  a message (81, 83, etc.)  which offers reincarnation; if accepted,
  *  this results in message 82, 84, etc.  The last time, if he wants
@@ -496,7 +496,7 @@ static void croak(void)
          *  death and exit. */
         rspeak(DEATH_CLOSING);
         terminate(endgame);
-    } else if (game.numdie == maximum_deaths || !YES(query, yes_response, arbitrary_messages[OK_MAN]))
+    } else if (game.numdie == NDEATHS || !YES(query, yes_response, arbitrary_messages[OK_MAN]))
         terminate(endgame);
     else {
         game.place[WATER] = game.place[OIL] = LOC_NOWHERE;
@@ -1022,7 +1022,7 @@ L2607:
 
 	/* If a turn threshold has been met, apply penalties and tell
 	 * the player about it. */
-	for (int i = 0; i < turn_threshold_count; ++i)
+	for (int i = 0; i < NTHRESHOLDS; ++i)
 	  {
 	    if (game.turns == turn_thresholds[i].threshold + 1)
 	      {
