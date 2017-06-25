@@ -677,15 +677,35 @@ section3 = (
 def destdecode(dest):
     "Decode a destinatio nnumber"
     if dest <= 300:
-        return '["move", %s]' % locnames[dest]
+        return '["goto", %s]' % locnames[dest]
     elif dest <= 500:
-        return '["goto", %s]' % (dest - 300)
+        return '["special", %s]' % (dest - 300)
     else:
         return '["speak", %s]' % (msgnames[dest - 500])
 
+def conddecode(cond):
+    #		If M=0		it's unconditional.
+    #		If 0<M<100	it is done with M% probability.
+    #		If M=100	unconditional, but forbidden to dwarves.
+    #		If 100<M<=200	he must be carrying object M-100.
+    #		If 200<M<=300	must be carrying or in same room as M-200.
+    #		If 300<M<=400	game.prop(M % 100) must *not* be 0.
+    #		If 400<M<=500	game.prop(M % 100) must *not* be 1.
+    #		If 500<M<=600	game.prop(M % 100) must *not* be 2, etc.
+    if cond == 0:
+        return ""
+    elif cond < 100:
+        return "cond: [pct %d], " % cond
+    elif cond <= 200:
+        return "cond: [carry %s], " % objnames[cond-100]    
+    elif cond <= 300:
+        return "cond: [with %s], " % objnames[cond-200]
+    else:
+        return "cond: [not %s %d], " % (objnames[cond % 100], (cond - 300) // 100)
+
 def genline(loc):
     attrs = []
-    sys.stdout.write("    travel: {\n")
+    sys.stdout.write("    travel: [\n")
     for t in section3:
         t = list(t)
         src = t.pop(0)
@@ -703,16 +723,16 @@ def genline(loc):
             cond = dest // 1000
             dest = dest % 1000
             t = [verbs[e] for e in t]
-            sys.stdout.write("      %s %s %s,\n" % (destdecode(dest), cond, t))
-    sys.stdout.write("    }\n")
-        
-    
+            sys.stdout.write("      {verbs: %s, %saction: %s},\n" %\
+                             (t, conddecode(cond), destdecode(dest)))
+    sys.stdout.write("    ]\n")
 
 if __name__ == "__main__":
     with open("adventure.yaml", "r") as fp:
         db = yaml.load(fp)
-        fp.seek(0)
+        fp.seek(0) 
         locnames = [el[0] for el in db["locations"]]
+        objnames = [el[0] for el in db["object_descriptions"]]
         msgnames = [el[0] for el in db["arbitrary_messages"]]
         verbs = {}
         for entry in db["vocabulary"]:
