@@ -25,6 +25,8 @@
 #include "linenoise/linenoise.h"
 #include "newdb.h"
 
+#define DIM(a) (sizeof(a)/sizeof(a[0]))
+
 struct game_t game;
 
 long LNLENG, LNPOSN;
@@ -414,7 +416,7 @@ static bool dwarfmove(void)
                                 !INDEEP(game.newloc) ||
                                 game.newloc == game.odloc[i] ||
                                 (j > 1 && game.newloc == tk[j - 1]) ||
-                                j >= 20 ||
+                                j >= DIM(tk) - 1 ||
                                 game.newloc == game.dloc[i] ||
                                 FORCED(game.newloc) ||
                                 (i == PIRATE && CNDBIT(game.newloc, COND_NOARRR)) ||
