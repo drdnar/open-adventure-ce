@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
-# This is the new open-adventure dungeon generator. It'll eventually replace the existing dungeon.c It currently outputs a .h and .c pair for C code.
+# This is the new open-adventure dungeon generator. It'll eventually
+# replace the existing dungeon.c It currently outputs a .h and .c pair
+# for C code.
 
 import yaml
 
@@ -294,10 +296,14 @@ def get_object_descriptions(obj):
              texts_str = texts_str[:-1] # trim trailing newline
         locs = attr.get("locations", ["LOC_NOWHERE", "LOC_NOWHERE"])
         immovable = attr.get("immovable", False)
-        if type(locs) == str:
-            locs = [locnames.index(locs), -1 if immovable else 0]
-        else:
-            locs = [locnames.index(x) for x in locs]
+        try:
+            if type(locs) == str:
+                locs = [locnames.index(locs), -1 if immovable else 0]
+            else:
+                locs = [locnames.index(x) for x in locs]
+        except IndexError:
+            sys.stderr.write("dungeon: unknown object location in %s\n" % locs)
+            sys.exit(1)
         treasure = "true" if attr.get("treasure") else "false"
         obj_str += template.format(i_msg, locs[0], locs[1], treasure, longs_str, sounds_str, texts_str)
     obj_str = obj_str[:-1] # trim trailing newline
@@ -358,6 +364,19 @@ def get_condbits(locations):
             line = "0"
         cnd_str += "    " + line + ",\t// " + name + "\n"
     return cnd_str
+
+def recompose(word):
+    "Compose the internal code for a vocabulary word from its YAML entry"
+    parts = ("motion", "action", "object", "special")
+    try:
+        attrs = db["vocabulary"][word]
+        return attrs["value"] + 1000 * parts.index(attrs["type"])
+    except KeyError:
+        sys.stderr.write("dungeon: %s is not a known word\n" % word)
+        sys.exit(1)
+    except IndexError:
+        sys.stderr.write("%s is not a known word classifier" % attrs["type"])
+        sys.exit(1)
 
 if __name__ == "__main__":
     with open(yaml_name, "r") as f:
