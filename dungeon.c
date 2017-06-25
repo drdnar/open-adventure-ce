@@ -234,9 +234,8 @@ static long GETNUM(FILE *source)
 }
 
 /*  Sections 1, 2, 5, 6, 10, 14.  Skip these, they're all in YAML now. */
-static void read_messages(FILE* database, long sect)
+static void read_messages(FILE* database)
 {
-    long KK = LINUSE;
     while (true) {
 	do {
 	    if (NULL == fgets(INLINE + 1, sizeof(INLINE) - 1, database)) {
@@ -337,8 +336,6 @@ static void read_sound_text(FILE* database)
 {
     long K;
     while ((K = GETNUM(database)) != -1) {
-        long KK = GETNUM(NULL);
-        long I = GETNUM(NULL);
 	/* this stuff is in YAML now */
     }
 }
@@ -371,10 +368,10 @@ static int read_database(FILE* database)
         case 0:
             return (0);
         case 1:
-            read_messages(database, sect);
+            read_messages(database);
             break;
         case 2:
-            read_messages(database, sect);
+            read_messages(database);
             break;
         case 3:
             read_section3_stuff(database);
@@ -383,10 +380,10 @@ static int read_database(FILE* database)
             read_vocabulary(database);
             break;
         case 5:
-            read_messages(database, sect);
+            read_messages(database);
             break;
         case 6:
-            read_messages(database, sect);
+            read_messages(database);
             break;
         case 7:
             read_initial_locations(database);
@@ -398,7 +395,7 @@ static int read_database(FILE* database)
             read_conditions(database);
             break;
         case 10:
-            read_messages(database, sect);
+            read_messages(database);
             break;
         case 11:
             read_hints(database);
@@ -409,7 +406,7 @@ static int read_database(FILE* database)
             read_sound_text(database);
             break;
         case 14:
-            read_messages(database, sect);
+            read_messages(database);
             break;
         default:
             BUG(INVALID_SECTION_NUMBER_IN_DATABASE);
