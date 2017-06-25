@@ -64,7 +64,10 @@
 #
 # objects: Each item contains a description for use in the inventory command
 #    and one or more messages describing the object in different states.
-#    There is also a boolean "treasure" attribute, deaykting to false.
+#    There is also a boolean "treasure" attribute, defaulting to false.
+#    An pbject may have one or two start locations (the gate is an example
+#    of a two-location object; it can be accessed from above or below).
+#    An object may also be flagged immovable, meaning it cannot be carried.
 #    If a state message is a tuple then the first element is made the name
 #    of a #define viible to the code for the associayed state, numbered
 #    from zero upwards. If the inventory desription begins with "*" the
@@ -74,9 +77,9 @@
 #    significant, they're used in succession as the player racks up
 #    deaths.
 #
-# These correspond to sections 1, 2, 5, 6, 9, 10, 11, 13, and 14 in the old
-# adventure.text format.  Sections 3, 4, 7, and 8 haven't moved yet.
-# Section 12 was obsolete.
+# These correspond to sections 1, 2, 5, 6, 7, 9, 10, 11, 13, and 14 in
+# the old adventure.text format.  Sections 3, 4, and 8 haven't moved
+# yet.  Section 12 was obsolete.
 #
 # Message strings may include certain special character sequences to
 # denote that the program must provide parameters to insert into a
@@ -1500,37 +1503,47 @@ object_descriptions: !!omap
     longs: !!null
 - OBJ_1:
     inventory: 'Set of keys'
+    locations: LOC_BUILDING
     longs:
     - 'There are some keys on the ground here.'
 - OBJ_2:
     inventory: 'Brass lantern'
+    locations: LOC_BUILDING
     longs:
     - [LAMP_DARK, 'There is a shiny brass lamp nearby.']
     - [LAMP_BRIGHT, 'There is a lamp shining nearby.']
 - OBJ_3:
     inventory: '*grate'
+    locations: [LOC_GRATE, LOC_BELOWGRATE]
+    immovable: true
     longs:
     - [GRATE_CLOSED, 'The grate is locked.']
     - [GRATE_OPEN, 'The grate is open.']
 - OBJ_4:
     inventory: 'Wicker cage'
+    locations: LOC_COBBLE
     longs:
     - 'There is a small wicker cage discarded nearby.'
 - OBJ_5:
     inventory: 'Black rod'
+    locations: LOC_DEBRIS
     longs:
     - 'A three foot black rod with a rusty star on an end lies nearby.'
 - OBJ_6:
     inventory: 'Black rod'
+    locations: LOC_NOWHERE
     longs:
     - 'A three foot black rod with a rusty mark on an end lies nearby.'
 - OBJ_7:
     inventory: '*steps'
+    locations: [LOC_PITTOP, LOC_MISTHALL]
+    immovable: true
     longs:
     - 'Rough stone steps lead down the pit.'
     - 'Rough stone steps lead up the dome.'
 - OBJ_8:
     inventory: 'Little bird in cage'
+    locations: LOC_BIRD
     longs:
     - [BIRD_UNCAGED, 'A cheerful little bird is sitting here singing.']
     - [BIRD_CAGED, 'There is a little bird in the cage.']
@@ -1544,15 +1557,20 @@ object_descriptions: !!omap
     - 'The bird is singing to you in gratitude for your having returned it to\nits home.  In return, it informs you of a magic word which it thinks\nyou may find useful somewhere near the Hall of Mists.  The magic word\nchanges frequently, but for now the bird believes it is "%s".  You\nthank the bird for this information, and it flies off into the forest.'
 - OBJ_9:
     inventory: '*rusty door'
+    locations: LOC_IMMENSE
+    immovable: true
     longs:
     - 'The way north is barred by a massive, rusty, iron door.'
     - 'The way north leads through a massive, rusty, iron door.'
 - OBJ_10:
     inventory: 'Velvet pillow'
+    locations: LOC_SOFTROOM
     longs:
     - 'A small velvet pillow lies on the floor.'
 - OBJ_11:
     inventory: '*snake'
+    locations: LOC_KINGHALL
+    immovable: true
     longs:
     - 'A huge green fierce snake bars the way!'
     - '' # chased away
@@ -1560,24 +1578,30 @@ object_descriptions: !!omap
     - 'The snake is hissing venomously.'
 - OBJ_12:
     inventory: '*fissure'
+    locations: [LOC_EASTBANK, LOC_WESTBANK]
+    immovable: true
     longs:
     - ''
     - 'A crystal bridge now spans the fissure.'
     - 'The crystal bridge has vanished!'
 - OBJ_13:
     inventory: '*stone tablet'
+    locations: LOC_DARKROOM
+    immovable: true
     longs:
     - 'A massive stone tablet imbedded in the wall reads:\n"Congratulations on bringing light into the dark-room!"'
     texts:
     - '"Congratulations on bringing light into the dark-room!"'
 - OBJ_14:
     inventory: 'Giant clam  >GRUNT!<'
+    locations: LOC_SHELLROOM
     longs:
     - 'There is an enormous clam here with its shell tightly closed.'
     sounds:
     - 'The clam is as tight-mouthed as a, er, clam.'
 - OBJ_15:
     inventory: 'Giant oyster  >GROAN!<'
+    locations: LOC_NOWHERE
     longs:
     - 'There is an enormous oyster here with its shell tightly closed.'
     - 'Interesting.  There seems to be something written on the underside of\nthe oyster.'
@@ -1586,37 +1610,49 @@ object_descriptions: !!omap
     - 'It says the same thing it did before.  Hm, maybe it''s a pun?'
 - OBJ_16:
     inventory: '"Spelunker Today"'
+    locations: LOC_ANTEROOM
     longs:
     - 'There are a few recent issues of "Spelunker Today" magazine here.'
     texts:
     - 'I''m afraid the magazine is written in dwarvish.  But pencilled on one\ncover you see, "Please leave the magazines at the construction site."'
 - OBJ_17:
     inventory: !!null
+    locations: LOC_NOWHERE
+    immovable: true
     longs: !!null
 - OBJ_18:
     inventory: !!null
+    locations: LOC_NOWHERE
     longs: !!null
 - OBJ_19:
     inventory: 'Tasty food'
+    locations: LOC_BUILDING
     longs:
     - 'There is food here.'
 - OBJ_20:
     inventory: 'Small bottle'
+    locations: LOC_BUILDING
     longs:
     - [WATER_BOTTLE, 'There is a bottle of water here.']
     - [EMPTY_BOTTLE, 'There is an empty bottle here.']
     - [OIL_BOTTLE, 'There is a bottle of oil here.']
 - OBJ_21:
     inventory: 'Water in the bottle'
+    locations: LOC_NOWHERE
     longs: !!null
 - OBJ_22:
     inventory: 'Oil in the bottle'
+    locations: LOC_NOWHERE
     longs: !!null
 - OBJ_23:
     inventory: '*mirror'
+    locations: LOC_MIRRORCANYON
+    immovable: true
     longs: !!null
 - OBJ_24:
     inventory: '*plant'
+    locations: LOC_WESTPIT
+    immovable: true
     longs:
     - 'There is a tiny little plant in the pit, murmuring "water, water, ..."'
     - 'There is a 12-foot-tall beanstalk stretching up out of the pit,\nbellowing "WATER!! WATER!!"'
@@ -1630,31 +1666,44 @@ object_descriptions: !!omap
     - 'The plant now maintains a contented silence.'
 - OBJ_25:
     inventory: '*phony plant' # seen in Twopit Room only when tall enough
+    locations: [LOC_WESTEND, LOC_EASTEND]
+    immovable: true
     longs:
     - ''
     - 'The top of a 12-foot-tall beanstalk is poking out of the west pit.'
     - 'There is a huge beanstalk growing out of the west pit up to the hole.'
 - OBJ_26:
     inventory: '*stalactite'
+    locations: LOC_TOPSTALACTITE
+    immovable: true
     longs:
     - ''
 - OBJ_27:
     inventory: '*shadowy figure and/or window'
+    locations: [LOC_WINDOW1, LOC_WINDOW2]
+    immovable: true
     longs:
     - 'The shadowy figure seems to be trying to attract your attention.'
 - OBJ_28:
     inventory: 'Dwarf''s axe'
+    locations: LOC_NOWHERE
     longs:
     - 'There is a little axe here.'
     - 'There is a little axe lying beside the bear.'
 - OBJ_29:
     inventory: '*cave drawings'
+    locations: LOC_ORIENTAL
+    immovable: true
     longs: !!null
 - OBJ_30:
     inventory: '*pirate/genie'
+    locations: LOC_NOWHERE
+    immovable: true
     longs: !!null # never present
 - OBJ_31:
     inventory: '*dragon'
+    locations: [LOC_SECRET4, LOC_SECRET6]
+    immovable: true
     longs:
     - 'A huge green fierce dragon bars the way!'
     - 'The blood-specked body of a huge green dead dragon lies to one side.'
@@ -1666,11 +1715,15 @@ object_descriptions: !!omap
     - 'The dragon is, not surprisingly, silent.'
 - OBJ_32:
     inventory: '*chasm'
+    locations: [LOC_SWCHASM, LOC_NECHASM]
+    immovable: true
     longs:
     - 'A rickety wooden bridge extends across the chasm, vanishing into the\nmist.  A notice posted on the bridge reads, "Stop! Pay troll!"'
     - 'The wreckage of a bridge (and a dead bear) can be seen at the bottom\nof the chasm.'
 - OBJ_33:
     inventory: '*troll'
+    locations: [LOC_SWCHASM, LOC_NECHASM]
+    immovable: true
     longs:
     - 'A burly troll stands by the bridge and insists you throw him a\ntreasure before you may cross.'
     - 'The troll steps out from beneath the bridge and blocks your way.'
@@ -1679,10 +1732,14 @@ object_descriptions: !!omap
     - 'The troll sounds quite adamant in his demand for a treasure.'
 - OBJ_34:
     inventory: '*phony troll'
+    locations: [LOC_NOWHERE, LOC_NOWHERE]
+    immovable: true
     longs:
     - 'The troll is nowhere to be seen.'
 - OBJ_35:
     inventory: !!null # bear uses rtext 141
+    locations: LOC_BARRENROOM
+    immovable: true
     longs:
     - 'There is a ferocious cave bear eying you from the far end of the room!'
     - 'There is a gentle cave bear sitting placidly in one corner.'
@@ -1690,15 +1747,21 @@ object_descriptions: !!omap
     - '' # dead
 - OBJ_36:
     inventory: '*message in second maze'
+    locations: LOC_NOWHERE
+    immovable: true
     longs:
     - 'There is a message scrawled in the dust in a flowery script, reading:\n"This is not the maze where the pirate leaves his treasure chest."'
     texts:
     - '"This is not the maze where the pirate leaves his treasure chest."'
 - OBJ_37:
     inventory: '*volcano and/or geyser'
+    locations: LOC_BREATHTAKING
+    immovable: true
     longs: !!null
 - OBJ_38:
     inventory: '*vending machine'
+    locations: LOC_DEADEND13
+    immovable: true
     longs:
     - [VEND_BLOCKS, 'There is a massive and somewhat battered vending machine here.  The\ninstructions on it read: "Drop coins here to receive fresh batteries."']
     - [VEND_UNBLOCKS, 'There is a massive vending machine here, swung back to reveal a\nsouthward passage.']
@@ -1707,57 +1770,77 @@ object_descriptions: !!omap
     - '"Drop coins here to receive fresh batteries."'
 - OBJ_39:
     inventory: 'Batteries'
+    locations: LOC_NOWHERE
     longs:
     - [FRESH_BATTERIES, 'There are fresh batteries here.']
     - [DEAD_BATTERIES, 'Some worn-out batteries have been discarded nearby.']
 - OBJ_40:
     inventory: '*carpet and/or moss and/or curtains'
+    locations: LOC_SOFTROOM
+    immovable: true
     longs: !!null
 - OBJ_41:
     inventory: '*ogre'
+    locations: LOC_LARGE
+    immovable: true
     longs:
     - 'A formidable ogre bars the northern exit.'
     sounds:
     - 'The ogre is apparently the strong, silent type.'
 - OBJ_42:
     inventory: '*urn'
+    locations: LOC_CLIFF
+    immovable: true
     longs:
     - 'A small urn is embedded in the rock.'
     - 'A small urn full of oil is embedded in the rock.'
     - 'A small oil flame extrudes from an urn embedded in the rock.'
 - OBJ_43:
     inventory: '*cavity'
+    locations: LOC_NOWHERE
+    immovable: true
     longs:
     - '' # something in it
     - 'There is a small urn-shaped cavity in the rock.'
 - OBJ_44:
     inventory: '*blood'
+    locations: LOC_NOWHERE
+    immovable: true
     longs:
     - '' # described with dragon
 - OBJ_45:
     inventory: '*reservoir'
+    locations: [LOC_RESERVOIR, LOC_RESNORTH]
+    immovable: true
     longs:
     - ''
     - 'The waters have parted to form a narrow path across the reservoir.'
     - 'The waters crash together again.'
 - OBJ_46:
     inventory: 'Leporine appendage'
+    locations: LOC_FOREST22
     longs:
     - 'Your keen eye spots a severed leporine appendage lying on the ground.'
 - OBJ_47:
     inventory: '*mud'
+    locations: LOC_DEBRIS
+    immovable: true
     longs:
     - ''
     texts:
     - '"MAGIC WORD XYZZY"'
 - OBJ_48:
     inventory: '*note'
+    locations: LOC_NUGGET
+    immovable: true
     longs:
     - ''
     texts:
     - '"You won''t get it up the steps"'
 - OBJ_49:
     inventory: '*sign'
+    locations: LOC_ANTEROOM
+    immovable: true
     longs:
     - [INGAME_SIGN, '']
     - [ENDGAME_SIGN, '']
@@ -1766,36 +1849,43 @@ object_descriptions: !!omap
     - '"Treasure Vault.  Keys in main office."'
 - OBJ_50:
     inventory: 'Large gold nugget'
+    locations: LOC_NUGGET
     treasure: true
     longs:
     - 'There is a large sparkling nugget of gold here!'
 - OBJ_51:
     inventory: 'Several diamonds'
+    locations: LOC_WESTBANK
     treasure: true
     longs:
     - 'There are diamonds here!'
 - OBJ_52:
     inventory: 'Bars of silver'
+    locations: LOC_FLOORHOLE
     treasure: true
     longs:
     - 'There are bars of silver here!'
 - OBJ_53:
     inventory: 'Precious jewelry'
+    locations: LOC_SOUTHSIDE
     treasure: true
     longs:
     - 'There is precious jewelry here!'
 - OBJ_54:
     inventory: 'Rare coins'
+    locations: LOC_WESTSIDE
     treasure: true
     longs:
     - 'There are many coins here!'
 - OBJ_55:
     inventory: 'Treasure chest'
+    locations: LOC_NOWHERE
     treasure: true
     longs:
     - 'The pirate''s treasure chest is here!'
 - OBJ_56:
     inventory: 'Golden eggs'
+    locations: LOC_GIANTROOM
     treasure: true
     longs:
     - 'There is a large nest here, full of golden eggs!'
@@ -1803,11 +1893,13 @@ object_descriptions: !!omap
     - 'Done!'
 - OBJ_57:
     inventory: 'Jeweled trident'
+    locations: LOC_WATERFALL
     treasure: true
     longs:
     - 'There is a jewel-encrusted trident here!'
 - OBJ_58:
     inventory: 'Ming vase'
+    locations: LOC_ORIENTAL
     treasure: true
     longs:
     - [VASE_WHOLE, 'There is a delicate, precious, ming vase here!']
@@ -1816,22 +1908,27 @@ object_descriptions: !!omap
     - [VASE_DROPS, 'The ming vase drops with a delicate crash.']
 - OBJ_59:
     inventory: 'Egg-sized emerald'
+    locations: LOC_PLOVER
     treasure: true
     longs:
     - 'There is an emerald here the size of a plover''s egg!'
     - 'There is an emerald resting in a small cavity in the rock!'
 - OBJ_60:
     inventory: 'Platinum pyramid'
+    locations: LOC_DARKROOM
     treasure: true
     longs:
     - 'There is a platinum pyramid here, 8 inches on a side!'
 - OBJ_61:
     inventory: 'Glistening pearl'
+    locations: LOC_NOWHERE
     treasure: true
     longs:
     - 'Off to one side lies a glistening pearl!'
 - OBJ_62:
     inventory: 'Persian rug'
+    locations: [LOC_SECRET4, LOC_SECRET6]
+    immovable: true
     treasure: true
     longs:
     - 'There is a persian rug spread out on the floor!'
@@ -1839,11 +1936,14 @@ object_descriptions: !!omap
     - 'There is a persian rug here, hovering in mid-air!'
 - OBJ_63:
     inventory: 'Rare spices'
+    locations: LOC_BOULDERS2
     treasure: true
     longs:
     - 'There are rare spices here!'
 - OBJ_64:
     inventory: 'Golden chain'
+    locations: LOC_BARRENROOM
+    immovable: true
     treasure: true
     longs:
     - 'There is a golden chain lying in a heap on the floor!'
@@ -1851,29 +1951,34 @@ object_descriptions: !!omap
     - 'There is a golden chain locked to the wall!'
 - OBJ_65:
     inventory: 'Giant ruby'
+    locations: LOC_STOREROOM
     treasure: true
     longs:
     - 'There is an enormous ruby here!'
     - 'There is a ruby resting in a small cavity in the rock!'
 - OBJ_66:
     inventory: 'Jade necklace'
+    locations: LOC_NOWHERE
     treasure: true
     longs:
     - 'A precious jade necklace has been dropped here!'
 - OBJ_67:
     inventory: 'Amber gemstone'
+    locations: LOC_NOWHERE
     treasure: true
     longs:
     - 'There is a rare amber gemstone here!'
     - 'There is an amber gemstone resting in a small cavity in the rock!'
 - OBJ_68:
     inventory: 'Star sapphire'
+    locations: LOC_LEDGE
     treasure: true
     longs:
     - 'A brilliant blue star sapphire is here!'
     - 'There is a star sapphire resting in a small cavity in the rock!'
 - OBJ_69:
     inventory: 'Ebony statuette'
+    locations: LOC_REACHDEAD
     treasure: true
     longs:
     - 'There is a richly-carved ebony statuette here!'

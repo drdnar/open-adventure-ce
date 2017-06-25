@@ -60,11 +60,6 @@
  *	or "attack").  Else, if M=3, the word is a special case verb (such as
  *	"dig") and N % 1000 is an index into section 6.  Objects from 50 to
  *	(currently, anyway) 79 are considered treasures (for pirate, closeout).
- *  Section 7: Object locations.  Each line contains an object number and its
- *	initial location (zero (or omitted) if none).  If the object is
- *	immovable, the location is followed by a "-1".  If it has two locations
- *	(e.g. the grate) the first location is followed with the second, and
- *	the object is assumed to be immovable.
  *  Section 8: Action defaults.  Each line contains an "action-verb" number and
  *	the index (in section 6) of the default message for the verb.
  *  Section 0: End of database.
@@ -104,8 +99,6 @@ long LINES[LINSIZ + 1];
 long TRAVEL[TRVSIZ + 1];
 long KTAB[TABSIZ + 1];
 long ATAB[TABSIZ + 1];
-long PLAC[NOBJECTS + 1];
-long FIXD[NOBJECTS + 1];
 long ACTSPK[VRBSIZ + 1];
 
 static long GETTXT(long SKIP, long ONEWRD, long UPPER)
@@ -301,8 +294,7 @@ static void read_initial_locations(FILE* database)
 {
     long OBJ;
     while ((OBJ = GETNUM(database)) != -1) {
-        PLAC[OBJ] = GETNUM(NULL);
-        FIXD[OBJ] = GETNUM(NULL);
+	/* all done from YAML now */
     }
 }
 
@@ -476,8 +468,6 @@ static void write_file(FILE* header_file)
     write_1d(header_file, TRAVEL, TRVSIZ + 1, "TRAVEL");
     write_1d(header_file, KTAB, TABSIZ + 1, "KTAB");
     write_1d(header_file, ATAB, TABSIZ + 1, "ATAB");
-    write_1d(header_file, PLAC, NOBJECTS + 1, "PLAC");
-    write_1d(header_file, FIXD, NOBJECTS + 1, "FIXD");
     write_1d(header_file, ACTSPK, VRBSIZ + 1, "ACTSPK");
 
     fprintf(header_file, "#undef LOCATION\n");

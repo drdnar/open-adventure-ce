@@ -44,6 +44,7 @@ h_template = """/* Generated from adventure.yaml - do not hand-hack! */
 
 typedef struct {{
   const char* inventory;
+  int plac, fixd;
   bool is_treasure;
   const char** longs;
   const char** sounds;
@@ -240,6 +241,8 @@ def get_locations(loc):
 def get_object_descriptions(obj):
     template = """    {{
         .inventory = {},
+        .plac = {},
+        .fixd = {},
         .is_treasure = {},
         .longs = (const char* []) {{
 {}
@@ -254,13 +257,14 @@ def get_object_descriptions(obj):
 """
     obj_str = ""
     for item in obj:
-        i_msg = make_c_string(item[1]["inventory"])
+        attr = item[1]
+        i_msg = make_c_string(attr["inventory"])
         longs_str = ""
-        if item[1]["longs"] == None:
+        if attr["longs"] == None:
             longs_str = " " * 12 + "NULL,"
         else:
             labels = []
-            for l_msg in item[1]["longs"]:
+            for l_msg in attr["longs"]:
                 if not isinstance(l_msg, str):
                     labels.append(l_msg)
                     l_msg = l_msg[1]
@@ -275,21 +279,27 @@ def get_object_descriptions(obj):
                     statedefines += "#define %s\t%d /* %s */\n" % (label, i, message)
                 statedefines += "\n"
         sounds_str = ""
-        if item[1].get("sounds") == None:
+        if attr.get("sounds") == None:
             sounds_str = " " * 12 + "NULL,"
         else:
-             for l_msg in item[1]["sounds"]:
+             for l_msg in attr["sounds"]:
                  sounds_str += " " * 12 + make_c_string(l_msg) + ",\n"
              sounds_str = sounds_str[:-1] # trim trailing newline
         texts_str = ""
-        if item[1].get("texts") == None:
+        if attr.get("texts") == None:
             texts_str = " " * 12 + "NULL,"
         else:
-             for l_msg in item[1]["texts"]:
+             for l_msg in attr["texts"]:
                  texts_str += " " * 12 + make_c_string(l_msg) + ",\n"
              texts_str = texts_str[:-1] # trim trailing newline
-        treasure = "true" if item[1].get("treasure") else "false"
-        obj_str += template.format(i_msg, treasure, longs_str, sounds_str, texts_str)
+        locs = attr.get("locations", ["LOC_NOWHERE", "LOC_NOWHERE"])
+        immovable = attr.get("immovable", False)
+        if type(locs) == str:
+            locs = [locnames.index(locs), -1 if immovable else 0]
+        else:
+            locs = [locnames.index(x) for x in locs]
+        treasure = "true" if attr.get("treasure") else "false"
+        obj_str += template.format(i_msg, locs[0], locs[1], treasure, longs_str, sounds_str, texts_str)
     obj_str = obj_str[:-1] # trim trailing newline
     return obj_str
 
@@ -352,6 +362,8 @@ def get_condbits(locations):
 if __name__ == "__main__":
     with open(yaml_name, "r") as f:
         db = yaml.load(f)
+
+    locnames = [x[0] for x in db["locations"]]
 
     c = c_template.format(
         h_name,

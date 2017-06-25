@@ -294,7 +294,7 @@ static bool spotted_by_pirate(int i)
 	    continue;
         /*  Pirate won't take pyramid from plover room or dark
          *  room (too easy!). */
-        if (treasure == PYRAMID && (game.loc == PLAC[PYRAMID] || game.loc == PLAC[EMERALD])) {
+        if (treasure == PYRAMID && (game.loc == object_descriptions[PYRAMID].plac || game.loc == object_descriptions[EMERALD].plac)) {
             continue;
         }
         if (TOTING(treasure) || HERE(treasure))
@@ -328,7 +328,7 @@ static bool spotted_by_pirate(int i)
 	for (int treasure = 1; treasure <= NOBJECTS; treasure++) {
 	    if (!object_descriptions[treasure].is_treasure)
 		continue;
-            if (!(treasure == PYRAMID && (game.loc == PLAC[PYRAMID] || game.loc == PLAC[EMERALD]))) {
+            if (!(treasure == PYRAMID && (game.loc == object_descriptions[PYRAMID].plac || game.loc == object_descriptions[EMERALD].plac))) {
                 if (AT(treasure) && game.fixed[treasure] == 0)
                     CARRY(treasure, game.loc);
                 if (TOTING(treasure))
@@ -695,13 +695,13 @@ static bool playermove(token_t verb, int motion)
                         game.prop[TROLL] = 0;
                         MOVE(TROLL2, 0);
                         MOVE(TROLL2 + NOBJECTS, 0);
-                        MOVE(TROLL, PLAC[TROLL]);
-                        MOVE(TROLL + NOBJECTS, FIXD[TROLL]);
+                        MOVE(TROLL, object_descriptions[TROLL].plac);
+                        MOVE(TROLL + NOBJECTS, object_descriptions[TROLL].fixd);
                         JUGGLE(CHASM);
                         game.newloc = game.loc;
                         return true;
                     } else {
-                        game.newloc = PLAC[TROLL] + FIXD[TROLL] - game.loc;
+                        game.newloc = object_descriptions[TROLL].plac + object_descriptions[TROLL].fixd - game.loc;
                         if (game.prop[TROLL] == 0)game.prop[TROLL] = 1;
                         if (!TOTING(BEAR)) return true;
                         rspeak(BRIDGE_COLLAPSE);
@@ -773,8 +773,8 @@ static bool closecheck(void)
         }
         MOVE(TROLL, 0);
         MOVE(TROLL + NOBJECTS, 0);
-        MOVE(TROLL2, PLAC[TROLL]);
-        MOVE(TROLL2 + NOBJECTS, FIXD[TROLL]);
+        MOVE(TROLL2, object_descriptions[TROLL].plac);
+        MOVE(TROLL2 + NOBJECTS, object_descriptions[TROLL].fixd);
         JUGGLE(CHASM);
         if (game.prop[BEAR] != 3)DESTROY(BEAR);
         game.prop[CHAIN] = 0;

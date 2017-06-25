@@ -40,17 +40,17 @@ void initialise(void)
      *  described last, we'll drop them first. */
     for (int i = 1; i <= NOBJECTS; i++) {
         int k = NOBJECTS + 1 - i;
-        if (FIXD[k] > 0) {
-            DROP(k + NOBJECTS, FIXD[k]);
-            DROP(k, PLAC[k]);
+        if (object_descriptions[k].fixd > 0) {
+            DROP(k + NOBJECTS, object_descriptions[k].fixd);
+            DROP(k, object_descriptions[k].plac);
         }
     }
 
     for (int i = 1; i <= NOBJECTS; i++) {
         int k = NOBJECTS + 1 - i;
-        game.fixed[k] = FIXD[k];
-        if (PLAC[k] != 0 && FIXD[k] <= 0)
-            DROP(k, PLAC[k]);
+        game.fixed[k] = object_descriptions[k].fixd;
+        if (object_descriptions[k].plac != 0 && object_descriptions[k].fixd <= 0)
+            DROP(k, object_descriptions[k].plac);
     }
 
     /*  Treasure props are initially -1, and are set to 0 the first time
