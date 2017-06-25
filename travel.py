@@ -25,11 +25,11 @@
 #		If M=100	unconditional, but forbidden to dwarves.
 #		If 100<M<=200	he must be carrying object M-100.
 #		If 200<M<=300	must be carrying or in same room as M-200.
-#		If 300<M<=400	game.prop(M % 100) must#not* be 0.
-#		If 400<M<=500	game.prop(M % 100) must#not* be 1.
-#		If 500<M<=600	game.prop(M % 100) must#not* be 2, etc.
-#	If the condition (if any) is not met, then the next#different*
-#	"destination" value is used (unless it fails to meet#its* conditions,
+#		If 300<M<=400	game.prop(M % 100) must *not* be 0.
+#		If 400<M<=500	game.prop(M % 100) must *not* be 1.
+#		If 500<M<=600	game.prop(M % 100) must *not* be 2, etc.
+#	If the condition (if any) is not met, then the next different
+#	"destination" value is used (unless it fails to meet *its* conditions,
 #	in which case the next is found, etc.).  Typically, the next dest will
 #	be for one of the same verbs, so that its only use is as the alternate
 #	destination for those verbs.  For instance:
@@ -671,13 +671,28 @@ section3 = (
     (184, 33, 1),
     )
 
+def destdecode(dest):
+    "Decode a destinatio nnumber"
+    if dest <= 300:
+        return '["move", %s]' % locnames[dest]
+    elif dest <= 500:
+        return '["goto", %s]' % (dest - 300)
+    else:
+        return '["speak", %s]' % (msgnames[dest - 500])
+
 def genline(loc):
     attrs = []
     sys.stdout.write("    travel: {\n")
     for t in section3:
         t = list(t)
-        if t.pop(0) == loc:
-            sys.stdout.write("       %s,\n" % t)
+        src = t.pop(0)
+        if src == loc:
+            dest = t.pop(0)
+            cond = dest // 1000
+            dest = dest % 1000
+            print("cond %s, dest %s, words: %s" % (cond, dest, t))
+            t = [verbs[e] for e in t]
+            sys.stdout.write("      %s %s %s,\n" % (destdecode(dest), cond, t))
     sys.stdout.write("    }\n")
         
     
@@ -687,6 +702,12 @@ if __name__ == "__main__":
         db = yaml.load(fp)
         fp.seek(0)
         locnames = [el[0] for el in db["locations"]]
+        msgnames = [el[0] for el in db["arbitrary_messages"]]
+        verbs = {}
+        for entry in db["vocabulary"]:
+            if entry["type"] == "motion" and entry["value"] not in verbs:
+                verbs[entry["value"]] = entry["word"]
+        print(verbs)
         ln = -1
         while True:
             line = fp.readline()
