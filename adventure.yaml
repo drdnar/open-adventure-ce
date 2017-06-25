@@ -7,23 +7,21 @@
 # We define a bunch of YAML structures:
 #
 # vocabulary: Almost all the words the game knows - one of them gets
-#    replaced with a randomly-generated cookie.  Fpor each word there
+#    replaced with a randomly-generated cookie.  For each word there
 #    is a type (motion, action, object, or special) and a numeric value.
 #    Multiple synonyms may have the same value.
 #
-# hints: Each item contains a hint number (add 10 to get cond bit),
-#    a hint label (used to generate the value macro for the hint) 
-#    the number of turns he must be at the right loc(s) before
-#    triggering the hint, the points deducted for taking the hint, the
-#    message number (section 6) of the question, and the message
-#    number of the hint.  These values are stashed in the "hints"
-#    array.
+# hints: Each item contains a hint number, a hint label (used to
+#    generate the value macro for the hint) the number of turns he
+#    must be at the right loc(s) before triggering the hint, the
+#    points deducted for taking the hint, the message number (in
+#    arbitrary_messages) of the question, and the message number of
+#    the hint.
 #
 # locations: They have attributes as follows...
-#
-#    long:         Long description, always shown on first encounter.
-#    short:        Short description. If none, use long description.
-#    conditions:   A dictionary of attributes
+#      long:         Long description, always shown on first encounter.
+#      short:        Short description. If none, use long description.
+#      conditions:   A dictionary of attributes
 #        LIT		Light
 #        OILY		If FLUID flag is on: true for oil, false for water
 #        FLUID		Liquid asset
@@ -39,11 +37,10 @@
 #        HWOODS		Lost in forest
 #        HOGRE		Trying to deal with ogre
 #        HJADE		Found all treasures except jade
-#    hints:        A list of YAML references to hints that may be available at
-#                  this location. (This is why locations has to follow hints.)
-#    sound:        Label for a location sound.
-#    loud:         If true, object sounds are drowned out at this location.
-#
+#      hints:        A list of YAML references to hints that may be available at
+#                    this location. (This is why locations has to follow hints.)
+#      sound:        Label for a location sound.
+#      loud:         If true, object sounds are drowned out at this location.
 #    All attributes are optional except the long description. Order of
 #    locations is not significant.
 #
@@ -82,8 +79,8 @@
 #    significant, they're used in succession as the player racks up
 #    deaths.
 #
-# These correspond to sections 1, 2, 5, 6, 7, 9, 10, 11, 13, and 14 in
-# the old adventure.text format.  Sections 3, 4, and 8 haven't moved
+# These correspond to sections 1, 2, 4, 5, 6, 7, 9, 10, 11, 13, and 14 in
+# the old adventure.text format.  Sections 3 and 8 haven't moved
 # yet.  Section 12 was obsolete.
 #
 # Message strings may include certain special character sequences to
