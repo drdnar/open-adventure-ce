@@ -6,10 +6,11 @@
 #
 # We define a bunch of YAML structures:
 #
-# vocabulary: Almost all the words the game knows - one of them gets
-#    replaced with a randomly-generated cookie.  For each word there
-#    is a type (motion, action, object, or special) and a numeric value.
-#    Multiple synonyms may have the same value.
+# vocabulary: Almost all the words the game knows - one of them (the
+#    reservoir magic word) gets replaced with a randomly-generated
+#    cookie.  For each word there is a type (motion, action, object,
+#    or special) and a numeric value.  Multiple synonyms may have the
+#    same value.
 #
 # hints: Each item contains a hint number, a hint label (used to
 #    generate the value macro for the hint) the number of turns he
@@ -64,16 +65,17 @@
 #    Order doesn't matter; the logic simply tests every threshold on
 #    the assumption that turn counts never decrease nor skip values.
 #
-# objects: Each item contains a description for use in the inventory command
-#    and one or more messages describing the object in different states.
-#    There is also a boolean "treasure" attribute, defaulting to false.
-#    An pbject may have one or two start locations (the gate is an example
-#    of a two-location object; it can be accessed from above or below).
-#    An object may also be flagged immovable, meaning it cannot be carried.
-#    If a state message is a tuple then the first element is made the name
-#    of a #define viible to the code for the associayed state, numbered
-#    from zero upwards. If the inventory desription begins with "*" the
-#    object is dungeon furniture that cannot be taken or carried.
+# object_descriptions: Each item contains a description for use in the
+#    inventory command and one or more messages describing the object
+#    in different states.  There is also a boolean "treasure"
+#    attribute, defaulting to false.  An pbject may have one or two
+#    start locations (the gate is an example of a two-location object;
+#    it can be accessed from above or below).  An object may also be
+#    flagged immovable, meaning it cannot be carried.  If a state
+#    message is a tuple then the first element is made the name of a
+#    #define viible to the code for the associayed state, numbered
+#    from zero upwards. If the inventory desription begins with "*"
+#    the object is dungeon furniture that cannot be taken or carried.
 #
 # obituaries: Death messages and reincarnation queries.  Order is
 #    significant, they're used in succession as the player racks up
@@ -99,7 +101,8 @@
 #	%B = Variable number of blanks
 #	%! = The entire message should be suppressed
 
-# There are duplicate keys in this voavulary, that's why it can't be a normal map
+# There are duplicate keys in this vocabulary, that's why it can't be a normal
+# map.  You have to iterate through it looking for a match qualified by type.
 vocabulary: [
     {word: "ROAD",  type: motion, value: 2},
     {word: "HILL",  type: motion, value: 2},
