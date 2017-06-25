@@ -42,6 +42,9 @@
 #	This says that, from 11, 49 takes him to 8 unless game.prop(3)=0, in which
 #	case he goes to 9.  Verb 50 takes him to 9 regardless of game.prop(3).
 #
+# In addition, it looks as though the action verb value 1 is a sentinel used
+# when a table entry would have no motions at all in it.
+#
 import sys, yaml
 
 # This is the original travel table from section 3 of adventure.text
@@ -688,9 +691,17 @@ def genline(loc):
         src = t.pop(0)
         if src == loc:
             dest = t.pop(0)
+            try:
+                if t.index(1) == len(t) - 1:
+                    t.pop()
+                else:
+                    sys.stderr.write("%s (%d): action value 1 in unexpected place\n" %\
+                                     (locnames[loc], loc))
+                    sys.exit(1)
+            except ValueError:
+                pass
             cond = dest // 1000
             dest = dest % 1000
-            print("cond %s, dest %s, words: %s" % (cond, dest, t))
             t = [verbs[e] for e in t]
             sys.stdout.write("      %s %s %s,\n" % (destdecode(dest), cond, t))
     sys.stdout.write("    }\n")
@@ -707,7 +718,6 @@ if __name__ == "__main__":
         for entry in db["vocabulary"]:
             if entry["type"] == "motion" and entry["value"] not in verbs:
                 verbs[entry["value"]] = entry["word"]
-        print(verbs)
         ln = -1
         while True:
             line = fp.readline()
