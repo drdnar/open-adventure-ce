@@ -38,11 +38,10 @@ void initialise(void)
      *  This also sets up "game.place" and "fixed" as copies of "PLAC" and
      *  "FIXD".  Also, since two-placed objects are typically best
      *  described last, we'll drop them first. */
-    for (int i = 1; i <= NOBJECTS; i++) {
-        int k = NOBJECTS + 1 - i;
-        if (object_descriptions[k].fixd > 0) {
-            DROP(k + NOBJECTS, object_descriptions[k].fixd);
-            DROP(k, object_descriptions[k].plac);
+    for (int i = NOBJECTS; i >= 1; i--) {
+        if (object_descriptions[i].fixd > 0) {
+            DROP(i + NOBJECTS, object_descriptions[i].fixd);
+            DROP(i, object_descriptions[i].plac);
         }
     }
 

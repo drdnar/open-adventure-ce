@@ -221,7 +221,7 @@ def get_turn_thresholds(trn):
     return trn_str
 
 def get_locations(loc):
-    template = """    {{
+    template = """    {{ // {}
         .description = {{
             .small = {},
             .big = {},
@@ -231,17 +231,17 @@ def get_locations(loc):
     }},
 """
     loc_str = ""
-    for item in loc:
+    for (i, item) in enumerate(loc):
         short_d = make_c_string(item[1]["description"]["short"])
         long_d = make_c_string(item[1]["description"]["long"])
         sound = item[1].get("sound", "SILENT")
         loud = "true" if item[1].get("loud") else "false"
-        loc_str += template.format(short_d, long_d, sound, loud)
+        loc_str += template.format(i, short_d, long_d, sound, loud)
     loc_str = loc_str[:-1] # trim trailing newline
     return loc_str
 
 def get_object_descriptions(obj):
-    template = """    {{
+    template = """    {{ // {}
         .inventory = {},
         .plac = {},
         .fixd = {},
@@ -258,7 +258,7 @@ def get_object_descriptions(obj):
     }},
 """
     obj_str = ""
-    for item in obj:
+    for (i, item) in enumerate(obj):
         attr = item[1]
         i_msg = make_c_string(attr["inventory"])
         longs_str = ""
@@ -305,7 +305,7 @@ def get_object_descriptions(obj):
             sys.stderr.write("dungeon: unknown object location in %s\n" % locs)
             sys.exit(1)
         treasure = "true" if attr.get("treasure") else "false"
-        obj_str += template.format(i_msg, locs[0], locs[1], treasure, longs_str, sounds_str, texts_str)
+        obj_str += template.format(i, i_msg, locs[0], locs[1], treasure, longs_str, sounds_str, texts_str)
     obj_str = obj_str[:-1] # trim trailing newline
     return obj_str
 
@@ -397,8 +397,8 @@ if __name__ == "__main__":
     )
 
     h = h_template.format(
-        len(db["locations"]),
-        len(db["object_descriptions"]),
+        len(db["locations"])-1,
+        len(db["object_descriptions"])-1,
         len(db["hints"]),
         len(db["classes"]),
         len(db["obituaries"]),
