@@ -27,6 +27,16 @@
 
 #define DIM(a) (sizeof(a)/sizeof(a[0]))
 
+/* Abstract out the encoding of words in the travel array.  Gives us
+ * some hope of getting to a less cryptic representation than we
+ * inherited from FORTRAN, someday. To understand these, read the
+ * encoding description in dungeon.c.
+ */
+#define T_DESTINATION(entry)	MOD(labs(entry) / 1000, 1000)
+#define T_NODWARVES(entry)	labs(entry) / 1000000 == 100
+#define T_MOTION(entry)		MOD(labs(entry), 1000)
+#define L_SPEAK(loc)		((loc) - 500)
+
 struct game_t game;
 
 long LNLENG, LNPOSN;
@@ -410,7 +420,7 @@ static bool dwarfmove(void)
         kk = KEY[game.dloc[i]];
         if (kk != 0)
             do {
-                game.newloc = MOD(labs(TRAVEL[kk]) / 1000, 1000);
+		game.newloc = T_DESTINATION(TRAVEL[kk]);
                 /* Have we avoided a dwarf encounter? */
                 bool avoided = (SPECIAL(game.newloc) ||
                                 !INDEEP(game.newloc) ||
@@ -420,7 +430,7 @@ static bool dwarfmove(void)
                                 game.newloc == game.dloc[i] ||
                                 FORCED(game.newloc) ||
                                 (i == PIRATE && CNDBIT(game.newloc, COND_NOARRR)) ||
-                                labs(TRAVEL[kk]) / 1000000 == 100);
+                                T_NODWARVES(TRAVEL[kk]));
                 if (!avoided) {
                     tk[j++] = game.newloc;
                 }
@@ -550,10 +560,10 @@ static bool playermove(token_t verb, int motion)
         if (CNDBIT(game.loc, COND_NOBACK))k2 = TWIST_TURN;
         if (k2 == 0) {
             for (;;) {
-                scratchloc = MOD((labs(TRAVEL[kk]) / 1000), 1000);
+                scratchloc = T_DESTINATION(TRAVEL[kk]);
                 if (scratchloc != motion) {
                     if (!SPECIAL(scratchloc)) {
-                        if (FORCED(scratchloc) && MOD((labs(TRAVEL[KEY[scratchloc]]) / 1000), 1000) == motion)
+                        if (FORCED(scratchloc) && T_DESTINATION(TRAVEL[KEY[scratchloc]]) == motion)
                             k2 = kk;
                     }
                     if (TRAVEL[kk] >= 0) {
@@ -567,7 +577,7 @@ static bool playermove(token_t verb, int motion)
                     }
                 }
 
-                motion = MOD(labs(TRAVEL[kk]), 1000);
+                motion = T_MOTION(TRAVEL[kk]);
                 kk = KEY[game.loc];
                 break; /* fall through to ordinary travel */
             }
@@ -723,8 +733,9 @@ static bool playermove(token_t verb, int motion)
         }
     } while
     (false);
-    /* FIXME: Arithmetic on location number, becoming a message number */
-    rspeak(game.newloc - 500);
+    
+    /* Execute a speak rule */
+    rspeak(L_SPEAK(game.newloc));
     game.newloc = game.loc;
     return true;
 }
@@ -750,7 +761,7 @@ static bool closecheck(void)
  *  to suppress the object descriptions until he's actually moved the
  *  objects. */
 {
-    if (game.tally == 0 && INDEEP(game.loc) && game.loc != 33)
+    if (game.tally == 0 && INDEEP(game.loc) && game.loc != LOC_Y2)
         --game.clock1;
 
     /*  When the first warning comes, we lock the grate, destroy
