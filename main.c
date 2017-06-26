@@ -303,11 +303,11 @@ static bool spotted_by_pirate(int i)
     int snarfed = 0;
     bool movechest = false, robplayer = false;
     for (int treasure = 1; treasure <= NOBJECTS; treasure++) {
-	if (!object_descriptions[treasure].is_treasure)
+	if (!objects[treasure].is_treasure)
 	    continue;
         /*  Pirate won't take pyramid from plover room or dark
          *  room (too easy!). */
-        if (treasure == PYRAMID && (game.loc == object_descriptions[PYRAMID].plac || game.loc == object_descriptions[EMERALD].plac)) {
+        if (treasure == PYRAMID && (game.loc == objects[PYRAMID].plac || game.loc == objects[EMERALD].plac)) {
             continue;
         }
         if (TOTING(treasure) || HERE(treasure))
@@ -339,9 +339,9 @@ static bool spotted_by_pirate(int i)
     if (robplayer) {
         rspeak(PIRATE_POUNCES);
 	for (int treasure = 1; treasure <= NOBJECTS; treasure++) {
-	    if (!object_descriptions[treasure].is_treasure)
+	    if (!objects[treasure].is_treasure)
 		continue;
-            if (!(treasure == PYRAMID && (game.loc == object_descriptions[PYRAMID].plac || game.loc == object_descriptions[EMERALD].plac))) {
+            if (!(treasure == PYRAMID && (game.loc == objects[PYRAMID].plac || game.loc == objects[EMERALD].plac))) {
                 if (AT(treasure) && game.fixed[treasure] == 0)
                     carry(treasure, game.loc);
                 if (TOTING(treasure))
@@ -709,13 +709,13 @@ static bool playermove(token_t verb, int motion)
                         game.prop[TROLL] = 0;
                         move(TROLL2, 0);
                         move(TROLL2 + NOBJECTS, 0);
-                        move(TROLL, object_descriptions[TROLL].plac);
-                        move(TROLL + NOBJECTS, object_descriptions[TROLL].fixd);
+                        move(TROLL, objects[TROLL].plac);
+                        move(TROLL + NOBJECTS, objects[TROLL].fixd);
                         juggle(CHASM);
                         game.newloc = game.loc;
                         return true;
                     } else {
-                        game.newloc = object_descriptions[TROLL].plac + object_descriptions[TROLL].fixd - game.loc;
+                        game.newloc = objects[TROLL].plac + objects[TROLL].fixd - game.loc;
                         if (game.prop[TROLL] == 0)game.prop[TROLL] = 1;
                         if (!TOTING(BEAR)) return true;
                         rspeak(BRIDGE_COLLAPSE);
@@ -788,8 +788,8 @@ static bool closecheck(void)
         }
         move(TROLL, 0);
         move(TROLL + NOBJECTS, 0);
-        move(TROLL2, object_descriptions[TROLL].plac);
-        move(TROLL2 + NOBJECTS, object_descriptions[TROLL].fixd);
+        move(TROLL2, objects[TROLL].plac);
+        move(TROLL2 + NOBJECTS, objects[TROLL].fixd);
         juggle(CHASM);
         if (game.prop[BEAR] != 3)DESTROY(BEAR);
         game.prop[CHAIN] = 0;

@@ -39,17 +39,17 @@ void initialise(void)
      *  "FIXD".  Also, since two-placed objects are typically best
      *  described last, we'll drop them first. */
     for (int i = NOBJECTS; i >= 1; i--) {
-        if (object_descriptions[i].fixd > 0) {
-            drop(i + NOBJECTS, object_descriptions[i].fixd);
-            drop(i, object_descriptions[i].plac);
+        if (objects[i].fixd > 0) {
+            drop(i + NOBJECTS, objects[i].fixd);
+            drop(i, objects[i].plac);
         }
     }
 
     for (int i = 1; i <= NOBJECTS; i++) {
         int k = NOBJECTS + 1 - i;
-        game.fixed[k] = object_descriptions[k].fixd;
-        if (object_descriptions[k].plac != 0 && object_descriptions[k].fixd <= 0)
-            drop(k, object_descriptions[k].plac);
+        game.fixed[k] = objects[k].fixd;
+        if (objects[k].plac != 0 && objects[k].fixd <= 0)
+            drop(k, objects[k].plac);
     }
 
     /*  Treasure props are initially -1, and are set to 0 the first time
@@ -57,8 +57,8 @@ void initialise(void)
      *  not yet found, so we know when to close the cave. */
     game.tally = 0;
     for (int treasure = 1; treasure <= NOBJECTS; treasure++) {
-	if (object_descriptions[treasure].is_treasure) {
-	    if (object_descriptions[treasure].inventory != 0)
+	if (objects[treasure].is_treasure) {
+	    if (objects[treasure].inventory != 0)
 		game.prop[treasure] = -1;
 	    game.tally = game.tally - game.prop[treasure];
 	}

@@ -2871,7 +2871,7 @@ turn_thresholds:
   point_loss: 10
   message: 'Good grief, don''t you *EVER* give up?  Do you realize you''ve spent\nover 2500 turns at this?  That''s another ten points off, a total of\ntwenty points lost for taking so long.'
   
-object_descriptions: !!omap
+objects: !!omap
 - OBJ_0:
     inventory: !!null
     longs: !!null

@@ -172,16 +172,16 @@ void pspeak(vocab_t msg, enum speaktype mode, int skip, ...)
     va_start(ap, skip);
     switch (mode) {
     case touch:
-        vspeak(object_descriptions[msg].inventory, ap);
+        vspeak(objects[msg].inventory, ap);
 	break;
     case look: 
-        vspeak(object_descriptions[msg].longs[skip], ap);
+        vspeak(objects[msg].longs[skip], ap);
 	break;
     case hear:
-        vspeak(object_descriptions[msg].sounds[skip], ap);
+        vspeak(objects[msg].sounds[skip], ap);
 	break;
     case study:
-        vspeak(object_descriptions[msg].texts[skip], ap);
+        vspeak(objects[msg].texts[skip], ap);
 	break;
     }
     va_end(ap);

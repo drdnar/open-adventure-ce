@@ -86,14 +86,14 @@ static int attack(FILE *input, struct command_t *command)
         pspeak(DRAGON, look, 3);
         game.prop[DRAGON] = 1;
         game.prop[RUG] = 0;
-        int k = (object_descriptions[DRAGON].plac + object_descriptions[DRAGON].fixd) / 2;
+        int k = (objects[DRAGON].plac + objects[DRAGON].fixd) / 2;
         move(DRAGON + NOBJECTS, -1);
         move(RUG + NOBJECTS, 0);
         move(DRAGON, k);
         move(RUG, k);
         drop(BLOOD, k);
         for (obj = 1; obj <= NOBJECTS; obj++) {
-            if (game.place[obj] == object_descriptions[DRAGON].plac || game.place[obj] == object_descriptions[DRAGON].fixd)
+            if (game.place[obj] == objects[DRAGON].plac || game.place[obj] == objects[DRAGON].fixd)
                 move(obj, k);
         }
         game.loc = k;
@@ -122,7 +122,7 @@ static int bigwords(token_t foo)
             return GO_CLEAROBJ;
         }
         game.foobar = 0;
-        if (game.place[EGGS] == object_descriptions[EGGS].plac || (TOTING(EGGS) && game.loc == object_descriptions[EGGS].plac)) {
+        if (game.place[EGGS] == objects[EGGS].plac || (TOTING(EGGS) && game.loc == objects[EGGS].plac)) {
             rspeak(spk);
             return GO_CLEAROBJ;
         } else {
@@ -132,8 +132,8 @@ static int bigwords(token_t foo)
                 game.prop[TROLL] = 1;
             k = 2;
             if (HERE(EGGS))k = 1;
-            if (game.loc == object_descriptions[EGGS].plac)k = 0;
-            move(EGGS, object_descriptions[EGGS].plac);
+            if (game.loc == objects[EGGS].plac)k = 0;
+            move(EGGS, objects[EGGS].plac);
             pspeak(EGGS, look, k);
             return GO_CLEAROBJ;
         }
@@ -305,7 +305,7 @@ static int chain(token_t verb)
     } else {
         spk = CHAIN_LOCKED;
         if (game.prop[CHAIN] != 0)spk = ALREADY_LOCKED;
-        if (game.loc != object_descriptions[CHAIN].plac)spk = NO_LOCKSITE;
+        if (game.loc != objects[CHAIN].plac)spk = NO_LOCKSITE;
         if (spk != CHAIN_LOCKED) {
             rspeak(spk);
             return GO_CLEAROBJ;
@@ -350,7 +350,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
                 if (spk != RUG_WIGGLES) {
                     int k = 2 - game.prop[RUG];
                     game.prop[RUG] = k;
-                    if (k == 2) k = object_descriptions[SAPPH].plac;
+                    if (k == 2) k = objects[SAPPH].plac;
                     move(RUG + NOBJECTS, k);
                 }
             }
@@ -367,11 +367,11 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
             rspeak(TROLL_SCAMPERS);
             move(TROLL, 0);
             move(TROLL + NOBJECTS, 0);
-            move(TROLL2, object_descriptions[TROLL].plac);
-            move(TROLL2 + NOBJECTS, object_descriptions[TROLL].fixd);
+            move(TROLL2, objects[TROLL].plac);
+            move(TROLL2 + NOBJECTS, objects[TROLL].fixd);
             juggle(CHASM);
             game.prop[TROLL] = 2;
-        } else if (obj != VASE || game.loc == object_descriptions[PILLOW].plac) {
+        } else if (obj != VASE || game.loc == objects[PILLOW].plac) {
             rspeak(OK_MAN);
         } else {
             game.prop[VASE] = 2;
@@ -686,7 +686,7 @@ static int listen(void)
 	    spk = NO_MESSAGE;
     }
     for (int i = 1; i <= NOBJECTS; i++) {
-        if (!HERE(i) || object_descriptions[i].sounds[0] == NULL || game.prop[i] < 0)
+        if (!HERE(i) || objects[i].sounds[0] == NULL || game.prop[i] < 0)
             continue;
 	int mi =  game.prop[i];
 	if (i == BIRD)
@@ -804,7 +804,7 @@ static int read(struct command_t command)
     if (command.obj == INTRANSITIVE) {
         command.obj = 0;
         for (int i = 1; i <= NOBJECTS; i++) {
-            if (HERE(i) && object_descriptions[i].texts[0] != NULL && game.prop[i] >= 0)
+            if (HERE(i) && objects[i].texts[0] != NULL && game.prop[i] >= 0)
                 command.obj = command.obj * NOBJECTS + i;
         }
         if (command.obj > NOBJECTS || command.obj == 0 || DARK(game.loc))
@@ -815,7 +815,7 @@ static int read(struct command_t command)
         rspeak(NO_SEE, command.wd1, command.wd1x);
     } else if (command.obj == OYSTER && !game.clshnt && game.closed) {
         game.clshnt = yes(arbitrary_messages[CLUE_QUERY], arbitrary_messages[WAYOUT_CLUE], arbitrary_messages[OK_MAN]);
-    } else if (object_descriptions[command.obj].texts[0] == NULL || game.prop[command.obj] < 0) {
+    } else if (objects[command.obj].texts[0] == NULL || game.prop[command.obj] < 0) {
         rspeak(actspk[command.verb]);
     } else
         pspeak(command.obj, study, game.prop[command.obj]);
@@ -899,14 +899,14 @@ static int throw (FILE *cmdin, struct command_t *command)
         rspeak(spk);
         return GO_CLEAROBJ;
     }
-    if (object_descriptions[command->obj].is_treasure && AT(TROLL)) {
+    if (objects[command->obj].is_treasure && AT(TROLL)) {
         spk = TROLL_SATISFIED;
         /*  Snarf a treasure for the troll. */
         drop(command->obj, 0);
         move(TROLL, 0);
         move(TROLL + NOBJECTS, 0);
-        drop(TROLL2, object_descriptions[TROLL].plac);
-        drop(TROLL2 + NOBJECTS, object_descriptions[TROLL].fixd);
+        drop(TROLL2, objects[TROLL].plac);
+        drop(TROLL2 + NOBJECTS, objects[TROLL].fixd);
         juggle(CHASM);
         rspeak(spk);
         return GO_CLEAROBJ;

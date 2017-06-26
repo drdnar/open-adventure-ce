@@ -51,7 +51,7 @@ typedef struct {{
   const char** longs;
   const char** sounds;
   const char** texts;
-}} object_description_t;
+}} object_t;
 
 typedef struct {{
   const char* small;
@@ -95,7 +95,7 @@ typedef struct {{
 }} vocabulary_t;
 
 extern const location_t locations[];
-extern const object_description_t object_descriptions[];
+extern const object_t objects[];
 extern const char* arbitrary_messages[];
 extern const class_t classes[];
 extern const turn_threshold_t turn_thresholds[];
@@ -122,7 +122,7 @@ enum locations_refs {{
 {}
 }};
 
-enum object_descriptions_refs {{
+enum object_refs {{
 {}
 }};
 
@@ -153,7 +153,7 @@ const location_t locations[] = {{
 {}
 }};
 
-const object_description_t object_descriptions[] = {{
+const object_t objects[] = {{
 {}
 }};
 
@@ -259,7 +259,7 @@ def get_locations(loc):
     loc_str = loc_str[:-1] # trim trailing newline
     return loc_str
 
-def get_object_descriptions(obj):
+def get_objects(obj):
     template = """    {{ // {}
         .inventory = {},
         .plac = {},
@@ -430,7 +430,7 @@ if __name__ == "__main__":
         get_class_messages(db["classes"]),
         get_turn_thresholds(db["turn_thresholds"]),
         get_locations(db["locations"]),
-        get_object_descriptions(db["object_descriptions"]),
+        get_objects(db["objects"]),
         get_obituaries(db["obituaries"]),
         get_hints(db["hints"], db["arbitrary_messages"]),
         get_condbits(db["locations"]),
@@ -440,7 +440,7 @@ if __name__ == "__main__":
 
     h = h_template.format(
         len(db["locations"])-1,
-        len(db["object_descriptions"])-1,
+        len(db["objects"])-1,
         len(db["hints"]),
         len(db["classes"]),
         len(db["obituaries"]),
@@ -449,7 +449,7 @@ if __name__ == "__main__":
         len(db["vocabulary"]),
         get_refs(db["arbitrary_messages"]),
         get_refs(db["locations"]),
-        get_refs(db["object_descriptions"]),
+        get_refs(db["objects"]),
         statedefines,
     )
 
