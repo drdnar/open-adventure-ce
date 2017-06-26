@@ -442,7 +442,7 @@ if __name__ == "__main__":
         len(db["locations"])-1,
         len(db["objects"])-1,
         len(db["hints"]),
-        len(db["classes"]),
+        len(db["classes"])-1,
         len(db["obituaries"]),
         len(db["turn_thresholds"]),
         len(db["actspk"]),

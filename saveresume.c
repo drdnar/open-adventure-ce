@@ -27,6 +27,20 @@ struct save_t {
 };
 struct save_t save;
 
+int savefile(FILE *fp)
+    /* Save game to file. No input or output from user. */
+{
+    long i, k;
+    datime(&i, &k);
+    k = i + 650 * k;
+    save.savetime = k;
+    save.mode = -1;
+    save.version = VRSION;
+    memcpy(&save.game, &game, sizeof(struct game_t));
+    IGNORE(fwrite(&save, sizeof(struct save_t), 1, fp));
+    return(0);
+}
+
 /* Suspend and resume */
 int suspend(void)
 {
@@ -38,7 +52,6 @@ int suspend(void)
 #ifdef ADVENT_NOSAVE
     return GO_UNKNOWN;
 #endif
-    long i, k;
     FILE *fp = NULL;
 
     rspeak(SUSPEND_WARNING);
@@ -55,12 +68,7 @@ int suspend(void)
         linenoiseFree(name);
     }
 
-    datime(&i, &k);
-    k = i + 650 * k;
-    save.savetime = k;
-    save.mode = -1;
-    save.version = VRSION;
-    memcpy(&save.game, &game, sizeof(struct game_t));
+    savefile(fp);
     IGNORE(fwrite(&save, sizeof(struct save_t), 1, fp));
     fclose(fp);
     rspeak(RESUME_HELP);

@@ -21,6 +21,7 @@ binary:debug:
   artifacts:
     paths:
       - advent
+      - cheat
       - "*.gcda"
       - "*.gcno"
   # cache outputs to reduce the build time
@@ -35,10 +36,11 @@ binary:release:
     - apk add make gcc musl-dev python3
     - pip3 install PyYAML
   script: 
-    - make advent
+    - make advent cheat
   artifacts:
     paths:
       - advent
+      - cheat
   # cache outputs to reduce the build time
   cache:
     paths:

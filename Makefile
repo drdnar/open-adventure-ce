@@ -37,6 +37,7 @@ ifeq ($(UNAME_S),Linux)
 endif
 
 OBJS=main.o init.o actions.o score.o misc.o saveresume.o common.o
+CHEAT_OBJS=cheat.o init.o actions.o score.o misc.o saveresume.o common.o
 SOURCES=$(OBJS:.o=.c) dungeon.c advent.h common.h adventure.text Makefile control linenoise/linenoise.[ch] newdungeon.py
 
 .c.o:
@@ -54,6 +55,8 @@ actions.o:	advent.h database.h common.h newdb.h
 score.o:	advent.h database.h common.h newdb.h
 
 misc.o:		advent.h database.h common.h newdb.h
+
+cheat.o:	advent.h database.h common.h newdb.h
 
 saveresume.o:	advent.h database.h common.h newdb.h
 
@@ -84,7 +87,11 @@ clean:
 	rm -f .*~
 	cd tests; $(MAKE) --quiet clean
 
-check: advent
+
+cheat: $(CHEAT_OBJS) linenoise.o newdb.o 
+	$(CC) $(CCFLAGS) $(DBX) -o cheat $(CHEAT_OBJS) linenoise.o newdb.o $(LDFLAGS) $(LIBS)
+
+check: advent cheat
 	cd tests; $(MAKE) --quiet
 
 .SUFFIXES: .adoc .html .6
@@ -144,3 +151,4 @@ linty: advent
 
 debug: CCFLAGS += -O0 --coverage -ggdb
 debug: linty
+debug: cheat
