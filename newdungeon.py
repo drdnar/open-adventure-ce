@@ -88,6 +88,12 @@ typedef struct {{
   const char* hint;
 }} hint_t;
 
+typedef struct {{
+  const char* word;
+  const int type;
+  const int value;
+}} vocabulary_t;
+
 extern const location_t locations[];
 extern const object_description_t object_descriptions[];
 extern const const char* arbitrary_messages[];
@@ -96,6 +102,7 @@ extern const turn_threshold_t turn_thresholds[];
 extern const obituary_t obituaries[];
 extern const hint_t hints[];
 extern long conditions[];
+extern const vocabulary_t vocabulary[];
 
 #define NLOCATIONS		{}
 #define NOBJECTS	{}
@@ -156,6 +163,10 @@ const hint_t hints[] = {{
 }};
 
 long conditions[] = {{
+{}
+}};
+
+vocabulary_t vocabulary[] {{
 {}
 }};
 
@@ -365,18 +376,33 @@ def get_condbits(locations):
         cnd_str += "    " + line + ",\t// " + name + "\n"
     return cnd_str
 
-def recompose(word):
+def recompose(type_word, value):
     "Compose the internal code for a vocabulary word from its YAML entry"
     parts = ("motion", "action", "object", "special")
     try:
-        attrs = db["vocabulary"][word]
-        return attrs["value"] + 1000 * parts.index(attrs["type"])
+        return value + 1000 * parts.index(type_word)
     except KeyError:
         sys.stderr.write("dungeon: %s is not a known word\n" % word)
         sys.exit(1)
     except IndexError:
         sys.stderr.write("%s is not a known word classifier" % attrs["type"])
         sys.exit(1)
+
+def get_vocabulary(vocabulary):
+    template = """    {{
+        .word = {},
+        .type = {},
+        .value = {},
+    }},
+"""
+    voc_str = ""
+    for vocab in vocabulary:
+        word = make_c_string(vocab["word"])
+        type_code = recompose(vocab["type"], vocab["value"])
+        value = vocab["value"]
+        voc_str += template.format(word, type_code, value)
+    voc_str = voc_str[:-1] # trim trailing newline
+    return voc_str
 
 if __name__ == "__main__":
     with open(yaml_name, "r") as f:
@@ -394,6 +420,7 @@ if __name__ == "__main__":
         get_obituaries(db["obituaries"]),
         get_hints(db["hints"], db["arbitrary_messages"]),
         get_condbits(db["locations"]),
+        get_vocabulary(db["vocabulary"]),
     )
 
     h = h_template.format(
