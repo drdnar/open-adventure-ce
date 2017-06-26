@@ -166,7 +166,7 @@ long conditions[] = {{
 {}
 }};
 
-vocabulary_t vocabulary[] {{
+const vocabulary_t vocabulary[] = {{
 {}
 }};
 
