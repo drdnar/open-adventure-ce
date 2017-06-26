@@ -30,12 +30,13 @@
 /* Abstract out the encoding of words in the travel array.  Gives us
  * some hope of getting to a less cryptic representation than we
  * inherited from FORTRAN, someday. To understand these, read the
- * encoding description in dungeon.c.
+ * encoding description for TRAVEL.
  */
 #define T_DESTINATION(entry)	MOD(labs(entry) / 1000, 1000)
 #define T_NODWARVES(entry)	labs(entry) / 1000000 == 100
 #define T_MOTION(entry)		MOD(labs(entry), 1000)
 #define L_SPEAK(loc)		((loc) - 500)
+#define T_TERMINATE(entry)	(T_MOTION(entry) == 1)
 
 struct game_t game;
 
@@ -567,10 +568,11 @@ static bool playermove(token_t verb, int motion)
                             k2 = kk;
                     }
                     if (TRAVEL[kk] >= 0) {
-                        ++kk;
+                        ++kk;	/* go to next travel entry for this location */
                         continue;
                     }
-                    kk = k2;
+		    /* we've reached the end of travel entries for game.loc */
+		    kk = k2;
                     if (kk == 0) {
                         rspeak(NOT_CONNECTED);
                         return true;
@@ -605,15 +607,15 @@ static bool playermove(token_t verb, int motion)
         game.oldloc = game.loc;
     }
 
-    /* ordinary travel */
+    /* Look for a way to fulfil the motion - kk indexes the beginning
+     * of the motion entries for here (game.loc). */
     for (;;) {
-        scratchloc = labs(TRAVEL[kk]);
-        if (MOD(scratchloc, 1000) == 1 || MOD(scratchloc, 1000) == motion)
+        if (T_TERMINATE(TRAVEL[kk]) || T_MOTION(TRAVEL[kk]) == motion)
             break;
         if (TRAVEL[kk] < 0) {
             /* FIXME: Magic numbers! */
-            /*  Non-applicable motion.  Various messages depending on
-             *  word given. */
+            /*  Couldn't find an entry matching the motion word passed
+             *  in.  Various messages depending on word given. */
             int spk = CANT_APPLY;
             if (motion >= 43 && motion <= 50)spk = BAD_DIRECTION;
             if (motion == 29 || motion == 30)spk = BAD_DIRECTION;
@@ -627,7 +629,7 @@ static bool playermove(token_t verb, int motion)
         }
         ++kk;
     }
-    scratchloc = scratchloc / 1000;
+    scratchloc = labs(TRAVEL[kk]) / 1000;
 
     do {
         /*
@@ -803,7 +805,7 @@ static bool closecheck(void)
     if (game.clock2 == 0) {
         /*  Once he's panicked, and clock2 has run out, we come here
          *  to set up the storage room.  The room has two locs,
-         *  hardwired as 115 (ne) and 116 (sw).  At the ne end, we
+         *  hardwired as LOC_NE and LOC_SW.  At the ne end, we
          *  place empty bottles, a nursery of plants, a bed of
          *  oysters, a pile of lamps, rods with stars, sleeping
          *  dwarves, and him.  At the sw end we place grate over
