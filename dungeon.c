@@ -198,7 +198,7 @@ static long GETNUM(FILE *source)
      *  scanned).  If we're at the end of the line or encounter an illegal
      *  character (not a digit, hyphen, or blank), we return 0. */
 
-    long DIGIT, GETNUM, SIGN;
+    long DIGIT, GETNUM, sign;
 
     if (source != NULL) MAPLIN(source);
     GETNUM = 0;
@@ -209,9 +209,9 @@ static long GETNUM(FILE *source)
     }
 
     if (INLINE[LNPOSN] != 9) {
-        SIGN = 1;
+        sign = 1;
     } else {
-        SIGN = -1;
+        sign = -1;
         LNPOSN = LNPOSN + 1;
     }
     while (!(LNPOSN > LNLENG || INLINE[LNPOSN] == 0)) {
@@ -224,7 +224,7 @@ static long GETNUM(FILE *source)
         LNPOSN = LNPOSN + 1;
     }
 
-    GETNUM = GETNUM * SIGN;
+    GETNUM = GETNUM * sign;
     LNPOSN = LNPOSN + 1;
     return (GETNUM);
 }

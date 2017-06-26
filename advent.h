@@ -166,15 +166,19 @@ extern int restore(FILE *);
 #define INDEEP(LOC)	((LOC) >= LOC_MISTHALL && !OUTSID(LOC))
 
 /* vocabulary items */
-extern long AMBER, ATTACK, AXE, BACK, BATTERY, BEAR,
-       BIRD, BLOOD, BOTTLE, CAGE, CAVE, CAVITY, CHAIN, CHASM, CHEST,
-       CLAM, COINS, DOOR, DPRSSN, DRAGON, DWARF, EGGS,
-       EMERALD, ENTER, ENTRNC, FIND, FISSURE, FOOD, GRATE, HINT, INVENT,
-       JADE, KEYS, KNIFE, LAMP, LOCK, LOOK, MAGAZINE, MESSAG, MIRROR, NUGGET, NUL,
-       OGRE, OIL, OYSTER, PANIC, PEARL, PILLOW, PLANT, PLANT2, PYRAMID,
-       RESER, ROD, ROD2, RUBY, RUG, SAPPH, SAY, SIGN, SNAKE,
-       STEPS, STICK, STREAM, THROW, TRIDENT, TROLL, TROLL2,
-       URN, VASE, VEND, VOLCANO, WATER;
+extern long NUL;
+extern long BACK;
+extern long LOOK;
+extern long CAVE;
+extern long FIND;
+extern long INVENT;
+extern long SAY;
+extern long ENTER;
+extern long STREAM;
+extern long DPRSSN;
+extern long ENTRNC;
+extern long LOCK;
+extern long THROW;
 
 enum speechpart {unknown, intransitive, transitive};
 
