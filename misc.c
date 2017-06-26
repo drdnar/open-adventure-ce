@@ -287,7 +287,7 @@ char* get_input()
     return (input);
 }
 
-bool YES(const char* question, const char* yes_response, const char* no_response)
+bool yes(const char* question, const char* yes_response, const char* no_response)
 /*  Print message X, wait for yes/no answer.  If yes, print Y and return true;
  *  if no, print Z and return false. */
 {
@@ -405,7 +405,7 @@ token_t MAKEWD(long letters)
 
 /*  Data structure  routines */
 
-long VOCAB(long id, long init)
+long vocab(long id, long init)
 /*  Look up ID in the vocabulary (ATAB) and return its "definition" (KTAB), or
  *  -1 if not found.  If INIT is positive, this is an initialisation call setting
  *  up a keyword variable, and not finding it constitutes a bug.  It also means
@@ -434,7 +434,7 @@ long VOCAB(long id, long init)
     BUG(RAN_OFF_END_OF_VOCABULARY_TABLE);
 }
 
-void JUGGLE(long object)
+void juggle(long object)
 /*  Juggle an object by picking it up and putting it down again, the purpose
  *  being to get the object to the front of the chain of things at its loc. */
 {
@@ -442,11 +442,11 @@ void JUGGLE(long object)
 
     i = game.place[object];
     j = game.fixed[object];
-    MOVE(object, i);
-    MOVE(object + NOBJECTS, j);
+    move(object, i);
+    move(object + NOBJECTS, j);
 }
 
-void MOVE(long object, long where)
+void move(long object, long where)
 /*  Place any object anywhere by picking it up and dropping it.  May
  *  already be toting, in which case the carry is a no-op.  Mustn't
  *  pick up objects which are not at any loc, since carry wants to
@@ -459,19 +459,19 @@ void MOVE(long object, long where)
     else
         from = game.place[object];
     if (from != LOC_NOWHERE && from != CARRIED && !SPECIAL(from))
-        CARRY(object, from);
-    DROP(object, where);
+        carry(object, from);
+    drop(object, where);
 }
 
-long PUT(long object, long where, long pval)
+long put(long object, long where, long pval)
 /*  PUT is the same as MOVE, except it returns a value used to set up the
  *  negated game.prop values for the repository objects. */
 {
-    MOVE(object, where);
+    move(object, where);
     return (-1) - pval;;
 }
 
-void CARRY(long object, long where)
+void carry(long object, long where)
 /*  Start toting an object, removing it from the list of things at its former
  *  location.  Incr holdng unless it was already being toted.  If object>NOBJECTS
  *  (moving "fixed" second loc), don't change game.place or game.holdng. */
@@ -495,7 +495,7 @@ void CARRY(long object, long where)
     game.link[temp] = game.link[object];
 }
 
-void DROP(long object, long where)
+void drop(long object, long where)
 /*  Place an object at a given loc, prefixing it onto the game.atloc list.  Decr
  *  game.holdng if the object was being toted. */
 {
@@ -512,7 +512,7 @@ void DROP(long object, long where)
     game.atloc[where] = object;
 }
 
-long ATDWRF(long where)
+long atdwrf(long where)
 /*  Return the index of first dwarf at the given location, zero if no dwarf is
  *  there (or if dwarves not active yet), -1 if all dwarves are dead.  Ignore
  *  the pirate (6th dwarf). */
@@ -535,13 +535,13 @@ long ATDWRF(long where)
 /*  Utility routines (SETBIT, TSTBIT, set_seed, get_next_lcg_value,
  *  randrange, RNDVOC) */
 
-long SETBIT(long bit)
+long setbit(long bit)
 /*  Returns 2**bit for use in constructing bit-masks. */
 {
     return (1 << bit);
 }
 
-bool TSTBIT(long mask, int bit)
+bool tstbit(long mask, int bit)
 /*  Returns true if the specified bit is set in the mask. */
 {
     return (mask & (1 << bit)) != 0;
@@ -567,7 +567,7 @@ long randrange(long range)
     return range * get_next_lcg_value() / game.lcg_m;
 }
 
-long RNDVOC(long second, long force)
+long rndvoc(long second, long force)
 /*  Searches the vocabulary ATAB for a word whose second character is
  *  char, and changes that word such that each of the other four
  *  characters is a random letter.  If force is non-zero, it is used
@@ -691,7 +691,7 @@ bool MAPLIN(FILE *fp)
     }
 }
 
-void DATIME(long* d, long* t)
+void datime(long* d, long* t)
 {
     struct timeval tv;
     gettimeofday(&tv, NULL);

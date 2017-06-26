@@ -104,21 +104,21 @@ extern void rspeak(vocab_t, ...);
 extern bool GETIN(FILE *, token_t*, token_t*, token_t*, token_t*);
 extern void echo_input(FILE*, char*, char*);
 extern char* get_input(void);
-extern bool YES(const char*, const char*, const char*);
+extern bool yes(const char*, const char*, const char*);
 extern long GETTXT(bool, bool, bool);
 extern token_t MAKEWD(long);
-extern long VOCAB(long, long);
-extern void JUGGLE(long);
-extern void MOVE(long, long);
-extern long PUT(long, long, long);
-extern void CARRY(long, long);
-extern void DROP(long, long);
-extern long ATDWRF(long);
-extern long SETBIT(long);
-extern bool TSTBIT(long, int);
-extern long RNDVOC(long, long);
+extern long vocab(long, long);
+extern void juggle(long);
+extern void move(long, long);
+extern long put(long, long, long);
+extern void carry(long, long);
+extern void drop(long, long);
+extern long atdwrf(long);
+extern long setbit(long);
+extern bool tstbit(long, int);
+extern long rndvoc(long, long);
 extern bool MAPLIN(FILE *);
-extern void DATIME(long*, long*);
+extern void datime(long*, long*);
 
 enum termination {endgame, quitgame, scoregame};
 
@@ -145,7 +145,7 @@ extern int restore(FILE *);
  *  PCT(N)      = true N% of the time (N integer from 0 to 100)
  *  TOTING(OBJ) = true if the OBJ is being carried */
 
-#define DESTROY(N)	MOVE(N, LOC_NOWHERE)
+#define DESTROY(N)	move(N, LOC_NOWHERE)
 #define MOD(N,M)	((N) % (M))
 #define TOTING(OBJ)	(game.place[OBJ] == CARRIED)
 #define AT(OBJ) (game.place[OBJ] == game.loc || game.fixed[OBJ] == game.loc)
@@ -153,13 +153,13 @@ extern int restore(FILE *);
 #define LIQ2(PBOTL)	((1-(PBOTL))*WATER+((PBOTL)/2)*(WATER+OIL))
 #define LIQUID()	(LIQ2(game.prop[BOTTLE]<0 ? -1-game.prop[BOTTLE] : game.prop[BOTTLE]))
 #define LIQLOC(LOC)	(LIQ2((MOD(conditions[LOC]/2*2,8)-5)*MOD(conditions[LOC]/4,2)+1))
-#define CNDBIT(L,N)	(TSTBIT(conditions[L],N))
+#define CNDBIT(L,N)	(tstbit(conditions[L],N))
 #define FORCED(LOC)	CNDBIT(LOC, COND_FORCED)
-#define DARK(DUMMY)	((!TSTBIT(conditions[game.loc],COND_LIT)) && (game.prop[LAMP] == LAMP_DARK || !HERE(LAMP)))
+#define DARK(DUMMY)	((!tstbit(conditions[game.loc],COND_LIT)) && (game.prop[LAMP] == LAMP_DARK || !HERE(LAMP)))
 #define PCT(N)		(randrange(100) < (N))
 #define GSTONE(OBJ)	((OBJ) == EMERALD || (OBJ) == RUBY || (OBJ) == AMBER || (OBJ) == SAPPH)
 #define FOREST(LOC)	CNDBIT(LOC, COND_FOREST)
-#define VOCWRD(LETTRS,SECT)	(VOCAB(MAKEWD(LETTRS),SECT))
+#define VOCWRD(LETTRS,SECT)	(vocab(MAKEWD(LETTRS),SECT))
 #define SPECIAL(LOC)	((LOC) > SPECIALBASE)
 #define OUTSID(LOC)	(CNDBIT(LOC, COND_ABOVE) || FOREST(LOC))
 

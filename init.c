@@ -40,8 +40,8 @@ void initialise(void)
      *  described last, we'll drop them first. */
     for (int i = NOBJECTS; i >= 1; i--) {
         if (object_descriptions[i].fixd > 0) {
-            DROP(i + NOBJECTS, object_descriptions[i].fixd);
-            DROP(i, object_descriptions[i].plac);
+            drop(i + NOBJECTS, object_descriptions[i].fixd);
+            drop(i, object_descriptions[i].plac);
         }
     }
 
@@ -49,7 +49,7 @@ void initialise(void)
         int k = NOBJECTS + 1 - i;
         game.fixed[k] = object_descriptions[k].fixd;
         if (object_descriptions[k].plac != 0 && object_descriptions[k].fixd <= 0)
-            DROP(k, object_descriptions[k].plac);
+            drop(k, object_descriptions[k].plac);
     }
 
     /*  Treasure props are initially -1, and are set to 0 the first time
@@ -191,7 +191,7 @@ void initialise(void)
     game.bonus = 0;
     game.clock1 = WARNTIME;
     game.clock2 = FLASHTIME;
-    game.conds = SETBIT(11);
+    game.conds = setbit(11);
     game.saved = 0;
     game.closng = false;
     game.panic = false;

@@ -42,7 +42,7 @@ int suspend(void)
     FILE *fp = NULL;
 
     rspeak(SUSPEND_WARNING);
-    if (!YES(arbitrary_messages[THIS_ACCEPTABLE], arbitrary_messages[OK_MAN], arbitrary_messages[OK_MAN])) return GO_CLEAROBJ;
+    if (!yes(arbitrary_messages[THIS_ACCEPTABLE], arbitrary_messages[OK_MAN], arbitrary_messages[OK_MAN])) return GO_CLEAROBJ;
     game.saved = game.saved + 5;
 
     while (fp == NULL) {
@@ -55,7 +55,7 @@ int suspend(void)
         linenoiseFree(name);
     }
 
-    DATIME(&i, &k);
+    datime(&i, &k);
     k = i + 650 * k;
     save.savetime = k;
     save.mode = -1;
@@ -79,7 +79,7 @@ int resume(void)
 
     if (game.loc != 1 || game.abbrev[1] != 1) {
         rspeak(RESUME_ABANDON);
-        if (!YES(arbitrary_messages[THIS_ACCEPTABLE], arbitrary_messages[OK_MAN], arbitrary_messages[OK_MAN])) return GO_CLEAROBJ;
+        if (!yes(arbitrary_messages[THIS_ACCEPTABLE], arbitrary_messages[OK_MAN], arbitrary_messages[OK_MAN])) return GO_CLEAROBJ;
     }
 
     while (fp == NULL) {
@@ -110,7 +110,7 @@ int restore(FILE* fp)
         rspeak(VERSION_SKEW, save.version / 10, MOD(save.version, 10), VRSION / 10, MOD(VRSION, 10));
     } else {
         memcpy(&game, &save.game, sizeof(struct game_t));
-        game.zzword = RNDVOC(3, game.zzword);
+        game.zzword = rndvoc(3, game.zzword);
     }
     return GO_TOP;
 }

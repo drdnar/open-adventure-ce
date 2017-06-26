@@ -16,7 +16,7 @@ static int attack(FILE *input, struct command_t *command)
     vocab_t obj = command->obj;
     int spk = actspk[verb];
     if (obj == 0 || obj == INTRANSITIVE) {
-        if (ATDWRF(game.loc) > 0)
+        if (atdwrf(game.loc) > 0)
             obj = DWARF;
         if (HERE(SNAKE))obj = obj * NOBJECTS + SNAKE;
         if (AT(DRAGON) && game.prop[DRAGON] == 0)obj = obj * NOBJECTS + DRAGON;
@@ -58,7 +58,7 @@ static int attack(FILE *input, struct command_t *command)
     if (obj == DRAGON)spk = ALREADY_DEAD;
     if (obj == TROLL)spk = ROCKY_TROLL;
     if (obj == OGRE)spk = OGRE_DODGE;
-    if (obj == OGRE && ATDWRF(game.loc) > 0) {
+    if (obj == OGRE && atdwrf(game.loc) > 0) {
         rspeak(spk);
         rspeak(KNIFE_THROWN);
         DESTROY(OGRE);
@@ -87,14 +87,14 @@ static int attack(FILE *input, struct command_t *command)
         game.prop[DRAGON] = 1;
         game.prop[RUG] = 0;
         int k = (object_descriptions[DRAGON].plac + object_descriptions[DRAGON].fixd) / 2;
-        MOVE(DRAGON + NOBJECTS, -1);
-        MOVE(RUG + NOBJECTS, 0);
-        MOVE(DRAGON, k);
-        MOVE(RUG, k);
-        DROP(BLOOD, k);
+        move(DRAGON + NOBJECTS, -1);
+        move(RUG + NOBJECTS, 0);
+        move(DRAGON, k);
+        move(RUG, k);
+        drop(BLOOD, k);
         for (obj = 1; obj <= NOBJECTS; obj++) {
             if (game.place[obj] == object_descriptions[DRAGON].plac || game.place[obj] == object_descriptions[DRAGON].fixd)
-                MOVE(obj, k);
+                move(obj, k);
         }
         game.loc = k;
         return GO_MOVE;
@@ -109,7 +109,7 @@ static int bigwords(token_t foo)
  *  Look up foo in section 3 of vocab to determine which word we've got.  Last
  *  word zips the eggs back to the giant room (unless already there). */
 {
-    int k = VOCAB(foo, 3);
+    int k = vocab(foo, 3);
     int spk = NOTHING_HAPPENS;
     if (game.foobar != 1 - k) {
         if (game.foobar != 0 && game.loc == LOC_GIANTROOM)spk = START_OVER;
@@ -133,7 +133,7 @@ static int bigwords(token_t foo)
             k = 2;
             if (HERE(EGGS))k = 1;
             if (game.loc == object_descriptions[EGGS].plac)k = 0;
-            MOVE(EGGS, object_descriptions[EGGS].plac);
+            move(EGGS, object_descriptions[EGGS].plac);
             pspeak(EGGS, look, k);
             return GO_CLEAROBJ;
         }
@@ -151,8 +151,8 @@ static int bivalve(token_t verb, token_t obj)
     if (verb == LOCK)spk = HUH_MAN;
     if (spk == PEARL_FALLS) {
         DESTROY(CLAM);
-        DROP(OYSTER, game.loc);
-        DROP(PEARL, LOC_CULDESAC);
+        drop(OYSTER, game.loc);
+        drop(PEARL, LOC_CULDESAC);
     }
     rspeak(spk);
     return GO_CLEAROBJ;
@@ -180,7 +180,7 @@ static int vbreak(token_t verb, token_t obj)
     int spk = actspk[verb];
     if (obj == MIRROR)spk = TOO_FAR;
     if (obj == VASE && game.prop[VASE] == 0) {
-        if (TOTING(VASE))DROP(VASE, game.loc);
+        if (TOTING(VASE))drop(VASE, game.loc);
         game.prop[VASE] = 2;
         game.fixed[VASE] = -1;
         spk = BREAK_VASE;
@@ -203,7 +203,7 @@ static int brief(void)
     return GO_CLEAROBJ;
 }
 
-static int carry(token_t verb, token_t obj)
+static int vcarry(token_t verb, token_t obj)
 /*  Carry an object.  Special cases for bird and cage (if bird in cage, can't
  *  take one without the other).  Liquids also special, since they depend on
  *  status of bottle.  Also various side effects, etc. */
@@ -213,7 +213,7 @@ static int carry(token_t verb, token_t obj)
         /*  Carry, no object given yet.  OK if only one object present. */
         if (game.atloc[game.loc] == 0 ||
             game.link[game.atloc[game.loc]] != 0 ||
-            ATDWRF(game.loc) > 0)
+            atdwrf(game.loc) > 0)
             return GO_UNKNOWN;
         obj = game.atloc[game.loc];
     }
@@ -274,8 +274,8 @@ static int carry(token_t verb, token_t obj)
         game.prop[BIRD] = BIRD_CAGED;
     }
     if ((obj == BIRD || obj == CAGE) && (game.prop[BIRD] == BIRD_CAGED || -1 - game.prop[BIRD] == 1))
-        CARRY(BIRD + CAGE - obj, game.loc);
-    CARRY(obj, game.loc);
+        carry(BIRD + CAGE - obj, game.loc);
+    carry(obj, game.loc);
     if (obj == BOTTLE && LIQUID() != 0)
         game.place[LIQUID()] = CARRIED;
     if (GSTONE(obj) && game.prop[obj] != 0) {
@@ -311,7 +311,7 @@ static int chain(token_t verb)
             return GO_CLEAROBJ;
         }
         game.prop[CHAIN] = 2;
-        if (TOTING(CHAIN))DROP(CHAIN, game.loc);
+        if (TOTING(CHAIN))drop(CHAIN, game.loc);
         game.fixed[CHAIN] = -1;
     }
     rspeak(spk);
@@ -351,12 +351,12 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
                     int k = 2 - game.prop[RUG];
                     game.prop[RUG] = k;
                     if (k == 2) k = object_descriptions[SAPPH].plac;
-                    MOVE(RUG + NOBJECTS, k);
+                    move(RUG + NOBJECTS, k);
                 }
             }
         } else if (obj == COINS && HERE(VEND)) {
             DESTROY(COINS);
-            DROP(BATTERY, game.loc);
+            drop(BATTERY, game.loc);
             pspeak(BATTERY, look, FRESH_BATTERIES);
             return GO_CLEAROBJ;
         } else if (obj == BIRD && AT(DRAGON) && game.prop[DRAGON] == 0) {
@@ -365,11 +365,11 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
             return GO_CLEAROBJ;
         } else if (obj == BEAR && AT(TROLL)) {
             rspeak(TROLL_SCAMPERS);
-            MOVE(TROLL, 0);
-            MOVE(TROLL + NOBJECTS, 0);
-            MOVE(TROLL2, object_descriptions[TROLL].plac);
-            MOVE(TROLL2 + NOBJECTS, object_descriptions[TROLL].fixd);
-            JUGGLE(CHASM);
+            move(TROLL, 0);
+            move(TROLL + NOBJECTS, 0);
+            move(TROLL2, object_descriptions[TROLL].plac);
+            move(TROLL2 + NOBJECTS, object_descriptions[TROLL].fixd);
+            juggle(CHASM);
             game.prop[TROLL] = 2;
         } else if (obj != VASE || game.loc == object_descriptions[PILLOW].plac) {
             rspeak(OK_MAN);
@@ -385,8 +385,8 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
     if (obj == BOTTLE && k != 0)
         game.place[k] = LOC_NOWHERE;
     if (obj == CAGE && game.prop[BIRD] == BIRD_CAGED)
-	DROP(BIRD, game.loc);
-    DROP(obj, game.loc);
+	drop(BIRD, game.loc);
+    drop(obj, game.loc);
     if (obj != BIRD) return GO_CLEAROBJ;
     game.prop[BIRD] = BIRD_UNCAGED;
     if (FOREST(game.loc))
@@ -573,7 +573,7 @@ static int find(token_t verb, token_t obj)
     if (AT(obj) ||
         (LIQUID() == obj && AT(BOTTLE)) ||
         obj == LIQLOC(game.loc) ||
-        (obj == DWARF && ATDWRF(game.loc) > 0))
+        (obj == DWARF && atdwrf(game.loc) > 0))
         spk = YOU_HAVEIT;
     if (game.closed)spk = NEEDED_NEARBY;
     if (TOTING(obj))spk = ALREADY_CARRYING;
@@ -793,7 +793,7 @@ static int pour(token_t verb, token_t obj)
 static int quit(void)
 /*  Quit.  Intransitive only.  Verify intent and exit if that's what he wants. */
 {
-    if (YES(arbitrary_messages[REALLY_QUIT], arbitrary_messages[OK_MAN], arbitrary_messages[OK_MAN]))
+    if (yes(arbitrary_messages[REALLY_QUIT], arbitrary_messages[OK_MAN], arbitrary_messages[OK_MAN]))
         terminate(quitgame);
     return GO_CLEAROBJ;
 }
@@ -814,7 +814,7 @@ static int read(struct command_t command)
     if (DARK(game.loc)) {
         rspeak(NO_SEE, command.wd1, command.wd1x);
     } else if (command.obj == OYSTER && !game.clshnt && game.closed) {
-        game.clshnt = YES(arbitrary_messages[CLUE_QUERY], arbitrary_messages[WAYOUT_CLUE], arbitrary_messages[OK_MAN]);
+        game.clshnt = yes(arbitrary_messages[CLUE_QUERY], arbitrary_messages[WAYOUT_CLUE], arbitrary_messages[OK_MAN]);
     } else if (object_descriptions[command.obj].texts[0] == NULL || game.prop[command.obj] < 0) {
         rspeak(actspk[command.verb]);
     } else
@@ -850,10 +850,10 @@ static int rub(token_t verb, token_t obj)
         spk = PECULIAR_NOTHING;
     if (obj == URN && game.prop[URN] == 2) {
         DESTROY(URN);
-        DROP(AMBER, game.loc);
+        drop(AMBER, game.loc);
         game.prop[AMBER] = 1;
         --game.tally;
-        DROP(CAVITY, game.loc);
+        drop(CAVITY, game.loc);
         spk = URN_GENIES;
     }
     rspeak(spk);
@@ -869,7 +869,7 @@ static int say(struct command_t *command)
         b = command->wd2x;
         command->wd1 = command->wd2;
     }
-    int wd = VOCAB(command->wd1, -1);
+    int wd = vocab(command->wd1, -1);
     /* FIXME: Magic numbers */
     if (wd == 62 || wd == 65 || wd == 71 || wd == 2025 || wd == 2034) {
         /* FIXME: scribbles on the interpreter's command block */
@@ -883,7 +883,7 @@ static int say(struct command_t *command)
 static int throw_support(long spk)
 {
     rspeak(spk);
-    DROP(AXE, game.loc);
+    drop(AXE, game.loc);
     return GO_MOVE;
 }
 
@@ -902,12 +902,12 @@ static int throw (FILE *cmdin, struct command_t *command)
     if (object_descriptions[command->obj].is_treasure && AT(TROLL)) {
         spk = TROLL_SATISFIED;
         /*  Snarf a treasure for the troll. */
-        DROP(command->obj, 0);
-        MOVE(TROLL, 0);
-        MOVE(TROLL + NOBJECTS, 0);
-        DROP(TROLL2, object_descriptions[TROLL].plac);
-        DROP(TROLL2 + NOBJECTS, object_descriptions[TROLL].fixd);
-        JUGGLE(CHASM);
+        drop(command->obj, 0);
+        move(TROLL, 0);
+        move(TROLL + NOBJECTS, 0);
+        drop(TROLL2, object_descriptions[TROLL].plac);
+        drop(TROLL2 + NOBJECTS, object_descriptions[TROLL].fixd);
+        juggle(CHASM);
         rspeak(spk);
         return GO_CLEAROBJ;
     }
@@ -919,7 +919,7 @@ static int throw (FILE *cmdin, struct command_t *command)
     if (command->obj != AXE)
         return (discard(command->verb, command->obj, false));
     else {
-        int i = ATDWRF(game.loc);
+        int i = atdwrf(game.loc);
         if (i <= 0) {
             if (AT(DRAGON) && game.prop[DRAGON] == 0)
                 return throw_support(DRAGON_SCALES);
@@ -929,10 +929,10 @@ static int throw (FILE *cmdin, struct command_t *command)
                 return throw_support(OGRE_DODGE);
             else if (HERE(BEAR) && game.prop[BEAR] == 0) {
                 /* This'll teach him to throw the axe at the bear! */
-                DROP(AXE, game.loc);
+                drop(AXE, game.loc);
                 game.fixed[AXE] = -1;
                 game.prop[AXE] = 1;
-                JUGGLE(BEAR);
+                juggle(BEAR);
                 rspeak(AXE_LOST);
                 return GO_CLEAROBJ;
             }
@@ -978,7 +978,7 @@ static int wave(token_t verb, token_t obj)
     if (HERE(BIRD))
 	spk = FREE_FLY + MOD(game.prop[BIRD], 2);
     if (spk == FREE_FLY && game.loc == game.place[STEPS] && game.prop[JADE] < 0) {
-        DROP(JADE, game.loc);
+        drop(JADE, game.loc);
         game.prop[JADE] = 0;
         --game.tally;
         spk = NECKLACE_FLY;
@@ -1023,7 +1023,7 @@ int action(FILE *input, struct command_t *command)
             if (game.loc == LOC_COBBLE || game.loc == LOC_DEBRIS || game.loc == LOC_AWKWARD ||
                 game.loc == LOC_BIRD || game.loc == LOC_PITTOP)
                 command->obj = ENTRNC;
-        } else if (command->obj == DWARF && ATDWRF(game.loc) > 0)
+        } else if (command->obj == DWARF && atdwrf(game.loc) > 0)
             /* FALL THROUGH */;
         else if ((LIQUID() == command->obj && HERE(BOTTLE)) || command->obj == LIQLOC(game.loc))
             /* FALL THROUGH */;
@@ -1063,7 +1063,7 @@ int action(FILE *input, struct command_t *command)
             /*  Analyse an intransitive verb (ie, no object given yet). */
             switch (command->verb - 1) {
             case  0: /* CARRY */
-                return carry(command->verb, INTRANSITIVE);
+                return vcarry(command->verb, INTRANSITIVE);
             case  1: /* DROP  */
                 return GO_UNKNOWN;
             case  2: /* SAY   */
@@ -1145,7 +1145,7 @@ int action(FILE *input, struct command_t *command)
         /*  Analyse a transitive verb. */
         switch (command->verb - 1) {
         case  0: /* CARRY */
-            return carry(command->verb, command->obj);
+            return vcarry(command->verb, command->obj);
         case  1: /* DROP  */
             return discard(command->verb, command->obj, false);
         case  2: /* SAY   */
