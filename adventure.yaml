@@ -2444,6 +2444,9 @@ locations: !!omap
       long: '>>Foof!<<'
       short: !!null
     conditions: {DEEP: true}
+    travel: [
+      {verbs: [], action: ["goto", LOC_Y2]},
+    ]
 
 arbitrary_messages:  !!omap
 - NO_MESSAGE: !!null
