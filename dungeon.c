@@ -7,7 +7,6 @@
  *     12600 words of message text (LINES, LINSIZ).
  *	885 travel options (TRAVEL, TRVSIZ).
  *	330 vocabulary words (KTAB, ATAB, TABSIZ).
- *	 35 "action" verbs (ACTSPK, VRBSIZ).
  *  There are also limits which cannot be exceeded due to the structure of
  *  the database.  (E.G., The vocabulary uses n/1000 to determine word type,
  *  so there can't be more than 1000 words.)  These upper limits are:
@@ -60,8 +59,6 @@
  *	or "attack").  Else, if M=3, the word is a special case verb (such as
  *	"dig") and N % 1000 is an index into section 6.  Objects from 50 to
  *	(currently, anyway) 79 are considered treasures (for pirate, closeout).
- *  Section 8: Action defaults.  Each line contains an "action-verb" number and
- *	the index (in section 6) of the default message for the verb.
  *  Section 0: End of database.
  *
  * Other sections are obsolete and ignored */
@@ -99,7 +96,6 @@ long LINES[LINSIZ + 1];
 long TRAVEL[TRVSIZ + 1];
 long KTAB[TABSIZ + 1];
 long ATAB[TABSIZ + 1];
-long ACTSPK[VRBSIZ + 1];
 
 static long GETTXT(long SKIP, long ONEWRD, long UPPER)
 {
@@ -297,12 +293,12 @@ static void read_initial_locations(FILE* database)
     }
 }
 
-/*  Read default message numbers for action verbs, store in ACTSPK. */
+/*  Read default message numbers for action verbs. */
 static void read_action_verb_message_nr(FILE* database)
 {
     long verb;
     while ((verb = GETNUM(database)) != -1) {
-        ACTSPK[verb] = GETNUM(NULL);
+	/* now declared in YAML */
     }
 }
 
@@ -465,7 +461,6 @@ static void write_file(FILE* header_file)
     write_1d(header_file, TRAVEL, TRVSIZ + 1, "TRAVEL");
     write_1d(header_file, KTAB, TABSIZ + 1, "KTAB");
     write_1d(header_file, ATAB, TABSIZ + 1, "ATAB");
-    write_1d(header_file, ACTSPK, VRBSIZ + 1, "ACTSPK");
 
     fprintf(header_file, "#undef LOCATION\n");
     fprintf(header_file, "#undef INITIALIZE\n");

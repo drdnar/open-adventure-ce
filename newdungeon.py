@@ -103,13 +103,15 @@ extern const obituary_t obituaries[];
 extern const hint_t hints[];
 extern long conditions[];
 extern const vocabulary_t vocabulary[];
+extern const long actspk[];
 
-#define NLOCATIONS		{}
+#define NLOCATIONS	{}
 #define NOBJECTS	{}
 #define NHINTS		{}
 #define NCLASSES	{}
 #define NDEATHS		{}
 #define NTHRESHOLDS	{}
+#define NVERBS  	{}
 
 enum arbitrary_messages_refs {{
 {}
@@ -167,6 +169,11 @@ long conditions[] = {{
 }};
 
 const vocabulary_t vocabulary[] = {{
+{}
+}};
+
+const long actspk[] = {{
+    NO_MESSAGE,
 {}
 }};
 
@@ -404,6 +411,12 @@ def get_vocabulary(vocabulary):
     voc_str = voc_str[:-1] # trim trailing newline
     return voc_str
 
+def get_actspk(actspk):
+    res = ""
+    for (i, word) in actspk.items():
+        res += "    %s,\n" % word
+    return res
+
 if __name__ == "__main__":
     with open(yaml_name, "r") as f:
         db = yaml.load(f)
@@ -421,6 +434,7 @@ if __name__ == "__main__":
         get_hints(db["hints"], db["arbitrary_messages"]),
         get_condbits(db["locations"]),
         get_vocabulary(db["vocabulary"]),
+        get_actspk(db["actspk"]),
     )
 
     h = h_template.format(
@@ -430,6 +444,7 @@ if __name__ == "__main__":
         len(db["classes"]),
         len(db["obituaries"]),
         len(db["turn_thresholds"]),
+        len(db["actspk"]),
         get_refs(db["arbitrary_messages"]),
         get_refs(db["locations"]),
         get_refs(db["object_descriptions"]),
