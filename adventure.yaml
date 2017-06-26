@@ -220,110 +220,6 @@ vocabulary: [
     {word: "RESER", type: motion, value: 75},
     {word: "MAIN",  type: motion, value: 76},
     {word: "OFFIC", type: motion, value: 76},
-    {word: "KEYS",  type: object, value: 1},
-    {word: "KEY",   type: object, value: 1},
-    {word: "LAMP",  type: object, value: 2},
-    {word: "LANTE", type: object, value: 2},
-    {word: "GRATE", type: object, value: 3},
-    {word: "CAGE",  type: object, value: 4},
-    {word: "ROD",   type: object, value: 5},
-    {word: "ROD",   type: object, value: 6}, # Must be next object after "real" rod
-    {word: "STEPS", type: object, value: 7},
-    {word: "BIRD",  type: object, value: 8},
-    {word: "DOOR",  type: object, value: 9},
-    {word: "PILLO", type: object, value: 10},
-    {word: "VELVE", type: object, value: 10},
-    {word: "SNAKE", type: object, value: 11},
-    {word: "FISSU", type: object, value: 12},
-    {word: "TABLE", type: object, value: 13},
-    {word: "CLAM",  type: object, value: 14},
-    {word: "OYSTE", type: object, value: 15},
-    {word: "MAGAZ", type: object, value: 16},
-    {word: "ISSUE", type: object, value: 16},
-    {word: "SPELU", type: object, value: 16},
-    {word: '"SPEL', type: object, value: 16},
-    {word: "DWARF", type: object, value: 17},
-    {word: "DWARV", type: object, value: 17},
-    {word: "KNIFE", type: object, value: 18},
-    {word: "KNIVE", type: object, value: 18},
-    {word: "FOOD",  type: object, value: 19},
-    {word: "RATIO", type: object, value: 19},
-    {word: "BOTTL", type: object, value: 20},
-    {word: "JAR",   type: object, value: 20},
-    {word: "WATER", type: object, value: 21},
-    {word: "H2O",   type: object, value: 21},
-    {word: "OIL",   type: object, value: 22},
-    {word: "MIRRO", type: object, value: 23},
-    {word: "PLANT", type: object, value: 24},
-    {word: "BEANS", type: object, value: 24},
-    {word: "PLANT", type: object, value: 25}, # Must be next object after "real" plant
-    {word: "STALA", type: object, value: 26},
-    {word: "SHADO", type: object, value: 27},
-    {word: "FIGUR", type: object, value: 27},
-    {word: "WINDO", type: object, value: 27}, # Same as figure
-    {word: "AXE",   type: object, value: 28},
-    {word: "DRAWI", type: object, value: 29},
-    {word: "PIRAT", type: object, value: 30},
-    {word: "GENIE", type: object, value: 30},
-    {word: "DJINN", type: object, value: 30},
-    {word: "DRAGO", type: object, value: 31},
-    {word: "CHASM", type: object, value: 32},
-    {word: "TROLL", type: object, value: 33},
-    {word: "TROLL", type: object, value: 34}, # Must be next object after "real" troll
-    {word: "BEAR",  type: object, value: 35},
-    {word: "MESSA", type: object, value: 36},
-    {word: "VOLCA", type: object, value: 37},
-    {word: "GEYSE", type: object, value: 37}, # Same as volcano
-    {word: "MACHI", type: object, value: 38},
-    {word: "VENDI", type: object, value: 38},
-    {word: "BATTE", type: object, value: 39},
-    {word: "CARPE", type: object, value: 40},
-    {word: "MOSS",  type: object, value: 40},
-    {word: "CURTA", type: object, value: 40}, # Same as carpet
-    {word: "OGRE",  type: object, value: 41},
-    {word: "URN",   type: object, value: 42},
-    {word: "CAVIT", type: object, value: 43},
-    {word: "BLOOD", type: object, value: 44},
-    {word: "RESER", type: object, value: 45}, # Verb overrides
-    {word: "APPEN", type: object, value: 46},
-    {word: "LEPOR", type: object, value: 46},
-    {word: "MUD",   type: object, value: 47},
-    {word: "NOTE",  type: object, value: 48},
-    {word: "SIGN",  type: object, value: 49},
-    {word: "GOLD",  type: object, value: 50},
-    {word: "NUGGE", type: object, value: 50},
-    {word: "DIAMO", type: object, value: 51},
-    {word: "SILVE", type: object, value: 52},
-    {word: "BARS",  type: object, value: 52},
-    {word: "JEWEL", type: object, value: 53},
-    {word: "COINS", type: object, value: 54},
-    {word: "CHEST", type: object, value: 55},
-    {word: "BOX",   type: object, value: 55},
-    {word: "TREAS", type: object, value: 55},
-    {word: "EGGS",  type: object, value: 56},
-    {word: "EGG",   type: object, value: 56},
-    {word: "NEST",  type: object, value: 56},
-    {word: "TRIDE", type: object, value: 57},
-    {word: "VASE",  type: object, value: 58},
-    {word: "MING",  type: object, value: 58},
-    {word: "SHARD", type: object, value: 58},
-    {word: "POTTE", type: object, value: 58},
-    {word: "EMERA", type: object, value: 59},
-    {word: "PLATI", type: object, value: 60},
-    {word: "PYRAM", type: object, value: 60},
-    {word: "PEARL", type: object, value: 61},
-    {word: "RUG",   type: object, value: 62},
-    {word: "PERSI", type: object, value: 62},
-    {word: "SPICE", type: object, value: 63},
-    {word: "CHAIN", type: object, value: 64},
-    {word: "RUBY",  type: object, value: 65},
-    {word: "JADE",  type: object, value: 66},
-    {word: "NECKL", type: object, value: 66},
-    {word: "AMBER", type: object, value: 67},
-    {word: "GEMST", type: object, value: 67},
-    {word: "SAPPH", type: object, value: 68},
-    {word: "EBONY", type: object, value: 69},
-    {word: "STATU", type: object, value: 69},
     {word: "CARRY", type: action, value: 1},
     {word: "TAKE",  type: action, value: 1},
     {word: "KEEP",  type: action, value: 1},
@@ -2876,17 +2772,20 @@ objects: !!omap
     inventory: !!null
     longs: !!null
 - OBJ_1:
+    words: ['keys', 'key']
     inventory: 'Set of keys'
     locations: LOC_BUILDING
     longs:
     - 'There are some keys on the ground here.'
 - OBJ_2:
+    words: ['lamp', 'lante']
     inventory: 'Brass lantern'
     locations: LOC_BUILDING
     longs:
     - [LAMP_DARK, 'There is a shiny brass lamp nearby.']
     - [LAMP_BRIGHT, 'There is a lamp shining nearby.']
 - OBJ_3:
+    words: ['grate']
     inventory: '*grate'
     locations: [LOC_GRATE, LOC_BELOWGRATE]
     immovable: true
@@ -2894,21 +2793,25 @@ objects: !!omap
     - [GRATE_CLOSED, 'The grate is locked.']
     - [GRATE_OPEN, 'The grate is open.']
 - OBJ_4:
+    words: ['cage']
     inventory: 'Wicker cage'
     locations: LOC_COBBLE
     longs:
     - 'There is a small wicker cage discarded nearby.'
 - OBJ_5:
+    words: ['rod']
     inventory: 'Black rod'
     locations: LOC_DEBRIS
     longs:
     - 'A three foot black rod with a rusty star on an end lies nearby.'
 - OBJ_6:
+    words: ['rod']
     inventory: 'Black rod'
     locations: LOC_NOWHERE
     longs:
     - 'A three foot black rod with a rusty mark on an end lies nearby.'
 - OBJ_7:
+    words: ['steps']
     inventory: '*steps'
     locations: [LOC_PITTOP, LOC_MISTHALL]
     immovable: true
@@ -2916,6 +2819,7 @@ objects: !!omap
     - 'Rough stone steps lead down the pit.'
     - 'Rough stone steps lead up the dome.'
 - OBJ_8:
+    words: ['bird']
     inventory: 'Little bird in cage'
     locations: LOC_BIRD
     longs:
@@ -2930,6 +2834,7 @@ objects: !!omap
     - 'The bird does not seem inclined to sing while in the cage.'
     - 'The bird is singing to you in gratitude for your having returned it to\nits home.  In return, it informs you of a magic word which it thinks\nyou may find useful somewhere near the Hall of Mists.  The magic word\nchanges frequently, but for now the bird believes it is "%s".  You\nthank the bird for this information, and it flies off into the forest.'
 - OBJ_9:
+    words: ['door']
     inventory: '*rusty door'
     locations: LOC_IMMENSE
     immovable: true
@@ -2937,11 +2842,13 @@ objects: !!omap
     - 'The way north is barred by a massive, rusty, iron door.'
     - 'The way north leads through a massive, rusty, iron door.'
 - OBJ_10:
+    words: ['pillo', 'velve']
     inventory: 'Velvet pillow'
     locations: LOC_SOFTROOM
     longs:
     - 'A small velvet pillow lies on the floor.'
 - OBJ_11:
+    words: ['snake']
     inventory: '*snake'
     locations: LOC_KINGHALL
     immovable: true
@@ -2951,6 +2858,7 @@ objects: !!omap
     sounds:
     - 'The snake is hissing venomously.'
 - OBJ_12:
+    words: ['fissu']
     inventory: '*fissure'
     locations: [LOC_EASTBANK, LOC_WESTBANK]
     immovable: true
@@ -2959,6 +2867,7 @@ objects: !!omap
     - 'A crystal bridge now spans the fissure.'
     - 'The crystal bridge has vanished!'
 - OBJ_13:
+    words: ['table']
     inventory: '*stone tablet'
     locations: LOC_DARKROOM
     immovable: true
@@ -2967,6 +2876,7 @@ objects: !!omap
     texts:
     - '"Congratulations on bringing light into the dark-room!"'
 - OBJ_14:
+    words: ['clam']
     inventory: 'Giant clam  >GRUNT!<'
     locations: LOC_SHELLROOM
     longs:
@@ -2974,6 +2884,7 @@ objects: !!omap
     sounds:
     - 'The clam is as tight-mouthed as a, er, clam.'
 - OBJ_15:
+    words: ['oyste']
     inventory: 'Giant oyster  >GROAN!<'
     locations: LOC_NOWHERE
     longs:
@@ -2983,6 +2894,7 @@ objects: !!omap
     - 'Even though it''s an oyster, the critter''s as tight-mouthed as a clam.'
     - 'It says the same thing it did before.  Hm, maybe it''s a pun?'
 - OBJ_16:
+    words: ['issue', 'spelu', '"spel']
     inventory: '"Spelunker Today"'
     locations: LOC_ANTEROOM
     longs:
@@ -2990,20 +2902,24 @@ objects: !!omap
     texts:
     - 'I''m afraid the magazine is written in dwarvish.  But pencilled on one\ncover you see, "Please leave the magazines at the construction site."'
 - OBJ_17:
+    words: ['dwarf', 'dwarv']
     inventory: !!null
     locations: LOC_NOWHERE
     immovable: true
     longs: !!null
 - OBJ_18:
+    words: ['knife', 'knive']
     inventory: !!null
     locations: LOC_NOWHERE
     longs: !!null
 - OBJ_19:
+    words: ['food', 'ratio']
     inventory: 'Tasty food'
     locations: LOC_BUILDING
     longs:
     - 'There is food here.'
 - OBJ_20:
+    words: ['bottl', 'jar']
     inventory: 'Small bottle'
     locations: LOC_BUILDING
     longs:
@@ -3011,19 +2927,23 @@ objects: !!omap
     - [EMPTY_BOTTLE, 'There is an empty bottle here.']
     - [OIL_BOTTLE, 'There is a bottle of oil here.']
 - OBJ_21:
+    words: ['water', 'h2o']
     inventory: 'Water in the bottle'
     locations: LOC_NOWHERE
     longs: !!null
 - OBJ_22:
+    words: ['oil']
     inventory: 'Oil in the bottle'
     locations: LOC_NOWHERE
     longs: !!null
 - OBJ_23:
+    words: ['mirro']
     inventory: '*mirror'
     locations: LOC_MIRRORCANYON
     immovable: true
     longs: !!null
 - OBJ_24:
+    words: ['plant', 'beans']
     inventory: '*plant'
     locations: LOC_WESTPIT
     immovable: true
@@ -3039,6 +2959,7 @@ objects: !!omap
     - 'The plant continues to demand water.'
     - 'The plant now maintains a contented silence.'
 - OBJ_25:
+    words: ['plant']
     inventory: '*phony plant' # seen in Twopit Room only when tall enough
     locations: [LOC_WESTEND, LOC_EASTEND]
     immovable: true
@@ -3047,34 +2968,40 @@ objects: !!omap
     - 'The top of a 12-foot-tall beanstalk is poking out of the west pit.'
     - 'There is a huge beanstalk growing out of the west pit up to the hole.'
 - OBJ_26:
+    words: ['stala']
     inventory: '*stalactite'
     locations: LOC_TOPSTALACTITE
     immovable: true
     longs:
     - ''
 - OBJ_27:
+    words: ['shado', 'figur', 'windo']
     inventory: '*shadowy figure and/or window'
     locations: [LOC_WINDOW1, LOC_WINDOW2]
     immovable: true
     longs:
     - 'The shadowy figure seems to be trying to attract your attention.'
 - OBJ_28:
+    words: ['axe']
     inventory: 'Dwarf''s axe'
     locations: LOC_NOWHERE
     longs:
     - 'There is a little axe here.'
     - 'There is a little axe lying beside the bear.'
 - OBJ_29:
+    words: ['drawi']
     inventory: '*cave drawings'
     locations: LOC_ORIENTAL
     immovable: true
     longs: !!null
 - OBJ_30:
+    words: ['pirat', 'genie', 'djinn']
     inventory: '*pirate/genie'
     locations: LOC_NOWHERE
     immovable: true
     longs: !!null # never present
 - OBJ_31:
+    words: ['drago']
     inventory: '*dragon'
     locations: [LOC_SECRET4, LOC_SECRET6]
     immovable: true
@@ -3088,6 +3015,7 @@ objects: !!omap
     - 'The dragon is, not surprisingly, silent.'
     - 'The dragon is, not surprisingly, silent.'
 - OBJ_32:
+    words: ['chasm']
     inventory: '*chasm'
     locations: [LOC_SWCHASM, LOC_NECHASM]
     immovable: true
@@ -3095,6 +3023,7 @@ objects: !!omap
     - 'A rickety wooden bridge extends across the chasm, vanishing into the\nmist.  A notice posted on the bridge reads, "Stop! Pay troll!"'
     - 'The wreckage of a bridge (and a dead bear) can be seen at the bottom\nof the chasm.'
 - OBJ_33:
+    words: ['troll']
     inventory: '*troll'
     locations: [LOC_SWCHASM, LOC_NECHASM]
     immovable: true
@@ -3105,12 +3034,14 @@ objects: !!omap
     sounds:
     - 'The troll sounds quite adamant in his demand for a treasure.'
 - OBJ_34:
+    words: ['troll']
     inventory: '*phony troll'
     locations: [LOC_NOWHERE, LOC_NOWHERE]
     immovable: true
     longs:
     - 'The troll is nowhere to be seen.'
 - OBJ_35:
+    words: ['bear']
     inventory: !!null # bear uses rtext 141
     locations: LOC_BARRENROOM
     immovable: true
@@ -3120,6 +3051,7 @@ objects: !!omap
     - 'There is a contented-looking bear wandering about nearby.'
     - '' # dead
 - OBJ_36:
+    words: ['messa']
     inventory: '*message in second maze'
     locations: LOC_NOWHERE
     immovable: true
@@ -3128,11 +3060,13 @@ objects: !!omap
     texts:
     - '"This is not the maze where the pirate leaves his treasure chest."'
 - OBJ_37:
+    words: ['volca', 'geyse']
     inventory: '*volcano and/or geyser'
     locations: LOC_BREATHTAKING
     immovable: true
     longs: !!null
 - OBJ_38:
+    words: ['machi', 'vendi']
     inventory: '*vending machine'
     locations: LOC_DEADEND13
     immovable: true
@@ -3143,17 +3077,20 @@ objects: !!omap
     - '"Drop coins here to receive fresh batteries."'
     - '"Drop coins here to receive fresh batteries."'
 - OBJ_39:
+    words: ['batte']
     inventory: 'Batteries'
     locations: LOC_NOWHERE
     longs:
     - [FRESH_BATTERIES, 'There are fresh batteries here.']
     - [DEAD_BATTERIES, 'Some worn-out batteries have been discarded nearby.']
 - OBJ_40:
+    words: ['carpe', 'moss']
     inventory: '*carpet and/or moss and/or curtains'
     locations: LOC_SOFTROOM
     immovable: true
     longs: !!null
 - OBJ_41:
+    words: ['ogre']
     inventory: '*ogre'
     locations: LOC_LARGE
     immovable: true
@@ -3162,6 +3099,7 @@ objects: !!omap
     sounds:
     - 'The ogre is apparently the strong, silent type.'
 - OBJ_42:
+    words: ['urn']
     inventory: '*urn'
     locations: LOC_CLIFF
     immovable: true
@@ -3170,6 +3108,7 @@ objects: !!omap
     - 'A small urn full of oil is embedded in the rock.'
     - 'A small oil flame extrudes from an urn embedded in the rock.'
 - OBJ_43:
+    words: ['cavit']
     inventory: '*cavity'
     locations: LOC_NOWHERE
     immovable: true
@@ -3177,12 +3116,14 @@ objects: !!omap
     - '' # something in it
     - 'There is a small urn-shaped cavity in the rock.'
 - OBJ_44:
+    words: ['blood']
     inventory: '*blood'
     locations: LOC_NOWHERE
     immovable: true
     longs:
     - '' # described with dragon
 - OBJ_45:
+    words: ['reser']
     inventory: '*reservoir'
     locations: [LOC_RESERVOIR, LOC_RESNORTH]
     immovable: true
@@ -3191,11 +3132,13 @@ objects: !!omap
     - 'The waters have parted to form a narrow path across the reservoir.'
     - 'The waters crash together again.'
 - OBJ_46:
+    words: ['appen', 'lepor']
     inventory: 'Leporine appendage'
     locations: LOC_FOREST22
     longs:
     - 'Your keen eye spots a severed leporine appendage lying on the ground.'
 - OBJ_47:
+    words: ['mud']
     inventory: '*mud'
     locations: LOC_DEBRIS
     immovable: true
@@ -3204,6 +3147,7 @@ objects: !!omap
     texts:
     - '"MAGIC WORD XYZZY"'
 - OBJ_48:
+    words: ['note']
     inventory: '*note'
     locations: LOC_NUGGET
     immovable: true
@@ -3212,6 +3156,7 @@ objects: !!omap
     texts:
     - '"You won''t get it up the steps"'
 - OBJ_49:
+    words: ['sign']
     inventory: '*sign'
     locations: LOC_ANTEROOM
     immovable: true
@@ -3222,42 +3167,49 @@ objects: !!omap
     - 'Cave under construction beyond this point.\n           Proceed at own risk.\n       [Witt Construction Company]'
     - '"Treasure Vault.  Keys in main office."'
 - OBJ_50:
+    words: ['gold', 'nugge']
     inventory: 'Large gold nugget'
     locations: LOC_NUGGET
     treasure: true
     longs:
     - 'There is a large sparkling nugget of gold here!'
 - OBJ_51:
+    words: ['diamo']
     inventory: 'Several diamonds'
     locations: LOC_WESTBANK
     treasure: true
     longs:
     - 'There are diamonds here!'
 - OBJ_52:
+    words: ['silve', 'bars']
     inventory: 'Bars of silver'
     locations: LOC_FLOORHOLE
     treasure: true
     longs:
     - 'There are bars of silver here!'
 - OBJ_53:
+    words: ['jewel']
     inventory: 'Precious jewelry'
     locations: LOC_SOUTHSIDE
     treasure: true
     longs:
     - 'There is precious jewelry here!'
 - OBJ_54:
+    words: ['coins']
     inventory: 'Rare coins'
     locations: LOC_WESTSIDE
     treasure: true
     longs:
     - 'There are many coins here!'
 - OBJ_55:
+    words: ['chest', 'box', 'treas']
     inventory: 'Treasure chest'
     locations: LOC_NOWHERE
     treasure: true
     longs:
     - 'The pirate''s treasure chest is here!'
 - OBJ_56:
+    words: ['eggs', 'egg', 'nest']
     inventory: 'Golden eggs'
     locations: LOC_GIANTROOM
     treasure: true
@@ -3266,12 +3218,14 @@ objects: !!omap
     - 'The nest of golden eggs has vanished!'
     - 'Done!'
 - OBJ_57:
+    words: ['tride']
     inventory: 'Jeweled trident'
     locations: LOC_WATERFALL
     treasure: true
     longs:
     - 'There is a jewel-encrusted trident here!'
 - OBJ_58:
+    words: ['vase', 'ming', 'shard', 'potte']
     inventory: 'Ming vase'
     locations: LOC_ORIENTAL
     treasure: true
@@ -3281,6 +3235,7 @@ objects: !!omap
     - [VASE_BROKEN, 'The floor is littered with worthless shards of pottery.']
     - [VASE_DROPS, 'The ming vase drops with a delicate crash.']
 - OBJ_59:
+    words: ['emera']
     inventory: 'Egg-sized emerald'
     locations: LOC_PLOVER
     treasure: true
@@ -3288,18 +3243,21 @@ objects: !!omap
     - 'There is an emerald here the size of a plover''s egg!'
     - 'There is an emerald resting in a small cavity in the rock!'
 - OBJ_60:
+    words: ['plati', 'pyram']
     inventory: 'Platinum pyramid'
     locations: LOC_DARKROOM
     treasure: true
     longs:
     - 'There is a platinum pyramid here, 8 inches on a side!'
 - OBJ_61:
+    words: ['pearl']
     inventory: 'Glistening pearl'
     locations: LOC_NOWHERE
     treasure: true
     longs:
     - 'Off to one side lies a glistening pearl!'
 - OBJ_62:
+    words: ['rug', 'persi']
     inventory: 'Persian rug'
     locations: [LOC_SECRET4, LOC_SECRET6]
     immovable: true
@@ -3309,12 +3267,14 @@ objects: !!omap
     - 'The dragon is sprawled out on a persian rug!!'
     - 'There is a persian rug here, hovering in mid-air!'
 - OBJ_63:
+    words: ['spice']
     inventory: 'Rare spices'
     locations: LOC_BOULDERS2
     treasure: true
     longs:
     - 'There are rare spices here!'
 - OBJ_64:
+    words: ['chain']
     inventory: 'Golden chain'
     locations: LOC_BARRENROOM
     immovable: true
@@ -3324,6 +3284,7 @@ objects: !!omap
     - 'The bear is locked to the wall with a golden chain!'
     - 'There is a golden chain locked to the wall!'
 - OBJ_65:
+    words: ['ruby']
     inventory: 'Giant ruby'
     locations: LOC_STOREROOM
     treasure: true
@@ -3331,12 +3292,14 @@ objects: !!omap
     - 'There is an enormous ruby here!'
     - 'There is a ruby resting in a small cavity in the rock!'
 - OBJ_66:
+    words: ['jade', 'neckl']
     inventory: 'Jade necklace'
     locations: LOC_NOWHERE
     treasure: true
     longs:
     - 'A precious jade necklace has been dropped here!'
 - OBJ_67:
+    words: ['amber', 'gemst']
     inventory: 'Amber gemstone'
     locations: LOC_NOWHERE
     treasure: true
@@ -3344,6 +3307,7 @@ objects: !!omap
     - 'There is a rare amber gemstone here!'
     - 'There is an amber gemstone resting in a small cavity in the rock!'
 - OBJ_68:
+    words: ['sapph']
     inventory: 'Star sapphire'
     locations: LOC_LEDGE
     treasure: true
@@ -3351,6 +3315,7 @@ objects: !!omap
     - 'A brilliant blue star sapphire is here!'
     - 'There is a star sapphire resting in a small cavity in the rock!'
 - OBJ_69:
+    words: ['ebony', 'statu']
     inventory: 'Ebony statuette'
     locations: LOC_REACHDEAD
     treasure: true
