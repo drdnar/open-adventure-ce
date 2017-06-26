@@ -443,78 +443,77 @@ vocabulary: [
     {word: "NEWS",  type: special, value: 275},
 ]
 
-# FIXME: Hint texts shouldn't be in arbitrary_messages, but inlined here
 hints:
   - hint: &grate
       name: CAVE
       number: 1
       turns: 4
       penalty: 2
-      question: ENTRY_QUERY
-      hint: HARD_GRATE
+      question: 'Are you trying to get into the cave?'
+      hint: 'The grate is very solid and has a hardened steel lock.  You cannot\nenter without a key, and there are no keys nearby.  I would recommend\nlooking elsewhere for the keys.'
   - hint: &bird
       name: BIRD
       number: 2
       turns: 5
       penalty: 2
-      question: BIRD_QUERY
-      hint: SKITTISH_BIRD
+      question: 'Are you trying to catch the bird?'
+      hint: 'Something about you seems to be frightening the bird.  Perhaps you\nmight figure out what it is.'
   - hint: &snake
       name: SNAKE
       number: 3
       turns: 8
       penalty: 2
-      question: SNAKE_QUERY
-      hint: SNAKE_HINT
+      question: 'Are you trying to somehow deal with the snake?'
+      hint: 'You can''t kill the snake, or drive it away, or avoid it, or anything\nlike that.  There is a way to get by, but you don''t have the necessary\nresources right now.'
   - hint: &maze
       name: MAZE
       number: 4
       turns: 75
       penalty: 4
-      question: MAZE_HELP
-      hint: DROP_THINGS
+      question: 'Do you need help getting out of the maze?'
+      hint: 'You can make the passages look less alike by dropping things.'
   - hint: &dark
       name: DARK
       number: 5
       turns: 25
       penalty: 5
-      question: PLOVER_QUERY
-      hint: EXPLORE_HINT
+      question: 'Are you trying to explore beyond the plover room?'
+      hint: 'There is a way to explore that region without having to worry about\nfalling into a pit.  None of the objects available is immediately\nuseful in discovering the secret.'
   - hint: &witt
       name: WITT
       number: 6
       turns: 20
       penalty: 3
-      question: HELP_LEAVING
-      hint: NOGO_WEST
+      question: 'Do you need help getting out of here?'
+      hint: 'Don''t go west.'
   - hint: &urn
       name: CLIFF
       number: 7
       turns: 8
       penalty: 2
-      question: WONDERING_QUERY
-      hint: ADVANCED_SECTION
+      question: 'Are you wondering what to do here?'
+      hint: 'This section is quite advanced.  Find the cave first.'
   - hint: &forest
       name: WOODS
       number: 8
       turns: 25
       penalty: 2
-      question: FOREST_QUERY
-      hint: GO_EAST
+      question: 'Would you like to be shown out of the forest?'
+      hint: 'Go east ten times.  If that doesn''t get you out, then go south, then\nwest twice, then south.'
   - hint: &ogre
       name: OGRE
       number: 9
       turns: 10
       penalty: 4
-      question: OGRE_QUERY
-      hint: OGRE_CLUE
+      question: 'Do you need help dealing with the ogre?'
+      hint: 'There is nothing the presence of which will prevent you from defeating\nhim; thus it can''t hurt to fetch everything you possibly can.'
   - hint: &jade
       name: JADE
       number: 10
       turns: 1
       penalty: 4
-      question: MISSING_ONE
-      hint: NO_LOCATE
+      question: 'You''re missing only one other treasure.  Do you need help finding it?'
+      hint: 'Once you''ve found all the other treasures, it is no longer possible to\nlocate the one you''re now missing.'
 
 locations: !!omap
 - LOC_NOWHERE:
@@ -2530,10 +2529,10 @@ arbitrary_messages:  !!omap
 - NO_MORE_DETAIL: 'Sorry, but I am not allowed to give more detail.  I will repeat the\nlong description of your location.'
 - PITCH_DARK: 'It is now pitch dark.  If you proceed you will likely fall into a pit.'
 - W_IS_WEST: 'If you prefer, simply type w rather than west.'
-- BIRD_QUERY: 'Are you trying to catch the bird?'
-- SKITTISH_BIRD: 'Something about you seems to be frightening the bird.  Perhaps you\nmight figure out what it is.'
-- SNAKE_QUERY: 'Are you trying to somehow deal with the snake?'
-- SNAKE_HINT: 'You can''t kill the snake, or drive it away, or avoid it, or anything\nlike that.  There is a way to get by, but you don''t have the necessary\nresources right now.'
+- ARB_18: !!null
+- ARB_19: !!null
+- ARB_20: !!null
+- ARB_21: !!null
 - REALLY_QUIT: 'Do you really want to quit now?'
 - PIT_FALL: 'You fell into a pit and broke every bone in your body!'
 - ALREADY_CARRYING: 'You are already carrying it!'
@@ -2574,8 +2573,8 @@ arbitrary_messages:  !!omap
 - NEARBY: 'I can only tell you what you see as you move about and manipulate\nthings.  I cannot tell you where remote things are.'
 - OGRE_SNARL: 'The ogre snarls and shoves you back.'
 - HUH_MAN: 'Huh?'
-- ENTRY_QUERY: 'Are you trying to get into the cave?'
-- HARD_GRATE: 'The grate is very solid and has a hardened steel lock.  You cannot\nenter without a key, and there are no keys nearby.  I would recommend\nlooking elsewhere for the keys.'
+- ARB_62: !!null
+- ARB_63: !!null
 - FOREST_LOOK: 'The trees of the forest are large hardwood oak and maple, with an\noccasional grove of pine or spruce.  There is quite a bit of under-\ngrowth, largely birch and ash saplings plus nondescript bushes of\nvarious sorts.  This time of year visibility is quite restricted by\nall the leaves, but travel is quite easy if you detour around the\nspruce and berry bushes.'
 - WELCOME_YOU: 'Welcome to Adventure!!  Would you like instructions?'
 - DIGGING_FUTILE: 'Digging without a shovel is quite impractical.  Even with a shovel\nprogress is unlikely.'
@@ -2688,12 +2687,12 @@ arbitrary_messages:  !!omap
 - NO_LOCKSITE: 'There is nothing here to which the chain can be locked.'
 - NO_EDIBLES: 'There is nothing here to eat.'
 - WANT_HINT: 'Do you want the hint?'
-- MAZE_HELP: 'Do you need help getting out of the maze?'
-- DROP_THINGS: 'You can make the passages look less alike by dropping things.'
-- PLOVER_QUERY: 'Are you trying to explore beyond the plover room?'
-- EXPLORE_HINT: 'There is a way to explore that region without having to worry about\nfalling into a pit.  None of the objects available is immediately\nuseful in discovering the secret.'
-- HELP_LEAVING: 'Do you need help getting out of here?'
-- NOGO_WEST: 'Don''t go west.'
+- ARB_176: !!null
+- ARB_177: !!null
+- ARB_178: !!null
+- ARB_179: !!null
+- ARB_180: !!null
+- ARB_181: !!null
 - TROLL_VICES: 'Gluttony is not one of the troll''s vices.  Avarice, however, is.'
 - LAMP_DIM: 'Your lamp is getting dim.  You''d best start wrapping this up, unless\nyou can find some fresh batteries.  I seem to recall there''s a vending\nmachine in the maze.  Bring some coins with you.'
 - LAMP_OUT: 'Your lamp has run out of power.'
@@ -2703,10 +2702,10 @@ arbitrary_messages:  !!omap
 - REPLACE_BATTERIES: 'Your lamp is getting dim.  I''m taking the liberty of replacing the\nbatteries.'
 - MISSING_BATTERIES: 'Your lamp is getting dim, and you''re out of spare batteries.  You''d\nbest start wrapping this up.'
 - REMOVE_MESSAGE: 'You sift your fingers through the dust, but succeed only in\nobliterating the cryptic message.'
-- OGRE_QUERY: 'Do you need help dealing with the ogre?'
+- ARB_191: !!null
 - CLUE_QUERY: 'Hmmm, this looks like a clue, which means it''ll cost you 10 points to\nread it.  Should I go ahead and read it anyway?'
 - WAYOUT_CLUE: 'It says, "There is a way out of this place.  Do you need any more\ninformation to escape?  Sorry, but this initial hint is all you get."'
-- OGRE_CLUE: 'There is nothing the presence of which will prevent you from defeating\nhim; thus it can''t hurt to fetch everything you possibly can.'
+- ARB_194: !!null
 - DONT_UNDERSTAND: 'I''m afraid I don''t understand.'
 - HAND_PASSTHROUGH: 'Your hand passes through it as though it weren''t there.'
 - BREAK_MIRROR: 'You strike the mirror a resounding blow, whereupon it shatters into a\nmyriad tiny fragments.'
@@ -2756,12 +2755,12 @@ arbitrary_messages:  !!omap
 - HEAD_BUZZES: 'Your head buzzes strangely for a moment.'
 - NOT_BRIGHT: '(Uh, y''know, that wasn''t very bright.)'
 - TOOK_LONG: 'It''s a pity you took so long about it.'
-- WONDERING_QUERY: 'Are you wondering what to do here?'
-- ADVANCED_SECTION: 'This section is quite advanced.  Find the cave first.'
+- ARB_244: !!null
+- ARB_245: !!null
 - UPSTREAM_DOWNSTREAM: 'Upstream or downstream?'
 - WIZARDS_NODISTURB: 'Wizards are not to be disturbed by such as you.'
-- FOREST_QUERY: 'Would you like to be shown out of the forest?'
-- GO_EAST: 'Go east ten times.  If that doesn''t get you out, then go south, then\nwest twice, then south.'
+- FOREST_QUERY: !!null
+- ARB_249: !!null
 - WATERS_CRASHING: 'The waters are crashing loudly against the shore.'
 - THROWN_KNIVES: '%d of them throw knives at you!'
 - MULTIPLE_HITS: '%d of them get you!'
@@ -2786,12 +2785,12 @@ arbitrary_messages:  !!omap
 # This message is not currently used
 - SAVE_TAMPERING: 'A dark fog creeps in to surround you.  From somewhere in the fog you\nhear a stern voice.  "This Adventure has been tampered with!  You have\nbeen dabbling in magic, knowing not the havoc you might cause thereby.\nLeave at once, before you do irrevocable harm!"  The fog thickens,\nuntil at last you can see nothing at all.  Your vision then clears,\nand you find yourself back in The Real World.'
 - GUESS_AGAIN: 'Guess again.'
-- MISSING_ONE: 'You''re missing only one other treasure.  Do you need help finding it?'
-- NO_LOCATE: 'Once you''ve found all the other treasures, it is no longer possible to\nlocate the one you''re now missing.'
+- ARB_274: !!null
+- ARB_275: !!null
 - TWIST_TURN: 'Sorry, but the path twisted and turned so much that I can''t figure\nout which way to go to get back.'
 - ADVENTURE_NEWS: 'Open Adventure is an author-approved open-source release of\nVersion 2.5 with, as yet, no gameplay changes.\nVersion 2.5 was essentially the same as Version II; the cave and the\nhazards therein are unchanged, and top score is still 430 points.\nThere are a few more hints, especially for some of the more obscure\npuzzles.  There are a few minor bugfixes and cosmetic changes.  You\ncan now save a game and resume it at once (formerly you had to wait a\nwhile first), but it now costs you a few points each time you save the\ngame.  Saved games are now stored in much smaller files than before.'
 - GO_UNNEEDED: 'You don''t have to say "go" every time; just specify a direction or, if\nit''s nearby, name the place to which you wish to move.'
-- CANNOT_CARRY7: !!null
+- ARB_279: !!null
 - MACHINE_SWINGOUT: 'As you strike the vending machine, it pivots backward along with a\nsection of wall, revealing a dark passage leading south.'
 - MACHINE_SWINGBACK: 'The vending machine swings back to block the passage.'
   

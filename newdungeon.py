@@ -339,8 +339,8 @@ def get_hints(hnt, arb):
         number = item["number"]
         penalty = item["penalty"]
         turns = item["turns"]
-        question = make_c_string(md[item["question"]])
-        hint = make_c_string(md[item["hint"]])
+        question = make_c_string(item["question"])
+        hint = make_c_string(item["hint"])
         hnt_str += template.format(number, penalty, turns, question, hint)
     hnt_str = hnt_str[:-1] # trim trailing newline
     return hnt_str
