@@ -12,6 +12,9 @@
 #    or special) and a numeric value.  Multiple synonyms may have the
 #    same value.
 #
+# actspk: Default message for action verbs.  The numbers correspond to
+#    values in the vocabulary list.
+#
 # hints: Each item contains a hint number, a hint label (used to
 #    generate the value macro for the hint) the number of turns he
 #    must be at the right loc(s) before triggering the hint, the
@@ -93,10 +96,6 @@
 #    significant, they're used in succession as the player racks up
 #    deaths.
 #
-# These correspond to sections 1, 2, 4, 5, 6, 7, 9, 10, 11, 13, and 14 in
-# the old adventure.text format.  Sections 3 and 8 haven't moved
-# yet.  Section 12 was obsolete.
-#
 # Message strings may include certain special character sequences to
 # denote that the program must provide parameters to insert into a
 # message when the message is printed.  These sequences are:
@@ -115,6 +114,8 @@
 
 # There are duplicate keys in this vocabulary, that's why it can't be a normal
 # map.  You have to iterate through it looking for a match qualified by type.
+# 1 is not allocated because it's used as a sentinel value in motion-verb
+# lists.
 vocabulary: [
     {word: "ROAD",  type: motion, value: 2},
     {word: "HILL",  type: motion, value: 2},
@@ -442,6 +443,44 @@ vocabulary: [
     {word: "YES",   type: special, value: 271},
     {word: "NEWS",  type: special, value: 275},
 ]
+
+actspk: {
+    1: ALREADY_CARRYING,
+    2: ARENT_CARRYING,
+    3: NO_MESSAGE,
+    4: NOT_LOCKABLE,
+    5: NO_MESSAGE,
+    6: NOT_LOCKABLE,
+    7: DONT_UNDERSTAND,
+    8: DONT_UNDERSTAND,
+    9: NOTHING_HAPPENS,
+    10: AM_GAME,
+    11: WHERE_QUERY,
+    12: RIDICULOUS_ATTEMPT,
+    13: ARENT_CARRYING,
+    14: RIDICULOUS_ATTEMPT,
+    15: STREAM_WATER,
+    16: RUB_NOGO,
+    17: ARENT_CARRYING,
+    18: HUH_MAN,
+    19: NEARBY,
+    20: NEARBY,
+    21: NO_EDIBLES,
+    22: CANT_FILL,
+    23: REQUIRES_DYNAMITE,
+    24: HUH_MAN,
+    25: NOT_KNOWHOW,
+    26: ON_WHAT,
+    27: DONT_UNDERSTAND,
+    28: BEYOND_POWER,
+    29: RIDICULOUS_ATTEMPT,
+    30: HUH_MAN,
+    31: HUH_MAN,
+    32: AM_GAME,
+    33: DONT_UNDERSTAND,
+    34: NOTHING_HAPPENS,
+    35: HUH_MAN,
+}
 
 hints:
   - hint: &grate
