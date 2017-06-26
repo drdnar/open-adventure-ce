@@ -112,6 +112,7 @@ extern const long actspk[];
 #define NDEATHS		{}
 #define NTHRESHOLDS	{}
 #define NVERBS  	{}
+#define NVOCAB          {}
 
 enum arbitrary_messages_refs {{
 {}
@@ -445,6 +446,7 @@ if __name__ == "__main__":
         len(db["obituaries"]),
         len(db["turn_thresholds"]),
         len(db["actspk"]),
+        len(db["vocabulary"]),
         get_refs(db["arbitrary_messages"]),
         get_refs(db["locations"]),
         get_refs(db["object_descriptions"]),
