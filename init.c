@@ -23,8 +23,8 @@ void initialise(void)
 
     for (int i = 1; i <= NLOCATIONS; i++) {
         game.abbrev[i] = 0;
-        if (!(locations[i].description.big == 0 || KEY[i] == 0)) {
-            int k = KEY[i];
+        if (!(locations[i].description.big == 0 || TKEY[i] == 0)) {
+            int k = TKEY[i];
             if (MOD(labs(TRAVEL[k]), 1000) == 1)
 		conditions[i] |= (1 << COND_FORCED);
         }

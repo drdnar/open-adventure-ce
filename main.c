@@ -418,7 +418,7 @@ static bool dwarfmove(void)
             continue;
         /*  Fill tk array with all the places this dwarf might go. */
         int j = 1;
-        kk = KEY[game.dloc[i]];
+        kk = TKEY[game.dloc[i]];
         if (kk != 0)
             do {
 		game.newloc = T_DESTINATION(TRAVEL[kk]);
@@ -541,7 +541,7 @@ static void croak(void)
 
 static bool playermove(token_t verb, int motion)
 {
-    int scratchloc, k2, kk = KEY[game.loc];
+    int scratchloc, k2, kk = TKEY[game.loc];
     game.newloc = game.loc;
     if (kk == 0)
         BUG(LOCATION_HAS_NO_TRAVEL_ENTRIES);
@@ -564,7 +564,7 @@ static bool playermove(token_t verb, int motion)
                 scratchloc = T_DESTINATION(TRAVEL[kk]);
                 if (scratchloc != motion) {
                     if (!SPECIAL(scratchloc)) {
-                        if (FORCED(scratchloc) && T_DESTINATION(TRAVEL[KEY[scratchloc]]) == motion)
+                        if (FORCED(scratchloc) && T_DESTINATION(TRAVEL[TKEY[scratchloc]]) == motion)
                             k2 = kk;
                     }
                     if (TRAVEL[kk] >= 0) {
@@ -580,7 +580,7 @@ static bool playermove(token_t verb, int motion)
                 }
 
                 motion = T_MOTION(TRAVEL[kk]);
-                kk = KEY[game.loc];
+                kk = TKEY[game.loc];
                 break; /* fall through to ordinary travel */
             }
         } else {
