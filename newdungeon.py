@@ -96,8 +96,8 @@ typedef struct {{
 
 extern const location_t locations[];
 extern const object_description_t object_descriptions[];
-extern const const char* arbitrary_messages[];
-extern const const class_t classes[];
+extern const char* arbitrary_messages[];
+extern const class_t classes[];
 extern const turn_threshold_t turn_thresholds[];
 extern const obituary_t obituaries[];
 extern const hint_t hints[];
