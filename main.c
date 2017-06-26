@@ -417,7 +417,7 @@ static bool dwarfmove(void)
         if (game.dloc[i] == 0)
             continue;
         /*  Fill tk array with all the places this dwarf might go. */
-        int j = 1;
+        unsigned int j = 1;
         kk = TKEY[game.dloc[i]];
         if (kk != 0)
             do {
