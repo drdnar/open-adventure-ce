@@ -27,7 +27,7 @@ struct save_t {
 };
 struct save_t save;
 
-int savefile(FILE *fp)
+int savefile(FILE *fp, long version)
     /* Save game to file. No input or output from user. */
 {
     long i, k;
@@ -35,7 +35,9 @@ int savefile(FILE *fp)
     k = i + 650 * k;
     save.savetime = k;
     save.mode = -1;
-    save.version = VRSION;
+    
+    save.version = (version == 0) ? VRSION : version;
+    
     memcpy(&save.game, &game, sizeof(struct game_t));
     IGNORE(fwrite(&save, sizeof(struct save_t), 1, fp));
     return(0);
@@ -68,8 +70,7 @@ int suspend(void)
         linenoiseFree(name);
     }
 
-    savefile(fp);
-    IGNORE(fwrite(&save, sizeof(struct save_t), 1, fp));
+    savefile(fp, VRSION);
     fclose(fp);
     rspeak(RESUME_HELP);
     exit(0);

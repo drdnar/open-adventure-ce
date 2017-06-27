@@ -25,10 +25,11 @@ int main(int argc, char *argv[])
     char *savefilename = NULL;
     long numdie = 0;
     long saved = 1;
+    long version = 0;
 
     /*  Options. */
-    const char* opts = "d:s:o:";
-    const char* usage = "Usage: %s [-d numdie] [-s numsaves] -o savefilename \n";
+    const char* opts = "d:s:v:o:";
+    const char* usage = "Usage: %s [-d numdie] [-s numsaves] [-v version] -o savefilename \n";
     while ((ch = getopt(argc, argv, opts)) != EOF) {
         switch (ch) {
         case 'd':
@@ -36,6 +37,9 @@ int main(int argc, char *argv[])
             break;
         case 's':
             saved = (long)atoi(optarg);
+            break;
+        case 'v':
+            version = (long)atoi(optarg);;
             break;
         case 'o':
             savefilename = optarg;
@@ -47,6 +51,8 @@ int main(int argc, char *argv[])
                     "        -d number of deaths. Signed integer value.'\n");
             fprintf(stderr,
                     "        -s number of saves. Signed integer value.\n");
+            fprintf(stderr,
+                    "        -v version number of save format.\n");
             fprintf(stderr,
                     "        -o file name of save game to write.\n");
             exit(-1);
@@ -87,11 +93,13 @@ int main(int argc, char *argv[])
     fp = fopen(savefilename, WRITE_MODE);
     if (fp == NULL)
     {
-        printf("Can't open file %s. Exiting.\n", savefilename);
+        fprintf(stderr,
+                "Can't open file %s. Exiting.\n", savefilename);
         exit(-1);
     }        
 
-    savefile(fp);
+    savefile(fp, version);
+    
     printf("cheat: %s created.\n", savefilename);
     return 0;
 }

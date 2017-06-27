@@ -127,7 +127,7 @@ extern unsigned long get_next_lcg_value(void);
 extern long randrange(long);
 extern long score(enum termination);
 extern void terminate(enum termination) __attribute__((noreturn));
-extern int savefile(FILE *);
+extern int savefile(FILE *, long);
 extern int suspend(void);
 extern int resume(void);
 extern int restore(FILE *);
