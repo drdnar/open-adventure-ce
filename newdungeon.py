@@ -107,6 +107,7 @@ extern const hint_t hints[];
 extern long conditions[];
 extern const long actspk[];
 extern const motion_t motions[];
+extern const action_t actions[];
 
 #define NLOCATIONS	{}
 #define NOBJECTS	{}
