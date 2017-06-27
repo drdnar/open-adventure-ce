@@ -6,14 +6,17 @@
 #
 # We define a bunch of YAML structures:
 #
-# vocabulary: Almost all the words the game knows - one of them (the
+# vocabulary: - This structure is unused, and will eventually be removed. -
+#    Almost all the words the game knows - one of them (the
 #    reservoir magic word) gets replaced with a randomly-generated
 #    cookie.  For each word there is a type (motion, action, object,
 #    or special) and a numeric value.  Multiple synonyms may have the
 #    same value.
 #
-# actspk: Default message for action verbs.  The numbers correspond to
-#    values in the vocabulary list.
+# motions: Motion words, grouped into synonyms.
+#
+# actions: Action words, grouped into synonyms, and their corresponding
+#    default messages.
 #
 # hints: Each item contains a hint number, a hint label (used to
 #    generate the value macro for the hint) the number of turns he
@@ -80,16 +83,17 @@
 #    Order doesn't matter; the logic simply tests every threshold on
 #    the assumption that turn counts never decrease nor skip values.
 #
-# object_descriptions: Each item contains a description for use in the
+# objects: Each item contains a description for use in the
 #    inventory command and one or more messages describing the object
-#    in different states.  There is also a boolean "treasure"
-#    attribute, defaulting to false.  An pbject may have one or two
+#    in different states.  The vocabulary word(s) referring to this
+#    object are listed (words).  There is also a boolean "treasure"
+#    attribute, defaulting to false.  An object may have one or two
 #    start locations (the gate is an example of a two-location object;
 #    it can be accessed from above or below).  An object may also be
 #    flagged immovable, meaning it cannot be carried.  If a state
 #    message is a tuple then the first element is made the name of a
-#    #define viible to the code for the associayed state, numbered
-#    from zero upwards. If the inventory desription begins with "*"
+#    #define visble to the code for the associated state, numbered
+#    from zero upwards. If the inventory description begins with "*"
 #    the object is dungeon furniture that cannot be taken or carried.
 #
 # obituaries: Death messages and reincarnation queries.  Order is
