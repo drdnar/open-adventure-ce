@@ -1,0 +1,31 @@
+## Elicit hint for dealing with snake
+n
+seed 1951269982
+in
+get lamp
+get keys
+out
+down
+s
+s
+open
+in
+west
+get cage
+w
+on
+w
+w
+w
+down
+down
+w
+attack snake
+w
+eat snake
+w
+throw snake
+w
+carry snake
+y
+y
