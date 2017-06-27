@@ -14,7 +14,7 @@ static int attack(FILE *input, struct command_t *command)
 {
     vocab_t verb = command->verb;
     vocab_t obj = command->obj;
-    int spk = actspk[verb];
+    int spk = actions[verb].message;
     if (obj == 0 || obj == INTRANSITIVE) {
         if (atdwrf(game.loc) > 0)
             obj = DWARF;
@@ -177,7 +177,7 @@ static void blast(void)
 static int vbreak(token_t verb, token_t obj)
 /*  Break.  Only works for mirror in repository and, of course, the vase. */
 {
-    int spk = actspk[verb];
+    int spk = actions[verb].message;
     if (obj == MIRROR)spk = TOO_FAR;
     if (obj == VASE && game.prop[VASE] == 0) {
         if (TOTING(VASE))drop(VASE, game.loc);
@@ -323,7 +323,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
  *  bird (might attack snake or dragon) and cage (might contain bird) and vase.
  *  Drop coins at vending machine for extra batteries. */
 {
-    int spk = actspk[verb];
+    int spk = actions[verb].message;
     if (!just_do_it) {
         if (TOTING(ROD2) && obj == ROD && !TOTING(ROD))obj = ROD2;
         if (!TOTING(obj)) {
@@ -398,7 +398,7 @@ static int drink(token_t verb, token_t obj)
 /*  Drink.  If no object, assume water and look for it here.  If water is in
  *  the bottle, drink that, else must be at a water loc, so drink stream. */
 {
-    int spk = actspk[verb];
+    int spk = actions[verb].message;
     if (obj == 0 && LIQLOC(game.loc) != WATER && (LIQUID() != WATER || !HERE(BOTTLE)))
         return GO_UNKNOWN;
     if (obj != BLOOD) {
@@ -422,7 +422,7 @@ static int eat(token_t verb, token_t obj)
 /*  Eat.  Intransitive: assume food if present, else ask what.  Transitive: food
  *  ok, some things lose appetite, rest are ridiculous. */
 {
-    int spk = actspk[verb];
+    int spk = actions[verb].message;
     if (obj == INTRANSITIVE) {
         if (!HERE(FOOD))
             return GO_UNKNOWN;
@@ -444,7 +444,7 @@ static int eat(token_t verb, token_t obj)
 static int extinguish(token_t verb, int obj)
 /* Extinguish.  Lamp, urn, dragon/volcano (nice try). */
 {
-    int spk = actspk[verb];
+    int spk = actions[verb].message;
     if (obj == INTRANSITIVE) {
         if (HERE(LAMP) && game.prop[LAMP] == LAMP_BRIGHT)
 	    obj = LAMP;
@@ -469,7 +469,7 @@ static int feed(token_t verb, token_t obj)
 /*  Feed.  If bird, no seed.  Snake, dragon, troll: quip.  If dwarf, make him
  *  mad.  Bear, special. */
 {
-    int spk = actspk[verb];
+    int spk = actions[verb].message;
     if (obj == BIRD) {
         rspeak(BIRD_PINING);
         return GO_CLEAROBJ;
@@ -511,7 +511,7 @@ int fill(token_t verb, token_t obj)
  *  is nasty.) */
 {
     int k;
-    int spk = actspk[verb];
+    int spk = actions[verb].message;
     if (obj == VASE) {
         spk = ARENT_CARRYING;
         if (LIQLOC(game.loc) == 0)spk = FILL_INVALID;
@@ -569,7 +569,7 @@ int fill(token_t verb, token_t obj)
 static int find(token_t verb, token_t obj)
 /* Find.  Might be carrying it, or it might be here.  Else give caveat. */
 {
-    int spk = actspk[verb];
+    int spk = actions[verb].message;
     if (AT(obj) ||
         (LIQUID() == obj && AT(BOTTLE)) ||
         obj == LIQLOC(game.loc) ||
@@ -584,7 +584,7 @@ static int find(token_t verb, token_t obj)
 static int fly(token_t verb, token_t obj)
 /* Fly.  Snide remarks unless hovering rug is here. */
 {
-    int spk = actspk[verb];
+    int spk = actions[verb].message;
     if (obj == INTRANSITIVE) {
         if (game.prop[RUG] != 2)spk = RUG_NOTHING2;
         if (!HERE(RUG))spk = FLAP_ARMS;
@@ -637,7 +637,7 @@ static int inven(void)
 static int light(token_t verb, token_t obj)
 /*  Light.  Applicable only to lamp and urn. */
 {
-    int spk = actspk[verb];
+    int spk = actions[verb].message;
     if (obj == INTRANSITIVE) {
         if (HERE(LAMP) && game.prop[LAMP] == LAMP_DARK && game.limit >= 0)
 	    obj = LAMP;
@@ -704,7 +704,7 @@ static int listen(void)
 static int lock(token_t verb, token_t obj)
 /* Lock, unlock, no object given.  Assume various things if present. */
 {
-    int spk = actspk[verb];
+    int spk = actions[verb].message;
     if (obj == INTRANSITIVE) {
         spk = NOTHING_LOCKED;
         if (HERE(CLAM))obj = CLAM;
@@ -750,7 +750,7 @@ static int pour(token_t verb, token_t obj)
 /*  Pour.  If no object, or object is bottle, assume contents of bottle.
  *  special tests for pouring water or oil on plant or rusty door. */
 {
-    int spk = actspk[verb];
+    int spk = actions[verb].message;
     if (obj == BOTTLE || obj == 0)obj = LIQUID();
     if (obj == 0) return GO_UNKNOWN;
     if (!TOTING(obj)) {
@@ -845,7 +845,7 @@ static int reservoir(void)
 static int rub(token_t verb, token_t obj)
 /* Rub.  Yields various snide remarks except for lit urn. */
 {
-    int spk = actspk[verb];
+    int spk = actions[verb].message;
     if (obj != LAMP)
         spk = PECULIAR_NOTHING;
     if (obj == URN && game.prop[URN] == 2) {
@@ -955,7 +955,7 @@ static int wake(token_t verb, token_t obj)
 /* Wake.  Only use is to disturb the dwarves. */
 {
     if (obj != DWARF || !game.closed) {
-        rspeak(actspk[verb]);
+        rspeak(actions[verb].message);
         return GO_CLEAROBJ;
     } else {
         rspeak(PROD_DWARF);
@@ -966,7 +966,7 @@ static int wake(token_t verb, token_t obj)
 static int wave(token_t verb, token_t obj)
 /* Wave.  No effect unless waving rod at fissure or at bird. */
 {
-    int spk = actspk[verb];
+    int spk = actions[verb].message;
     if ((!TOTING(obj)) && (obj != ROD || !TOTING(ROD2)))spk = ARENT_CARRYING;
     if (obj != ROD ||
         !TOTING(obj) ||
