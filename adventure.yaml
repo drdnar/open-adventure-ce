@@ -340,44 +340,6 @@ vocabulary: [
     {word: "NEWS",  type: special, value: 275},
 ]
 
-actspk: {
-    1: ALREADY_CARRYING,
-    2: ARENT_CARRYING,
-    3: NO_MESSAGE,
-    4: NOT_LOCKABLE,
-    5: NO_MESSAGE,
-    6: NOT_LOCKABLE,
-    7: DONT_UNDERSTAND,
-    8: DONT_UNDERSTAND,
-    9: NOTHING_HAPPENS,
-    10: AM_GAME,
-    11: WHERE_QUERY,
-    12: RIDICULOUS_ATTEMPT,
-    13: ARENT_CARRYING,
-    14: RIDICULOUS_ATTEMPT,
-    15: STREAM_WATER,
-    16: RUB_NOGO,
-    17: ARENT_CARRYING,
-    18: HUH_MAN,
-    19: NEARBY,
-    20: NEARBY,
-    21: NO_EDIBLES,
-    22: CANT_FILL,
-    23: REQUIRES_DYNAMITE,
-    24: HUH_MAN,
-    25: NOT_KNOWHOW,
-    26: ON_WHAT,
-    27: DONT_UNDERSTAND,
-    28: BEYOND_POWER,
-    29: RIDICULOUS_ATTEMPT,
-    30: HUH_MAN,
-    31: HUH_MAN,
-    32: AM_GAME,
-    33: DONT_UNDERSTAND,
-    34: NOTHING_HAPPENS,
-    35: HUH_MAN,
-}
-
 motions: !!omap
 - MOT_0:
     words: !!null

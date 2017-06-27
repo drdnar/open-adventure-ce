@@ -105,7 +105,6 @@ extern const turn_threshold_t turn_thresholds[];
 extern const obituary_t obituaries[];
 extern const hint_t hints[];
 extern long conditions[];
-extern const long actspk[];
 extern const motion_t motions[];
 extern const action_t actions[];
 
@@ -178,11 +177,6 @@ const hint_t hints[] = {{
 }};
 
 long conditions[] = {{
-{}
-}};
-
-const long actspk[] = {{
-    NO_MESSAGE,
 {}
 }};
 
@@ -412,12 +406,6 @@ def recompose(type_word, value):
         sys.stderr.write("%s is not a known word classifier\n" % attrs["type"])
         sys.exit(1)
 
-def get_actspk(actspk):
-    res = ""
-    for (i, word) in actspk.items():
-        res += "    %s,\n" % word
-    return res
-
 def buildtravel(locs, objs, voc):
     ltravel = []
     lkeys = []
@@ -543,7 +531,6 @@ if __name__ == "__main__":
         get_obituaries(db["obituaries"]),
         get_hints(db["hints"], db["arbitrary_messages"]),
         get_condbits(db["locations"]),
-        get_actspk(db["actspk"]),
         get_motions(db["motions"]),
         get_actions(db["actions"]),
     )
@@ -555,7 +542,7 @@ if __name__ == "__main__":
         len(db["classes"])-1,
         len(db["obituaries"]),
         len(db["turn_thresholds"]),
-        len(db["actspk"]),
+        len(db["actions"]),
         len(travel),
         get_refs(db["arbitrary_messages"]),
         get_refs(db["locations"]),
