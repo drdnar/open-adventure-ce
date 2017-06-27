@@ -92,6 +92,11 @@ typedef struct {{
   const char** words;
 }} motion_t;
 
+typedef struct {{
+  const char** words;
+  const long message;
+}} action_t;
+
 extern const location_t locations[];
 extern const object_t objects[];
 extern const char* arbitrary_messages[];
@@ -109,7 +114,7 @@ extern const motion_t motions[];
 #define NCLASSES	{}
 #define NDEATHS		{}
 #define NTHRESHOLDS	{}
-#define NVERBS  	{}
+#define NACTIONS  	{}
 #define NTRAVEL		{}
 
 enum arbitrary_messages_refs {{
@@ -125,6 +130,10 @@ enum object_refs {{
 }};
 
 enum motion_refs {{
+{}
+}};
+
+enum action_refs {{
 {}
 }};
 
@@ -177,6 +186,10 @@ const long actspk[] = {{
 }};
 
 const motion_t motions[] = {{
+{}
+}};
+
+const action_t actions[] = {{
 {}
 }};
 
@@ -484,6 +497,31 @@ def get_motions(motions):
         mot_str += template.format(words_str)
     return mot_str
 
+def get_actions(actions):
+    template = """    {{
+        .words = {},
+        .message = {},
+    }},
+"""
+    act_str = ""
+    for action in actions:
+        contents = action[1]
+        
+        if contents["words"] == None:
+            words_str = "NULL"
+        else:
+            c_words = [make_c_string(s) for s in contents["words"]]
+            words_str = "(const char* []) {" + ", ".join(c_words) + "}"
+
+        if contents["message"] == None:
+            message = "NO_MESSAGE"
+        else:
+            message = contents["message"]
+            
+        act_str += template.format(words_str, message)
+    act_str = act_str[:-1] # trim trailing newline
+    return act_str
+
 if __name__ == "__main__":
     with open(yaml_name, "r") as f:
         db = yaml.load(f)
@@ -506,6 +544,7 @@ if __name__ == "__main__":
         get_condbits(db["locations"]),
         get_actspk(db["actspk"]),
         get_motions(db["motions"]),
+        get_actions(db["actions"]),
     )
 
     h = h_template.format(
@@ -521,6 +560,7 @@ if __name__ == "__main__":
         get_refs(db["locations"]),
         get_refs(db["objects"]),
         get_refs(db["motions"]),
+        get_refs(db["actions"]),
         statedefines,
     )
 
