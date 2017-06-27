@@ -3,6 +3,46 @@
 # This is the new open-adventure dungeon generator. It'll eventually
 # replace the existing dungeon.c It currently outputs a .h and .c pair
 # for C code.
+#
+# The nontrivial part of this is the compilation of the YAML for
+# movement rules to the travel array that's actually used by
+# playermove().  This program first compiles the YAML to a form
+# identical to the data in section 3 of the old adventure.text file,
+# then a second stage packs that data into the travel array.
+#
+# Here are the rules of the intermediate form:
+#
+# Each row of data contains a location number (X), a second
+# location number (Y), and a list of motion numbers (see section 4).
+# each motion represents a verb which will go to Y if currently at X.
+# Y, in turn, is interpreted as follows.  Let M=Y/1000, N=Y mod 1000.
+#		If N<=300	it is the location to go to.
+#		If 300<N<=500	N-300 is used in a computed goto to
+#					a section of special code.
+#		If N>500	message N-500 from section 6 is printed,
+#					and he stays wherever he is.
+# Meanwhile, M specifies the conditions on the motion.
+#		If M=0		it's unconditional.
+#		If 0<M<100	it is done with M% probability.
+#		If M=100	unconditional, but forbidden to dwarves.
+#		If 100<M<=200	he must be carrying object M-100.
+#		If 200<M<=300	must be carrying or in same room as M-200.
+#		If 300<M<=400	game.prop(M % 100) must *not* be 0.
+#		If 400<M<=500	game.prop(M % 100) must *not* be 1.
+#		If 500<M<=600	game.prop(M % 100) must *not* be 2, etc.
+# If the condition (if any) is not met, then the next *different*
+# "destination" value is used (unless it fails to meet *its* conditions,
+# in which case the next is found, etc.).  Typically, the next dest will
+# be for one of the same verbs, so that its only use is as the alternate
+# destination for those verbs.  For instance:
+#		15	110022	29	31	34	35	23	43
+#		15	14	29
+# This says that, from loc 15, any of the verbs 29, 31, etc., will take
+# him to 22 if he's carrying object 10, and otherwise will go to 14.
+#		11	303008	49
+#		11	9	50
+# This says that, from 11, 49 takes him to 8 unless game.prop(3)=0, in which
+# case he goes to 9.  Verb 50 takes him to 9 regardless of game.prop(3).
 
 import sys, yaml
 
@@ -408,7 +448,6 @@ def recompose(type_word, value):
 
 def buildtravel(locs, objs, voc):
     ltravel = []
-    lkeys = []
     verbmap = {}
     for entry in db["vocabulary"]:
         if entry["type"] == "motion" and entry["value"] not in verbmap:
@@ -468,7 +507,7 @@ def buildtravel(locs, objs, voc):
                 if not rule["verbs"]:
                     tt.append(1)
                 ltravel.append(tuple(tt))
-    return (tuple(ltravel), lkeys)
+    return tuple(ltravel)
 
 def get_motions(motions):
     template = """    {{
@@ -518,8 +557,30 @@ if __name__ == "__main__":
     locnames = [x[0] for x in db["locations"]]
     msgnames = [el[0] for el in db["arbitrary_messages"]]
     objnames = [el[0] for el in db["objects"]]
-    (travel, key) = buildtravel(db["locations"], db["objects"], db["vocabulary"])
-    # FIXME: pack the Section 3 representation into the runtime format.
+
+    travel = buildtravel(db["locations"], db["objects"], db["vocabulary"])
+
+    # At this point the ltravel data is in the Section 3
+    # representation from the FORTRAN version.  Next we perform the
+    # same mapping into the runtime format.  This was the C translation
+    # of the FORTRAN code:
+    # long loc;
+    # while ((loc = GETNUM(database)) != -1) {
+    #     long newloc = GETNUM(NULL);
+    #     long L;
+    #     if (TKEY[loc] == 0) {
+    #         TKEY[loc] = TRVS;
+    #     } else {
+    #         TRAVEL[TRVS - 1] = -TRAVEL[TRVS - 1];
+    #     }
+    #     while ((L = GETNUM(NULL)) != 0) {
+    #         TRAVEL[TRVS] = newloc * 1000 + L;
+    #         TRVS = TRVS + 1;
+    #         if (TRVS == TRVSIZ)
+    #             BUG(TOO_MANY_TRAVEL_OPTIONS);
+    #     }
+    #     TRAVEL[TRVS - 1] = -TRAVEL[TRVS - 1];
+    # }
 
     c = c_template.format(
         h_name,
