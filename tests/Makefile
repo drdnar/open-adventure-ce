@@ -41,6 +41,14 @@ regress:
 	../cheat -d -1000 -o cheat_numdie.adv
 	$(ECHO) -n "Generate save file with version -1337: "
 	../cheat -v -1337 -o resume_badversion.adv
+	$(ECHO) -n "Generate save file 1000 saves: "
+	../cheat -s -1000 -o thousand_saves.adv
+	$(ECHO) -n "Bogus option for save file generation: "
+	../cheat -QqQ | true
+	$(ECHO) -n "Fail to save because we omit -o: "
+	../cheat -d 1 | true
+	$(ECHO) -n "Fail to save to invalid path: "
+	../cheat -o /badfilename.adv | true
 	@for file in $(TESTLOADS); do \
 	    $(ECHO) -n "  $${file} "; grep '##' $${file}.log  || echo ' ## (no description)'; \
 	    OPTS=`sed -n /#options:/s///p <$${file}.log`; \
