@@ -167,17 +167,9 @@ extern int restore(FILE *);
 #define INDEEP(LOC)	((LOC) >= LOC_MISTHALL && !OUTSID(LOC))
 
 /* vocabulary items */
-extern long NUL;
-extern long BACK;
-extern long LOOK;
-extern long CAVE;
 extern long FIND;
 extern long INVENT;
 extern long SAY;
-extern long ENTER;
-extern long STREAM;
-extern long DPRSSN;
-extern long ENTRNC;
 extern long LOCK;
 extern long THROW;
 

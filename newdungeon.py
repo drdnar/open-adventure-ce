@@ -89,10 +89,8 @@ typedef struct {{
 }} hint_t;
 
 typedef struct {{
-  const char* word;
-  const int type;
-  const int value;
-}} vocabulary_t;
+  const char** words;
+}} motion_t;
 
 extern const location_t locations[];
 extern const object_t objects[];
@@ -102,8 +100,8 @@ extern const turn_threshold_t turn_thresholds[];
 extern const obituary_t obituaries[];
 extern const hint_t hints[];
 extern long conditions[];
-extern const vocabulary_t vocabulary[];
 extern const long actspk[];
+extern const motion_t motions[];
 
 #define NLOCATIONS	{}
 #define NOBJECTS	{}
@@ -112,7 +110,6 @@ extern const long actspk[];
 #define NDEATHS		{}
 #define NTHRESHOLDS	{}
 #define NVERBS  	{}
-#define NVOCAB          {}
 #define NTRAVEL		{}
 
 enum arbitrary_messages_refs {{
@@ -124,6 +121,10 @@ enum locations_refs {{
 }};
 
 enum object_refs {{
+{}
+}};
+
+enum motion_refs {{
 {}
 }};
 
@@ -170,12 +171,12 @@ long conditions[] = {{
 {}
 }};
 
-const vocabulary_t vocabulary[] = {{
+const long actspk[] = {{
+    NO_MESSAGE,
 {}
 }};
 
-const long actspk[] = {{
-    NO_MESSAGE,
+const motion_t motions[] = {{
 {}
 }};
 
@@ -397,22 +398,6 @@ def recompose(type_word, value):
         sys.stderr.write("%s is not a known word classifier\n" % attrs["type"])
         sys.exit(1)
 
-def get_vocabulary(vocabulary):
-    template = """    {{
-        .word = {},
-        .type = {},
-        .value = {},
-    }},
-"""
-    voc_str = ""
-    for vocab in vocabulary:
-        word = make_c_string(vocab["word"])
-        type_code = recompose(vocab["type"], vocab["value"])
-        value = vocab["value"]
-        voc_str += template.format(word, type_code, value)
-    voc_str = voc_str[:-1] # trim trailing newline
-    return voc_str
-
 def get_actspk(actspk):
     res = ""
     for (i, word) in actspk.items():
@@ -483,6 +468,22 @@ def buildtravel(locs, objs, voc):
                 #print(tuple(tt))
     return (ltravel, lkeys)
 
+def get_motions(motions):
+    template = """    {{
+        .words = {},
+    }},
+"""
+    mot_str = ""
+    for motion in motions:
+        contents = motion[1]
+        if contents["words"] == None:
+            mot_str += template.format("NULL")
+            continue
+        c_words = [make_c_string(s) for s in contents["words"]]
+        words_str = "(const char* []) {" + ", ".join(c_words) + "}"
+        mot_str += template.format(words_str)
+    return mot_str
+
 if __name__ == "__main__":
     with open(yaml_name, "r") as f:
         db = yaml.load(f)
@@ -502,8 +503,8 @@ if __name__ == "__main__":
         get_obituaries(db["obituaries"]),
         get_hints(db["hints"], db["arbitrary_messages"]),
         get_condbits(db["locations"]),
-        get_vocabulary(db["vocabulary"]),
         get_actspk(db["actspk"]),
+        get_motions(db["motions"]),
     )
 
     h = h_template.format(
@@ -514,11 +515,11 @@ if __name__ == "__main__":
         len(db["obituaries"]),
         len(db["turn_thresholds"]),
         len(db["actspk"]),
-        len(db["vocabulary"]),
         len(travel),
         get_refs(db["arbitrary_messages"]),
         get_refs(db["locations"]),
         get_refs(db["objects"]),
+        get_refs(db["motions"]),
         statedefines,
     )
 

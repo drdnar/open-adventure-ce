@@ -378,6 +378,162 @@ actspk: {
     35: HUH_MAN,
 }
 
+motions: !!omap
+- MOT_0:
+    words: !!null
+- MOT_1:
+    words: !!null
+- MOT_2:
+    words: ['road', 'hill']
+- ENTER:
+    words: ['enter']
+- MOT_4:
+    words: ['upstr']
+- MOT_5:
+    words: ['downs']
+- MOT_6:
+    words: ['fores']
+- MOT_7:
+    words: ['forwa', 'conti', 'onwar']
+- BACK:
+    words: ['back', 'retur', 'retre']
+- MOT_9:
+    words: ['valle']
+- MOT_10:
+    words: ['stair']
+- MOT_11:
+    words: ['out', 'outsi', 'exit', 'leave']
+- MOT_12:
+    words: ['build', 'house']
+- MOT_13:
+    words: ['gully']
+- STREAM:
+    words: ['strea']
+- MOT_15:
+    words: ['fork']
+- MOT_16:
+    words: ['bed']
+- MOT_17:
+    words: ['crawl']
+- MOT_18:
+    words: ['cobbl']
+- MOT_19:
+    words: ['inwar', 'insid', 'in']
+- MOT_20:
+    words: ['surfa']
+- NUL:
+    words: ['null', 'nowhe']
+- MOT_22:
+    words: ['dark']
+- MOT_23:
+    words: ['passa', 'tunne']
+- MOT_24:
+    words: ['low']
+- MOT_25:
+    words: ['canyo']
+- MOT_26:
+    words: ['awkwa']
+- MOT_27:
+    words: ['giant']
+- MOT_28:
+    words: ['view']
+- MOT_29:
+    words: ['upwar', 'up', 'u', 'above', 'ascen']
+- MOT_30:
+    words: ['d', 'downw', 'down', 'desce']
+- MOT_31:
+    words: ['pit']
+- MOT_32:
+    words: ['outdo']
+- MOT_33:
+    words: ['crack']
+- MOT_34:
+    words: ['steps']
+- MOT_35:
+    words: ['dome']
+- MOT_36:
+    words: ['left']
+- MOT_37:
+    words: ['right']
+- MOT_38:
+    words: ['hall']
+- MOT_39:
+    words: ['jump']
+- MOT_40:
+    words: ['barre']
+- MOT_41:
+    words: ['over']
+- MOT_42:
+    words: ['acros']
+- MOT_43:
+    words: ['east', 'e']
+- MOT_44:
+    words: ['west', 'w']
+- MOT_45:
+    words: ['north', 'n']
+- MOT_46:
+    words: ['south', 's']
+- MOT_47:
+    words: ['ne']
+- MOT_48:
+    words: ['se']
+- MOT_49:
+    words: ['sw']
+- MOT_50:
+    words: ['nw']
+- MOT_51:
+    words: ['debri']
+- MOT_52:
+    words: ['hole']
+- MOT_53:
+    words: ['wall']
+- MOT_54:
+    words: ['broke']
+- MOT_55:
+    words: ['y2']
+- MOT_56:
+    words: ['climb']
+- LOOK:
+    words: ['look', 'exami', 'touch', 'descr']
+- MOT_58:
+    words: ['floor']
+- MOT_59:
+    words: ['room']
+- MOT_60:
+    words: ['slit']
+- MOT_61:
+    words: ['slab', 'slabr']
+- MOT_62:
+    words: ['xyzzy']
+- DPRSSN:
+    words: ['depre']
+- ENTRNC:
+    words: ['entra']
+- MOT_65:
+    words: ['plugh']
+- MOT_66:
+    words: ['secre']
+- CAVE:
+    words: ['cave']
+- MOT_68:
+    words: !!null
+- MOT_69:
+    words: ['cross']
+- MOT_70:
+    words: ['bedqu']
+- MOT_71:
+    words: ['plove']
+- MOT_72:
+    words: ['orien']
+- MOT_73:
+    words: ['caver']
+- MOT_74:
+    words: ['shell']
+- MOT_75:
+    words: ['reser']
+- MOT_76:
+    words: ['main', 'offic']
+
 hints:
   - hint: &grate
       name: CAVE

@@ -43,17 +43,9 @@ struct game_t game;
 long LNLENG, LNPOSN;
 char rawbuf[LINESIZE], INLINE[LINESIZE + 1];
 
-long NUL;
-long BACK;
-long LOOK;
-long CAVE;
 long FIND;
 long INVENT;
 long SAY;
-long ENTER;
-long STREAM;
-long DPRSSN;
-long ENTRNC;
 long LOCK;
 long THROW;
 

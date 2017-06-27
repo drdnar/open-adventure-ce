@@ -74,17 +74,7 @@ void initialise(void)
 
     /* Define some handy mnemonics. */
 
-    /* These are motion-verb numbers. */
-    BACK = VOCWRD(WORD_BACK, 0);
-    CAVE = VOCWRD(WORD_CAVE, 0);
-    DPRSSN = VOCWRD(WORD_DPRSSN, 0);
-    ENTER = VOCWRD(WORD_ENTER, 0);
-    ENTRNC = VOCWRD(WORD_ENTRNC, 0);
-    LOOK = VOCWRD(WORD_LOOK, 0);
-    NUL = VOCWRD(WORD_NUL, 0);
-    STREAM = VOCWRD(WORD_STREAM, 0);
-
-    /* And some action verbs. */
+    /* Some action verbs. */
     FIND = VOCWRD(WORD_FIND, 2);
     INVENT = VOCWRD(WORD_INVENT, 2);
     LOCK = VOCWRD(WORD_LOCK, 2);
