@@ -816,7 +816,7 @@ static int read(struct command_t command)
     } else if (command.obj == OYSTER && !game.clshnt && game.closed) {
         game.clshnt = yes(arbitrary_messages[CLUE_QUERY], arbitrary_messages[WAYOUT_CLUE], arbitrary_messages[OK_MAN]);
     } else if (objects[command.obj].texts[0] == NULL || game.prop[command.obj] < 0) {
-        rspeak(actspk[command.verb]);
+        rspeak(actions[command.verb].message);
     } else
         pspeak(command.obj, study, game.prop[command.obj]);
     return GO_CLEAROBJ;
@@ -893,7 +893,7 @@ static int throw (FILE *cmdin, struct command_t *command)
  *  (Only way to do so!)  Axe also special for dragon, bear, and
  *  troll.  Treasures special for troll. */
 {
-    int spk = actspk[command->verb];
+    int spk = actions[command->verb].message;
     if (TOTING(ROD2) && command->obj == ROD && !TOTING(ROD))command->obj = ROD2;
     if (!TOTING(command->obj)) {
         rspeak(spk);
@@ -1005,7 +1005,7 @@ int action(FILE *input, struct command_t *command)
  *  unless verb is "say", which snarfs arbitrary second word.
  */
 {
-    token_t spk = actspk[command->verb];
+    token_t spk = actions[command->verb].message;
 
     if (command->part == unknown) {
         /*  Analyse an object word.  See if the thing is here, whether
