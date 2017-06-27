@@ -465,8 +465,8 @@ def buildtravel(locs, objs, voc):
                 tt += [verbmap[e] for e in rule["verbs"]]
                 if not rule["verbs"]:
                     tt.append(1)
-                #print(tuple(tt))
-    return (ltravel, lkeys)
+                ltravel.append(tuple(tt))
+    return (tuple(ltravel), lkeys)
 
 def get_motions(motions):
     template = """    {{
@@ -492,6 +492,7 @@ if __name__ == "__main__":
     msgnames = [el[0] for el in db["arbitrary_messages"]]
     objnames = [el[0] for el in db["objects"]]
     (travel, key) = buildtravel(db["locations"], db["objects"], db["vocabulary"])
+    # FIXME: pack the Section 3 representation into the runtime format.
 
     c = c_template.format(
         h_name,
