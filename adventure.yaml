@@ -59,7 +59,8 @@
 #                      [pct, N]       Roll a die, n% chance of success
 #                      [carry, OBJ]   Must be carrying named object
 #                      [with, OBJ]    Must be carrying or in room with
-#                      [not, OBJ N]   Property of named OBJ must not be N
+#                      [not, OBJ N]   Property of named OBJ must not be N.
+#                                     N may be numeric or a state label.
 #    All attributes are optional except the long description and
 #    travel. Order of locations is not significant.
 #
@@ -92,8 +93,9 @@
 #    it can be accessed from above or below).  An object may also be
 #    flagged immovable, meaning it cannot be carried.  If a state
 #    message is a tuple then the first element is made the name of a
-#    #define visble to the code for the associated state, numbered
-#    from zero upwards. If the inventory description begins with "*"
+#    #define visible to the code for the associated state, numbered
+#    from zero upwards; it is also a state label that can be used in
+#    travel-rule 'not' clauses. If the inventory description begins with "*"
 #    the object is dungeon furniture that cannot be taken or carried.
 #
 # obituaries: Death messages and reincarnation queries.  Order is
@@ -790,7 +792,7 @@ locations: !!omap
       {verbs: ['WEST'], action: [goto, LOC_FOREST9]},
       {verbs: ['BUILD'], action: [goto, LOC_START]},
       {verbs: ['UPSTR', 'GULLY', 'NORTH'], action: [goto, LOC_SLIT]},
-      {verbs: ['ENTER', 'INWAR', 'D'], cond: [not, GRATE, 0,], action: [goto, LOC_BELOWGRATE]},
+      {verbs: ['ENTER', 'INWAR', 'D'], cond: [not, GRATE, GRATE_CLOSED], action: [goto, LOC_BELOWGRATE]},
       {verbs: ['ENTER'], action: ["speak", GRATE_NOWAY]},
     ]
 - LOC_BELOWGRATE:
@@ -799,7 +801,7 @@ locations: !!omap
       short: 'You''re below the grate.'
     conditions: {LIT: true}
     travel: [
-      {verbs: ['OUT', 'UPWAR'], cond: [not, GRATE, 0], action: [goto, LOC_GRATE]},
+      {verbs: ['OUT', 'UPWAR'], cond: [not, GRATE, GRATE_CLOSED], action: [goto, LOC_GRATE]},
       {verbs: ['OUT'], action: ["speak", GRATE_NOWAY]},
       {verbs: ['CRAWL', 'COBBL', 'INWAR', 'WEST'], action: [goto, LOC_COBBLE]},
       {verbs: ['PIT'], action: [goto, LOC_PITTOP]},
@@ -821,7 +823,7 @@ locations: !!omap
       short: 'You''re in debris room.'
     conditions: {}
     travel: [
-      {verbs: ['DEPRE'], cond: [not, GRATE, 0], action: [goto, LOC_GRATE]},
+      {verbs: ['DEPRE'], cond: [not, GRATE, GRATE_CLOSED], action: [goto, LOC_GRATE]},
       {verbs: ['ENTRA'], action: [goto, LOC_BELOWGRATE]},
       {verbs: ['CRAWL', 'COBBL', 'PASSA', 'LOW', 'EAST'], action: [goto, LOC_COBBLE]},
       {verbs: ['CANYO', 'INWAR', 'UPWAR', 'WEST'], action: [goto, LOC_AWKWARD]},
@@ -834,7 +836,7 @@ locations: !!omap
       short: !!null
     conditions: {}
     travel: [
-      {verbs: ['DEPRE'], cond: [not, GRATE, 0], action: [goto, LOC_GRATE]},
+      {verbs: ['DEPRE'], cond: [not, GRATE, GRATE_CLOSED], action: [goto, LOC_GRATE]},
       {verbs: ['ENTRA'], action: [goto, LOC_BELOWGRATE]},
       {verbs: ['D', 'EAST', 'DEBRI'], action: [goto, LOC_DEBRIS]},
       {verbs: ['INWAR', 'UPWAR', 'WEST'], action: [goto, LOC_BIRD]},
@@ -847,7 +849,7 @@ locations: !!omap
     conditions: {}
     hints: [*bird] 
     travel: [
-      {verbs: ['DEPRE'], cond: [not, GRATE, 0], action: [goto, LOC_GRATE]},
+      {verbs: ['DEPRE'], cond: [not, GRATE, GRATE_CLOSED], action: [goto, LOC_GRATE]},
       {verbs: ['ENTRA'], action: [goto, LOC_BELOWGRATE]},
       {verbs: ['DEBRI'], action: [goto, LOC_DEBRIS]},
       {verbs: ['CANYO', 'EAST'], action: [goto, LOC_AWKWARD]},
@@ -859,7 +861,7 @@ locations: !!omap
       short: 'You''re at top of small pit.'
     conditions: {}
     travel: [
-      {verbs: ['DEPRE'], cond: [not, GRATE, 0], action: [goto, LOC_GRATE]},
+      {verbs: ['DEPRE'], cond: [not, GRATE, GRATE_CLOSED], action: [goto, LOC_GRATE]},
       {verbs: ['ENTRA'], action: [goto, LOC_BELOWGRATE]},
       {verbs: ['DEBRI'], action: [goto, LOC_DEBRIS]},
       {verbs: ['PASSA', 'EAST'], action: [goto, LOC_BIRD]},
@@ -897,9 +899,9 @@ locations: !!omap
     conditions: {DEEP: true}
     travel: [
       {verbs: ['HALL', 'EAST'], action: [goto, LOC_MISTHALL]},
-      {verbs: ['JUMP'], cond: [not, FISSURE, 0], action: ["speak", CROSS_BRIDGE]},
-      {verbs: ['FORWA'], cond: [not, FISSURE, 1], action: [goto, LOC_NOMAKE]},
-      {verbs: ['OVER', 'ACROS', 'WEST', 'CROSS'], cond: [not, FISSURE, 1], action: ["speak", NO_CROSS]},
+      {verbs: ['JUMP'], cond: [not, FISSURE, UNBRIDGED], action: ["speak", CROSS_BRIDGE]},
+      {verbs: ['FORWA'], cond: [not, FISSURE, BRIDGED], action: [goto, LOC_NOMAKE]},
+      {verbs: ['OVER', 'ACROS', 'WEST', 'CROSS'], cond: [not, FISSURE, BRIDGED], action: ["speak", NO_CROSS]},
       {verbs: ['OVER'], action: [goto, LOC_WESTBANK]},
     ]
 - LOC_NUGGET:
@@ -2226,7 +2228,7 @@ locations: !!omap
     conditions: {DEEP: true}
     travel: [
       {verbs: ['NORTH', 'OUT'], action: [goto, LOC_DIFFERENT2]},
-      {verbs: ['SOUTH'], cond: [not, VEND, 0], action: [goto, LOC_ROUGHHEWN]},
+      {verbs: ['SOUTH'], cond: [not, VEND, VEND_BLOCKS], action: [goto, LOC_ROUGHHEWN]},
       {verbs: ['SOUTH'], action: [goto, LOC_BADDIRECTION]},
     ]
 - LOC_ROUGHHEWN:
@@ -3098,9 +3100,9 @@ objects: !!omap
     locations: [LOC_EASTBANK, LOC_WESTBANK]
     immovable: true
     longs:
-    - ''
-    - 'A crystal bridge now spans the fissure.'
-    - 'The crystal bridge has vanished!'
+    - [UNBRIDGED, '']
+    - [BRIDGED, 'A crystal bridge now spans the fissure.']
+    - [VANISHED, 'The crystal bridge has vanished!']
 - OBJ_13:
     words: ['table']
     inventory: '*stone tablet'

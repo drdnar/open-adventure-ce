@@ -548,7 +548,19 @@ def buildtravel(locs, objs, voc):
         elif cond[0] == "not":
             # FIXME: Allow named as well as numbered states
             try:
-                return 300 + objnames.index(cond[1]) + 100 * cond[2]
+                obj = objnames.index(cond[1])
+                if type(cond[2]) == int:
+                    state = cond[2]
+                else:
+                    for (i, stateclause) in enumerate(objs[obj][1]["longs"]):
+                        if type(stateclause) == list:
+                            if stateclause[0] == cond[2]:
+                                state = i
+                                break
+                    else:
+                        sys.stderr.write("dungeon: unmatched state symbol %s in not caluase of %s\n" % (cond[2], name))
+                        sys.exit(0);
+                return 300 + obj + 100 * state
             except ValueError:
                 sys.stderr.write("dungeon: unknown object name %s in not clause of %s\n" % (cond[1], name))
                 sys.exit(1)
