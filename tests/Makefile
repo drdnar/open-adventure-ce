@@ -38,7 +38,7 @@ buildregress:
 	rm -f scratch.tmp
 regress:
 	$(ECHO) -n "Generate cheat file: "
-	../cheat
+	../cheat -d -1000 -o cheat_numdie.adv
 	@for file in $(TESTLOADS); do \
 	    $(ECHO) -n "  $${file} "; grep '##' $${file}.log  || echo ' ## (no description)'; \
 	    OPTS=`sed -n /#options:/s///p <$${file}.log`; \
