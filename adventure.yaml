@@ -534,6 +534,116 @@ motions: !!omap
 - MOT_76:
     words: ['main', 'offic']
 
+actions: !!omap
+- ACT_0:
+    message: !!null
+    words: !!null
+- ACT_1:
+    message: ALREADY_CARRYING
+    words: ['carry', 'take', 'keep', 'catch', 'steal', 'captu', 'get', 'tote', 'snarf']
+- ACT_2:
+    message: ARENT_CARRYING
+    words: ['drop', 'relea', 'free', 'disca', 'dump']
+- ACT_3:
+    message: NO_MESSAGE
+    words: ['say', 'chant', 'sing', 'utter', 'mumbl']
+- ACT_4:
+    message: NOT_LOCKABLE
+    words: ['unloc', 'open']
+- ACT_5:
+    message: NO_MESSAGE
+    words: ['nothi']
+- ACT_6:
+    message: NOT_LOCKABLE
+    words: ['lock', 'close']
+- ACT_7:
+    message: DONT_UNDERSTAND
+    words: ['light', 'on']
+- ACT_8:
+    message: DONT_UNDERSTAND
+    words: ['extin', 'off']
+- ACT_9:
+    message: NOTHING_HAPPENS
+    words: ['wave', 'shake', 'swing']
+- ACT_10:
+    message: AM_GAME
+    words: ['calm', 'placa', 'tame']
+- ACT_11:
+    message: WHERE_QUERY
+    words: ['walk', 'run', 'trave', 'go', 'proce', 'conti', 'explo', 'follo', 'turn']
+- ACT_12:
+    message: RIDICULOUS_ATTEMPT
+    words: ['attac', 'kill', 'fight', 'hit', 'strik', 'slay']
+- ACT_13:
+    message: ARENT_CARRYING
+    words: ['pour']
+- ACT_14:
+    message: RIDICULOUS_ATTEMPT
+    words: ['eat', 'devou']
+- ACT_15:
+    message: STREAM_WATER
+    words: ['drink']
+- ACT_16:
+    message: RUB_NOGO
+    words: ['rub']
+- ACT_17:
+    message: ARENT_CARRYING
+    words: ['throw', 'toss']
+- ACT_18:
+    message: HUH_MAN
+    words: ['quit']
+- ACT_19:
+    message: NEARBY
+    words: ['find', 'where']
+- ACT_20:
+    message: NEARBY
+    words: ['inven']
+- ACT_21:
+    message: NO_EDIBLES
+    words: ['feed']
+- ACT_22:
+    message: CANT_FILL
+    words: ['fill']
+- ACT_23:
+    message: REQUIRES_DYNAMITE
+    words: ['blast', 'deton', 'ignit', 'blowu']
+- ACT_24:
+    message: HUH_MAN
+    words: ['score']
+- ACT_25:
+    message: NOT_KNOWHOW
+    words: ['fee', 'fie', 'foe', 'foo', 'fum']
+- ACT_26:
+    message: ON_WHAT
+    words: ['brief']
+- ACT_27:
+    message: DONT_UNDERSTAND
+    words: ['read', 'perus']
+- ACT_28:
+    message: BEYOND_POWER
+    words: ['break', 'shatt', 'smash']
+- ACT_29:
+    message: RIDICULOUS_ATTEMPT
+    words: ['wake', 'distu']
+- ACT_30:
+    message: HUH_MAN
+    words: ['suspe', 'pause', 'save']
+- ACT_31:
+    message: HUH_MAN
+    words: ['resum', 'resta']
+- ACT_32:
+    message: AM_GAME
+    words: ['fly']
+- ACT_33:
+    message: DONT_UNDERSTAND
+    words: ['liste']
+- ACT_34:
+    message: NOTHING_HAPPENS
+    words: ['z''zzz']
+- ACT_35:
+    message: HUH_MAN
+    words: !!null
+
 hints:
   - hint: &grate
       name: CAVE
