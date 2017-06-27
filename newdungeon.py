@@ -598,8 +598,8 @@ def buildtravel(locs, objs, voc):
         if loc != oldloc:
             tkey.append(len(travel))
             oldloc = loc 
-            if travel:
-                travel[-1] *= -1
+        elif travel:
+            travel[-1] *= -1
         while rule:
             travel.append(rule.pop(0) + newloc * 1000)
         travel[-1] *= -1
