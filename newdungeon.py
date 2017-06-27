@@ -147,6 +147,8 @@ extern const hint_t hints[];
 extern long conditions[];
 extern const motion_t motions[];
 extern const action_t actions[];
+extern const long travel[];
+extern const long tkey[];
 
 #define NLOCATIONS	{}
 #define NOBJECTS	{}
@@ -156,6 +158,7 @@ extern const action_t actions[];
 #define NTHRESHOLDS	{}
 #define NACTIONS  	{}
 #define NTRAVEL		{}
+#define NKEYS		{}
 
 enum arbitrary_messages_refs {{
 {}
@@ -227,6 +230,10 @@ const motion_t motions[] = {{
 const action_t actions[] = {{
 {}
 }};
+
+{}
+
+{}
 
 /* end */
 """
@@ -446,6 +453,58 @@ def recompose(type_word, value):
         sys.stderr.write("%s is not a known word classifier\n" % attrs["type"])
         sys.exit(1)
 
+def get_motions(motions):
+    template = """    {{
+        .words = {},
+    }},
+"""
+    mot_str = ""
+    for motion in motions:
+        contents = motion[1]
+        if contents["words"] == None:
+            mot_str += template.format("NULL")
+            continue
+        c_words = [make_c_string(s) for s in contents["words"]]
+        words_str = "(const char* []) {" + ", ".join(c_words) + "}"
+        mot_str += template.format(words_str)
+    return mot_str
+
+def get_actions(actions):
+    template = """    {{
+        .words = {},
+        .message = {},
+    }},
+"""
+    act_str = ""
+    for action in actions:
+        contents = action[1]
+        
+        if contents["words"] == None:
+            words_str = "NULL"
+        else:
+            c_words = [make_c_string(s) for s in contents["words"]]
+            words_str = "(const char* []) {" + ", ".join(c_words) + "}"
+
+        if contents["message"] == None:
+            message = "NO_MESSAGE"
+        else:
+            message = contents["message"]
+            
+        act_str += template.format(words_str, message)
+    act_str = act_str[:-1] # trim trailing newline
+    return act_str
+
+def bigdump(arr):
+    out = ""
+    for (i, entry) in enumerate(arr):
+        if i % 10 == 0:
+            if out and out[-1] == ' ':
+                out = out[:-1]
+            out += "\n    "
+        out += str(arr[i]) + ", "
+    out = out[:-2] + "\n"
+    return out
+
 def buildtravel(locs, objs, voc):
     ltravel = []
     verbmap = {}
@@ -496,7 +555,7 @@ def buildtravel(locs, objs, voc):
         else:
             print(cond)
             raise ValueError
-    # Much more to be done here
+
     for (i, (name, loc)) in enumerate(locs):
         if "travel" in loc:
             for rule in loc["travel"]:
@@ -507,58 +566,6 @@ def buildtravel(locs, objs, voc):
                 if not rule["verbs"]:
                     tt.append(1)
                 ltravel.append(tuple(tt))
-    return tuple(ltravel)
-
-def get_motions(motions):
-    template = """    {{
-        .words = {},
-    }},
-"""
-    mot_str = ""
-    for motion in motions:
-        contents = motion[1]
-        if contents["words"] == None:
-            mot_str += template.format("NULL")
-            continue
-        c_words = [make_c_string(s) for s in contents["words"]]
-        words_str = "(const char* []) {" + ", ".join(c_words) + "}"
-        mot_str += template.format(words_str)
-    return mot_str
-
-def get_actions(actions):
-    template = """    {{
-        .words = {},
-        .message = {},
-    }},
-"""
-    act_str = ""
-    for action in actions:
-        contents = action[1]
-        
-        if contents["words"] == None:
-            words_str = "NULL"
-        else:
-            c_words = [make_c_string(s) for s in contents["words"]]
-            words_str = "(const char* []) {" + ", ".join(c_words) + "}"
-
-        if contents["message"] == None:
-            message = "NO_MESSAGE"
-        else:
-            message = contents["message"]
-            
-        act_str += template.format(words_str, message)
-    act_str = act_str[:-1] # trim trailing newline
-    return act_str
-
-if __name__ == "__main__":
-    with open(yaml_name, "r") as f:
-        db = yaml.load(f)
-
-    locnames = [x[0] for x in db["locations"]]
-    msgnames = [el[0] for el in db["arbitrary_messages"]]
-    objnames = [el[0] for el in db["objects"]]
-
-    travel = buildtravel(db["locations"], db["objects"], db["vocabulary"])
 
     # At this point the ltravel data is in the Section 3
     # representation from the FORTRAN version.  Next we perform the
@@ -581,6 +588,34 @@ if __name__ == "__main__":
     #     }
     #     TRAVEL[TRVS - 1] = -TRAVEL[TRVS - 1];
     # }
+    travel = [0]
+    tkey = [0]
+    oldloc = 0
+    while ltravel:
+        rule = list(ltravel.pop(0))
+        loc = rule.pop(0)
+        newloc = rule.pop(0)
+        if loc != oldloc:
+            tkey.append(len(travel))
+            oldloc = loc 
+            if travel:
+                travel[-1] *= -1
+        while rule:
+            travel.append(rule.pop(0) + newloc * 1000)
+        travel[-1] *= -1
+    return (travel, tkey)
+
+if __name__ == "__main__":
+    with open(yaml_name, "r") as f:
+        db = yaml.load(f)
+
+    locnames = [x[0] for x in db["locations"]]
+    msgnames = [el[0] for el in db["arbitrary_messages"]]
+    objnames = [el[0] for el in db["objects"]]
+
+    (travel, tkey) = buildtravel(db["locations"],
+                                 db["objects"],
+                                 db["vocabulary"])
 
     c = c_template.format(
         h_name,
@@ -594,6 +629,8 @@ if __name__ == "__main__":
         get_condbits(db["locations"]),
         get_motions(db["motions"]),
         get_actions(db["actions"]),
+        "const long tkey[] = {%s};" % bigdump(tkey),
+        "const long travel[] = {%s};" % bigdump(travel), 
     )
 
     h = h_template.format(
@@ -605,6 +642,7 @@ if __name__ == "__main__":
         len(db["turn_thresholds"]),
         len(db["actions"]),
         len(travel),
+        len(tkey),
         get_refs(db["arbitrary_messages"]),
         get_refs(db["locations"]),
         get_refs(db["objects"]),
