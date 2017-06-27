@@ -30,7 +30,7 @@
 /* Abstract out the encoding of words in the travel array.  Gives us
  * some hope of getting to a less cryptic representation than we
  * inherited from FORTRAN, someday. To understand these, read the
- * encoding description for TRAVEL.
+ * encoding description for travel.
  */
 #define T_DESTINATION(entry)	MOD(labs(entry) / 1000, 1000)
 #define T_NODWARVES(entry)	labs(entry) / 1000000 == 100
@@ -406,10 +406,10 @@ static bool dwarfmove(void)
             continue;
         /*  Fill tk array with all the places this dwarf might go. */
         unsigned int j = 1;
-        kk = TKEY[game.dloc[i]];
+        kk = tkey[game.dloc[i]];
         if (kk != 0)
             do {
-		game.newloc = T_DESTINATION(TRAVEL[kk]);
+		game.newloc = T_DESTINATION(travel[kk]);
                 /* Have we avoided a dwarf encounter? */
                 bool avoided = (SPECIAL(game.newloc) ||
                                 !INDEEP(game.newloc) ||
@@ -419,13 +419,13 @@ static bool dwarfmove(void)
                                 game.newloc == game.dloc[i] ||
                                 FORCED(game.newloc) ||
                                 (i == PIRATE && CNDBIT(game.newloc, COND_NOARRR)) ||
-                                T_NODWARVES(TRAVEL[kk]));
+                                T_NODWARVES(travel[kk]));
                 if (!avoided) {
                     tk[j++] = game.newloc;
                 }
                 ++kk;
             } while
-            (TRAVEL[kk - 1] >= 0);
+            (travel[kk - 1] >= 0);
         tk[j] = game.odloc[i];
         if (j >= 2)
             --j;
@@ -529,7 +529,7 @@ static void croak(void)
 
 static bool playermove(token_t verb, int motion)
 {
-    int scratchloc, k2, kk = TKEY[game.loc];
+    int scratchloc, k2, kk = tkey[game.loc];
     game.newloc = game.loc;
     if (kk == 0)
         BUG(LOCATION_HAS_NO_TRAVEL_ENTRIES);
@@ -549,13 +549,13 @@ static bool playermove(token_t verb, int motion)
         if (CNDBIT(game.loc, COND_NOBACK))k2 = TWIST_TURN;
         if (k2 == 0) {
             for (;;) {
-                scratchloc = T_DESTINATION(TRAVEL[kk]);
+                scratchloc = T_DESTINATION(travel[kk]);
                 if (scratchloc != motion) {
                     if (!SPECIAL(scratchloc)) {
-                        if (FORCED(scratchloc) && T_DESTINATION(TRAVEL[TKEY[scratchloc]]) == motion)
+                        if (FORCED(scratchloc) && T_DESTINATION(travel[tkey[scratchloc]]) == motion)
                             k2 = kk;
                     }
-                    if (TRAVEL[kk] >= 0) {
+                    if (travel[kk] >= 0) {
                         ++kk;	/* go to next travel entry for this location */
                         continue;
                     }
@@ -567,8 +567,8 @@ static bool playermove(token_t verb, int motion)
                     }
                 }
 
-                motion = T_MOTION(TRAVEL[kk]);
-                kk = TKEY[game.loc];
+                motion = T_MOTION(travel[kk]);
+                kk = tkey[game.loc];
                 break; /* fall through to ordinary travel */
             }
         } else {
@@ -598,9 +598,9 @@ static bool playermove(token_t verb, int motion)
     /* Look for a way to fulfil the motion - kk indexes the beginning
      * of the motion entries for here (game.loc). */
     for (;;) {
-        if (T_TERMINATE(TRAVEL[kk]) || T_MOTION(TRAVEL[kk]) == motion)
+        if (T_TERMINATE(travel[kk]) || T_MOTION(travel[kk]) == motion)
             break;
-        if (TRAVEL[kk] < 0) {
+        if (travel[kk] < 0) {
             /* FIXME: Magic numbers! */
             /*  Couldn't find an entry matching the motion word passed
              *  in.  Various messages depending on word given. */
@@ -617,7 +617,7 @@ static bool playermove(token_t verb, int motion)
         }
         ++kk;
     }
-    scratchloc = labs(TRAVEL[kk]) / 1000;
+    scratchloc = labs(travel[kk]) / 1000;
 
     do {
         /*
@@ -642,10 +642,10 @@ static bool playermove(token_t verb, int motion)
                 } else if (game.prop[motion] != game.newloc / 100 - 3)
                     break;
                 do {
-                    if (TRAVEL[kk] < 0)
+                    if (travel[kk] < 0)
                         BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION);
                     ++kk;
-                    game.newloc = labs(TRAVEL[kk]) / 1000;
+                    game.newloc = labs(travel[kk]) / 1000;
                 } while
                 (game.newloc == scratchloc);
                 scratchloc = game.newloc;
@@ -676,10 +676,10 @@ static bool playermove(token_t verb, int motion)
                      *  pretend he wasn't carrying it after all. */
                     drop(EMERALD, game.loc);
                     do {
-                        if (TRAVEL[kk] < 0)
+                        if (travel[kk] < 0)
                             BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION);
                         ++kk;
-                        game.newloc = labs(TRAVEL[kk]) / 1000;
+                        game.newloc = labs(travel[kk]) / 1000;
                     } while
                     (game.newloc == scratchloc);
                     scratchloc = game.newloc;

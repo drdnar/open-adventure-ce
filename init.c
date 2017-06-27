@@ -23,9 +23,9 @@ void initialise(void)
 
     for (int i = 1; i <= NLOCATIONS; i++) {
         game.abbrev[i] = 0;
-        if (!(locations[i].description.big == 0 || TKEY[i] == 0)) {
-            int k = TKEY[i];
-            if (MOD(labs(TRAVEL[k]), 1000) == 1)
+        if (!(locations[i].description.big == 0 || tkey[i] == 0)) {
+            int k = tkey[i];
+            if (MOD(labs(travel[k]), 1000) == 1)
 		conditions[i] |= (1 << COND_FORCED);
         }
         game.atloc[i] = 0;

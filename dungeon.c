@@ -5,7 +5,6 @@
 
 /*  Current limits:
  *     12600 words of message text (LINES, LINSIZ).
- *	885 travel options (TRAVEL, TRVSIZ).
  *	330 vocabulary words (KTAB, ATAB, TABSIZ).
  *  There are also limits which cannot be exceeded due to the structure of
  *  the database.  (E.G., The vocabulary uses n/1000 to determine word type,
@@ -21,37 +20,6 @@
  *  The data file contains several sections.  Each begins with a line containing
  *  a number identifying the section, and ends with a line containing "-1".
  *
- *  Section 3: Travel table.  Each line contains a location number (X), a second
- *	location number (Y), and a list of motion numbers (see section 4).
- *	each motion represents a verb which will go to Y if currently at X.
- *	Y, in turn, is interpreted as follows.  Let M=Y/1000, N=Y mod 1000.
- *		If N<=300	it is the location to go to.
- *		If 300<N<=500	N-300 is used in a computed goto to
- *					a section of special code.
- *		If N>500	message N-500 from section 6 is printed,
- *					and he stays wherever he is.
- *	Meanwhile, M specifies the conditions on the motion.
- *		If M=0		it's unconditional.
- *		If 0<M<100	it is done with M% probability.
- *		If M=100	unconditional, but forbidden to dwarves.
- *		If 100<M<=200	he must be carrying object M-100.
- *		If 200<M<=300	must be carrying or in same room as M-200.
- *		If 300<M<=400	game.prop(M % 100) must *not* be 0.
- *		If 400<M<=500	game.prop(M % 100) must *not* be 1.
- *		If 500<M<=600	game.prop(M % 100) must *not* be 2, etc.
- *	If the condition (if any) is not met, then the next *different*
- *	"destination" value is used (unless it fails to meet *its* conditions,
- *	in which case the next is found, etc.).  Typically, the next dest will
- *	be for one of the same verbs, so that its only use is as the alternate
- *	destination for those verbs.  For instance:
- *		15	110022	29	31	34	35	23	43
- *		15	14	29
- *	This says that, from loc 15, any of the verbs 29, 31, etc., will take
- *	him to 22 if he's carrying object 10, and otherwise will go to 14.
- *		11	303008	49
- *		11	9	50
- *	This says that, from 11, 49 takes him to 8 unless game.prop(3)=0, in which
- *	case he goes to 9.  Verb 50 takes him to 9 regardless of game.prop(3).
  *  Section 4: Vocabulary.  Each line contains a number (n), a tab, and a
  *	five-letter word.  Call M=N/1000.  If M=0, then the word is a motion
  *	verb for use in travelling (see section 3).  Else, if M=1, the word is
@@ -64,12 +32,9 @@
  * Other sections are obsolete and ignored */
 
 #define LINESIZE 100
-#define CLSMAX 12
 #define LINSIZ 12600
-#define TRNSIZ 5
 #define TABSIZ 330
 #define VRBSIZ 35
-#define TRVSIZ 885
 #define TOKLEN 5
 
 #include <stdio.h>
@@ -88,12 +53,8 @@ static long OLDLOC;
 static long LINUSE;
 
 // Storage for what comes out of the database
-long TRVS;
-long TRNVLS;
 long TABNDX;
-long TKEY[NLOCATIONS + 1];
 long LINES[LINSIZ + 1];
-long TRAVEL[TRVSIZ + 1];
 long KTAB[TABSIZ + 1];
 long ATAB[TABSIZ + 1];
 
@@ -244,7 +205,7 @@ static void read_messages(FILE* database)
 }
 
 /*  The stuff for section 3 is encoded here.  Each "from-location" gets a
- *  contiguous section of the "TRAVEL" array.  Each entry in travel is
+ *  contiguous section of the "travel" array.  Each entry in travel is
  *  newloc*1000 + KEYWORD (from section 4, motion verbs), and is negated if
  *  this is the last entry for this location.  KEY(N) is the index in travel
  *  of the first option at location N. */
@@ -252,20 +213,7 @@ static void read_section3_stuff(FILE* database)
 {
     long loc;
     while ((loc = GETNUM(database)) != -1) {
-        long newloc = GETNUM(NULL);
-        long L;
-        if (TKEY[loc] == 0) {
-            TKEY[loc] = TRVS;
-        } else {
-            TRAVEL[TRVS - 1] = -TRAVEL[TRVS - 1];
-        }
-        while ((L = GETNUM(NULL)) != 0) {
-            TRAVEL[TRVS] = newloc * 1000 + L;
-            TRVS = TRVS + 1;
-            if (TRVS == TRVSIZ)
-                BUG(TOO_MANY_TRAVEL_OPTIONS);
-        }
-        TRAVEL[TRVS - 1] = -TRAVEL[TRVS - 1];
+	/* Now done from YAML */
     }
 }
 
@@ -347,13 +295,8 @@ static int read_database(FILE* database)
      *  pointer-words in lines. PTEXT(N) points to
      *  message for game.prop(N)=0.  Successive prop messages are
      *  found by chasing pointers. */
-    for (int I = 1; I <= NLOCATIONS; I++) {
-        TKEY[I] = 0;
-    }
 
     LINUSE = 1;
-    TRVS = 1;
-    TRNVLS = 0;
 
     /*  Start new data section.  Sect is the section number. */
 
@@ -457,8 +400,6 @@ static void write_file(FILE* header_file)
     fprintf(header_file, "\n");
 
     // content variables
-    write_1d(header_file, TKEY, NLOCATIONS + 1, "TKEY");
-    write_1d(header_file, TRAVEL, TRVSIZ + 1, "TRAVEL");
     write_1d(header_file, KTAB, TABSIZ + 1, "KTAB");
     write_1d(header_file, ATAB, TABSIZ + 1, "ATAB");
 
