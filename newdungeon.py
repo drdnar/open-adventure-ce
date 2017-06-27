@@ -4,7 +4,7 @@
 # replace the existing dungeon.c It currently outputs a .h and .c pair
 # for C code.
 
-import yaml
+import sys, yaml
 
 yaml_name = "adventure.yaml"
 h_name = "newdb.h"
@@ -113,6 +113,7 @@ extern const long actspk[];
 #define NTHRESHOLDS	{}
 #define NVERBS  	{}
 #define NVOCAB          {}
+#define NTRAVEL		{}
 
 enum arbitrary_messages_refs {{
 {}
@@ -393,7 +394,7 @@ def recompose(type_word, value):
         sys.stderr.write("dungeon: %s is not a known word\n" % word)
         sys.exit(1)
     except IndexError:
-        sys.stderr.write("%s is not a known word classifier" % attrs["type"])
+        sys.stderr.write("%s is not a known word classifier\n" % attrs["type"])
         sys.exit(1)
 
 def get_vocabulary(vocabulary):
@@ -418,11 +419,78 @@ def get_actspk(actspk):
         res += "    %s,\n" % word
     return res
 
+def buildtravel(locs, objs, voc):
+    ltravel = []
+    lkeys = []
+    verbmap = {}
+    for entry in db["vocabulary"]:
+        if entry["type"] == "motion" and entry["value"] not in verbmap:
+            verbmap[entry["word"]] = entry["value"]
+    def dencode(action, name):
+        "Decode a destination number"
+        if action[0] == "goto":
+            try:
+                return locnames.index(action[1])
+            except ValueError:
+                sys.stderr.write("dungeon: unknown location %s in goto clause of %s\n" % (cond[1], name))
+        elif action[0] == "special":
+            return 300 + action[1]
+        elif action[0] == "speak":
+            try:
+                return 500 + msgnames.index(action[1])
+            except ValueError:
+                sys.stderr.write("dungeon: unknown location %s in carry clause of %s\n" % (cond[1], name))
+        else:
+            print(cond)
+            raise ValueError
+    def cencode(cond, name):
+        if cond is None:
+            return 0;
+        elif cond[0] == "pct":
+            return cond[1]
+        elif cond[0] == "carry":
+            try:
+                return 100 + objnames.index(cond[1])
+            except ValueError:
+                sys.stderr.write("dungeon: unknown object name %s in carry clause of %s\n" % (cond[1], name))
+                sys.exit(1)
+        elif cond[0] == "with":
+            try:
+                return 200 + objnames.index(cond[1])
+            except IndexError:
+                sys.stderr.write("dungeon: unknown object name %s in with clause of \n" % (cond[1], name))
+                sys.exit(1)
+        elif cond[0] == "not":
+            # FIXME: Allow named as well as numbered states
+            try:
+                return 300 + objnames.index(cond[1]) + 100 * cond[2]
+            except ValueError:
+                sys.stderr.write("dungeon: unknown object name %s in not clause of %s\n" % (cond[1], name))
+                sys.exit(1)
+        else:
+            print(cond)
+            raise ValueError
+    # Much more to be done here
+    for (i, (name, loc)) in enumerate(locs):
+        if "travel" in loc:
+            for rule in loc["travel"]:
+                tt = [i]
+                dest = dencode(rule["action"], name) + 1000 * cencode(rule.get("cond"), name)
+                tt.append(dest)
+                tt += [verbmap[e] for e in rule["verbs"]]
+                if not rule["verbs"]:
+                    tt.append(1)
+                #print(tuple(tt))
+    return (ltravel, lkeys)
+
 if __name__ == "__main__":
     with open(yaml_name, "r") as f:
         db = yaml.load(f)
 
     locnames = [x[0] for x in db["locations"]]
+    msgnames = [el[0] for el in db["arbitrary_messages"]]
+    objnames = [el[0] for el in db["objects"]]
+    (travel, key) = buildtravel(db["locations"], db["objects"], db["vocabulary"])
 
     c = c_template.format(
         h_name,
@@ -447,6 +515,7 @@ if __name__ == "__main__":
         len(db["turn_thresholds"]),
         len(db["actspk"]),
         len(db["vocabulary"]),
+        len(travel),
         get_refs(db["arbitrary_messages"]),
         get_refs(db["locations"]),
         get_refs(db["objects"]),
