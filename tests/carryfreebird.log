@@ -1,0 +1,57 @@
+## Try to carry the bird after freeing it instead of listening
+n
+seed 1495951709
+in
+take lamp
+on
+xyzzy
+take rod
+e
+take cage
+w
+w
+w
+drop rod
+take bird
+take rod
+w
+free bird
+wave rod
+take jade
+drop rod
+take bird
+take rod
+d
+w
+wave rod
+drop rod
+e
+n
+free bird
+take bird
+s
+take jewelry
+n
+sw
+w
+kill dragon
+yes
+drink blood
+take rug
+e
+e
+n
+take silver
+n
+plugh
+drop silver
+drop jewelry
+drop jade
+drop rug
+out
+s
+w
+n
+take appendage
+free bird
+carry bird

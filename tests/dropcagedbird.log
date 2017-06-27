@@ -1,0 +1,23 @@
+## Try to carry the bird after freeing it instead of listening
+n
+seed 1495951709
+in
+take lamp
+on
+xyzzy
+take rod
+e
+take cage
+w
+w
+w
+drop rod
+take bird
+take rod
+w
+free bird
+wave rod
+take jade
+drop rod
+take bird
+drop cage
