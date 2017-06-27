@@ -920,9 +920,9 @@ locations: !!omap
     hints: [*snake]
     travel: [
       {verbs: ['STAIR', 'UPWAR', 'EAST'], action: [goto, LOC_MISTHALL]},
-      {verbs: ['NORTH', 'RIGHT'], cond: [not, SNAKE, 0], action: [goto, LOC_FLOORHOLE]},
-      {verbs: ['SOUTH', 'LEFT'], cond: [not, SNAKE, 0], action: [goto, LOC_SOUTHSIDE]},
-      {verbs: ['WEST', 'FORWA'], cond: [not, SNAKE, 0], action: [goto, LOC_WESTSIDE]},
+      {verbs: ['NORTH', 'RIGHT'], cond: [not, SNAKE, SNAKE_BLOCKS], action: [goto, LOC_FLOORHOLE]},
+      {verbs: ['SOUTH', 'LEFT'], cond: [not, SNAKE, SNAKE_BLOCKS], action: [goto, LOC_SOUTHSIDE]},
+      {verbs: ['WEST', 'FORWA'], cond: [not, SNAKE, SNAKE_BLOCKS], action: [goto, LOC_WESTSIDE]},
       {verbs: ['NORTH'], action: [goto, LOC_SNAKEBLOCK]},
       {verbs: ['SW'], cond: [pct, 35], action: [goto, LOC_SECRET3]},
       {verbs: ['SW'], cond: ["with", SNAKE], action: [goto, LOC_SNAKEBLOCK]},
@@ -995,9 +995,9 @@ locations: !!omap
       short: 'You''re on west bank of fissure.'
     conditions: {DEEP: true}
     travel: [
-      {verbs: ['JUMP'], cond: [not, FISSURE, 0], action: ["speak", CROSS_BRIDGE]},
-      {verbs: ['FORWA'], cond: [not, FISSURE, 1], action: [goto, LOC_NOMAKE]},
-      {verbs: ['OVER', 'ACROS', 'EAST', 'CROSS'], cond: [not, FISSURE, 1], action: ["speak", NO_CROSS]},
+      {verbs: ['JUMP'], cond: [not, FISSURE, UNBRIDGED], action: ["speak", CROSS_BRIDGE]},
+      {verbs: ['FORWA'], cond: [not, FISSURE, BRIDGED], action: [goto, LOC_NOMAKE]},
+      {verbs: ['OVER', 'ACROS', 'EAST', 'CROSS'], cond: [not, FISSURE, BRIDGED], action: ["speak", NO_CROSS]},
       {verbs: ['OVER'], action: [goto, LOC_EASTBANK]},
       {verbs: ['NORTH'], action: [goto, LOC_PARALLEL1]},
       {verbs: ['WEST'], action: [goto, LOC_MISTWEST]},
@@ -1441,7 +1441,7 @@ locations: !!omap
     conditions: {DEEP: true}
     travel: [
       {verbs: ['D', 'SLAB'], action: [goto, LOC_SLAB]},
-      {verbs: ['SOUTH'], cond: [not, DRAGON, 0], action: [goto, LOC_SECRET5]},
+      {verbs: ['SOUTH'], cond: [not, DRAGON, DRAGON_BLOCKS], action: [goto, LOC_SECRET5]},
       {verbs: ['SOUTH'], action: [goto, LOC_SECRET4]},
       {verbs: ['NORTH'], action: [goto, LOC_MIRRORCANYON]},
       {verbs: ['RESER'], action: [goto, LOC_RESERVOIR]},
@@ -1492,7 +1492,7 @@ locations: !!omap
     conditions: {DEEP: true}
     travel: [
       {verbs: ['EAST'], action: [goto, LOC_KINGHALL]},
-      {verbs: ['WEST'], cond: [not, DRAGON, 0], action: [goto, LOC_SECRET5]},
+      {verbs: ['WEST'], cond: [not, DRAGON, DRAGON_BLOCKS], action: [goto, LOC_SECRET5]},
       {verbs: ['WEST'], action: [goto, LOC_SECRET6]},
       {verbs: ['D'], action: [goto, LOC_WIDEPLACE]},
     ]
@@ -2551,7 +2551,7 @@ locations: !!omap
     conditions: {FLUID: true, DEEP: true}
     sound: WATERS_CRASHING
     travel: [
-      {verbs: ['SOUTH', 'ACROS', 'CROSS'], cond: [not, RESER, 1], action: ["speak", BAD_DIRECTION]},
+      {verbs: ['SOUTH', 'ACROS', 'CROSS'], cond: [not, RESER, WATERS_PARTED], action: ["speak", BAD_DIRECTION]},
       {verbs: ['SOUTH'], action: [goto, LOC_RESBOTTOM]},
       {verbs: ['NW', 'UPWAR', 'OUT'], action: [goto, LOC_TREACHEROUS]},
     ]
@@ -3090,8 +3090,8 @@ objects: !!omap
     locations: LOC_KINGHALL
     immovable: true
     longs:
-    - 'A huge green fierce snake bars the way!'
-    - '' # chased away
+    - [SNAKE_BLOCKS, 'A huge green fierce snake bars the way!']
+    - [SNAKE_CHASED, ''] # chased away
     sounds:
     - 'The snake is hissing venomously.'
 - FISSURE:
@@ -3243,7 +3243,7 @@ objects: !!omap
     locations: [LOC_SECRET4, LOC_SECRET6]
     immovable: true
     longs:
-    - 'A huge green fierce dragon bars the way!'
+    - [DRAGON_BLOCKS, 'A huge green fierce dragon bars the way!']
     - 'The blood-specked body of a huge green dead dragon lies to one side.'
     - 'The body of a huge green dead dragon is lying off to one side.'
     - 'Congratulations!  You have just vanquished a dragon with your bare\nhands!  (Unbelievable, isn''t it?)'
@@ -3366,7 +3366,7 @@ objects: !!omap
     immovable: true
     longs:
     - ''
-    - 'The waters have parted to form a narrow path across the reservoir.'
+    - [WATERS_PARTED, 'The waters have parted to form a narrow path across the reservoir.']
     - 'The waters crash together again.'
 - OBJ_46:
     words: ['appen', 'lepor']
