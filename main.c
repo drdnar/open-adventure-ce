@@ -636,6 +636,7 @@ static bool playermove(token_t verb, int motion)
                             break;
                         /* else fall through */
                     }
+		    /* handles the YAML "with" clause */
                     if (TOTING(motion) || (game.newloc > 200 && AT(motion)))
                         break;
                     /* else fall through */
@@ -654,14 +655,20 @@ static bool playermove(token_t verb, int motion)
             game.newloc = MOD(scratchloc, 1000);
             if (!SPECIAL(game.newloc))
                 return true;
-            if (game.newloc <= 500) {
-                game.newloc -= SPECIALBASE;
+
+	    if (game.newloc > 500) {
+		/* Execute a speak rule */
+		rspeak(L_SPEAK(game.newloc));
+		game.newloc = game.loc;
+		return true;
+	    } else {
+		game.newloc -= SPECIALBASE;
                 switch (game.newloc) {
                 case 1:
-                    /*  Travel 301.  Plover-alcove passage.  Can carry only
-                     *  emerald.  Note: travel table must include "useless"
-                     *  entries going through passage, which can never be used for
-                     *  actual motion, but can be spotted by "go back". */
+                    /* Travel 301.  Plover-alcove passage.  Can carry only
+                     * emerald.  Note: travel table must include "useless"
+                     * entries going through passage, which can never be used
+                     * for actual motion, but can be spotted by "go back". */
                     /* FIXME: Arithmetic on location numbers */
                     game.newloc = 99 + 100 - game.loc;
                     if (game.holdng > 1 || (game.holdng == 1 && !TOTING(EMERALD))) {
@@ -670,10 +677,11 @@ static bool playermove(token_t verb, int motion)
                     }
                     return true;
                 case 2:
-                    /*  Travel 302.  Plover transport.  Drop the emerald (only use
-                     *  special travel if toting it), so he's forced to use the
-                     *  plover-passage to get it out.  Having dropped it, go back and
-                     *  pretend he wasn't carrying it after all. */
+                    /* Travel 302.  Plover transport.  Drop the
+                     * emerald (only use special travel if toting
+                     * it), so he's forced to use the plover-passage
+                     * to get it out.  Having dropped it, go back and
+                     * pretend he wasn't carrying it after all. */
                     drop(EMERALD, game.loc);
                     do {
                         if (travel[kk] < 0)
@@ -685,13 +693,15 @@ static bool playermove(token_t verb, int motion)
                     scratchloc = game.newloc;
                     continue; /* goto L12 */
                 case 3:
-                    /*  Travel 303.  Troll bridge.  Must be done only as special
-                     *  motion so that dwarves won't wander across and encounter
-                     *  the bear.  (They won't follow the player there because
-                     *  that region is forbidden to the pirate.)  If
-                     *  game.prop(TROLL)=1, he's crossed since paying, so step out
-                     *  and block him.  (standard travel entries check for
-                     *  game.prop(TROLL)=0.)  Special stuff for bear. */
+                    /* Travel 303.  Troll bridge.  Must be done only
+                     * as special motion so that dwarves won't wander
+                     * across and encounter the bear.  (They won't
+                     * follow the player there because that region is
+                     * forbidden to the pirate.)  If
+                     * game.prop(TROLL)=1, he's crossed since paying,
+                     * so step out and block him.  (standard travel
+                     * entries check for game.prop(TROLL)=0.)  Special
+                     * stuff for bear. */
                     if (game.prop[TROLL] == 1) {
                         pspeak(TROLL,look, 1);
                         game.prop[TROLL] = 0;
@@ -716,18 +726,14 @@ static bool playermove(token_t verb, int motion)
                         croak();
                         return true;
                     }
+		default:
+		    BUG(SPECIAL_TRAVEL_500_GT_L_GT_300_EXCEEDS_GOTO_LIST);
                 }
-                BUG(SPECIAL_TRAVEL_500_GT_L_GT_300_EXCEEDS_GOTO_LIST);
             }
             break; /* Leave L12 loop */
         }
     } while
     (false);
-    
-    /* Execute a speak rule */
-    rspeak(L_SPEAK(game.newloc));
-    game.newloc = game.loc;
-    return true;
 }
 
 static bool closecheck(void)
