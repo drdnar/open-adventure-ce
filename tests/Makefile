@@ -30,6 +30,10 @@ listcheck:
 # corresponding *.chk files to see which tests this runs.
 TESTLOADS := $(shell ls -1 *.log | sed '/.log/s///' | sort)
 buildregress:
+	$(ECHO) -n "Generate save file with -1000 deaths: "
+	../cheat -d -1000 -o cheat_numdie.adv
+	$(ECHO) -n "Generate save file with version -1337: "
+	../cheat -v -1337 -o resume_badversion.adv
 	@for file in $(TESTLOADS); do \
 	    echo "Remaking $${file}.chk"; \
 	    OPTS=`sed -n /#options:/s///p <$${file}.log`; \
