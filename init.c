@@ -72,15 +72,6 @@ void initialise(void)
         game.hintlc[i] = 0;
     }
 
-    /* Define some handy mnemonics. */
-
-    /* Some action verbs. */
-    FIND = VOCWRD(WORD_FIND, 2);
-    INVENT = VOCWRD(WORD_INVENT, 2);
-    LOCK = VOCWRD(WORD_LOCK, 2);
-    SAY = VOCWRD(WORD_SAY, 2);
-    THROW = VOCWRD(WORD_THROW, 2);
-
     /*  Initialise the dwarves.  game.dloc is loc of dwarves,
      *  hard-wired in.  game.odloc is prior loc of each dwarf,
      *  initially garbage.  DALTLC is alternate initial loc for dwarf,

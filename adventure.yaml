@@ -506,7 +506,7 @@ actions: !!omap
 - ACT_2:
     message: ARENT_CARRYING
     words: ['drop', 'relea', 'free', 'disca', 'dump']
-- ACT_3:
+- SAY:
     message: NO_MESSAGE
     words: ['say', 'chant', 'sing', 'utter', 'mumbl']
 - ACT_4:
@@ -515,7 +515,7 @@ actions: !!omap
 - ACT_5:
     message: NO_MESSAGE
     words: ['nothi']
-- ACT_6:
+- LOCK:
     message: NOT_LOCKABLE
     words: ['lock', 'close']
 - ACT_7:
@@ -548,16 +548,16 @@ actions: !!omap
 - ACT_16:
     message: RUB_NOGO
     words: ['rub']
-- ACT_17:
+- THROW:
     message: ARENT_CARRYING
     words: ['throw', 'toss']
 - ACT_18:
     message: HUH_MAN
     words: ['quit']
-- ACT_19:
+- FIND:
     message: NEARBY
     words: ['find', 'where']
-- ACT_20:
+- INVENT:
     message: NEARBY
     words: ['inven']
 - ACT_21:

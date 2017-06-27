@@ -160,18 +160,10 @@ extern int restore(FILE *);
 #define PCT(N)		(randrange(100) < (N))
 #define GSTONE(OBJ)	((OBJ) == EMERALD || (OBJ) == RUBY || (OBJ) == AMBER || (OBJ) == SAPPH)
 #define FOREST(LOC)	CNDBIT(LOC, COND_FOREST)
-#define VOCWRD(LETTRS,SECT)	(vocab(MAKEWD(LETTRS),SECT))
 #define SPECIAL(LOC)	((LOC) > SPECIALBASE)
 #define OUTSID(LOC)	(CNDBIT(LOC, COND_ABOVE) || FOREST(LOC))
 
 #define INDEEP(LOC)	((LOC) >= LOC_MISTHALL && !OUTSID(LOC))
-
-/* vocabulary items */
-extern long FIND;
-extern long INVENT;
-extern long SAY;
-extern long LOCK;
-extern long THROW;
 
 enum speechpart {unknown, intransitive, transitive};
 
