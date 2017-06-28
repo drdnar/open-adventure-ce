@@ -52,7 +52,7 @@ regress:
 	$(ECHO) -n "Fail to save because we omit -o: "
 	../cheat -d 1 | true
 	$(ECHO) -n "Fail to save to invalid path: "
-	../cheat -o /badfilename.adv | true
+	../cheat -o / | true
 	@for file in $(TESTLOADS); do \
 	    $(ECHO) -n "  $${file} "; grep '##' $${file}.log  || echo ' ## (no description)'; \
 	    OPTS=`sed -n /#options:/s///p <$${file}.log`; \
