@@ -54,11 +54,11 @@ regress: savegames
 	$(ECHO) "TEST cheat: Fail to save to invalid path"
 	../cheat -o / 2> /tmp/coverage_cheat_badoutput | true
 	$(ECHO) "TEST advent: Start with invalid file with -r"
-	advent -r /badfilename < quit.log > /tmp/coverage_advent_readfail 2>&1 || exit 1
+	advent -r /badfilename < pitfall.log > /tmp/coverage_advent_readfail 2>&1 || exit 1
 	$(ECHO) "TEST advent: Start with invalid file with -r"
-	advent -l / < quit.log > /tmp/coverage_advent_logfail 2>&1 || exit 1
+	advent -l / < pitfall.log > /tmp/coverage_advent_logfail 2>&1 || exit 1
 	$(ECHO) "TEST advent: Test -r with valid input"
-	advent -r thousand_saves.adv < quit.log > /tmp/coverage_advent_readfail 2>&1 || exit 1
+	advent -r thousand_saves.adv < pitfall.log > /tmp/coverage_advent_readfail 2>&1 || exit 1
 	@for file in $(TESTLOADS); do \
 	    $(ECHO) -n "  $${file} "; grep '##' $${file}.log  || echo ' ## (no description)'; \
 	    OPTS=`sed -n /#options:/s///p <$${file}.log`; \
