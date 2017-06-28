@@ -30,10 +30,12 @@ listcheck:
 # corresponding *.chk files to see which tests this runs.
 TESTLOADS := $(shell ls -1 *.log | sed '/.log/s///' | sort)
 buildregress:
-	$(ECHO) -n "Generate save file with -1000 deaths: "
+	$(ECHO) "Generate save file with -1000 deaths: "
 	../cheat -d -1000 -o cheat_numdie.adv
-	$(ECHO) -n "Generate save file with version -1337: "
+	$(ECHO) "Generate save file with version -1337: "
 	../cheat -v -1337 -o resume_badversion.adv
+	$(ECHO) "TEST cheat: Generate save file 1000 saves"
+	../cheat -s -1000 -o thousand_saves.adv > /tmp/regress1000saves
 	@for file in $(TESTLOADS); do \
 	    echo "Remaking $${file}.chk"; \
 	    OPTS=`sed -n /#options:/s///p <$${file}.log`; \
@@ -41,18 +43,24 @@ buildregress:
 	done; \
 	rm -f scratch.tmp
 regress:
-	$(ECHO) -n "Generate save file with -1000 deaths: "
-	../cheat -d -1000 -o cheat_numdie.adv
-	$(ECHO) -n "Generate save file with version -1337: "
-	../cheat -v -1337 -o resume_badversion.adv
-	$(ECHO) -n "Generate save file 1000 saves: "
-	../cheat -s -1000 -o thousand_saves.adv
-	$(ECHO) -n "Bogus option for save file generation: "
-	../cheat -QqQ | true
-	$(ECHO) -n "Fail to save because we omit -o: "
-	../cheat -d 1 | true
-	$(ECHO) -n "Fail to save to invalid path: "
-	../cheat -o / | true
+	$(ECHO) "TEST cheat: Generate save file with -1000 deaths"
+	../cheat -d -1000 -o cheat_numdie.adv > /tmp/regressdumdie
+	$(ECHO) "TEST cheat: Generate save file with version -1337"
+	../cheat -v -1337 -o resume_badversion.adv > /tmp/regressbadversion
+	$(ECHO) "TEST cheat: Generate save file 1000 saves"
+	../cheat -s -1000 -o thousand_saves.adv > /tmp/regress1000saves
+	$(ECHO) "TEST cheat: Bogus option for save file generation"
+	../cheat -QqQ 2> /tmp/coverage_cheat_batopt | true
+	$(ECHO) "TEST cheat: Fail to save because we omit -o"
+	../cheat -d 1 2> /tmp/coverage_cheat_nooutput | true
+	$(ECHO) "TEST cheat: Fail to save to invalid path"
+	../cheat -o / 2> /tmp/coverage_cheat_badoutput | true
+	$(ECHO) "TEST advent: Start with invalid file with -r"
+	advent -r /badfilename < quit.log > /tmp/coverage_advent_readfail 2>&1 || exit 1
+	$(ECHO) "TEST advent: Start with invalid file with -r"
+	advent -l / < quit.log > /tmp/coverage_advent_logfail 2>&1 || exit 1
+	$(ECHO) "TEST advent: Test -r with valid input"
+	advent -r thousand_saves.adv < quit.log > /tmp/coverage_advent_readfail 2>&1 || exit 1
 	@for file in $(TESTLOADS); do \
 	    $(ECHO) -n "  $${file} "; grep '##' $${file}.log  || echo ' ## (no description)'; \
 	    OPTS=`sed -n /#options:/s///p <$${file}.log`; \
@@ -60,6 +68,6 @@ regress:
 	    then diff --text -u $${file}.chk /tmp/regress$$$$ || exit 1; \
 	    else echo "*** Nonzero return status on $${file}!"; exit 1; fi \
 	done; \
-	rm -f scratch.tmp /tmp/regress$$$$
+	rm -f scratch.tmp /tmp/regress$$$$ /tmp/coverage*
 
 # end
