@@ -32,9 +32,9 @@
  * inherited from FORTRAN, someday. To understand these, read the
  * encoding description for travel.
  */
-#define T_DESTINATION(entry)	MOD(labs((entry).opcode) / 1000, 1000)
-#define T_NODWARVES(entry)	labs((entry).opcode) / 1000000 == 100
-#define T_MOTION(entry)		MOD(labs((entry).opcode), 1000)
+#define T_DESTINATION(entry)	MOD((entry).opcode / 1000, 1000)
+#define T_NODWARVES(entry)	((entry).opcode / 1000000 == 100)
+#define T_MOTION(entry)		MOD((entry).opcode, 1000)
 #define T_TERMINATE(entry)	(T_MOTION(entry) == 1)
 #define T_STOP(entry)		((entry).stop)
 #define T_OPCODE(entry)		((entry).opcode)
@@ -619,7 +619,7 @@ static bool playermove(token_t verb, int motion)
         }
         ++kk;
     }
-    scratchloc = labs(T_OPCODE(travel[kk])) / 1000;
+    scratchloc = T_OPCODE(travel[kk]) / 1000;
 
     do {
         /*
@@ -648,7 +648,7 @@ static bool playermove(token_t verb, int motion)
                     if (T_STOP(travel[kk]))
                         BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION);
                     ++kk;
-                    game.newloc = labs(T_OPCODE(travel[kk])) / 1000;
+                    game.newloc = T_OPCODE(travel[kk]) / 1000;
                 } while
                 (game.newloc == scratchloc);
                 scratchloc = game.newloc;
@@ -689,7 +689,7 @@ static bool playermove(token_t verb, int motion)
                         if (T_STOP(travel[kk]))
                             BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION);
                         ++kk;
-                        game.newloc = labs(T_OPCODE(travel[kk])) / 1000;
+                        game.newloc = T_OPCODE(travel[kk]) / 1000;
                     } while
                     (game.newloc == scratchloc);
                     scratchloc = game.newloc;
