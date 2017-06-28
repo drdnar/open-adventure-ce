@@ -1397,13 +1397,13 @@ There are some keys on the ground here.
 
 There is food here.
 
+> drop vase
+
+The ming vase drops with a delicate crash.
+
 > drop pillow
 
 OK
-
-> drop vase
-
-The vase is now resting, delicately, on a velvet pillow.
 
 > drop trident
 
@@ -1898,9 +1898,9 @@ There is an emerald here the size of a plover's egg!
 
 There is a jewel-encrusted trident here!
 
-There is a delicate, precious, ming vase here!
-
 A small velvet pillow lies on the floor.
+
+The floor is littered with worthless shards of pottery.
 
 There is a platinum pyramid here, 8 inches on a side!
 
@@ -2099,9 +2099,9 @@ There is a richly-carved ebony statuette here!
 
 There is a jewel-encrusted trident here!
 
-There is a delicate, precious, ming vase here!
-
 A small velvet pillow lies on the floor.
+
+The floor is littered with worthless shards of pottery.
 
 There is a platinum pyramid here, 8 inches on a side!
 
@@ -2163,9 +2163,9 @@ There is a richly-carved ebony statuette here!
 
 There is a jewel-encrusted trident here!
 
-There is a delicate, precious, ming vase here!
-
 A small velvet pillow lies on the floor.
+
+The floor is littered with worthless shards of pottery.
 
 There is a platinum pyramid here, 8 inches on a side!
 
@@ -2353,9 +2353,9 @@ There is a richly-carved ebony statuette here!
 
 There is a jewel-encrusted trident here!
 
-There is a delicate, precious, ming vase here!
-
 A small velvet pillow lies on the floor.
+
+The floor is littered with worthless shards of pottery.
 
 There is a platinum pyramid here, 8 inches on a side!
 
@@ -2944,8 +2944,8 @@ There is a loud explosion, and a twenty-foot hole appears in the far
 wall, burying the snakes in the rubble.  A river of molten lava pours
 in through the hole, destroying everything in its path, including you!
 
-You scored 413 out of a possible 430, using 468 turns.
+You scored 399 out of a possible 430, using 468 turns.
 
-Your score puts you in Master Adventurer Class A.
+Your score puts you in Master Adventurer Class B.
 
-To achieve the next higher rating, you need 14 more points.
+To achieve the next higher rating, you need 12 more points.

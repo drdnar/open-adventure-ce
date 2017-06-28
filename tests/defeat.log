@@ -1,4 +1,4 @@
-## Last-minute defeat, with lava
+## Last-minute defeat, with lava. Also tests vase drop before pillow.
 # Based on walkthrough at http://www.ecsoftwareconsulting.com/node/56
 n
 seed 1838473132
@@ -232,8 +232,9 @@ u
 n
 off
 plugh
-drop pillow
+# Invert these so we test the vase-drop code
 drop vase
+drop pillow
 drop trident
 drop emerald
 drop ebony

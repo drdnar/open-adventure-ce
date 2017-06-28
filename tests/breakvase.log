@@ -216,3 +216,5 @@ s
 # Previous was just setup - this is the real test 
 take vase
 break vase
+quit
+yes
