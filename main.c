@@ -27,19 +27,6 @@
 
 #define DIM(a) (sizeof(a)/sizeof(a[0]))
 
-/* Abstract out the encoding of words in the travel array.  Gives us
- * some hope of getting to a less cryptic representation than we
- * inherited from FORTRAN, someday. To understand these, read the
- * encoding description for travel.
- */
-#define T_DESTINATION(entry)	MOD((entry).opcode / 1000, 1000)
-#define T_NODWARVES(entry)	((entry).opcode / 1000000 == 100)
-#define T_MOTION(entry)		MOD((entry).opcode, 1000)
-#define T_TERMINATE(entry)	(T_MOTION(entry) == 1)
-#define T_STOP(entry)		((entry).stop)
-#define T_OPCODE(entry)		((entry).opcode)
-#define L_SPEAK(loc)		((loc) - 500)
-
 struct game_t game;
 
 long LNLENG, LNPOSN;
@@ -619,7 +606,7 @@ static bool playermove(token_t verb, int motion)
         }
         ++kk;
     }
-    scratchloc = T_OPCODE(travel[kk]) / 1000;
+    scratchloc = T_HIGH(travel[kk]);
 
     do {
         /*
@@ -648,7 +635,7 @@ static bool playermove(token_t verb, int motion)
                     if (T_STOP(travel[kk]))
                         BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION);
                     ++kk;
-                    game.newloc = T_OPCODE(travel[kk]) / 1000;
+                    game.newloc = T_HIGH(travel[kk]);
                 } while
                 (game.newloc == scratchloc);
                 scratchloc = game.newloc;
@@ -689,7 +676,7 @@ static bool playermove(token_t verb, int motion)
                         if (T_STOP(travel[kk]))
                             BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION);
                         ++kk;
-                        game.newloc = T_OPCODE(travel[kk]) / 1000;
+                        game.newloc = T_HIGH(travel[kk]);
                     } while
                     (game.newloc == scratchloc);
                     scratchloc = game.newloc;
@@ -749,15 +736,14 @@ static bool closecheck(void)
  *  to get out.  If he doesn't within clock2 turns, we close the cave;
  *  if he does try, we assume he panics, and give him a few additional
  *  turns to get frantic before we close.  When clock2 hits zero, we
- *  branch to 11000 to transport him into the final puzzle.  Note that
- *  the puzzle depends upon all sorts of random things.  For instance,
- *  there must be no water or oil, since there are beanstalks which we
- *  don't want to be able to water, since the code can't handle it.
- *  Also, we can have no keys, since there is a grate (having moved
- *  the fixed object!) there separating him from all the treasures.
- *  Most of these problems arise from the use of negative prop numbers
- *  to suppress the object descriptions until he's actually moved the
- *  objects. */
+ *  transport him into the final puzzle.  Note that the puzzle depends
+ *  upon all sorts of random things.  For instance, there must be no
+ *  water or oil, since there are beanstalks which we don't want to be
+ *  able to water, since the code can't handle it.  Also, we can have
+ *  no keys, since there is a grate (having moved the fixed object!)
+ *  there separating him from all the treasures.  Most of these
+ *  problems arise from the use of negative prop numbers to suppress
+ *  the object descriptions until he's actually moved the objects. */
 {
     if (game.tally == 0 && INDEEP(game.loc) && game.loc != LOC_Y2)
         --game.clock1;

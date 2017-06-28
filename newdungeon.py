@@ -142,6 +142,20 @@ typedef struct {{
   const bool stop;
 }} travelop_t;
 
+/* Abstract out the encoding of words in the travel array.  Gives us
+ * some hope of getting to a less cryptic representation than we
+ * inherited from FORTRAN, someday. To understand these, read the
+ * encoding description for travel.
+ */
+#define T_DESTINATION(entry)	MOD((entry).opcode / 1000, 1000)
+#define T_NODWARVES(entry)	((entry).opcode / 1000000 == 100)
+#define T_MOTION(entry)		MOD((entry).opcode, 1000)
+#define T_TERMINATE(entry)	(T_MOTION(entry) == 1)
+#define T_STOP(entry)		((entry).stop)
+#define T_HIGH(entry)		((entry).opcode / 1000)
+#define T_LOW(entry)		((entry).opcode % 1000)
+#define L_SPEAK(loc)		((loc) - 500)
+
 extern const location_t locations[];
 extern const object_t objects[];
 extern const char* arbitrary_messages[];
