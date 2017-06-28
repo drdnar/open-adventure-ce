@@ -32,13 +32,13 @@
  * inherited from FORTRAN, someday. To understand these, read the
  * encoding description for travel.
  */
-#define T_DESTINATION(entry)	MOD(labs(entry) / 1000, 1000)
-#define T_NODWARVES(entry)	labs(entry) / 1000000 == 100
-#define T_MOTION(entry)		MOD(labs(entry), 1000)
-#define L_SPEAK(loc)		((loc) - 500)
+#define T_DESTINATION(entry)	MOD(labs((entry).opcode) / 1000, 1000)
+#define T_NODWARVES(entry)	labs((entry).opcode) / 1000000 == 100
+#define T_MOTION(entry)		MOD(labs((entry).opcode), 1000)
 #define T_TERMINATE(entry)	(T_MOTION(entry) == 1)
-#define T_STOP(entry)		((entry) < 0)
-#define T_OPCODE(entry)		(entry)
+#define T_STOP(entry)		((entry).stop)
+#define T_OPCODE(entry)		((entry).opcode)
+#define L_SPEAK(loc)		((loc) - 500)
 
 struct game_t game;
 

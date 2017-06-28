@@ -137,6 +137,11 @@ typedef struct {{
   const long message;
 }} action_t;
 
+typedef struct {{
+  const long opcode;
+  const bool stop;
+}} travelop_t;
+
 extern const location_t locations[];
 extern const object_t objects[];
 extern const char* arbitrary_messages[];
@@ -147,7 +152,7 @@ extern const hint_t hints[];
 extern long conditions[];
 extern const motion_t motions[];
 extern const action_t actions[];
-extern const long travel[];
+extern const travelop_t travel[];
 extern const long tkey[];
 
 #define NLOCATIONS	{}
@@ -233,7 +238,9 @@ const action_t actions[] = {{
 
 {}
 
+const travelop_t travel[] = {{
 {}
+}};
 
 /* end */
 """
@@ -558,7 +565,7 @@ def buildtravel(locs, objs, voc):
                                 state = i
                                 break
                     else:
-                        sys.stderr.write("dungeon: unmatched state symbol %s in not caluase of %s\n" % (cond[2], name))
+                        sys.stderr.write("dungeon: unmatched state symbol %s in not clause of %s\n" % (cond[2], name))
                         sys.exit(0);
                 return 300 + obj + 100 * state
             except ValueError:
@@ -600,7 +607,9 @@ def buildtravel(locs, objs, voc):
     #     }
     #     TRAVEL[TRVS - 1] = -TRAVEL[TRVS - 1];
     # }
-    travel = [0]
+    #
+    # We're going to break the magic numbers up into a struct.
+    travel = [[0, False]]
     tkey = [0]
     oldloc = 0
     while ltravel:
@@ -611,11 +620,23 @@ def buildtravel(locs, objs, voc):
             tkey.append(len(travel))
             oldloc = loc 
         elif travel:
-            travel[-1] *= -1
+            travel[-1][1] = not travel[-1][1]
         while rule:
-            travel.append(rule.pop(0) + newloc * 1000)
-        travel[-1] *= -1
+            travel.append([rule.pop(0) + newloc * 1000, False])
+        travel[-1][1] = True
     return (travel, tkey)
+
+def get_travel(travel):
+    template = """    {{
+        .opcode = {},
+        .stop = {},
+    }},
+"""
+    out = ""
+    for entry in travel:
+        out += template.format(entry[0], entry[1]).lower()
+    out = out[:-1] # trim trailing newline
+    return out
 
 if __name__ == "__main__":
     with open(yaml_name, "r") as f:
@@ -642,7 +663,7 @@ if __name__ == "__main__":
         get_motions(db["motions"]),
         get_actions(db["actions"]),
         "const long tkey[] = {%s};" % bigdump(tkey),
-        "const long travel[] = {%s};" % bigdump(travel), 
+        get_travel(travel), 
     )
 
     h = h_template.format(
