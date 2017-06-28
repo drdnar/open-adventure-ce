@@ -462,7 +462,7 @@ motions: !!omap
 - MOT_56:
     words: ['climb']
 - LOOK:
-    words: ['look', 'exami', 'touch', 'descr']
+    words: ['l', 'x', 'look', 'exami', 'touch', 'descr']
 - MOT_58:
     words: ['floor']
 - MOT_59:
@@ -508,10 +508,10 @@ actions: !!omap
     words: !!null
 - CARRY:
     message: ALREADY_CARRYING
-    words: ['carry', 'take', 'keep', 'catch', 'steal', 'captu', 'get', 'tote', 'snarf']
+    words: ['g', 'carry', 'take', 'keep', 'catch', 'steal', 'captu', 'get', 'tote', 'snarf']
 - DROP:
     message: ARENT_CARRYING
-    words: ['drop', 'relea', 'free', 'disca', 'dump']
+    words: ['d', 'drop', 'relea', 'free', 'disca', 'dump']
 - SAY:
     message: NO_MESSAGE
     words: ['say', 'chant', 'sing', 'utter', 'mumbl']
@@ -520,7 +520,7 @@ actions: !!omap
     words: ['unloc', 'open']
 - NOTHING:
     message: NO_MESSAGE
-    words: ['nothi']
+    words: ['z', 'nothi']
 - LOCK:
     message: NOT_LOCKABLE
     words: ['lock', 'close']
@@ -565,7 +565,7 @@ actions: !!omap
     words: ['find', 'where']
 - INVENTORY:
     message: NEARBY
-    words: ['inven']
+    words: ['i', 'inven']
 - FEED:
     message: NO_EDIBLES
     words: ['feed']
