@@ -252,7 +252,10 @@ char* get_input()
             input = NULL;
             size_t n = 0;
             if (isatty(0))
+            // LCOV_EXCL_START
+            // Should be unreachable in tests, as they will use a non-interactive shell.
                 printf("%s", input_prompt);
+            // LCOV_EXCL_STOP 
             IGNORE(getline(&input, &n, stdin));
         }
 
@@ -289,10 +292,13 @@ bool yes(const char* question, const char* yes_response, const char* no_response
         speak(question);
 
         reply = get_input();
-	if (reply == NULL) {
-	  linenoiseFree(reply);
-	  exit(EXIT_SUCCESS);
-	}
+        if (reply == NULL) {
+            // LCOV_EXCL_START
+            // Should be unreachable. Reply should never be NULL
+            linenoiseFree(reply);
+            exit(EXIT_SUCCESS);
+            // LCOV_EXCL_STOP 
+        }
 
         char* firstword = (char*) xmalloc(strlen(reply)+1);
         sscanf(reply, "%s", firstword);
