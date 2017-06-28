@@ -598,7 +598,7 @@ static bool playermove(token_t verb, int motion)
             if (motion == 29 || motion == 30)spk = BAD_DIRECTION;
             if (motion == 7 || motion == 36 || motion == 37)spk = UNSURE_FACING;
             if (motion == 11 || motion == 19)spk = NO_INOUT_HERE;
-            if (verb == FIND || verb == INVENT)spk = NEARBY;
+            if (verb == FIND || verb == INVENTORY)spk = NEARBY;
             if (motion == 62 || motion == 65)spk = NOTHING_HAPPENS;
             if (motion == 17)spk = WHICH_WAY;
             rspeak(spk);

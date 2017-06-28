@@ -1041,7 +1041,7 @@ int action(FILE *input, struct command_t *command)
         } else if (command->obj == ROD && HERE(ROD2)) {
             command->obj = ROD2;
             /* FALL THROUGH */;
-        } else if ((command->verb == FIND || command->verb == INVENT) && command->wd2 <= 0)
+        } else if ((command->verb == FIND || command->verb == INVENTORY) && command->wd2 <= 0)
             /* FALL THROUGH */;
         else {
             rspeak(NO_SEE, command->wd1, command->wd1x);
@@ -1061,180 +1061,182 @@ int action(FILE *input, struct command_t *command)
         if (command->verb == SAY)command->obj = command->wd2;
         if (command->obj == 0 || command->obj == INTRANSITIVE) {
             /*  Analyse an intransitive verb (ie, no object given yet). */
-            switch (command->verb - 1) {
-            case  0: /* CARRY */
+            switch (command->verb) {
+            case CARRY:
                 return vcarry(command->verb, INTRANSITIVE);
-            case  1: /* DROP  */
+            case  DROP:
                 return GO_UNKNOWN;
-            case  2: /* SAY   */
+            case  SAY:
                 return GO_UNKNOWN;
-            case  3: /* UNLOC */
+            case  UNLOCK:
                 return lock(command->verb, INTRANSITIVE);
-            case  4: { /* NOTHI */
+            case  NOTHING: {
                 rspeak(OK_MAN);
                 return (GO_CLEAROBJ);
             }
-            case  5: /* LOCK  */
+            case  LOCK:
                 return lock(command->verb, INTRANSITIVE);
-            case  6: /* LIGHT */
+            case  LIGHT:
                 return light(command->verb, INTRANSITIVE);
-            case  7: /* EXTIN */
+            case  EXTINGUISH:
                 return extinguish(command->verb, INTRANSITIVE);
-            case  8: /* WAVE  */
+            case  WAVE:
                 return GO_UNKNOWN;
-            case  9: /* CALM  */
+            case  TAME:
                 return GO_UNKNOWN;
-            case 10: { /* WALK  */
+            case GO: {
                 rspeak(spk);
                 return GO_CLEAROBJ;
             }
-            case 11: /* ATTAC */
+            case ATTACK:
                 return attack(input, command);
-            case 12: /* POUR  */
+            case POUR:
                 return pour(command->verb, command->obj);
-            case 13: /* EAT   */
+            case EAT:
                 return eat(command->verb, INTRANSITIVE);
-            case 14: /* DRINK */
+            case DRINK:
                 return drink(command->verb, command->obj);
-            case 15: /* RUB   */
+            case RUB:
                 return GO_UNKNOWN;
-            case 16: /* TOSS  */
+            case THROW:
                 return GO_UNKNOWN;
-            case 17: /* QUIT  */
+            case QUIT:
                 return quit();
-            case 18: /* FIND  */
+            case FIND:
                 return GO_UNKNOWN;
-            case 19: /* INVEN */
+            case INVENTORY:
                 return inven();
-            case 20: /* FEED  */
+            case FEED:
                 return GO_UNKNOWN;
-            case 21: /* FILL  */
+            case FILL:
                 return fill(command->verb, command->obj);
-            case 22: /* BLAST */
+            case BLAST:
                 blast();
                 return GO_CLEAROBJ;
-            case 23: /* SCOR  */
+            case SCORE:
                 score(scoregame);
                 return GO_CLEAROBJ;
-            case 24: /* FOO   */
+            case GIANTWORDS:
                 return bigwords(command->wd1);
-            case 25: /* BRIEF */
+            case BRIEF:
                 return brief();
-            case 26: /* READ  */
+            case READ:
 		command->obj = INTRANSITIVE;
                 return read(*command);
-            case 27: /* BREAK */
+            case BREAK:
                 return GO_UNKNOWN;
-            case 28: /* WAKE  */
+            case WAKE:
                 return GO_UNKNOWN;
-            case 29: /* SUSP  */
+            case SAVE:
                 return suspend();
-            case 30: /* RESU  */
+            case RESUME:
                 return resume();
-            case 31: /* FLY   */
+            case FLY:
                 return fly(command->verb, INTRANSITIVE);
-            case 32: /* LISTE */
+            case LISTEN:
                 return listen();
-            case 33: /* ZZZZ  */
+            case PART:
                 return reservoir();
+	    default:
+		BUG(INTRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST);
             }
-            BUG(INTRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST);
         }
     /* FALLTHRU */
     case transitive:
         /*  Analyse a transitive verb. */
-        switch (command->verb - 1) {
-        case  0: /* CARRY */
+        switch (command->verb) {
+        case  CARRY:
             return vcarry(command->verb, command->obj);
-        case  1: /* DROP  */
+        case  DROP:
             return discard(command->verb, command->obj, false);
-        case  2: /* SAY   */
+        case  SAY:
             return say(command);
-        case  3: /* UNLOC */
+        case  UNLOCK:
             return lock(command->verb, command->obj);
-        case  4: { /* NOTHI */
+        case  NOTHING: {
             rspeak(OK_MAN);
             return (GO_CLEAROBJ);
         }
-        case  5: /* LOCK  */
+        case  LOCK:
             return lock(command->verb, command->obj);
-        case  6: /* LIGHT */
+        case LIGHT:
             return light(command->verb, command->obj);
-        case  7: /* EXTI  */
+        case EXTINGUISH:
             return extinguish(command->verb, command->obj);
-        case  8: /* WAVE  */
+        case WAVE:
             return wave(command->verb, command->obj);
-        case  9: { /* CALM  */
+        case TAME: {
             rspeak(spk);
             return GO_CLEAROBJ;
         }
-        case 10: { /* WALK  */
+	case GO: {
             rspeak(spk);
             return GO_CLEAROBJ;
         }
-        case 11: /* ATTAC */
+        case ATTACK:
             return attack(input, command);
-        case 12: /* POUR  */
+        case POUR:
             return pour(command->verb, command->obj);
-        case 13: /* EAT   */
+        case EAT:
             return eat(command->verb, command->obj);
-        case 14: /* DRINK */
+        case DRINK:
             return drink(command->verb, command->obj);
-        case 15: /* RUB   */
+        case RUB:
             return rub(command->verb, command->obj);
-        case 16: /* TOSS  */
+        case THROW:
             return throw(input, command);
-        case 17: { /* QUIT  */
+        case QUIT: {
             rspeak(spk);
             return GO_CLEAROBJ;
         }
-        case 18: /* FIND  */
+        case FIND:
             return find(command->verb, command->obj);
-        case 19: /* INVEN */
+        case INVENTORY:
             return find(command->verb, command->obj);
-        case 20: /* FEED  */
+        case FEED:
             return feed(command->verb, command->obj);
-        case 21: /* FILL  */
+        case FILL:
             return fill(command->verb, command->obj);
-        case 22: /* BLAST */
+        case BLAST:
             blast();
             return GO_CLEAROBJ;
-        case 23: { /* SCOR  */
+        case SCORE: {
             rspeak(spk);
             return GO_CLEAROBJ;
         }
-        case 24: { /* FOO   */
+        case GIANTWORDS: {
             rspeak(spk);
             return GO_CLEAROBJ;
         }
-        case 25: { /* BRIEF */
+        case BRIEF: {
             rspeak(spk);
             return GO_CLEAROBJ;
         }
-        case 26: /* READ  */
+        case READ:
             return read(*command);
-        case 27: /* BREAK */
+        case BREAK:
             return vbreak(command->verb, command->obj);
-        case 28: /* WAKE  */
+        case WAKE:
             return wake(command->verb, command->obj);
-        case 29: { /* SUSP  */
+        case SAVE: {
             rspeak(spk);
             return GO_CLEAROBJ;
         }
-        case 30: { /* RESU  */
+        case RESUME: {
             rspeak(spk);
             return GO_CLEAROBJ;
         }
-        case 31: /* FLY   */
+        case FLY:
             return fly(command->verb, command->obj);
-        case 32: { /* LISTE */
+        case LISTEN: {
             rspeak(spk);
             return GO_CLEAROBJ;
         }
-        case 33: /* ZZZZ  */
+	case PART:
             return reservoir();
-        }
+    default:
         BUG(TRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST);
+    }
     case unknown:
         /* Unknown verb, couldn't deduce object - might need hint */
         rspeak(WHAT_DO, command->wd1, command->wd1x);

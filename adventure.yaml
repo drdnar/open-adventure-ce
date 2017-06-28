@@ -506,106 +506,106 @@ actions: !!omap
 - ACT_0:
     message: !!null
     words: !!null
-- ACT_1:
+- CARRY:
     message: ALREADY_CARRYING
     words: ['carry', 'take', 'keep', 'catch', 'steal', 'captu', 'get', 'tote', 'snarf']
-- ACT_2:
+- DROP:
     message: ARENT_CARRYING
     words: ['drop', 'relea', 'free', 'disca', 'dump']
 - SAY:
     message: NO_MESSAGE
     words: ['say', 'chant', 'sing', 'utter', 'mumbl']
-- ACT_4:
+- UNLOCK:
     message: NOT_LOCKABLE
     words: ['unloc', 'open']
-- ACT_5:
+- NOTHING:
     message: NO_MESSAGE
     words: ['nothi']
 - LOCK:
     message: NOT_LOCKABLE
     words: ['lock', 'close']
-- ACT_7:
+- LIGHT:
     message: DONT_UNDERSTAND
     words: ['light', 'on']
-- ACT_8:
+- EXTINGUISH:
     message: DONT_UNDERSTAND
     words: ['extin', 'off']
-- ACT_9:
+- WAVE:
     message: NOTHING_HAPPENS
     words: ['wave', 'shake', 'swing']
-- ACT_10:
+- TAME:
     message: AM_GAME
     words: ['calm', 'placa', 'tame']
-- ACT_11:
+- GO:
     message: WHERE_QUERY
     words: ['walk', 'run', 'trave', 'go', 'proce', 'conti', 'explo', 'follo', 'turn']
-- ACT_12:
+- ATTACK:
     message: RIDICULOUS_ATTEMPT
     words: ['attac', 'kill', 'fight', 'hit', 'strik', 'slay']
-- ACT_13:
+- POUR:
     message: ARENT_CARRYING
     words: ['pour']
-- ACT_14:
+- EAT:
     message: RIDICULOUS_ATTEMPT
     words: ['eat', 'devou']
-- ACT_15:
+- DRINK:
     message: STREAM_WATER
     words: ['drink']
-- ACT_16:
+- RUB:
     message: RUB_NOGO
     words: ['rub']
 - THROW:
     message: ARENT_CARRYING
     words: ['throw', 'toss']
-- ACT_18:
+- QUIT:
     message: HUH_MAN
     words: ['quit']
 - FIND:
     message: NEARBY
     words: ['find', 'where']
-- INVENT:
+- INVENTORY:
     message: NEARBY
     words: ['inven']
-- ACT_21:
+- FEED:
     message: NO_EDIBLES
     words: ['feed']
-- ACT_22:
+- FILL:
     message: CANT_FILL
     words: ['fill']
-- ACT_23:
+- BLAST:
     message: REQUIRES_DYNAMITE
     words: ['blast', 'deton', 'ignit', 'blowu']
-- ACT_24:
+- SCORE:
     message: HUH_MAN
     words: ['score']
-- ACT_25:
+- GIANTWORDS:
     message: NOT_KNOWHOW
     words: ['fee', 'fie', 'foe', 'foo', 'fum']
-- ACT_26:
+- BRIEF:
     message: ON_WHAT
     words: ['brief']
-- ACT_27:
+- READ:
     message: DONT_UNDERSTAND
     words: ['read', 'perus']
-- ACT_28:
+- BREAK:
     message: BEYOND_POWER
     words: ['break', 'shatt', 'smash']
-- ACT_29:
+- WAKE:
     message: RIDICULOUS_ATTEMPT
     words: ['wake', 'distu']
-- ACT_30:
+- SAVE:
     message: HUH_MAN
     words: ['suspe', 'pause', 'save']
-- ACT_31:
+- RESUME:
     message: HUH_MAN
     words: ['resum', 'resta']
-- ACT_32:
+- FLY:
     message: AM_GAME
     words: ['fly']
-- ACT_33:
+- LISTEN:
     message: DONT_UNDERSTAND
     words: ['liste']
-- ACT_34:
+- PART:
     message: NOTHING_HAPPENS
     words: ['z''zzz']
 - ACT_35:
