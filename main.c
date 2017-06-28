@@ -250,7 +250,7 @@ static void checkhints(void)
                     game.hintlc[hint] = 0;
                     return;
                 default:
-                    BUG(HINT_NUMBER_EXCEEDS_GOTO_LIST);
+                    BUG(HINT_NUMBER_EXCEEDS_GOTO_LIST); // LCOV_EXCL_LINE
                     break;
                 }
 
@@ -524,7 +524,7 @@ static bool playermove(token_t verb, int motion)
     int scratchloc, k2, kk = tkey[game.loc];
     game.newloc = game.loc;
     if (kk == 0)
-        BUG(LOCATION_HAS_NO_TRAVEL_ENTRIES);
+        BUG(LOCATION_HAS_NO_TRAVEL_ENTRIES); // LCOV_EXCL_LINE
     if (motion == NUL)
         return true;
     else if (motion == BACK) {
@@ -640,7 +640,7 @@ static bool playermove(token_t verb, int motion)
                     break;
                 do {
                     if (travel[kk].stop)
-                        BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION);
+                        BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION); // LCOV_EXCL_LINE
                     ++kk;
                     game.newloc = T_HIGH(travel[kk]);
                 } while
@@ -681,7 +681,7 @@ static bool playermove(token_t verb, int motion)
                     drop(EMERALD, game.loc);
                     do {
                         if (travel[kk].stop)
-                            BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION);
+                            BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION); // LCOV_EXCL_LINE
                         ++kk;
                         game.newloc = T_HIGH(travel[kk]);
                     } while
@@ -723,7 +723,7 @@ static bool playermove(token_t verb, int motion)
                         return true;
                     }
 		default:
-		    BUG(SPECIAL_TRAVEL_500_GT_L_GT_300_EXCEEDS_GOTO_LIST);
+		    BUG(SPECIAL_TRAVEL_500_GT_L_GT_300_EXCEEDS_GOTO_LIST); // LCOV_EXCL_LINE
                 }
             }
             break; /* Leave L12 loop */
@@ -1113,7 +1113,7 @@ Lookup:
             rspeak(kmod);
             goto L2012;
         default:
-            BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3);
+            BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3); // LCOV_EXCL_LINE
         }
 
 Laction:
@@ -1150,7 +1150,7 @@ Laction:
             rspeak(DWARVES_AWAKEN);
             terminate(endgame);
         default:
-            BUG(ACTION_RETURNED_PHASE_CODE_BEYOND_END_OF_SWITCH);
+            BUG(ACTION_RETURNED_PHASE_CODE_BEYOND_END_OF_SWITCH); // LCOV_EXCL_LINE
         }
     }
 }

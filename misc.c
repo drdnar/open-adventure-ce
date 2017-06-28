@@ -411,7 +411,7 @@ long vocab(long id, long init)
             lexeme = -1;
             if (init < 0)
                 return (lexeme);
-            BUG(REQUIRED_VOCABULARY_WORD_NOT_FOUND);
+            BUG(REQUIRED_VOCABULARY_WORD_NOT_FOUND); // LCOV_EXCL_LINE
         }
         if (init >= 0 && KTAB[i] / 1000 != init)
             continue;
@@ -422,7 +422,7 @@ long vocab(long id, long init)
             return (lexeme);
         }
     }
-    BUG(RAN_OFF_END_OF_VOCABULARY_TABLE);
+    BUG(RAN_OFF_END_OF_VOCABULARY_TABLE); // LCOV_EXCL_LINE
 }
 
 void juggle(long object)
@@ -690,10 +690,12 @@ void datime(long* d, long* t)
     *t = (long) tv.tv_usec;
 }
 
+// LCOV_EXCL_START
 void bug(enum bugtype num, const char *error_string)
 {
     fprintf(stderr, "Fatal error %d, %s.\n", num, error_string);
     exit(EXIT_FAILURE);
 }
+// LCOV_EXCL_STOP
 
 /* end */

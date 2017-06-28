@@ -1138,7 +1138,7 @@ int action(FILE *input, struct command_t *command)
             case PART:
                 return reservoir();
 	    default:
-		BUG(INTRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST);
+		BUG(INTRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST); // LCOV_EXCL_LINE
             }
         }
     /* FALLTHRU */
@@ -1235,13 +1235,13 @@ int action(FILE *input, struct command_t *command)
 	case PART:
             return reservoir();
     default:
-        BUG(TRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST);
+        BUG(TRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST); // LCOV_EXCL_LINE
     }
     case unknown:
         /* Unknown verb, couldn't deduce object - might need hint */
         rspeak(WHAT_DO, command->wd1, command->wd1x);
         return GO_CHECKHINT;
     default:
-        BUG(SPEECHPART_NOT_TRANSITIVE_OR_INTRANSITIVE_OR_UNKNOWN);
+        BUG(SPEECHPART_NOT_TRANSITIVE_OR_INTRANSITIVE_OR_UNKNOWN); // LCOV_EXCL_LINE
     }
 }
