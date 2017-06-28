@@ -1696,6 +1696,10 @@ It was already unlocked.
 
 The chain is now locked.
 
+> lock chain
+
+It was already locked.
+
 > unlock chain
 
 The chain is now unlocked.
@@ -1715,7 +1719,7 @@ Glistening pearl
 You are being followed by a very large, tame bear.
 
 
-You scored 225 out of a possible 430, using 297 turns.
+You scored 225 out of a possible 430, using 298 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 
