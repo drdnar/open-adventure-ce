@@ -15,8 +15,11 @@ void* xmalloc(size_t size)
 {
     void* ptr = malloc(size);
     if (ptr == NULL) {
+        // LCOV_EXCL_START
+        // exclude from coverage analysis because we can't simulate an out of memory error in testing
         fprintf(stderr, "Out of memory!\n");
         exit(EXIT_FAILURE);
+        // LCOV_EXCL_STOP 
     }
     return (ptr);
 }

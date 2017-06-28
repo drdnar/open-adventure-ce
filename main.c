@@ -37,6 +37,8 @@ bool oldstyle = false;
 bool editline = true;
 bool prompt = true;
 
+// LCOV_EXCL_START
+// exclude from coverage analysis because it requires interactivity to test
 static void sig_handler(int signo)
 {
     if (signo == SIGINT) {
@@ -45,6 +47,7 @@ static void sig_handler(int signo)
     }
     exit(0);
 }
+// LCOV_EXCL_STOP
 
 /*
  * MAIN PROGRAM
