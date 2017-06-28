@@ -535,7 +535,7 @@ long atdwrf(long where)
 long setbit(long bit)
 /*  Returns 2**bit for use in constructing bit-masks. */
 {
-    return (1 << bit);
+    return (1L << bit);
 }
 
 bool tstbit(long mask, int bit)

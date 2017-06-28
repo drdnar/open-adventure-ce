@@ -14,7 +14,7 @@ static int attack(FILE *input, struct command_t *command)
 {
     vocab_t verb = command->verb;
     vocab_t obj = command->obj;
-    int spk = actions[verb].message;
+    long spk = actions[verb].message;
     if (obj == 0 || obj == INTRANSITIVE) {
         if (atdwrf(game.loc) > 0)
             obj = DWARF;

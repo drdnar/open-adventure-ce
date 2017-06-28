@@ -74,7 +74,7 @@ newdb.c newdb.h: newdungeon.py adventure.yaml
 	python3 newdungeon.py
 
 linenoise.o:	linenoise/linenoise.h
-	$(CC) -c linenoise/linenoise.c
+	$(CC) $(CCFLAGS) -c linenoise/linenoise.c
 
 dungeon: dungeon.o common.o
 	$(CC) $(CCFLAGS) -o $@ dungeon.o common.o
