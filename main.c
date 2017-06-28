@@ -37,6 +37,7 @@
 #define T_MOTION(entry)		MOD(labs(entry), 1000)
 #define L_SPEAK(loc)		((loc) - 500)
 #define T_TERMINATE(entry)	(T_MOTION(entry) == 1)
+#define T_STOP(entry)		((entry) < 0)
 
 struct game_t game;
 
@@ -425,7 +426,7 @@ static bool dwarfmove(void)
                 }
                 ++kk;
             } while
-            (travel[kk - 1] >= 0);
+		(!T_STOP(travel[kk - 1]));
         tk[j] = game.odloc[i];
         if (j >= 2)
             --j;
@@ -555,7 +556,7 @@ static bool playermove(token_t verb, int motion)
                         if (FORCED(scratchloc) && T_DESTINATION(travel[tkey[scratchloc]]) == motion)
                             k2 = kk;
                     }
-                    if (travel[kk] >= 0) {
+                    if (!T_STOP(travel[kk])) {
                         ++kk;	/* go to next travel entry for this location */
                         continue;
                     }
@@ -600,7 +601,7 @@ static bool playermove(token_t verb, int motion)
     for (;;) {
         if (T_TERMINATE(travel[kk]) || T_MOTION(travel[kk]) == motion)
             break;
-        if (travel[kk] < 0) {
+        if (T_STOP(travel[kk])) {
             /* FIXME: Magic numbers! */
             /*  Couldn't find an entry matching the motion word passed
              *  in.  Various messages depending on word given. */
@@ -643,7 +644,7 @@ static bool playermove(token_t verb, int motion)
                 } else if (game.prop[motion] != game.newloc / 100 - 3)
                     break;
                 do {
-                    if (travel[kk] < 0)
+                    if (T_STOP(travel[kk]))
                         BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION);
                     ++kk;
                     game.newloc = labs(travel[kk]) / 1000;
@@ -684,7 +685,7 @@ static bool playermove(token_t verb, int motion)
                      * pretend he wasn't carrying it after all. */
                     drop(EMERALD, game.loc);
                     do {
-                        if (travel[kk] < 0)
+                        if (T_STOP(travel[kk]))
                             BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION);
                         ++kk;
                         game.newloc = labs(travel[kk]) / 1000;
