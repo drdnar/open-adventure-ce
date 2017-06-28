@@ -6,8 +6,6 @@ extern const char advent_to_ascii[128];
 extern const char ascii_to_advent[128];
 
 enum bugtype {
-   TOO_MANY_WORDS_OF_MESSAGES,                            // 2
-   TOO_MANY_TRAVEL_OPTIONS,                               // 3
    TOO_MANY_VOCABULARY_WORDS,                             // 4
    REQUIRED_VOCABULARY_WORD_NOT_FOUND,                    // 5
    INVALID_SECTION_NUMBER_IN_DATABASE,                    // 9
