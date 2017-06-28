@@ -12,7 +12,7 @@ static void state_change(long obj, long state)
     pspeak(obj, change, state);
 }
 
-static int attack(FILE *input, struct command_t *command)
+static int attack(struct command_t *command)
 /*  Attack.  Assume target if unambiguous.  "Throw" also links here.
  *  Attackable objects fall into two categories: enemies (snake,
  *  dwarf, etc.)  and others (bird, clam, machine).  Ambiguous if 2
@@ -86,9 +86,17 @@ static int attack(FILE *input, struct command_t *command)
          *  fixed), move rug there (not fixed), and move him there,
          *  too.  Then do a null motion to get new description. */
         rspeak(BARE_HANDS_QUERY);
-        GETIN(input, &command->wd1, &command->wd1x, &command->wd2, &command->wd2x);
-        if (command->wd1 != MAKEWD(WORD_YINIT) && command->wd1 != MAKEWD(WORD_YES))
-            return GO_CHECKFOO;
+	if(silent_yes())
+	  {
+	    // FIXME: setting wd1 is a workaround for broken logic
+	    command->wd1 = token_to_packed("Y");
+	  }
+	else
+	  {
+	    // FIXME: setting wd1 is a workaround for broken logic
+	    command->wd1 = token_to_packed("N");
+	    return GO_CHECKFOO;
+	  }
         pspeak(DRAGON, look, 3);
         game.prop[DRAGON] = 1;
         game.prop[RUG] = 0;
@@ -115,7 +123,10 @@ static int bigwords(token_t foo)
  *  Look up foo in section 3 of vocab to determine which word we've got.  Last
  *  word zips the eggs back to the giant room (unless already there). */
 {
-    int k = vocab(foo, 3);
+    //int k = vocab(foo, 3);
+    char word[6];
+    packed_to_token(foo, word);
+    int k = (int) get_special_vocab_id(word);
     int spk = NOTHING_HAPPENS;
     if (game.foobar != 1 - k) {
         if (game.foobar != 0 && game.loc == LOC_GIANTROOM)spk = START_OVER;
@@ -706,7 +717,8 @@ static int listen(void)
 	int mi =  game.prop[i];
 	if (i == BIRD)
 	    mi += 3 * game.blooded;
-        pspeak(i, hear, mi, game.zzword);
+	long packed_zzword = token_to_packed(game.zzword);
+        pspeak(i, hear, mi, packed_zzword);
         spk = NO_MESSAGE;
 	/* FIXME: Magic number, sensitive to bird state logic */
 	if (i == BIRD && game.prop[i] == 5)
@@ -884,7 +896,10 @@ static int say(struct command_t *command)
         b = command->wd2x;
         command->wd1 = command->wd2;
     }
-    int wd = vocab(command->wd1, -1);
+    //int wd = vocab(command->wd1, -1);
+    char word1[6];
+    packed_to_token(command->wd1, word1);
+    int wd = (int) get_vocab_id(word1);
     /* FIXME: Magic numbers */
     if (wd == 62 || wd == 65 || wd == 71 || wd == 2025 || wd == 2034) {
         /* FIXME: scribbles on the interpreter's command block */
@@ -902,7 +917,7 @@ static int throw_support(long spk)
     return GO_MOVE;
 }
 
-static int throw (FILE *cmdin, struct command_t *command)
+static int throw (struct command_t *command)
 /*  Throw.  Same as discard unless axe.  Then same as attack except
  *  ignore bird, and if dwarf is present then one might be killed.
  *  (Only way to do so!)  Axe also special for dragon, bear, and
@@ -952,7 +967,7 @@ static int throw (FILE *cmdin, struct command_t *command)
                 return GO_CLEAROBJ;
             }
             command->obj = 0;
-            return (attack(cmdin, command));
+            return (attack(command));
         }
 
         if (randrange(NDWARVES + 1) < game.dflag) {
@@ -1015,7 +1030,7 @@ static int wave(token_t verb, token_t obj)
     }
 }
 
-int action(FILE *input, struct command_t *command)
+int action(struct command_t *command)
 /*  Analyse a verb.  Remember what it was, go back for object if second word
  *  unless verb is "say", which snarfs arbitrary second word.
  */
@@ -1104,7 +1119,7 @@ int action(FILE *input, struct command_t *command)
                 return GO_CLEAROBJ;
             }
             case ATTACK:
-                return attack(input, command);
+                return attack(command);
             case POUR:
                 return pour(command->verb, command->obj);
             case EAT:
@@ -1189,7 +1204,7 @@ int action(FILE *input, struct command_t *command)
             return GO_CLEAROBJ;
         }
         case ATTACK:
-            return attack(input, command);
+            return attack(command);
         case POUR:
             return pour(command->verb, command->obj);
         case EAT:
@@ -1199,7 +1214,7 @@ int action(FILE *input, struct command_t *command)
         case RUB:
             return rub(command->verb, command->obj);
         case THROW:
-            return throw(input, command);
+            return throw(command);
         case QUIT: {
             rspeak(spk);
             return GO_CLEAROBJ;

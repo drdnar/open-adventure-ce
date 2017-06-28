@@ -20,6 +20,7 @@
 #define FLASHTIME	50	/*turns from first warning till blinding flash */
 #define PANICTIME	15		/* time left after closing */
 #define BATTERYLIFE	2500		/* turn limit increment from batteries */
+#define WORD_NOT_FOUND  -1              /* "Word not found" flag value for the vocab hash functions. */
 
 typedef long token_t;	/* word token - someday this will be char[TOKLEN+1] */
 typedef long vocab_t;	/* index into a vocabulary array */
@@ -62,7 +63,7 @@ struct game_t {
     long trnluz;	/* # points lost so far due to number of turns used */
     long turns;		/* how many commands he's given (ignores yes/no) */
     bool wzdark;	/* whether the loc he's leaving was dark */
-    long zzword;
+    char zzword[6];
     bool blooded;	/* has player drunk of dragon's blood? */
     long abbrev[NLOCATIONS + 1];
     long atloc[NLOCATIONS + 1];
@@ -91,9 +92,11 @@ enum speaktype {touch, look, hear, study, change};
 /* b is not needed for POSIX but harmless */
 #define READ_MODE "rb"
 #define WRITE_MODE "wb"
+extern char* xstrdup(const char* s);
 extern void* xmalloc(size_t size);
 extern void packed_to_token(long, char token[]);
-extern void token_to_packed(char token[], long*);
+extern long token_to_packed(const char token[6]);
+extern void tokenize(char*, long tokens[4]);
 extern void vspeak(const char*, va_list);
 extern bool wordeq(token_t, token_t);
 extern bool wordempty(token_t);
@@ -103,11 +106,18 @@ extern void pspeak(vocab_t, enum speaktype, int, ...);
 extern void rspeak(vocab_t, ...);
 extern bool GETIN(FILE *, token_t*, token_t*, token_t*, token_t*);
 extern void echo_input(FILE*, char*, char*);
+extern int word_count(char*);
 extern char* get_input(void);
+extern bool silent_yes(void);
 extern bool yes(const char*, const char*, const char*);
 extern long GETTXT(bool, bool, bool);
 extern token_t MAKEWD(long);
 extern long vocab(long, long);
+extern int get_motion_vocab_id(const char*);
+extern int get_object_vocab_id(const char*);
+extern int get_action_vocab_id(const char*);
+extern int get_special_vocab_id(const char*);
+extern long get_vocab_id(const char*);
 extern void juggle(long);
 extern void move(long, long);
 extern long put(long, long, long);
@@ -117,6 +127,7 @@ extern long atdwrf(long);
 extern long setbit(long);
 extern bool tstbit(long, int);
 extern long rndvoc(long, long);
+extern void make_zzword(char*);
 extern bool MAPLIN(FILE *);
 extern void datime(long*, long*);
 
@@ -176,7 +187,7 @@ struct command_t {
 };
 
 void initialise(void);
-int action(FILE *input, struct command_t *command);
+int action(struct command_t *command);
 
 /* Phase codes for action returns.
  * These were at one time FORTRAN line numbers.

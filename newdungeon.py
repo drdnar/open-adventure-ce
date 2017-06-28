@@ -85,6 +85,12 @@ h_template = """/* Generated from adventure.yaml - do not hand-hack! */
 #define COND_HJADE	20	/* Found all treasures except jade */
 
 typedef struct {{
+  const char** strs;
+  const int n;
+}} string_group_t;
+
+typedef struct {{
+  const string_group_t words;
   const char* inventory;
   int plac, fixd;
   bool is_treasure;
@@ -130,11 +136,11 @@ typedef struct {{
 }} hint_t;
 
 typedef struct {{
-  const char** words;
+  const string_group_t words;
 }} motion_t;
 
 typedef struct {{
-  const char** words;
+  const string_group_t words;
   const long message;
 }} action_t;
 
@@ -166,6 +172,7 @@ extern const hint_t hints[];
 extern long conditions[];
 extern const motion_t motions[];
 extern const action_t actions[];
+extern const action_t specials[];
 extern const travelop_t travel[];
 extern const long tkey[];
 
@@ -175,7 +182,9 @@ extern const long tkey[];
 #define NCLASSES	{}
 #define NDEATHS		{}
 #define NTHRESHOLDS	{}
+#define NMOTIONS        {}
 #define NACTIONS  	{}
+#define NSPECIALS       {}
 #define NTRAVEL		{}
 #define NKEYS		{}
 
@@ -196,6 +205,10 @@ enum motion_refs {{
 }};
 
 enum action_refs {{
+{}
+}};
+
+enum special_refs {{
 {}
 }};
 
@@ -250,6 +263,10 @@ const action_t actions[] = {{
 {}
 }};
 
+const action_t specials[] = {{
+{}
+}};
+
 {}
 
 const travelop_t travel[] = {{
@@ -277,6 +294,19 @@ def get_refs(l):
         ref_str += "    {},\n".format(ref)
     ref_str = ref_str[:-1] # trim trailing newline
     return ref_str
+
+def get_string_group(strings):
+    template = """{{
+            .strs = {},
+            .n = {},
+        }}"""
+    if strings == []:
+        strs = "NULL"
+    else:
+        strs = "(const char* []) {" + ", ".join([make_c_string(s) for s in strings]) + "}"
+    n = len(strings)
+    sg_str = template.format(strs, n)
+    return sg_str
 
 def get_arbitrary_messages(arb):
     template = """    {},
@@ -339,6 +369,7 @@ def get_locations(loc):
 
 def get_objects(obj):
     template = """    {{ // {}
+        .words = {},
         .inventory = {},
         .plac = {},
         .fixd = {},
@@ -360,6 +391,10 @@ def get_objects(obj):
     obj_str = ""
     for (i, item) in enumerate(obj):
         attr = item[1]
+        try:
+            words_str = get_string_group(attr["words"])
+        except KeyError:
+            words_str = get_string_group([])
         i_msg = make_c_string(attr["inventory"])
         descriptions_str = ""
         if attr["descriptions"] == None:
@@ -412,7 +447,7 @@ def get_objects(obj):
             sys.stderr.write("dungeon: unknown object location in %s\n" % locs)
             sys.exit(1)
         treasure = "true" if attr.get("treasure") else "false"
-        obj_str += template.format(i, i_msg, locs[0], locs[1], treasure, descriptions_str, sounds_str, texts_str, changes_str)
+        obj_str += template.format(i, words_str, i_msg, locs[0], locs[1], treasure, descriptions_str, sounds_str, texts_str, changes_str)
     obj_str = obj_str[:-1] # trim trailing newline
     return obj_str
 
@@ -493,10 +528,9 @@ def get_motions(motions):
     for motion in motions:
         contents = motion[1]
         if contents["words"] == None:
-            mot_str += template.format("NULL")
-            continue
-        c_words = [make_c_string(s) for s in contents["words"]]
-        words_str = "(const char* []) {" + ", ".join(c_words) + "}"
+            words_str = get_string_group([])
+        else:
+            words_str = get_string_group(contents["words"])
         mot_str += template.format(words_str)
     return mot_str
 
@@ -511,10 +545,9 @@ def get_actions(actions):
         contents = action[1]
         
         if contents["words"] == None:
-            words_str = "NULL"
+            words_str = get_string_group([])
         else:
-            c_words = [make_c_string(s) for s in contents["words"]]
-            words_str = "(const char* []) {" + ", ".join(c_words) + "}"
+            words_str = get_string_group(contents["words"])
 
         if contents["message"] == None:
             message = "NO_MESSAGE"
@@ -688,6 +721,7 @@ if __name__ == "__main__":
         get_condbits(db["locations"]),
         get_motions(db["motions"]),
         get_actions(db["actions"]),
+        get_actions(db["specials"]),
         "const long tkey[] = {%s};" % bigdump(tkey),
         get_travel(travel), 
     )
@@ -699,7 +733,9 @@ if __name__ == "__main__":
         len(db["classes"])-1,
         len(db["obituaries"]),
         len(db["turn_thresholds"]),
+        len(db["motions"]),
         len(db["actions"]),
+        len(db["specials"]),
         len(travel),
         len(tkey),
         get_refs(db["arbitrary_messages"]),
@@ -707,6 +743,7 @@ if __name__ == "__main__":
         get_refs(db["objects"]),
         get_refs(db["motions"]),
         get_refs(db["actions"]),
+        get_refs(db["specials"]),
         statedefines,
     )
 

@@ -4,6 +4,8 @@
 
 extern const char advent_to_ascii[128];
 extern const char ascii_to_advent[128];
+extern const char new_advent_to_ascii[64];
+extern const char new_ascii_to_advent[128];
 
 enum bugtype {
    TOO_MANY_VOCABULARY_WORDS,                             // 4

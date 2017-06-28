@@ -119,7 +119,8 @@ int restore(FILE* fp)
         rspeak(VERSION_SKEW, save.version / 10, MOD(save.version, 10), VRSION / 10, MOD(VRSION, 10));
     } else {
         memcpy(&game, &save.game, sizeof(struct game_t));
-        game.zzword = rndvoc(3, game.zzword);
+        //game.zzword = rndvoc(3, game.zzword);
+	make_zzword(game.zzword);
     }
     return GO_TOP;
 }

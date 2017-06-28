@@ -618,6 +618,71 @@ actions: !!omap
     message: HUH_MAN
     words: !!null
 
+specials: !!omap
+- SPC_0:
+    message: !!null
+    words: !!null
+- SPC_1:
+    message: !!null
+    words: ['fee']
+- SPC_2:
+    message: !!null
+    words: ['fie']
+- SPC_3:
+    message: !!null
+    words: ['foe']
+- SPC_4:
+    message: !!null
+    words: ['foo']
+- SPC_5:
+    message: !!null
+    words: ['fum']
+- SPC_13:
+    message: YOUR_WELCOME
+    words: ['thank']
+- SPC_50:
+    message: WORN_OUT
+    words: ['sesam', 'opens', 'abra', 'abrac', 'shaza', 'hocus', 'pocus']
+- SPC_51:
+    message: VOCAB_DESCRIPTION
+    words: ['help', '?']
+- SPC_54:
+    message: OK_MAN
+    words: ['no']
+- SPC_64:
+    message: FOREST_LOOK
+    words: ['tree', 'trees']
+- SPC_66:
+    message: DIGGING_FUTILE
+    words: ['dig', 'excav']
+- SPC_68:
+    message: IM_CONFUSED
+    words: ['lost']
+- SPC_69:
+    message: EXPLAIN_MIST
+    words: ['mist']
+- SPC_79:
+    message: WATCH_IT
+    words: ['fuck']
+- SPC_139:
+    message: STOP_UNKNOWN
+    words: ['stop']
+- SPC_142:
+    message: QUICK_START
+    words: ['info', 'infor']
+- SPC_147:
+    message: NOT_KNOWHOW
+    words: ['swim']
+- SPC_246:
+    message: WIZARDS_NODISTURB
+    words: ['wizar']
+- SPC_271:
+    message: GUESS_AGAIN
+    words: ['yes']
+- SPC_275:
+    message: ADVENTURE_NEWS
+    words: ['news']
+
 hints:
   - hint: &grate
       name: CAVE
@@ -3141,7 +3206,7 @@ objects: !!omap
     - 'Even though it''s an oyster, the critter''s as tight-mouthed as a clam.'
     - 'It says the same thing it did before.  Hm, maybe it''s a pun?'
 - MAGAZINE:
-    words: ['issue', 'spelu', '"spel']
+    words: ['magaz', 'issue', 'spelu', '"spel']
     inventory: '"Spelunker Today"'
     locations: LOC_ANTEROOM
     descriptions:

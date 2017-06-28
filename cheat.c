@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
     /*  Initialize game variables */
     initialise();
 
-    game.zzword = rndvoc(3, 0);
+    make_zzword(game.zzword);
     game.newloc = LOC_START;
     game.loc = LOC_START;
     game.limit = GAMELIMIT;

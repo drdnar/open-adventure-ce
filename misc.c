@@ -11,6 +11,18 @@
 #include "linenoise/linenoise.h"
 #include "newdb.h"
 
+char* xstrdup(const char* s)
+{
+  char* ptr = strdup(s);
+  if (ptr == NULL) {
+    // LCOV_EXCL_START
+    // exclude from coverage analysis because we can't simulate an out of memory error in testing
+    fprintf(stderr, "Out of memory!\n");
+    exit(EXIT_FAILURE);
+  }
+  return(ptr);
+}
+
 void* xmalloc(size_t size)
 {
     void* ptr = malloc(size);
@@ -28,8 +40,8 @@ void packed_to_token(long packed, char token[6])
 {
     // Unpack and map back to ASCII.
     for (int i = 0; i < 5; ++i) {
-        char advent = (packed >> i * 6) & 63;
-        token[4 - i] = advent_to_ascii[(int) advent];
+      char advent = (packed >> i * 6) & 63;
+        token[i] = new_advent_to_ascii[(int) advent];
     }
 
     // Ensure the last character is \0.
@@ -42,6 +54,55 @@ void packed_to_token(long packed, char token[6])
         else
             break;
     }
+}
+
+long token_to_packed(const char token[6])
+{
+  size_t t_len = strlen(token);
+  long packed = 0;
+  for (size_t i = 0; i < t_len; ++i)
+    {
+      char mapped = new_ascii_to_advent[(int) token[i]];
+      packed |= (mapped << (6 * i));
+    }
+  return(packed);
+}
+
+void tokenize(char* raw, long tokens[4])
+{
+  // set each token to 0
+  for (int i = 0; i < 4; ++i)
+    tokens[i] = 0;
+  
+  // grab the first two words
+  char* words[2];
+  words[0] = (char*) xmalloc(strlen(raw));
+  words[1] = (char*) xmalloc(strlen(raw));
+  int word_count = sscanf(raw, "%s%s", words[0], words[1]);
+
+  // make space for substrings and zero it out
+  char chunk_data[][6] = {
+    {"\0\0\0\0\0"},
+    {"\0\0\0\0\0"},
+    {"\0\0\0\0\0"},
+    {"\0\0\0\0\0"},
+  };
+
+  // break the words into up to 4 5-char substrings
+  sscanf(words[0], "%5s%5s", chunk_data[0], chunk_data[1]);
+  if (word_count == 2)
+    sscanf(words[1], "%5s%5s", chunk_data[2], chunk_data[3]);
+  free(words[0]);
+  free(words[1]);
+
+  // uppercase all the substrings
+  for (int i = 0; i < 4; ++i)
+    for (unsigned int j = 0; j < strlen(chunk_data[i]); ++j)
+      chunk_data[i][j] = (char) toupper(chunk_data[i][j]);
+
+  // pack the substrings
+  for (int i = 0; i < 4; ++i)
+    tokens[i] = token_to_packed(chunk_data[i]);
 }
 
 /* Hide the fact that wods are corrently packed longs */
@@ -236,6 +297,23 @@ void echo_input(FILE* destination, char* input_prompt, char* input)
     free(prompt_and_input);
 }
 
+int word_count(char* s)
+{
+  char* copy = xstrdup(s);
+  char delims[] = " \t";
+  int count = 0;
+  char* word;
+
+  word = strtok(copy, delims);
+  while(word != NULL)
+    {
+      word = strtok(NULL, delims);
+      ++count;
+    }
+  free(copy);
+  return(count);
+}
+
 char* get_input()
 {
     // Set up the prompt
@@ -259,7 +337,9 @@ char* get_input()
             // Should be unreachable in tests, as they will use a non-interactive shell.
                 printf("%s", input_prompt);
             // LCOV_EXCL_STOP 
-            IGNORE(getline(&input, &n, stdin));
+            ssize_t numread = getline(&input, &n, stdin);
+	    if (numread == -1) // Got EOF; return with it.
+	      return(NULL);
         }
 
         if (input == NULL) // Got EOF; return with it.
@@ -283,6 +363,48 @@ char* get_input()
 
     return (input);
 }
+
+bool silent_yes()
+{
+  char* reply;
+  bool outcome;
+  
+  for (;;) {
+    reply = get_input();
+    if (reply == NULL) {
+      // LCOV_EXCL_START
+      // Should be unreachable. Reply should never be NULL
+      linenoiseFree(reply);
+      exit(EXIT_SUCCESS);
+      // LCOV_EXCL_STOP 
+    }
+
+    char* firstword = (char*) xmalloc(strlen(reply)+1);
+    sscanf(reply, "%s", firstword);
+
+    for (int i = 0; i < (int)strlen(firstword); ++i)
+      firstword[i] = tolower(firstword[i]);
+
+    int yes = strncmp("yes", firstword, sizeof("yes") - 1);
+    int y = strncmp("y", firstword, sizeof("y") - 1);
+    int no = strncmp("no", firstword, sizeof("no") - 1);
+    int n = strncmp("n", firstword, sizeof("n") - 1);
+
+    free(firstword);
+
+    if (yes == 0 || y == 0) {
+      outcome = true;
+      break;
+    } else if (no == 0 || n == 0) {
+      outcome = false;
+      break;
+    } else
+      rspeak(PLEASE_ANSWER);
+  }
+  linenoiseFree(reply);
+  return (outcome);
+}
+
 
 bool yes(const char* question, const char* yes_response, const char* no_response)
 /*  Print message X, wait for yes/no answer.  If yes, print Y and return true;
@@ -317,7 +439,7 @@ bool yes(const char* question, const char* yes_response, const char* no_response
         free(firstword);
 
         if (yes == 0 || y == 0) {
-            speak(yes_response);
+	    speak(yes_response);
             outcome = true;
             break;
         } else if (no == 0 || n == 0) {
@@ -432,6 +554,94 @@ long vocab(long id, long init)
         }
     }
     BUG(RAN_OFF_END_OF_VOCABULARY_TABLE); // LCOV_EXCL_LINE
+}
+
+int get_motion_vocab_id(const char* word)
+// Return the first motion number that has 'word' as one of its words.
+{
+  for (int i = 0; i < NMOTIONS; ++i)
+    {
+      for (int j = 0; j < motions[i].words.n; ++j)
+	{
+	  if (strcasecmp(word, motions[i].words.strs[j]) == 0)
+	    return(i);
+	}
+    }
+  // If execution reaches here, we didn't find the word.
+  return(WORD_NOT_FOUND);
+}
+
+int get_object_vocab_id(const char* word)
+// Return the first object number that has 'word' as one of its words.
+{
+  for (int i = 0; i < NOBJECTS + 1; ++i) // FIXME: the + 1 should go when 1-indexing for objects is removed
+    {
+      for (int j = 0; j < objects[i].words.n; ++j)
+	{
+	  if (strcasecmp(word, objects[i].words.strs[j]) == 0)
+	    return(i);
+	}
+    }
+  // If execution reaches here, we didn't find the word.
+  return(WORD_NOT_FOUND);
+}
+
+int get_action_vocab_id(const char* word)
+// Return the first motion number that has 'word' as one of its words.
+{
+  for (int i = 0; i < NACTIONS; ++i)
+    {
+      for (int j = 0; j < actions[i].words.n; ++j)
+	{
+	  if (strcasecmp(word, actions[i].words.strs[j]) == 0)
+	    return(i);
+	}
+    }
+  // If execution reaches here, we didn't find the word.
+  return(WORD_NOT_FOUND);
+}
+
+int get_special_vocab_id(const char* word)
+// Return the first special number that has 'word' as one of its words.
+{
+  for (int i = 0; i < NSPECIALS; ++i)
+    {
+      for (int j = 0; j < specials[i].words.n; ++j)
+	{
+	  if (strcasecmp(word, specials[i].words.strs[j]) == 0)
+	    return(i);
+	}
+    }
+  // If execution reaches here, we didn't find the word.
+  return(WORD_NOT_FOUND);
+}
+
+long get_vocab_id(const char* word)
+// Search the vocab categories in order for the supplied word.
+{
+  long ref_num;
+  
+  ref_num = get_motion_vocab_id(word);
+  if (ref_num != WORD_NOT_FOUND)
+    return(ref_num + 0); // FIXME: replace with a proper hash
+
+  ref_num = get_object_vocab_id(word);
+  if (ref_num != WORD_NOT_FOUND)
+    return(ref_num + 1000); // FIXME: replace with a proper hash
+
+  ref_num = get_action_vocab_id(word);
+  if (ref_num != WORD_NOT_FOUND)
+    return(ref_num + 2000); // FIXME: replace with a proper hash
+
+  ref_num = get_special_vocab_id(word);
+  if (ref_num != WORD_NOT_FOUND)
+    return(ref_num + 3000); // FIXME: replace with a proper hash
+
+  // Check for the reservoir magic word.
+  if (strcasecmp(word, game.zzword) == 0)
+    return(PART + 2000); // FIXME: replace with a proper hash
+
+  return(WORD_NOT_FOUND);
 }
 
 void juggle(long object)
@@ -595,6 +805,15 @@ long rndvoc(long second, long force)
     return rnd;
 }
 
+void make_zzword(char zzword[6])
+{
+  for (int i = 0; i < 5; ++i)
+    {
+      zzword[i] = 'A' + randrange(26);
+    }
+  zzword[1] = '\''; // force second char to apostrophe
+  zzword[5] = '\0';
+}
 
 /*  Machine dependent routines (MAPLIN, SAVEIO) */
 
