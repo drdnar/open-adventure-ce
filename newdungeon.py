@@ -8,7 +8,7 @@
 # movement rules to the travel array that's actually used by
 # playermove().  This program first compiles the YAML to a form
 # identical to the data in section 3 of the old adventure.text file,
-# then a second stage packs that data into the travel array.
+# then a second stage unpacks that data into the travel array.
 #
 # Here are the rules of the intermediate form:
 #
@@ -139,6 +139,7 @@ typedef struct {{
 
 typedef struct {{
   const long opcode;
+  const long dest;
   const bool stop;
 }} travelop_t;
 
@@ -147,13 +148,13 @@ typedef struct {{
  * inherited from FORTRAN, someday. To understand these, read the
  * encoding description for travel.
  */
-#define T_DESTINATION(entry)	MOD((entry).opcode / 1000, 1000)
-#define T_NODWARVES(entry)	((entry).opcode / 1000000 == 100)
+#define T_DESTINATION(entry)	MOD((entry).dest, 1000)
+#define T_NODWARVES(entry)	((entry).dest / 1000 == 100)
 #define T_MOTION(entry)		MOD((entry).opcode, 1000)
 #define T_TERMINATE(entry)	(T_MOTION(entry) == 1)
 #define T_STOP(entry)		((entry).stop)
-#define T_HIGH(entry)		((entry).opcode / 1000)
-#define T_LOW(entry)		((entry).opcode % 1000)
+#define T_HIGH(entry)		((entry).dest)
+#define T_LOW(entry)		((entry).opcode)
 #define L_SPEAK(loc)		((loc) - 500)
 
 extern const location_t locations[];
@@ -622,8 +623,9 @@ def buildtravel(locs, objs, voc):
     #     TRAVEL[TRVS - 1] = -TRAVEL[TRVS - 1];
     # }
     #
-    # We're going to break the magic numbers up into a struct.
-    travel = [[0, False]]
+    # In order to de-crypticize the runtime code, we're going to break these
+    # magic numbers up into a struct.
+    travel = [[0, 0, False]]
     tkey = [0]
     oldloc = 0
     while ltravel:
@@ -634,21 +636,22 @@ def buildtravel(locs, objs, voc):
             tkey.append(len(travel))
             oldloc = loc 
         elif travel:
-            travel[-1][1] = not travel[-1][1]
+            travel[-1][2] = not travel[-1][2]
         while rule:
-            travel.append([rule.pop(0) + newloc * 1000, False])
-        travel[-1][1] = True
+            travel.append([rule.pop(0), newloc, False])
+        travel[-1][2] = True
     return (travel, tkey)
 
 def get_travel(travel):
     template = """    {{
         .opcode = {},
+        .dest = {},
         .stop = {},
     }},
 """
     out = ""
     for entry in travel:
-        out += template.format(entry[0], entry[1]).lower()
+        out += template.format(entry[0], entry[1], entry[2]).lower()
     out = out[:-1] # trim trailing newline
     return out
 
