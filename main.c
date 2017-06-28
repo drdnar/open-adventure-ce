@@ -414,7 +414,7 @@ static bool dwarfmove(void)
                 }
                 ++kk;
             } while
-		(!T_STOP(travel[kk - 1]));
+		(!travel[kk - 1].stop);
         tk[j] = game.odloc[i];
         if (j >= 2)
             --j;
@@ -544,7 +544,7 @@ static bool playermove(token_t verb, int motion)
                         if (FORCED(scratchloc) && T_DESTINATION(travel[tkey[scratchloc]]) == motion)
                             k2 = kk;
                     }
-                    if (!T_STOP(travel[kk])) {
+                    if (!travel[kk].stop) {
                         ++kk;	/* go to next travel entry for this location */
                         continue;
                     }
@@ -556,7 +556,7 @@ static bool playermove(token_t verb, int motion)
                     }
                 }
 
-                motion = T_MOTION(travel[kk]);
+                motion = travel[kk].motion;
                 kk = tkey[game.loc];
                 break; /* fall through to ordinary travel */
             }
@@ -587,9 +587,9 @@ static bool playermove(token_t verb, int motion)
     /* Look for a way to fulfil the motion - kk indexes the beginning
      * of the motion entries for here (game.loc). */
     for (;;) {
-        if (T_TERMINATE(travel[kk]) || T_MOTION(travel[kk]) == motion)
+        if (T_TERMINATE(travel[kk]) || travel[kk].motion == motion)
             break;
-        if (T_STOP(travel[kk])) {
+        if (travel[kk].stop) {
             /* FIXME: Magic numbers! */
             /*  Couldn't find an entry matching the motion word passed
              *  in.  Various messages depending on word given. */
@@ -632,7 +632,7 @@ static bool playermove(token_t verb, int motion)
                 } else if (game.prop[motion] != game.newloc / 100 - 3)
                     break;
                 do {
-                    if (T_STOP(travel[kk]))
+                    if (travel[kk].stop)
                         BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION);
                     ++kk;
                     game.newloc = T_HIGH(travel[kk]);
@@ -673,7 +673,7 @@ static bool playermove(token_t verb, int motion)
                      * pretend he wasn't carrying it after all. */
                     drop(EMERALD, game.loc);
                     do {
-                        if (T_STOP(travel[kk]))
+                        if (travel[kk].stop)
                             BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION);
                         ++kk;
                         game.newloc = T_HIGH(travel[kk]);

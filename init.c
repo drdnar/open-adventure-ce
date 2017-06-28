@@ -25,7 +25,7 @@ void initialise(void)
         game.abbrev[i] = 0;
         if (!(locations[i].description.big == 0 || tkey[i] == 0)) {
             int k = tkey[i];
-            if (T_LOW(travel[k]) == 1)
+            if (T_TERMINATE(travel[k]))
 		conditions[i] |= (1 << COND_FORCED);
         }
         game.atloc[i] = 0;

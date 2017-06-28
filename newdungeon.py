@@ -138,7 +138,7 @@ typedef struct {{
 }} action_t;
 
 typedef struct {{
-  const long opcode;
+  const long motion;
   const long dest;
   const bool stop;
 }} travelop_t;
@@ -150,11 +150,8 @@ typedef struct {{
  */
 #define T_DESTINATION(entry)	MOD((entry).dest, 1000)
 #define T_NODWARVES(entry)	((entry).dest / 1000 == 100)
-#define T_MOTION(entry)		MOD((entry).opcode, 1000)
-#define T_TERMINATE(entry)	(T_MOTION(entry) == 1)
-#define T_STOP(entry)		((entry).stop)
 #define T_HIGH(entry)		((entry).dest)
-#define T_LOW(entry)		((entry).opcode)
+#define T_TERMINATE(entry)	((entry).motion == 1)
 #define L_SPEAK(loc)		((loc) - 500)
 
 extern const location_t locations[];
@@ -644,7 +641,7 @@ def buildtravel(locs, objs, voc):
 
 def get_travel(travel):
     template = """    {{
-        .opcode = {},
+        .motion = {},
         .dest = {},
         .stop = {},
     }},
