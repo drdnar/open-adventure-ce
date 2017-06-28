@@ -88,7 +88,10 @@ test:debug:
     - apk add make gcc
     - apk add lcov --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted
   script:
+    - cd tests
+    - make
     - make coverage
+    - cd ..
   artifacts:
     paths:
       - coverage

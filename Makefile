@@ -85,6 +85,7 @@ clean:
 	rm -f README advent.6 MANIFEST *.tar.gz
 	rm -f *~
 	rm -f .*~
+	rm -rf coverage advent.info
 	cd tests; $(MAKE) --quiet clean
 
 
@@ -93,6 +94,9 @@ cheat: $(CHEAT_OBJS) linenoise.o newdb.o
 
 check: advent cheat
 	cd tests; $(MAKE) --quiet
+
+coverage: debug cheat
+	cd tests; $(MAKE) coverage --quiet
 
 .SUFFIXES: .adoc .html .6
 
@@ -153,7 +157,4 @@ debug: CCFLAGS += -O0 --coverage -ggdb
 debug: linty
 debug: cheat
 
-coverage: debug check
-	lcov -t "advent" -o advent.info -c -d .
-	genhtml -o coverage/ advent.info
 

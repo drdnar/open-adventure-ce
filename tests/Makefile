@@ -13,6 +13,10 @@ check: regress
 	@-advent -x 2>/dev/null	# Get usage message into coverage tests
 	@-advent -l /dev/null <pitfall.log >/dev/null
 
+coverage: check
+	lcov -t "advent" -o ../advent.info -c -d ..
+	genhtml -o ../coverage/ ../advent.info
+
 .SUFFIXES: .chk
 
 clean:
