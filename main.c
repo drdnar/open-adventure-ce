@@ -38,6 +38,7 @@
 #define L_SPEAK(loc)		((loc) - 500)
 #define T_TERMINATE(entry)	(T_MOTION(entry) == 1)
 #define T_STOP(entry)		((entry) < 0)
+#define T_OPCODE(entry)		(entry)
 
 struct game_t game;
 
@@ -618,7 +619,7 @@ static bool playermove(token_t verb, int motion)
         }
         ++kk;
     }
-    scratchloc = labs(travel[kk]) / 1000;
+    scratchloc = labs(T_OPCODE(travel[kk])) / 1000;
 
     do {
         /*
@@ -647,7 +648,7 @@ static bool playermove(token_t verb, int motion)
                     if (T_STOP(travel[kk]))
                         BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION);
                     ++kk;
-                    game.newloc = labs(travel[kk]) / 1000;
+                    game.newloc = labs(T_OPCODE(travel[kk])) / 1000;
                 } while
                 (game.newloc == scratchloc);
                 scratchloc = game.newloc;
@@ -688,7 +689,7 @@ static bool playermove(token_t verb, int motion)
                         if (T_STOP(travel[kk]))
                             BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION);
                         ++kk;
-                        game.newloc = labs(travel[kk]) / 1000;
+                        game.newloc = labs(T_OPCODE(travel[kk])) / 1000;
                     } while
                     (game.newloc == scratchloc);
                     scratchloc = game.newloc;
