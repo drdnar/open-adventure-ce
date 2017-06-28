@@ -1921,9 +1921,9 @@ locations: !!omap
     travel: [
       {verbs: ['SW'], action: [goto, LOC_WINDING]},
       {verbs: ['OVER', 'ACROS', 'CROSS', 'NE'], cond: [with, TROLL], action: ["speak", TROLL_BLOCKS]},
-      {verbs: ['OVER'], cond: [not, CHASM, 0], action: ["speak", BRIDGE_GONE]},
+      {verbs: ['OVER'], cond: [not, CHASM, TROLL_BRIDGE], action: ["speak", BRIDGE_GONE]},
       {verbs: ['OVER'], action: ["special", 3]},
-      {verbs: ['JUMP'], cond: [not, CHASM, 0], action: [goto, LOC_NOMAKE]},
+      {verbs: ['JUMP'], cond: [not, CHASM, TROLL_BRIDGE], action: [goto, LOC_NOMAKE]},
       {verbs: ['JUMP'], action: ["speak", CROSS_BRIDGE]},
     ]
 - LOC_WINDING:
@@ -3257,8 +3257,8 @@ objects: !!omap
     locations: [LOC_SWCHASM, LOC_NECHASM]
     immovable: true
     longs:
-    - 'A rickety wooden bridge extends across the chasm, vanishing into the\nmist.  A notice posted on the bridge reads, "Stop! Pay troll!"'
-    - 'The wreckage of a bridge (and a dead bear) can be seen at the bottom\nof the chasm.'
+    - [TROLL_BRIDGE, 'A rickety wooden bridge extends across the chasm, vanishing into the\nmist.  A notice posted on the bridge reads, "Stop! Pay troll!"']
+    - [BRIDGE_WRECKED, 'The wreckage of a bridge (and a dead bear) can be seen at the bottom\nof the chasm.']
 - TROLL:
     words: ['troll']
     inventory: '*troll'
