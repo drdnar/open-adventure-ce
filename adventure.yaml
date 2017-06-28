@@ -3363,8 +3363,8 @@ objects: !!omap
     locations: LOC_NOWHERE
     immovable: true
     descriptions:
-    - '' # something in it
-    - 'There is a small urn-shaped cavity in the rock.'
+    - [CAVITY_FULL, ''] # something in it
+    - [CAVITY_EMPTY, 'There is a small urn-shaped cavity in the rock.']
 - BLOOD:
     words: ['blood']
     inventory: '*blood'

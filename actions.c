@@ -288,7 +288,7 @@ static int vcarry(token_t verb, token_t obj)
         game.place[LIQUID()] = CARRIED;
     if (GSTONE(obj) && game.prop[obj] != 0) {
         game.prop[obj] = 0;
-        game.prop[CAVITY] = 1;
+        game.prop[CAVITY] = CAVITY_EMPTY;
     }
     rspeak(OK_MAN);
     return GO_CLEAROBJ;
@@ -350,12 +350,12 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
             if (game.closed) return GO_DWARFWAKE;
             DESTROY(SNAKE);
             /* Set game.prop for use by travel options */
-            game.prop[SNAKE] = 1;
+            game.prop[SNAKE] = SNAKE_CHASED;
 
-        } else if ((GSTONE(obj) && AT(CAVITY) && game.prop[CAVITY] != 0)) {
+        } else if ((GSTONE(obj) && AT(CAVITY) && game.prop[CAVITY] != CAVITY_FULL)) {
             rspeak(GEM_FITS);
             game.prop[obj] = 1;
-            game.prop[CAVITY] = 0;
+            game.prop[CAVITY] = CAVITY_FULL;
             if (HERE(RUG) && ((obj == EMERALD && game.prop[RUG] != 2) || (obj == RUBY &&
                               game.prop[RUG] == 2))) {
                 spk = RUG_RISES;
