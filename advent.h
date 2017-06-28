@@ -86,7 +86,7 @@ extern const char advent_to_ascii[];
 extern FILE *logfp;
 extern bool oldstyle, editline, prompt;
 
-enum speaktype {touch, look, hear, study};
+enum speaktype {touch, look, hear, study, change};
 
 /* b is not needed for POSIX but harmless */
 #define READ_MODE "rb"

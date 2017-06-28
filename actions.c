@@ -6,6 +6,12 @@
 
 static int fill(token_t, token_t);
 
+static void state_change(long obj, long state)
+{
+    game.prop[obj] = state;
+    pspeak(obj, change, state);
+}
+
 static int attack(FILE *input, struct command_t *command)
 /*  Attack.  Assume target if unambiguous.  "Throw" also links here.
  *  Attackable objects fall into two categories: enemies (snake,
@@ -456,8 +462,7 @@ static int extinguish(token_t verb, int obj)
         game.prop[URN] = game.prop[URN] / 2;
         spk = URN_DARK;
     } else if (obj == LAMP) {
-        game.prop[LAMP] = LAMP_DARK;
-        rspeak(LAMP_OFF);
+	state_change(LAMP, LAMP_DARK);
         spk = DARK(game.loc) ? PITCH_DARK : NO_MESSAGE;
     } else if (obj == DRAGON || obj == VOLCANO)
         spk = BEYOND_POWER;
@@ -663,8 +668,7 @@ static int light(token_t verb, token_t obj)
             rspeak(spk);
             return GO_CLEAROBJ;
         }
-        game.prop[LAMP] = LAMP_BRIGHT;
-        rspeak(LAMP_ON);
+	state_change(LAMP, LAMP_BRIGHT);
         if (game.wzdark)
             return GO_TOP;
         else
@@ -737,8 +741,8 @@ static int lock(token_t verb, token_t obj)
                 if (!game.panic)game.clock2 = PANICTIME;
                 game.panic = true;
             } else {
-                game.prop[GRATE] = (verb == LOCK) ? GRATE_CLOSED : GRATE_OPEN;
-                spk = game.prop[GRATE] ? GRATE_UNLOCKED : GRATE_LOCKED;
+		state_change(GRATE, (verb == LOCK) ? GRATE_CLOSED : GRATE_OPEN);
+		return GO_CLEAROBJ;
             }
         }
     }

@@ -88,9 +88,10 @@ typedef struct {{
   const char* inventory;
   int plac, fixd;
   bool is_treasure;
-  const char** longs;
+  const char** descriptions;
   const char** sounds;
   const char** texts;
+  const char** changes;
 }} object_t;
 
 typedef struct {{
@@ -341,7 +342,7 @@ def get_objects(obj):
         .plac = {},
         .fixd = {},
         .is_treasure = {},
-        .longs = (const char* []) {{
+        .descriptions = (const char* []) {{
 {}
         }},
         .sounds = (const char* []) {{
@@ -350,23 +351,26 @@ def get_objects(obj):
         .texts = (const char* []) {{
 {}
         }},
+        .changes = (const char* []) {{
+{}
+        }},
     }},
 """
     obj_str = ""
     for (i, item) in enumerate(obj):
         attr = item[1]
         i_msg = make_c_string(attr["inventory"])
-        longs_str = ""
-        if attr["longs"] == None:
-            longs_str = " " * 12 + "NULL,"
+        descriptions_str = ""
+        if attr["descriptions"] == None:
+            descriptions_str = " " * 12 + "NULL,"
         else:
             labels = []
-            for l_msg in attr["longs"]:
+            for l_msg in attr["descriptions"]:
                 if not isinstance(l_msg, str):
                     labels.append(l_msg)
                     l_msg = l_msg[1]
-                longs_str += " " * 12 + make_c_string(l_msg) + ",\n"
-            longs_str = longs_str[:-1] # trim trailing newline
+                descriptions_str += " " * 12 + make_c_string(l_msg) + ",\n"
+            descriptions_str = descriptions_str[:-1] # trim trailing newline
             if labels:
                 global statedefines
                 statedefines += "/* States for %s */\n" % item[0]
@@ -389,6 +393,13 @@ def get_objects(obj):
              for l_msg in attr["texts"]:
                  texts_str += " " * 12 + make_c_string(l_msg) + ",\n"
              texts_str = texts_str[:-1] # trim trailing newline
+        changes_str = ""
+        if attr.get("changes") == None:
+            changes_str = " " * 12 + "NULL,"
+        else:
+             for l_msg in attr["changes"]:
+                 changes_str += " " * 12 + make_c_string(l_msg) + ",\n"
+             changes_str = changes_str[:-1] # trim trailing newline
         locs = attr.get("locations", ["LOC_NOWHERE", "LOC_NOWHERE"])
         immovable = attr.get("immovable", False)
         try:
@@ -400,7 +411,7 @@ def get_objects(obj):
             sys.stderr.write("dungeon: unknown object location in %s\n" % locs)
             sys.exit(1)
         treasure = "true" if attr.get("treasure") else "false"
-        obj_str += template.format(i, i_msg, locs[0], locs[1], treasure, longs_str, sounds_str, texts_str)
+        obj_str += template.format(i, i_msg, locs[0], locs[1], treasure, descriptions_str, sounds_str, texts_str, changes_str)
     obj_str = obj_str[:-1] # trim trailing newline
     return obj_str
 
@@ -571,7 +582,7 @@ def buildtravel(locs, objs, voc):
                 if type(cond[2]) == int:
                     state = cond[2]
                 else:
-                    for (i, stateclause) in enumerate(objs[obj][1]["longs"]):
+                    for (i, stateclause) in enumerate(objs[obj][1]["descriptions"]):
                         if type(stateclause) == list:
                             if stateclause[0] == cond[2]:
                                 state = i
