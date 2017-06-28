@@ -28,7 +28,8 @@ static int attack(FILE *input, struct command_t *command)
         if (AT(DRAGON) && game.prop[DRAGON] == 0)obj = obj * NOBJECTS + DRAGON;
         if (AT(TROLL))obj = obj * NOBJECTS + TROLL;
         if (AT(OGRE))obj = obj * NOBJECTS + OGRE;
-        if (HERE(BEAR) && game.prop[BEAR] == 0)obj = obj * NOBJECTS + BEAR;
+        if (HERE(BEAR) && game.prop[BEAR] == UNTAMED_BEAR)
+	    obj = obj * NOBJECTS + BEAR;
         if (obj > NOBJECTS) return GO_UNKNOWN;
         if (obj == 0) {
             /* Can't attack bird or machine by throwing axe. */
@@ -50,9 +51,8 @@ static int attack(FILE *input, struct command_t *command)
         DESTROY(BIRD);
         spk = BIRD_DEAD;
     } else if (obj == VEND) {
-	bool blocking = (game.prop[VEND] == VEND_BLOCKS);
-        game.prop[VEND] = blocking ? VEND_UNBLOCKS : VEND_BLOCKS;
-        rspeak(blocking ? MACHINE_SWINGOUT : MACHINE_SWINGBACK);
+	state_change(VEND,
+		     game.prop[VEND]==VEND_BLOCKS ? VEND_UNBLOCKS : VEND_BLOCKS);
         return GO_CLEAROBJ;
     }
 
@@ -230,8 +230,10 @@ static int vcarry(token_t verb, token_t obj)
     }
     spk = YOU_JOKING;
     if (obj == PLANT && game.prop[PLANT] <= 0)spk = DEEP_ROOTS;
-    if (obj == BEAR && game.prop[BEAR] == 1)spk = BEAR_CHAINED;
-    if (obj == CHAIN && game.prop[BEAR] != 0)spk = STILL_LOCKED;
+    if (obj == BEAR && game.prop[BEAR] == SITTING_BEAR)
+	spk = BEAR_CHAINED;
+    if (obj == CHAIN && game.prop[BEAR] != UNTAMED_BEAR)
+	spk = STILL_LOCKED;
     if (obj == URN)spk = URN_NOBUDGE;
     if (obj == CAVITY)spk = DOUGHNUT_HOLES;
     if (obj == BLOOD)spk = FEW_DROPS;
@@ -298,26 +300,33 @@ static int chain(token_t verb)
     int spk;
     if (verb != LOCK) {
         spk = CHAIN_UNLOCKED;
-        if (game.prop[BEAR] == 0)spk = BEAR_BLOCKS;
-        if (game.prop[CHAIN] == 0)spk = ALREADY_UNLOCKED;
+        if (game.prop[BEAR] == UNTAMED_BEAR)
+	    spk = BEAR_BLOCKS;
+        if (game.prop[CHAIN] == 0)
+	    spk = ALREADY_UNLOCKED;
         if (spk != CHAIN_UNLOCKED) {
             rspeak(spk);
             return GO_CLEAROBJ;
         }
         game.prop[CHAIN] = 0;
         game.fixed[CHAIN] = 0;
-        if (game.prop[BEAR] != 3)game.prop[BEAR] = 2;
+        if (game.prop[BEAR] != BEAR_DEAD)
+	    game.prop[BEAR] = CONTENTED_BEAR;
+	/* FIXME: Arithmetic on state numbers */
         game.fixed[BEAR] = 2 - game.prop[BEAR];
     } else {
         spk = CHAIN_LOCKED;
-        if (game.prop[CHAIN] != 0)spk = ALREADY_LOCKED;
-        if (game.loc != objects[CHAIN].plac)spk = NO_LOCKSITE;
+        if (game.prop[CHAIN] != 0)
+	    spk = ALREADY_LOCKED;
+        if (game.loc != objects[CHAIN].plac)
+	    spk = NO_LOCKSITE;
         if (spk != CHAIN_LOCKED) {
             rspeak(spk);
             return GO_CLEAROBJ;
         }
         game.prop[CHAIN] = 2;
-        if (TOTING(CHAIN))drop(CHAIN, game.loc);
+        if (TOTING(CHAIN))
+	    drop(CHAIN, game.loc);
         game.fixed[CHAIN] = -1;
     }
     rspeak(spk);
@@ -492,11 +501,13 @@ static int feed(token_t verb, token_t obj)
             spk = REALLY_MAD;
         }
     } else if (obj == BEAR) {
-        if (game.prop[BEAR] == 0)spk = NOTHING_EDIBLE;
-        if (game.prop[BEAR] == 3)spk = RIDICULOUS_ATTEMPT;
+        if (game.prop[BEAR] == UNTAMED_BEAR)
+	    spk = NOTHING_EDIBLE;
+        if (game.prop[BEAR] == BEAR_DEAD)
+	    spk = RIDICULOUS_ATTEMPT;
         if (HERE(FOOD)) {
             DESTROY(FOOD);
-            game.prop[BEAR] = 1;
+            game.prop[BEAR] = SITTING_BEAR;
             game.fixed[AXE] = 0;
             game.prop[AXE] = 0;
             spk = BEAR_TAMED;
@@ -931,7 +942,7 @@ static int throw (FILE *cmdin, struct command_t *command)
                 return throw_support(TROLL_RETURNS);
             else if (AT(OGRE))
                 return throw_support(OGRE_DODGE);
-            else if (HERE(BEAR) && game.prop[BEAR] == 0) {
+            else if (HERE(BEAR) && game.prop[BEAR] == UNTAMED_BEAR) {
                 /* This'll teach him to throw the axe at the bear! */
                 drop(AXE, game.loc);
                 game.fixed[AXE] = -1;

@@ -2969,8 +2969,6 @@ arbitrary_messages:  !!omap
 - ADVENTURE_NEWS: 'Open Adventure is an author-approved open-source release of\nVersion 2.5 with, as yet, no gameplay changes.\nVersion 2.5 was essentially the same as Version II; the cave and the\nhazards therein are unchanged, and top score is still 430 points.\nThere are a few more hints, especially for some of the more obscure\npuzzles.  There are a few minor bugfixes and cosmetic changes.  You\ncan now save a game and resume it at once (formerly you had to wait a\nwhile first), but it now costs you a few points each time you save the\ngame.  Saved games are now stored in much smaller files than before.'
 - GO_UNNEEDED: 'You don''t have to say "go" every time; just specify a direction or, if\nit''s nearby, name the place to which you wish to move.'
 - ARB_279: !!null
-- MACHINE_SWINGOUT: 'As you strike the vending machine, it pivots backward along with a\nsection of wall, revealing a dark passage leading south.'
-- MACHINE_SWINGBACK: 'The vending machine swings back to block the passage.'
   
 classes: 
 - threshold: 0
@@ -3295,10 +3293,10 @@ objects: !!omap
     locations: LOC_BARRENROOM
     immovable: true
     descriptions:
-    - 'There is a ferocious cave bear eying you from the far end of the room!'
-    - 'There is a gentle cave bear sitting placidly in one corner.'
-    - 'There is a contented-looking bear wandering about nearby.'
-    - '' # dead
+    - [UNTAMED_BEAR, 'There is a ferocious cave bear eying you from the far end of the room!']
+    - [SITTING_BEAR, 'There is a gentle cave bear sitting placidly in one corner.']
+    - [CONTENTED_BEAR, 'There is a contented-looking bear wandering about nearby.']
+    - [BEAR_DEAD, '']
 - MESSAG:
     words: ['messa']
     inventory: '*message in second maze'
@@ -3322,6 +3320,9 @@ objects: !!omap
     descriptions:
     - [VEND_BLOCKS, 'There is a massive and somewhat battered vending machine here.  The\ninstructions on it read: "Drop coins here to receive fresh batteries."']
     - [VEND_UNBLOCKS, 'There is a massive vending machine here, swung back to reveal a\nsouthward passage.']
+    changes:
+    - 'The vending machine swings back to block the passage.'
+    - 'As you strike the vending machine, it pivots backward along with a\nsection of wall, revealing a dark passage leading south.'
     texts:
     - '"Drop coins here to receive fresh batteries."'
     - '"Drop coins here to receive fresh batteries."'

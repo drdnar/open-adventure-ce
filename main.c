@@ -717,7 +717,7 @@ static bool playermove(token_t verb, int motion)
                         game.prop[TROLL] = 2;
                         drop(BEAR, game.newloc);
                         game.fixed[BEAR] = -1;
-                        game.prop[BEAR] = 3;
+                        game.prop[BEAR] = BEAR_DEAD;
                         game.oldlc2 = game.newloc;
                         croak();
                         return true;
@@ -780,7 +780,8 @@ static bool closecheck(void)
         move(TROLL2, objects[TROLL].plac);
         move(TROLL2 + NOBJECTS, objects[TROLL].fixd);
         juggle(CHASM);
-        if (game.prop[BEAR] != 3)DESTROY(BEAR);
+        if (game.prop[BEAR] != BEAR_DEAD)
+	    DESTROY(BEAR);
         game.prop[CHAIN] = 0;
         game.fixed[CHAIN] = 0;
         game.prop[AXE] = 0;
