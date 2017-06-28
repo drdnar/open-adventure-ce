@@ -26,15 +26,19 @@ listcheck:
 	    if ( head -3 $$f | grep -q '^ *##' ); then :; else echo "$$f needs a description"; fi; \
 	done
 
+savegames:
+	$(ECHO) "cheat: Generate save file with -1000 deaths"
+	../cheat -d -1000 -o cheat_numdie.adv > /tmp/cheat_numdie
+	$(ECHO) "cheat: Generate save file with version -1337"
+	../cheat -v -1337 -o resume_badversion.adv > /tmp/cheat_badversion
+	$(ECHO) "cheat: Generate save file 1000 saves"
+	../cheat -s -1000 -o thousand_saves.adv > /tmp/cheat_1000saves
+	rm -f /tmp/cheat*
+
 # General regression testing of commands and output; look at the *.log and
 # corresponding *.chk files to see which tests this runs.
 TESTLOADS := $(shell ls -1 *.log | sed '/.log/s///' | sort)
-buildregress:
-	$(ECHO) "Generate save file with -1000 deaths: "
-	../cheat -d -1000 -o cheat_numdie.adv
-	$(ECHO) "Generate save file with version -1337: "
-	../cheat -v -1337 -o resume_badversion.adv
-	$(ECHO) "TEST cheat: Generate save file 1000 saves"
+buildregress: savegames
 	../cheat -s -1000 -o thousand_saves.adv > /tmp/regress1000saves
 	@for file in $(TESTLOADS); do \
 	    echo "Remaking $${file}.chk"; \
@@ -42,13 +46,7 @@ buildregress:
 	    advent $$OPTS <$${file}.log >$${file}.chk 2>&1 || exit 1; \
 	done; \
 	rm -f scratch.tmp
-regress:
-	$(ECHO) "TEST cheat: Generate save file with -1000 deaths"
-	../cheat -d -1000 -o cheat_numdie.adv > /tmp/regressdumdie
-	$(ECHO) "TEST cheat: Generate save file with version -1337"
-	../cheat -v -1337 -o resume_badversion.adv > /tmp/regressbadversion
-	$(ECHO) "TEST cheat: Generate save file 1000 saves"
-	../cheat -s -1000 -o thousand_saves.adv > /tmp/regress1000saves
+regress: savegames
 	$(ECHO) "TEST cheat: Bogus option for save file generation"
 	../cheat -QqQ 2> /tmp/coverage_cheat_batopt | true
 	$(ECHO) "TEST cheat: Fail to save because we omit -o"
