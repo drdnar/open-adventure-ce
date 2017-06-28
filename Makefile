@@ -152,3 +152,8 @@ linty: advent
 debug: CCFLAGS += -O0 --coverage -ggdb
 debug: linty
 debug: cheat
+
+coverage: debug check
+	lcov -t "advent" -o advent.info -c -d .
+	genhtml -o coverage/ advent.info
+

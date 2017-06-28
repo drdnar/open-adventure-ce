@@ -14,3 +14,4 @@ newdb.h
 newdb.c
 cheat
 advent.info
+coverage/*
