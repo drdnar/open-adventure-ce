@@ -11,7 +11,7 @@ ECHO := /bin/echo
 check: regress
 	@echo "=== No diff output is good news."
 	@-advent -x 2>/dev/null	# Get usage message into coverage tests
-	@-advent -l /dev/null <quit.log >/dev/null
+	@-advent -l /dev/null <pitfall.log >/dev/null
 
 .SUFFIXES: .chk
 
