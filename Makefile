@@ -80,7 +80,7 @@ dungeon: dungeon.o common.o
 	$(CC) $(CCFLAGS) -o $@ dungeon.o common.o
 
 clean:
-	rm -f *.o advent *.html database.h dungeon *.gcno *.gcda
+	rm -f *.o advent cheat *.html database.h dungeon *.gcno *.gcda
 	rm -f newdb.c newdb.h
 	rm -f README advent.6 MANIFEST *.tar.gz
 	rm -f *~
