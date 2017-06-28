@@ -584,8 +584,8 @@ static bool playermove(token_t verb, int motion)
         game.oldloc = game.loc;
     }
 
-    /* Look for a way to fulfil the motion - kk indexes the beginning
-     * of the motion entries for here (game.loc). */
+    /* Look for a way to fulfil the motion verb passed in - kk indexes
+     * the beginning of the motion entries for here (game.loc). */
     for (;;) {
         if (T_TERMINATE(travel[kk]) || travel[kk].motion == motion)
             break;
@@ -606,14 +606,18 @@ static bool playermove(token_t verb, int motion)
         }
         ++kk;
     }
+
+    /* (ESR) We've found a destination that goes with the motion verb.
+     * Next we need to check any conditional(s) on this destination, and
+     * possibly on following entries. */
     scratchloc = T_HIGH(travel[kk]);
 
     do {
         /*
-         * (ESR) This special-travel loop may have to be repeated if it includes
-         * the plover passage.  Same deal for any future cases where we need to
-         * block travel and then redo it once the blocking condition has been
-         * removed.
+         * (ESR) This conditional-skip loop may have to be repeated if
+         * it includes the plover passage.  Same deal for any future
+         * cases where we need to block travel and then redo it once
+         * the blocking condition has been removed.
          */
         for (;;) { /* L12 loop */
             for (;;) {
