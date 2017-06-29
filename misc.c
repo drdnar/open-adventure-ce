@@ -152,7 +152,7 @@ void wordclear(token_t *v)
     *v = 0;
 }
 
-/*  I/O routines (speak, pspeak, rspeak, GETIN, YES) */
+/*  I/O routines (speak, pspeak, rspeak, get_input, yes) */
 
 void vspeak(const char* msg, va_list ap)
 {

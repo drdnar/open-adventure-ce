@@ -1,6 +1,10 @@
 ## Resume and then quit
 n
+in
 resume
+n
+resume
+y
 saveresume.adv
 quit
 yes

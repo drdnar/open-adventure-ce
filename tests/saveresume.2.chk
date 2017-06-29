@@ -7,7 +7,37 @@ You are standing at the end of a road before a small brick building.
 Around you is a forest.  A small stream flows out of the building and
 down a gully.
 
+> in
+
+You are inside a building, a well house for a large spring.
+
+There are some keys on the ground here.
+
+There is a shiny brass lamp nearby.
+
+There is food here.
+
+There is a bottle of water here.
+
 > resume
+
+To resume an earlier Adventure, you must abandon the current one.
+
+Is this acceptable?
+
+> n
+
+OK
+
+> resume
+
+To resume an earlier Adventure, you must abandon the current one.
+
+Is this acceptable?
+
+> y
+
+OK
 
 You're in front of building.
 
@@ -19,7 +49,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 27 out of a possible 430, using 2 turns.
+You scored 27 out of a possible 430, using 3 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 
