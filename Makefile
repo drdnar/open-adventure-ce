@@ -24,9 +24,9 @@
 #
 # To build with save/resume disabled, pass CCFLAGS="-D ADVENT_NOSAVE"
 
-.PHONY: debug indent release refresh dist linty html clean
+VERS=$(shell sed -n <NEWS '/^[0-9]/s/:.*//p' | head -1)
 
-VERS=1.0
+.PHONY: debug indent release refresh dist linty html clean
 
 CC?=gcc
 CCFLAGS+=-std=c99 -D _DEFAULT_SOURCE -Wpedantic -O2
