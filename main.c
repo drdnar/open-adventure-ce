@@ -624,32 +624,33 @@ static bool playermove(token_t verb, int motion)
          */
         for (;;) { /* L12 loop */
             for (;;) {
-                game.newloc = scratchloc / 1000;
-                long arg = MOD(game.newloc, 100);
-                if (!SPECIAL(game.newloc)) {
+                long cond = scratchloc / 1000;
+                long arg = MOD(cond, 100);
+                if (!SPECIAL(cond)) {
 		    /* YAML N and [pct N] conditionals */
-                    if (game.newloc <= 100) {
-                        if (game.newloc == 0 || PCT(game.newloc))
+                    if (cond <= 100) {
+                        if (cond == 0 || PCT(cond))
                             break;
                         /* else fall through */
                     }
 		    /* YAML [with OBJ] clause */
-                    if (TOTING(arg) || (game.newloc > 200 && AT(arg)))
+                    if (TOTING(arg) || (cond > 200 && AT(arg)))
                         break;
                     /* else fall through to check [not OBJ STATE] */
-                } else if (game.prop[arg] != game.newloc / 100 - 3)
+                } else if (game.prop[arg] != cond / 100 - 3)
                     break;
 
 		/* We arrive here on conditional failure.
 		 * Skip to next non-matching destination */
+		long nextup;
 		do {
                     if (travel[kk].stop)
                         BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION); // LCOV_EXCL_LINE
                     ++kk;
-                    game.newloc = T_HIGH(travel[kk]);
+                    nextup = T_HIGH(travel[kk]);
                 } while
-                (game.newloc == scratchloc);
-                scratchloc = game.newloc;
+		    (nextup == scratchloc);
+                scratchloc = nextup;
             }
 
             game.newloc = MOD(scratchloc, 1000);
