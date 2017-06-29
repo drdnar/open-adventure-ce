@@ -614,18 +614,10 @@ static bool playermove(token_t verb, int motion)
     /* (ESR) We've found a destination that goes with the motion verb.
      * Next we need to check any conditional(s) on this destination, and
      * possibly on following entries. */
-    scratchloc = T_HIGH(travel[kk]);
-
     do {
-        /*
-         * (ESR) This conditional-skip loop may have to be repeated if
-         * it includes the plover passage.  Same deal for any future
-         * cases where we need to block travel and then redo it once
-         * the blocking condition has been removed.
-         */
         for (;;) { /* L12 loop */
             for (;;) {
-                long cond = scratchloc / 1000;
+                long cond = T_CONDITION(travel[kk]);
                 long arg = MOD(cond, 100);
                 if (!SPECIAL(cond)) {
 		    /* YAML N and [pct N] conditionals */
@@ -643,18 +635,18 @@ static bool playermove(token_t verb, int motion)
 
 		/* We arrive here on conditional failure.
 		 * Skip to next non-matching destination */
-		long nextup;
+		long k2 = kk;
 		do {
-                    if (travel[kk].stop)
+                    if (travel[k2].stop)
                         BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION); // LCOV_EXCL_LINE
-                    ++kk;
-                    nextup = T_HIGH(travel[kk]);
+                    ++k2;
                 } while
-		    (nextup == scratchloc);
-                scratchloc = nextup;
+		    (T_HIGH(travel[kk]) == T_HIGH(travel[k2]));
+		kk = k2;
             }
 
-            game.newloc = MOD(scratchloc, 1000);
+	    /* Found an eligible rule, now execute it */
+            game.newloc = T_DESTINATION(travel[kk]);
             if (!SPECIAL(game.newloc))
                 return true;
 
@@ -685,14 +677,14 @@ static bool playermove(token_t verb, int motion)
                      * to get it out.  Having dropped it, go back and
                      * pretend he wasn't carrying it after all. */
                     drop(EMERALD, game.loc);
+		    k2 = kk;
                     do {
-                        if (travel[kk].stop)
+                        if (travel[k2].stop)
                             BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION); // LCOV_EXCL_LINE
-                        ++kk;
-                        game.newloc = T_HIGH(travel[kk]);
+                        ++k2;
                     } while
-                    (game.newloc == scratchloc);
-                    scratchloc = game.newloc;
+			(T_HIGH(travel[kk]) == T_HIGH(travel[k2]));
+                    kk = k2;
                     continue; /* goto L12 */
                 case 3:
                     /* Travel 303.  Troll bridge.  Must be done only
