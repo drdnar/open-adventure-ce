@@ -220,7 +220,6 @@ enum special_refs {{
 
 c_template = """/* Generated from adventure.yaml - do not hand-hack! */
 
-#include "common.h"
 #include "{}"
 
 const char* arbitrary_messages[] = {{

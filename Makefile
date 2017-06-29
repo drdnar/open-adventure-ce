@@ -36,9 +36,9 @@ ifeq ($(UNAME_S),Linux)
 	LIBS=-lrt
 endif
 
-OBJS=main.o init.o actions.o score.o misc.o saveresume.o common.o
-CHEAT_OBJS=cheat.o init.o actions.o score.o misc.o saveresume.o common.o
-SOURCES=$(OBJS:.o=.c) advent.h common.h adventure.text adventure.yaml Makefile control linenoise/linenoise.[ch] newdungeon.py
+OBJS=main.o init.o actions.o score.o misc.o saveresume.o
+CHEAT_OBJS=cheat.o init.o actions.o score.o misc.o saveresume.o
+SOURCES=$(OBJS:.o=.c) advent.h adventure.text adventure.yaml Makefile control linenoise/linenoise.[ch] newdungeon.py
 
 .c.o:
 	$(CC) $(CCFLAGS) $(DBX) -c $<
@@ -46,21 +46,19 @@ SOURCES=$(OBJS:.o=.c) advent.h common.h adventure.text adventure.yaml Makefile c
 advent:	$(OBJS) linenoise.o newdb.o
 	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) newdb.o linenoise.o $(LDFLAGS) $(LIBS)
 
-main.o:	 	advent.h common.h newdb.h
+main.o:	 	advent.h newdb.h
 
-init.o:	 	advent.h common.h newdb.h
+init.o:	 	advent.h newdb.h
 
-actions.o:	advent.h common.h newdb.h
+actions.o:	advent.h newdb.h
 
-score.o:	advent.h common.h newdb.h
+score.o:	advent.h newdb.h
 
-misc.o:		advent.h common.h newdb.h
+misc.o:		advent.h newdb.h
 
-cheat.o:	advent.h common.h newdb.h
+cheat.o:	advent.h newdb.h
 
-saveresume.o:	advent.h common.h newdb.h
-
-common.o:	common.h
+saveresume.o:	advent.h newdb.h
 
 newdb.o:	newdb.c newdb.h
 	$(CC) $(CCFLAGS) $(DBX) -c newdb.c

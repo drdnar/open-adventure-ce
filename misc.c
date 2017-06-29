@@ -10,6 +10,38 @@
 #include "linenoise/linenoise.h"
 #include "newdb.h"
 
+const char new_advent_to_ascii[] = {
+  ' ', '!', '"', '#', '$', '%', '&', '\'',
+  '(', ')', '*', '+', ',', '-', '.', '/',
+  '0', '1', '2', '3', '4', '5', '6', '7',
+  '8', '9', ':', ';', '<', '=', '>', '?',
+  '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G',
+  'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
+  'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
+  'X', 'Y', 'Z', '\0', '\0', '\0', '\0', '\0',
+};
+
+const char new_ascii_to_advent[] = {
+  63, 63, 63, 63, 63, 63, 63, 63,
+  63, 63, 63, 63, 63, 63, 63, 63,
+  63, 63, 63, 63, 63, 63, 63, 63,
+  63, 63, 63, 63, 63, 63, 63, 63,
+
+  0, 1, 2, 3, 4, 5, 6, 7,
+  8, 9, 10, 11, 12, 13, 14, 15,
+  16, 17, 18, 19, 20, 21, 22, 23,
+  24, 25, 26, 27, 28, 29, 30, 31,
+  32, 33, 34, 35, 36, 37, 38, 39,
+  40, 41, 42, 43, 44, 45, 46, 47,
+  48, 49, 50, 51, 52, 53, 54, 55,
+  56, 57, 58, 59, 60, 61, 62, 63,
+
+  63, 63, 63, 63, 63, 63, 63, 63,
+  63, 63, 63, 63, 63, 63, 63, 63,
+  63, 63, 63, 63, 63, 63, 63, 63,
+  63, 63, 63, 63, 63, 63, 63, 63,
+};
+
 char* xstrdup(const char* s)
 {
   char* ptr = strdup(s);
@@ -647,101 +679,6 @@ void make_zzword(char zzword[6])
     }
   zzword[1] = '\''; // force second char to apostrophe
   zzword[5] = '\0';
-}
-
-/*  Machine dependent routines (MAPLIN, SAVEIO) */
-
-bool MAPLIN(FILE *fp)
-{
-    bool eof;
-
-    /* Read a line of input, from the specified input source.
-     * This logic is complicated partly because it has to serve
-     * several cases with different requirements and partly because
-     * of a quirk in linenoise().
-     *
-     * The quirk shows up when you paste a test log from the clipboard
-     * to the program's command prompt.  While fgets (as expected)
-     * consumes it a line at a time, linenoise() returns the first
-     * line and discards the rest.  Thus, there needs to be an
-     * editline (-s) option to fall back to fgets while still
-     * prompting.  Note that linenoise does behave properly when
-     * fed redirected stdin.
-     *
-     * The logging is a bit of a mess because there are two distinct cases
-     * in which you want to echo commands.  One is when shipping them to
-     * a log under the -l option, in which case you want to suppress
-     * prompt generation (so test logs are unadorned command sequences).
-     * On the other hand, if you redirected stdin and are feeding the program
-     * a logfile, you *do* want prompt generation - it makes checkfiles
-     * easier to read when the commands are marked by a preceding prompt.
-     */
-    do {
-        if (!editline) {
-            if (prompt)
-                fputs("> ", stdout);
-            IGNORE(fgets(rawbuf, sizeof(rawbuf) - 1, fp));
-            eof = (feof(fp));
-        } else {
-            char *cp = linenoise("> ");
-            eof = (cp == NULL);
-            if (!eof) {
-                strncpy(rawbuf, cp, sizeof(rawbuf) - 1);
-                linenoiseHistoryAdd(rawbuf);
-                strncat(rawbuf, "\n", sizeof(rawbuf) - strlen(rawbuf) - 1);
-                linenoiseFree(cp);
-            }
-        }
-    } while
-    (!eof && rawbuf[0] == '#');
-    if (eof) {
-        if (logfp && fp == stdin)
-            fclose(logfp);
-        return false;
-    } else {
-        FILE *efp = NULL;
-        if (logfp && fp == stdin)
-            efp = logfp;
-        else if (!isatty(0))
-            efp = stdout;
-        if (efp != NULL) {
-            if (prompt && efp == stdout)
-                fputs("> ", efp);
-            IGNORE(fputs(rawbuf, efp));
-        }
-        strcpy(INLINE + 1, rawbuf);
-        /*  translate the chars to integers in the range 0-126 and store
-         *  them in the common array "INLINE".  Integer values are as follows:
-         *     0   = space [ASCII CODE 40 octal, 32 decimal]
-         *    1-2  = !" [ASCII 41-42 octal, 33-34 decimal]
-         *    3-10 = '()*+,-. [ASCII 47-56 octal, 39-46 decimal]
-         *   11-36 = upper-case letters
-         *   37-62 = lower-case letters
-         *    63   = percent (%) [ASCII 45 octal, 37 decimal]
-         *   64-73 = digits, 0 through 9
-         *  Remaining characters can be translated any way that is convenient;
-         *  The above mappings are required so that certain special
-         *  characters are known to fit in 6 bits and/or can be easily spotted.
-         *  Array elements beyond the end of the line should be filled with 0,
-         *  and LNLENG should be set to the index of the last character.
-         *
-         *  If the data file uses a character other than space (e.g., tab) to
-         *  separate numbers, that character should also translate to 0.
-         *
-         *  This procedure may use the map1,map2 arrays to maintain
-         *  static data for he mapping.  MAP2(1) is set to 0 when the
-         *  program starts and is not changed thereafter unless the
-         *  routines in this module choose to do so. */
-        LNLENG = 0;
-        for (long i = 1; i <= (long)sizeof(INLINE) && INLINE[i] != 0; i++) {
-            long val = INLINE[i];
-            INLINE[i] = ascii_to_advent[val];
-            if (INLINE[i] != 0)
-                LNLENG = i;
-        }
-        LNPOSN = 1;
-        return true;
-    }
 }
 
 void datime(long* d, long* t)
