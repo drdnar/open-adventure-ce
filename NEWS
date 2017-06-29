@@ -1,6 +1,7 @@
 = Open Adventure project news =
 
-Repository head::
+1.1: 2017-08-29::
+  There is a 'version' command.
   Include tests directory in generated tarball.
   Support command-line editing with arrow keys and Emacs keystrokes.
   Save format has changed.
