@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include "advent.h"
-#include "database.h"
 #include "newdb.h"
 
 /*

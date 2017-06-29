@@ -22,7 +22,6 @@
 #include <time.h>
 #include <string.h>
 #include "advent.h"
-#include "database.h"
 #include "linenoise/linenoise.h"
 #include "newdb.h"
 

@@ -2,7 +2,6 @@
 #include <string.h>
 
 #include "advent.h"
-#include "database.h"
 #include "newdb.h"
 #include "linenoise/linenoise.h"
 

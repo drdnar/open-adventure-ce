@@ -38,7 +38,7 @@ endif
 
 OBJS=main.o init.o actions.o score.o misc.o saveresume.o common.o
 CHEAT_OBJS=cheat.o init.o actions.o score.o misc.o saveresume.o common.o
-SOURCES=$(OBJS:.o=.c) dungeon.c advent.h common.h adventure.text adventure.yaml Makefile control linenoise/linenoise.[ch] newdungeon.py
+SOURCES=$(OBJS:.o=.c) advent.h common.h adventure.text adventure.yaml Makefile control linenoise/linenoise.[ch] newdungeon.py
 
 .c.o:
 	$(CC) $(CCFLAGS) $(DBX) -c $<
@@ -46,29 +46,24 @@ SOURCES=$(OBJS:.o=.c) dungeon.c advent.h common.h adventure.text adventure.yaml 
 advent:	$(OBJS) linenoise.o newdb.o
 	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) newdb.o linenoise.o $(LDFLAGS) $(LIBS)
 
-main.o:	 	advent.h database.h common.h newdb.h
+main.o:	 	advent.h common.h newdb.h
 
-init.o:	 	advent.h database.h common.h newdb.h
+init.o:	 	advent.h common.h newdb.h
 
-actions.o:	advent.h database.h common.h newdb.h
+actions.o:	advent.h common.h newdb.h
 
-score.o:	advent.h database.h common.h newdb.h
+score.o:	advent.h common.h newdb.h
 
-misc.o:		advent.h database.h common.h newdb.h
+misc.o:		advent.h common.h newdb.h
 
-cheat.o:	advent.h database.h common.h newdb.h
+cheat.o:	advent.h common.h newdb.h
 
-saveresume.o:	advent.h database.h common.h newdb.h
+saveresume.o:	advent.h common.h newdb.h
 
 common.o:	common.h
 
-dungeon.o:	common.h newdb.h
-
 newdb.o:	newdb.c newdb.h
 	$(CC) $(CCFLAGS) $(DBX) -c newdb.c
-
-database.h: dungeon
-	./dungeon
 
 newdb.c newdb.h: newdungeon.py adventure.yaml
 	python3 newdungeon.py
@@ -76,11 +71,8 @@ newdb.c newdb.h: newdungeon.py adventure.yaml
 linenoise.o:	linenoise/linenoise.h
 	$(CC) $(CCFLAGS) -c linenoise/linenoise.c
 
-dungeon: dungeon.o common.o
-	$(CC) $(CCFLAGS) -o $@ dungeon.o common.o
-
 clean:
-	rm -f *.o advent cheat *.html database.h dungeon *.gcno *.gcda
+	rm -f *.o advent cheat *.html *.gcno *.gcda
 	rm -f newdb.c newdb.h
 	rm -f README advent.6 MANIFEST *.tar.gz
 	rm -f *~

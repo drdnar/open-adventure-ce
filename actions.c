@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "advent.h"
-#include "database.h"
 #include "newdb.h"
 
 static int fill(token_t, token_t);

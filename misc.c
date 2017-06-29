@@ -7,7 +7,6 @@
 #include <ctype.h>
 
 #include "advent.h"
-#include "database.h"
 #include "linenoise/linenoise.h"
 #include "newdb.h"
 
@@ -251,42 +250,6 @@ void rspeak(vocab_t i, ...)
     va_end(ap);
 }
 
-bool GETIN(FILE *input,
-           long *pword1, long *pword1x,
-           long *pword2, long *pword2x)
-/*  Get a command from the adventurer.  Snarf out the first word, pad it with
- *  blanks, and return it in WORD1.  Chars 6 thru 10 are returned in WORD1X, in
- *  case we need to print out the whole word in an error message.  Any number of
- *  blanks may follow the word.  If a second word appears, it is returned in
- *  WORD2 (chars 6 thru 10 in WORD2X), else WORD2 is -1. */
-{
-    long junk;
-
-    for (;;) {
-        if (game.blklin)
-            fputc('\n', stdout);;
-        if (!MAPLIN(input))
-            return false;
-        *pword1 = GETTXT(true, true, true);
-        if (game.blklin && *pword1 < 0)
-            continue;
-        *pword1x = GETTXT(false, true, true);
-        do {
-            junk = GETTXT(false, true, true);
-        } while
-        (junk > 0);
-        *pword2 = GETTXT(true, true, true);
-        *pword2x = GETTXT(false, true, true);
-        do {
-            junk = GETTXT(false, true, true);
-        } while
-        (junk > 0);
-        if (GETTXT(true, true, true) <= 0)
-            return true;
-        rspeak(TWO_WORDS);
-    }
-}
-
 void echo_input(FILE* destination, char* input_prompt, char* input)
 {
     size_t len = strlen(input_prompt) + strlen(input) + 1;
@@ -453,108 +416,7 @@ bool yes(const char* question, const char* yes_response, const char* no_response
     return (outcome);
 }
 
-/*  Line-parsing routines (GETTXT, MAKEWD, PUTTXT, SHFTXT) */
-
-long GETTXT(bool skip, bool onewrd, bool upper)
-/*  Take characters from an input line and pack them into 30-bit words.
- *  Skip says to skip leading blanks.  ONEWRD says stop if we come to a
- *  blank.  UPPER says to map all letters to uppercase.  If we reach the
- *  end of the line, the word is filled up with blanks (which encode as 0's).
- *  If we're already at end of line when TEXT is called, we return -1. */
-{
-    long text;
-    static long splitting = -1;
-
-    if (LNPOSN != splitting)
-        splitting = -1;
-    text = -1;
-    while (true) {
-        if (LNPOSN > LNLENG)
-            return (text);
-        if ((!skip) || INLINE[LNPOSN] != 0)
-            break;
-        ++LNPOSN;
-    }
-
-    text = 0;
-    for (int I = 1; I <= TOKLEN; I++) {
-        text = text * 64;
-        if (LNPOSN > LNLENG || (onewrd && INLINE[LNPOSN] == 0))
-            continue;
-        char current = INLINE[LNPOSN];
-        if (current < ascii_to_advent['%']) {
-            splitting = -1;
-            if (upper && current >= ascii_to_advent['a'])
-                current = current - 26;
-            text = text + current;
-            ++LNPOSN;
-            continue;
-        }
-        if (splitting != LNPOSN) {
-            text = text + ascii_to_advent['%'];
-            splitting = LNPOSN;
-            continue;
-        }
-
-        text = text + current - ascii_to_advent['%'];
-        splitting = -1;
-        ++LNPOSN;
-    }
-
-    return text;
-}
-
-token_t MAKEWD(long letters)
-/*  Combine TOKLEN (currently 5) uppercase letters (represented by
- *  pairs of decimal digits in lettrs) to form a 30-bit value matching
- *  the one that GETTXT would return given those characters plus
- *  trailing blanks.  Caution: lettrs will overflow 31 bits if
- *  5-letter word starts with V-Z.  As a kludgey workaround, you can
- *  increment a letter by 5 by adding 50 to the next pair of
- *  digits. */
-{
-    long i = 1, word = 0;
-
-    for (long k = letters; k != 0; k = k / 100) {
-        word = word + i * (MOD(k, 50) + 10);
-        i = i * 64;
-        if (MOD(k, 100) > 50)word = word + i * 5;
-    }
-    i = 64L * 64L * 64L * 64L * 64L / i;
-    word = word * i;
-    return word;
-}
-
 /*  Data structure  routines */
-
-long vocab(long id, long init)
-/*  Look up ID in the vocabulary (ATAB) and return its "definition" (KTAB), or
- *  -1 if not found.  If INIT is positive, this is an initialisation call setting
- *  up a keyword variable, and not finding it constitutes a bug.  It also means
- *  that only KTAB values which taken over 1000 equal INIT may be considered.
- *  (Thus "STEPS", which is a motion verb as well as an object, may be located
- *  as an object.)  And it also means the KTAB value is taken modulo 1000. */
-{
-    long lexeme;
-
-    for (long i = 1; i <= TABSIZ; i++) {
-        if (KTAB[i] == -1) {
-            lexeme = -1;
-            if (init < 0)
-                return (lexeme);
-            BUG(REQUIRED_VOCABULARY_WORD_NOT_FOUND); // LCOV_EXCL_LINE
-        }
-        if (init >= 0 && KTAB[i] / 1000 != init)
-            continue;
-        if (ATAB[i] == id) {
-            lexeme = KTAB[i];
-            if (init >= 0)
-                lexeme = MOD(lexeme, 1000);
-            return (lexeme);
-        }
-    }
-    BUG(RAN_OFF_END_OF_VOCABULARY_TABLE); // LCOV_EXCL_LINE
-}
 
 int get_motion_vocab_id(const char* word)
 // Return the first motion number that has 'word' as one of its words.
@@ -775,34 +637,6 @@ long randrange(long range)
 /* Return a random integer from [0, range). */
 {
     return range * get_next_lcg_value() / game.lcg_m;
-}
-
-long rndvoc(long second, long force)
-/*  Searches the vocabulary ATAB for a word whose second character is
- *  char, and changes that word such that each of the other four
- *  characters is a random letter.  If force is non-zero, it is used
- *  as the new word.  Returns the new word. */
-{
-    long rnd = force;
-
-    if (rnd == 0) {
-        for (int i = 1; i <= 5; i++) {
-            long j = 11 + randrange(26);
-            if (i == 2)
-                j = second;
-            rnd = rnd * 64 + j;
-        }
-    }
-
-    long div = 64L * 64L * 64L;
-    for (int i = 1; i <= TABSIZ; i++) {
-        if (MOD(ATAB[i] / div, 64L) == second) {
-            ATAB[i] = rnd;
-            break;
-        }
-    }
-
-    return rnd;
 }
 
 void make_zzword(char zzword[6])
