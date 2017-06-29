@@ -521,9 +521,9 @@ static void croak(void)
 
 static bool playermove(token_t verb, int motion)
 {
-    int scratchloc, k2, kk = tkey[game.loc];
+    int scratchloc, k2, travel_entry = tkey[game.loc];
     game.newloc = game.loc;
-    if (kk == 0)
+    if (travel_entry == 0)
         BUG(LOCATION_HAS_NO_TRAVEL_ENTRIES); // LCOV_EXCL_LINE
     if (motion == NUL)
         return true;
@@ -536,35 +536,37 @@ static bool playermove(token_t verb, int motion)
             motion = game.oldlc2;
         game.oldlc2 = game.oldloc;
         game.oldloc = game.loc;
-        k2 = 0;
-        if (motion == game.loc)k2 = FORGOT_PATH;
-        if (CNDBIT(game.loc, COND_NOBACK))k2 = TWIST_TURN;
-        if (k2 == 0) {
+        int spk = 0;
+        if (motion == game.loc)
+            spk = FORGOT_PATH;
+        if (CNDBIT(game.loc, COND_NOBACK))
+            spk = TWIST_TURN;
+        if (spk == 0) {
             for (;;) {
-                scratchloc = T_DESTINATION(travel[kk]);
+                scratchloc = T_DESTINATION(travel[travel_entry]);
                 if (scratchloc != motion) {
                     if (!SPECIAL(scratchloc)) {
                         if (FORCED(scratchloc) && T_DESTINATION(travel[tkey[scratchloc]]) == motion)
-                            k2 = kk;
+                            k2 = travel_entry;
                     }
-                    if (!travel[kk].stop) {
-                        ++kk;	/* go to next travel entry for this location */
+                    if (!travel[travel_entry].stop) {
+                        ++travel_entry;	/* go to next travel entry for this location */
                         continue;
                     }
                     /* we've reached the end of travel entries for game.loc */
-                    kk = k2;
-                    if (kk == 0) {
+                    travel_entry = k2;
+                    if (travel_entry == 0) {
                         rspeak(NOT_CONNECTED);
                         return true;
                     }
                 }
 
-                motion = travel[kk].motion;
-                kk = tkey[game.loc];
+                motion = travel[travel_entry].motion;
+                travel_entry = tkey[game.loc];
                 break; /* fall through to ordinary travel */
             }
         } else {
-            rspeak(k2);
+            rspeak(spk);
             return true;
         }
     } else if (motion == LOOK) {
@@ -587,12 +589,12 @@ static bool playermove(token_t verb, int motion)
         game.oldloc = game.loc;
     }
 
-    /* Look for a way to fulfil the motion verb passed in - kk indexes
+    /* Look for a way to fulfil the motion verb passed in - travel_entry indexes
      * the beginning of the motion entries for here (game.loc). */
     for (;;) {
-        if (T_TERMINATE(travel[kk]) || travel[kk].motion == motion)
+        if (T_TERMINATE(travel[travel_entry]) || travel[travel_entry].motion == motion)
             break;
-        if (travel[kk].stop) {
+        if (travel[travel_entry].stop) {
             /* FIXME: Magic numbers! */
             /*  Couldn't find an entry matching the motion word passed
              *  in.  Various messages depending on word given. */
@@ -607,7 +609,7 @@ static bool playermove(token_t verb, int motion)
             rspeak(spk);
             return true;
         }
-        ++kk;
+        ++travel_entry;
     }
 
     /* (ESR) We've found a destination that goes with the motion verb.
@@ -616,7 +618,7 @@ static bool playermove(token_t verb, int motion)
     do {
         for (;;) { /* L12 loop */
             for (;;) {
-                long cond = T_CONDITION(travel[kk]);
+                long cond = T_CONDITION(travel[travel_entry]);
                 long arg = MOD(cond, 100);
                 if (!SPECIAL(cond)) {
                     /* YAML N and [pct N] conditionals */
@@ -634,18 +636,18 @@ static bool playermove(token_t verb, int motion)
 
                 /* We arrive here on conditional failure.
                  * Skip to next non-matching destination */
-                long k3 = kk;
+                long k3 = travel_entry;
                 do {
                     if (travel[k3].stop)
                         BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION); // LCOV_EXCL_LINE
                     ++k3;
                 } while
-                (T_HIGH(travel[kk]) == T_HIGH(travel[k3]));
-                kk = k3;
+                (T_HIGH(travel[travel_entry]) == T_HIGH(travel[k3]));
+                travel_entry = k3;
             }
 
             /* Found an eligible rule, now execute it */
-            game.newloc = T_DESTINATION(travel[kk]);
+            game.newloc = T_DESTINATION(travel[travel_entry]);
             if (!SPECIAL(game.newloc))
                 return true;
 
@@ -676,14 +678,14 @@ static bool playermove(token_t verb, int motion)
                      * to get it out.  Having dropped it, go back and
                      * pretend he wasn't carrying it after all. */
                     drop(EMERALD, game.loc);
-                    k2 = kk;
+                    k2 = travel_entry;
                     do {
                         if (travel[k2].stop)
                             BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION); // LCOV_EXCL_LINE
                         ++k2;
                     } while
-                    (T_HIGH(travel[kk]) == T_HIGH(travel[k2]));
-                    kk = k2;
+                    (T_HIGH(travel[travel_entry]) == T_HIGH(travel[k2]));
+                    travel_entry = k2;
                     continue; /* goto L12 */
                 case 3:
                     /* Travel 303.  Troll bridge.  Must be done only
