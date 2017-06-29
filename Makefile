@@ -38,7 +38,7 @@ endif
 
 OBJS=main.o init.o actions.o score.o misc.o saveresume.o
 CHEAT_OBJS=cheat.o init.o actions.o score.o misc.o saveresume.o
-SOURCES=$(OBJS:.o=.c) advent.h adventure.text adventure.yaml Makefile control linenoise/linenoise.[ch] make_dungeon.py
+SOURCES=$(OBJS:.o=.c) advent.h adventure.yaml Makefile control linenoise/linenoise.[ch] make_dungeon.py
 
 .c.o:
 	$(CC) $(CCFLAGS) $(DBX) -c $<
