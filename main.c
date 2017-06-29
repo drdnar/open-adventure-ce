@@ -521,7 +521,7 @@ static void croak(void)
 
 static bool playermove(token_t verb, int motion)
 {
-    int scratchloc, k2, travel_entry = tkey[game.loc];
+    int scratchloc, travel_entry = tkey[game.loc];
     game.newloc = game.loc;
     if (travel_entry == 0)
         BUG(LOCATION_HAS_NO_TRAVEL_ENTRIES); // LCOV_EXCL_LINE
@@ -530,7 +530,7 @@ static bool playermove(token_t verb, int motion)
     else if (motion == BACK) {
         /*  Handle "go back".  Look for verb which goes from game.loc to
          *  game.oldloc, or to game.oldlc2 If game.oldloc has forced-motion.
-         *  k2 saves entry -> forced loc -> previous loc. */
+         *  te_tmp saves entry -> forced loc -> previous loc. */
         motion = game.oldloc;
         if (FORCED(motion))
             motion = game.oldlc2;
@@ -542,19 +542,20 @@ static bool playermove(token_t verb, int motion)
         if (CNDBIT(game.loc, COND_NOBACK))
             spk = TWIST_TURN;
         if (spk == 0) {
+            int te_tmp = 0;
             for (;;) {
                 scratchloc = T_DESTINATION(travel[travel_entry]);
                 if (scratchloc != motion) {
                     if (!SPECIAL(scratchloc)) {
                         if (FORCED(scratchloc) && T_DESTINATION(travel[tkey[scratchloc]]) == motion)
-                            k2 = travel_entry;
+                            te_tmp = travel_entry;
                     }
                     if (!travel[travel_entry].stop) {
                         ++travel_entry;	/* go to next travel entry for this location */
                         continue;
                     }
                     /* we've reached the end of travel entries for game.loc */
-                    travel_entry = k2;
+                    travel_entry = te_tmp;
                     if (travel_entry == 0) {
                         rspeak(NOT_CONNECTED);
                         return true;
@@ -636,14 +637,14 @@ static bool playermove(token_t verb, int motion)
 
                 /* We arrive here on conditional failure.
                  * Skip to next non-matching destination */
-                long k3 = travel_entry;
+                long te_tmp = travel_entry;
                 do {
-                    if (travel[k3].stop)
+                    if (travel[te_tmp].stop)
                         BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION); // LCOV_EXCL_LINE
-                    ++k3;
+                    ++te_tmp;
                 } while
-                (T_HIGH(travel[travel_entry]) == T_HIGH(travel[k3]));
-                travel_entry = k3;
+                (T_HIGH(travel[travel_entry]) == T_HIGH(travel[te_tmp]));
+                travel_entry = te_tmp;
             }
 
             /* Found an eligible rule, now execute it */
@@ -678,14 +679,14 @@ static bool playermove(token_t verb, int motion)
                      * to get it out.  Having dropped it, go back and
                      * pretend he wasn't carrying it after all. */
                     drop(EMERALD, game.loc);
-                    k2 = travel_entry;
+                    int te_tmp = travel_entry;
                     do {
-                        if (travel[k2].stop)
+                        if (travel[te_tmp].stop)
                             BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION); // LCOV_EXCL_LINE
-                        ++k2;
+                        ++te_tmp;
                     } while
-                    (T_HIGH(travel[travel_entry]) == T_HIGH(travel[k2]));
-                    travel_entry = k2;
+                    (T_HIGH(travel[travel_entry]) == T_HIGH(travel[te_tmp]));
+                    travel_entry = te_tmp;
                     continue; /* goto L12 */
                 case 3:
                     /* Travel 303.  Troll bridge.  Must be done only
