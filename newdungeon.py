@@ -150,7 +150,8 @@ typedef struct {{
  * encoding description for travel.
  */
 #define T_DESTINATION(entry)	MOD((entry).dest, 1000)
-#define T_NODWARVES(entry)	((entry).dest / 1000 == 100)
+#define T_CONDITION(entry)	((entry).dest / 1000)
+#define T_NODWARVES(entry)	(T_CONDITION(entry) == 100)
 #define T_HIGH(entry)		((entry).dest)
 #define T_TERMINATE(entry)	((entry).motion == 1)
 #define L_SPEAK(loc)		((loc) - 500)
