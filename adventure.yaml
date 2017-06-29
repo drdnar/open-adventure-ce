@@ -454,6 +454,9 @@ specials: !!omap
 - SPC_275:
     message: ADVENTURE_NEWS
     words: ['news']
+- SPC_276:
+    message: ADVENTURE_VERSION
+    words: ['versi']
 
 hints:
   - hint: &grate
@@ -2527,7 +2530,7 @@ locations: !!omap
 
 arbitrary_messages:  !!omap
 - NO_MESSAGE: !!null
-- CAVE_NEARBY: 'Somewhere nearby is Colossal Cave, where others have found fortunes in\ntreasure and gold, though it is rumored that some who enter are never\nseen again.  Magic is said to work in the cave.  I will be your eyes\nand hands.  Direct me with commands of 1 or 2 words.  I should warn\nyou that I look at only the first five letters of each word, so you''ll\nhave to enter "northeast" as "ne" to distinguish it from "north".\nYou can type "help" for some general hints.  For information on how\nto end your adventure, scoring, etc., type "info".\n\t\t\t      - - -\nThis program was originally developed by Willie Crowther.  Most of the\nfeatures of the current program were added by Don Woods. You are running Open Adventure; there is a resource page at http://www.catb.org/esr/open-adventure/'
+- CAVE_NEARBY: 'Somewhere nearby is Colossal Cave, where others have found fortunes in\ntreasure and gold, though it is rumored that some who enter are never\nseen again.  Magic is said to work in the cave.  I will be your eyes\nand hands.  Direct me with commands of 1 or 2 words.  I should warn\nyou that I look at only the first five letters of each word, so you''ll\nhave to enter "northeast" as "ne" to distinguish it from "north".\nYou can type "help" for some general hints.  For information on how\nto end your adventure, scoring, etc., type "info".\n\t\t\t      - - -\nThis program was originally developed by Willie Crowther.  Most of the\nfeatures of the current program were added by Don Woods.'
 - DWARF_BLOCK: 'A little dwarf with a big knife blocks your way.'
 - DWARF_RAN: 'A little dwarf just walked around a corner, saw you, threw a little\naxe at you which missed, cursed, and ran away.'
 - DWARF_PACK: 'There are %d threatening little dwarves in the room with you.'
@@ -2805,8 +2808,8 @@ arbitrary_messages:  !!omap
 - TWIST_TURN: 'Sorry, but the path twisted and turned so much that I can''t figure\nout which way to go to get back.'
 - ADVENTURE_NEWS: 'Open Adventure is an author-approved open-source release of\nVersion 2.5 with, as yet, no gameplay changes.\nVersion 2.5 was essentially the same as Version II; the cave and the\nhazards therein are unchanged, and top score is still 430 points.\nThere are a few more hints, especially for some of the more obscure\npuzzles.  There are a few minor bugfixes and cosmetic changes.  You\ncan now save a game and resume it at once (formerly you had to wait a\nwhile first), but it now costs you a few points each time you save the\ngame.  Saved games are now stored in much smaller files than before.'
 - GO_UNNEEDED: 'You don''t have to say "go" every time; just specify a direction or, if\nit''s nearby, name the place to which you wish to move.'
-- ARB_279: !!null
-  
+- ADVENTURE_VERSION: 'There is a puff of orange smoke; within it, fiery runes spell out:\n\n\tOpen Adventure 1.1 - http://www.catb.org/esr/open-adventure/'
+
 classes: 
 - threshold: 0
   message: !!null

@@ -20,7 +20,7 @@ original, type 'news' at the command prompt.
 There is an 'adventure' in the BSD games package that is a C port by
 Jim Gillogly of the 1976 ancestor of this game.  To avoid a name
 collision, this game builds as 'advent', reflecting the fact that the
-PDP-10 on which it originally ran limited filenames to 6 characters.
+PDP-10 on which the game originally ran limited filenames to 6 characters.
 
 This version is released as open source with the permission and
 encouragement of the original authors.
@@ -28,6 +28,9 @@ encouragement of the original authors.
 Unlike the original, this version supports use of your arrow keys to edit
 your command line in place.  Basic Emacs keystrokes are supported, and
 your up/down arrows access a command history.
+
+Otherwise, the "version" command is about the only way to tell you're not
+running Don's original.
 
 To exit the game, type Ctrl-D (EOF).
 
