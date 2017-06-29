@@ -67,6 +67,9 @@ dungeon.c dungeon.h: make_dungeon.py adventure.yaml
 	python3 make_dungeon.py
 
 linenoise.o:	linenoise/linenoise.h
+	$(CC) -c linenoise/linenoise.c
+
+linenoise-dbg:	linenoise/linenoise.h
 	$(CC) $(CCFLAGS) -c linenoise/linenoise.c
 
 clean:
@@ -147,4 +150,4 @@ debug: CCFLAGS += -O0 --coverage -ggdb
 debug: linty
 debug: cheat
 
-
+debug-ln: linenoise-dbg debug
