@@ -106,8 +106,8 @@ void tokenize(char* raw, long tokens[4])
 
     // grab the first two words
     char* words[2];
-    words[0] = (char*) xmalloc(strlen(raw));
-    words[1] = (char*) xmalloc(strlen(raw));
+    words[0] = (char*) xmalloc(strlen(raw)+1);
+    words[1] = (char*) xmalloc(strlen(raw)+1);
     int word_count = sscanf(raw, "%s%s", words[0], words[1]);
 
     // make space for substrings and zero it out
