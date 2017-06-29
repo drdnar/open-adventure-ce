@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "advent.h"
-#include "newdb.h"
+#include "dungeon.h"
 
 /*
  * scoring and wrap-up

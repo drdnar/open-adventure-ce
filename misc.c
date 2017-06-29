@@ -8,7 +8,7 @@
 
 #include "advent.h"
 #include "linenoise/linenoise.h"
-#include "newdb.h"
+#include "dungeon.h"
 
 const char new_advent_to_ascii[] = {
   ' ', '!', '"', '#', '$', '%', '&', '\'',

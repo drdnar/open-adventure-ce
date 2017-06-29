@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <stdarg.h>
 
-#include "newdb.h"
+#include "dungeon.h"
 
 #define LINESIZE	100
 #define NDWARVES	6		/* number of dwarves */

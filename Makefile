@@ -38,40 +38,40 @@ endif
 
 OBJS=main.o init.o actions.o score.o misc.o saveresume.o
 CHEAT_OBJS=cheat.o init.o actions.o score.o misc.o saveresume.o
-SOURCES=$(OBJS:.o=.c) advent.h adventure.text adventure.yaml Makefile control linenoise/linenoise.[ch] newdungeon.py
+SOURCES=$(OBJS:.o=.c) advent.h adventure.text adventure.yaml Makefile control linenoise/linenoise.[ch] make_dungeon.py
 
 .c.o:
 	$(CC) $(CCFLAGS) $(DBX) -c $<
 
-advent:	$(OBJS) linenoise.o newdb.o
-	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) newdb.o linenoise.o $(LDFLAGS) $(LIBS)
+advent:	$(OBJS) linenoise.o dungeon.o
+	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) dungeon.o linenoise.o $(LDFLAGS) $(LIBS)
 
-main.o:	 	advent.h newdb.h
+main.o:	 	advent.h dungeon.h
 
-init.o:	 	advent.h newdb.h
+init.o:	 	advent.h dungeon.h
 
-actions.o:	advent.h newdb.h
+actions.o:	advent.h dungeon.h
 
-score.o:	advent.h newdb.h
+score.o:	advent.h dungeon.h
 
-misc.o:		advent.h newdb.h
+misc.o:		advent.h dungeon.h
 
-cheat.o:	advent.h newdb.h
+cheat.o:	advent.h dungeon.h
 
-saveresume.o:	advent.h newdb.h
+saveresume.o:	advent.h dungeon.h
 
-newdb.o:	newdb.c newdb.h
-	$(CC) $(CCFLAGS) $(DBX) -c newdb.c
+dungeon.o:	dungeon.c dungeon.h
+	$(CC) $(CCFLAGS) $(DBX) -c dungeon.c
 
-newdb.c newdb.h: newdungeon.py adventure.yaml
-	python3 newdungeon.py
+dungeon.c dungeon.h: make_dungeon.py adventure.yaml
+	python3 make_dungeon.py
 
 linenoise.o:	linenoise/linenoise.h
 	$(CC) $(CCFLAGS) -c linenoise/linenoise.c
 
 clean:
 	rm -f *.o advent cheat *.html *.gcno *.gcda
-	rm -f newdb.c newdb.h
+	rm -f dungeon.c dungeon.h
 	rm -f README advent.6 MANIFEST *.tar.gz
 	rm -f *~
 	rm -f .*~
@@ -79,8 +79,8 @@ clean:
 	cd tests; $(MAKE) --quiet clean
 
 
-cheat: $(CHEAT_OBJS) linenoise.o newdb.o 
-	$(CC) $(CCFLAGS) $(DBX) -o cheat $(CHEAT_OBJS) linenoise.o newdb.o $(LDFLAGS) $(LIBS)
+cheat: $(CHEAT_OBJS) linenoise.o dungeon.o 
+	$(CC) $(CCFLAGS) $(DBX) -o cheat $(CHEAT_OBJS) linenoise.o dungeon.o $(LDFLAGS) $(LIBS)
 
 check: advent cheat
 	cd tests; $(MAKE) --quiet

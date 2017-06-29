@@ -6,7 +6,7 @@
 #include <time.h>
 #include "advent.h"
 #include "linenoise/linenoise.h"
-#include "newdb.h"
+#include "dungeon.h"
 
 struct game_t game;
 

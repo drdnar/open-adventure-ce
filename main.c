@@ -23,7 +23,7 @@
 #include <string.h>
 #include "advent.h"
 #include "linenoise/linenoise.h"
-#include "newdb.h"
+#include "dungeon.h"
 
 #define DIM(a) (sizeof(a)/sizeof(a[0]))
 
