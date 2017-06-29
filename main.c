@@ -468,17 +468,17 @@ static bool dwarfmove(void)
  *  We'll allow this maxdie times.  NDEATHS is automatically set based
  *  on the number of snide messages available.  Each death results in
  *  a message (obituaries[n]) which offers reincarnation; if accepted,
- *  this results in message obituaries[0], obituaries[2], etc.  The 
- *  last time, if he wants another chance, he gets a snide remark as 
- *  we exit.  When reincarnated, all objects being carried get dropped 
- *  at game.oldlc2 (presumably the last place prior to being killed) 
- *  without change of props.  The loop runs backwards to assure that 
+ *  this results in message obituaries[0], obituaries[2], etc.  The
+ *  last time, if he wants another chance, he gets a snide remark as
+ *  we exit.  When reincarnated, all objects being carried get dropped
+ *  at game.oldlc2 (presumably the last place prior to being killed)
+ *  without change of props.  The loop runs backwards to assure that
  *  the bird is dropped before the cage.  (This kluge could be changed
- *  once we're sure all references to bird and cage are done by 
- *  keywords.)  The lamp is a special case (it wouldn't do to leave it 
- *  in the cave). It is turned off and left outside the building (only 
- *  if he was carrying it, of course).  He himself is left inside the 
- *  building (and heaven help him if he tries to xyzzy back into the 
+ *  once we're sure all references to bird and cage are done by
+ *  keywords.)  The lamp is a special case (it wouldn't do to leave it
+ *  in the cave). It is turned off and left outside the building (only
+ *  if he was carrying it, of course).  He himself is left inside the
+ *  building (and heaven help him if he tries to xyzzy back into the
  *  cave without the lamp!).  game.oldloc is zapped so he can't just
  *  "retreat". */
 
