@@ -289,7 +289,7 @@ actions: !!omap
     words: ['g', 'carry', 'take', 'keep', 'catch', 'steal', 'captu', 'get', 'tote', 'snarf']
 - DROP:
     message: ARENT_CARRYING
-    words: ['d', 'drop', 'relea', 'free', 'disca', 'dump']
+    words: ['drop', 'relea', 'free', 'disca', 'dump']
 - SAY:
     message: NO_MESSAGE
     words: ['say', 'chant', 'sing', 'utter', 'mumbl']
