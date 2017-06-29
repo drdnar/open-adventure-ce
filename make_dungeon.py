@@ -47,14 +47,14 @@
 import sys, yaml
 
 yaml_name = "adventure.yaml"
-h_name = "newdb.h"
-c_name = "newdb.c"
+h_name = "dungeon.h"
+c_name = "dungeon.c"
 
 statedefines = ""
 
 h_template = """/* Generated from adventure.yaml - do not hand-hack! */
-#ifndef NEWDB_H
-#define NEWDB_H
+#ifndef DUNGEON_H
+#define DUNGEON_H
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -215,7 +215,7 @@ enum special_refs {{
 /* State definitions */
 
 {}
-#endif /* end NEWDB_H */
+#endif /* end DUNGEON_H */
 """
 
 c_template = """/* Generated from adventure.yaml - do not hand-hack! */
