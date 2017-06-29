@@ -60,11 +60,11 @@ Using "seed" and -l, the distribution now includes a regression-test
 suite for the game.  Any log captured with -l (and thus containing
 a "seed" command) will replay reliably, including random events.
 
-The adventure.text file is no longer required at runtime.  Instead, it
-is compiled at build time to a source module containing C structures,
-which is then linked to the advent binary. There is an adventure.yaml file
-as well; this is also compiled to C code, and will eventually replace
-adventure.text altogether.
+The adventure.text file is no longer required at runtime.  Instead, an
+adventure.yaml file is compiled at build time to a source module
+containing C structures, which is then linked to the advent
+binary.  The YAML is drastically easier to read and edit than
+the old ad-hoc format of adventure.txt.
 
 The game-save format has changed.  This was done to simplify the
 FORTRAN-derived code that formerly implemented the save/restore
@@ -85,7 +85,7 @@ ugly and quite unreadable.
 Jason Ninneman and I have moved it to what is almost, but not quite,
 idiomatic modern C.  We refactored the right way, checking correctness
 against a comprehensive test suite that we built first and verified
-with coverage tools (we now have over 90% coverage, with the remaining
+with coverage tools (we now have over 95% coverage, with the remaining
 confined to exception cases that are very difficult to reach). This is
 what you are running when you do "make check".
 
@@ -107,14 +107,14 @@ of sixbit code points in a restricted character set, packed 5 to a
 verb was one of these words, and what would be string operations in a
 more recent language were all done on sequences of these words.
 
-We are still in the process of removing all this bit-packing cruft
-in favor of proper C strings.  C strings may be a weak and leaky
-abstraction, but this is one of the rare cases in which they are
-an obvious improvement over what they're displacing... 
+We have removed all this bit-packing cruft in favor of proper C
+strings.  C strings may be a weak and leaky abstraction, but this is
+one of the rare cases in which they are an obvious improvement over
+what they're displacing...
 
 We have also conducted extensive fuzz testing on the game using
 afl (American Fuzzy Lop).  We've found and fixed some crashers in
-our new code (which occasionally uses malloc(3)) but none as yet
+our new code (which occasionally uses malloc(3)), but none as yet
 in Don's old code (which didn't).
 
 The code falls short of being fully modern C in the following
@@ -136,10 +136,9 @@ ways:
   to fix it because doing so would (a) be quite difficult, and (b)
   compromise forward-portability to other languages.
 
-* Much of the code still uses FORTRAN-style uppercase names.
-
-* The code still assumes one-origin array indexing.  Thus, arrays are
-  a cell larger than they strictly need to be and cell 0 is unused.
+* Muxh of the code still assumes one-origin array indexing.  Thus,
+  arrays are a cell larger than they strictly need to be and cell 0 is
+  unused.
 
 * The code is still mostly typeless, slinging around machine longs
   like a FORTRAN or BCPL program.  Some (incomplete) effort has been made

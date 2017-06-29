@@ -399,6 +399,20 @@ Read what?
 
 It is now pitch dark.  If you proceed you will likely fall into a pit.
 
+> l
+
+It is now pitch dark.  If you proceed you will likely fall into a pit.
+
+> x
+
+It is now pitch dark.  If you proceed you will likely fall into a pit.
+
+> i
+
+You are currently holding the following:
+Black rod
+Small bottle
+
 > news
 
 Open Adventure is an author-approved open-source release of
@@ -439,7 +453,15 @@ Okay, "BOO".
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 86 turns.
+You have garnered 27 out of a possible 430 points, using 89 turns.
+
+> z
+
+OK
+
+> score
+
+You have garnered 27 out of a possible 430 points, using 91 turns.
 
 > quit keys
 
@@ -453,7 +475,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 27 out of a possible 430, using 88 turns.
+You scored 27 out of a possible 430, using 93 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 
