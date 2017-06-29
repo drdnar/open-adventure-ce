@@ -915,6 +915,10 @@ a large hole in the wall about 25 feet above you.
 
 There is a tiny little plant in the pit, murmuring "water, water, ..."
 
+> carry plant
+
+The plant has exceptionally deep roots and cannot be pulled free.
+
 > water plant
 
 The plant spurts into furious growth for a few seconds.
@@ -1134,8 +1138,12 @@ There is a huge beanstalk growing out of the west pit up to the hole.
 
 What do you want to do with the plant?
 
+> carry plant
 
-You scored 185 out of a possible 430, using 184 turns.
+You can't be serious!
+
+
+You scored 185 out of a possible 430, using 186 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 

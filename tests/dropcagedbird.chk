@@ -74,6 +74,11 @@ from east and west sides of the chamber.
 
 A cheerful little bird is sitting here singing.
 
+> take bird
+
+The bird seemed unafraid at first, but as you approach it becomes
+disturbed and you cannot catch it.
+
 > drop rod
 
 OK
@@ -120,7 +125,7 @@ OK
 OK
 
 
-You scored 34 out of a possible 430, using 20 turns.
+You scored 34 out of a possible 430, using 21 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 

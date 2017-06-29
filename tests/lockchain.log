@@ -47,7 +47,7 @@ n
 sw
 w
 feed dragon
-kill dragon
+attack
 yes
 drink blood
 take rug
@@ -101,7 +101,7 @@ s
 kill machine
 s
 s
-kill ogre
+attack
 n
 take ruby
 s
@@ -284,6 +284,7 @@ w
 d
 sw
 u
+attack
 feed troll
 toss eggs
 ne

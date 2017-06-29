@@ -27,13 +27,21 @@ OK
 
 OK
 
-> fill bottle
+> drop water
 
-Your bottle is already full.
+OK
+
+> carry bottle
+
+OK
 
 > drink
 
 The bottle of water is now empty.
+
+> fill bottle
+
+Your bottle is now full of water.
 
 > xyzzy
 
@@ -47,10 +55,10 @@ You can't fill that.
 
 > fill bottle
 
-There is nothing here with which to fill the bottle.
+Your bottle is already full.
 
 
-You scored 32 out of a possible 430, using 8 turns.
+You scored 32 out of a possible 430, using 10 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 

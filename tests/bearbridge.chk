@@ -1609,10 +1609,23 @@ There is a ferocious cave bear eying you from the far end of the room!
 
 The bear is locked to the wall with a golden chain!
 
+> attack
+
+With what?  Your bare hands?  Against *HIS* bear hands??
+
+> unlock chain
+
+There is no way to get past the bear to unlock the chain, which is
+probably just as well.
+
 > feed bear
 
 The bear eagerly wolfs down your food, after which he seems to calm
 down considerably and even becomes rather friendly.
+
+> carry bear
+
+The bear is still chained to the wall.
 
 > unlock chain
 
@@ -1722,7 +1735,7 @@ to try to reincarnate you?
 
 OK
 
-You scored 247 out of a possible 430, using 284 turns.
+You scored 247 out of a possible 430, using 287 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 

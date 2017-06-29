@@ -2898,12 +2898,28 @@ not disturb the dwarves!"  An immense mirror is hanging against one
 wall, and stretches to the other end of the room, where various other
 sundry objects can be glimpsed dimly in the distance.
 
+> attack
+
+The shell is very strong and is impervious to attack.
+
 > take oyster
 
 OK
 
 Interesting.  There seems to be something written on the underside of
 the oyster.
+
+> lock oyster
+
+Huh?
+
+> drop oyster
+
+OK
+
+> take oyster
+
+OK
 
 > read oyster
 
@@ -2937,7 +2953,7 @@ The resulting ruckus has awakened the dwarves.  There are now several
 threatening little dwarves in the room with you!  Most of them throw
 knives at you!  All of them get you!
 
-You scored 383 out of a possible 430, using 465 turns.
+You scored 383 out of a possible 430, using 469 turns.
 
 Your score puts you in Master Adventurer Class B.
 

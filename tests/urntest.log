@@ -57,6 +57,7 @@ take axe
 w
 kill dragon
 yes
+carry blood
 drink blood
 take rug
 e
@@ -331,6 +332,7 @@ n
 n
 n
 # Everything to here copied from endgame428
+carry urn
 light urn
 # Changed below from "fill urn" in order to test more code
 pour bottle
@@ -339,5 +341,5 @@ drink oil
 light urn
 fill urn
 read urn
-extinguish urn
+extinguish
 fly

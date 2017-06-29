@@ -332,6 +332,10 @@ There is a persian rug spread out on the floor!
 
 The blood-specked body of a huge green dead dragon lies to one side.
 
+> carry blood
+
+There are only a few drops--not enough to carry.
+
 > drink blood
 
 Your head buzzes strangely for a moment.
@@ -1965,6 +1969,10 @@ down, but a small ledge can be seen to the west across the chasm.
 
 A small urn is embedded in the rock.
 
+> carry urn
+
+The urn is far too firmly embedded for your puny strength to budge it.
+
 > light urn
 
 The urn is empty and will not light.
@@ -1993,9 +2001,9 @@ The urn is already full of oil.
 
 I'm afraid I don't understand.
 
-> extinguish urn
+> extinguish
 
-The urn is now dark.
+I'm afraid I don't understand.
 
 > fly
 
@@ -2003,7 +2011,7 @@ If you mean to use the persian rug, it does not appear inclined to
 cooperate.
 
 
-You scored 267 out of a possible 430, using 337 turns.
+You scored 267 out of a possible 430, using 339 turns.
 
 You have reached "Junior Master" status.
 
