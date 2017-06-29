@@ -58,9 +58,8 @@ int main(int argc, char *argv[])
             break;
         }
     }
-    
-    if (savefilename == NULL)
-    {
+
+    if (savefilename == NULL) {
         fprintf(stderr,
                 usage, argv[0]);
         fprintf(stderr,
@@ -84,21 +83,20 @@ int main(int argc, char *argv[])
     game.newloc = LOC_START;
     game.loc = LOC_START;
     game.limit = GAMELIMIT;
-    
+
     // apply cheats
     game.numdie = numdie;
     game.saved = saved;
-    
+
     fp = fopen(savefilename, WRITE_MODE);
-    if (fp == NULL)
-    {
+    if (fp == NULL) {
         fprintf(stderr,
                 "Can't open file %s. Exiting.\n", savefilename);
         exit(-1);
-    }        
+    }
 
     savefile(fp, version);
-    
+
     printf("cheat: %s created.\n", savefilename);
     return 0;
 }

@@ -27,19 +27,19 @@ struct save_t {
 struct save_t save;
 
 int savefile(FILE *fp, long version)
-    /* Save game to file. No input or output from user. */
+/* Save game to file. No input or output from user. */
 {
     long i, k;
     datime(&i, &k);
     k = i + 650 * k;
     save.savetime = k;
     save.mode = -1;
-    
+
     save.version = (version == 0) ? VRSION : version;
-    
+
     memcpy(&save.game, &game, sizeof(struct game_t));
     IGNORE(fwrite(&save, sizeof(struct save_t), 1, fp));
-    return(0);
+    return (0);
 }
 
 /* Suspend and resume */
@@ -119,7 +119,7 @@ int restore(FILE* fp)
     } else {
         memcpy(&game, &save.game, sizeof(struct game_t));
         //game.zzword = rndvoc(3, game.zzword);
-	make_zzword(game.zzword);
+        make_zzword(game.zzword);
     }
     return GO_TOP;
 }

@@ -28,7 +28,7 @@ static int attack(struct command_t *command)
         if (AT(TROLL))obj = obj * NOBJECTS + TROLL;
         if (AT(OGRE))obj = obj * NOBJECTS + OGRE;
         if (HERE(BEAR) && game.prop[BEAR] == UNTAMED_BEAR)
-	    obj = obj * NOBJECTS + BEAR;
+            obj = obj * NOBJECTS + BEAR;
         if (obj > NOBJECTS) return GO_UNKNOWN;
         if (obj == 0) {
             /* Can't attack bird or machine by throwing axe. */
@@ -50,8 +50,8 @@ static int attack(struct command_t *command)
         DESTROY(BIRD);
         spk = BIRD_DEAD;
     } else if (obj == VEND) {
-	state_change(VEND,
-		     game.prop[VEND]==VEND_BLOCKS ? VEND_UNBLOCKS : VEND_BLOCKS);
+        state_change(VEND,
+                     game.prop[VEND] == VEND_BLOCKS ? VEND_UNBLOCKS : VEND_BLOCKS);
         return GO_CLEAROBJ;
     }
 
@@ -85,17 +85,14 @@ static int attack(struct command_t *command)
          *  fixed), move rug there (not fixed), and move him there,
          *  too.  Then do a null motion to get new description. */
         rspeak(BARE_HANDS_QUERY);
-	if(silent_yes())
-	  {
-	    // FIXME: setting wd1 is a workaround for broken logic
-	    command->wd1 = token_to_packed("Y");
-	  }
-	else
-	  {
-	    // FIXME: setting wd1 is a workaround for broken logic
-	    command->wd1 = token_to_packed("N");
-	    return GO_CHECKFOO;
-	  }
+        if (silent_yes()) {
+            // FIXME: setting wd1 is a workaround for broken logic
+            command->wd1 = token_to_packed("Y");
+        } else {
+            // FIXME: setting wd1 is a workaround for broken logic
+            command->wd1 = token_to_packed("N");
+            return GO_CHECKFOO;
+        }
         pspeak(DRAGON, look, 3);
         game.prop[DRAGON] = 1;
         game.prop[RUG] = 0;
@@ -241,9 +238,9 @@ static int vcarry(token_t verb, token_t obj)
     spk = YOU_JOKING;
     if (obj == PLANT && game.prop[PLANT] <= 0)spk = DEEP_ROOTS;
     if (obj == BEAR && game.prop[BEAR] == SITTING_BEAR)
-	spk = BEAR_CHAINED;
+        spk = BEAR_CHAINED;
     if (obj == CHAIN && game.prop[BEAR] != UNTAMED_BEAR)
-	spk = STILL_LOCKED;
+        spk = STILL_LOCKED;
     if (obj == URN)spk = URN_NOBUDGE;
     if (obj == CAVITY)spk = DOUGHNUT_HOLES;
     if (obj == BLOOD)spk = FEW_DROPS;
@@ -264,7 +261,7 @@ static int vcarry(token_t verb, token_t obj)
                 return (fill(verb, BOTTLE));
             else {
                 if (game.prop[BOTTLE] != EMPTY_BOTTLE)
-		    spk = BOTTLE_FULL;
+                    spk = BOTTLE_FULL;
                 if (!TOTING(BOTTLE))spk = NO_CONTAINER;
                 rspeak(spk);
                 return GO_CLEAROBJ;
@@ -311,9 +308,9 @@ static int chain(token_t verb)
     if (verb != LOCK) {
         spk = CHAIN_UNLOCKED;
         if (game.prop[BEAR] == UNTAMED_BEAR)
-	    spk = BEAR_BLOCKS;
+            spk = BEAR_BLOCKS;
         if (game.prop[CHAIN] == 0)
-	    spk = ALREADY_UNLOCKED;
+            spk = ALREADY_UNLOCKED;
         if (spk != CHAIN_UNLOCKED) {
             rspeak(spk);
             return GO_CLEAROBJ;
@@ -321,22 +318,22 @@ static int chain(token_t verb)
         game.prop[CHAIN] = 0;
         game.fixed[CHAIN] = 0;
         if (game.prop[BEAR] != BEAR_DEAD)
-	    game.prop[BEAR] = CONTENTED_BEAR;
-	/* FIXME: Arithmetic on state numbers */
+            game.prop[BEAR] = CONTENTED_BEAR;
+        /* FIXME: Arithmetic on state numbers */
         game.fixed[BEAR] = 2 - game.prop[BEAR];
     } else {
         spk = CHAIN_LOCKED;
         if (game.prop[CHAIN] != 0)
-	    spk = ALREADY_LOCKED;
+            spk = ALREADY_LOCKED;
         if (game.loc != objects[CHAIN].plac)
-	    spk = NO_LOCKSITE;
+            spk = NO_LOCKSITE;
         if (spk != CHAIN_LOCKED) {
             rspeak(spk);
             return GO_CLEAROBJ;
         }
         game.prop[CHAIN] = 2;
         if (TOTING(CHAIN))
-	    drop(CHAIN, game.loc);
+            drop(CHAIN, game.loc);
         game.fixed[CHAIN] = -1;
     }
     rspeak(spk);
@@ -410,12 +407,12 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
     if (obj == BOTTLE && k != 0)
         game.place[k] = LOC_NOWHERE;
     if (obj == CAGE && game.prop[BIRD] == BIRD_CAGED)
-	drop(BIRD, game.loc);
+        drop(BIRD, game.loc);
     drop(obj, game.loc);
     if (obj != BIRD) return GO_CLEAROBJ;
     game.prop[BIRD] = BIRD_UNCAGED;
     if (FOREST(game.loc))
-	game.prop[BIRD] = BIRD_FOREST_UNCAGED;
+        game.prop[BIRD] = BIRD_FOREST_UNCAGED;
     return GO_CLEAROBJ;
 }
 
@@ -472,7 +469,7 @@ static int extinguish(token_t verb, int obj)
     int spk = actions[verb].message;
     if (obj == INTRANSITIVE) {
         if (HERE(LAMP) && game.prop[LAMP] == LAMP_BRIGHT)
-	    obj = LAMP;
+            obj = LAMP;
         if (HERE(URN) && game.prop[URN] == 2)obj = obj * NOBJECTS + URN;
         if (obj == INTRANSITIVE || obj == 0 || obj > NOBJECTS) return GO_UNKNOWN;
     }
@@ -481,7 +478,7 @@ static int extinguish(token_t verb, int obj)
         game.prop[URN] = game.prop[URN] / 2;
         spk = URN_DARK;
     } else if (obj == LAMP) {
-	state_change(LAMP, LAMP_DARK);
+        state_change(LAMP, LAMP_DARK);
         spk = DARK(game.loc) ? PITCH_DARK : NO_MESSAGE;
     } else if (obj == DRAGON || obj == VOLCANO)
         spk = BEYOND_POWER;
@@ -512,9 +509,9 @@ static int feed(token_t verb, token_t obj)
         }
     } else if (obj == BEAR) {
         if (game.prop[BEAR] == UNTAMED_BEAR)
-	    spk = NOTHING_EDIBLE;
+            spk = NOTHING_EDIBLE;
         if (game.prop[BEAR] == BEAR_DEAD)
-	    spk = RIDICULOUS_ATTEMPT;
+            spk = RIDICULOUS_ATTEMPT;
         if (HERE(FOOD)) {
             DESTROY(FOOD);
             game.prop[BEAR] = SITTING_BEAR;
@@ -580,7 +577,7 @@ int fill(token_t verb, token_t obj)
     if (LIQUID() != 0)
         spk = BOTTLE_FULL;
     if (spk == BOTTLED_WATER) {
-	/* FIXME: Arithmetic on property values */
+        /* FIXME: Arithmetic on property values */
         game.prop[BOTTLE] = MOD(conditions[game.loc], 4) / 2 * 2;
         k = LIQUID();
         if (TOTING(BOTTLE))
@@ -666,7 +663,7 @@ static int light(token_t verb, token_t obj)
     int spk = actions[verb].message;
     if (obj == INTRANSITIVE) {
         if (HERE(LAMP) && game.prop[LAMP] == LAMP_DARK && game.limit >= 0)
-	    obj = LAMP;
+            obj = LAMP;
         if (HERE(URN) && game.prop[URN] == 1)obj = obj * NOBJECTS + URN;
         if (obj == INTRANSITIVE || obj == 0 || obj > NOBJECTS) return GO_UNKNOWN;
     }
@@ -689,7 +686,7 @@ static int light(token_t verb, token_t obj)
             rspeak(spk);
             return GO_CLEAROBJ;
         }
-	state_change(LAMP, LAMP_BRIGHT);
+        state_change(LAMP, LAMP_BRIGHT);
         if (game.wzdark)
             return GO_TOP;
         else
@@ -706,21 +703,21 @@ static int listen(void)
     if (k != SILENT) {
         rspeak(k);
         if (locations[game.loc].loud)
-	    return GO_CLEAROBJ;
-	else
-	    spk = NO_MESSAGE;
+            return GO_CLEAROBJ;
+        else
+            spk = NO_MESSAGE;
     }
     for (int i = 1; i <= NOBJECTS; i++) {
         if (!HERE(i) || objects[i].sounds[0] == NULL || game.prop[i] < 0)
             continue;
-	int mi =  game.prop[i];
-	if (i == BIRD)
-	    mi += 3 * game.blooded;
-	long packed_zzword = token_to_packed(game.zzword);
+        int mi =  game.prop[i];
+        if (i == BIRD)
+            mi += 3 * game.blooded;
+        long packed_zzword = token_to_packed(game.zzword);
         pspeak(i, hear, mi, packed_zzword);
         spk = NO_MESSAGE;
-	/* FIXME: Magic number, sensitive to bird state logic */
-	if (i == BIRD && game.prop[i] == 5)
+        /* FIXME: Magic number, sensitive to bird state logic */
+        if (i == BIRD && game.prop[i] == 5)
             DESTROY(BIRD);
     }
     rspeak(spk);
@@ -763,8 +760,8 @@ static int lock(token_t verb, token_t obj)
                 if (!game.panic)game.clock2 = PANICTIME;
                 game.panic = true;
             } else {
-		state_change(GRATE, (verb == LOCK) ? GRATE_CLOSED : GRATE_OPEN);
-		return GO_CLEAROBJ;
+                state_change(GRATE, (verb == LOCK) ? GRATE_CLOSED : GRATE_OPEN);
+                return GO_CLEAROBJ;
             }
         }
     }
@@ -1005,7 +1002,7 @@ static int wave(token_t verb, token_t obj)
     }
     /* FIXME: Arithemetic on proprty values */
     if (HERE(BIRD))
-	spk = FREE_FLY + MOD(game.prop[BIRD], 2);
+        spk = FREE_FLY + MOD(game.prop[BIRD], 2);
     if (spk == FREE_FLY && game.loc == game.place[STEPS] && game.prop[JADE] < 0) {
         drop(JADE, game.loc);
         game.prop[JADE] = 0;
@@ -1086,7 +1083,7 @@ int action(struct command_t *command)
     switch (command->part) {
     case intransitive:
         if (command->wd2 > 0 && command->verb != SAY)
-	    return GO_WORD2;
+            return GO_WORD2;
         if (command->verb == SAY)command->obj = command->wd2;
         if (command->obj == 0 || command->obj == INTRANSITIVE) {
             /*  Analyse an intransitive verb (ie, no object given yet). */
@@ -1150,7 +1147,7 @@ int action(struct command_t *command)
             case BRIEF:
                 return brief();
             case READ:
-		command->obj = INTRANSITIVE;
+                command->obj = INTRANSITIVE;
                 return read(*command);
             case BREAK:
                 return GO_UNKNOWN;
@@ -1166,8 +1163,8 @@ int action(struct command_t *command)
                 return listen();
             case PART:
                 return reservoir();
-	    default:
-		BUG(INTRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST); // LCOV_EXCL_LINE
+            default:
+                BUG(INTRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST); // LCOV_EXCL_LINE
             }
         }
     /* FALLTHRU */
@@ -1198,7 +1195,7 @@ int action(struct command_t *command)
             rspeak(spk);
             return GO_CLEAROBJ;
         }
-	case GO: {
+        case GO: {
             rspeak(spk);
             return GO_CLEAROBJ;
         }
@@ -1213,7 +1210,7 @@ int action(struct command_t *command)
         case RUB:
             return rub(command->verb, command->obj);
         case THROW:
-            return throw(command);
+            return throw (command);
         case QUIT: {
             rspeak(spk);
             return GO_CLEAROBJ;
@@ -1261,11 +1258,11 @@ int action(struct command_t *command)
             rspeak(spk);
             return GO_CLEAROBJ;
         }
-	case PART:
+        case PART:
             return reservoir();
-    default:
-        BUG(TRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST); // LCOV_EXCL_LINE
-    }
+        default:
+            BUG(TRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST); // LCOV_EXCL_LINE
+        }
     case unknown:
         /* Unknown verb, couldn't deduce object - might need hint */
         rspeak(WHAT_DO, command->wd1, command->wd1x);

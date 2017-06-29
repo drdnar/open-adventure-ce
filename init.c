@@ -25,7 +25,7 @@ void initialise(void)
         if (!(locations[i].description.big == 0 || tkey[i] == 0)) {
             int k = tkey[i];
             if (T_TERMINATE(travel[k]))
-		conditions[i] |= (1 << COND_FORCED);
+                conditions[i] |= (1 << COND_FORCED);
         }
         game.atloc[i] = 0;
     }
@@ -56,11 +56,11 @@ void initialise(void)
      *  not yet found, so we know when to close the cave. */
     game.tally = 0;
     for (int treasure = 1; treasure <= NOBJECTS; treasure++) {
-	if (objects[treasure].is_treasure) {
-	    if (objects[treasure].inventory != 0)
-		game.prop[treasure] = -1;
-	    game.tally = game.tally - game.prop[treasure];
-	}
+        if (objects[treasure].is_treasure) {
+            if (objects[treasure].inventory != 0)
+                game.prop[treasure] = -1;
+            game.tally = game.tally - game.prop[treasure];
+        }
     }
 
     /*  Clear the hint stuff.  game.hintlc[i] is how long he's been at LOC
