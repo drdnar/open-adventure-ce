@@ -506,18 +506,6 @@ def get_condbits(locations):
         cnd_str += "    " + line + ",\t// " + name + "\n"
     return cnd_str
 
-def recompose(type_word, value):
-    "Compose the internal code for a vocabulary word from its YAML entry"
-    parts = ("motion", "action", "object", "special")
-    try:
-        return value + 1000 * parts.index(type_word)
-    except KeyError:
-        sys.stderr.write("dungeon: %s is not a known word\n" % word)
-        sys.exit(1)
-    except IndexError:
-        sys.stderr.write("%s is not a known word classifier\n" % attrs["type"])
-        sys.exit(1)
-
 def get_motions(motions):
     template = """    {{
         .words = {},
@@ -568,12 +556,15 @@ def bigdump(arr):
     out = out[:-2] + "\n"
     return out
 
-def buildtravel(locs, objs, voc):
+def buildtravel(locs, objs):
     ltravel = []
     verbmap = {}
-    for entry in db["vocabulary"]:
-        if entry["type"] == "motion" and entry["value"] not in verbmap:
-            verbmap[entry["word"]] = entry["value"]
+    for i, motion in enumerate(db["motions"]):
+        try:
+            for word in motion[1]["words"]:
+                verbmap[word.upper()] = i
+        except TypeError:
+            pass
     def dencode(action, name):
         "Decode a destination number"
         if action[0] == "goto":
@@ -705,8 +696,7 @@ if __name__ == "__main__":
     objnames = [el[0] for el in db["objects"]]
 
     (travel, tkey) = buildtravel(db["locations"],
-                                 db["objects"],
-                                 db["vocabulary"])
+                                 db["objects"])
 
     c = c_template.format(
         h_name,
