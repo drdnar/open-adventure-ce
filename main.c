@@ -53,7 +53,7 @@ static void sig_handler(int signo)
  * MAIN PROGRAM
  *
  *  Adventure (rev 2: 20 treasures)
- *
+Here's what we think. *
  *  History: Original idea & 5-treasure version (adventures) by Willie Crowther
  *           15-treasure version (adventure) by Don Woods, April-June 1977
  *           20-treasure version (rev 2) by Don Woods, August 1978
@@ -472,8 +472,8 @@ static bool dwarfmove(void)
  *  another chance, he gets a snide remark as we exit.  When
  *  reincarnated, all objects being carried get dropped at game.oldlc2
  *  (presumably the last place prior to being killed) without change
- *  of props.  the loop runs backwards to assure that the bird is
- *  dropped before the cage.  (this kluge could be changed once we're
+ *  of props.  The loop runs backwards to assure that the bird is
+ *  dropped before the cage.  (This kluge could be changed once we're
  *  sure all references to bird and cage are done by keywords.)  The
  *  lamp is a special case (it wouldn't do to leave it in the cave).
  *  It is turned off and left outside the building (only if he was
