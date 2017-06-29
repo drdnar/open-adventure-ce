@@ -425,7 +425,8 @@ static bool dwarfmove(void)
         game.odloc[i] = game.dloc[i];
         game.dloc[i] = tk[j];
         game.dseen[i] = (game.dseen[i] && INDEEP(game.loc)) || (game.dloc[i] == game.loc || game.odloc[i] == game.loc);
-        if (!game.dseen[i]) continue;
+        if (!game.dseen[i])
+            continue;
         game.dloc[i] = game.loc;
         if (spotted_by_pirate(i))
             continue;
@@ -448,7 +449,8 @@ static bool dwarfmove(void)
     rspeak(game.dtotal == 1 ? DWARF_SINGLE : DWARF_PACK, game.dtotal);
     if (attack == 0)
         return true;
-    if (game.dflag == 2)game.dflag = 3;
+    if (game.dflag == 2)
+        game.dflag = 3;
     if (attack > 1) {
         rspeak(THROWN_KNIVES, attack);
         rspeak(stick > 1 ? MULTIPLE_HITS : (stick == 1 ? ONE_HIT : NONE_HIT), stick);
@@ -600,13 +602,20 @@ static bool playermove(token_t verb, int motion)
             /*  Couldn't find an entry matching the motion word passed
              *  in.  Various messages depending on word given. */
             int spk = CANT_APPLY;
-            if (motion >= 43 && motion <= 50)spk = BAD_DIRECTION;
-            if (motion == 29 || motion == 30)spk = BAD_DIRECTION;
-            if (motion == 7 || motion == 36 || motion == 37)spk = UNSURE_FACING;
-            if (motion == 11 || motion == 19)spk = NO_INOUT_HERE;
-            if (verb == FIND || verb == INVENTORY)spk = NEARBY;
-            if (motion == 62 || motion == 65)spk = NOTHING_HAPPENS;
-            if (motion == 17)spk = WHICH_WAY;
+            if (motion >= 43 && motion <= 50)
+                spk = BAD_DIRECTION;
+            if (motion == 29 || motion == 30)
+                spk = BAD_DIRECTION;
+            if (motion == 7 || motion == 36 || motion == 37)
+                spk = UNSURE_FACING;
+            if (motion == 11 || motion == 19)
+                spk = NO_INOUT_HERE;
+            if (verb == FIND || verb == INVENTORY)
+                spk = NEARBY;
+            if (motion == 62 || motion == 65)
+                spk = NOTHING_HAPPENS;
+            if (motion == 17)
+                spk = WHICH_WAY;
             rspeak(spk);
             return true;
         }
@@ -710,8 +719,10 @@ static bool playermove(token_t verb, int motion)
                         return true;
                     } else {
                         game.newloc = objects[TROLL].plac + objects[TROLL].fixd - game.loc;
-                        if (game.prop[TROLL] == 0)game.prop[TROLL] = 1;
-                        if (!TOTING(BEAR)) return true;
+                        if (game.prop[TROLL] == 0)
+                            game.prop[TROLL] = 1;
+                        if (!TOTING(BEAR))
+                            return true;
                         rspeak(BRIDGE_COLLAPSE);
                         game.prop[CHASM] = 1;
                         game.prop[TROLL] = 2;
@@ -872,7 +883,8 @@ static void lampcheck(void)
         if (!game.lmwarn && HERE(LAMP)) {
             game.lmwarn = true;
             int spk = GET_BATTERIES;
-            if (game.place[BATTERY] == LOC_NOWHERE)spk = LAMP_DIM;
+            if (game.place[BATTERY] == LOC_NOWHERE)
+                spk = LAMP_DIM;
             if (game.prop[BATTERY] == DEAD_BATTERIES)
                 spk = MISSING_BATTERIES;
             rspeak(spk);
@@ -893,7 +905,8 @@ static void listobjects(void)
         ++game.abbrev[game.loc];
         for (int i = game.atloc[game.loc]; i != 0; i = game.link[i]) {
             long obj = i;
-            if (obj > NOBJECTS)obj = obj - NOBJECTS;
+            if (obj > NOBJECTS)
+                obj = obj - NOBJECTS;
             if (obj == STEPS && TOTING(NUGGET))
                 continue;
             if (game.prop[obj] < 0) {
@@ -939,7 +952,8 @@ static bool do_command()
     if (OUTSID(game.newloc) && game.newloc != 0 && game.closng) {
         rspeak(EXIT_CLOSED);
         game.newloc = game.loc;
-        if (!game.panic)game.clock2 = PANICTIME;
+        if (!game.panic)
+            game.clock2 = PANICTIME;
         game.panic = true;
     }
 
@@ -980,7 +994,8 @@ static bool do_command()
             }
             msg = arbitrary_messages[PITCH_DARK];
         }
-        if (TOTING(BEAR))rspeak(TAME_BEAR);
+        if (TOTING(BEAR))
+            rspeak(TAME_BEAR);
         speak(msg);
         if (FORCED(game.loc)) {
             if (playermove(command.verb, 1))

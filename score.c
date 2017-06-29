@@ -41,8 +41,10 @@ long score(enum termination mode)
             continue;
         if (objects[i].inventory != 0) {
             long k = 12;
-            if (i == CHEST)k = 14;
-            if (i > CHEST)k = 16;
+            if (i == CHEST)
+                k = 14;
+            if (i > CHEST)
+                k = 16;
             if (game.prop[i] >= 0)
                 score += 2;
             if (game.place[i] == LOC_BUILDING && game.prop[i] == 0)
@@ -62,9 +64,11 @@ long score(enum termination mode)
     if (mode == endgame)
         score += 4;
     mxscor += 4;
-    if (game.dflag != 0)score += 25;
+    if (game.dflag != 0)
+        score += 25;
     mxscor += 25;
-    if (game.closng)score += 25;
+    if (game.closng)
+        score += 25;
     mxscor += 25;
     if (game.closed) {
         if (game.bonus == 0)
