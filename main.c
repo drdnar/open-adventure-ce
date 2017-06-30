@@ -598,7 +598,6 @@ static bool playermove(token_t verb, int motion)
         if (T_TERMINATE(travel[travel_entry]) || travel[travel_entry].motion == motion)
             break;
         if (travel[travel_entry].stop) {
-            /* FIXME: Magic numbers! */
             /*  Couldn't find an entry matching the motion word passed
              *  in.  Various messages depending on word given. */
             int spk = CANT_APPLY;

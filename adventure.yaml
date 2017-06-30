@@ -65,10 +65,11 @@
 #    travel. Order of locations is not significant.
 #
 # arbitrary_messages: These are arguments to rspeak(). Some spans of
-#    these messages need to be kept adjacent and ordered (for now).
-#    To see which, grep for rspeak() calls containing expressions with
-#    arithmetic.  Eventually, these will be pulled out into more appropriate
-#    data structures. Then ordering can be dropped, and gaps removed.
+#    these messages need to be kept adjacent and ordered (for now),
+#    though there are no depenencies on actual numbers left.  To see
+#    which, grep for rspeak() calls containing expressions with
+#    arithmetic.  Eventually, these will be pulled out into more
+#    appropriate data structures. Then ordering can be dropped.
 #
 # classes: Each item contains a point threshold and a message
 #    describing a classification of player.  Point thresholds must be
@@ -2547,10 +2548,6 @@ arbitrary_messages:  !!omap
 - NO_MORE_DETAIL: 'Sorry, but I am not allowed to give more detail.  I will repeat the\nlong description of your location.'
 - PITCH_DARK: 'It is now pitch dark.  If you proceed you will likely fall into a pit.'
 - W_IS_WEST: 'If you prefer, simply type w rather than west.'
-- ARB_18: !!null
-- ARB_19: !!null
-- ARB_20: !!null
-- ARB_21: !!null
 - REALLY_QUIT: 'Do you really want to quit now?'
 - PIT_FALL: 'You fell into a pit and broke every bone in your body!'
 - ALREADY_CARRYING: 'You are already carrying it!'
@@ -2564,12 +2561,8 @@ arbitrary_messages:  !!omap
 - NO_LOCK: 'It has no lock.'
 - NOT_LOCKABLE: 'I don''t know how to lock or unlock such a thing.'
 - ALREADY_LOCKED: 'It was already locked.'
-- ARB_35: !!null
-- ARB_36: !!null
 - ALREADY_UNLOCKED: 'It was already unlocked.'
 - URN_EMPTY: 'The urn is empty and will not light.'
-- ARB_39: !!null
-- ARB_40: !!null
 - BEAR_BLOCKS: 'There is no way to get past the bear to unlock the chain, which is\nprobably just as well.'
 - NOTHING_HAPPENS: 'Nothing happens.'
 - WHERE_QUERY: 'Where?'
@@ -2591,8 +2584,6 @@ arbitrary_messages:  !!omap
 - NEARBY: 'I can only tell you what you see as you move about and manipulate\nthings.  I cannot tell you where remote things are.'
 - OGRE_SNARL: 'The ogre snarls and shoves you back.'
 - HUH_MAN: 'Huh?'
-- ARB_62: !!null
-- ARB_63: !!null
 - FOREST_LOOK: 'The trees of the forest are large hardwood oak and maple, with an\noccasional grove of pine or spruce.  There is quite a bit of under-\ngrowth, largely birch and ash saplings plus nondescript bushes of\nvarious sorts.  This time of year visibility is quite restricted by\nall the leaves, but travel is quite easy if you detour around the\nspruce and berry bushes.'
 - WELCOME_YOU: 'Welcome to Adventure!!  Would you like instructions?'
 - DIGGING_FUTILE: 'Digging without a shovel is quite impractical.  Even with a shovel\nprogress is unlikely.'
@@ -2610,16 +2601,6 @@ arbitrary_messages:  !!omap
 - CANT_POUR: 'You can''t pour that.'
 - WATCH_IT: 'Watch it!'
 - WHICH_WAY: 'Which way?'
-- ARB_81: !!null
-- ARB_82: !!null
-- ARB_83: !!null
-- ARB_84: !!null
-- ARB_85: !!null
-- ARB_86: !!null
-- ARB_87: !!null
-- ARB_88: !!null
-- ARB_89: !!null
-- ARB_90: !!null
 - FORGOT_PATH: 'Sorry, but I no longer seem to remember how it was you got here.'
 - CARRY_LIMIT: 'You can''t carry anything more.  You''ll have to drop something first.'
 - GRATE_NOWAY: 'You can''t go through a locked steel grate!'
@@ -2705,12 +2686,6 @@ arbitrary_messages:  !!omap
 - NO_LOCKSITE: 'There is nothing here to which the chain can be locked.'
 - NO_EDIBLES: 'There is nothing here to eat.'
 - WANT_HINT: 'Do you want the hint?'
-- ARB_176: !!null
-- ARB_177: !!null
-- ARB_178: !!null
-- ARB_179: !!null
-- ARB_180: !!null
-- ARB_181: !!null
 - TROLL_VICES: 'Gluttony is not one of the troll''s vices.  Avarice, however, is.'
 - LAMP_DIM: 'Your lamp is getting dim.  You''d best start wrapping this up, unless\nyou can find some fresh batteries.  I seem to recall there''s a vending\nmachine in the maze.  Bring some coins with you.'
 - LAMP_OUT: 'Your lamp has run out of power.'
@@ -2720,10 +2695,8 @@ arbitrary_messages:  !!omap
 - REPLACE_BATTERIES: 'Your lamp is getting dim.  I''m taking the liberty of replacing the\nbatteries.'
 - MISSING_BATTERIES: 'Your lamp is getting dim, and you''re out of spare batteries.  You''d\nbest start wrapping this up.'
 - REMOVE_MESSAGE: 'You sift your fingers through the dust, but succeed only in\nobliterating the cryptic message.'
-- ARB_191: !!null
 - CLUE_QUERY: 'Hmmm, this looks like a clue, which means it''ll cost you 10 points to\nread it.  Should I go ahead and read it anyway?'
 - WAYOUT_CLUE: 'It says, "There is a way out of this place.  Do you need any more\ninformation to escape?  Sorry, but this initial hint is all you get."'
-- ARB_194: !!null
 - DONT_UNDERSTAND: 'I''m afraid I don''t understand.'
 - HAND_PASSTHROUGH: 'Your hand passes through it as though it weren''t there.'
 - BREAK_MIRROR: 'You strike the mirror a resounding blow, whereupon it shatters into a\nmyriad tiny fragments.'
@@ -2773,12 +2746,9 @@ arbitrary_messages:  !!omap
 - HEAD_BUZZES: 'Your head buzzes strangely for a moment.'
 - NOT_BRIGHT: '(Uh, y''know, that wasn''t very bright.)'
 - TOOK_LONG: 'It''s a pity you took so long about it.'
-- ARB_244: !!null
-- ARB_245: !!null
 - UPSTREAM_DOWNSTREAM: 'Upstream or downstream?'
 - WIZARDS_NODISTURB: 'Wizards are not to be disturbed by such as you.'
 - FOREST_QUERY: !!null
-- ARB_249: !!null
 - WATERS_CRASHING: 'The waters are crashing loudly against the shore.'
 - THROWN_KNIVES: '%d of them throw knives at you!'
 - MULTIPLE_HITS: '%d of them get you!'
@@ -2803,8 +2773,6 @@ arbitrary_messages:  !!omap
 # This message is not currently used
 - SAVE_TAMPERING: 'A dark fog creeps in to surround you.  From somewhere in the fog you\nhear a stern voice.  "This Adventure has been tampered with!  You have\nbeen dabbling in magic, knowing not the havoc you might cause thereby.\nLeave at once, before you do irrevocable harm!"  The fog thickens,\nuntil at last you can see nothing at all.  Your vision then clears,\nand you find yourself back in The Real World.'
 - GUESS_AGAIN: 'Guess again.'
-- ARB_274: !!null
-- ARB_275: !!null
 - TWIST_TURN: 'Sorry, but the path twisted and turned so much that I can''t figure\nout which way to go to get back.'
 - ADVENTURE_NEWS: 'Open Adventure is an author-approved open-source release of\nVersion 2.5 with, as yet, no gameplay changes.\nVersion 2.5 was essentially the same as Version II; the cave and the\nhazards therein are unchanged, and top score is still 430 points.\nThere are a few more hints, especially for some of the more obscure\npuzzles.  There are a few minor bugfixes and cosmetic changes.  You\ncan now save a game and resume it at once (formerly you had to wait a\nwhile first), but it now costs you a few points each time you save the\ngame.  Saved games are now stored in much smaller files than before.'
 - GO_UNNEEDED: 'You don''t have to say "go" every time; just specify a direction or, if\nit''s nearby, name the place to which you wish to move.'
