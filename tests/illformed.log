@@ -4,6 +4,7 @@ y
 seed 1801426495
 eat grate
 in
+in
 throw food
 nothing food
 calm food
@@ -12,10 +13,12 @@ score food
 foo food
 brief food
 blast food
+find grate
 light food
 extinguish food
 suspend food
 resume food
+crawl
 out
 stream
 lock

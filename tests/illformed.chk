@@ -46,6 +46,21 @@ There is food here.
 
 There is a bottle of water here.
 
+> in
+
+I don't know in from out here.  Use compass points or name something
+in the general direction you want to go.
+
+You're inside building.
+
+There are some keys on the ground here.
+
+There is a shiny brass lamp nearby.
+
+There is food here.
+
+There is a bottle of water here.
+
 > throw food
 
 You aren't carrying it!
@@ -78,6 +93,11 @@ On what?
 
 Blasting requires dynamite.
 
+> find grate
+
+I can only tell you what you see as you move about and manipulate
+things.  I cannot tell you where remote things are.
+
 > light food
 
 I'm afraid I don't understand.
@@ -93,6 +113,20 @@ Huh?
 > resume food
 
 Huh?
+
+> crawl
+
+Which way?
+
+You're inside building.
+
+There are some keys on the ground here.
+
+There is a shiny brass lamp nearby.
+
+There is food here.
+
+There is a bottle of water here.
 
 > out
 
@@ -472,7 +506,7 @@ Okay, "BOO".
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 94 turns.
+You have garnered 27 out of a possible 430 points, using 97 turns.
 
 > z
 
@@ -480,7 +514,7 @@ OK
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 96 turns.
+You have garnered 27 out of a possible 430 points, using 99 turns.
 
 > quit keys
 
@@ -494,7 +528,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 27 out of a possible 430, using 98 turns.
+You scored 27 out of a possible 430, using 101 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 
