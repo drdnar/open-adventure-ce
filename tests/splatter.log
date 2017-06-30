@@ -1,10 +1,10 @@
-## Adventurer fall down go boom.
+## Adventurer fall down go boom. Also tests 'say' verb on magic words.
 # Based on walkthrough at http://www.ecsoftwareconsulting.com/node/56
 n
 seed 1838473132
 in
 take lamp
-xyzzy
+say xyzzy
 on
 take rod
 e
@@ -42,13 +42,13 @@ n
 d
 n
 n
-plugh
+say plugh
 extinguish lamp
 drop coins
 drop jewelry
 drop necklace
 drop gold
-plugh
+say plugh
 on
 s
 take silver
@@ -67,7 +67,7 @@ d
 n
 n
 off
-plugh
+say plugh
 inven
 drop rug
 drop silver
@@ -84,13 +84,13 @@ s
 n
 in
 take water
-plugh
+say plugh
 on
-plover
+say plover
 ne
 take pyramid
 s
-plover
+say plover
 s
 s
 take rod
@@ -131,11 +131,11 @@ n
 n
 n
 off
-plugh
+say plugh
 drop ruby
 drop diamonds
 drop pyramid
-plugh
+say plugh
 on
 s
 s
@@ -231,7 +231,7 @@ e
 u
 n
 off
-plugh
+say plugh
 drop pillow
 drop vase
 drop trident
@@ -239,7 +239,7 @@ drop emerald
 drop ebony
 take keys
 take food
-plugh
+say plugh
 on
 s
 d
@@ -319,7 +319,7 @@ e
 n
 n
 off
-plugh
+say plugh
 drop eggs
 drop pearl
 drop spices
@@ -357,7 +357,7 @@ drop sapphire
 drop amber
 drop rug
 look
-plugh
+say plugh
 on
 s
 s
@@ -384,10 +384,10 @@ d
 e
 e
 off
-xyzzy
+say xyzzy
 drop emerald
 drop chest
-plugh
+say plugh
 on
 s
 d
@@ -418,7 +418,7 @@ u
 e
 u
 n
-plover
+say plover
 e
 e
 e

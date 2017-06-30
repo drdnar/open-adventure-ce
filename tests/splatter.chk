@@ -28,7 +28,7 @@ There is a bottle of water here.
 
 OK
 
-> xyzzy
+> say xyzzy
 
 >>Foof!<<
 
@@ -234,7 +234,7 @@ a rock in the room's center.
 
 A hollow voice says "PLUGH".
 
-> plugh
+> say plugh
 
 >>Foof!<<
 
@@ -266,7 +266,7 @@ OK
 
 OK
 
-> plugh
+> say plugh
 
 >>Foof!<<
 
@@ -391,7 +391,7 @@ Your lamp is now off.
 
 It is now pitch dark.  If you proceed you will likely fall into a pit.
 
-> plugh
+> say plugh
 
 >>Foof!<<
 
@@ -506,7 +506,7 @@ There is a bottle of water here.
 
 OK
 
-> plugh
+> say plugh
 
 >>Foof!<<
 
@@ -518,7 +518,7 @@ Your lamp is now on.
 
 You're at "Y2".
 
-> plover
+> say plover
 
 >>Foof!<<
 
@@ -546,7 +546,7 @@ You're in Plover Room.
 
 There is an emerald here the size of a plover's egg!
 
-> plover
+> say plover
 
 >>Foof!<<
 
@@ -799,7 +799,7 @@ Your lamp is now off.
 
 It is now pitch dark.  If you proceed you will likely fall into a pit.
 
-> plugh
+> say plugh
 
 >>Foof!<<
 
@@ -833,7 +833,7 @@ OK
 
 OK
 
-> plugh
+> say plugh
 
 >>Foof!<<
 
@@ -1364,7 +1364,7 @@ Your lamp is now off.
 
 It is now pitch dark.  If you proceed you will likely fall into a pit.
 
-> plugh
+> say plugh
 
 >>Foof!<<
 
@@ -1420,7 +1420,7 @@ OK
 
 OK
 
-> plugh
+> say plugh
 
 >>Foof!<<
 
@@ -1881,7 +1881,7 @@ Your lamp is now off.
 
 It is now pitch dark.  If you proceed you will likely fall into a pit.
 
-> plugh
+> say plugh
 
 >>Foof!<<
 
@@ -2176,7 +2176,7 @@ There is precious jewelry here!
 
 There are many coins here!
 
-> plugh
+> say plugh
 
 >>Foof!<<
 
@@ -2322,7 +2322,7 @@ Your lamp is now off.
 
 It is now pitch dark.  If you proceed you will likely fall into a pit.
 
-> xyzzy
+> say xyzzy
 
 >>Foof!<<
 
@@ -2374,7 +2374,7 @@ OK
 
 OK
 
-> plugh
+> say plugh
 
 >>Foof!<<
 
@@ -2593,7 +2593,7 @@ You're in n/s passage above e/w passage.
 
 You're at "Y2".
 
-> plover
+> say plover
 
 >>Foof!<<
 
