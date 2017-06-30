@@ -5,6 +5,7 @@
 
 #include "dungeon.h"
 
+#define LINESIZE       1024
 #define NDWARVES       6          // number of dwarves
 #define PIRATE         NDWARVES   // must be NDWARVES-1 when zero-origin
 #define DALTLC         LOC_NUGGET // alternate dwarf location

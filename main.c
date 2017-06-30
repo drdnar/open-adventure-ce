@@ -1029,6 +1029,8 @@ L2600:
 
         /* This is where we get a new command from the user */
         char* input;
+        char inputbuf[LINESIZE];
+
         for (;;) {
             input = get_input();
             if (input == NULL)
@@ -1040,8 +1042,12 @@ L2600:
             if (strcmp(input, "") != 0)
                 break;
         }
+
+        strncpy(inputbuf, input, LINESIZE - 1);
+        linenoiseFree(input);
+
         long tokens[4];
-        tokenize(input, tokens);
+        tokenize(inputbuf, tokens);
         command.wd1 = tokens[0];
         command.wd1x = tokens[1];
         command.wd2 = tokens[2];
@@ -1118,7 +1124,7 @@ Lookup:
         defn = get_vocab_id(word1);
         if (defn == -1) {
             /* Gee, I don't understand. */
-            if (fallback_handler(input))
+            if (fallback_handler(inputbuf))
                 continue;
             rspeak(DONT_KNOW, command.wd1, command.wd1x);
             goto L2600;

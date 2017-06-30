@@ -217,14 +217,14 @@ void vspeak(const char* msg, va_list ap)
                 }
             }
 
-	    /* Version specifier */
+            /* Version specifier */
             if (msg[i] == 'V') {
-		strcpy(renderp, VERSION);
+                strcpy(renderp, VERSION);
                 size_t len = strlen(VERSION);
                 renderp += len;
                 size -= len;
-	    }
-	    
+            }
+
             // All-lowercase specifier.
             if (msg[i] == 'L' || msg[i] == 'C') {
                 packed_to_token(arg, renderp); /* unpack directly to destination */
@@ -345,8 +345,10 @@ char* get_input()
                 printf("%s", input_prompt);
             // LCOV_EXCL_STOP
             ssize_t numread = getline(&input, &n, stdin);
-            if (numread == -1) // Got EOF; return with it.
+            if (numread == -1) { // Got EOF; return with it.
+                free(input);
                 return (NULL);
+            }
         }
 
         if (input == NULL) // Got EOF; return with it.
