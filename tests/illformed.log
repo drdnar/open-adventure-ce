@@ -15,8 +15,11 @@ suspend food
 resume food
 out
 stream
+extinguish stream
+light stream
 lock
 take water
+blast
 building
 cave
 enter stream
@@ -40,6 +43,7 @@ find bar
 carry
 blast
 take bottle
+find bottle
 drink water
 fill bottle
 throw axe

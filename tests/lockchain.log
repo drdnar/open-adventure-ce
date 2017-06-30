@@ -305,3 +305,6 @@ lock chain
 unlock chain
 take bear
 inven
+take chain
+fork
+lock chain

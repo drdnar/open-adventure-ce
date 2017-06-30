@@ -1727,8 +1727,24 @@ Glistening pearl
 
 You are being followed by a very large, tame bear.
 
+> take chain
 
-You scored 225 out of a possible 430, using 300 turns.
+OK
+
+> fork
+
+You are being followed by a very large, tame bear.
+
+The path forks here.  The left fork leads northeast.  A dull rumbling
+seems to get louder in that direction.  The right fork leads southeast
+down a gentle slope.  The main corridor enters from the west.
+
+> lock chain
+
+There is nothing here to which the chain can be locked.
+
+
+You scored 225 out of a possible 430, using 303 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 
