@@ -266,9 +266,9 @@ motions: !!omap
     words: !!null
 - MOT_69:
     words: ['cross']
-- FORWARD0:
+- BEDQUILT:
     words: ['bedqu']
-- FORWARD1:
+- PLOVER:
     words: ['plove']
 - FORWARD2:
     words: ['orien']
@@ -2676,6 +2676,7 @@ arbitrary_messages:  !!omap
 - TROLL_SCAMPERS: 'The bear lumbers toward the troll, who lets out a startled shriek and\nscurries away.  The bear soon gives up the pursuit and wanders back.'
 - AXE_LOST: 'The axe misses and lands near the bear where you can''t get at it.'
 - BEAR_HANDS: 'With what?  Your bare hands?  Against *HIS* bear hands??'
+# The following three messages must be contiguous
 - BEAR_CONFUSED: 'The bear is confused; he only wants to be your friend.'
 - ALREADY_DEAD: 'For crying out loud, the poor thing is already dead!'
 - BEAR_TAMED: 'The bear eagerly wolfs down your food, after which he seems to calm\ndown considerably and even becomes rather friendly.'
@@ -2709,6 +2710,7 @@ arbitrary_messages:  !!omap
 - OGRE_DODGE: 'The ogre, who despite his bulk is quite agile, easily dodges your\nattack.  He seems almost amused by your puny effort.'
 - OGRE_PANIC1: 'The ogre, distracted by your rush, is struck by the knife.  With a\nblood-curdling yell he turns and bounds after the dwarves, who flee\nin panic.  You are left alone in the room.'
 - OGRE_PANIC2: 'The ogre, distracted by your rush, is struck by the knife.  With a\nblood-curdling yell he turns and bounds after the dwarf, who flees\nin panic.  You are left alone in the room.'
+# Following three messages must be contiguous
 - FREE_FLY: 'The bird flies about agitatedly for a moment.'
 - CAGE_FLY: 'The bird flies agitatedly about the cage.'
 - NECKLACE_FLY: 'The bird flies about agitatedly for a moment, then disappears through\nthe crack.  It reappears shortly, carrying in its beak a jade\nnecklace, which it drops at your feet.'

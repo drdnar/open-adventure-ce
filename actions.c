@@ -92,10 +92,10 @@ static int attack(struct command_t *command)
             }
         }
         spk = (dwarves > 1) ? OGRE_PANIC1 : OGRE_PANIC2;
-    } else if (obj == BEAR)
+    } else if (obj == BEAR) {
         /* FIXME: Arithmetic on message numbers */
         spk = BEAR_HANDS + (game.prop[BEAR] + 1) / 2;
-    else if (obj == DRAGON && game.prop[DRAGON] == 0) {
+    } else if (obj == DRAGON && game.prop[DRAGON] == 0) {
         /*  Fun stuff for dragon.  If he insists on attacking it, win!
          *  Set game.prop to dead, move dragon to central loc (still
          *  fixed), move rug there (not fixed), and move him there,
@@ -966,8 +966,8 @@ static int say(struct command_t *command)
     char word1[6];
     packed_to_token(command->wd1, word1);
     int wd = (int) get_vocab_id(word1);
-    /* FIXME: Magic numbers */
-    if (wd == 62 || wd == 65 || wd == 71 || wd == 2025 || wd == 2034) {
+    /* FIXME: issue in lexical analyzer, last two magic numbers can't change */
+    if (wd == XYZZY || wd == PLUGH || wd == PLOVER || wd == 2025 || wd == 2034) {
         /* FIXME: scribbles on the interpreter's command block */
         wordclear(&command->wd2);
         return GO_LOOKUP;
