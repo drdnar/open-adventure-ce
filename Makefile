@@ -46,7 +46,7 @@ SOURCES=$(OBJS:.o=.c) advent.h adventure.yaml Makefile control linenoise/linenoi
 advent:	$(OBJS) linenoise.o dungeon.o
 	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) dungeon.o linenoise.o $(LDFLAGS) $(LIBS)
 
-main.o:	 	advent.h dungeon.h
+main.o:	 	linenoise-gitmodule advent.h dungeon.h
 
 init.o:	 	advent.h dungeon.h
 
@@ -56,7 +56,7 @@ score.o:	advent.h dungeon.h
 
 misc.o:		advent.h dungeon.h
 
-cheat.o:	advent.h dungeon.h
+cheat.o:	linenoise-gitmodule advent.h dungeon.h
 
 saveresume.o:	advent.h dungeon.h
 
@@ -66,10 +66,13 @@ dungeon.o:	dungeon.c dungeon.h
 dungeon.c dungeon.h: make_dungeon.py adventure.yaml
 	python3 make_dungeon.py
 
-linenoise.o:	linenoise/linenoise.h
+linenoise-gitmodule: 
+	test -s linenoise/linenoise.h || { echo "\nlinenoise not present. Try: \n\n\tgit submodule update --recursive --remote --init\n"; exit 1; }
+
+linenoise.o:	linenoise-gitmodule linenoise/linenoise.h
 	$(CC) -c linenoise/linenoise.c
 
-linenoise-dbg:	linenoise/linenoise.h
+linenoise-dbg:	linenoise-gitmodule linenoise/linenoise.h
 	$(CC) $(CCFLAGS) -c linenoise/linenoise.c
 
 clean:
