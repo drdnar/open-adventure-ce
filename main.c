@@ -995,7 +995,7 @@ static bool do_command()
             rspeak(TAME_BEAR);
         speak(msg);
         if (FORCED(game.loc)) {
-            if (playermove(MOT_1))
+            if (playermove(HERE))
                 return true;
             else
                 continue;	/* back to top of main interpreter loop */
