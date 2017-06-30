@@ -1181,7 +1181,6 @@ Laction:
         default:
             BUG(ACTION_RETURNED_PHASE_CODE_BEYOND_END_OF_SWITCH); // LCOV_EXCL_LINE
         }
-        linenoiseFree(input);
     }
 }
 

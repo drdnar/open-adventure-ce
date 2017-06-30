@@ -351,9 +351,10 @@ char* get_input()
 
         if (input == NULL) // Got EOF; return with it.
             return (input);
-        else if (input[0] == '#') // Ignore comments.
+        else if (input[0] == '#') { // Ignore comments.
+            linenoiseFree(input);
             continue;
-        else // We have a 'normal' line; leave the loop.
+        } else // We have a 'normal' line; leave the loop.
             break;
     }
 
@@ -389,6 +390,8 @@ bool silent_yes()
         char* firstword = (char*) xmalloc(strlen(reply) + 1);
         sscanf(reply, "%s", firstword);
 
+        linenoiseFree(reply);
+
         for (int i = 0; i < (int)strlen(firstword); ++i)
             firstword[i] = tolower(firstword[i]);
 
@@ -408,7 +411,6 @@ bool silent_yes()
         } else
             rspeak(PLEASE_ANSWER);
     }
-    linenoiseFree(reply);
     return (outcome);
 }
 
@@ -435,6 +437,8 @@ bool yes(const char* question, const char* yes_response, const char* no_response
         char* firstword = (char*) xmalloc(strlen(reply) + 1);
         sscanf(reply, "%s", firstword);
 
+        linenoiseFree(reply);
+
         for (int i = 0; i < (int)strlen(firstword); ++i)
             firstword[i] = tolower(firstword[i]);
 
@@ -455,8 +459,9 @@ bool yes(const char* question, const char* yes_response, const char* no_response
             break;
         } else
             rspeak(PLEASE_ANSWER);
+
     }
-    linenoiseFree(reply);
+
     return (outcome);
 }
 
