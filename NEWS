@@ -1,6 +1,6 @@
 = Open Adventure project news =
 
-1.1: 2017-08-29::
+1.1: 2017-06-29::
   There is a 'version' command.
   Include tests directory in generated tarball.
   Support command-line editing with arrow keys and Emacs keystrokes.
