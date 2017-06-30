@@ -5,11 +5,9 @@
 
 #include "dungeon.h"
 
-#define LINESIZE       100
 #define NDWARVES       6          // number of dwarves
 #define PIRATE         NDWARVES   // must be NDWARVES-1 when zero-origin
 #define DALTLC         LOC_NUGGET // alternate dwarf location
-#define MAXPARMS       25         // Max parameters for speak()
 #define INVLIMIT       7          // inverntory limit (# of objects)
 #define INTRANSITIVE   -1         // illegal object number
 #define SPECIALBASE    300        // base number of special rooms
