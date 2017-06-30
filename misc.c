@@ -243,6 +243,11 @@ void vspeak(const char* msg, va_list ap)
     }
     *renderp = 0;
 
+    // Deal with messages that are in YAML block format and therefore
+    // have their own trailing \n
+    if (renderp > rendered && renderp[-1] == '\n')
+	*--renderp = '\0';
+    
     // Print the message.
     printf("%s\n", rendered);
 
