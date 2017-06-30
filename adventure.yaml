@@ -139,7 +139,7 @@ motions: !!omap
     words: ['downs']
 - MOT_6:
     words: ['fores']
-- MOT_7:
+- FORWARD:
     words: ['forwa', 'conti', 'onwar']
 - BACK:
     words: ['back', 'retur', 'retre']
@@ -147,7 +147,7 @@ motions: !!omap
     words: ['valle']
 - MOT_10:
     words: ['stair']
-- MOT_11:
+- OUTSIDE:
     words: ['out', 'outsi', 'exit', 'leave']
 - MOT_12:
     words: ['build', 'house']
@@ -159,11 +159,11 @@ motions: !!omap
     words: ['fork']
 - MOT_16:
     words: ['bed']
-- MOT_17:
+- CRAWL:
     words: ['crawl']
 - MOT_18:
     words: ['cobbl']
-- MOT_19:
+- INSIDE:
     words: ['inwar', 'insid', 'in']
 - MOT_20:
     words: ['surfa']
@@ -183,9 +183,9 @@ motions: !!omap
     words: ['giant']
 - MOT_28:
     words: ['view']
-- MOT_29:
+- UP:
     words: ['upwar', 'up', 'u', 'above', 'ascen']
-- MOT_30:
+- DOWN:
     words: ['d', 'downw', 'down', 'desce']
 - MOT_31:
     words: ['pit']
@@ -197,9 +197,9 @@ motions: !!omap
     words: ['steps']
 - MOT_35:
     words: ['dome']
-- MOT_36:
+- LEFT:
     words: ['left']
-- MOT_37:
+- RIGHT:
     words: ['right']
 - MOT_38:
     words: ['hall']
@@ -211,21 +211,21 @@ motions: !!omap
     words: ['over']
 - MOT_42:
     words: ['acros']
-- MOT_43:
+- EAST:
     words: ['east', 'e']
-- MOT_44:
+- WEST:
     words: ['west', 'w']
 - MOT_45:
     words: ['north', 'n']
 - MOT_46:
     words: ['south', 's']
-- MOT_47:
+- NE:
     words: ['ne']
-- MOT_48:
+- SE:
     words: ['se']
-- MOT_49:
+- SW:
     words: ['sw']
-- MOT_50:
+- NW:
     words: ['nw']
 - MOT_51:
     words: ['debri']
@@ -249,13 +249,13 @@ motions: !!omap
     words: ['slit']
 - MOT_61:
     words: ['slab', 'slabr']
-- MOT_62:
+- XYZZY:
     words: ['xyzzy']
 - DPRSSN:
     words: ['depre']
 - ENTRNC:
     words: ['entra']
-- MOT_65:
+- PLUGH:
     words: ['plugh']
 - MOT_66:
     words: ['secre']
@@ -265,19 +265,19 @@ motions: !!omap
     words: !!null
 - MOT_69:
     words: ['cross']
-- MOT_70:
+- FORWARD0:
     words: ['bedqu']
-- MOT_71:
+- FORWARD1:
     words: ['plove']
-- MOT_72:
+- FORWARD2:
     words: ['orien']
-- MOT_73:
+- FORWARD3:
     words: ['caver']
-- MOT_74:
+- FORWARD4:
     words: ['shell']
-- MOT_75:
+- FORWARD5:
     words: ['reser']
-- MOT_76:
+- FORWARD6:
     words: ['main', 'offic']
 
 actions: !!omap

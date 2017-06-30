@@ -602,19 +602,19 @@ static bool playermove(token_t verb, int motion)
             /*  Couldn't find an entry matching the motion word passed
              *  in.  Various messages depending on word given. */
             int spk = CANT_APPLY;
-            if (motion >= MOT_43 && motion <= MOT_50)
+            if (motion >= EAST && motion <= NW)
                 spk = BAD_DIRECTION;
-            if (motion == MOT_29 || motion == MOT_30)
+            if (motion == UP || motion == DOWN)
                 spk = BAD_DIRECTION;
-            if (motion == MOT_7 || motion == MOT_36 || motion == MOT_37)
+            if (motion == FORWARD || motion == LEFT || motion == RIGHT)
                 spk = UNSURE_FACING;
-            if (motion == MOT_11 || motion == MOT_19)
+            if (motion == OUTSIDE || motion == INSIDE)
                 spk = NO_INOUT_HERE;
             if (verb == FIND || verb == INVENTORY)
                 spk = NEARBY;
-            if (motion == MOT_62 || motion == MOT_65)
+            if (motion == XYZZY || motion == PLUGH)
                 spk = NOTHING_HAPPENS;
-            if (motion == MOT_17)
+            if (motion == CRAWL)
                 spk = WHICH_WAY;
             rspeak(spk);
             return true;
