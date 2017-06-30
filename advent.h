@@ -18,9 +18,41 @@
 #define PANICTIME      15         // time left after closing
 #define BATTERYLIFE    2500       // turn limit increment from batteries
 #define WORD_NOT_FOUND -1         // "Word not found" flag value for the vocab hash functions.
+#define CARRIED        -1         // Player is toting it
+#define READ_MODE      "rb"       // b is not needed for POSIX but harmless
+#define WRITE_MODE     "wb"       // b is not needed for POSIX but harmless
 
-typedef long token_t;  // word token - someday this will be char[TOKLEN+1]
-typedef long vocab_t;  // index into a vocabulary array */
+/*
+ *  MOD(N,M)    = Arithmetic modulus
+ *  AT(OBJ)     = true if on either side of two-placed object
+ *  CNDBIT(L,N) = true if COND(L) has bit n set (bit 0 is units bit)
+ *  DARK(LOC)   = true if location "LOC" is dark
+ *  FORCED(LOC) = true if LOC moves without asking for input (COND=2)
+ *  FOREST(LOC) = true if LOC is part of the forest
+ *  GSTONE(OBJ) = true if OBJ is a gemstone
+ *  HERE(OBJ)   = true if the OBJ is at "LOC" (or is being carried)
+ *  LIQUID()    = object number of liquid in bottle
+ *  LIQLOC(LOC) = object number of liquid (if any) at LOC
+ *  PCT(N)      = true N% of the time (N integer from 0 to 100)
+ *  TOTING(OBJ) = true if the OBJ is being carried */
+#define DESTROY(N)   move(N, LOC_NOWHERE)
+#define MOD(N,M)     ((N) % (M))
+#define TOTING(OBJ)  (game.place[OBJ] == CARRIED)
+#define AT(OBJ)      (game.place[OBJ] == game.loc || game.fixed[OBJ] == game.loc)
+#define HERE(OBJ)    (AT(OBJ) || TOTING(OBJ))
+#define LIQ2(PBOTL)  ((1-(PBOTL))*WATER+((PBOTL)/2)*(WATER+OIL))
+#define LIQUID()     (LIQ2(game.prop[BOTTLE]<0 ? -1-game.prop[BOTTLE] : game.prop[BOTTLE]))
+#define LIQLOC(LOC)  (LIQ2((MOD(conditions[LOC]/2*2,8)-5)*MOD(conditions[LOC]/4,2)+1))
+#define CNDBIT(L,N)  (tstbit(conditions[L],N))
+#define FORCED(LOC)  CNDBIT(LOC, COND_FORCED)
+#define DARK(DUMMY)  ((!tstbit(conditions[game.loc],COND_LIT)) && (game.prop[LAMP] == LAMP_DARK || !HERE(LAMP)))
+#define PCT(N)       (randrange(100) < (N))
+#define GSTONE(OBJ)  ((OBJ) == EMERALD || (OBJ) == RUBY || (OBJ) == AMBER || (OBJ) == SAPPH)
+#define FOREST(LOC)  CNDBIT(LOC, COND_FOREST)
+#define SPECIAL(LOC) ((LOC) > SPECIALBASE)
+#define OUTSID(LOC)  (CNDBIT(LOC, COND_ABOVE) || FOREST(LOC))
+#define INDEEP(LOC)  ((LOC) >= LOC_MISTHALL && !OUTSID(LOC))
+#define BUG(x)       bug(x, #x)
 
 enum bugtype {
    SPECIAL_TRAVEL_500_GT_L_GT_300_EXCEEDS_GOTO_LIST,
@@ -34,9 +66,34 @@ enum bugtype {
    ACTION_RETURNED_PHASE_CODE_BEYOND_END_OF_SWITCH,
 };
 
-/* Alas, declaring this static confuses the coverage analyzer */
-void bug(enum bugtype, const char *) __attribute__((__noreturn__));
-#define BUG(x) bug(x, #x)
+enum speaktype {touch, look, hear, study, change};
+
+enum termination {endgame, quitgame, scoregame};
+
+enum speechpart {unknown, intransitive, transitive};
+
+/* Phase codes for action returns.
+ * These were at one time FORTRAN line numbers.
+ * The values don't matter, but perturb their order at your peril.
+ */
+enum phase_codes {
+  GO_TERMINATE,
+  GO_MOVE,
+  GO_TOP,
+  GO_CLEAROBJ,
+  GO_CHECKHINT,
+  GO_CHECKFOO,
+  GO_DIRECTION,
+  GO_LOOKUP,
+  GO_WORD2,
+  GO_SPECIALS,
+  GO_UNKNOWN,
+  GO_ACTION,
+  GO_DWARFWAKE,
+};
+
+typedef long token_t;  // word token - someday this will be char[TOKLEN+1]
+typedef long vocab_t;  // index into a vocabulary array */
 
 struct game_t {
     unsigned long lcg_a, lcg_c, lcg_m, lcg_x;
@@ -91,16 +148,18 @@ struct game_t {
     long prop[NOBJECTS + 1];
 };
 
-extern struct game_t game;
+struct command_t {
+    enum speechpart part;
+    vocab_t verb;
+    vocab_t obj;
+    token_t wd1, wd1x;
+    token_t wd2, wd2x;
+};
 
+extern struct game_t game;
 extern FILE *logfp;
 extern bool oldstyle, editline, prompt;
 
-enum speaktype {touch, look, hear, study, change};
-
-/* b is not needed for POSIX but harmless */
-#define READ_MODE "rb"
-#define WRITE_MODE "wb"
 extern char* xstrdup(const char* s);
 extern void* xmalloc(size_t size);
 extern void packed_to_token(long, char token[]);
@@ -133,9 +192,6 @@ extern long setbit(long);
 extern bool tstbit(long, int);
 extern void make_zzword(char*);
 extern void datime(long*, long*);
-
-enum termination {endgame, quitgame, scoregame};
-
 extern void set_seed(long);
 extern unsigned long get_next_lcg_value(void);
 extern long randrange(long);
@@ -145,75 +201,10 @@ extern int savefile(FILE *, long);
 extern int suspend(void);
 extern int resume(void);
 extern int restore(FILE *);
+extern void initialise(void);
+extern int action(struct command_t *command);
 
-/*
- *  MOD(N,M)    = Arithmetic modulus
- *  AT(OBJ)     = true if on either side of two-placed object
- *  CNDBIT(L,N) = true if COND(L) has bit n set (bit 0 is units bit)
- *  DARK(LOC)   = true if location "LOC" is dark
- *  FORCED(LOC) = true if LOC moves without asking for input (COND=2)
- *  FOREST(LOC) = true if LOC is part of the forest
- *  GSTONE(OBJ) = true if OBJ is a gemstone
- *  HERE(OBJ)   = true if the OBJ is at "LOC" (or is being carried)
- *  LIQUID()    = object number of liquid in bottle
- *  LIQLOC(LOC) = object number of liquid (if any) at LOC
- *  PCT(N)      = true N% of the time (N integer from 0 to 100)
- *  TOTING(OBJ) = true if the OBJ is being carried */
-
-#define DESTROY(N)   move(N, LOC_NOWHERE)
-#define MOD(N,M)     ((N) % (M))
-#define TOTING(OBJ)  (game.place[OBJ] == CARRIED)
-#define AT(OBJ)      (game.place[OBJ] == game.loc || game.fixed[OBJ] == game.loc)
-#define HERE(OBJ)    (AT(OBJ) || TOTING(OBJ))
-#define LIQ2(PBOTL)  ((1-(PBOTL))*WATER+((PBOTL)/2)*(WATER+OIL))
-#define LIQUID()     (LIQ2(game.prop[BOTTLE]<0 ? -1-game.prop[BOTTLE] : game.prop[BOTTLE]))
-#define LIQLOC(LOC)  (LIQ2((MOD(conditions[LOC]/2*2,8)-5)*MOD(conditions[LOC]/4,2)+1))
-#define CNDBIT(L,N)  (tstbit(conditions[L],N))
-#define FORCED(LOC)  CNDBIT(LOC, COND_FORCED)
-#define DARK(DUMMY)  ((!tstbit(conditions[game.loc],COND_LIT)) && (game.prop[LAMP] == LAMP_DARK || !HERE(LAMP)))
-#define PCT(N)       (randrange(100) < (N))
-#define GSTONE(OBJ)  ((OBJ) == EMERALD || (OBJ) == RUBY || (OBJ) == AMBER || (OBJ) == SAPPH)
-#define FOREST(LOC)  CNDBIT(LOC, COND_FOREST)
-#define SPECIAL(LOC) ((LOC) > SPECIALBASE)
-#define OUTSID(LOC)  (CNDBIT(LOC, COND_ABOVE) || FOREST(LOC))
-
-#define INDEEP(LOC)  ((LOC) >= LOC_MISTHALL && !OUTSID(LOC))
-
-enum speechpart {unknown, intransitive, transitive};
-
-struct command_t {
-    enum speechpart part;
-    vocab_t verb;
-    vocab_t obj;
-    token_t wd1, wd1x;
-    token_t wd2, wd2x;
-};
-
-void initialise(void);
-int action(struct command_t *command);
-
-/* Phase codes for action returns.
- * These were at one time FORTRAN line numbers.
- * The values don't matter, but perturb their order at your peril.
- */
-#define GO_TERMINATE 2
-#define GO_MOVE      8
-#define GO_TOP       2000
-#define GO_CLEAROBJ  2012
-#define GO_CHECKHINT 2600
-#define GO_CHECKFOO  2607
-#define GO_DIRECTION 2620
-#define GO_LOOKUP    2630
-#define GO_WORD2     2800
-#define GO_SPECIALS  1900
-#define GO_UNKNOWN   8000
-#define GO_ACTION    40000
-#define GO_DWARFWAKE 19000
-
-/* Special object statuses in game.place - can also be a location number (> 0) */
-#define CARRIED                -1        /* Player is toting it */
-
-/* hack to ignore GCC Unused Result */
-#define IGNORE(r) do{if (r){}}while(0)
+/* Alas, declaring this static confuses the coverage analyzer */
+void bug(enum bugtype, const char *) __attribute__((__noreturn__));
 
 /* end */

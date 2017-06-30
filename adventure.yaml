@@ -469,7 +469,7 @@ hints:
       turns: 4
       penalty: 2
       question: 'Are you trying to get into the cave?'
-      hint: |
+      hint: |-
           The grate is very solid and has a hardened steel lock.  You cannot
           enter without a key, and there are no keys nearby.  I would recommend
           looking elsewhere for the keys.
@@ -479,7 +479,7 @@ hints:
       turns: 5
       penalty: 2
       question: 'Are you trying to catch the bird?'
-      hint: |
+      hint: |-
           Something about you seems to be frightening the bird.  Perhaps you
           might figure out what it is.
   - hint: &snake
@@ -488,7 +488,7 @@ hints:
       turns: 8
       penalty: 2
       question: 'Are you trying to somehow deal with the snake?'
-      hint: |
+      hint: |-
           You can't kill the snake, or drive it away, or avoid it, or anything
           like that.  There is a way to get by, but you don't have the necessary
           resources right now.
@@ -505,7 +505,7 @@ hints:
       turns: 25
       penalty: 5
       question: 'Are you trying to explore beyond the plover room?'
-      hint: |
+      hint: |-
           There is a way to explore that region without having to worry about
           falling into a pit.  None of the objects available is immediately
           useful in discovering the secret.
@@ -529,7 +529,7 @@ hints:
       turns: 25
       penalty: 2
       question: 'Would you like to be shown out of the forest?'
-      hint: |
+      hint: |-
           Go east ten times.  If that doesn't get you out, then go south, then
           west twice, then south.
   - hint: &ogre
@@ -538,7 +538,7 @@ hints:
       turns: 10
       penalty: 4
       question: 'Do you need help dealing with the ogre?'
-      hint: |
+      hint: |-
           There is nothing the presence of which will prevent you from defeating
           him; thus it can't hurt to fetch everything you possibly can.
   - hint: &jade
@@ -547,7 +547,7 @@ hints:
       turns: 1
       penalty: 4
       question: 'You''re missing only one other treasure.  Do you need help finding it?'
-      hint: |
+      hint: |-
         Once you''ve found all the other treasures, it is no longer possible to
         locate the one you''re now missing.'
 locations: !!omap
@@ -560,7 +560,7 @@ locations: !!omap
     ]
 - LOC_START:
     description:
-      long: |
+      long: |-
           You are standing at the end of a road before a small brick building.
           Around you is a forest.  A small stream flows out of the building and
           down a gully.
@@ -577,7 +577,7 @@ locations: !!omap
     ]
 - LOC_HILL:
     description:
-      long: |
+      long: |-
           You have walked up a hill, still in the forest.  The road slopes back
           down the other side of the hill.  There is a building in the distance.
       short: 'You''re at hill in road.'
@@ -603,7 +603,7 @@ locations: !!omap
     ]
 - LOC_VALLEY:
     description:
-      long: |
+      long: |-
           You are in a valley in the forest beside a stream tumbling along a
           rocky bed.
       short: 'You''re in valley.'
@@ -631,7 +631,7 @@ locations: !!omap
     ]
 - LOC_CLIFF:
     description:
-      long: |
+      long: |-
           The forest thins out here to reveal a steep cliff.  There is no way
           down, but a small ledge can be seen to the west across the chasm.
       short: 'You''re at cliff.'
@@ -644,7 +644,7 @@ locations: !!omap
     ]
 - LOC_SLIT:
     description:
-      long: |
+      long: |-
           At your feet all the water of the stream splashes into a 2-inch slit
           in the rock.  Downstream the streambed is bare rock.
       short: 'You''re at slit in streambed.'
@@ -661,7 +661,7 @@ locations: !!omap
     ]
 - LOC_GRATE:
     description:
-      long: |
+      long: |-
           You are in a 20-foot depression floored with bare dirt.  Set into the
           dirt is a strong steel grate mounted in concrete.  A dry streambed
           leads into the depression.
@@ -681,7 +681,7 @@ locations: !!omap
     ]
 - LOC_BELOWGRATE:
     description:
-      long: |
+      long: |-
           You are in a small chamber beneath a 3x3 steel grate to the surface.
           A low crawl over cobbles leads inward to the west.
       short: 'You''re below the grate.'
@@ -695,7 +695,7 @@ locations: !!omap
     ]
 - LOC_COBBLE:
     description:
-      long: |
+      long: |-
           You are crawling over cobbles in a low passage.  There is a dim light
           at the east end of the passage.
       short: 'You''re in cobble crawl.'
@@ -707,7 +707,7 @@ locations: !!omap
     ]
 - LOC_DEBRIS:
     description:
-      long: |
+      long: |-
           You are in a debris room filled with stuff washed in from the surface.
           A low wide passage with cobbles becomes plugged with mud and debris
           here, but an awkward canyon leads upward and west.  In the mud someone
@@ -737,7 +737,7 @@ locations: !!omap
     ]
 - LOC_BIRD:
     description:
-      long: |
+      long: |-
           You are in a splendid chamber thirty feet high.  The walls are frozen
           rivers of orange stone.  An awkward canyon and a good passage exit
           from east and west sides of the chamber.
@@ -753,7 +753,7 @@ locations: !!omap
     ]
 - LOC_PITTOP:
     description:
-      long: |
+      long: |-
           At your feet is a small pit breathing traces of white mist.  An east
           passage ends here except for a small crack leading on.
       short: 'You''re at top of small pit.'
@@ -769,7 +769,7 @@ locations: !!omap
     ]
 - LOC_MISTHALL:
     description:
-      long: |
+      long: |-
           You are at one end of a vast hall stretching forward out of sight to
           the west.  There are openings to either side.  Nearby, a wide stone
           staircase leads downward.  The hall is filled with wisps of white mist
@@ -790,7 +790,7 @@ locations: !!omap
     ]
 - LOC_CRACK:
     description:
-      long: |
+      long: |-
           The crack is far too small for you to follow.  At its widest it is
           barely wide enough to admit your foot.'
       short: !!null
@@ -800,7 +800,7 @@ locations: !!omap
     ]
 - LOC_EASTBANK:
     description:
-      long: |
+      long: |-
           You are on the east bank of a fissure slicing clear across the hall.
           The mist is quite thick here, and the fissure is too wide to jump.
       short: 'You''re on east bank of fissure.'
@@ -818,7 +818,7 @@ locations: !!omap
     ]
 - LOC_NUGGET:
     description:
-      long: |
+      long: |-
           This is a low room with a crude note on the wall.  The note says,
           "You won't get it up the steps".
       short: 'You''re in nugget-of-gold room.'
@@ -828,7 +828,7 @@ locations: !!omap
     ]
 - LOC_KINGHALL:
     description:
-      long: |
+      long: |-
           You are in the Hall of the Mountain King, with passages off in all
           directions.
       short: 'You''re in Hall of Mt King.'
@@ -873,7 +873,7 @@ locations: !!omap
     ]
 - LOC_WESTEND:
     description:
-      long: |
+      long: |-
           You are at the west end of the Twopit Room.  There is a large hole in
           the wall above the pit at this end of the room.
       short: 'You''re at west end of Twopit Room.'
@@ -886,7 +886,7 @@ locations: !!omap
     ]
 - LOC_EASTPIT:
     description:
-      long: |
+      long: |-
           You are at the bottom of the eastern pit in the Twopit Room.  There is
           a small pool of oil in one corner of the pit.
       short: 'You''re in east pit.'
@@ -896,7 +896,7 @@ locations: !!omap
     ]
 - LOC_WESTPIT:
     description:
-      long: |
+      long: |-
           You are at the bottom of the western pit in the Twopit Room.  There is
           a large hole in the wall about 25 feet above you.
       short: 'You''re in west pit.'
@@ -933,7 +933,7 @@ locations: !!omap
     ]
 - LOC_FLOORHOLE:
     description:
-      long: |
+      long: |-
           You are in a low n/s passage at a hole in the floor.  The hole goes
           down to an e/w passage.
       short: 'You''re in n/s passage above e/w passage.'
@@ -953,7 +953,7 @@ locations: !!omap
     ]
 - LOC_WESTSIDE:
     description:
-      long: |
+      long: |-
           You are in the west side chamber of the Hall of the Mountain King.
           A passage continues west and up here.
       short: 'You''re in the west side chamber.'
@@ -981,7 +981,7 @@ locations: !!omap
     ]
 - LOC_Y2:
     description:
-      long: |
+      long: |-
           You are in a large room, with a passage to the south, a passage to the
           west, and a wall of broken rock to the east.  There is a large "Y2" on
           a rock in the room's center.
@@ -1006,7 +1006,7 @@ locations: !!omap
     ]
 - LOC_WINDOW1:
     description:
-      long: |
+      long: |-
           You're at a low window overlooking a huge pit, which extends up out of
           sight.  A floor is indistinctly visible over 50 feet below.  Traces of
           white mist cover the floor of the pit, becoming thicker to the right.
@@ -1022,7 +1022,7 @@ locations: !!omap
     ]
 - LOC_BROKEN:
     description:
-      long: |
+      long: |-
           You are in a dirty broken passage.  To the east is a crawl.  To the
           west is a large passage.  Above you is a hole to another passage.
       short: 'You''re in dirty passage.'
@@ -1035,7 +1035,7 @@ locations: !!omap
     ]
 - LOC_SMALLPITBRINK:
     description:
-      long: |
+      long: |-
           You are on the brink of a small clean climbable pit.  A crawl leads
           west.
       short: 'You''re at brink of small pit.'
@@ -1046,7 +1046,7 @@ locations: !!omap
     ]
 - LOC_SMALLPIT:
     description:
-      long: |
+      long: |-
          You are in the bottom of a small pit with a little stream, which
          enters and exits through tiny slits.
       short: 'You''re at bottom of pit with stream.'
@@ -1058,7 +1058,7 @@ locations: !!omap
     ]
 - LOC_DUSTY:
     description:
-      long: |
+      long: |-
           You are in a large room full of dusty rocks.  There is a big hole in
           the floor.  There are cracks everywhere, and a passage leading east.
       short: 'You''re in dusty rock room.'
@@ -1070,7 +1070,7 @@ locations: !!omap
     ]
 - LOC_PARALLEL1:
     description:
-      long: |
+      long: |-
           You have crawled through a very low wide passage parallel to and north
           of the Hall of Mists.
       short: !!null
@@ -1080,7 +1080,7 @@ locations: !!omap
     ]
 - LOC_MISTWEST:
     description:
-      long: |
+      long: |-
           You are at the west end of the Hall of Mists.  A low wide crawl
           continues west and another goes north.  To the south is a little
           passage 6 feet off the floor.
@@ -1259,7 +1259,7 @@ locations: !!omap
     ]
 - LOC_PITBRINK:
     description:
-      long: |
+      long: |-
           You are on the brink of a thirty foot pit with a massive orange column
           down one wall.  You could climb down here but you could not get back
           up.  The maze continues at this level.
@@ -1282,7 +1282,7 @@ locations: !!omap
     ]
 - LOC_PARALLEL2:
     description:
-      long: |
+      long: |-
           You have crawled through a very low wide passage parallel to and north
           of the Hall of Mists.
       short: !!null
@@ -1292,7 +1292,7 @@ locations: !!omap
     ]
 - LOC_LONGEAST:
     description:
-      long: |
+      long: |-
           You are at the east end of a very long hall apparently without side
           chambers.  To the east a low wide crawl slants up.  To the north a
           round two foot hole slants down.
@@ -1305,7 +1305,7 @@ locations: !!omap
     ]
 - LOC_LONGWEST:
     description:
-      long: |
+      long: |-
           You are at the west end of a very long featureless hall.  The hall
           joins up with a narrow north/south passage.
       short: 'You''re at west end of long hall.'
@@ -1336,7 +1336,7 @@ locations: !!omap
     ]
 - LOC_COMPLEX:
     description:
-      long: |
+      long: |-
           You are at a complex junction.  A low hands and knees passage from the
           north joins a higher crawl from the east to make a walking passage
           going west.  There is also a large room above.  The air is damp here.
@@ -1352,7 +1352,7 @@ locations: !!omap
     ]
 - LOC_BEDQUILT:
     description:
-      long: |
+      long: |-
           You are in Bedquilt, a long east/west passage with holes everywhere.
           To explore at random select north, south, up, or down.
       short: 'You''re in Bedquilt.'
@@ -1373,7 +1373,7 @@ locations: !!omap
     ]
 - LOC_SWISSCHEESE:
     description:
-      long: |
+      long: |-
           You are in a room whose walls resemble swiss cheese.  Obvious passages
           go west, east, ne, and nw.  Part of the room is occupied by a large
           bedrock block.
@@ -1390,7 +1390,7 @@ locations: !!omap
     ]
 - LOC_EASTEND:
     description:
-      long: |
+      long: |-
           You are at the east end of the Twopit Room.  The floor here is
           littered with thin rock slabs, which make it easy to descend the pits.
           There is a path here bypassing the pits to connect passages from east
@@ -1405,7 +1405,7 @@ locations: !!omap
     ]
 - LOC_SLAB:
     description:
-      long: |
+      long: |-
           You are in a large low circular chamber whose floor is an immense slab
           fallen from the ceiling (Slab Room).  East and west there once were
           large passages, but they are now filled with boulders.  Low small
@@ -1443,7 +1443,7 @@ locations: !!omap
     ]
 - LOC_THREEJUNCTION:
     description:
-      long: |
+      long: |-
           You are in a secret canyon at a junction of three canyons, bearing
           north, south, and se.  The north one is as tall as the other two
           combined.
@@ -1475,7 +1475,7 @@ locations: !!omap
     ]
 - LOC_SECRET3:
     description:
-      long: |
+      long: |-
           You are in a secret canyon which here runs e/w.  It crosses over a
           very tight canyon 15 feet below.  If you go down you may not be able
           to get back up.
@@ -1506,7 +1506,7 @@ locations: !!omap
     ]
 - LOC_TALL:
     description:
-      long: |
+      long: |-
           You are in a tall e/w canyon.  A low tight crawl goes 3 feet north and
           seems to open up.
       short: !!null
@@ -1526,7 +1526,7 @@ locations: !!omap
     ]
 - LOC_SEWER:
     description:
-      long: |
+      long: |-
           The stream flows out through a pair of 1 foot diameter sewer pipes.
           It would be advisable to use the exit.
       short: !!null
@@ -1612,7 +1612,7 @@ locations: !!omap
     ]
 - LOC_NARROW:
     description:
-      long: |
+      long: |-
           You are in a long, narrow corridor stretching out of sight to the
           west.  At the eastern end is a hole through which you can see a
           profusion of leaves.
@@ -1641,7 +1641,7 @@ locations: !!omap
     ]
 - LOC_INCLINE:
     description:
-      long: |
+      long: |-
           You are at the top of a steep incline above a large room.  You could
           climb down here, but you would not be able to climb up.  There is a
           passage leading back to the north.
@@ -1653,7 +1653,7 @@ locations: !!omap
     ]
 - LOC_GIANTROOM:
     description:
-      long: |
+      long: |-
           You are in the Giant Room.  The ceiling here is too high up for your
           lamp to show it.  Cavernous passages lead east, north, and south.  On
           the west wall is scrawled the inscription, "FEE FIE FOE FOO" [sic].
@@ -1686,7 +1686,7 @@ locations: !!omap
     ]
 - LOC_WATERFALL:
     description:
-      long: |
+      long: |-
           You are in a magnificent cavern with a rushing stream, which cascades
           over a sparkling waterfall into a roaring whirlpool which disappears
           through a hole in the floor.  Passages exit to the south and west.
@@ -1700,7 +1700,7 @@ locations: !!omap
     ]
 - LOC_SOFTROOM:
     description:
-      long: |
+      long: |-
           You are in the Soft Room.  The walls are covered with heavy curtains,
           the floor with a thick pile carpet.  Moss covers the ceiling.
       short: 'You''re in Soft Room.'
@@ -1710,7 +1710,7 @@ locations: !!omap
     ]
 - LOC_ORIENTAL:
     description:
-      long: |
+      long: |-
           This is the Oriental Room.  Ancient oriental cave drawings cover the
           walls.  A gently sloping passage leads upward to the north, another
           passage leads se, and a hands and knees crawl leads west.
@@ -1723,7 +1723,7 @@ locations: !!omap
     ]
 - LOC_MISTY:
     description:
-      long: |
+      long: |-
           You are following a wide path around the outer edge of a large cavern.
           Far below, through a heavy white mist, strange splashing noises can be
           heard.  The mist rises up through a fissure in the ceiling.  The path
@@ -1737,7 +1737,7 @@ locations: !!omap
     ]
 - LOC_ALCOVE:
     description:
-      long: |
+      long: |-
           You are in an alcove.  A small nw path seems to widen after a short
           distance.  An extremely tight tunnel leads east.  It looks like a very
           tight squeeze.  An eerie light can be seen at the other end.
@@ -1751,7 +1751,7 @@ locations: !!omap
     ]
 - LOC_PLOVER:
     description:
-      long: |
+      long: |-
           You're in a small chamber lit by an eerie green light.  An extremely
           narrow tunnel exits to the west.  A dark corridor leads ne.
       short: 'You''re in Plover Room.'
@@ -1775,7 +1775,7 @@ locations: !!omap
     ]
 - LOC_ARCHED:
     description:
-      long: |
+      long: |-
           You are in an arched hall.  A coral passage once continued up and east
           from here, but is now blocked by debris.  The air smells of sea water.
       short: 'You''re in arched hall.'
@@ -1785,7 +1785,7 @@ locations: !!omap
     ]
 - LOC_SHELLROOM:
     description:
-      long: |
+      long: |-
           You're in a large room carved out of sedimentary rock.  The floor and
           walls are littered with bits of shells imbedded in the stone.  A
           shallow passage proceeds downward, and a somewhat steeper one leads
@@ -1821,7 +1821,7 @@ locations: !!omap
     ]
 - LOC_ANTEROOM:
     description:
-      long: |
+      long: |-
           You are in an anteroom leading to a large passage to the east.  Small
           passages go west and up.  The remnants of recent digging are evident.
           A sign in midair here says "Cave under construction beyond this point.
@@ -1863,7 +1863,7 @@ locations: !!omap
     ]
 - LOC_MIRRORCANYON:
     description:
-      long: |
+      long: |-
           You are in a north/south canyon about 25 feet across.  The floor is
           covered by white mist seeping in from the north.  The walls extend
           upward for well over 100 feet.  Suspended from some unseen point far
@@ -1881,7 +1881,7 @@ locations: !!omap
     ]
 - LOC_WINDOW2:
     description:
-      long: |
+      long: |-
           You're at a low window overlooking a huge pit, which extends up out of
           sight.  A floor is indistinctly visible over 50 feet below.  Traces of
           white mist cover the floor of the pit, becoming thicker to the left.
@@ -1897,7 +1897,7 @@ locations: !!omap
     ]
 - LOC_TOPSTALACTITE:
     description:
-      long: |
+      long: |-
           A large stalactite extends from the roof and almost reaches the floor
           below.  You could climb down it, and jump from it to the floor, but
           having done so you would be unable to reach it to climb back up.
@@ -1929,7 +1929,7 @@ locations: !!omap
     ]
 - LOC_RESERVOIR:
     description:
-      long: |
+      long: |-
           You are at the edge of a large underground reservoir.  An opaque cloud
           of white mist fills the room and rises rapidly upward.  The lake is
           fed by a stream, which tumbles out of a hole in the wall about 10 feet
@@ -1953,7 +1953,7 @@ locations: !!omap
     ]
 - LOC_NE:
     description:
-      long: |
+      long: |-
           You are at the northeast end of an immense room, even larger than the
           Giant Room.  It appears to be a repository for the "Adventure"
           program.  Massive torches far overhead bathe the room with smoky
@@ -1973,7 +1973,7 @@ locations: !!omap
     ]
 - LOC_SW:
     description:
-      long: |
+      long: |-
           You are at the southwest end of the repository.  To one side is a pit
           full of fierce green snakes.  On the other side is a row of small
           wicker cages, each of which contains a little sulking bird.  In one
@@ -1991,7 +1991,7 @@ locations: !!omap
     ]
 - LOC_SWCHASM:
     description:
-      long: |
+      long: |-
           You are on one side of a large, deep chasm.  A heavy white mist rising
           up from below obscures all view of the far side.  A sw path leads away
           from the chasm into a winding corridor.
@@ -2010,7 +2010,7 @@ locations: !!omap
     ]
 - LOC_WINDING:
     description:
-      long: |
+      long: |-
           You are in a long winding corridor sloping out of sight in both
           directions.
       short: 'You''re in sloping corridor.'
@@ -2048,7 +2048,7 @@ locations: !!omap
     ]
 - LOC_NECHASM:
     description:
-      long: |
+      long: |-
            You are on the far side of the chasm.  A ne path leads away from the
            chasm on this side.
       short: 'You''re on ne side of chasm.'
@@ -2064,7 +2064,7 @@ locations: !!omap
     ]
 - LOC_CORRIDOR:
     description:
-      long: |
+      long: |-
           You're in a long east/west corridor.  A faint rumbling noise can be
           heard in the distance.
       short: 'You''re in corridor.'
@@ -2078,7 +2078,7 @@ locations: !!omap
     ]
 - LOC_FORK:
     description:
-      long: |
+      long: |-
           The path forks here.  The left fork leads northeast.  A dull rumbling
           seems to get louder in that direction.  The right fork leads southeast
           down a gentle slope.  The main corridor enters from the west.
@@ -2094,7 +2094,7 @@ locations: !!omap
     ]
 - LOC_WARMWALLS:
     description:
-      long: |
+      long: |-
           The walls are quite warm here.  From the north can be heard a steady
           roar, so loud that the entire cave seems to be trembling.  Another
           passage leads south, and a low crawl goes east.
@@ -2108,7 +2108,7 @@ locations: !!omap
     ]
 - LOC_BREATHTAKING:
     description:
-      long: |
+      long: |-
           You are on the edge of a breath-taking view.  Far below you is an
           active volcano, from which great gouts of molten lava come surging
           out, cascading back down into the depths.  The glowing rock fills the
@@ -2141,7 +2141,7 @@ locations: !!omap
     ]
 - LOC_BOULDERS2:
     description:
-      long: |
+      long: |-
           You are in a small chamber filled with large boulders.  The walls are
           very warm, causing the air in the room to be almost stifling from the
           heat.  The only exit is a crawl heading west, through which is coming
@@ -2168,7 +2168,7 @@ locations: !!omap
     ]
 - LOC_BARRENFRONT:
     description:
-      long: |
+      long: |-
           You are standing at the entrance to a large, barren room.  A notice
           above the entrance reads:  "Caution!  Bear in room!"
       short: 'You''re in front of Barren Room.'
@@ -2182,7 +2182,7 @@ locations: !!omap
     ]
 - LOC_BARRENROOM:
     description:
-      long: |
+      long: |-
           You are inside a barren room.  The center of the room is completely
           empty except for some dust.  Marks in the dust lead away toward the
           far end of the room.  The only exit is the way you came in.
@@ -2652,7 +2652,7 @@ locations: !!omap
     ]
 - LOC_LEDGE:
     description:
-      long: |
+      long: |-
           You are on a small ledge on one face of a sheer cliff.  There are no
           paths away from the ledge.  Across the chasm is a small clearing
           surrounded by forest.
@@ -2663,7 +2663,7 @@ locations: !!omap
     ]
 - LOC_RESBOTTOM:
     description:
-      long: |
+      long: |-
           You are walking across the bottom of the reservoir.  Walls of water
           rear up on either side.  The roar of the water cascading past is
           nearly deafening, and the mist is so thick you can barely see.
@@ -2677,7 +2677,7 @@ locations: !!omap
     ]
 - LOC_RESNORTH:
     description:
-      long: |
+      long: |-
           You are at the northern edge of the reservoir.  A northwest passage
           leads sharply up from here.
       short: 'You''re north of reservoir.'
@@ -2708,7 +2708,7 @@ locations: !!omap
     ]
 - LOC_CLIFFBASE:
     description:
-      long: |
+      long: |-
           You are at the base of a nearly vertical cliff.  There are some
           slim footholds which would enable you to climb up, but it looks
           extremely dangerous.  Here at the base of the cliff lie the remains
@@ -2731,7 +2731,7 @@ locations: !!omap
     ]
 - LOC_FOOTSLIP:
     description:
-      long: |
+      long: |-
           Just as you reach the top, your foot slips on a loose rock and you
           tumble several hundred feet to join the other unlucky adventurers.
       short: !!null
@@ -2741,7 +2741,7 @@ locations: !!omap
     ]
 - LOC_CLIFFTOP:
     description:
-      long: |
+      long: |-
           Just as you reach the top, your foot slips on a loose rock and you
           make one last desperate grab.  Your luck holds, as does your grip.
           With an enormous heave, you lift yourself to the ledge above.
@@ -2752,7 +2752,7 @@ locations: !!omap
     ]
 - LOC_CLIFFLEDGE:
     description:
-      long: |
+      long: |-
           You are on a small ledge at the top of a nearly vertical cliff.
           There is a low crawl leading off to the northeast.
       short: 'You''re at top of cliff.'
@@ -2828,7 +2828,7 @@ locations: !!omap
 
 arbitrary_messages:  !!omap
 - NO_MESSAGE: !!null
-- CAVE_NEARBY: |
+- CAVE_NEARBY: |-
       Somewhere nearby is Colossal Cave, where others have found fortunes in
       treasure and gold, though it is rumored that some who enter are never
       seen again.  Magic is said to work in the cave.  I will be your eyes
@@ -2841,7 +2841,7 @@ arbitrary_messages:  !!omap
       This program was originally developed by Willie Crowther.  Most of the
       features of the current program were added by Don Woods.
 - DWARF_BLOCK: 'A little dwarf with a big knife blocks your way.'
-- DWARF_RAN: |
+- DWARF_RAN: |-
       A little dwarf just walked around a corner, saw you, threw a little
       axe at you which missed, cursed, and ran away.
 - DWARF_PACK: 'There are %d threatening little dwarves in the room with you.'
@@ -2855,7 +2855,7 @@ arbitrary_messages:  !!omap
 - CANT_APPLY: 'I don''t know how to apply that word here.'
 - YOUR_WELCOME: 'You''re quite welcome.'
 - AM_GAME: 'I''m game.  Would you care to explain how?'
-- NO_MORE_DETAIL: |
+- NO_MORE_DETAIL: |-
       Sorry, but I am not allowed to give more detail.  I will repeat the
       long description of your location.
 - PITCH_DARK: 'It is now pitch dark.  If you proceed you will likely fall into a pit.'
@@ -2885,7 +2885,7 @@ arbitrary_messages:  !!omap
 - DWARF_DODGES: 'You attack a little dwarf, but he dodges out of the way.'
 - BARE_HANDS_QUERY: 'With what?  Your bare hands?'
 - WORN_OUT: 'Good try, but that is an old worn-out magic word.'
-- VOCAB_DESCRIPTION: |
+- VOCAB_DESCRIPTION: |-
       I know of places, actions, and things.  Most of my vocabulary
       describes places and is used to move you there.  To move, try words
       like forest, building, downstream, enter, east, west, north, south,
@@ -2919,19 +2919,19 @@ arbitrary_messages:  !!omap
 - TWO_WORDS: 'Please stick to 1- and 2-word commands.'
 - OK_MAN: 'OK'
 - CANNOT_UNLOCK: 'You can''t unlock the keys.'
-- FUTILE_CRAWL: |
+- FUTILE_CRAWL: |-
     You have crawled around in some little holes and wound up back in the
     main passage.
-- FOLLOW_STREAM: |
+- FOLLOW_STREAM: |-
       I don't know where the cave is, but hereabouts no stream can run on
       the surface for long.  I would try the stream.
 - NEED_DETAIL: 'I need more detailed instructions to do that.'
-- NEARBY: |
+- NEARBY: |-
       I can only tell you what you see as you move about and manipulate
       things.  I cannot tell you where remote things are.
 - OGRE_SNARL: 'The ogre snarls and shoves you back.'
 - HUH_MAN: 'Huh?'
-- FOREST_LOOK: |
+- FOREST_LOOK: |-
       The trees of the forest are large hardwood oak and maple, with an
       occasional grove of pine or spruce.  There is quite a bit of under-
       growth, largely birch and ash saplings plus nondescript bushes of
@@ -2939,12 +2939,12 @@ arbitrary_messages:  !!omap
       all the leaves, but travel is quite easy if you detour around the
       spruce and berry bushes.
 - WELCOME_YOU: 'Welcome to Adventure!!  Would you like instructions?'
-- DIGGING_FUTILE: |
+- DIGGING_FUTILE: |-
       Digging without a shovel is quite impractical.  Even with a shovel
       progress is unlikely.
 - REQUIRES_DYNAMITE: 'Blasting requires dynamite.'
 - IM_CONFUSED: 'I''m as confused as you are.'
-- EXPLAIN_MIST: |
+- EXPLAIN_MIST: |-
       Mist is a white vapor, usually water, seen from time to time in
       caverns.  It can be found anywhere but is frequently a sign of a deep
       pit leading down to water.'
@@ -3010,7 +3010,7 @@ arbitrary_messages:  !!omap
 - STOP_UNKNOWN: 'I don''t know the word "stop".  Use "quit" if you want to give up.'
 - NOT_CONNECTED: 'You can''t get there from here.'
 - TAME_BEAR: 'You are being followed by a very large, tame bear.'
-- QUICK_START: |
+- QUICK_START: |-
       For a summary of the most recent changes to the game, say "news".
       If you want to end your adventure early, say "quit".  To suspend your
       adventure such that you can continue later, say "suspend" (or "pause"
@@ -3038,7 +3038,7 @@ arbitrary_messages:  !!omap
 - BEYOND_POWER: 'It is beyond your power to do that.'
 - NOT_KNOWHOW: 'I don''t know how.'
 - TOO_FAR: 'It is too far up for you to reach.'
-- DWARF_SMOKE: |
+- DWARF_SMOKE: |-
       You killed a little dwarf.  The body vanishes in a cloud of greasy
       black smoke.
 - SHELL_IMPERVIOUS: 'The shell is very strong and is impervious to attack.'
@@ -3764,22 +3764,22 @@ objects: !!omap
     - 'There is a richly-carved ebony statuette here!'
 
 obituaries:
-  - query: |
+  - query: |-
         Oh dear, you seem to have gotten yourself killed.  I might be able to
         help you out, but I've never really done this before.  Do you want me
         to try to reincarnate you?
-    yes_response: |
+    yes_response: |-
         All right.  But don't blame me if something goes wr......
                             --- POOF!! ---
         You are engulfed in a cloud of orange smoke.  Coughing and gasping,
         you emerge from the smoke and find....
-  - query: |
+  - query: |-
         You clumsy oaf, you've done it again!  I don''t know how long I can
         keep this up.  Do you want me to try reincarnating you again?
-    yes_response: |
+    yes_response: |-
         Okay, now where did I put my orange smoke?....  >POOF!<
         Everything disappears in a dense cloud of orange smoke.
-  - query: |
+  - query: |-
         Now you''ve really done it!  I'm out of orange smoke!  You don''t expect
         me to do a decent reincarnation without any orange smoke, do you?
     yes_response: 'Okay, if you''re so smart, do it yourself!  I''m leaving!'

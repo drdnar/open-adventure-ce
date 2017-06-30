@@ -125,12 +125,12 @@ void terminate(enum termination mode)
             speak(classes[i].message);
             i = classes[i].threshold + 1 - points;
             rspeak(NEXT_HIGHER, i, i);
-            exit(0);
+            exit(EXIT_SUCCESS);
         }
     }
     rspeak(OFF_SCALE);
     rspeak(NO_HIGHER);
-    exit(0);
+    exit(EXIT_SUCCESS);
 }
 
 /* end */

@@ -38,7 +38,7 @@ int savefile(FILE *fp, long version)
     save.version = (version == 0) ? VRSION : version;
 
     memcpy(&save.game, &game, sizeof(struct game_t));
-    IGNORE(fwrite(&save, sizeof(struct save_t), 1, fp));
+    fwrite(&save, sizeof(struct save_t), 1, fp);
     return (0);
 }
 
@@ -73,7 +73,7 @@ int suspend(void)
     savefile(fp, VRSION);
     fclose(fp);
     rspeak(RESUME_HELP);
-    exit(0);
+    exit(EXIT_SUCCESS);
 }
 
 int resume(void)
@@ -114,7 +114,7 @@ int restore(FILE* fp)
     return GO_UNKNOWN;
 #endif
 
-    IGNORE(fread(&save, sizeof(struct save_t), 1, fp));
+    fread(&save, sizeof(struct save_t), 1, fp);
     fclose(fp);
     if (save.version != VRSION) {
         rspeak(VERSION_SKEW, save.version / 10, MOD(save.version, 10), VRSION / 10, MOD(VRSION, 10));

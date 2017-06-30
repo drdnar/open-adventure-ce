@@ -1,4 +1,3 @@
-#define DEFINE_GLOBALS_FROM_INCLUDES
 #include <getopt.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -51,7 +50,7 @@ int main(int argc, char *argv[])
                     "        -v version number of save format.\n");
             fprintf(stderr,
                     "        -o file name of save game to write.\n");
-            exit(-1);
+            exit(EXIT_FAILURE);
             break;
         }
     }
@@ -61,7 +60,7 @@ int main(int argc, char *argv[])
                 usage, argv[0]);
         fprintf(stderr,
                 "ERROR: filename required\n");
-        exit(-1);
+        exit(EXIT_FAILURE);
     }
 
     FILE *fp = NULL;
@@ -89,7 +88,7 @@ int main(int argc, char *argv[])
     if (fp == NULL) {
         fprintf(stderr,
                 "Can't open file %s. Exiting.\n", savefilename);
-        exit(-1);
+        exit(EXIT_FAILURE);
     }
 
     savefile(fp, version);
