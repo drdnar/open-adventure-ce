@@ -521,7 +521,7 @@ static void croak(void)
  *  him, so we need game.oldlc2, which is the last place he was
  *  safe.) */
 
-static bool playermove(token_t verb, int motion)
+static bool playermove( int motion)
 {
     int scratchloc, travel_entry = tkey[game.loc];
     game.newloc = game.loc;
@@ -609,8 +609,6 @@ static bool playermove(token_t verb, int motion)
                 spk = UNSURE_FACING;
             if (motion == OUTSIDE || motion == INSIDE)
                 spk = NO_INOUT_HERE;
-            if (verb == FIND || verb == INVENTORY)
-                spk = NEARBY;
             if (motion == XYZZY || motion == PLUGH)
                 spk = NOTHING_HAPPENS;
             if (motion == CRAWL)
@@ -997,7 +995,7 @@ static bool do_command()
             rspeak(TAME_BEAR);
         speak(msg);
         if (FORCED(game.loc)) {
-            if (playermove(command.verb, 1))
+            if (playermove(MOT_1))
                 return true;
             else
                 continue;	/* back to top of main interpreter loop */
@@ -1131,7 +1129,7 @@ Lookup:
         kmod = MOD(defn, 1000);
         switch (defn / 1000) {
         case 0:
-            if (playermove(command.verb, kmod))
+            if (playermove(kmod))
                 return true;
             else
                 continue;	/* back to top of main interpreter loop */
@@ -1155,7 +1153,7 @@ Laction:
         case GO_TERMINATE:
             return true;
         case GO_MOVE:
-            playermove(command.verb, NUL);
+            playermove(NUL);
             return true;
         case GO_TOP:
             continue;	/* back to top of main interpreter loop */
