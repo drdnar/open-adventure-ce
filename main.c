@@ -29,9 +29,6 @@
 
 struct game_t game;
 
-long LNLENG, LNPOSN;
-char rawbuf[LINESIZE], INLINE[LINESIZE + 1];
-
 FILE  *logfp = NULL, *rfp = NULL;
 bool oldstyle = false;
 bool editline = true;

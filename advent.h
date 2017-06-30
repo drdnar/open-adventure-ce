@@ -24,11 +24,6 @@
 typedef long token_t;  // word token - someday this will be char[TOKLEN+1]
 typedef long vocab_t;  // index into a vocabulary array */
 
-extern const char advent_to_ascii[128];
-extern const char ascii_to_advent[128];
-extern const char new_advent_to_ascii[64];
-extern const char new_ascii_to_advent[128];
-
 enum bugtype {
    SPECIAL_TRAVEL_500_GT_L_GT_300_EXCEEDS_GOTO_LIST = 20,   // 20
    VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3 = 22,    // 22
@@ -101,10 +96,6 @@ struct game_t {
 
 extern struct game_t game;
 
-extern long LNLENG, LNPOSN;
-extern char rawbuf[LINESIZE], INLINE[LINESIZE + 1];
-extern const char ascii_to_advent[];
-extern const char advent_to_ascii[];
 extern FILE *logfp;
 extern bool oldstyle, editline, prompt;
 
@@ -234,31 +225,4 @@ int action(struct command_t *command);
 /* hack to ignore GCC Unused Result */
 #define IGNORE(r) do{if (r){}}while(0)
 
-/*
- * FIXME: These constants should be replaced by strings, at their usage sites.
- * They are sixbit-packed representations of vocabulary words.  This, and code
- * left in misc.c, is the only place left in the runtime that knows about 
- * word packing.
- */
-#define WORD_CATCH  301200308
-#define WORD_GO     715
-#define WORD_POUR   16152118
-#define WORD_BACK   2010311
-#define WORD_CAVE   3012205
-#define WORD_DPRSSN 405161805
-#define WORD_ENTER  514200518
-#define WORD_ENTRNC 514201801
-#define WORD_LOOK   12151511
-#define WORD_NUL    14211212
-#define WORD_STREAM 1920180501
-#define WORD_FIND   6091404
-#define WORD_INVENT 914220514
-#define WORD_LOCK   12150311
-#define WORD_SAY    190125
-#define WORD_THROW  2008181523
-#define WORD_WEST   23051920
-#define WORD_YES    250519
-#define WORD_YINIT  25
-
 /* end */
-
