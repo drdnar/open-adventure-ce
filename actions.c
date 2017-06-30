@@ -966,8 +966,8 @@ static int say(struct command_t *command)
     char word1[6];
     packed_to_token(command->wd1, word1);
     int wd = (int) get_vocab_id(word1);
-    /* FIXME: issue in lexical analyzer, last two magic numbers can't change */
-    if (wd == XYZZY || wd == PLUGH || wd == PLOVER || wd == 2025 || wd == 2034) {
+    /* FIXME: magic numbers */
+    if (wd == XYZZY || wd == PLUGH || wd == PLOVER || wd == 2000 + GIANTWORDS || wd == 2000 + PART) {
         /* FIXME: scribbles on the interpreter's command block */
         wordclear(&command->wd2);
         return GO_LOOKUP;
