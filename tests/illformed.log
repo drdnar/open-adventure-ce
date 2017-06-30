@@ -12,12 +12,12 @@ score food
 foo food
 brief food
 blast food
+light food
+extinguish food
 suspend food
 resume food
 out
 stream
-extinguish stream
-light stream
 lock
 take water
 blast
