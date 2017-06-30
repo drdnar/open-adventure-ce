@@ -29,7 +29,7 @@ VERS=$(shell sed -n <NEWS '/^[0-9]/s/:.*//p' | head -1)
 .PHONY: debug indent release refresh dist linty html clean
 
 CC?=gcc
-CCFLAGS+=-std=c99 -D _DEFAULT_SOURCE -Wpedantic -O2
+CCFLAGS+=-std=c99 -D_DEFAULT_SOURCE -DVERSION=\"$(VERS)\" -Wpedantic -O2
 LIBS=
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)

@@ -176,7 +176,9 @@ void vspeak(const char* msg, va_list ap)
     char* rendered = xmalloc(size);
     char* renderp = rendered;
 
-    // Handle format specifiers (including the custom %C, %L, %S) by adjusting the parameter accordingly, and replacing the specifier with %s.
+    // Handle format specifiers (including the custom %C, %L, %S) by
+    // adjusting the parameter accordingly, and replacing the
+    // specifier with %s.
     long previous_arg = 0;
     for (int i = 0; i < msglen; i++) {
         if (msg[i] != '%') {
@@ -187,7 +189,10 @@ void vspeak(const char* msg, va_list ap)
             if (arg == -1)
                 arg = 0;
             i++;
-            // Integer specifier. In order to accommodate the fact that PARMS can have both legitimate integers *and* packed tokens, stringify everything. Future work may eliminate the need for this.
+            // Integer specifier. In order to accommodate the fact
+            // that PARMS can have both legitimate integers *and*
+            // packed tokens, stringify everything. Future work may
+            // eliminate the need for this.
             if (msg[i] == 'd') {
                 int ret = snprintf(renderp, size, "%ld", arg);
                 if (ret < size) {
@@ -212,6 +217,14 @@ void vspeak(const char* msg, va_list ap)
                 }
             }
 
+	    /* Version specifier */
+            if (msg[i] == 'V') {
+		strcpy(renderp, VERSION);
+                size_t len = strlen(VERSION);
+                renderp += len;
+                size -= len;
+	    }
+	    
             // All-lowercase specifier.
             if (msg[i] == 'L' || msg[i] == 'C') {
                 packed_to_token(arg, renderp); /* unpack directly to destination */

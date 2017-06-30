@@ -124,6 +124,7 @@
 #	%9 = A 9-digit number
 #	%B = Variable number of blanks
 #	%! = The entire message should be suppressed
+#	%V = substitute program version string
 
 motions: !!omap
 - MOT_0:
@@ -2778,7 +2779,7 @@ arbitrary_messages:  !!omap
 - TWIST_TURN: 'Sorry, but the path twisted and turned so much that I can''t figure\nout which way to go to get back.'
 - ADVENTURE_NEWS: 'Open Adventure is an author-approved open-source release of\nVersion 2.5 with, as yet, no gameplay changes.\nVersion 2.5 was essentially the same as Version II; the cave and the\nhazards therein are unchanged, and top score is still 430 points.\nThere are a few more hints, especially for some of the more obscure\npuzzles.  There are a few minor bugfixes and cosmetic changes.  You\ncan now save a game and resume it at once (formerly you had to wait a\nwhile first), but it now costs you a few points each time you save the\ngame.  Saved games are now stored in much smaller files than before.'
 - GO_UNNEEDED: 'You don''t have to say "go" every time; just specify a direction or, if\nit''s nearby, name the place to which you wish to move.'
-- ADVENTURE_VERSION: 'There is a puff of orange smoke; within it, fiery runes spell out:\n\n\tOpen Adventure 1.1 - http://www.catb.org/esr/open-adventure/'
+- ADVENTURE_VERSION: 'There is a puff of orange smoke; within it, fiery runes spell out:\n\n\tOpen Adventure %V - http://www.catb.org/esr/open-adventure/'
 
 classes: 
 - threshold: 0
