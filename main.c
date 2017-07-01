@@ -491,6 +491,13 @@ static void croak(void)
     }
 }
 
+static bool traveleq(long a, long b)
+/* Are two travel entries equal for purposes of skip after failed condition? */
+{
+    return (travel[a].cond == travel[b].cond)
+	&& (travel[a].dest == travel[b].dest);
+}
+
 /*  Given the current location in "game.loc", and a motion verb number in
  *  "motion", put the new location in "game.newloc".  The current loc is saved
  *  in "game.oldloc" in case he wants to retreat.  The current
@@ -628,7 +635,7 @@ static bool playermove( int motion)
                         BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION); // LCOV_EXCL_LINE
                     ++te_tmp;
                 } while
-			((T_DESTINATION(travel[travel_entry]) == T_DESTINATION(travel[te_tmp])) && (T_CONDITION(travel[travel_entry]) == T_CONDITION(travel[te_tmp])));
+		    (traveleq(travel_entry, te_tmp));
                 travel_entry = te_tmp;
             }
 
@@ -670,7 +677,7 @@ static bool playermove( int motion)
                             BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION); // LCOV_EXCL_LINE
                         ++te_tmp;
                     } while
-			((T_DESTINATION(travel[travel_entry]) == T_DESTINATION(travel[te_tmp])) && (T_CONDITION(travel[travel_entry]) == T_CONDITION(travel[te_tmp])));
+			(traveleq(travel_entry, te_tmp));
                     travel_entry = te_tmp;
                     continue; /* goto L12 */
                 case 3:
