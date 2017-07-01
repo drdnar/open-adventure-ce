@@ -122,6 +122,8 @@ int main(int argc, char *argv[])
 
     /*  Start-up, dwarf stuff */
     make_zzword(game.zzword);
+
+#ifndef ADVENT_NOSAVE
     if (!rfp) {
         game.novice = yes(arbitrary_messages[WELCOME_YOU], arbitrary_messages[CAVE_NEARBY], arbitrary_messages[NO_MESSAGE]);
         if (game.novice)
@@ -129,6 +131,7 @@ int main(int argc, char *argv[])
     } else {
         restore(rfp);
     }
+#endif
 
     if (logfp)
         fprintf(logfp, "seed %ld\n", seedval);
@@ -1090,12 +1093,12 @@ L2607:
             wordclear(&command.wd2);
         } else {
             /* FIXME: Magic numbers related to vocabulary */
-	    if (!((V1 != PROMOTE_WORD(WATER) && V1 != PROMOTE_WORD(OIL)) ||
-		  (V2 != PROMOTE_WORD(PLANT) && V2 != PROMOTE_WORD(DOOR)))) {
-	        if (AT(DEMOTE_WORD(V2)))
+            if (!((V1 != PROMOTE_WORD(WATER) && V1 != PROMOTE_WORD(OIL)) ||
+                  (V2 != PROMOTE_WORD(PLANT) && V2 != PROMOTE_WORD(DOOR)))) {
+                if (AT(DEMOTE_WORD(V2)))
                     command.wd2 = token_to_packed("POUR");
             }
-	    if (V1 == PROMOTE_WORD(CAGE) && V2 == PROMOTE_WORD(BIRD) && HERE(CAGE) && HERE(BIRD))
+            if (V1 == PROMOTE_WORD(CAGE) && V2 == PROMOTE_WORD(BIRD) && HERE(CAGE) && HERE(BIRD))
                 command.wd1 = token_to_packed("CATCH");
         }
 L2620:
