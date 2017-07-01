@@ -224,23 +224,24 @@ static void blast(void)
 static int vbreak(token_t verb, token_t obj)
 /*  Break.  Only works for mirror in repository and, of course, the vase. */
 {
-    int spk = actions[verb].message;
-    if (obj == MIRROR)
-        spk = TOO_FAR;
-    if (obj == VASE && game.prop[VASE] == 0) {
-        if (TOTING(VASE))
-            drop(VASE, game.loc);
-        game.prop[VASE] = 2;
-        game.fixed[VASE] = -1;
-        spk = BREAK_VASE;
-    } else {
-        if (obj == MIRROR && game.closed) {
+    if (obj == MIRROR) {
+        if (game.closed) {
             rspeak(BREAK_MIRROR);
             return GO_DWARFWAKE;
+        } else {
+            rspeak(TOO_FAR);
+            return GO_CLEAROBJ;
         }
     }
-    rspeak(spk);
-    return GO_CLEAROBJ;
+    if (obj == VASE && game.prop[VASE] == VASE_WHOLE) {
+        if (TOTING(VASE))
+            drop(VASE, game.loc);
+        state_change(VASE, VASE_BROKEN);
+        game.fixed[VASE] = -1;
+        return GO_CLEAROBJ;
+    }
+    rspeak(actions[verb].message);
+    return (GO_CLEAROBJ);
 }
 
 static int brief(void)
