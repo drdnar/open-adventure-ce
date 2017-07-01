@@ -26,6 +26,8 @@ struct save_t {
 };
 struct save_t save;
 
+#define IGNORE(r) do{if (r){}}while(0)
+
 int savefile(FILE *fp, long version)
 /* Save game to file. No input or output from user. */
 {
@@ -38,7 +40,7 @@ int savefile(FILE *fp, long version)
     save.version = (version == 0) ? VRSION : version;
 
     memcpy(&save.game, &game, sizeof(struct game_t));
-    fwrite(&save, sizeof(struct save_t), 1, fp);
+    IGNORE(fwrite(&save, sizeof(struct save_t), 1, fp));
     return (0);
 }
 
@@ -114,7 +116,7 @@ int restore(FILE* fp)
     return GO_UNKNOWN;
 #endif
 
-    fread(&save, sizeof(struct save_t), 1, fp);
+    IGNORE(fread(&save, sizeof(struct save_t), 1, fp));
     fclose(fp);
     if (save.version != VRSION) {
         rspeak(VERSION_SKEW, save.version / 10, MOD(save.version, 10), VRSION / 10, MOD(VRSION, 10));
