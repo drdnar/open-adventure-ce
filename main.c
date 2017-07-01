@@ -1115,7 +1115,7 @@ L2607:
             /* FIXME: Magic numbers related to vocabulary */
 	    if (!((V1 != PROMOTE_WORD(WATER) && V1 != PROMOTE_WORD(OIL)) ||
 		  (V2 != PROMOTE_WORD(PLANT) && V2 != PROMOTE_WORD(DOOR)))) {
-                if (AT(V2 - 1000))
+	        if (AT(DEMOTE_WORD(V2)))
                     command.wd2 = token_to_packed("POUR");
             }
 	    if (V1 == PROMOTE_WORD(CAGE) && V2 == PROMOTE_WORD(BIRD) && HERE(CAGE) && HERE(BIRD))
