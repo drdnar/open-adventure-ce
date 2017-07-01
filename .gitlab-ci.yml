@@ -1,9 +1,5 @@
 image: alpine
 
-variables:
-  GIT_SUBMODULE_STRATEGY: "recursive"
-  GIT_SSL_NO_VERIFY: "true"
-
 stages:
   - build
   - test
@@ -14,7 +10,7 @@ binary:debug:
   stage: build
   before_script:
     - apk update
-    - apk add make gcc musl-dev python3
+    - apk add make gcc musl-dev python3 libedit-dev
     - pip3 install PyYAML
   script: 
     - make debug
@@ -33,7 +29,7 @@ binary:release:
   stage: build
   before_script:
     - apk update
-    - apk add make gcc musl-dev python3
+    - apk add make gcc musl-dev python3 libedit-dev
     - pip3 install PyYAML
   script: 
     - make advent cheat
