@@ -70,7 +70,7 @@ savecheck: savegames
 	advent -l / < pitfall.log > /tmp/coverage_advent_logfail 2>&1 || exit 1
 	$(ECHO) "TEST advent: Test -r with valid input"
 	advent -r thousand_saves.adv < pitfall.log > /tmp/coverage_advent_readfail 2>&1 || exit 1
-	rm -f scratch.tmp /tmp/regress$$$$ /tmp/coverage*
+	rm -f scratch.tmp /tmp/coverage*
 
 # General regression testing of commands and output; look at the *.log and
 # corresponding *.chk files to see which tests this runs.
@@ -81,6 +81,7 @@ regress:
 	    if advent $$OPTS < $${file}.log >/tmp/regress$$$$ 2>&1; \
 	    then diff --text -u $${file}.chk /tmp/regress$$$$ || exit 1; \
 	    else echo "*** Nonzero return status on $${file}!"; exit 1; fi \
-	done;
+	done; \
+	rm -f /tmp/regress$$$$
 
 # end
