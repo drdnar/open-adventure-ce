@@ -27,7 +27,20 @@
 
 #define DIM(a) (sizeof(a)/sizeof(a[0]))
 
-struct game_t game;
+struct game_t game = {
+    .chloc = LOC_DEADEND12,
+    .chloc2 = LOC_DEADEND13,
+    .dloc[1] = LOC_KINGHALL,
+    .dloc[2] = LOC_WESTBANK,
+    .dloc[3] = LOC_Y2,
+    .dloc[4] = LOC_ALIKE3,
+    .dloc[5] = LOC_COMPLEX,
+    .dloc[6] = LOC_DEADEND12,
+    .abbnum = 5,
+    .clock1 = WARNTIME,
+    .clock2 = FLASHTIME,
+    .blklin = true
+};
 
 FILE  *logfp = NULL, *rfp = NULL;
 bool oldstyle = false;

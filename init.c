@@ -16,18 +16,14 @@ void initialise(void)
 
     for (int i = 1; i <= NOBJECTS; i++) {
         game.place[i] = LOC_NOWHERE;
-        game.prop[i] = 0;
-        game.link[i + NOBJECTS] = game.link[i] = 0;
     }
 
     for (int i = 1; i <= NLOCATIONS; i++) {
-        game.abbrev[i] = 0;
         if (!(locations[i].description.big == 0 || tkey[i] == 0)) {
             int k = tkey[i];
             if (T_TERMINATE(travel[k]))
                 conditions[i] |= (1 << COND_FORCED);
         }
-        game.atloc[i] = 0;
     }
 
     /*  Set up the game.atloc and game.link arrays.
@@ -54,7 +50,6 @@ void initialise(void)
     /*  Treasure props are initially -1, and are set to 0 the first time
      *  they are described.  game.tally keeps track of how many are
      *  not yet found, so we know when to close the cave. */
-    game.tally = 0;
     for (int treasure = 1; treasure <= NOBJECTS; treasure++) {
         if (objects[treasure].is_treasure) {
             if (objects[treasure].inventory != 0)
@@ -87,39 +82,6 @@ void initialise(void)
      *  chest's eventual location inside the maze.  This loc is saved
      *  in game.chloc for ref.  the dead end in the other maze has its
      *  loc stored in game.chloc2. */
-    game.chloc = LOC_DEADEND12;
-    game.chloc2 = LOC_DEADEND13;
-    for (int i = 1; i <= NDWARVES; i++) {
-        game.dseen[i] = false;
-    }
-    game.dflag = 0;
-    game.dloc[1] = LOC_KINGHALL;
-    game.dloc[2] = LOC_WESTBANK;
-    game.dloc[3] = LOC_Y2;
-    game.dloc[4] = LOC_ALIKE3;
-    game.dloc[5] = LOC_COMPLEX;
-    game.dloc[6] = game.chloc;
 
-    game.turns = 0;
-    game.trnluz = 0;
-    game.lmwarn = false;
-    game.iwest = 0;
-    game.knfloc = 0;
-    game.detail = 0;
-    game.abbnum = 5;
-    game.numdie = 0;
-    game.holdng = 0;
-    game.dkill = 0;
-    game.foobar = 0;
-    game.bonus = 0;
-    game.clock1 = WARNTIME;
-    game.clock2 = FLASHTIME;
     game.conds = setbit(11);
-    game.saved = 0;
-    game.closng = false;
-    game.panic = false;
-    game.closed = false;
-    game.clshnt = false;
-    game.novice = false;
-    game.blklin = true;
 }
