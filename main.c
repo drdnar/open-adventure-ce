@@ -619,6 +619,7 @@ static bool playermove( int motion)
     /* (ESR) We've found a destination that goes with the motion verb.
      * Next we need to check any conditional(s) on this destination, and
      * possibly on following entries. */
+    /* FIXME: Magic numbers related to move opcodes */
     do {
         for (;;) { /* L12 loop */
             for (;;) {
@@ -701,8 +702,8 @@ static bool playermove( int motion)
                      * so step out and block him.  (standard travel
                      * entries check for game.prop(TROLL)=0.)  Special
                      * stuff for bear. */
-                    if (game.prop[TROLL] == 1) {
-                        pspeak(TROLL, look, 1);
+                    if (game.prop[TROLL] == TROLL_PAIDONCE) {
+                        pspeak(TROLL, look, TROLL_PAIDONCE);
                         game.prop[TROLL] = 0;
                         move(TROLL2, 0);
                         move(TROLL2 + NOBJECTS, 0);
@@ -713,13 +714,13 @@ static bool playermove( int motion)
                         return true;
                     } else {
                         game.newloc = objects[TROLL].plac + objects[TROLL].fixd - game.loc;
-                        if (game.prop[TROLL] == 0)
-                            game.prop[TROLL] = 1;
+                        if (game.prop[TROLL] == TROLL_UNPAID)
+                            game.prop[TROLL] = TROLL_PAIDONCE;
                         if (!TOTING(BEAR))
                             return true;
                         rspeak(BRIDGE_COLLAPSE);
-                        game.prop[CHASM] = 1;
-                        game.prop[TROLL] = 2;
+                        game.prop[CHASM] = BRIDGE_WRECKED;
+                        game.prop[TROLL] = TROLL_GONE;
                         drop(BEAR, game.newloc);
                         game.fixed[BEAR] = -1;
                         game.prop[BEAR] = BEAR_DEAD;
@@ -775,7 +776,7 @@ static bool closecheck(void)
      *  have been activated, since we've found chest. */
     if (game.clock1 == 0) {
         game.prop[GRATE] = GRATE_CLOSED;
-        game.prop[FISSURE] = 0;
+        game.prop[FISSURE] = UNBRIDGED;
         for (int i = 1; i <= NDWARVES; i++) {
             game.dseen[i] = false;
             game.dloc[i] = 0;
@@ -1100,7 +1101,7 @@ L2607:
             command.wd1x = command.wd2x;
             wordclear(&command.wd2);
         } else {
-            /* FIXME: Magic numbers */
+            /* FIXME: Magic numbers related to vocabulary */
             if (!((V1 != 1000 + WATER && V1 != 1000 + OIL) ||
                   (V2 != 1000 + PLANT && V2 != 1000 + DOOR))) {
                 if (AT(V2 - 1000))
@@ -1129,6 +1130,7 @@ Lookup:
             rspeak(DONT_KNOW, command.wd1, command.wd1x);
             goto L2600;
         }
+	/* FIXME: magic numbers related to vocabulary */
         kmod = MOD(defn, 1000);
         switch (defn / 1000) {
         case 0:

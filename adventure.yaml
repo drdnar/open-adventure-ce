@@ -3466,9 +3466,9 @@ objects: !!omap
     locations: [LOC_SWCHASM, LOC_NECHASM]
     immovable: true
     descriptions:
-    - 'A burly troll stands by the bridge and insists you throw him a\ntreasure before you may cross.'
-    - 'The troll steps out from beneath the bridge and blocks your way.'
-    - '' # chased away
+    - [TROLL_UNPAID, 'A burly troll stands by the bridge and insists you throw him a\ntreasure before you may cross.']
+    - [TROLL_PAIDONCE, 'The troll steps out from beneath the bridge and blocks your way.']
+    - [TROLL_GONE, ''] # chased away
     sounds:
     - 'The troll sounds quite adamant in his demand for a treasure.'
 - TROLL2:

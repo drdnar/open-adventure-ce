@@ -526,6 +526,7 @@ long get_vocab_id(const char* word)
 {
     long ref_num;
 
+    /* FIXME: Magic numbers related to vocabulary */
     ref_num = get_motion_vocab_id(word);
     if (ref_num != WORD_NOT_FOUND)
         return (ref_num + 0); // FIXME: replace with a proper hash
