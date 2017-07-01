@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <string.h>
+#include <editline/readline.h>
 
 #include "advent.h"
 #include "dungeon.h"
-#include "linenoise/linenoise.h"
 
 /*
  * (ESR) This replaces  a bunch of particularly nasty FORTRAN-derived code;
@@ -63,13 +63,13 @@ int suspend(void)
     game.saved = game.saved + 5;
 
     while (fp == NULL) {
-        char* name = linenoise("\nFile name: ");
+        char* name = readline("\nFile name: ");
         if (name == NULL)
             return GO_TOP;
         fp = fopen(name, WRITE_MODE);
         if (fp == NULL)
             printf("Can't open file %s, try again.\n", name);
-        linenoiseFree(name);
+        free(name);
     }
 
     savefile(fp, VRSION);
@@ -95,13 +95,13 @@ int resume(void)
     }
 
     while (fp == NULL) {
-        char* name = linenoise("\nFile name: ");
+        char* name = readline("\nFile name: ");
         if (name == NULL)
             return GO_TOP;
         fp = fopen(name, READ_MODE);
         if (fp == NULL)
             printf("Can't open file %s, try again.\n", name);
-        linenoiseFree(name);
+        free(name);
     }
 
     return restore(fp);

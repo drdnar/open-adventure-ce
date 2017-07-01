@@ -21,7 +21,6 @@
 #include <signal.h>
 #include <string.h>
 #include "advent.h"
-#include "linenoise/linenoise.h"
 #include "dungeon.h"
 
 #define DIM(a) (sizeof(a)/sizeof(a[0]))
@@ -114,8 +113,6 @@ int main(int argc, char *argv[])
             break;
         }
     }
-
-    linenoiseHistorySetMaxLen(350);
 
     /*  Initialize game variables */
     long seedval = initialise();
@@ -1036,7 +1033,7 @@ L2600:
         }
 
         strncpy(inputbuf, input, LINESIZE - 1);
-        linenoiseFree(input);
+        free(input);
 
         long tokens[4];
         tokenize(inputbuf, tokens);

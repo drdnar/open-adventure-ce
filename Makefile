@@ -1,17 +1,6 @@
 # Makefile for the open-source release of adventure 2.5
 
-# Note: If you're building from the repository rather than the source tarball,
-# do this to get the linenoise library where you can use it:
-#
-# git submodule update --recursive --remote --init
-#
-# Therafter, you can update it like this:
-#
-# git submodule update --recursive --remote
-#
-# but this should seldom be necessary as that library is pretty stable.
-#
-# You will also need Python 3 YAML.  Under Debian or ubuntu:
+# You will need Python 3 YAML.  Under Debian or ubuntu:
 #
 # apt-get install python3-yaml
 #
@@ -31,23 +20,23 @@ VERS=$(shell sed -n <NEWS '/^[0-9]/s/:.*//p' | head -1)
 
 CC?=gcc
 CCFLAGS+=-std=c99 -D_DEFAULT_SOURCE -DVERSION=\"$(VERS)\" -Wpedantic -O2
-LIBS=
+LIBS=-ledit
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
-	LIBS=-lrt
+	LIBS+=-lrt
 endif
 
 OBJS=main.o init.o actions.o score.o misc.o saveresume.o
 CHEAT_OBJS=cheat.o init.o actions.o score.o misc.o saveresume.o
-SOURCES=$(OBJS:.o=.c) advent.h adventure.yaml Makefile control linenoise/linenoise.[ch] make_dungeon.py
+SOURCES=$(OBJS:.o=.c) advent.h adventure.yaml Makefile control make_dungeon.py
 
 .c.o:
 	$(CC) $(CCFLAGS) $(DBX) -c $<
 
-advent:	$(OBJS) linenoise.o dungeon.o
-	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) dungeon.o linenoise.o $(LDFLAGS) $(LIBS)
+advent:	$(OBJS) dungeon.o
+	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) dungeon.o $(LDFLAGS) $(LIBS)
 
-main.o:	 	advent.h dungeon.h linenoise.o
+main.o:	 	advent.h dungeon.h
 
 init.o:	 	advent.h dungeon.h
 
@@ -57,7 +46,7 @@ score.o:	advent.h dungeon.h
 
 misc.o:		advent.h dungeon.h
 
-cheat.o:	advent.h dungeon.h linenoise.o
+cheat.o:	advent.h dungeon.h
 
 saveresume.o:	advent.h dungeon.h
 
@@ -66,16 +55,6 @@ dungeon.o:	dungeon.c dungeon.h
 
 dungeon.c dungeon.h: make_dungeon.py adventure.yaml
 	python3 make_dungeon.py
-
-linenoise.o: linenoise/linenoise.h
-	@test -s linenoise/linenoise.h || { echo -e "linenoise not present. Try:\n\
-		git submodule update --recursive --remote --init"; exit 1; }
-	$(CC) -c linenoise/linenoise.c
-
-linenoise-dbg: linenoise/linenoise.h
-	@test -s linenoise/linenoise.h || { echo -e "linenoise not present. Try:\n\
-		git submodule update --recursive --remote --init"; exit 1; }
-	$(CC) $(CCFLAGS) -c linenoise/linenoise.c
 
 clean:
 	rm -f *.o advent cheat *.html *.gcno *.gcda
@@ -87,8 +66,8 @@ clean:
 	cd tests; $(MAKE) --quiet clean
 
 
-cheat: $(CHEAT_OBJS) linenoise.o dungeon.o 
-	$(CC) $(CCFLAGS) $(DBX) -o cheat $(CHEAT_OBJS) linenoise.o dungeon.o $(LDFLAGS) $(LIBS)
+cheat: $(CHEAT_OBJS) dungeon.o
+	$(CC) $(CCFLAGS) $(DBX) -o cheat $(CHEAT_OBJS) dungeon.o $(LDFLAGS) $(LIBS)
 
 check: advent cheat
 	cd tests; $(MAKE) --quiet
@@ -155,4 +134,3 @@ debug: CCFLAGS += -O0 --coverage -ggdb
 debug: linty
 debug: cheat
 
-debug-ln: linenoise-dbg debug

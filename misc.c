@@ -5,9 +5,9 @@
 #include <stdarg.h>
 #include <sys/time.h>
 #include <ctype.h>
+#include <editline/readline.h>
 
 #include "advent.h"
-#include "linenoise/linenoise.h"
 #include "dungeon.h"
 
 char* xstrdup(const char* s)
@@ -334,27 +334,12 @@ char* get_input()
 
     char* input;
     while (true) {
-        if (editline)
-            input = linenoise(input_prompt);
-        else {
-            input = NULL;
-            size_t n = 0;
-            if (isatty(0))
-                // LCOV_EXCL_START
-                // Should be unreachable in tests, as they will use a non-interactive shell.
-                printf("%s", input_prompt);
-            // LCOV_EXCL_STOP
-            ssize_t numread = getline(&input, &n, stdin);
-            if (numread == -1) { // Got EOF; return with it.
-                free(input);
-                return (NULL);
-            }
-        }
+        input = readline(input_prompt);
 
         if (input == NULL) // Got EOF; return with it.
             return (input);
         else if (input[0] == '#') { // Ignore comments.
-            linenoiseFree(input);
+            free(input);
             continue;
         } else // We have a 'normal' line; leave the loop.
             break;
@@ -363,7 +348,7 @@ char* get_input()
     // Strip trailing newlines from the input
     input[strcspn(input, "\n")] = 0;
 
-    linenoiseHistoryAdd(input);
+    add_history(input);
 
     if (!isatty(0))
         echo_input(stdout, input_prompt, input);
@@ -384,7 +369,7 @@ bool silent_yes()
         if (reply == NULL) {
             // LCOV_EXCL_START
             // Should be unreachable. Reply should never be NULL
-            linenoiseFree(reply);
+            free(reply);
             exit(EXIT_SUCCESS);
             // LCOV_EXCL_STOP
         }
@@ -392,7 +377,7 @@ bool silent_yes()
         char* firstword = (char*) xmalloc(strlen(reply) + 1);
         sscanf(reply, "%s", firstword);
 
-        linenoiseFree(reply);
+        free(reply);
 
         for (int i = 0; i < (int)strlen(firstword); ++i)
             firstword[i] = tolower(firstword[i]);
@@ -431,7 +416,7 @@ bool yes(const char* question, const char* yes_response, const char* no_response
         if (reply == NULL) {
             // LCOV_EXCL_START
             // Should be unreachable. Reply should never be NULL
-            linenoiseFree(reply);
+            free(reply);
             exit(EXIT_SUCCESS);
             // LCOV_EXCL_STOP
         }
@@ -439,7 +424,7 @@ bool yes(const char* question, const char* yes_response, const char* no_response
         char* firstword = (char*) xmalloc(strlen(reply) + 1);
         sscanf(reply, "%s", firstword);
 
-        linenoiseFree(reply);
+        free(reply);
 
         for (int i = 0; i < (int)strlen(firstword); ++i)
             firstword[i] = tolower(firstword[i]);

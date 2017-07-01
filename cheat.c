@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include <time.h>
 #include "advent.h"
-#include "linenoise/linenoise.h"
 #include "dungeon.h"
 
 FILE  *logfp = NULL, *rfp = NULL;
