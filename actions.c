@@ -93,8 +93,12 @@ static int attack(struct command_t *command)
         }
         spk = (dwarves > 1) ? OGRE_PANIC1 : OGRE_PANIC2;
     } else if (obj == BEAR) {
-        /* FIXME: Arithmetic on message numbers */
-        spk = BEAR_HANDS + (game.prop[BEAR] + 1) / 2;
+	switch (game.prop[BEAR]) {
+	case UNTAMED_BEAR: spk = BEAR_HANDS; break; 
+	case SITTING_BEAR: spk = BEAR_CONFUSED; break;
+	case CONTENTED_BEAR: spk = BEAR_CONFUSED; break;
+	case BEAR_DEAD: spk = ALREADY_DEAD; break;
+	}
     } else if (obj == DRAGON && game.prop[DRAGON] == 0) {
         /*  Fun stuff for dragon.  If he insists on attacking it, win!
          *  Set game.prop to dead, move dragon to central loc (still

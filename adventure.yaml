@@ -3057,7 +3057,6 @@ arbitrary_messages:  !!omap
 - TROLL_SCAMPERS: 'The bear lumbers toward the troll, who lets out a startled shriek and\nscurries away.  The bear soon gives up the pursuit and wanders back.'
 - AXE_LOST: 'The axe misses and lands near the bear where you can''t get at it.'
 - BEAR_HANDS: 'With what?  Your bare hands?  Against *HIS* bear hands??'
-# The following three messages must be contiguous
 - BEAR_CONFUSED: 'The bear is confused; he only wants to be your friend.'
 - ALREADY_DEAD: 'For crying out loud, the poor thing is already dead!'
 - BEAR_TAMED: 'The bear eagerly wolfs down your food, after which he seems to calm\ndown considerably and even becomes rather friendly.'
