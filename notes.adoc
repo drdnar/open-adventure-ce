@@ -137,7 +137,7 @@ ways:
   to fix it because doing so would (a) be quite difficult, and (b)
   compromise forward-portability to other languages.
 
-* Muxh of the code still assumes one-origin array indexing.  Thus,
+* Much of the code still assumes one-origin array indexing.  Thus,
   arrays are a cell larger than they strictly need to be and cell 0 is
   unused.
 
