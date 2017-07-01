@@ -210,7 +210,7 @@ extern int savefile(FILE *, long);
 extern int suspend(void);
 extern int resume(void);
 extern int restore(FILE *);
-extern void initialise(void);
+extern long initialise(void);
 extern int action(struct command_t *command);
 
 /* Alas, declaring this static confuses the coverage analyzer */

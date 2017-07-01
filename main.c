@@ -19,7 +19,6 @@
 #include <stdbool.h>
 #include <getopt.h>
 #include <signal.h>
-#include <time.h>
 #include <string.h>
 #include "advent.h"
 #include "linenoise/linenoise.h"
@@ -138,17 +137,8 @@ int main(int argc, char *argv[])
 
     linenoiseHistorySetMaxLen(350);
 
-    /* Initialize our LCG PRNG with parameters tested against
-     * Knuth vol. 2. by the original authors */
-    game.lcg_a = 1093;
-    game.lcg_c = 221587;
-    game.lcg_m = 1048576;
-    srand(time(NULL));
-    long seedval = (long)rand();
-    set_seed(seedval);
-
     /*  Initialize game variables */
-    initialise();
+    long seedval = initialise();
 
     /*  Start-up, dwarf stuff */
     make_zzword(game.zzword);

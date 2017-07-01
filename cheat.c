@@ -83,13 +83,6 @@ int main(int argc, char *argv[])
 
     FILE *fp = NULL;
 
-    game.lcg_a = 1093;
-    game.lcg_c = 221587;
-    game.lcg_m = 1048576;
-    srand(time(NULL));
-    long seedval = (long)rand();
-    set_seed(seedval);
-
     /*  Initialize game variables */
     initialise();
 

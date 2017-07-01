@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <time.h>
 
 #include "advent.h"
 
@@ -9,10 +10,19 @@
  * Initialisation
  */
 
-void initialise(void)
+long initialise(void)
 {
     if (oldstyle)
         printf("Initialising...\n");
+
+    /* Initialize our LCG PRNG with parameters tested against
+     * Knuth vol. 2. by the original authors */
+    game.lcg_a = 1093;
+    game.lcg_c = 221587;
+    game.lcg_m = 1048576;
+    srand(time(NULL));
+    long seedval = (long)rand();
+    set_seed(seedval);
 
     for (int i = 1; i <= NOBJECTS; i++) {
         game.place[i] = LOC_NOWHERE;
@@ -57,4 +67,6 @@ void initialise(void)
         }
     }
     game.conds = setbit(11);
+
+    return seedval;
 }
