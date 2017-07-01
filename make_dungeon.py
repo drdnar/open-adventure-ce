@@ -175,6 +175,7 @@ extern const action_t actions[];
 extern const action_t specials[];
 extern const travelop_t travel[];
 extern const long tkey[];
+extern const char *ignore;
 
 #define NLOCATIONS	{}
 #define NOBJECTS	{}
@@ -266,11 +267,13 @@ const action_t specials[] = {{
 {}
 }};
 
-{}
+const long tkey[] = {{{}}};
 
 const travelop_t travel[] = {{
 {}
 }};
+
+const char *ignore = \"{}\";
 
 /* end */
 """
@@ -519,6 +522,11 @@ def get_motions(motions):
         else:
             words_str = get_string_group(contents["words"])
         mot_str += template.format(words_str)
+        global ignore
+        if contents.get("oldstyle", True) == False:
+            for word in contents["words"]:
+                if len(word) == 1:
+                    ignore += word.upper()
     return mot_str
 
 def get_actions(actions):
@@ -542,6 +550,11 @@ def get_actions(actions):
             message = contents["message"]
             
         act_str += template.format(words_str, message)
+        global ignore
+        if contents.get("oldstyle", True) == False:
+            for word in contents["words"]:
+                if len(word) == 1:
+                    ignore += word.upper()
     act_str = act_str[:-1] # trim trailing newline
     return act_str
 
@@ -552,7 +565,7 @@ def bigdump(arr):
             if out and out[-1] == ' ':
                 out = out[:-1]
             out += "\n    "
-        out += str(arr[i]) + ", "
+        out += str(arr[i]).lower() + ", "
     out = out[:-2] + "\n"
     return out
 
@@ -697,7 +710,7 @@ if __name__ == "__main__":
 
     (travel, tkey) = buildtravel(db["locations"],
                                  db["objects"])
-
+    ignore = ""
     c = c_template.format(
         h_name,
         get_arbitrary_messages(db["arbitrary_messages"]),
@@ -711,8 +724,9 @@ if __name__ == "__main__":
         get_motions(db["motions"]),
         get_actions(db["actions"]),
         get_actions(db["specials"]),
-        "const long tkey[] = {%s};" % bigdump(tkey),
+        bigdump(tkey),
         get_travel(travel), 
+        ignore,
     )
 
     h = h_template.format(

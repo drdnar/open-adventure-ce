@@ -6,17 +6,12 @@
 #
 # We define a bunch of YAML structures:
 #
-# vocabulary: - This structure is unused, and will eventually be removed. -
-#    Almost all the words the game knows - one of them (the
-#    reservoir magic word) gets replaced with a randomly-generated
-#    cookie.  For each word there is a type (motion, action, object,
-#    or special) and a numeric value.  Multiple synonyms may have the
-#    same value.
-#
-# motions: Motion words, grouped into synonyms.
-#
+# motions: Motion words, grouped into synonyms.  The 'oldstyle'
+#    attribute, if false, means that single-letter synonyms should be
+#    accepted in oldstyle mode; it defaults to truie.
+
 # actions: Action words, grouped into synonyms, and their corresponding
-#    default messages.
+#    default messages. The 'oldstyle' attribute is as for motions.
 #
 # hints: Each item contains a hint number, a hint label (used to
 #    generate the value macro for the hint) the number of turns he
@@ -243,6 +238,7 @@ motions: !!omap
     words: ['climb']
 - LOOK:
     words: ['l', 'x', 'look', 'exami', 'touch', 'descr']
+    oldstyle: false
 - MOT_58:
     words: ['floor']
 - MOT_59:
@@ -290,6 +286,7 @@ actions: !!omap
     message: ALREADY_CARRYING
     words: ['g', 'carry', 'take', 'keep', 'catch',
             'steal', 'captu', 'get', 'tote', 'snarf']
+    oldstyle: false
 - DROP:
     message: ARENT_CARRYING
     words: ['drop', 'relea', 'free', 'disca', 'dump']
@@ -302,6 +299,7 @@ actions: !!omap
 - NOTHING:
     message: NO_MESSAGE
     words: ['z', 'nothi']
+    oldstyle: false
 - LOCK:
     message: NOT_LOCKABLE
     words: ['lock', 'close']
@@ -348,6 +346,7 @@ actions: !!omap
 - INVENTORY:
     message: NEARBY
     words: ['i', 'inven']
+    oldstyle: false
 - FEED:
     message: NO_EDIBLES
     words: ['feed']
