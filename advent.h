@@ -59,6 +59,7 @@
 #define ACTION_WORD(n)  ((n) + 2000)
 #define SPECIAL_WORD(n) ((n) + 3000)
 #define PROMOTE_WORD(n) ((n) + 1000)
+#define DEMOTE_WORD(n)  ((n) - 1000)
 
 enum bugtype {
     SPECIAL_TRAVEL_500_GT_L_GT_300_EXCEEDS_GOTO_LIST,
