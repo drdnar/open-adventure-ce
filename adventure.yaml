@@ -8,7 +8,7 @@
 #
 # motions: Motion words, grouped into synonyms.  The 'oldstyle'
 #    attribute, if false, means that single-letter synonyms should be
-#    accepted in oldstyle mode; it defaults to truie.
+#    accepted in oldstyle mode; it defaults to true.
 
 # actions: Action words, grouped into synonyms, and their corresponding
 #    default messages. The 'oldstyle' attribute is as for motions.
