@@ -8,7 +8,13 @@ PATH := $(realpath ..):$(realpath .):${PATH}
 # Defeat annoying behavior under Mac OS X - builtin echo doesn't do -n
 ECHO := /bin/echo
 
-check: regress
+# Find all *.log entries to test
+TESTLOADS := $(shell ls -1 *.log | sed '/.log/s///' | sort)
+
+.PHONY: check coverage clean testlist listcheck savegames buildregress
+.PHONY: savecheck regress
+
+check: savecheck regress
 	@echo "=== No diff output is good news."
 	@-advent -x 2>/dev/null	# Get usage message into coverage tests
 	@-advent -l /dev/null <pitfall.log >/dev/null
@@ -30,6 +36,7 @@ listcheck:
 	    if ( head -3 $$f | grep -q '^ *##' ); then :; else echo "$$f needs a description"; fi; \
 	done
 
+# Generate bogus savegames.
 savegames:
 	$(ECHO) "cheat: Generate save file with -1000 deaths"
 	../cheat -d -1000 -o cheat_numdie.adv > /tmp/cheat_numdie
@@ -39,9 +46,8 @@ savegames:
 	../cheat -s -1000 -o thousand_saves.adv > /tmp/cheat_1000saves
 	rm -f /tmp/cheat*
 
-# General regression testing of commands and output; look at the *.log and
-# corresponding *.chk files to see which tests this runs.
-TESTLOADS := $(shell ls -1 *.log | sed '/.log/s///' | sort)
+
+# Rebuild characterizing tests
 buildregress: savegames
 	../cheat -s -1000 -o thousand_saves.adv > /tmp/regress1000saves
 	@for file in $(TESTLOADS); do \
@@ -50,7 +56,8 @@ buildregress: savegames
 	    advent $$OPTS <$${file}.log >$${file}.chk 2>&1 || exit 1; \
 	done; \
 	rm -f scratch.tmp
-regress: savegames
+
+savecheck: savegames
 	$(ECHO) "TEST cheat: Bogus option for save file generation"
 	../cheat -QqQ 2> /tmp/coverage_cheat_batopt | true
 	$(ECHO) "TEST cheat: Fail to save because we omit -o"
@@ -63,13 +70,17 @@ regress: savegames
 	advent -l / < pitfall.log > /tmp/coverage_advent_logfail 2>&1 || exit 1
 	$(ECHO) "TEST advent: Test -r with valid input"
 	advent -r thousand_saves.adv < pitfall.log > /tmp/coverage_advent_readfail 2>&1 || exit 1
+	rm -f scratch.tmp /tmp/regress$$$$ /tmp/coverage*
+
+# General regression testing of commands and output; look at the *.log and
+# corresponding *.chk files to see which tests this runs.
+regress:
 	@for file in $(TESTLOADS); do \
 	    $(ECHO) -n "  $${file} "; grep '##' $${file}.log  || echo ' ## (no description)'; \
 	    OPTS=`sed -n /#options:/s///p <$${file}.log`; \
 	    if advent $$OPTS < $${file}.log >/tmp/regress$$$$ 2>&1; \
 	    then diff --text -u $${file}.chk /tmp/regress$$$$ || exit 1; \
 	    else echo "*** Nonzero return status on $${file}!"; exit 1; fi \
-	done; \
-	rm -f scratch.tmp /tmp/regress$$$$ /tmp/coverage*
+	done;
 
 # end
