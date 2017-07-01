@@ -161,8 +161,6 @@ typedef struct {{
  * inherited from FORTRAN, someday. To understand these, read the
  * encoding description for travel.
  */
-#define T_DESTINATION(entry)	(entry).dest
-#define T_CONDITION(entry)	(entry).cond
 #define T_NODWARVES(entry)	(T_CONDITION(entry) == 100)
 #define T_TERMINATE(entry)	((entry).motion == 1)
 #define L_SPEAK(loc)		((loc) - 500)

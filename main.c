@@ -379,7 +379,7 @@ static bool dwarfmove(void)
         kk = tkey[game.dloc[i]];
         if (kk != 0)
             do {
-                game.newloc = T_DESTINATION(travel[kk]);
+                game.newloc = travel[kk].dest;
                 /* Have we avoided a dwarf encounter? */
                 bool avoided = (SPECIAL(game.newloc) ||
                                 !INDEEP(game.newloc) ||
@@ -531,10 +531,10 @@ static bool playermove( int motion)
         if (spk == 0) {
             int te_tmp = 0;
             for (;;) {
-                scratchloc = T_DESTINATION(travel[travel_entry]);
+                scratchloc = travel[travel_entry].dest;
                 if (scratchloc != motion) {
                     if (!SPECIAL(scratchloc)) {
-                        if (FORCED(scratchloc) && T_DESTINATION(travel[tkey[scratchloc]]) == motion)
+                        if (FORCED(scratchloc) && travel[tkey[scratchloc]].dest == motion)
                             te_tmp = travel_entry;
                     }
                     if (!travel[travel_entry].stop) {
@@ -611,7 +611,7 @@ static bool playermove( int motion)
     do {
         for (;;) { /* L12 loop */
             for (;;) {
-                long cond = T_CONDITION(travel[travel_entry]);
+                long cond = travel[travel_entry].cond;
                 long arg = MOD(cond, 100);
                 if (!SPECIAL(cond)) {
                     /* YAML N and [pct N] conditionals */
@@ -640,7 +640,7 @@ static bool playermove( int motion)
             }
 
             /* Found an eligible rule, now execute it */
-            game.newloc = T_DESTINATION(travel[travel_entry]);
+            game.newloc = travel[travel_entry].dest;
             if (!SPECIAL(game.newloc))
                 return true;
 
