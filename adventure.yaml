@@ -1425,7 +1425,7 @@ locations: !!omap
     conditions: {DEEP: true}
     travel: [
       {verbs: ['D', 'SLAB'], action: [goto, LOC_SLAB]},
-      {verbs: ['SOUTH'], cond: [not, DRAGON, DRAGON_BLOCKS],
+      {verbs: ['SOUTH'], cond: [not, DRAGON, DRAGON_BARS],
                          action: [goto, LOC_SECRET5]},
       {verbs: ['SOUTH'], action: [goto, LOC_SECRET4]},
       {verbs: ['NORTH'], action: [goto, LOC_MIRRORCANYON]},
@@ -1483,7 +1483,7 @@ locations: !!omap
     conditions: {DEEP: true}
     travel: [
       {verbs: ['EAST'], action: [goto, LOC_KINGHALL]},
-      {verbs: ['WEST'], cond: [not, DRAGON, DRAGON_BLOCKS], action: [goto, LOC_SECRET5]},
+      {verbs: ['WEST'], cond: [not, DRAGON, DRAGON_BARS], action: [goto, LOC_SECRET5]},
       {verbs: ['WEST'], action: [goto, LOC_SECRET6]},
       {verbs: ['D'], action: [goto, LOC_WIDEPLACE]},
     ]
@@ -3125,7 +3125,6 @@ arbitrary_messages:  !!omap
 - TOTAL_ROAR: 'The roaring is so loud that it drowns out all other sound.'
 - BIRD_CRAP: 'The bird eyes you suspiciously and flutters away.  A moment later you\nfeel something wet land on your head, but upon looking up you can see\nno sign of the culprit.'
 - FEW_DROPS: 'There are only a few drops--not enough to carry.'
-- HEAD_BUZZES: 'Your head buzzes strangely for a moment.'
 - NOT_BRIGHT: '(Uh, y''know, that wasn''t very bright.)'
 - TOOK_LONG: 'It''s a pity you took so long about it.'
 - UPSTREAM_DOWNSTREAM: 'Upstream or downstream?'
@@ -3443,10 +3442,15 @@ objects: !!omap
     locations: [LOC_SECRET4, LOC_SECRET6]
     immovable: true
     descriptions:
-    - [DRAGON_BLOCKS, 'A huge green fierce dragon bars the way!']
-    - 'The blood-specked body of a huge green dead dragon lies to one side.'
-    - 'The body of a huge green dead dragon is lying off to one side.'
-    - 'Congratulations!  You have just vanquished a dragon with your bare\nhands!  (Unbelievable, isn''t it?)'
+    - [DRAGON_BARS, 'A huge green fierce dragon bars the way!']
+    - [DRAGON_DEAD, 'The blood-specked body of a huge green dead dragon lies to one side.']
+    - [DRAGON_BLOODLESS, 'The body of a huge green dead dragon is lying off to one side.']
+    changes:
+    - ''
+    - |-
+        Congratulations!  You have just vanquished a dragon with your bare
+        hands!  (Unbelievable, isn't it?)
+    - 'Your head buzzes strangely for a moment.'
     sounds:
     - 'The dragon''s ominous hissing does not bode well for you.'
     - 'The dragon is, not surprisingly, silent.'
@@ -3703,9 +3707,9 @@ objects: !!omap
     immovable: true
     treasure: true
     descriptions:
-    - 'There is a persian rug spread out on the floor!'
-    - 'The dragon is sprawled out on a persian rug!!'
-    - 'There is a persian rug here, hovering in mid-air!'
+    - [RUG_FLOOR, 'There is a persian rug spread out on the floor!']
+    - [RUG_DRAGON, 'The dragon is sprawled out on a persian rug!!']
+    - [RUG_HOVER, 'There is a persian rug here, hovering in mid-air!']
 - OBJ_63:
     words: ['spice']
     inventory: 'Rare spices'

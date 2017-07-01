@@ -121,9 +121,9 @@ static int attack(struct command_t *command)
             command->wd1 = token_to_packed("N");
             return GO_CHECKFOO;
         }
-        pspeak(DRAGON, look, 3);
-        game.prop[DRAGON] = 1;
-        game.prop[RUG] = 0;
+        state_change(DRAGON, DRAGON_DEAD);
+        game.prop[RUG] = RUG_FLOOR;
+	/* FIXME: Arithmentic on location values */
         int k = (objects[DRAGON].plac + objects[DRAGON].fixd) / 2;
         move(DRAGON + NOBJECTS, -1);
         move(RUG + NOBJECTS, 0);
@@ -284,7 +284,7 @@ static int vcarry(token_t verb, token_t obj)
         spk = DOUGHNUT_HOLES;
     if (obj == BLOOD)
         spk = FEW_DROPS;
-    if (obj == RUG && game.prop[RUG] == 2)
+    if (obj == RUG && game.prop[RUG] == RUG_HOVER)
         spk = RUG_HOVERS;
     if (obj == SIGN)
         spk = HAND_PASSTHROUGH;
@@ -410,8 +410,8 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
             rspeak(GEM_FITS);
             game.prop[obj] = 1;
             game.prop[CAVITY] = CAVITY_FULL;
-            if (HERE(RUG) && ((obj == EMERALD && game.prop[RUG] != 2) || (obj == RUBY &&
-                              game.prop[RUG] == 2))) {
+            if (HERE(RUG) && ((obj == EMERALD && game.prop[RUG] != RUG_HOVER) || (obj == RUBY &&
+                              game.prop[RUG] == RUG_HOVER))) {
                 spk = RUG_RISES;
                 if (TOTING(RUG))
                     spk = RUG_WIGGLES;
@@ -419,6 +419,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
                     spk = RUG_SETTLES;
                 rspeak(spk);
                 if (spk != RUG_WIGGLES) {
+		    /* FIXME: Arithmetic on state numbers */
                     int k = 2 - game.prop[RUG];
                     game.prop[RUG] = k;
                     if (k == 2)
@@ -485,13 +486,12 @@ static int drink(token_t verb, token_t obj)
             game.place[WATER] = LOC_NOWHERE;
             spk = BOTTLE_EMPTY;
         }
+	rspeak(spk);
     } else {
         DESTROY(BLOOD);
-        game.prop[DRAGON] = 2;
+        state_change(DRAGON, DRAGON_BLOODLESS);
         game.blooded = true;
-        spk = HEAD_BUZZES;
     }
-    rspeak(spk);
     return GO_CLEAROBJ;
 }
 
@@ -673,7 +673,7 @@ static int fly(token_t verb, token_t obj)
 {
     int spk = actions[verb].message;
     if (obj == INTRANSITIVE) {
-        if (game.prop[RUG] != 2)
+        if (game.prop[RUG] != RUG_HOVER)
             spk = RUG_NOTHING2;
         if (!HERE(RUG))
             spk = FLAP_ARMS;
@@ -689,12 +689,13 @@ static int fly(token_t verb, token_t obj)
         return GO_CLEAROBJ;
     }
     spk = RUG_NOTHING1;
-    if (game.prop[RUG] != 2) {
+    if (game.prop[RUG] != RUG_HOVER) {
         rspeak(spk);
         return GO_CLEAROBJ;
     }
     game.oldlc2 = game.oldloc;
     game.oldloc = game.loc;
+    /* FIXME: Arithmetic on location values */
     game.newloc = game.place[RUG] + game.fixed[RUG] - game.loc;
     spk = RUG_GOES;
     if (game.prop[SAPPH] >= 0)
