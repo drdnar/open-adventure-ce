@@ -1,21 +1,5 @@
 # Makefile for the open-source release of adventure 2.5
 
-# The libedit (aka: editline) library is required to build. On
-# Debian or Ubuntu:
-#
-# apt-get install libedit-dev
-
-# You will also need Python 3 YAML.  Under Debian or ubuntu:
-#
-# apt-get install python3-yaml
-#
-# If you have pip installed,
-#
-# pip3 install PyYAML
-#
-# If you are using MacPorts on OS X:
-# port install py3{5,6}-yaml as appropriate for your Python 3 version.
-#
 # To build with save/resume disabled, pass CCFLAGS="-D ADVENT_NOSAVE"
 
 VERS=$(shell sed -n <NEWS '/^[0-9]/s/:.*//p' | head -1)

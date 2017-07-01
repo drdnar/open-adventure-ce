@@ -16,13 +16,11 @@ original 6-character name on the PDP-10 has been reverted to for the
 executable in order to avoid a collision with the BSD games port of
 the ancestral 1977 version.
 
-The distribution has three build-time dependencies: Python 3, Python 3
-YAML, and libedit.  It builds a pure C executable.
+Please see INSTALL.adoc for build info.
 
-You can run a regression test on the code with 'make check'. Extreme
-care has been taken to not silently change gameplay. By policy, all
-user-visible changes from 2.5 are revertible with the -o (oldstyle)
-option.
+Extreme care has been taken to not silently change gameplay. By
+policy, all user-visible changes from 2.5 are revertible with the
+-o (oldstyle) option.
 
 If you encounter a bug (not likely; this code is old and well tested)
 please try to make a test log that reproduces it, using the -l option,

@@ -1,0 +1,17 @@
+= Installing Open Adventure =
+
+1. Install PyYAML for Python 3 (which requires Python 3), and libedit
+(aka: editline) on your system.
+
+On Debian and Ubuntu: 'apt-get install python3-yaml libedit-dev'.
+On Fedora: 'dnf install python3-PyYAML libedit-devel'.
+
+If you are using MacPorts on OS X: 'port install py3{5,6}-yaml', as appropriate for your Python 3 version.
+
+You can also use pip to install PyYAML: 'pip3 install PyYAML'.
+
+2. 'make'.
+
+3. Optionally run a regression test on the code with 'make check'.
+
+4. Run the resulting 'advent' binary to play.
