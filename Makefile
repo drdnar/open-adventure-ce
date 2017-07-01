@@ -1,6 +1,11 @@
 # Makefile for the open-source release of adventure 2.5
 
-# You will need Python 3 YAML.  Under Debian or ubuntu:
+# The libedit (aka: editline) library is required to build. On
+# Debian or Ubuntu:
+#
+# apt-get install libedit-dev
+
+# You will also need Python 3 YAML.  Under Debian or ubuntu:
 #
 # apt-get install python3-yaml
 #
