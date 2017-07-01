@@ -25,7 +25,7 @@ static int attack(struct command_t *command)
             obj = DWARF;
         if (HERE(SNAKE))
             obj = obj * NOBJECTS + SNAKE;
-        if (AT(DRAGON) && game.prop[DRAGON] == 0)
+        if (AT(DRAGON) && game.prop[DRAGON] == DRAGON_BARS)
             obj = obj * NOBJECTS + DRAGON;
         if (AT(TROLL))
             obj = obj * NOBJECTS + TROLL;
@@ -107,7 +107,7 @@ static int attack(struct command_t *command)
             spk = ALREADY_DEAD;
             break;
         }
-    } else if (obj == DRAGON && game.prop[DRAGON] == 0) {
+    } else if (obj == DRAGON && game.prop[DRAGON] == DRAGON_BARS) {
         /*  Fun stuff for dragon.  If he insists on attacking it, win!
          *  Set game.prop to dead, move dragon to central loc (still
          *  fixed), move rug there (not fixed), and move him there,
@@ -123,7 +123,7 @@ static int attack(struct command_t *command)
         }
         state_change(DRAGON, DRAGON_DEAD);
         game.prop[RUG] = RUG_FLOOR;
-	/* FIXME: Arithmentic on location values */
+        /* FIXME: Arithmentic on location values */
         int k = (objects[DRAGON].plac + objects[DRAGON].fixd) / 2;
         move(DRAGON + NOBJECTS, -1);
         move(RUG + NOBJECTS, 0);
@@ -419,7 +419,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
                     spk = RUG_SETTLES;
                 rspeak(spk);
                 if (spk != RUG_WIGGLES) {
-		    /* FIXME: Arithmetic on state numbers */
+                    /* FIXME: Arithmetic on state numbers */
                     int k = 2 - game.prop[RUG];
                     game.prop[RUG] = k;
                     if (k == 2)
@@ -432,7 +432,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
             drop(BATTERY, game.loc);
             pspeak(BATTERY, look, FRESH_BATTERIES);
             return GO_CLEAROBJ;
-        } else if (obj == BIRD && AT(DRAGON) && game.prop[DRAGON] == 0) {
+        } else if (obj == BIRD && AT(DRAGON) && game.prop[DRAGON] == DRAGON_BARS) {
             rspeak(BIRD_BURNT);
             DESTROY(BIRD);
             return GO_CLEAROBJ;
@@ -486,7 +486,7 @@ static int drink(token_t verb, token_t obj)
             game.place[WATER] = LOC_NOWHERE;
             spk = BOTTLE_EMPTY;
         }
-	rspeak(spk);
+        rspeak(spk);
     } else {
         DESTROY(BLOOD);
         state_change(DRAGON, DRAGON_BLOODLESS);
@@ -554,7 +554,7 @@ static int feed(token_t verb, token_t obj)
         return GO_CLEAROBJ;
     } else if (obj == SNAKE || obj == DRAGON || obj == TROLL) {
         spk = NOTHING_EDIBLE;
-        if (obj == DRAGON && game.prop[DRAGON] != 0)
+        if (obj == DRAGON && game.prop[DRAGON] != DRAGON_BARS)
             spk = RIDICULOUS_ATTEMPT;
         if (obj == TROLL)
             spk = TROLL_VICES;
@@ -1031,7 +1031,7 @@ static int throw (struct command_t *command)
     else {
         int i = atdwrf(game.loc);
         if (i <= 0) {
-            if (AT(DRAGON) && game.prop[DRAGON] == 0)
+            if (AT(DRAGON) && game.prop[DRAGON] == DRAGON_BARS)
                 return throw_support(DRAGON_SCALES);
             if (AT(TROLL))
                 return throw_support(TROLL_RETURNS);
