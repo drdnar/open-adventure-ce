@@ -56,6 +56,7 @@
 #                      [with, OBJ]    Must be carrying or in room with
 #                      [not, OBJ N]   Property of named OBJ must not be N.
 #                                     N may be numeric or a state label.
+#                      [nodwarves]    Dwarves must skip this rule.
 #    All attributes are optional except the long description and
 #    travel. Order of locations is not significant.
 #
@@ -1244,7 +1245,7 @@ locations: !!omap
     travel: [
       {verbs: ['EAST'], action: [goto, LOC_LONGEAST]},
       {verbs: ['NORTH'], action: [goto, LOC_CROSSOVER]},
-      {verbs: ['SOUTH'], cond: [carry, OBJ_0], action: [goto, LOC_DIFFERENT1]},
+      {verbs: ['SOUTH'], cond: ["nodwarves"], action: [goto, LOC_DIFFERENT1]},
     ]
 - LOC_CROSSOVER:
     description:

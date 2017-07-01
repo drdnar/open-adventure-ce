@@ -153,6 +153,7 @@ typedef struct {{
   const long motion;
   const long cond;
   const long dest;
+  const bool nodwarves;
   const bool stop;
 }} travelop_t;
 
@@ -161,7 +162,6 @@ typedef struct {{
  * inherited from FORTRAN, someday. To understand these, read the
  * encoding description for travel.
  */
-#define T_NODWARVES(entry)	(T_CONDITION(entry) == 100)
 #define T_TERMINATE(entry)	((entry).motion == 1)
 #define L_SPEAK(loc)		((loc) - 500)
 
@@ -629,7 +629,9 @@ def buildtravel(locs, objs):
             raise ValueError
     def cencode(cond, name):
         if cond is None:
-            return 0;
+            return 0
+        elif cond == ["nodwarves"]:
+            return 100
         elif cond[0] == "pct":
             return cond[1]
         elif cond[0] == "carry":
@@ -645,7 +647,6 @@ def buildtravel(locs, objs):
                 sys.stderr.write("dungeon: unknown object name %s in with clause of \n" % (cond[1], name))
                 sys.exit(1)
         elif cond[0] == "not":
-            # FIXME: Allow named as well as numbered states
             try:
                 obj = objnames.index(cond[1])
                 if type(cond[2]) == int:
@@ -702,7 +703,7 @@ def buildtravel(locs, objs):
     #
     # In order to de-crypticize the runtime code, we're going to break these
     # magic numbers up into a struct.
-    travel = [[0, 0, 0, False]]
+    travel = [[0, 0, 0, False, False]]
     tkey = [0]
     oldloc = 0
     while ltravel:
@@ -715,7 +716,11 @@ def buildtravel(locs, objs):
         elif travel:
             travel[-1][-1] = not travel[-1][-1]
         while rule:
-            travel.append([rule.pop(0), newloc // 1000, newloc % 1000, False])
+            travel.append([rule.pop(0),
+                           newloc // 1000,
+                           newloc % 1000,
+                           (newloc//1000)==100,
+                           False])
         travel[-1][-1] = True
     return (travel, tkey)
 
@@ -724,12 +729,13 @@ def get_travel(travel):
         .motion = {},
         .cond = {},
         .dest = {},
+        .nodwarves = {},
         .stop = {},
     }},
 """
     out = ""
     for entry in travel:
-        out += template.format(entry[0], entry[1], entry[2], entry[3]).lower()
+        out += template.format(*entry).lower()
     out = out[:-1] # trim trailing newline
     return out
 

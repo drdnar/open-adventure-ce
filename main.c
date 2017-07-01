@@ -389,7 +389,7 @@ static bool dwarfmove(void)
                                 game.newloc == game.dloc[i] ||
                                 FORCED(game.newloc) ||
                                 (i == PIRATE && CNDBIT(game.newloc, COND_NOARRR)) ||
-                                T_NODWARVES(travel[kk]));
+                                travel[kk].nodwarves);
                 if (!avoided) {
                     tk[j++] = game.newloc;
                 }
