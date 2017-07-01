@@ -6,7 +6,8 @@
 On Debian and Ubuntu: 'apt-get install python3-yaml libedit-dev'.
 On Fedora: 'dnf install python3-PyYAML libedit-devel'.
 
-If you are using MacPorts on OS X: 'port install py3{5,6}-yaml', as appropriate for your Python 3 version.
+If you are using MacPorts on OS X: 'port install py3{5,6}-yaml', as
+appropriate for your Python 3 version.
 
 You can also use pip to install PyYAML: 'pip3 install PyYAML'.
 
