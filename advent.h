@@ -187,7 +187,7 @@ extern void wordclear(token_t *);
 extern void speak(const char*, ...);
 extern void pspeak(vocab_t, enum speaktype, int, ...);
 extern void rspeak(vocab_t, ...);
-extern void echo_input(FILE*, char*, char*);
+extern void echo_input(FILE*, const char*, const char*);
 extern int word_count(char*);
 extern char* get_input(void);
 extern bool silent_yes(void);

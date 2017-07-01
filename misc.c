@@ -295,7 +295,7 @@ void rspeak(vocab_t i, ...)
     va_end(ap);
 }
 
-void echo_input(FILE* destination, char* input_prompt, char* input)
+void echo_input(FILE* destination, const char* input_prompt, const char* input)
 {
     size_t len = strlen(input_prompt) + strlen(input) + 1;
     char* prompt_and_input = (char*) xmalloc(len);
@@ -354,7 +354,7 @@ char* get_input()
         echo_input(stdout, input_prompt, input);
 
     if (logfp)
-        echo_input(logfp, input_prompt, input);
+        echo_input(logfp, "", input);
 
     return (input);
 }
