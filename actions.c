@@ -170,8 +170,8 @@ static int bigwords(token_t foo)
         } else {
             /*  Bring back troll if we steal the eggs back from him before
              *  crossing. */
-            if (game.place[EGGS] == LOC_NOWHERE && game.place[TROLL] == LOC_NOWHERE && game.prop[TROLL] == 0)
-                game.prop[TROLL] = 1;
+            if (game.place[EGGS] == LOC_NOWHERE && game.place[TROLL] == LOC_NOWHERE && game.prop[TROLL] == TROLL_UNPAID)
+                game.prop[TROLL] = TROLL_PAIDONCE;
             k = 2;
             if (HERE(EGGS))
                 k = 1;
@@ -354,21 +354,21 @@ static int chain(token_t verb)
         spk = CHAIN_UNLOCKED;
         if (game.prop[BEAR] == UNTAMED_BEAR)
             spk = BEAR_BLOCKS;
-        if (game.prop[CHAIN] == 0)
+        if (game.prop[CHAIN] == CHAIN_HEAP)
             spk = ALREADY_UNLOCKED;
         if (spk != CHAIN_UNLOCKED) {
             rspeak(spk);
             return GO_CLEAROBJ;
         }
-        game.prop[CHAIN] = 0;
-        game.fixed[CHAIN] = 0;
+        game.prop[CHAIN] = CHAIN_HEAP;
+        game.fixed[CHAIN] = CHAIN_HEAP;
         if (game.prop[BEAR] != BEAR_DEAD)
             game.prop[BEAR] = CONTENTED_BEAR;
         /* FIXME: Arithmetic on state numbers */
         game.fixed[BEAR] = 2 - game.prop[BEAR];
     } else {
         spk = CHAIN_LOCKED;
-        if (game.prop[CHAIN] != 0)
+        if (game.prop[CHAIN] != CHAIN_HEAP)
             spk = ALREADY_LOCKED;
         if (game.loc != objects[CHAIN].plac)
             spk = NO_LOCKSITE;
@@ -376,7 +376,7 @@ static int chain(token_t verb)
             rspeak(spk);
             return GO_CLEAROBJ;
         }
-        game.prop[CHAIN] = 2;
+        game.prop[CHAIN] = CHAIN_FIXED;
         if (TOTING(CHAIN))
             drop(CHAIN, game.loc);
         game.fixed[CHAIN] = -1;

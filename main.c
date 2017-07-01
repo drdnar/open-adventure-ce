@@ -770,8 +770,8 @@ static bool closecheck(void)
         juggle(CHASM);
         if (game.prop[BEAR] != BEAR_DEAD)
             DESTROY(BEAR);
-        game.prop[CHAIN] = 0;
-        game.fixed[CHAIN] = 0;
+        game.prop[CHAIN] = CHAIN_HEAP;
+        game.fixed[CHAIN] = CHAIN_HEAP;
         game.prop[AXE] = 0;
         game.fixed[AXE] = 0;
         rspeak(CAVE_CLOSING);
@@ -873,8 +873,8 @@ static void listobjects(void)
 /*  Print out descriptions of objects at this location.  If
  *  not closing and property value is negative, tally off
  *  another treasure.  Rug is special case; once seen, its
- *  game.prop is 1 (dragon on it) till dragon is killed.
- *  Similarly for chain; game.prop is initially 1 (locked to
+ *  game.prop is RUG_DRAGON (dragon on it) till dragon is killed.
+ *  Similarly for chain; game.prop is initially CHAINING_BEAR (locked to
  *  bear).  These hacks are because game.prop=0 is needed to
  *  get full score. */
 {
@@ -890,8 +890,10 @@ static void listobjects(void)
                 if (game.closed)
                     continue;
                 game.prop[obj] = 0;
-                if (obj == RUG || obj == CHAIN)
-                    game.prop[obj] = 1;
+                if (obj == RUG)
+                    game.prop[RUG] = RUG_DRAGON;
+                if (obj == CHAIN)
+                    game.prop[CHAIN] = CHAINING_BEAR;
                 --game.tally;
                 /*  Note: There used to be a test here to see whether the
                  *  player had blown it so badly that he could never ever see

@@ -3724,9 +3724,9 @@ objects: !!omap
     immovable: true
     treasure: true
     descriptions:
-    - 'There is a golden chain lying in a heap on the floor!'
-    - 'The bear is locked to the wall with a golden chain!'
-    - 'There is a golden chain locked to the wall!'
+    - [CHAIN_HEAP, 'There is a golden chain lying in a heap on the floor!']
+    - [CHAINING_BEAR, 'The bear is locked to the wall with a golden chain!']
+    - [CHAIN_FIXED, 'There is a golden chain locked to the wall!']
 - RUBY:
     words: ['ruby']
     inventory: 'Giant ruby'
