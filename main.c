@@ -27,7 +27,6 @@
 
 FILE  *logfp = NULL, *rfp = NULL;
 bool oldstyle = false;
-bool editline = true;
 bool prompt = true;
 
 // LCOV_EXCL_START
@@ -63,11 +62,11 @@ int main(int argc, char *argv[])
     /*  Options. */
 
 #ifndef ADVENT_NOSAVE
-    const char* opts = "l:or:s";
-    const char* usage = "Usage: %s [-l logfilename] [-o] [-r restorefilename] [-s] \n";
+    const char* opts = "l:or";
+    const char* usage = "Usage: %s [-l logfilename] [-o] [-r restorefilename]\n";
 #else
-    const char* opts = "l:os";
-    const char* usage = "Usage: %s [-l logfilename] [-o] [-s] \n";
+    const char* opts = "l:o";
+    const char* usage = "Usage: %s [-l logfilename] [-o]\n";
 #endif
     while ((ch = getopt(argc, argv, opts)) != EOF) {
         switch (ch) {
@@ -81,7 +80,7 @@ int main(int argc, char *argv[])
             break;
         case 'o':
             oldstyle = true;
-            editline = prompt = false;
+            prompt = false;
             break;
 #ifndef ADVENT_NOSAVE
         case 'r':
@@ -93,9 +92,6 @@ int main(int argc, char *argv[])
             signal(SIGINT, sig_handler);
             break;
 #endif
-        case 's':
-            editline = false;
-            break;
         default:
             fprintf(stderr,
                     usage, argv[0]);
@@ -107,8 +103,6 @@ int main(int argc, char *argv[])
             fprintf(stderr,
                     "        -r restore from specified saved game file\n");
 #endif
-            fprintf(stderr,
-                    "        -s suppress command editing\n");
             exit(EXIT_FAILURE);
             break;
         }

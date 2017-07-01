@@ -1,5 +1,5 @@
 ## Exercise logging option and seed dump
-#options: -s -l scratch.tmp
+#options: -l scratch.tmp
 n
 in
 

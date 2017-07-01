@@ -173,7 +173,7 @@ struct command_t {
 
 extern struct game_t game;
 extern FILE *logfp;
-extern bool oldstyle, editline, prompt;
+extern bool oldstyle, prompt;
 
 extern char* xstrdup(const char* s);
 extern void* xmalloc(size_t size);

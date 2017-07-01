@@ -8,7 +8,6 @@
 
 FILE  *logfp = NULL, *rfp = NULL;
 bool oldstyle = false;
-bool editline = true;
 bool prompt = true;
 
 int main(int argc, char *argv[])
