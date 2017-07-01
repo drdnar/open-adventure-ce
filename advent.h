@@ -56,15 +56,15 @@
 #define BUG(x)       bug(x, #x)
 
 enum bugtype {
-   SPECIAL_TRAVEL_500_GT_L_GT_300_EXCEEDS_GOTO_LIST,
-   VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3,
-   INTRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST,
-   TRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST,
-   CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION,
-   LOCATION_HAS_NO_TRAVEL_ENTRIES,
-   HINT_NUMBER_EXCEEDS_GOTO_LIST,
-   SPEECHPART_NOT_TRANSITIVE_OR_INTRANSITIVE_OR_UNKNOWN,
-   ACTION_RETURNED_PHASE_CODE_BEYOND_END_OF_SWITCH,
+    SPECIAL_TRAVEL_500_GT_L_GT_300_EXCEEDS_GOTO_LIST,
+    VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3,
+    INTRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST,
+    TRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST,
+    CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION,
+    LOCATION_HAS_NO_TRAVEL_ENTRIES,
+    HINT_NUMBER_EXCEEDS_GOTO_LIST,
+    SPEECHPART_NOT_TRANSITIVE_OR_INTRANSITIVE_OR_UNKNOWN,
+    ACTION_RETURNED_PHASE_CODE_BEYOND_END_OF_SWITCH,
 };
 
 enum speaktype {touch, look, hear, study, change};
@@ -78,19 +78,19 @@ enum speechpart {unknown, intransitive, transitive};
  * The values don't matter, but perturb their order at your peril.
  */
 enum phase_codes {
-  GO_TERMINATE,
-  GO_MOVE,
-  GO_TOP,
-  GO_CLEAROBJ,
-  GO_CHECKHINT,
-  GO_CHECKFOO,
-  GO_DIRECTION,
-  GO_LOOKUP,
-  GO_WORD2,
-  GO_SPECIALS,
-  GO_UNKNOWN,
-  GO_ACTION,
-  GO_DWARFWAKE,
+    GO_TERMINATE,
+    GO_MOVE,
+    GO_TOP,
+    GO_CLEAROBJ,
+    GO_CHECKHINT,
+    GO_CHECKFOO,
+    GO_DIRECTION,
+    GO_LOOKUP,
+    GO_WORD2,
+    GO_SPECIALS,
+    GO_UNKNOWN,
+    GO_ACTION,
+    GO_DWARFWAKE,
 };
 
 typedef long token_t;  // word token - someday this will be char[TOKLEN+1]
@@ -110,7 +110,15 @@ struct game_t {
     bool closng;                 // whether it's closing time yet
     long conds;                  // min value for cond(loc) if loc has any hints
     long detail;
+
+    /*  dflag controls the level of activation of dwarves:
+     *	0	No dwarf stuff yet (wait until reaches Hall Of Mists)
+     *	1	Reached Hall Of Mists, but hasn't met first dwarf
+     *	2	Met first dwarf, others start moving, no knives thrown yet
+     *	3	A knife has been thrown (first set always misses)
+     *	3+	Dwarves are mad (increases their accuracy) */
     long dflag;
+
     long dkill;
     long dtotal;
     long foobar;                 // current progress in saying "FEE FIE FOE FOO".
@@ -136,16 +144,16 @@ struct game_t {
     bool wzdark;                 // whether the loc he's leaving was dark
     char zzword[6];              // randomly generated magic word from bird
     bool blooded;                // has player drunk of dragon's blood?
-    long abbrev[NLOCATIONS + 1]; 
+    long abbrev[NLOCATIONS + 1];
     long atloc[NLOCATIONS + 1];
-    long dseen[NDWARVES + 1];
-    long dloc[NDWARVES + 1];
-    long odloc[NDWARVES + 1];
+    long dseen[NDWARVES + 1];    // true if dwarf has seen him
+    long dloc[NDWARVES + 1];     // location of dwarves, initially hard-wired in
+    long odloc[NDWARVES + 1];    // prior loc of each dwarf, initially garbage
     long fixed[NOBJECTS + 1];
     long link[NOBJECTS * 2 + 1];
     long place[NOBJECTS + 1];
-    long hinted[NHINTS];
-    long hintlc[NHINTS];
+    long hinted[NHINTS];         // hintlc[i] is how long he's been at LOC with cond bit i
+    long hintlc[NHINTS];         // hinted[i] is true iff hint i has been used.
     long prop[NOBJECTS + 1];
 };
 

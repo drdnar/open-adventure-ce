@@ -28,18 +28,23 @@
 #define DIM(a) (sizeof(a)/sizeof(a[0]))
 
 struct game_t game = {
-    .chloc = LOC_DEADEND12,
-    .chloc2 = LOC_DEADEND13,
     .dloc[1] = LOC_KINGHALL,
     .dloc[2] = LOC_WESTBANK,
     .dloc[3] = LOC_Y2,
     .dloc[4] = LOC_ALIKE3,
     .dloc[5] = LOC_COMPLEX,
+
+    /*  Sixth dwarf is special (the pirate).  He always starts at his
+     *  chest's eventual location inside the maze. This loc is saved
+     *  in chloc for ref. The dead end in the other maze has its
+     *  loc stored in chloc2. */
     .dloc[6] = LOC_DEADEND12,
-    .abbnum = 5,
-    .clock1 = WARNTIME,
-    .clock2 = FLASHTIME,
-    .blklin = true
+    .chloc   = LOC_DEADEND12,
+    .chloc2  = LOC_DEADEND13,
+    .abbnum  = 5,
+    .clock1  = WARNTIME,
+    .clock2  = FLASHTIME,
+    .blklin  = true
 };
 
 FILE  *logfp = NULL, *rfp = NULL;
@@ -384,9 +389,12 @@ static bool dwarfmove(void)
             if (PCT(50))
                 game.dloc[j] = 0;
         }
+
+        /* Alternate initial loc for dwarf, in case one of them
+        *  starts out on top of the adventurer. */
         for (int i = 1; i <= NDWARVES - 1; i++) {
             if (game.dloc[i] == game.loc)
-                game.dloc[i] = DALTLC;
+                game.dloc[i] = DALTLC; //
             game.odloc[i] = game.dloc[i];
         }
         rspeak(DWARF_RAN);
@@ -1143,7 +1151,7 @@ Lookup:
             rspeak(DONT_KNOW, command.wd1, command.wd1x);
             goto L2600;
         }
-	/* FIXME: magic numbers related to vocabulary */
+        /* FIXME: magic numbers related to vocabulary */
         kmod = MOD(defn, 1000);
         switch (defn / 1000) {
         case 0:
