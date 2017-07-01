@@ -145,6 +145,11 @@ typedef struct {{
 }} action_t;
 
 typedef struct {{
+  const string_group_t words;
+  const char* message;
+}} special_t;
+
+typedef struct {{
   const long motion;
   const long cond;
   const long dest;
@@ -172,7 +177,7 @@ extern const hint_t hints[];
 extern long conditions[];
 extern const motion_t motions[];
 extern const action_t actions[];
-extern const action_t specials[];
+extern const special_t specials[];
 extern const travelop_t travel[];
 extern const long tkey[];
 extern const char *ignore;
@@ -263,7 +268,7 @@ const action_t actions[] = {{
 {}
 }};
 
-const action_t specials[] = {{
+const special_t specials[] = {{
 {}
 }};
 
@@ -558,6 +563,35 @@ def get_actions(actions):
     act_str = act_str[:-1] # trim trailing newline
     return act_str
 
+def get_specials(specials):
+    template = """    {{
+        .words = {},
+        .message = {},
+    }},
+"""
+    spc_str = ""
+    for special in specials:
+        contents = special[1]
+
+        if contents["words"] == None:
+            words_str = get_string_group([])
+        else:
+            words_str = get_string_group(contents["words"])
+
+        if contents["message"] == None:
+            message = "NULL"
+        else:
+            message = make_c_string(contents["message"])
+
+        spc_str += template.format(words_str, message)
+        global ignore
+        if contents.get("oldstyle", True) == False:
+            for word in contents["words"]:
+                if len(word) == 1:
+                    ignore += word.upper()
+    spc_str = spc_str[:-1] # trim trailing newline
+    return spc_str
+
 def bigdump(arr):
     out = ""
     for (i, entry) in enumerate(arr):
@@ -724,7 +758,7 @@ if __name__ == "__main__":
         get_condbits(db["locations"]),
         get_motions(db["motions"]),
         get_actions(db["actions"]),
-        get_actions(db["specials"]),
+        get_specials(db["specials"]),
         bigdump(tkey),
         get_travel(travel), 
         ignore,

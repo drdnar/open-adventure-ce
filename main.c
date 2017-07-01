@@ -1137,7 +1137,7 @@ Lookup:
             command.verb = kmod;
             break;
         case 3:
-            rspeak(specials[kmod].message);
+            speak(specials[kmod].message);
             goto L2012;
         default:
             BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3); // LCOV_EXCL_LINE

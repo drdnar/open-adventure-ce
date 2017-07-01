@@ -393,74 +393,6 @@ actions: !!omap
     message: HUH_MAN
     words: !!null
 
-specials: !!omap
-- SPC_0:
-    message: !!null
-    words: !!null
-- SPC_1:
-    message: !!null
-    words: ['fee']
-- SPC_2:
-    message: !!null
-    words: ['fie']
-- SPC_3:
-    message: !!null
-    words: ['foe']
-- SPC_4:
-    message: !!null
-    words: ['foo']
-- SPC_5:
-    message: !!null
-    words: ['fum']
-- SPC_13:
-    message: YOUR_WELCOME
-    words: ['thank']
-- SPC_50:
-    message: WORN_OUT
-    words: ['sesam', 'opens', 'abra', 'abrac', 'shaza', 'hocus', 'pocus']
-- SPC_51:
-    message: VOCAB_DESCRIPTION
-    words: ['help', '?']
-- SPC_54:
-    message: OK_MAN
-    words: ['no']
-- SPC_64:
-    message: FOREST_LOOK
-    words: ['tree', 'trees']
-- SPC_66:
-    message: DIGGING_FUTILE
-    words: ['dig', 'excav']
-- SPC_68:
-    message: IM_CONFUSED
-    words: ['lost']
-- SPC_69:
-    message: EXPLAIN_MIST
-    words: ['mist']
-- SPC_79:
-    message: WATCH_IT
-    words: ['fuck']
-- SPC_139:
-    message: STOP_UNKNOWN
-    words: ['stop']
-- SPC_142:
-    message: QUICK_START
-    words: ['info', 'infor']
-- SPC_147:
-    message: NOT_KNOWHOW
-    words: ['swim']
-- SPC_246:
-    message: WIZARDS_NODISTURB
-    words: ['wizar']
-- SPC_271:
-    message: GUESS_AGAIN
-    words: ['yes']
-- SPC_275:
-    message: ADVENTURE_NEWS
-    words: ['news']
-- SPC_276:
-    message: ADVENTURE_VERSION
-    words: ['versi']
-
 hints:
   - hint: &grate
       name: CAVE
@@ -2852,7 +2784,6 @@ arbitrary_messages:  !!omap
 - UNSURE_FACING: 'I am unsure how you are facing.  Use compass points or nearby objects.'
 - NO_INOUT_HERE: 'I don''t know in from out here.  Use compass points or name something\nin the general direction you want to go.'
 - CANT_APPLY: 'I don''t know how to apply that word here.'
-- YOUR_WELCOME: 'You''re quite welcome.'
 - AM_GAME: 'I''m game.  Would you care to explain how?'
 - NO_MORE_DETAIL: |-
       Sorry, but I am not allowed to give more detail.  I will repeat the
@@ -2883,40 +2814,9 @@ arbitrary_messages:  !!omap
 - KILLED_DWARF: 'You killed a little dwarf.'
 - DWARF_DODGES: 'You attack a little dwarf, but he dodges out of the way.'
 - BARE_HANDS_QUERY: 'With what?  Your bare hands?'
-- WORN_OUT: 'Good try, but that is an old worn-out magic word.'
-- VOCAB_DESCRIPTION: |-
-      I know of places, actions, and things.  Most of my vocabulary
-      describes places and is used to move you there.  To move, try words
-      like forest, building, downstream, enter, east, west, north, south,
-      up, or down.  I know about a few special objects, like a black rod
-      hidden in the cave.  These objects can be manipulated using some of
-      the action words that I know.  Usually you will need to give both the
-      object and action words (in either order), but sometimes I can infer
-      the object from the verb alone.  Some objects also imply verbs; in
-      particular, "inventory" implies "take inventory", which causes me to
-      give you a list of what you're carrying.  Some objects have unexpected
-      effects; the effects are not always desirable!  Usually people having
-      trouble moving just need to try a few more words.  Usually people
-      trying unsuccessfully to manipulate an object are attempting something
-      beyond their (or my!) capabilities and should try a completely
-      different tack.  One point often confusing to beginners is that, when
-      there are several ways to go in a certain direction (e.g., if there
-      are several holes in a wall), choosing that direction in effect
-      chooses one of the ways at random; often, though, by specifying the
-      place you want to reach you can guarantee choosing the right path.
-      Also, to speed the game you can sometimes move long distances with a
-      single word.  For example, "building" usually gets you to the building
-      from anywhere above ground except when lost in the forest.  Also, note
-      that cave passages and forest paths turn a lot, so leaving one place
-      heading north doesn't guarantee entering the next from the south.
-      However (another important point), except when you've used a "long
-      distance" word such as "building", there is always a way to go back
-      where you just came from unless I warn you to the contrary, even
-      though the direction that takes you back might not be the reverse of
-      what got you here.  Good luck, and have fun!
 - BAD_DIRECTION: 'There is no way to go that direction.'
 - TWO_WORDS: 'Please stick to 1- and 2-word commands.'
-- OK_MAN: 'OK'
+- OK_MAN: &ok_man 'OK'
 - CANNOT_UNLOCK: 'You can''t unlock the keys.'
 - FUTILE_CRAWL: |-
     You have crawled around in some little holes and wound up back in the
@@ -2930,23 +2830,8 @@ arbitrary_messages:  !!omap
       things.  I cannot tell you where remote things are.
 - OGRE_SNARL: 'The ogre snarls and shoves you back.'
 - HUH_MAN: 'Huh?'
-- FOREST_LOOK: |-
-      The trees of the forest are large hardwood oak and maple, with an
-      occasional grove of pine or spruce.  There is quite a bit of under-
-      growth, largely birch and ash saplings plus nondescript bushes of
-      various sorts.  This time of year visibility is quite restricted by
-      all the leaves, but travel is quite easy if you detour around the
-      spruce and berry bushes.
 - WELCOME_YOU: 'Welcome to Adventure!!  Would you like instructions?'
-- DIGGING_FUTILE: |-
-      Digging without a shovel is quite impractical.  Even with a shovel
-      progress is unlikely.
 - REQUIRES_DYNAMITE: 'Blasting requires dynamite.'
-- IM_CONFUSED: 'I''m as confused as you are.'
-- EXPLAIN_MIST: |-
-      Mist is a white vapor, usually water, seen from time to time in
-      caverns.  It can be found anywhere but is frequently a sign of a deep
-      pit leading down to water.'
 - FEET_WET: 'Your feet are now wet.'
 - LOST_APPETITE: 'I think I just lost my appetite.'
 - THANKS_DELICIOUS: 'Thank you, it was delicious!'
@@ -2956,7 +2841,6 @@ arbitrary_messages:  !!omap
 - PECULIAR_NOTHING: 'Peculiar.  Nothing unexpected happens.'
 - GROUND_WET: 'Your bottle is empty and the ground is wet.'
 - CANT_POUR: 'You can''t pour that.'
-- WATCH_IT: 'Watch it!'
 - WHICH_WAY: 'Which way?'
 - FORGOT_PATH: 'Sorry, but I no longer seem to remember how it was you got here.'
 - CARRY_LIMIT: 'You can''t carry anything more.  You''ll have to drop something first.'
@@ -3006,36 +2890,13 @@ arbitrary_messages:  !!omap
 - DWARVES_AWAKEN: 'The resulting ruckus has awakened the dwarves.  There are now several\nthreatening little dwarves in the room with you!  Most of them throw\nknives at you!  All of them get you!'
 - UNHAPPY_BIRD: 'Oh, leave the poor unhappy bird alone.'
 - NEEDED_NEARBY: 'I daresay whatever you want is around here somewhere.'
-- STOP_UNKNOWN: 'I don''t know the word "stop".  Use "quit" if you want to give up.'
 - NOT_CONNECTED: 'You can''t get there from here.'
 - TAME_BEAR: 'You are being followed by a very large, tame bear.'
-- QUICK_START: |-
-      For a summary of the most recent changes to the game, say "news".
-      If you want to end your adventure early, say "quit".  To suspend your
-      adventure such that you can continue later, say "suspend" (or "pause"
-      or "save").  To see how well you're doing, say "score".  To get full
-      credit for a treasure, you must have left it safely in the building,
-      though you get partial credit just for locating it.  You lose points
-      for getting killed, or for quitting, though the former costs you more.
-      There are also points based on how much (if any) of the cave you've
-      managed to explore; in particular, there is a large bonus just for
-      getting in (to distinguish the beginners from the rest of the pack),
-      and there are other ways to determine whether you've been through some
-      of the more harrowing sections.  If you think you've found all the
-      treasures, just keep exploring for a while.  If nothing interesting
-      happens, you haven't found them all yet.  If something interesting
-      *DOES* happen (incidentally, there *ARE* ways to hasten things along),
-      it means you're getting a bonus and have an opportunity to garner many
-      more points in the Master's section.  I may occasionally offer hints
-      if you seem to be having trouble.  If I do, I'll warn you in advance
-      how much it will affect your score to accept the hints.  Finally, to
-      save time, you may specify "brief", which tells me never to repeat the
-      full description of a place unless you explicitly ask me to.
 - WITHOUT_SUSPENDS: 'Now let''s see you do it without suspending in mid-Adventure.'
 - FILL_INVALID: 'There is nothing here with which to fill it.'
 - SHATTER_VASE: 'The sudden change in temperature has delicately shattered the vase.'
 - BEYOND_POWER: 'It is beyond your power to do that.'
-- NOT_KNOWHOW: 'I don''t know how.'
+- NOT_KNOWHOW: &not_knowhow 'I don''t know how.'
 - TOO_FAR: 'It is too far up for you to reach.'
 - DWARF_SMOKE: |-
       You killed a little dwarf.  The body vanishes in a cloud of greasy
@@ -3126,7 +2987,6 @@ arbitrary_messages:  !!omap
 - NOT_BRIGHT: '(Uh, y''know, that wasn''t very bright.)'
 - TOOK_LONG: 'It''s a pity you took so long about it.'
 - UPSTREAM_DOWNSTREAM: 'Upstream or downstream?'
-- WIZARDS_NODISTURB: 'Wizards are not to be disturbed by such as you.'
 - FOREST_QUERY: !!null
 - WATERS_CRASHING: 'The waters are crashing loudly against the shore.'
 - THROWN_KNIVES: '%d of them throw knives at you!'
@@ -3151,11 +3011,8 @@ arbitrary_messages:  !!omap
 - VERSION_SKEW: 'I''m sorry, but that Adventure was begun using Version%d.%d of the\nprogram, and this is Version%d.%d.  You must find the other version\nin order to resume that Adventure.'
 # This message is not currently used
 - SAVE_TAMPERING: 'A dark fog creeps in to surround you.  From somewhere in the fog you\nhear a stern voice.  "This Adventure has been tampered with!  You have\nbeen dabbling in magic, knowing not the havoc you might cause thereby.\nLeave at once, before you do irrevocable harm!"  The fog thickens,\nuntil at last you can see nothing at all.  Your vision then clears,\nand you find yourself back in The Real World.'
-- GUESS_AGAIN: 'Guess again.'
 - TWIST_TURN: 'Sorry, but the path twisted and turned so much that I can''t figure\nout which way to go to get back.'
-- ADVENTURE_NEWS: 'Open Adventure is an author-approved open-source release of\nVersion 2.5 with, as yet, no gameplay changes.\nVersion 2.5 was essentially the same as Version II; the cave and the\nhazards therein are unchanged, and top score is still 430 points.\nThere are a few more hints, especially for some of the more obscure\npuzzles.  There are a few minor bugfixes and cosmetic changes.  You\ncan now save a game and resume it at once (formerly you had to wait a\nwhile first), but it now costs you a few points each time you save the\ngame.  Saved games are now stored in much smaller files than before.'
 - GO_UNNEEDED: 'You don''t have to say "go" every time; just specify a direction or, if\nit''s nearby, name the place to which you wish to move.'
-- ADVENTURE_VERSION: 'There is a puff of orange smoke; within it, fiery runes spell out:\n\n\tOpen Adventure %V - http://www.catb.org/esr/open-adventure/'
 
 classes: 
 - threshold: 0
@@ -3788,5 +3645,134 @@ obituaries:
         Now you''ve really done it!  I'm out of orange smoke!  You don''t expect
         me to do a decent reincarnation without any orange smoke, do you?
     yes_response: 'Okay, if you''re so smart, do it yourself!  I''m leaving!'
+
+specials: !!omap
+- SPC_0:
+    message: !!null
+    words: !!null
+- SPC_1:
+    message: !!null
+    words: ['fee']
+- SPC_2:
+    message: !!null
+    words: ['fie']
+- SPC_3:
+    message: !!null
+    words: ['foe']
+- SPC_4:
+    message: !!null
+    words: ['foo']
+- SPC_5:
+    message: !!null
+    words: ['fum']
+- SPC_13:
+    message: 'You''re quite welcome.'
+    words: ['thank']
+- SPC_50:
+    message: 'Good try, but that is an old worn-out magic word.'
+    words: ['sesam', 'opens', 'abra', 'abrac', 'shaza', 'hocus', 'pocus']
+- SPC_51:
+    message: |-
+      I know of places, actions, and things.  Most of my vocabulary
+      describes places and is used to move you there.  To move, try words
+      like forest, building, downstream, enter, east, west, north, south,
+      up, or down.  I know about a few special objects, like a black rod
+      hidden in the cave.  These objects can be manipulated using some of
+      the action words that I know.  Usually you will need to give both the
+      object and action words (in either order), but sometimes I can infer
+      the object from the verb alone.  Some objects also imply verbs; in
+      particular, "inventory" implies "take inventory", which causes me to
+      give you a list of what you're carrying.  Some objects have unexpected
+      effects; the effects are not always desirable!  Usually people having
+      trouble moving just need to try a few more words.  Usually people
+      trying unsuccessfully to manipulate an object are attempting something
+      beyond their (or my!) capabilities and should try a completely
+      different tack.  One point often confusing to beginners is that, when
+      there are several ways to go in a certain direction (e.g., if there
+      are several holes in a wall), choosing that direction in effect
+      chooses one of the ways at random; often, though, by specifying the
+      place you want to reach you can guarantee choosing the right path.
+      Also, to speed the game you can sometimes move long distances with a
+      single word.  For example, "building" usually gets you to the building
+      from anywhere above ground except when lost in the forest.  Also, note
+      that cave passages and forest paths turn a lot, so leaving one place
+      heading north doesn't guarantee entering the next from the south.
+      However (another important point), except when you've used a "long
+      distance" word such as "building", there is always a way to go back
+      where you just came from unless I warn you to the contrary, even
+      though the direction that takes you back might not be the reverse of
+      what got you here.  Good luck, and have fun!
+    words: ['help', '?']
+- SPC_54:
+    message: *ok_man
+    words: ['no']
+- SPC_64:
+    message: |-
+      The trees of the forest are large hardwood oak and maple, with an
+      occasional grove of pine or spruce.  There is quite a bit of under-
+      growth, largely birch and ash saplings plus nondescript bushes of
+      various sorts.  This time of year visibility is quite restricted by
+      all the leaves, but travel is quite easy if you detour around the
+      spruce and berry bushes.
+    words: ['tree', 'trees']
+- SPC_66:
+    message: |-
+      Digging without a shovel is quite impractical.  Even with a shovel
+      progress is unlikely.
+    words: ['dig', 'excav']
+- SPC_68:
+    message: 'I''m as confused as you are.'
+    words: ['lost']
+- SPC_69:
+    message: |-
+      Mist is a white vapor, usually water, seen from time to time in
+      caverns.  It can be found anywhere but is frequently a sign of a deep
+      pit leading down to water.'
+    words: ['mist']
+- SPC_79:
+    message: 'Watch it!'
+    words: ['fuck']
+- SPC_139:
+    message: 'I don''t know the word "stop".  Use "quit" if you want to give up.'
+    words: ['stop']
+- SPC_142:
+    message: |-
+      For a summary of the most recent changes to the game, say "news".
+      If you want to end your adventure early, say "quit".  To suspend your
+      adventure such that you can continue later, say "suspend" (or "pause"
+      or "save").  To see how well you're doing, say "score".  To get full
+      credit for a treasure, you must have left it safely in the building,
+      though you get partial credit just for locating it.  You lose points
+      for getting killed, or for quitting, though the former costs you more.
+      There are also points based on how much (if any) of the cave you've
+      managed to explore; in particular, there is a large bonus just for
+      getting in (to distinguish the beginners from the rest of the pack),
+      and there are other ways to determine whether you've been through some
+      of the more harrowing sections.  If you think you've found all the
+      treasures, just keep exploring for a while.  If nothing interesting
+      happens, you haven't found them all yet.  If something interesting
+      *DOES* happen (incidentally, there *ARE* ways to hasten things along),
+      it means you're getting a bonus and have an opportunity to garner many
+      more points in the Master's section.  I may occasionally offer hints
+      if you seem to be having trouble.  If I do, I'll warn you in advance
+      how much it will affect your score to accept the hints.  Finally, to
+      save time, you may specify "brief", which tells me never to repeat the
+      full description of a place unless you explicitly ask me to.
+    words: ['info', 'infor']
+- SPC_147:
+    message: *not_knowhow
+    words: ['swim']
+- SPC_246:
+    message: 'Wizards are not to be disturbed by such as you.'
+    words: ['wizar']
+- SPC_271:
+    message: 'Guess again.'
+    words: ['yes']
+- SPC_275:
+    message: 'Open Adventure is an author-approved open-source release of\nVersion 2.5 with, as yet, no gameplay changes.\nVersion 2.5 was essentially the same as Version II; the cave and the\nhazards therein are unchanged, and top score is still 430 points.\nThere are a few more hints, especially for some of the more obscure\npuzzles.  There are a few minor bugfixes and cosmetic changes.  You\ncan now save a game and resume it at once (formerly you had to wait a\nwhile first), but it now costs you a few points each time you save the\ngame.  Saved games are now stored in much smaller files than before.'
+    words: ['news']
+- SPC_276:
+    message: 'There is a puff of orange smoke; within it, fiery runes spell out:\n\n\tOpen Adventure %V - http://www.catb.org/esr/open-adventure/'
+    words: ['versi']
 
 # end
