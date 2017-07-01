@@ -10,16 +10,40 @@
  * Initialisation
  */
 
+struct game_t game = {
+    .dloc[1] = LOC_KINGHALL,
+    .dloc[2] = LOC_WESTBANK,
+    .dloc[3] = LOC_Y2,
+    .dloc[4] = LOC_ALIKE3,
+    .dloc[5] = LOC_COMPLEX,
+
+    /*  Sixth dwarf is special (the pirate).  He always starts at his
+     *  chest's eventual location inside the maze. This loc is saved
+     *  in chloc for ref. The dead end in the other maze has its
+     *  loc stored in chloc2. */
+    .dloc[6] = LOC_DEADEND12,
+    .chloc   = LOC_DEADEND12,
+    .chloc2  = LOC_DEADEND13,
+    .abbnum  = 5,
+    .clock1  = WARNTIME,
+    .clock2  = FLASHTIME,
+    .blklin  = true,
+    .newloc  = LOC_START,
+    .loc     = LOC_START,
+    .limit   = GAMELIMIT,
+
+    /* Initialize our LCG PRNG with parameters tested against
+     * Knuth vol. 2. by the original authors */
+    .lcg_a = 1093,
+    .lcg_c = 221587,
+    .lcg_m = 1048576,
+};
+
 long initialise(void)
 {
     if (oldstyle)
         printf("Initialising...\n");
 
-    /* Initialize our LCG PRNG with parameters tested against
-     * Knuth vol. 2. by the original authors */
-    game.lcg_a = 1093;
-    game.lcg_c = 221587;
-    game.lcg_m = 1048576;
     srand(time(NULL));
     long seedval = (long)rand();
     set_seed(seedval);

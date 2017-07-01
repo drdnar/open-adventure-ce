@@ -26,26 +26,6 @@
 
 #define DIM(a) (sizeof(a)/sizeof(a[0]))
 
-struct game_t game = {
-    .dloc[1] = LOC_KINGHALL,
-    .dloc[2] = LOC_WESTBANK,
-    .dloc[3] = LOC_Y2,
-    .dloc[4] = LOC_ALIKE3,
-    .dloc[5] = LOC_COMPLEX,
-
-    /*  Sixth dwarf is special (the pirate).  He always starts at his
-     *  chest's eventual location inside the maze. This loc is saved
-     *  in chloc for ref. The dead end in the other maze has its
-     *  loc stored in chloc2. */
-    .dloc[6] = LOC_DEADEND12,
-    .chloc   = LOC_DEADEND12,
-    .chloc2  = LOC_DEADEND13,
-    .abbnum  = 5,
-    .clock1  = WARNTIME,
-    .clock2  = FLASHTIME,
-    .blklin  = true
-};
-
 FILE  *logfp = NULL, *rfp = NULL;
 bool oldstyle = false;
 bool editline = true;
@@ -142,9 +122,6 @@ int main(int argc, char *argv[])
 
     /*  Start-up, dwarf stuff */
     make_zzword(game.zzword);
-    game.newloc = LOC_START;
-    game.loc = LOC_START;
-    game.limit = GAMELIMIT;
     if (!rfp) {
         game.novice = yes(arbitrary_messages[WELCOME_YOU], arbitrary_messages[CAVE_NEARBY], arbitrary_messages[NO_MESSAGE]);
         if (game.novice)
