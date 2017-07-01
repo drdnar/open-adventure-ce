@@ -45,7 +45,6 @@ static void sig_handler(int signo)
  * MAIN PROGRAM
  *
  *  Adventure (rev 2: 20 treasures)
-Here's what we think. *
  *  History: Original idea & 5-treasure version (adventures) by Willie Crowther
  *           15-treasure version (adventure) by Don Woods, April-June 1977
  *           20-treasure version (rev 2) by Don Woods, August 1978
