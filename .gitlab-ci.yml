@@ -81,7 +81,7 @@ test:debug:
   stage: test
   before_script:
     - apk update
-    - apk add make gcc
+    - apk add make gcc libedit-dev
     - apk add lcov --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted
   script:
     - cd tests
@@ -98,7 +98,7 @@ test:release:
   stage: test
   before_script:
     - apk update
-    - apk add make
+    - apk add make libedit
   script:
     - cd tests
     - make
