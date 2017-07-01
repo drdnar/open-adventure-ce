@@ -1113,12 +1113,12 @@ L2607:
             wordclear(&command.wd2);
         } else {
             /* FIXME: Magic numbers related to vocabulary */
-            if (!((V1 != 1000 + WATER && V1 != 1000 + OIL) ||
-                  (V2 != 1000 + PLANT && V2 != 1000 + DOOR))) {
+	    if (!((V1 != PROMOTE_WORD(WATER) && V1 != PROMOTE_WORD(OIL)) ||
+		  (V2 != PROMOTE_WORD(PLANT) && V2 != PROMOTE_WORD(DOOR)))) {
                 if (AT(V2 - 1000))
                     command.wd2 = token_to_packed("POUR");
             }
-            if (V1 == 1000 + CAGE && V2 == 1000 + BIRD && HERE(CAGE) && HERE(BIRD))
+	    if (V1 == PROMOTE_WORD(CAGE) && V2 == PROMOTE_WORD(BIRD) && HERE(CAGE) && HERE(BIRD))
                 command.wd1 = token_to_packed("CATCH");
         }
 L2620:

@@ -54,6 +54,11 @@
 #define OUTSID(LOC)  (CNDBIT(LOC, COND_ABOVE) || FOREST(LOC))
 #define INDEEP(LOC)  ((LOC) >= LOC_MISTHALL && !OUTSID(LOC))
 #define BUG(x)       bug(x, #x)
+#define MOTION_WORD(n)  ((n) + 0)
+#define OBJECT_WORD(n)  ((n) + 1000)
+#define ACTION_WORD(n)  ((n) + 2000)
+#define SPECIAL_WORD(n) ((n) + 3000)
+#define PROMOTE_WORD(n) ((n) + 1000)
 
 enum bugtype {
     SPECIAL_TRAVEL_500_GT_L_GT_300_EXCEEDS_GOTO_LIST,

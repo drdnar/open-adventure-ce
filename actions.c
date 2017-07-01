@@ -967,7 +967,7 @@ static int say(struct command_t *command)
     packed_to_token(command->wd1, word1);
     int wd = (int) get_vocab_id(word1);
     /* FIXME: magic numbers */
-    if (wd == XYZZY || wd == PLUGH || wd == PLOVER || wd == 2000 + GIANTWORDS || wd == 2000 + PART) {
+    if (wd == XYZZY || wd == PLUGH || wd == PLOVER || wd == ACTION_WORD(GIANTWORDS) || wd == ACTION_WORD(PART)) {
         /* FIXME: scribbles on the interpreter's command block */
         wordclear(&command->wd2);
         return GO_LOOKUP;
