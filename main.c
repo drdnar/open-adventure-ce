@@ -628,7 +628,7 @@ static bool playermove( int motion)
                         BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION); // LCOV_EXCL_LINE
                     ++te_tmp;
                 } while
-                (T_HIGH(travel[travel_entry]) == T_HIGH(travel[te_tmp]));
+			((T_DESTINATION(travel[travel_entry]) == T_DESTINATION(travel[te_tmp])) && (T_CONDITION(travel[travel_entry]) == T_CONDITION(travel[te_tmp])));
                 travel_entry = te_tmp;
             }
 
@@ -670,7 +670,7 @@ static bool playermove( int motion)
                             BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION); // LCOV_EXCL_LINE
                         ++te_tmp;
                     } while
-                    (T_HIGH(travel[travel_entry]) == T_HIGH(travel[te_tmp]));
+			((T_DESTINATION(travel[travel_entry]) == T_DESTINATION(travel[te_tmp])) && (T_CONDITION(travel[travel_entry]) == T_CONDITION(travel[te_tmp])));
                     travel_entry = te_tmp;
                     continue; /* goto L12 */
                 case 3:

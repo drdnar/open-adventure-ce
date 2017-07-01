@@ -146,6 +146,7 @@ typedef struct {{
 
 typedef struct {{
   const long motion;
+  const long cond;
   const long dest;
   const bool stop;
 }} travelop_t;
@@ -155,10 +156,9 @@ typedef struct {{
  * inherited from FORTRAN, someday. To understand these, read the
  * encoding description for travel.
  */
-#define T_DESTINATION(entry)	MOD((entry).dest, 1000)
-#define T_CONDITION(entry)	((entry).dest / 1000)
+#define T_DESTINATION(entry)	(entry).dest
+#define T_CONDITION(entry)	(entry).cond
 #define T_NODWARVES(entry)	(T_CONDITION(entry) == 100)
-#define T_HIGH(entry)		((entry).dest)
 #define T_TERMINATE(entry)	((entry).motion == 1)
 #define L_SPEAK(loc)		((loc) - 500)
 
@@ -670,7 +670,7 @@ def buildtravel(locs, objs):
     #
     # In order to de-crypticize the runtime code, we're going to break these
     # magic numbers up into a struct.
-    travel = [[0, 0, False]]
+    travel = [[0, 0, 0, False]]
     tkey = [0]
     oldloc = 0
     while ltravel:
@@ -681,22 +681,23 @@ def buildtravel(locs, objs):
             tkey.append(len(travel))
             oldloc = loc 
         elif travel:
-            travel[-1][2] = not travel[-1][2]
+            travel[-1][-1] = not travel[-1][-1]
         while rule:
-            travel.append([rule.pop(0), newloc, False])
-        travel[-1][2] = True
+            travel.append([rule.pop(0), newloc // 1000, newloc % 1000, False])
+        travel[-1][-1] = True
     return (travel, tkey)
 
 def get_travel(travel):
     template = """    {{
         .motion = {},
+        .cond = {},
         .dest = {},
         .stop = {},
     }},
 """
     out = ""
     for entry in travel:
-        out += template.format(entry[0], entry[1], entry[2]).lower()
+        out += template.format(entry[0], entry[1], entry[2], entry[3]).lower()
     out = out[:-1] # trim trailing newline
     return out
 
