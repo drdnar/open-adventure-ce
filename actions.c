@@ -1089,47 +1089,40 @@ static int wake(token_t verb, token_t obj)
 static token_t birdspeak(void)
 {
     switch (game.prop[BIRD]) {
-    case BIRD_UNCAGED:
-    case BIRD_FOREST_UNCAGED:
-        return FREE_FLY;
     case BIRD_CAGED:
         return CAGE_FLY;
+    default:
+        return FREE_FLY;
     }
 }
 
 static int wave(token_t verb, token_t obj)
 /* Wave.  No effect unless waving rod at fissure or at bird. */
 {
-    int spk = actions[verb].message;
-    if ((!TOTING(obj)) && (obj != ROD || !TOTING(ROD2)))
-        spk = ARENT_CARRYING;
     if (obj != ROD ||
         !TOTING(obj) ||
         (!HERE(BIRD) && (game.closng || !AT(FISSURE)))) {
-        rspeak(spk);
+        rspeak(((!TOTING(obj)) && (obj != ROD || !TOTING(ROD2))) ? ARENT_CARRYING : actions[verb].message);
         return GO_CLEAROBJ;
     }
 
-    if (HERE(BIRD))
-        spk = birdspeak();
-    if (spk == FREE_FLY && game.loc == game.place[STEPS] && game.prop[JADE] < 0) {
+    if (game.prop[BIRD] == BIRD_UNCAGED && game.loc == game.place[STEPS] && game.prop[JADE] < 0) {
         drop(JADE, game.loc);
         game.prop[JADE] = 0;
         --game.tally;
-        spk = NECKLACE_FLY;
-        rspeak(spk);
+        rspeak(NECKLACE_FLY);
         return GO_CLEAROBJ;
     } else {
         if (game.closed) {
-            rspeak(spk);
+            rspeak(birdspeak());
             return GO_DWARFWAKE;
         }
         if (game.closng || !AT(FISSURE)) {
-            rspeak(spk);
+            rspeak(birdspeak());
             return GO_CLEAROBJ;
         }
         if (HERE(BIRD))
-            rspeak(spk);
+            rspeak(birdspeak());
 
         /* FIXME: Arithemetic on property values */
         game.prop[FISSURE] = 1 - game.prop[FISSURE];
@@ -1137,8 +1130,6 @@ static int wave(token_t verb, token_t obj)
         return GO_CLEAROBJ;
     }
 }
-
-
 
 int action(struct command_t *command)
 /*  Analyse a verb.  Remember what it was, go back for object if second word
