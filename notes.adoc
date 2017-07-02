@@ -42,10 +42,26 @@ future as a Python or Go translation seems possible, even probable.
 
 == Functional changes ==
 
+Bug fixes:
+
+* Reading the relocated Witt's End sign in the endgame didn't work right.
+
+* Behavior when saying the giant's magic words outside his room wasn't
+  quite corrected - the game responded as though the player were in
+  the room.
+ 
+* Attempting to extinguish an unlit urn caused it to lose its oil.
+
 By default, advent issues "> " as a command prompt.  This feature
 became common in many variants after the original 350-point version,
 but was never backported into Crowther & Woods's main line before now.
-The "-o" (oldstyle) version reverts the behavior.
+The "-o" (oldstyle) option reverts the behavior.
+
+There is a set of standard one-letter command aliases conventional in modern
+text adventure games; 'l' and 'x'; for 'look' (or 'examine'), 'z' to do nothing
+for a turn, 'i' for 'inventory', 'g' for 'get', and 'd' for 'drop'.  The 'd'
+alias collides with 'd' for 'down', but the others have been implemented.
+The "-o" (oldstyle) option disables them.
 
 A "seed" command has been added.  This is not intended for human use
 but as a way for game logs to set the PRNG (pseudorandom-number generator) so
@@ -87,18 +103,9 @@ ugly and quite unreadable.
 Jason Ninneman and I have moved it to what is almost, but not quite,
 idiomatic modern C.  We refactored the right way, checking correctness
 against a comprehensive test suite that we built first and verified
-with coverage tools (we now have over 95% coverage, with the remaining
+with coverage tools (we have over 95% coverage, with the remaining
 confined to exception cases that are very difficult to reach). This is
 what you are running when you do "make check".
-
-In the process we found and fixed a few minor bugs:
-
-* Reading the relocated Witt's End sign in the endgame didn't work.
-
-* Behavior when saying the giant's magic words outside his room wasn't
-  quite right - the game responded as though the player were in the room.
- 
-* Attempting to extinguish an unlit urn caused it to lose its oil.
 
 The move to modern C entailed some structural changes.  The most
 important was the refactoring of over 350 gotos into if/loop/break
