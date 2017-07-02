@@ -33,4 +33,6 @@ y
 y
 drop rod
 take bird
+get rod
+wave rod
 attack bird

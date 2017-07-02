@@ -179,12 +179,20 @@ OK
 
 OK
 
+> get rod
+
+OK
+
+> wave rod
+
+The bird flies agitatedly about the cage.
+
 > attack bird
 
 The little bird is now dead.  Its body disappears.
 
 
-You scored 30 out of a possible 430, using 30 turns.
+You scored 30 out of a possible 430, using 32 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 

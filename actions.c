@@ -1086,51 +1086,59 @@ static int wake(token_t verb, token_t obj)
     }
 }
 
+static token_t birdspeak(void)
+{
+    switch (game.prop[BIRD]) {
+    case BIRD_UNCAGED:
+    case BIRD_FOREST_UNCAGED:
+        return FREE_FLY;
+    case BIRD_CAGED:
+        return CAGE_FLY;
+    }
+}
+
 static int wave(token_t verb, token_t obj)
 /* Wave.  No effect unless waving rod at fissure or at bird. */
 {
-    if ((!TOTING(obj)) && (obj != ROD || !TOTING(ROD2))) {
-        rspeak(ARENT_CARRYING);
-        return GO_CLEAROBJ;
-    }
+    int spk = actions[verb].message;
+    if ((!TOTING(obj)) && (obj != ROD || !TOTING(ROD2)))
+        spk = ARENT_CARRYING;
     if (obj != ROD ||
         !TOTING(obj) ||
         (!HERE(BIRD) && (game.closng || !AT(FISSURE)))) {
-        rspeak(actions[verb].message);
+        rspeak(spk);
         return GO_CLEAROBJ;
     }
-    if (game.prop[BIRD] == BIRD_UNCAGED && game.loc == game.place[STEPS] && game.prop[JADE] < 0) {
+
+    if (HERE(BIRD))
+        spk = birdspeak();
+    if (spk == FREE_FLY && game.loc == game.place[STEPS] && game.prop[JADE] < 0) {
         drop(JADE, game.loc);
         game.prop[JADE] = 0;
         --game.tally;
-        rspeak(NECKLACE_FLY);
+        spk = NECKLACE_FLY;
+        rspeak(spk);
         return GO_CLEAROBJ;
     } else {
         if (game.closed) {
-            rspeak(actions[verb].message);
+            rspeak(spk);
             return GO_DWARFWAKE;
         }
         if (game.closng || !AT(FISSURE)) {
-            rspeak(actions[verb].message);
+            rspeak(spk);
             return GO_CLEAROBJ;
         }
-        if (HERE(BIRD)) {
-            switch (game.prop[BIRD]) {
-            case BIRD_UNCAGED:
-            case BIRD_FOREST_UNCAGED:
-                rspeak(FREE_FLY);
-                break;
-            case BIRD_CAGED:
-                rspeak(CAGE_FLY);
-                break;
-            }
-        }
+        if (HERE(BIRD))
+            rspeak(spk);
+
         /* FIXME: Arithemetic on property values */
         game.prop[FISSURE] = 1 - game.prop[FISSURE];
         pspeak(FISSURE, look, 2 - game.prop[FISSURE], true);
         return GO_CLEAROBJ;
     }
 }
+
+
 
 int action(struct command_t *command)
 /*  Analyse a verb.  Remember what it was, go back for object if second word
