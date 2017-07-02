@@ -30,6 +30,12 @@ Seed set to 1801426495
 
 You're in front of building.
 
+> version
+
+There is a puff of orange smoke; within it, fiery runes spell out:
+
+	Open Adventure 1.1 - http://www.catb.org/esr/open-adventure/
+
 > eat grate
 
 Don't be ridiculous!
@@ -506,7 +512,7 @@ Okay, "BOO".
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 97 turns.
+You have garnered 27 out of a possible 430 points, using 98 turns.
 
 > z
 
@@ -514,7 +520,7 @@ OK
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 99 turns.
+You have garnered 27 out of a possible 430 points, using 100 turns.
 
 > quit keys
 
@@ -528,7 +534,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 27 out of a possible 430, using 101 turns.
+You scored 27 out of a possible 430, using 102 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 

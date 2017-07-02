@@ -187,7 +187,7 @@ void vspeak(const char* msg, va_list ap)
         } else {
             long arg = va_arg(ap, long);
             if (arg == -1)
-                arg = 0;
+                arg = 0; // LCOV_EXCL_LINE - don't think we can get here.
             i++;
             // Integer specifier. In order to accommodate the fact
             // that PARMS can have both legitimate integers *and*
