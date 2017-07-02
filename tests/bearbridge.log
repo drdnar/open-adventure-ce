@@ -277,6 +277,7 @@ feed bear
 carry bear
 unlock chain
 take chain
+attack bear
 take bear
 fork
 ne
@@ -291,3 +292,30 @@ free bear
 take bear
 sw
 y
+inven
+xyzzy
+light lamp
+back
+west
+up
+north
+east
+outside
+out
+yes
+inven
+out
+take lamp
+light lamp
+in
+plugh
+s
+d
+bedquilt
+n
+n
+sw
+up
+
+feed bear
+attack bear
