@@ -468,6 +468,9 @@ e
 e
 e
 sw
+# We want the xyzzy and plugh words to fail here
+xyzzy
+plugh
 read sign
 take rod
 drop rod
