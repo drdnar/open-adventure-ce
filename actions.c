@@ -166,10 +166,9 @@ static int attack(struct command_t *command)
 
 static int bigwords(token_t foo)
 /*  FEE FIE FOE FOO (AND FUM).  Advance to next state if given in proper order.
- *  Look up foo in section 3 of vocab to determine which word we've got.  Last
- *  word zips the eggs back to the giant room (unless already there). */
+ *  Look up foo in special section of vocab to determine which word we've got.
+ *  Last word zips the eggs back to the giant room (unless already there). */
 {
-    //int k = vocab(foo, 3);
     char word[6];
     packed_to_token(foo, word);
     int k = (int) get_special_vocab_id(word);
@@ -362,7 +361,7 @@ static int vcarry(token_t verb, token_t obj)
     if (obj == BOTTLE && LIQUID() != 0)
         game.place[LIQUID()] = CARRIED;
     if (GSTONE(obj) && game.prop[obj] != 0) {
-        game.prop[obj] = 0;
+        game.prop[obj] = STATE_GROUND;
         game.prop[CAVITY] = CAVITY_EMPTY;
     }
     rspeak(OK_MAN);

@@ -19,10 +19,13 @@
 #define PANICTIME      15         // time left after closing
 #define BATTERYLIFE    2500       // turn limit increment from batteries
 #define WORD_NOT_FOUND -1         // "Word not found" flag value for the vocab hash functions.
-#define NOT_YET_FOUND  -1	  // 'Not found" state of treasures */
 #define CARRIED        -1         // Player is toting it
 #define READ_MODE      "rb"       // b is not needed for POSIX but harmless
 #define WRITE_MODE     "wb"       // b is not needed for POSIX but harmless
+
+/* Special object-state values - integers > 0 are object-specific */
+#define STATE_NOTFOUND  -1	  // 'Not found" state of treasures */
+#define STATE_GROUND	0	  // After discovered, before messed with
 
 /*
  *  MOD(N,M)    = Arithmetic modulus

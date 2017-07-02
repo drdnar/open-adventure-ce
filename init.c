@@ -91,7 +91,7 @@ long initialise(void)
     for (int treasure = 1; treasure <= NOBJECTS; treasure++) {
         if (objects[treasure].is_treasure) {
             if (objects[treasure].inventory != 0)
-                game.prop[treasure] = NOT_YET_FOUND;
+                game.prop[treasure] = STATE_NOTFOUND;
             game.tally = game.tally - game.prop[treasure];
         }
     }

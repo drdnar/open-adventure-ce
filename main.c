@@ -185,7 +185,7 @@ static void checkhints(void)
                     game.hintlc[hint] = 0;
                     return;
                 case 4:	/* dark */
-                    if (game.prop[EMERALD] != NOT_YET_FOUND && game.prop[PYRAMID] == NOT_YET_FOUND)
+                    if (game.prop[EMERALD] != STATE_NOTFOUND && game.prop[PYRAMID] == STATE_NOTFOUND)
                         break;
                     game.hintlc[hint] = 0;
                     return;
@@ -1076,7 +1076,7 @@ L2607:
         packed_to_token(command.wd2, word2);
         V1 = get_vocab_id(word1);
         V2 = get_vocab_id(word2);
-        if (V1 == ENTER && (V2 == STREAM || V2 == 1000 + WATER)) {
+        if (V1 == ENTER && (V2 == STREAM || V2 == PROMOTE_WORD(WATER))) {
             if (LIQLOC(game.loc) == WATER) {
                 rspeak(FEET_WET);
             } else {

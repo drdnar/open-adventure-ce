@@ -45,9 +45,9 @@ long score(enum termination mode)
                 k = 14;
             if (i > CHEST)
                 k = 16;
-            if (game.prop[i] >= 0)
+            if (game.prop[i] > STATE_NOTFOUND)
                 score += 2;
-            if (game.place[i] == LOC_BUILDING && game.prop[i] == 0)
+            if (game.place[i] == LOC_BUILDING && game.prop[i] == STATE_GROUND)
                 score += k - 2;
             mxscor += k;
         }
