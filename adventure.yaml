@@ -2783,7 +2783,9 @@ arbitrary_messages:  !!omap
 - GETS_YOU: 'It gets you!'
 - MISSES_YOU: 'It misses!'
 - UNSURE_FACING: 'I am unsure how you are facing.  Use compass points or nearby objects.'
-- NO_INOUT_HERE: 'I don''t know in from out here.  Use compass points or name something\nin the general direction you want to go.'
+- NO_INOUT_HERE: |-
+    I don't know in from out here.  Use compass points or name something
+    in the general direction you want to go.
 - CANT_APPLY: 'I don''t know how to apply that word here.'
 - AM_GAME: 'I''m game.  Would you care to explain how?'
 - NO_MORE_DETAIL: |-
@@ -2795,17 +2797,23 @@ arbitrary_messages:  !!omap
 - PIT_FALL: 'You fell into a pit and broke every bone in your body!'
 - ALREADY_CARRYING: 'You are already carrying it!'
 - YOU_JOKING: 'You can''t be serious!'
-- BIRD_EVADES: 'The bird seemed unafraid at first, but as you approach it becomes\ndisturbed and you cannot catch it.'
+- BIRD_EVADES: |-
+    The bird seemed unafraid at first, but as you approach it becomes
+    disturbed and you cannot catch it.
 - CANNOT_CARRY: 'You can catch the bird, but you cannot carry it.'
 - NOTHING_LOCKED: 'There is nothing here with a lock!'
 - ARENT_CARRYING: 'You aren''t carrying it!'
-- BIRD_ATTACKS: 'The little bird attacks the green snake, and in an astounding flurry\ndrives the snake away.'
+- BIRD_ATTACKS: |-
+    The little bird attacks the green snake, and in an astounding flurry
+    drives the snake away.
 - NO_KEYS: 'You have no keys!'
 - NO_LOCK: 'It has no lock.'
 - NOT_LOCKABLE: 'I don''t know how to lock or unlock such a thing.'
 - ALREADY_LOCKED: 'It was already locked.'
 - ALREADY_UNLOCKED: 'It was already unlocked.'
-- BEAR_BLOCKS: 'There is no way to get past the bear to unlock the chain, which is\nprobably just as well.'
+- BEAR_BLOCKS: |-
+    There is no way to get past the bear to unlock the chain, which is
+    probably just as well.
 - NOTHING_HAPPENS: 'Nothing happens.'
 - WHERE_QUERY: 'Where?'
 - NO_TARGET: 'There is nothing here to attack.'
@@ -2835,9 +2843,13 @@ arbitrary_messages:  !!omap
 - FEET_WET: 'Your feet are now wet.'
 - LOST_APPETITE: 'I think I just lost my appetite.'
 - THANKS_DELICIOUS: 'Thank you, it was delicious!'
-- STREAM_WATER: 'You have taken a drink from the stream.  The water tastes strongly of\nminerals, but is not unpleasant.  It is extremely cold.'
+- STREAM_WATER: |-
+    You have taken a drink from the stream.  The water tastes strongly of
+    minerals, but is not unpleasant.  It is extremely cold.
 - BOTTLE_EMPTY: 'The bottle of water is now empty.'
-- RUB_NOGO: 'Rubbing the electric lamp is not particularly rewarding.  Anyway,\nnothing exciting happens.'
+- RUB_NOGO: |-
+    Rubbing the electric lamp is not particularly rewarding.  Anyway,
+    nothing exciting happens.
 - PECULIAR_NOTHING: 'Peculiar.  Nothing unexpected happens.'
 - GROUND_WET: 'Your bottle is empty and the ground is wet.'
 - CANT_POUR: 'You can''t pour that.'
@@ -2851,7 +2863,9 @@ arbitrary_messages:  !!omap
 - NO_CROSS: 'There is no way across the fissure.'
 - NO_CARRY: 'You''re not carrying anything.'
 - NOW_HOLDING: 'You are currently holding the following:'
-- BIRD_PINING: 'It''s not hungry (it''s merely pinin'' for the fjords).  Besides, you\nhave no bird seed.'
+- BIRD_PINING: |-
+    It's not hungry (it's merely pinin' for the fjords).  Besides, you
+    have no bird seed.
 - BIRD_DEVOURED: 'The snake has now devoured your bird.'
 - NOTHING_EDIBLE: 'There''s nothing here it wants to eat (except perhaps you).'
 - REALLY_MAD: 'You fool, dwarves eat only coal!  Now you''ve made him *REALLY* mad!!'
@@ -2866,26 +2880,60 @@ arbitrary_messages:  !!omap
 - SHAKING_LEAVES: 'The plant indignantly shakes the oil off its leaves and asks, "Water?"'
 - DEEP_ROOTS: 'The plant has exceptionally deep roots and cannot be pulled free.'
 - KNIVES_VANISH: 'The dwarves'' knives vanish as they strike the walls of the cave.'
-- MUST_DROP: 'Something you''re carrying won''t fit through the tunnel with you.\nYou''d best take inventory and drop something.'
+- MUST_DROP: |-
+    Something you're carrying won't fit through the tunnel with you.
+    You'd best take inventory and drop something.
 - CLAM_BLOCKER: 'You can''t fit this five-foot clam through that little passage!'
 - OYSTER_BLOCKER: 'You can''t fit this five-foot oyster through that little passage!'
 - DROP_CLAM: 'I advise you to put down the clam before opening it.  >STRAIN!<'
 - DROP_OYSTER: 'I advise you to put down the oyster before opening it.  >WRENCH!<'
 - CLAM_OPENER: 'You don''t have anything strong enough to open the clam.'
 - OYSTER_OPENER: 'You don''t have anything strong enough to open the oyster.'
-- PEARL_FALLS: 'A glistening pearl falls out of the clam and rolls away.  Goodness,\nthis must really be an oyster.  (I never was very good at identifying\nbivalves.)  Whatever it is, it has now snapped shut again.'
-- OYSTER_OPENS: 'The oyster creaks open, revealing nothing but oyster inside.  It\npromptly snaps shut again.'
-- WAY_BLOCKED: 'You have crawled around in some little holes and found your way\nblocked by a recent cave-in.  You are now back in the main passage.'
+- PEARL_FALLS: |-
+    A glistening pearl falls out of the clam and rolls away.  Goodness,
+    this must really be an oyster.  (I never was very good at identifying
+    bivalves.)  Whatever it is, it has now snapped shut again.
+- OYSTER_OPENS: |-
+    The oyster creaks open, revealing nothing but oyster inside.  It
+    promptly snaps shut again.
+- WAY_BLOCKED: |-
+    You have crawled around in some little holes and found your way
+    blocked by a recent cave-in.  You are now back in the main passage.
 - PIRATE_RUSTLES: 'There are faint rustling noises from the darkness behind you.'
-- PIRATE_POUNCES: 'Out from the shadows behind you pounces a bearded pirate!  "Har, har,"\nhe chortles, "I''ll just take all this booty and hide it away with me\nchest deep in the maze!"  He snatches your treasure and vanishes into\nthe gloom.'
-- CAVE_CLOSING: 'A sepulchral voice reverberating through the cave, says, "Cave closing\nsoon.  All adventurers exit immediately through main office."'
-- EXIT_CLOSED: 'A mysterious recorded voice groans into life and announces:\n   "This exit is closed.  Please leave via main office."'
-- DEATH_CLOSING: 'It looks as though you''re dead.  Well, seeing as how it''s so close to\nclosing time anyway, I think we''ll just call it a day.'
-- CAVE_CLOSED: 'The sepulchral voice intones, "The cave is now closed."  As the echoes\nfade, there is a blinding flash of light (and a small puff of orange\nsmoke). . . .    As your eyes refocus, you look around and find...'
-- VICTORY_MESSAGE: 'There is a loud explosion, and a twenty-foot hole appears in the far\nwall, burying the dwarves in the rubble.  You march through the hole\nand find yourself in the main office, where a cheering band of\nfriendly elves carry the conquering adventurer off into the sunset.'
-- DEFEAT_MESSAGE: 'There is a loud explosion, and a twenty-foot hole appears in the far\nwall, burying the snakes in the rubble.  A river of molten lava pours\nin through the hole, destroying everything in its path, including you!'
-- SPLATTER_MESSAGE: 'There is a loud explosion, and you are suddenly splashed across the\nwalls of the room.'
-- DWARVES_AWAKEN: 'The resulting ruckus has awakened the dwarves.  There are now several\nthreatening little dwarves in the room with you!  Most of them throw\nknives at you!  All of them get you!'
+- PIRATE_POUNCES: |-
+    Out from the shadows behind you pounces a bearded pirate!  "Har, har,"
+    he chortles, "I'll just take all this booty and hide it away with me
+    chest deep in the maze!"  He snatches your treasure and vanishes into
+    the gloom.
+- CAVE_CLOSING: |-
+    A sepulchral voice reverberating through the cave, says, "Cave closing
+    soon.  All adventurers exit immediately through main office."
+- EXIT_CLOSED: |-
+    A mysterious recorded voice groans into life and announces:
+       "This exit is closed.  Please leave via main office."
+- DEATH_CLOSING: |-
+    It looks as though you're dead.  Well, seeing as how it's so close to
+    closing time anyway, I think we'll just call it a day.
+- CAVE_CLOSED: |-
+    The sepulchral voice intones, "The cave is now closed."  As the echoes
+    fade, there is a blinding flash of light (and a small puff of orange
+    smoke). . . .    As your eyes refocus, you look around and find...
+- VICTORY_MESSAGE: |-
+    There is a loud explosion, and a twenty-foot hole appears in the far
+    wall, burying the dwarves in the rubble.  You march through the hole
+    and find yourself in the main office, where a cheering band of
+    friendly elves carry the conquering adventurer off into the sunset.
+- DEFEAT_MESSAGE: |-
+    There is a loud explosion, and a twenty-foot hole appears in the far
+    wall, burying the snakes in the rubble.  A river of molten lava pours
+    in through the hole, destroying everything in its path, including you!
+- SPLATTER_MESSAGE: |-
+    There is a loud explosion, and you are suddenly splashed across the
+    walls of the room.
+- DWARVES_AWAKEN: |-
+    The resulting ruckus has awakened the dwarves.  There are now several
+    threatening little dwarves in the room with you!  Most of them throw
+    knives at you!  All of them get you!
 - UNHAPPY_BIRD: 'Oh, leave the poor unhappy bird alone.'
 - NEEDED_NEARBY: 'I daresay whatever you want is around here somewhere.'
 - NOT_CONNECTED: 'You can''t get there from here.'
@@ -2903,21 +2951,37 @@ arbitrary_messages:  !!omap
 - START_OVER: 'What''s the matter, can''t you read?  Now you''d best start over.'
 - DRAGON_SCALES: 'The axe bounces harmlessly off the dragon''s thick scales.'
 - NASTY_DRAGON: 'The dragon looks rather nasty.  You''d best not try to get by.'
-- BIRD_BURNT: 'The little bird attacks the green dragon, and in an astounding flurry\ngets burnt to a cinder.  The ashes blow away.'
+- BIRD_BURNT: |-
+    The little bird attacks the green dragon, and in an astounding flurry
+    gets burnt to a cinder.  The ashes blow away.
 - ON_WHAT: 'On what?'
-- BRIEF_CONFIRM: 'Okay, from now on I''ll only describe a place in full the first time\nyou come to it.  To get the full description, say "look".'
-- ROCKY_TROLL: 'Trolls are close relatives with the rocks and have skin as tough as\nthat of a rhinoceros.  The troll fends off your blows effortlessly.'
-- TROLL_RETURNS: 'The troll deftly catches the axe, examines it carefully, and tosses it\nback, declaring, "Good workmanship, but it''s not valuable enough."'
+- BRIEF_CONFIRM: |-
+    Okay, from now on I'll only describe a place in full the first time
+    you come to it.  To get the full description, say "look".
+- ROCKY_TROLL: |-
+    Trolls are close relatives with the rocks and have skin as tough as
+    that of a rhinoceros.  The troll fends off your blows effortlessly.
+- TROLL_RETURNS: |-
+    The troll deftly catches the axe, examines it carefully, and tosses it
+    back, declaring, "Good workmanship, but it's not valuable enough."
 - TROLL_SATISFIED: 'The troll catches your treasure and scurries away out of sight.'
 - TROLL_BLOCKS: 'The troll refuses to let you cross.'
 - BRIDGE_GONE: 'There is no longer any way across the chasm.'
-- BRIDGE_COLLAPSE: 'Just as you reach the other side, the bridge buckles beneath the\nweight of the bear, which was still following you around.  You\nscrabble desperately for support, but as the bridge collapses you\nstumble back and fall into the chasm.'
-- TROLL_SCAMPERS: 'The bear lumbers toward the troll, who lets out a startled shriek and\nscurries away.  The bear soon gives up the pursuit and wanders back.'
+- BRIDGE_COLLAPSE: |-
+    Just as you reach the other side, the bridge buckles beneath the
+    weight of the bear, which was still following you around.  You
+    scrabble desperately for support, but as the bridge collapses you
+    stumble back and fall into the chasm.
+- TROLL_SCAMPERS: |-
+    The bear lumbers toward the troll, who lets out a startled shriek and
+    scurries away.  The bear soon gives up the pursuit and wanders back.
 - AXE_LOST: 'The axe misses and lands near the bear where you can''t get at it.'
 - BEAR_HANDS: 'With what?  Your bare hands?  Against *HIS* bear hands??'
 - BEAR_CONFUSED: 'The bear is confused; he only wants to be your friend.'
 - ALREADY_DEAD: 'For crying out loud, the poor thing is already dead!'
-- BEAR_TAMED: 'The bear eagerly wolfs down your food, after which he seems to calm\ndown considerably and even becomes rather friendly.'
+- BEAR_TAMED: |-
+    The bear eagerly wolfs down your food, after which he seems to calm
+    down considerably and even becomes rather friendly.
 - BEAR_CHAINED: 'The bear is still chained to the wall.'
 - STILL_LOCKED: 'The chain is still locked.'
 - CHAIN_UNLOCKED: 'The chain is now unlocked.'
@@ -2926,59 +2990,115 @@ arbitrary_messages:  !!omap
 - NO_EDIBLES: 'There is nothing here to eat.'
 - WANT_HINT: 'Do you want the hint?'
 - TROLL_VICES: 'Gluttony is not one of the troll''s vices.  Avarice, however, is.'
-- LAMP_DIM: 'Your lamp is getting dim.  You''d best start wrapping this up, unless\nyou can find some fresh batteries.  I seem to recall there''s a vending\nmachine in the maze.  Bring some coins with you.'
+- LAMP_DIM: |-
+    Your lamp is getting dim.  You'd best start wrapping this up, unless
+    you can find some fresh batteries.  I seem to recall there's a vending
+    machine in the maze.  Bring some coins with you.
 - LAMP_OUT: 'Your lamp has run out of power.'
 - PLEASE_ANSWER: 'Please answer the question.'
-- PIRATE_SPOTTED: 'There are faint rustling noises from the darkness behind you.  As you\nturn toward them, the beam of your lamp falls across a bearded pirate.\nHe is carrying a large chest.  "Shiver me timbers!" he cries, "I''ve\nbeen spotted!  I''d best hie meself off to the maze to hide me chest!"\nWith that, he vanishes into the gloom.'
+- PIRATE_SPOTTED: |-
+    There are faint rustling noises from the darkness behind you.  As you
+    turn toward them, the beam of your lamp falls across a bearded pirate.
+    He is carrying a large chest.  "Shiver me timbers!" he cries, "I've
+    been spotted!  I'd best hie meself off to the maze to hide me chest!"
+    With that, he vanishes into the gloom.
 - GET_BATTERIES: 'Your lamp is getting dim.  You''d best go back for those batteries.'
-- REPLACE_BATTERIES: 'Your lamp is getting dim.  I''m taking the liberty of replacing the\nbatteries.'
-- MISSING_BATTERIES: 'Your lamp is getting dim, and you''re out of spare batteries.  You''d\nbest start wrapping this up.'
-- REMOVE_MESSAGE: 'You sift your fingers through the dust, but succeed only in\nobliterating the cryptic message.'
-- CLUE_QUERY: 'Hmmm, this looks like a clue, which means it''ll cost you 10 points to\nread it.  Should I go ahead and read it anyway?'
-- WAYOUT_CLUE: 'It says, "There is a way out of this place.  Do you need any more\ninformation to escape?  Sorry, but this initial hint is all you get."'
+- REPLACE_BATTERIES: |-
+    Your lamp is getting dim.  I'm taking the liberty of replacing the
+    batteries.
+- MISSING_BATTERIES: |-
+    Your lamp is getting dim, and you're out of spare batteries.  You'd
+    best start wrapping this up.
+- REMOVE_MESSAGE: |-
+    You sift your fingers through the dust, but succeed only in
+    obliterating the cryptic message.
+- CLUE_QUERY: |-
+    Hmmm, this looks like a clue, which means it'll cost you 10 points to
+    read it.  Should I go ahead and read it anyway?
+- WAYOUT_CLUE: |-
+    It says, "There is a way out of this place.  Do you need any more
+    information to escape?  Sorry, but this initial hint is all you get."
 - DONT_UNDERSTAND: 'I''m afraid I don''t understand.'
 - HAND_PASSTHROUGH: 'Your hand passes through it as though it weren''t there.'
-- BREAK_MIRROR: 'You strike the mirror a resounding blow, whereupon it shatters into a\nmyriad tiny fragments.'
-- PROD_DWARF: 'You prod the nearest dwarf, who wakes up grumpily, takes one look at\nyou, curses, and grabs for his axe.'
+- BREAK_MIRROR: |-
+    You strike the mirror a resounding blow, whereupon it shatters into a
+    myriad tiny fragments.
+- PROD_DWARF: |-
+    You prod the nearest dwarf, who wakes up grumpily, takes one look at
+    you, curses, and grabs for his axe.
 - THIS_ACCEPTABLE: 'Is this acceptable?'
 # This message is not currently used
-- ALREADY_OVER: 'This adventure is already over.  To start a new adventure, or to\nresume an earlier adventure, please run a fresh copy of the program.'
+- ALREADY_OVER: |-
+    This adventure is already over.  To start a new adventure, or to
+    resume an earlier adventure, please run a fresh copy of the program.
 - OGRE_FULL: 'The ogre doesn''t appear to be hungry.'
-- OGRE_DODGE: 'The ogre, who despite his bulk is quite agile, easily dodges your\nattack.  He seems almost amused by your puny effort.'
-- OGRE_PANIC1: 'The ogre, distracted by your rush, is struck by the knife.  With a\nblood-curdling yell he turns and bounds after the dwarves, who flee\nin panic.  You are left alone in the room.'
-- OGRE_PANIC2: 'The ogre, distracted by your rush, is struck by the knife.  With a\nblood-curdling yell he turns and bounds after the dwarf, who flees\nin panic.  You are left alone in the room.'
+- OGRE_DODGE: |-
+    The ogre, who despite his bulk is quite agile, easily dodges your
+    attack.  He seems almost amused by your puny effort.
+- OGRE_PANIC1: |-
+    The ogre, distracted by your rush, is struck by the knife.  With a
+    blood-curdling yell he turns and bounds after the dwarves, who flee
+    in panic.  You are left alone in the room.
+- OGRE_PANIC2: |-
+    The ogre, distracted by your rush, is struck by the knife.  With a
+    blood-curdling yell he turns and bounds after the dwarf, who flees
+    in panic.  You are left alone in the room.
 # Following three messages must be contiguous
 - FREE_FLY: 'The bird flies about agitatedly for a moment.'
 - CAGE_FLY: 'The bird flies agitatedly about the cage.'
-- NECKLACE_FLY: 'The bird flies about agitatedly for a moment, then disappears through\nthe crack.  It reappears shortly, carrying in its beak a jade\nnecklace, which it drops at your feet.'
-- WATER_URN: 'You empty the bottle into the urn, which promptly ejects the water\nwith uncanny accuracy, squirting you directly between the eyes.'
+- NECKLACE_FLY: |-
+    The bird flies about agitatedly for a moment, then disappears through
+    the crack.  It reappears shortly, carrying in its beak a jade
+    necklace, which it drops at your feet.
+- WATER_URN: |-
+    You empty the bottle into the urn, which promptly ejects the water
+    with uncanny accuracy, squirting you directly between the eyes.
 - OIL_URN: 'Your bottle is now empty and the urn is full of oil.'
 - FULL_URN: 'The urn is already full of oil.'
 - URN_NOPOUR: 'There''s no way to get the oil out of the urn.'
 - URN_NOBUDGE: 'The urn is far too firmly embedded for your puny strength to budge it.'
-- URN_GENIES: 'As you rub the urn, there is a flash of light and a genie appears.\nHis aspect is stern as he advises: "One who wouldst traffic in\nprecious stones must first learn to recognize the signals thereof."\nHe wrests the urn from the stone, leaving a small cavity.  Turning to\nface you again, he fixes you with a steely eye and intones: "Caution!"\nGenie and urn vanish in a cloud of amber smoke.  The smoke condenses\nto form a rare amber gemstone, resting in the cavity in the rock.'
+- URN_GENIES: |-
+    As you rub the urn, there is a flash of light and a genie appears.
+    His aspect is stern as he advises: "One who wouldst traffic in
+    precious stones must first learn to recognize the signals thereof."
+    He wrests the urn from the stone, leaving a small cavity.  Turning to
+    face you again, he fixes you with a steely eye and intones: "Caution!"
+    Genie and urn vanish in a cloud of amber smoke.  The smoke condenses
+    to form a rare amber gemstone, resting in the cavity in the rock.
 - DOUGHNUT_HOLES: 'I suppose you collect doughnut holes, too?'
 - GEM_FITS: 'The gem fits easily into the cavity.'
 - RUG_RISES: 'The persian rug stiffens and rises a foot or so off the ground.'
-- RUG_WIGGLES: 'The persian rug draped over your shoulder seems to wriggle for a\nmoment, but then subsides.'
+- RUG_WIGGLES: |-
+    The persian rug draped over your shoulder seems to wriggle for a
+    moment, but then subsides.
 - RUG_SETTLES: 'The persian rug settles gently to the ground.'
 - RUG_HOVERS: 'The rug hovers stubbornly where it is.'
 - RUG_NOTHING1: 'The rug does not appear inclined to cooperate.'
-- RUG_NOTHING2: 'If you mean to use the persian rug, it does not appear inclined to\ncooperate.'
+- RUG_NOTHING2: |-
+    If you mean to use the persian rug, it does not appear inclined to
+    cooperate.
 - FLAP_ARMS: 'Though you flap your arms furiously, it is to no avail.'
-- RUG_GOES: 'You board the persian rug, which promptly whisks you across the chasm.\nYou have time for a fleeting glimpse of a two thousand foot drop to a\nmighty river; then you find yourself on the other side.'
+- RUG_GOES: |-
+    You board the persian rug, which promptly whisks you across the chasm.
+    You have time for a fleeting glimpse of a two thousand foot drop to a
+    mighty river; then you find yourself on the other side.
 - RUG_RETURNS: 'The rug ferries you back across the chasm.'
 - ALL_SILENT: 'All is silent.'
 - STREAM_GURGLES: 'The stream is gurgling placidly.'
 - WIND_WHISTLES: 'The wind whistles coldly past your ears.'
 - STREAM_SPLASHES: 'The stream splashes loudly into the pool.'
 - NO_MEANING: 'You are unable to make anything of the splashing noise.'
-- MURMURING_SNORING: 'You can hear the murmuring of the beanstalks and the snoring of the\ndwarves.'
+- MURMURING_SNORING: |-
+    You can hear the murmuring of the beanstalks and the snoring of the
+    dwarves.
 - SNAKES_HISSING: 'A loud hissing emanates from the snake pit.'
 - DULL_RUMBLING: 'The air is filled with a dull rumbling sound.'
 - LOUD_ROAR: 'The roar is quite loud here.'
 - TOTAL_ROAR: 'The roaring is so loud that it drowns out all other sound.'
-- BIRD_CRAP: 'The bird eyes you suspiciously and flutters away.  A moment later you\nfeel something wet land on your head, but upon looking up you can see\nno sign of the culprit.'
+- BIRD_CRAP: |-
+    The bird eyes you suspiciously and flutters away.  A moment later you
+    feel something wet land on your head, but upon looking up you can see
+    no sign of the culprit.
 - FEW_DROPS: 'There are only a few drops--not enough to carry.'
 - NOT_BRIGHT: '(Uh, y''know, that wasn''t very bright.)'
 - TOOK_LONG: 'It''s a pity you took so long about it.'
@@ -2995,20 +3115,44 @@ arbitrary_messages:  !!omap
 - DO_WHAT: '%C what?'
 - OKEY_DOKEY: 'Okay, "%s".'
 - GARNERED_POINTS: 'You have garnered %d out of a possible %d points, using %d turn%S.'
-- SUSPEND_WARNING: 'I can suspend your Adventure for you so that you can resume later, but\nit will cost you 5 points.'
+- SUSPEND_WARNING: |-
+    I can suspend your Adventure for you so that you can resume later, but
+    it will cost you 5 points.
 - HINT_COST: 'I am prepared to give you a hint, but it will cost you %d point%S.'
 - TOTAL_SCORE: 'You scored %d out of a possible %d, using %d turn%S.'
 - NEXT_HIGHER: 'To achieve the next higher rating, you need %d more point%S.'
-- NO_HIGHER: 'To achieve the next higher rating would be a neat trick!\nCongratulations!!'
+- NO_HIGHER: |-
+    To achieve the next higher rating would be a neat trick!
+    Congratulations!!
 - OFF_SCALE: 'You just went off my scale!!'
 - RESUME_HELP: 'To resume your Adventure, start a new game and then say "RESUME".'
-- TABLE_SPACE: 'Table space used:\n%d of %d words of messages   %d of %d travel options\n%d of %d vocabulary words    %d of %d locations\n%d of %d objects             %d of %d action verbs\n%d of %d "random" messages   %d of %d "class" messages\n%d of %d hints               %d of %d turn threshholds'
-- RESUME_ABANDON: 'To resume an earlier Adventure, you must abandon the current one.'
-- VERSION_SKEW: 'I''m sorry, but that Adventure was begun using Version %d.%d of the\nsave file format, and this program uses Version %d.%d.  You must find an instance\nusing that other version in order to resume that Adventure.'
 # This message is not currently used
-- SAVE_TAMPERING: 'A dark fog creeps in to surround you.  From somewhere in the fog you\nhear a stern voice.  "This Adventure has been tampered with!  You have\nbeen dabbling in magic, knowing not the havoc you might cause thereby.\nLeave at once, before you do irrevocable harm!"  The fog thickens,\nuntil at last you can see nothing at all.  Your vision then clears,\nand you find yourself back in The Real World.'
-- TWIST_TURN: 'Sorry, but the path twisted and turned so much that I can''t figure\nout which way to go to get back.'
-- GO_UNNEEDED: 'You don''t have to say "go" every time; just specify a direction or, if\nit''s nearby, name the place to which you wish to move.'
+- TABLE_SPACE: |-
+    Table space used:
+    %d of %d words of messages   %d of %d travel options
+    %d of %d vocabulary words    %d of %d locations
+    %d of %d objects             %d of %d action verbs
+    %d of %d "random" messages   %d of %d "class" messages
+    %d of %d hints               %d of %d turn threshholds'
+- RESUME_ABANDON: 'To resume an earlier Adventure, you must abandon the current one.'
+- VERSION_SKEW: |-
+    I'm sorry, but that Adventure was begun using Version %d.%d of the
+    save file format, and this program uses Version %d.%d.  You must find an instance
+    using that other version in order to resume that Adventure.
+# This message is not currently used
+- SAVE_TAMPERING: |-
+    A dark fog creeps in to surround you.  From somewhere in the fog you
+    hear a stern voice.  "This Adventure has been tampered with!  You have
+    been dabbling in magic, knowing not the havoc you might cause thereby.
+    Leave at once, before you do irrevocable harm!"  The fog thickens,
+    until at last you can see nothing at all.  Your vision then clears,
+    and you find yourself back in The Real World.
+- TWIST_TURN: |-
+    Sorry, but the path twisted and turned so much that I can't figure
+    out which way to go to get back.
+- GO_UNNEEDED: |-
+    You don't have to say "go" every time; just specify a direction or, if
+    it's nearby, name the place to which you wish to move.
 
 classes: 
 - threshold: 0
@@ -3032,21 +3176,30 @@ classes:
 - threshold: 429
   message: 'All of Adventuredom gives tribute to you, Adventurer Grandmaster!'
 - threshold: 9999
-  message: 'Adventuredom stands in awe -- you have now joined the ranks of the\n       W O R L D   C H A M P I O N   A D V E N T U R E R S !\nIt may interest you to know that the Dungeon-Master himself has, to\nmy knowledge, never achieved this threshhold in fewer than 330 turns.'
+  message: |-
+    'Adventuredom stands in awe -- you have now joined the ranks of the
+           W O R L D   C H A M P I O N   A D V E N T U R E R S !
+    It may interest you to know that the Dungeon-Master himself has, to
+    my knowledge, never achieved this threshhold in fewer than 330 turns.'
 
 turn_thresholds:
 - threshold: 350
   point_loss: 2
-  message: 'Tsk!  A wizard wouldn''t have to take 350 turns.  This is going to cost\nyou a couple of points.' 
+  message: |-
+    Tsk!  A wizard wouldn't have to take 350 turns.  This is going to cost
+    you a couple of points.
 - threshold: 500
   point_loss: 3
-  message: '500 turns?  That''s another few points you''ve lost.'  
+  message: '500 turns?  That''s another few points you''ve lost.'
 - threshold: 1000
   point_loss: 5
-  message: 'Are you still at it?  Five points off for exceeding 1000 turns!'  
+  message: 'Are you still at it?  Five points off for exceeding 1000 turns!'
 - threshold: 2500
   point_loss: 10
-  message: 'Good grief, don''t you *EVER* give up?  Do you realize you''ve spent\nover 2500 turns at this?  That''s another ten points off, a total of\ntwenty points lost for taking so long.'
+  message: |-
+    Good grief, don't you *EVER* give up?  Do you realize you've spent
+    over 2500 turns at this?  That's another ten points off, a total of
+    twenty points lost for taking so long.
   
 objects: !!omap
 - OBJ_0:
@@ -3117,9 +3270,16 @@ objects: !!omap
     - 'The bird''s singing is quite melodious.'
     - 'The bird does not seem inclined to sing while in the cage.'
     - 'It almost seems as though the bird is trying to tell you something.'
-    - 'To your surprise, you can understand the bird''s chirping; it is\nsinging about the joys of its forest home.'
+    - |-
+      To your surprise, you can understand the bird''s chirping; it is
+      singing about the joys of its forest home.
     - 'The bird does not seem inclined to sing while in the cage.'
-    - 'The bird is singing to you in gratitude for your having returned it to\nits home.  In return, it informs you of a magic word which it thinks\nyou may find useful somewhere near the Hall of Mists.  The magic word\nchanges frequently, but for now the bird believes it is "%s".  You\nthank the bird for this information, and it flies off into the forest.'
+    - |- 
+      The bird is singing to you in gratitude for your having returned it to
+      its home.  In return, it informs you of a magic word which it thinks
+      you may find useful somewhere near the Hall of Mists.  The magic word
+      changes frequently, but for now the bird believes it is "%s".  You
+      thank the bird for this information, and it flies off into the forest.
 - DOOR:
     words: ['door']
     inventory: '*rusty door'
@@ -3130,7 +3290,9 @@ objects: !!omap
     - [DOOR_UNRUSTED, 'The way north leads through a massive, rusty, iron door.']
     changes:
     - 'The hinges are quite thoroughly rusted now and won''t budge.'
-    - 'The oil has freed up the hinges so that the door will now move,\nalthough it requires some effort.'
+    - |-
+      The oil has freed up the hinges so that the door will now move,
+      although it requires some effort.
 - PILLOW:
     words: ['pillo', 'velve']
     inventory: 'Velvet pillow'
@@ -3162,7 +3324,9 @@ objects: !!omap
     locations: LOC_DARKROOM
     immovable: true
     descriptions:
-    - 'A massive stone tablet imbedded in the wall reads:\n"Congratulations on bringing light into the dark-room!"'
+    - |-
+      A massive stone tablet imbedded in the wall reads:
+      "Congratulations on bringing light into the dark-room!"
     texts:
     - '"Congratulations on bringing light into the dark-room!"'
 - CLAM:
@@ -3190,7 +3354,9 @@ objects: !!omap
     descriptions:
     - 'There are a few recent issues of "Spelunker Today" magazine here.'
     texts:
-    - 'I''m afraid the magazine is written in dwarvish.  But pencilled on one\ncover you see, "Please leave the magazines at the construction site."'
+    - |-
+      I''m afraid the magazine is written in dwarvish.  But pencilled on one
+      cover you see, "Please leave the magazines at the construction site."
 - DWARF:
     words: ['dwarf', 'dwarv']
     inventory: !!null
@@ -3239,7 +3405,9 @@ objects: !!omap
     immovable: true
     descriptions:
     - 'There is a tiny little plant in the pit, murmuring "water, water, ..."'
-    - 'There is a 12-foot-tall beanstalk stretching up out of the pit,\nbellowing "WATER!! WATER!!"'
+    - |-
+      There is a 12-foot-tall beanstalk stretching up out of the pit,
+      bellowing "WATER!! WATER!!"
     - 'There is a gigantic beanstalk stretching all the way up to the hole.'
     - 'The plant spurts into furious growth for a few seconds.'
     - 'The plant grows explosively, almost filling the bottom of the pit.'
@@ -3352,7 +3520,9 @@ objects: !!omap
     locations: LOC_NOWHERE
     immovable: true
     descriptions:
-    - 'There is a message scrawled in the dust in a flowery script, reading:\n"This is not the maze where the pirate leaves his treasure chest."'
+    - |-
+        There is a message scrawled in the dust in a flowery script, reading:
+        "This is not the maze where the pirate leaves his treasure chest."
     texts:
     - '"This is not the maze where the pirate leaves his treasure chest."'
 - VOLCANO:
@@ -3467,7 +3637,10 @@ objects: !!omap
     - [INGAME_SIGN, '']
     - [ENDGAME_SIGN, '']
     texts:
-    - 'Cave under construction beyond this point.\n           Proceed at own risk.\n       [Witt Construction Company]'
+    - |-
+      Cave under construction beyond this point.
+                 Proceed at own risk.
+             [Witt Construction Company]
     - '"Treasure Vault.  Keys in main office."'
 - NUGGET:
     words: ['gold', 'nugge']
@@ -3773,10 +3946,22 @@ specials: !!omap
     message: 'Guess again.'
     words: ['yes']
 - SPC_275:
-    message: 'Open Adventure is an author-approved open-source release of\nVersion 2.5 with, as yet, no gameplay changes.\nVersion 2.5 was essentially the same as Version II; the cave and the\nhazards therein are unchanged, and top score is still 430 points.\nThere are a few more hints, especially for some of the more obscure\npuzzles.  There are a few minor bugfixes and cosmetic changes.  You\ncan now save a game and resume it at once (formerly you had to wait a\nwhile first), but it now costs you a few points each time you save the\ngame.  Saved games are now stored in much smaller files than before.'
+    message: |-
+      Open Adventure is an author-approved open-source release of
+      Version 2.5 with, as yet, no gameplay changes.
+      Version 2.5 was essentially the same as Version II; the cave and the
+      hazards therein are unchanged, and top score is still 430 points.
+      There are a few more hints, especially for some of the more obscure
+      puzzles.  There are a few minor bugfixes and cosmetic changes.  You
+      can now save a game and resume it at once (formerly you had to wait a
+      while first), but it now costs you a few points each time you save the
+      game.  Saved games are now stored in much smaller files than before.
     words: ['news']
 - SPC_276:
-    message: 'There is a puff of orange smoke; within it, fiery runes spell out:\n\n\tOpen Adventure %V - http://www.catb.org/esr/open-adventure/'
+    message: |-
+      There is a puff of orange smoke; within it, fiery runes spell out:
+      
+      \tOpen Adventure %V - http://www.catb.org/esr/open-adventure/
     words: ['versi']
 
 # end
