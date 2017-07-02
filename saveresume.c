@@ -11,7 +11,7 @@
  * see the history.adoc file in the source distribution for discussion.
  */
 
-#define VRSION	26	/* bump on save format change */
+#define VRSION	27	/* bump on save format change */
 
 /*
  * If you change the first three members, the resume function may not properly
