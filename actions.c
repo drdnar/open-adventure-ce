@@ -123,7 +123,7 @@ static int attack(struct command_t *command)
         }
         state_change(DRAGON, DRAGON_DEAD);
         game.prop[RUG] = RUG_FLOOR;
-        /* FIXME: Arithmentic on location values */
+        /* FIXME: Arithmetic on location values */
         int k = (objects[DRAGON].plac + objects[DRAGON].fixd) / 2;
         move(DRAGON + NOBJECTS, -1);
         move(RUG + NOBJECTS, 0);
@@ -172,11 +172,11 @@ static int bigwords(token_t foo)
              *  crossing. */
             if (game.place[EGGS] == LOC_NOWHERE && game.place[TROLL] == LOC_NOWHERE && game.prop[TROLL] == TROLL_UNPAID)
                 game.prop[TROLL] = TROLL_PAIDONCE;
-            k = 2;
+            k = EGGS_DONE;
             if (HERE(EGGS))
-                k = 1;
+                k = EGGS_VANISHED;
             if (game.loc == objects[EGGS].plac)
-                k = 0;
+                k = EGGS_HERE;
             move(EGGS, objects[EGGS].plac);
             pspeak(EGGS, look, k);
             return GO_CLEAROBJ;
@@ -444,15 +444,15 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
             move(TROLL2, objects[TROLL].plac);
             move(TROLL2 + NOBJECTS, objects[TROLL].fixd);
             juggle(CHASM);
-            game.prop[TROLL] = 2;
+            game.prop[TROLL] = TROLL_GONE;
         } else if (obj != VASE || game.loc == objects[PILLOW].plac) {
             rspeak(OK_MAN);
         } else {
-            game.prop[VASE] = 2;
+            game.prop[VASE] = VASE_BROKEN;
             if (AT(PILLOW))
-                game.prop[VASE] = 0;
+                game.prop[VASE] = VASE_WHOLE;
             pspeak(VASE, look, game.prop[VASE] + 1);
-            if (game.prop[VASE] != 0)
+            if (game.prop[VASE] != VASE_WHOLE)
                 game.fixed[VASE] = -1;
         }
     }
@@ -605,7 +605,7 @@ int fill(token_t verb, token_t obj)
             return GO_CLEAROBJ;
         }
         rspeak(SHATTER_VASE);
-        game.prop[VASE] = 2;
+        game.prop[VASE] = VASE_BROKEN;
         game.fixed[VASE] = -1;
         return (discard(verb, obj, true));
     } else if (obj == URN) {

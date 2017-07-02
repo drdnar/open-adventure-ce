@@ -3330,6 +3330,7 @@ objects: !!omap
     - [TROLL_GONE, ''] # chased away
     sounds:
     - 'The troll sounds quite adamant in his demand for a treasure.'
+    - 'The troll sounds quite adamant in his demand for a treasure.'
 - TROLL2:
     words: ['troll']
     inventory: '*phony troll'
@@ -3514,9 +3515,9 @@ objects: !!omap
     locations: LOC_GIANTROOM
     treasure: true
     descriptions:
-    - 'There is a large nest here, full of golden eggs!'
-    - 'The nest of golden eggs has vanished!'
-    - 'Done!'
+    - [EGGS_HERE, 'There is a large nest here, full of golden eggs!']
+    - [EGGS_VANISHED, 'The nest of golden eggs has vanished!']
+    - [EGGS_DONE, 'Done!']
 - TRIDENT:
     words: ['tride']
     inventory: 'Jeweled trident'
