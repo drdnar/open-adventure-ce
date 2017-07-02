@@ -45,6 +45,10 @@ savegames:
 	../cheat -v -1337 -o resume_badversion.adv > /tmp/cheat_badversion
 	$(ECHO) "cheat: Generate save file 1000 saves"
 	../cheat -s -1000 -o thousand_saves.adv > /tmp/cheat_1000saves
+	$(ECHO) "cheat: Generate save file 1000 turns"
+	../cheat -t -1000 -o thousand_saves.adv > /tmp/cheat_1000turns
+	$(ECHO) "cheat: Generate save file 1000 turns"
+	../cheat -l -1000 -o thousand_lamp.adv > /tmp/cheat_1000lamp
 	rm -f /tmp/cheat*
 
 
