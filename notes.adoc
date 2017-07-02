@@ -29,15 +29,16 @@ with the BSD Games version.
 == Philosophy ==
 
 Extreme care has been taken not to make changes that would alter the
-logic of the game as we received it from Don Woods.  By policy, all
-user-visible changes must be revertible with the -o (oldstyle) option.
+logic of the game as we received it from Don Woods, except to fix
+glitches that were clearly bugs.  By policy, all user-visible
+changes must be revertible with the -o (oldstyle) option.
 
-It is a goal of this project to exactly preserve the *behavior* of
-430-point Adventure, but the implementation of it is fair game for
-improvement. In particular, we are concerned to move it to a form that
-is (a) readable, and (b) friendly to forward translation to future
-languages.  It has already survived a move from FORTRAN to C; a future
-as a Python or Go translation seems possible, even probable.
+It is a goal of this project to exactly preserve the *intended
+behavior* of 430-point Adventure, but the implementation of it is fair
+game for improvement. In particular, we are concerned to move it to a
+form that is (a) readable, and (b) friendly to forward translation to
+future languages.  It has already survived a move from FORTRAN to C; a
+future as a Python or Go translation seems possible, even probable.
 
 == Functional changes ==
 
@@ -90,10 +91,14 @@ with coverage tools (we now have over 95% coverage, with the remaining
 confined to exception cases that are very difficult to reach). This is
 what you are running when you do "make check".
 
-In the process we found and fixed a few minor bugs. Most notably, reading
-the relocated Witt's End sign in the endgame didn't work. Behavior when
-saying the giant's magic words outside his room wasn't quite right either.
-Attempt to extinguish dark urn would have cause it do lose oil.
+In the process we found and fixed a few minor bugs:
+
+* Reading the relocated Witt's End sign in the endgame didn't work.
+
+* Behavior when saying the giant's magic words outside his room wasn't
+  quite right - the game responded as though the player were in the room.
+ 
+* Attempting to extinguish an unlit urn caused it to lose its oil.
 
 The move to modern C entailed some structural changes.  The most
 important was the refactoring of over 350 gotos into if/loop/break
@@ -149,7 +154,7 @@ ways:
 We have made exactly one minor architectural change.  In addition to the
 old code's per-object state-description messages, we now have a per-object
 message series for state *changes*.  This makes it possible to pull a fair
-amount of test out of the arbitrary-messages list and associate those
+amount of text out of the arbitrary-messages list and associate those
 mesages with the objects that conceptually own them.
 
 // end
