@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     /*  Options. */
 
 #ifndef ADVENT_NOSAVE
-    const char* opts = "l:or";
+    const char* opts = "l:or:";
     const char* usage = "Usage: %s [-l logfilename] [-o] [-r restorefilename]\n";
 #else
     const char* opts = "l:o";
