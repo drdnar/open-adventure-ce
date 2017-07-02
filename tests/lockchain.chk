@@ -1713,6 +1713,10 @@ The chain is now locked.
 
 It was already locked.
 
+> attack bear
+
+The bear is confused; he only wants to be your friend.
+
 > unlock chain
 
 The chain is now unlocked.
@@ -1735,20 +1739,32 @@ You are being followed by a very large, tame bear.
 
 OK
 
-> fork
+> out
 
 You are being followed by a very large, tame bear.
 
-The path forks here.  The left fork leads northeast.  A dull rumbling
-seems to get louder in that direction.  The right fork leads southeast
-down a gentle slope.  The main corridor enters from the west.
+You're in front of Barren Room.
 
 > lock chain
 
 There is nothing here to which the chain can be locked.
 
+> drop bear
 
-You scored 225 out of a possible 430, using 304 turns.
+OK
+
+> back
+
+You're in Barren Room.
+
+There is a little axe here.
+
+> lock chain
+
+The chain is now locked.
+
+
+You scored 225 out of a possible 430, using 308 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 

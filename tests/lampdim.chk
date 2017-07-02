@@ -1996,6 +1996,10 @@ face you again, he fixes you with a steely eye and intones: "Caution!"
 Genie and urn vanish in a cloud of amber smoke.  The smoke condenses
 to form a rare amber gemstone, resting in the cavity in the rock.
 
+> take cavity
+
+I suppose you collect doughnut holes, too?
+
 > take amber
 
 OK
@@ -2009,6 +2013,10 @@ OK
 The gem fits easily into the cavity.
 
 The persian rug stiffens and rises a foot or so off the ground.
+
+> get rug
+
+The rug hovers stubbornly where it is.
 
 > fly rug
 
@@ -2114,6 +2122,9 @@ There are many coins here!
 
 > drop ruby
 
+Tsk!  A wizard wouldn't have to take 350 turns.  This is going to cost
+you a couple of points.
+
 OK
 
 > drop sapphire
@@ -2121,9 +2132,6 @@ OK
 OK
 
 > drop amber
-
-Tsk!  A wizard wouldn't have to take 350 turns.  This is going to cost
-you a couple of points.
 
 OK
 
@@ -2474,7 +2482,7 @@ batteries.
 OK
 
 
-You scored 343 out of a possible 430, using 401 turns.
+You scored 343 out of a possible 430, using 403 turns.
 
 Your score puts you in Master Adventurer Class C.
 

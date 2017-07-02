@@ -335,9 +335,11 @@ inven
 fill urn
 light urn
 rub urn
+take cavity
 take amber
 drop rug
 drop emerald
+get rug
 fly rug
 take sapphire
 fly rug

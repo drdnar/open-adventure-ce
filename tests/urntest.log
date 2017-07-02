@@ -342,4 +342,5 @@ light urn
 fill urn
 read urn
 extinguish
+extinguish urn
 fly

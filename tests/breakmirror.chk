@@ -1051,6 +1051,10 @@ midway between the canyon walls.  (The mirror is obviously provided
 for the use of the dwarves who, as you know, are extremely vain.)  A
 small window can be seen in either wall, some fifty feet up.
 
+> break mirror
+
+It is too far up for you to reach.
+
 > s
 
 You are in a secret n/s canyon above a large room.
@@ -2118,12 +2122,12 @@ OK
 
 > drop sapphire
 
+Tsk!  A wizard wouldn't have to take 350 turns.  This is going to cost
+you a couple of points.
+
 OK
 
 > drop amber
-
-Tsk!  A wizard wouldn't have to take 350 turns.  This is going to cost
-you a couple of points.
 
 OK
 
@@ -2402,13 +2406,13 @@ You're in dusty rock room.
 
 > d
 
-You're at complex junction.
-
-> e
-
 Your lamp is getting dim.  You'd best start wrapping this up, unless
 you can find some fresh batteries.  I seem to recall there's a vending
 machine in the maze.  Bring some coins with you.
+
+You're at complex junction.
+
+> e
 
 You are in an anteroom leading to a large passage to the east.  Small
 passages go west and up.  The remnants of recent digging are evident.
@@ -2626,13 +2630,13 @@ You're in Plover Room.
 
 > e
 
+Your lamp has run out of power.
+
 There is no way to go that direction.
 
 You're in Plover Room.
 
 > e
-
-Your lamp has run out of power.
 
 There is no way to go that direction.
 
@@ -2953,7 +2957,7 @@ The resulting ruckus has awakened the dwarves.  There are now several
 threatening little dwarves in the room with you!  Most of them throw
 knives at you!  All of them get you!
 
-You scored 383 out of a possible 430, using 469 turns.
+You scored 383 out of a possible 430, using 470 turns.
 
 Your score puts you in Master Adventurer Class B.
 
