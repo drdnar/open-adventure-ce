@@ -811,8 +811,6 @@ static int lock(token_t verb, token_t obj)
             obj = DOOR;
         if (AT(GRATE))
             obj = GRATE;
-        if (obj != 0 && HERE(CHAIN))
-            return GO_UNKNOWN;
         if (HERE(CHAIN))
             obj = CHAIN;
         if (obj == 0 || obj == INTRANSITIVE) {
