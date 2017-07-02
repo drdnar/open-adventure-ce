@@ -25,7 +25,7 @@
 
 #define DIM(a) (sizeof(a)/sizeof(a[0]))
 
-FILE  *logfp = NULL, *rfp = NULL;
+FILE *logfp = NULL;
 bool oldstyle = false;
 bool prompt = true;
 
@@ -63,6 +63,7 @@ int main(int argc, char *argv[])
 #ifndef ADVENT_NOSAVE
     const char* opts = "l:or:";
     const char* usage = "Usage: %s [-l logfilename] [-o] [-r restorefilename]\n";
+    FILE *rfp = NULL;
 #else
     const char* opts = "l:o";
     const char* usage = "Usage: %s [-l logfilename] [-o]\n";
