@@ -3042,7 +3042,6 @@ arbitrary_messages:  !!omap
     The ogre, distracted by your rush, is struck by the knife.  With a
     blood-curdling yell he turns and bounds after the dwarf, who flees
     in panic.  You are left alone in the room.
-# Following three messages must be contiguous
 - FREE_FLY: 'The bird flies about agitatedly for a moment.'
 - CAGE_FLY: 'The bird flies agitatedly about the cage.'
 - NECKLACE_FLY: |-

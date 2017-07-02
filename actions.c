@@ -1089,36 +1089,43 @@ static int wake(token_t verb, token_t obj)
 static int wave(token_t verb, token_t obj)
 /* Wave.  No effect unless waving rod at fissure or at bird. */
 {
-    int spk = actions[verb].message;
-    if ((!TOTING(obj)) && (obj != ROD || !TOTING(ROD2)))
-        spk = ARENT_CARRYING;
+    if ((!TOTING(obj)) && (obj != ROD || !TOTING(ROD2))) {
+        rspeak(ARENT_CARRYING);
+        return GO_CLEAROBJ;
+    }
     if (obj != ROD ||
         !TOTING(obj) ||
         (!HERE(BIRD) && (game.closng || !AT(FISSURE)))) {
-        rspeak(spk);
+        rspeak(actions[verb].message);
         return GO_CLEAROBJ;
     }
-    /* FIXME: Arithemetic on property values */
-    if (HERE(BIRD))
-        spk = FREE_FLY + MOD(game.prop[BIRD], 2);
-    if (spk == FREE_FLY && game.loc == game.place[STEPS] && game.prop[JADE] < 0) {
+    if (game.prop[BIRD] == BIRD_UNCAGED && game.loc == game.place[STEPS] && game.prop[JADE] < 0) {
         drop(JADE, game.loc);
         game.prop[JADE] = 0;
         --game.tally;
-        spk = NECKLACE_FLY;
-        rspeak(spk);
+        rspeak(NECKLACE_FLY);
         return GO_CLEAROBJ;
     } else {
         if (game.closed) {
-            rspeak(spk);
+            rspeak(actions[verb].message);
             return GO_DWARFWAKE;
         }
         if (game.closng || !AT(FISSURE)) {
-            rspeak(spk);
+            rspeak(actions[verb].message);
             return GO_CLEAROBJ;
         }
-        if (HERE(BIRD))
-            rspeak(spk);
+        if (HERE(BIRD)) {
+            switch (game.prop[BIRD]) {
+            case BIRD_UNCAGED:
+            case BIRD_FOREST_UNCAGED:
+                rspeak(FREE_FLY);
+                break;
+            case BIRD_CAGED:
+                rspeak(CAGE_FLY);
+                break;
+            }
+        }
+        /* FIXME: Arithemetic on property values */
         game.prop[FISSURE] = 1 - game.prop[FISSURE];
         pspeak(FISSURE, look, 2 - game.prop[FISSURE], true);
         return GO_CLEAROBJ;
@@ -1130,8 +1137,6 @@ int action(struct command_t *command)
  *  unless verb is "say", which snarfs arbitrary second word.
  */
 {
-    token_t spk = actions[command->verb].message;
-
     if (command->part == unknown) {
         /*  Analyse an object word.  See if the thing is here, whether
          *  we've got a verb yet, and so on.  Object must be here
@@ -1160,8 +1165,7 @@ int action(struct command_t *command)
             /* FALL THROUGH */;
         } else if (command->obj == KNIFE && game.knfloc == game.loc) {
             game.knfloc = -1;
-            spk = KNIVES_VANISH;
-            rspeak(spk);
+            rspeak(KNIVES_VANISH);
             return GO_CLEAROBJ;
         } else if (command->obj == ROD && HERE(ROD2)) {
             command->obj = ROD2;
@@ -1211,7 +1215,7 @@ int action(struct command_t *command)
             case  TAME:
                 return GO_UNKNOWN;
             case GO: {
-                rspeak(spk);
+                rspeak(actions[command->verb].message);
                 return GO_CLEAROBJ;
             }
             case ATTACK:
@@ -1292,11 +1296,11 @@ int action(struct command_t *command)
         case WAVE:
             return wave(command->verb, command->obj);
         case TAME: {
-            rspeak(spk);
+            rspeak(actions[command->verb].message);
             return GO_CLEAROBJ;
         }
         case GO: {
-            rspeak(spk);
+            rspeak(actions[command->verb].message);
             return GO_CLEAROBJ;
         }
         case ATTACK:
@@ -1312,7 +1316,7 @@ int action(struct command_t *command)
         case THROW:
             return throw (command);
         case QUIT: {
-            rspeak(spk);
+            rspeak(actions[command->verb].message);
             return GO_CLEAROBJ;
         }
         case FIND:
@@ -1327,15 +1331,15 @@ int action(struct command_t *command)
             blast();
             return GO_CLEAROBJ;
         case SCORE: {
-            rspeak(spk);
+            rspeak(actions[command->verb].message);
             return GO_CLEAROBJ;
         }
         case GIANTWORDS: {
-            rspeak(spk);
+            rspeak(actions[command->verb].message);
             return GO_CLEAROBJ;
         }
         case BRIEF: {
-            rspeak(spk);
+            rspeak(actions[command->verb].message);
             return GO_CLEAROBJ;
         }
         case READ:
@@ -1345,17 +1349,17 @@ int action(struct command_t *command)
         case WAKE:
             return wake(command->verb, command->obj);
         case SAVE: {
-            rspeak(spk);
+            rspeak(actions[command->verb].message);
             return GO_CLEAROBJ;
         }
         case RESUME: {
-            rspeak(spk);
+            rspeak(actions[command->verb].message);
             return GO_CLEAROBJ;
         }
         case FLY:
             return fly(command->verb, command->obj);
         case LISTEN: {
-            rspeak(spk);
+            rspeak(actions[command->verb].message);
             return GO_CLEAROBJ;
         }
         case PART:
