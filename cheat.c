@@ -25,7 +25,12 @@ int main(int argc, char *argv[])
 
     /*  Options. */
     const char* opts = "d:s:v:o:";
-    const char* usage = "Usage: %s [-d numdie] [-s numsaves] [-v version] -o savefilename \n";
+    const char* usage = "Usage: %s [-d numdie] [-s numsaves] [-v version] -o savefilename \n"
+                        "        -d number of deaths. Signed integer value.\n"
+                        "        -s number of saves. Signed integer value.\n"
+                        "        -v version number of save format.\n"
+                        "        -o required. File name of save game to write.\n";
+
     while ((ch = getopt(argc, argv, opts)) != EOF) {
         switch (ch) {
         case 'd':
@@ -43,14 +48,6 @@ int main(int argc, char *argv[])
         default:
             fprintf(stderr,
                     usage, argv[0]);
-            fprintf(stderr,
-                    "        -d number of deaths. Signed integer value.'\n");
-            fprintf(stderr,
-                    "        -s number of saves. Signed integer value.\n");
-            fprintf(stderr,
-                    "        -v version number of save format.\n");
-            fprintf(stderr,
-                    "        -o file name of save game to write.\n");
             exit(EXIT_FAILURE);
             break;
         }
