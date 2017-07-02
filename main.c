@@ -25,17 +25,13 @@
 
 #define DIM(a) (sizeof(a)/sizeof(a[0]))
 
-FILE *logfp = NULL;
-bool oldstyle = false;
-bool prompt = true;
-
 // LCOV_EXCL_START
 // exclude from coverage analysis because it requires interactivity to test
 static void sig_handler(int signo)
 {
     if (signo == SIGINT) {
-        if (logfp != NULL)
-            fflush(logfp);
+        if (settings.logfp != NULL)
+            fflush(settings.logfp);
     }
     exit(EXIT_FAILURE);
 }
@@ -71,16 +67,16 @@ int main(int argc, char *argv[])
     while ((ch = getopt(argc, argv, opts)) != EOF) {
         switch (ch) {
         case 'l':
-            logfp = fopen(optarg, "w");
-            if (logfp == NULL)
+            settings.logfp = fopen(optarg, "w");
+            if (settings.logfp == NULL)
                 fprintf(stderr,
                         "advent: can't open logfile %s for write\n",
                         optarg);
             signal(SIGINT, sig_handler);
             break;
         case 'o':
-            oldstyle = true;
-            prompt = false;
+            settings.oldstyle = true;
+            settings.prompt = false;
             break;
 #ifndef ADVENT_NOSAVE
         case 'r':
@@ -121,8 +117,8 @@ int main(int argc, char *argv[])
     }
 #endif
 
-    if (logfp)
-        fprintf(logfp, "seed %ld\n", seedval);
+    if (settings.logfp)
+        fprintf(settings.logfp, "seed %ld\n", seedval);
 
     /* interpret commands until EOF or interrupt */
     for (;;) {

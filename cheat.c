@@ -10,10 +10,6 @@
 #include <stdbool.h>
 #include "advent.h"
 
-FILE *logfp = NULL;
-bool oldstyle = false;
-bool prompt = true;
-
 int main(int argc, char *argv[])
 {
     int ch;

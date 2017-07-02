@@ -10,6 +10,12 @@
  * Initialisation
  */
 
+struct settings_t settings = {
+    .logfp = NULL,
+    .oldstyle = false,
+    .prompt = true
+};
+
 struct game_t game = {
     .dloc[1] = LOC_KINGHALL,
     .dloc[2] = LOC_WESTBANK,
@@ -41,7 +47,7 @@ struct game_t game = {
 
 long initialise(void)
 {
-    if (oldstyle)
+    if (settings.oldstyle)
         printf("Initialising...\n");
 
     srand(time(NULL));

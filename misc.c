@@ -325,7 +325,7 @@ char* get_input()
 {
     // Set up the prompt
     char input_prompt[] = "> ";
-    if (!prompt)
+    if (!settings.prompt)
         input_prompt[0] = '\0';
 
     // Print a blank line if game.blklin tells us to.
@@ -353,8 +353,8 @@ char* get_input()
     if (!isatty(0))
         echo_input(stdout, input_prompt, input);
 
-    if (logfp)
-        echo_input(logfp, "", input);
+    if (settings.logfp)
+        echo_input(settings.logfp, "", input);
 
     return (input);
 }
@@ -459,7 +459,7 @@ int get_motion_vocab_id(const char* word)
 {
     for (int i = 0; i < NMOTIONS; ++i) {
         for (int j = 0; j < motions[i].words.n; ++j) {
-            if (strcasecmp(word, motions[i].words.strs[j]) == 0 && (strlen(word) > 1 || strchr(ignore, word[0]) == NULL || !oldstyle))
+            if (strcasecmp(word, motions[i].words.strs[j]) == 0 && (strlen(word) > 1 || strchr(ignore, word[0]) == NULL || !settings.oldstyle))
                 return (i);
         }
     }
@@ -485,7 +485,7 @@ int get_action_vocab_id(const char* word)
 {
     for (int i = 0; i < NACTIONS; ++i) {
         for (int j = 0; j < actions[i].words.n; ++j) {
-            if (strcasecmp(word, actions[i].words.strs[j]) == 0 && (strlen(word) > 1 || strchr(ignore, word[0]) == NULL || !oldstyle))
+            if (strcasecmp(word, actions[i].words.strs[j]) == 0 && (strlen(word) > 1 || strchr(ignore, word[0]) == NULL || !settings.oldstyle))
                 return (i);
         }
     }

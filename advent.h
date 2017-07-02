@@ -163,6 +163,16 @@ struct game_t {
     long prop[NOBJECTS + 1];
 };
 
+/* 
+ * Game application settings - settings, but not state of the game, per se.
+ * This data is not saved in a saved game.
+ */
+struct settings_t {
+    FILE *logfp;
+    bool oldstyle;
+    bool prompt;
+};
+
 struct command_t {
     enum speechpart part;
     vocab_t verb;
@@ -172,8 +182,7 @@ struct command_t {
 };
 
 extern struct game_t game;
-extern FILE *logfp;
-extern bool oldstyle, prompt;
+extern struct settings_t settings;
 
 extern char* xstrdup(const char* s);
 extern void* xmalloc(size_t size);
@@ -218,7 +227,6 @@ extern int restore(FILE *);
 extern long initialise(void);
 extern int action(struct command_t *command);
 
-/* Alas, declaring this static confuses the coverage analyzer */
 void bug(enum bugtype, const char *) __attribute__((__noreturn__));
 
 /* end */
