@@ -888,7 +888,7 @@ static int pour(token_t verb, token_t obj)
         game.prop[PLANT2] = game.prop[PLANT];
         return GO_MOVE;
     } else {
-	state_change(DOOR, (obj == OIL) ? DOOR_UNRUSTED: DOOR_RUSTED);
+        state_change(DOOR, (obj == OIL) ? DOOR_UNRUSTED : DOOR_RUSTED);
         return GO_CLEAROBJ;
     }
 }

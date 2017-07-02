@@ -378,26 +378,26 @@ static bool dwarfmove(void)
                 game.newloc = travel[kk].dest;
                 /* Have we avoided a dwarf encounter? */
                 if (SPECIAL(game.newloc))
-		    continue;
+                    continue;
                 else if (!INDEEP(game.newloc))
-		    continue;
-		else if (game.newloc == game.odloc[i])
-		    continue;
+                    continue;
+                else if (game.newloc == game.odloc[i])
+                    continue;
                 else if (j > 1 && game.newloc == tk[j - 1])
-		    continue;
-		else if (j >= DIM(tk) - 1)
-		    continue;
-		else if (game.newloc == game.dloc[i])
-		    continue;
-		else if (FORCED(game.newloc))
-		    continue;
-		else if (i == PIRATE && CNDBIT(game.newloc, COND_NOARRR))
-		    continue;
-		else if (travel[kk].nodwarves)
-		    continue;
-		tk[j++] = game.newloc;
+                    continue;
+                else if (j >= DIM(tk) - 1)
+                    continue;
+                else if (game.newloc == game.dloc[i])
+                    continue;
+                else if (FORCED(game.newloc))
+                    continue;
+                else if (i == PIRATE && CNDBIT(game.newloc, COND_NOARRR))
+                    continue;
+                else if (travel[kk].nodwarves)
+                    continue;
+                tk[j++] = game.newloc;
             } while
-		(!travel[kk++].stop);
+            (!travel[kk++].stop);
         tk[j] = game.odloc[i];
         if (j >= 2)
             --j;
@@ -497,7 +497,7 @@ static bool traveleq(long a, long b)
 /* Are two travel entries equal for purposes of skip after failed condition? */
 {
     return (travel[a].cond == travel[b].cond)
-	&& (travel[a].dest == travel[b].dest);
+           && (travel[a].dest == travel[b].dest);
 }
 
 /*  Given the current location in "game.loc", and a motion verb number in
@@ -637,7 +637,7 @@ static bool playermove( int motion)
                         BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION); // LCOV_EXCL_LINE
                     ++te_tmp;
                 } while
-		    (traveleq(travel_entry, te_tmp));
+                (traveleq(travel_entry, te_tmp));
                 travel_entry = te_tmp;
             }
 
@@ -679,7 +679,7 @@ static bool playermove( int motion)
                             BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION); // LCOV_EXCL_LINE
                         ++te_tmp;
                     } while
-			(traveleq(travel_entry, te_tmp));
+                    (traveleq(travel_entry, te_tmp));
                     travel_entry = te_tmp;
                     continue; /* goto L12 */
                 case 3:
