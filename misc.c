@@ -633,8 +633,8 @@ long atdwrf(long where)
     return (at);
 }
 
-/*  Utility routines (SETBIT, TSTBIT, set_seed, get_next_lcg_value,
- *  randrange, RNDVOC) */
+/*  Utility routines (setbit, tstbit, set_seed, get_next_lcg_value,
+ *  randrange) */
 
 long setbit(long bit)
 /*  Returns 2**bit for use in constructing bit-masks. */
@@ -652,6 +652,9 @@ void set_seed(long seedval)
 /* Set the LCG seed */
 {
     game.lcg_x = (unsigned long) seedval % game.lcg_m;
+    
+    // once seed is set, we need to generate the Z`ZZZ word
+    make_zzword(game.zzword);
 }
 
 unsigned long get_next_lcg_value(void)

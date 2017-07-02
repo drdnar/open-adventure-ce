@@ -92,8 +92,5 @@ long initialise(void)
     }
     game.conds = setbit(11);
 
-    /*  Start-up, dwarf stuff */
-    make_zzword(game.zzword);
-
     return seedval;
 }
