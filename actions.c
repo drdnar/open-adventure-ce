@@ -825,7 +825,7 @@ static int lock(token_t verb, token_t obj)
         return bivalve(verb, obj);
     if (obj == DOOR)
         spk = RUSTY_DOOR;
-    if (obj == DOOR && game.prop[DOOR] == 1)
+    if (obj == DOOR && game.prop[DOOR] == DOOR_UNRUSTED)
         spk = OK_MAN;
     if (obj == CAGE)
         spk = NO_LOCK;
@@ -869,7 +869,7 @@ static int pour(token_t verb, token_t obj)
         rspeak(spk);
         return GO_CLEAROBJ;
     }
-    if (HERE(URN) && game.prop[URN] == 0)
+    if (HERE(URN) && game.prop[URN] == URN_EMPTY)
         return fill(verb, URN);
     game.prop[BOTTLE] = EMPTY_BOTTLE;
     game.place[obj] = LOC_NOWHERE;
@@ -952,7 +952,7 @@ static int rub(token_t verb, token_t obj)
     int spk = actions[verb].message;
     if (obj != LAMP)
         spk = PECULIAR_NOTHING;
-    if (obj == URN && game.prop[URN] == 2) {
+    if (obj == URN && game.prop[URN] == URN_LIT) {
         DESTROY(URN);
         drop(AMBER, game.loc);
         game.prop[AMBER] = 1;

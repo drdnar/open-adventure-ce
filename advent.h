@@ -19,6 +19,7 @@
 #define PANICTIME      15         // time left after closing
 #define BATTERYLIFE    2500       // turn limit increment from batteries
 #define WORD_NOT_FOUND -1         // "Word not found" flag value for the vocab hash functions.
+#define NOT_YET_FOUND  -1	  // 'Not found" state of treasures */
 #define CARRIED        -1         // Player is toting it
 #define READ_MODE      "rb"       // b is not needed for POSIX but harmless
 #define WRITE_MODE     "wb"       // b is not needed for POSIX but harmless

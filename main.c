@@ -185,7 +185,7 @@ static void checkhints(void)
                     game.hintlc[hint] = 0;
                     return;
                 case 4:	/* dark */
-                    if (game.prop[EMERALD] != -1 && game.prop[PYRAMID] == -1)
+                    if (game.prop[EMERALD] != NOT_YET_FOUND && game.prop[PYRAMID] == NOT_YET_FOUND)
                         break;
                     game.hintlc[hint] = 0;
                     return;
