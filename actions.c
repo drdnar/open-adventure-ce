@@ -523,13 +523,12 @@ static int eat(token_t verb, token_t obj)
 static int extinguish(token_t verb, int obj)
 /* Extinguish.  Lamp, urn, dragon/volcano (nice try). */
 {
-    int spk = actions[verb].message;
     if (obj == INTRANSITIVE) {
         if (HERE(LAMP) && game.prop[LAMP] == LAMP_BRIGHT)
             obj = LAMP;
         if (HERE(URN) && game.prop[URN] == URN_LIT)
-            obj = obj * NOBJECTS + URN;
-        if (obj == INTRANSITIVE || obj == 0 || obj > NOBJECTS)
+            obj = URN;
+        if (obj == INTRANSITIVE)
             return GO_UNKNOWN;
     }
 
@@ -539,13 +538,16 @@ static int extinguish(token_t verb, int obj)
         } else {
             pspeak(URN, change, URN_DARK);
         }
-        return GO_CLEAROBJ;
+
     } else if (obj == LAMP) {
         state_change(LAMP, LAMP_DARK);
-        spk = DARK(game.loc) ? PITCH_DARK : NO_MESSAGE;
-    } else if (obj == DRAGON || obj == VOLCANO)
-        spk = BEYOND_POWER;
-    rspeak(spk);
+        rspeak(DARK(game.loc) ? PITCH_DARK : NO_MESSAGE);
+    } else if (obj == DRAGON || obj == VOLCANO) {
+        rspeak(BEYOND_POWER);
+
+    } else {
+        rspeak(actions[verb].message);
+    }
     return GO_CLEAROBJ;
 }
 

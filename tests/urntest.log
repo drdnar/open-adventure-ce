@@ -344,7 +344,7 @@ read urn
 look
 extinguish
 look
-extinguish urn
+light
 look
 extinguish urn
 look

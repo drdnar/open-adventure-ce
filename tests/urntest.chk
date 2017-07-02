@@ -2013,20 +2013,6 @@ A small oil flame extrudes from an urn embedded in the rock.
 
 > extinguish
 
-I'm afraid I don't understand.
-
-> look
-
-Sorry, but I am not allowed to give more detail.  I will repeat the
-long description of your location.
-
-The forest thins out here to reveal a steep cliff.  There is no way
-down, but a small ledge can be seen to the west across the chasm.
-
-A small oil flame extrudes from an urn embedded in the rock.
-
-> extinguish urn
-
 The urn is now dark.
 
 > look
@@ -2038,6 +2024,20 @@ The forest thins out here to reveal a steep cliff.  There is no way
 down, but a small ledge can be seen to the west across the chasm.
 
 A small urn full of oil is embedded in the rock.
+
+> light
+
+The urn is now lit.
+
+> look
+
+Sorry, but I am not allowed to give more detail.  I will repeat the
+long description of your location.
+
+The forest thins out here to reveal a steep cliff.  There is no way
+down, but a small ledge can be seen to the west across the chasm.
+
+A small oil flame extrudes from an urn embedded in the rock.
 
 > extinguish urn
 
