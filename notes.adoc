@@ -93,6 +93,7 @@ what you are running when you do "make check".
 In the process we found and fixed a few minor bugs. Most notably, reading
 the relocated Witt's End sign in the endgame didn't work. Behavior when
 saying the giant's magic words outside his room wasn't quite right either.
+Attempt to extinguish dark urn would have cause it do lose oil.
 
 The move to modern C entailed some structural changes.  The most
 important was the refactoring of over 350 gotos into if/loop/break

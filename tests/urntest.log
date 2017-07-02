@@ -338,14 +338,18 @@ light urn
 pour bottle
 fill bottle
 drink oil
+light
 light urn
 fill urn
 read urn
 look
 extinguish
+extinguish
 look
+light urn
 light
 look
 extinguish urn
+extinguish
 look
 fly

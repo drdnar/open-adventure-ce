@@ -528,7 +528,9 @@ static int extinguish(token_t verb, int obj)
             obj = LAMP;
         if (HERE(URN) && game.prop[URN] == URN_LIT)
             obj = URN;
-        if (obj == INTRANSITIVE)
+        if (obj == INTRANSITIVE ||
+            HERE(LAMP) && game.prop[LAMP] == LAMP_BRIGHT &&
+            HERE(URN) && game.prop[URN] == URN_LIT)
             return GO_UNKNOWN;
     }
 
@@ -739,7 +741,9 @@ static int light(token_t verb, token_t obj)
             obj = LAMP;
         if (HERE(URN) && game.prop[URN] == URN_DARK)
             obj =  URN;
-        if (obj == INTRANSITIVE || obj == 0 || obj > NOBJECTS)
+        if (obj == INTRANSITIVE ||
+            HERE(LAMP) && game.prop[LAMP] == LAMP_DARK && game.limit >= 0 &&
+            HERE(URN) && game.prop[URN] == URN_DARK)
             return GO_UNKNOWN;
     }
 

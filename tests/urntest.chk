@@ -1989,6 +1989,10 @@ There's no way to get the oil out of the urn.
 
 Don't be ridiculous!
 
+> light
+
+Light what?
+
 > light urn
 
 The urn is now lit.
@@ -2015,6 +2019,10 @@ A small oil flame extrudes from an urn embedded in the rock.
 
 The urn is now dark.
 
+> extinguish
+
+Extin what?
+
 > look
 
 Sorry, but I am not allowed to give more detail.  I will repeat the
@@ -2025,9 +2033,13 @@ down, but a small ledge can be seen to the west across the chasm.
 
 A small urn full of oil is embedded in the rock.
 
-> light
+> light urn
 
 The urn is now lit.
+
+> light
+
+Your lamp is now on.
 
 > look
 
@@ -2043,6 +2055,10 @@ A small oil flame extrudes from an urn embedded in the rock.
 
 The urn is now dark.
 
+> extinguish
+
+Your lamp is now off.
+
 > look
 
 The forest thins out here to reveal a steep cliff.  There is no way
@@ -2056,7 +2072,7 @@ If you mean to use the persian rug, it does not appear inclined to
 cooperate.
 
 
-You scored 267 out of a possible 430, using 345 turns.
+You scored 267 out of a possible 430, using 349 turns.
 
 You have reached "Junior Master" status.
 
