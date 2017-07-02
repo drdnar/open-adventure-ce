@@ -381,21 +381,27 @@ static bool dwarfmove(void)
             do {
                 game.newloc = travel[kk].dest;
                 /* Have we avoided a dwarf encounter? */
-                bool avoided = (SPECIAL(game.newloc) ||
-                                !INDEEP(game.newloc) ||
-                                game.newloc == game.odloc[i] ||
-                                (j > 1 && game.newloc == tk[j - 1]) ||
-                                j >= DIM(tk) - 1 ||
-                                game.newloc == game.dloc[i] ||
-                                FORCED(game.newloc) ||
-                                (i == PIRATE && CNDBIT(game.newloc, COND_NOARRR)) ||
-                                travel[kk].nodwarves);
-                if (!avoided) {
-                    tk[j++] = game.newloc;
-                }
-                ++kk;
+                if (SPECIAL(game.newloc))
+		    continue;
+                else if (!INDEEP(game.newloc))
+		    continue;
+		else if (game.newloc == game.odloc[i])
+		    continue;
+                else if (j > 1 && game.newloc == tk[j - 1])
+		    continue;
+		else if (j >= DIM(tk) - 1)
+		    continue;
+		else if (game.newloc == game.dloc[i])
+		    continue;
+		else if (FORCED(game.newloc))
+		    continue;
+		else if (i == PIRATE && CNDBIT(game.newloc, COND_NOARRR))
+		    continue;
+		else if (travel[kk].nodwarves)
+		    continue;
+		tk[j++] = game.newloc;
             } while
-            (!travel[kk - 1].stop);
+		(!travel[kk++].stop);
         tk[j] = game.odloc[i];
         if (j >= 2)
             --j;
