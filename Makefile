@@ -8,8 +8,10 @@ VERS=$(shell sed -n <NEWS '/^[0-9]/s/:.*//p' | head -1)
 .PHONY: check coverage
 
 CC?=gcc
-CCFLAGS+=-std=c99 -D_DEFAULT_SOURCE -DVERSION=\"$(VERS)\" -Wpedantic -O2
-LIBS=-ledit
+CCFLAGS+=-std=c99 -D_DEFAULT_SOURCE -DVERSION=\"$(VERS)\" -O2
+LIBS=$(shell pkg-config --libs libedit)
+INC+=$(shell pkg-config --cflags libedit)
+
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
 	LIBS+=-lrt
@@ -20,7 +22,7 @@ CHEAT_OBJS=cheat.o init.o actions.o score.o misc.o saveresume.o
 SOURCES=$(OBJS:.o=.c) advent.h adventure.yaml Makefile control make_dungeon.py
 
 .c.o:
-	$(CC) $(CCFLAGS) $(DBX) -c $<
+	$(CC) $(CCFLAGS) $(INC) $(DBX) -c $<
 
 advent:	$(OBJS) dungeon.o
 	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) dungeon.o $(LDFLAGS) $(LIBS)
@@ -102,6 +104,7 @@ dist: advent-$(VERS).tar.gz
 linty: CCFLAGS += -W
 linty: CCFLAGS += -Wall
 linty: CCFLAGS += -Wextra
+linty: CCGLAGS += -Wpedantic
 linty: CCFLAGS += -Wundef
 linty: CCFLAGS += -Wstrict-prototypes
 linty: CCFLAGS += -Wmissing-prototypes
