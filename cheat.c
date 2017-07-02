@@ -1,12 +1,16 @@
+/*
+ * 'cheat' is a tool for generating save game files to test states that ought
+ * not happen. It leverages chunks of advent, mostly initialize() and
+ * savefile(), so we know we're always outputing save files that advent
+ * can import.
+ */
 #include <getopt.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include <time.h>
 #include "advent.h"
-#include "dungeon.h"
 
-FILE  *logfp = NULL, *rfp = NULL;
+FILE *logfp = NULL;
 bool oldstyle = false;
 bool prompt = true;
 
@@ -17,6 +21,7 @@ int main(int argc, char *argv[])
     long numdie = 0;
     long saved = 1;
     long version = 0;
+    FILE *fp = NULL;
 
     /*  Options. */
     const char* opts = "d:s:v:o:";
@@ -51,6 +56,7 @@ int main(int argc, char *argv[])
         }
     }
 
+    // Save filename required; the point of cheat is to generate save file
     if (savefilename == NULL) {
         fprintf(stderr,
                 usage, argv[0]);
@@ -59,12 +65,8 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    FILE *fp = NULL;
-
-    /*  Initialize game variables */
+    // Initialize game variables
     initialise();
-
-    make_zzword(game.zzword);
 
     // apply cheats
     game.numdie = numdie;
@@ -80,5 +82,6 @@ int main(int argc, char *argv[])
     savefile(fp, version);
 
     printf("cheat: %s created.\n", savefilename);
-    return 0;
+
+    return EXIT_SUCCESS;
 }

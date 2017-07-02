@@ -110,9 +110,6 @@ int main(int argc, char *argv[])
     /*  Initialize game variables */
     long seedval = initialise();
 
-    /*  Start-up, dwarf stuff */
-    make_zzword(game.zzword);
-
 #ifndef ADVENT_NOSAVE
     if (!rfp) {
         game.novice = yes(arbitrary_messages[WELCOME_YOU], arbitrary_messages[CAVE_NEARBY], arbitrary_messages[NO_MESSAGE]);
