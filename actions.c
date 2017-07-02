@@ -8,7 +8,7 @@ static int fill(token_t, token_t);
 static void state_change(long obj, long state)
 {
     game.prop[obj] = state;
-    pspeak(obj, change, state);
+    pspeak(obj, change, state, true);
 }
 
 static int attack(struct command_t *command)
@@ -200,7 +200,7 @@ static int bigwords(token_t foo)
             if (game.loc == objects[EGGS].plac)
                 k = EGGS_HERE;
             move(EGGS, objects[EGGS].plac);
-            pspeak(EGGS, look, k);
+            pspeak(EGGS, look, k, true);
             return GO_CLEAROBJ;
         }
     }
@@ -453,7 +453,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
         } else if (obj == COINS && HERE(VEND)) {
             DESTROY(COINS);
             drop(BATTERY, game.loc);
-            pspeak(BATTERY, look, FRESH_BATTERIES);
+            pspeak(BATTERY, look, FRESH_BATTERIES, true);
             return GO_CLEAROBJ;
         } else if (obj == BIRD && AT(DRAGON) && game.prop[DRAGON] == DRAGON_BARS) {
             rspeak(BIRD_BURNT);
@@ -473,7 +473,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
             game.prop[VASE] = VASE_BROKEN;
             if (AT(PILLOW))
                 game.prop[VASE] = VASE_WHOLE;
-            pspeak(VASE, look, game.prop[VASE] + 1);
+            pspeak(VASE, look, game.prop[VASE] + 1, true);
             if (game.prop[VASE] != VASE_WHOLE)
                 game.fixed[VASE] = -1;
         }
@@ -560,7 +560,7 @@ static int extinguish(token_t verb, int obj)
         if (game.prop[URN] != URN_EMPTY) {
             state_change(URN, URN_DARK);
         } else {
-            pspeak(URN, change, URN_DARK);
+	  pspeak(URN, change, URN_DARK, true);
         }
 
     } else if (obj == LAMP) {
@@ -744,9 +744,7 @@ static int inven(void)
             continue;
         if (spk == NO_CARRY)
             rspeak(NOW_HOLDING);
-        game.blklin = false;
-        pspeak(i, touch, -1);
-        game.blklin = true;
+        pspeak(i, touch, -1, false);
         spk = NO_MESSAGE;
     }
     if (TOTING(BEAR))
@@ -809,7 +807,7 @@ static int listen(void)
         if (i == BIRD)
             mi += 3 * game.blooded;
         long packed_zzword = token_to_packed(game.zzword);
-        pspeak(i, hear, mi, packed_zzword);
+        pspeak(i, hear, mi, true, packed_zzword);
         spk = NO_MESSAGE;
         /* FIXME: Magic number, sensitive to bird state logic */
         if (i == BIRD && game.prop[i] == 5)
@@ -906,7 +904,7 @@ static int pour(token_t verb, token_t obj)
             rspeak(spk);
             return GO_CLEAROBJ;
         }
-        pspeak(PLANT, look, game.prop[PLANT] + 3);
+        pspeak(PLANT, look, game.prop[PLANT] + 3, true);
         game.prop[PLANT] = MOD(game.prop[PLANT] + 1, 3);
         game.prop[PLANT2] = game.prop[PLANT];
         return GO_MOVE;
@@ -944,7 +942,7 @@ static int read(struct command_t command)
     } else if (objects[command.obj].texts[0] == NULL || game.prop[command.obj] < 0) {
         rspeak(actions[command.verb].message);
     } else
-        pspeak(command.obj, study, game.prop[command.obj]);
+      pspeak(command.obj, study, game.prop[command.obj], true);
     return GO_CLEAROBJ;
 }
 
@@ -955,7 +953,7 @@ static int reservoir(void)
         rspeak(NOTHING_HAPPENS);
         return GO_CLEAROBJ;
     } else {
-        pspeak(RESER, look, game.prop[RESER] + 1);
+      pspeak(RESER, look, game.prop[RESER] + 1, true);
         game.prop[RESER] = 1 - game.prop[RESER];
         if (AT(RESER))
             return GO_CLEAROBJ;
@@ -1127,7 +1125,7 @@ static int wave(token_t verb, token_t obj)
         if (HERE(BIRD))
             rspeak(spk);
         game.prop[FISSURE] = 1 - game.prop[FISSURE];
-        pspeak(FISSURE, look, 2 - game.prop[FISSURE]);
+        pspeak(FISSURE, look, 2 - game.prop[FISSURE], true);
         return GO_CLEAROBJ;
     }
 }

@@ -106,7 +106,6 @@ typedef long vocab_t;  // index into a vocabulary array */
 struct game_t {
     unsigned long lcg_a, lcg_c, lcg_m, lcg_x;
     long abbnum;                 // How often to print non-abbreviated descriptions
-    long blklin;
     long bonus;
     long chloc;
     long chloc2;
@@ -190,12 +189,12 @@ extern void* xmalloc(size_t size);
 extern void packed_to_token(long, char token[]);
 extern long token_to_packed(const char token[6]);
 extern void tokenize(char*, long tokens[4]);
-extern void vspeak(const char*, va_list);
+extern void vspeak(const char*, bool, va_list);
 extern bool wordeq(token_t, token_t);
 extern bool wordempty(token_t);
 extern void wordclear(token_t *);
 extern void speak(const char*, ...);
-extern void pspeak(vocab_t, enum speaktype, int, ...);
+extern void pspeak(vocab_t, enum speaktype, int, bool, ...);
 extern void rspeak(vocab_t, ...);
 extern void echo_input(FILE*, const char*, const char*);
 extern int word_count(char*);

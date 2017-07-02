@@ -33,7 +33,6 @@ struct game_t game = {
     .abbnum  = 5,
     .clock1  = WARNTIME,
     .clock2  = FLASHTIME,
-    .blklin  = true,
     .newloc  = LOC_START,
     .loc     = LOC_START,
     .limit   = GAMELIMIT,

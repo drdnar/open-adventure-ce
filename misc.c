@@ -155,7 +155,7 @@ void wordclear(token_t *v)
 
 /*  I/O routines (speak, pspeak, rspeak, get_input, yes) */
 
-void vspeak(const char* msg, va_list ap)
+void vspeak(const char* msg, bool blank, va_list ap)
 {
     // Do nothing if we got a null pointer.
     if (msg == NULL)
@@ -165,9 +165,8 @@ void vspeak(const char* msg, va_list ap)
     if (strlen(msg) == 0)
         return;
 
-    // Print a newline if the global game.blklin says to.
-    if (game.blklin == true)
-        printf("\n");
+    if (blank == true)
+      printf("\n");
 
     int msglen = strlen(msg);
 
@@ -253,11 +252,11 @@ void speak(const char* msg, ...)
 {
     va_list ap;
     va_start(ap, msg);
-    vspeak(msg, ap);
+    vspeak(msg, true, ap);
     va_end(ap);
 }
 
-void pspeak(vocab_t msg, enum speaktype mode, int skip, ...)
+void pspeak(vocab_t msg, enum speaktype mode, int skip, bool blank, ...)
 /* Find the skip+1st message from msg and print it.  Modes are:
  * feel = for inventory, what you can touch
  * look = the long description for the state the object is in
@@ -265,22 +264,22 @@ void pspeak(vocab_t msg, enum speaktype mode, int skip, ...)
  * study = text on the object. */
 {
     va_list ap;
-    va_start(ap, skip);
+    va_start(ap, blank);
     switch (mode) {
     case touch:
-        vspeak(objects[msg].inventory, ap);
+      vspeak(objects[msg].inventory, blank, ap);
         break;
     case look:
-        vspeak(objects[msg].descriptions[skip], ap);
+      vspeak(objects[msg].descriptions[skip], blank, ap);
         break;
     case hear:
-        vspeak(objects[msg].sounds[skip], ap);
+      vspeak(objects[msg].sounds[skip], blank, ap);
         break;
     case study:
-        vspeak(objects[msg].texts[skip], ap);
+      vspeak(objects[msg].texts[skip], blank, ap);
         break;
     case change:
-        vspeak(objects[msg].changes[skip], ap);
+      vspeak(objects[msg].changes[skip], blank, ap);
         break;
     }
     va_end(ap);
@@ -291,7 +290,7 @@ void rspeak(vocab_t i, ...)
 {
     va_list ap;
     va_start(ap, i);
-    vspeak(arbitrary_messages[i], ap);
+    vspeak(arbitrary_messages[i], true, ap);
     va_end(ap);
 }
 
@@ -328,9 +327,8 @@ char* get_input()
     if (!settings.prompt)
         input_prompt[0] = '\0';
 
-    // Print a blank line if game.blklin tells us to.
-    if (game.blklin == true)
-        printf("\n");
+    // Print a blank line
+    printf("\n");
 
     char* input;
     while (true) {
