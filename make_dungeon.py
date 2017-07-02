@@ -716,10 +716,11 @@ def buildtravel(locs, objs):
         elif travel:
             travel[-1][-1] = not travel[-1][-1]
         while rule:
+            cond = newloc // 1000
             travel.append([rule.pop(0),
-                           newloc // 1000,
+                           cond,
                            newloc % 1000,
-                           (newloc//1000)==100,
+                           cond==100,
                            False])
         travel[-1][-1] = True
     return (travel, tkey)
