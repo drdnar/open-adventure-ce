@@ -3004,7 +3004,7 @@ arbitrary_messages:  !!omap
 - RESUME_HELP: 'To resume your Adventure, start a new game and then say "RESUME".'
 - TABLE_SPACE: 'Table space used:\n%d of %d words of messages   %d of %d travel options\n%d of %d vocabulary words    %d of %d locations\n%d of %d objects             %d of %d action verbs\n%d of %d "random" messages   %d of %d "class" messages\n%d of %d hints               %d of %d turn threshholds'
 - RESUME_ABANDON: 'To resume an earlier Adventure, you must abandon the current one.'
-- VERSION_SKEW: 'I''m sorry, but that Adventure was begun using Version%d.%d of the\nprogram, and this is Version%d.%d.  You must find the other version\nin order to resume that Adventure.'
+- VERSION_SKEW: 'I''m sorry, but that Adventure was begun using Version%d.%d of the\nsave file format, and this program uses Version %d.%d.  You must find an instance\nusing that other version in order to resume that Adventure.'
 # This message is not currently used
 - SAVE_TAMPERING: 'A dark fog creeps in to surround you.  From somewhere in the fog you\nhear a stern voice.  "This Adventure has been tampered with!  You have\nbeen dabbling in magic, knowing not the havoc you might cause thereby.\nLeave at once, before you do irrevocable harm!"  The fog thickens,\nuntil at last you can see nothing at all.  Your vision then clears,\nand you find yourself back in The Real World.'
 - TWIST_TURN: 'Sorry, but the path twisted and turned so much that I can''t figure\nout which way to go to get back.'
