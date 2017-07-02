@@ -24,7 +24,7 @@ static int attack(struct command_t *command)
         return GO_UNKNOWN;
     }
     long spk = actions[verb].message;
-    if (obj == 0 || obj == INTRANSITIVE) {
+    if (obj == NO_OBJECT || obj == INTRANSITIVE) {
         int changes = 0;
         if (atdwrf(game.loc) > 0) {
             obj = DWARF;
@@ -51,7 +51,7 @@ static int attack(struct command_t *command)
             ++changes;
         }
         /* check for low-priority targets */
-        if (obj == 0) {
+        if (obj == NO_OBJECT) {
             /* Can't attack bird or machine by throwing axe. */
             if (HERE(BIRD) && verb != THROW) {
                 obj = BIRD;
@@ -85,7 +85,7 @@ static int attack(struct command_t *command)
         return GO_CLEAROBJ;
     }
 
-    if (obj == 0)
+    if (obj == NO_OBJECT)
         spk = NO_TARGET;
     if (obj == CLAM || obj == OYSTER)
         spk = SHELL_IMPERVIOUS;
@@ -460,8 +460,8 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
             return GO_CLEAROBJ;
         } else if (obj == BEAR && AT(TROLL)) {
             rspeak(TROLL_SCAMPERS);
-            move(TROLL, 0);
-            move(TROLL + NOBJECTS, 0);
+            move(TROLL, LOC_NOWHERE);
+            move(TROLL + NOBJECTS, LOC_NOWHERE);
             move(TROLL2, objects[TROLL].plac);
             move(TROLL2 + NOBJECTS, objects[TROLL].fixd);
             juggle(CHASM);
@@ -497,18 +497,18 @@ static int drink(token_t verb, token_t obj)
 /*  Drink.  If no object, assume water and look for it here.  If water is in
  *  the bottle, drink that, else must be at a water loc, so drink stream. */
 {
-    int spk = actions[verb].message;
-    if (obj == 0 && LIQLOC(game.loc) != WATER && (LIQUID() != WATER || !HERE(BOTTLE)))
+    if (obj == NO_OBJECT && LIQLOC(game.loc) != WATER && (LIQUID() != WATER || !HERE(BOTTLE)))
         return GO_UNKNOWN;
     if (obj != BLOOD) {
-        if (obj != 0 && obj != WATER)
-            spk = RIDICULOUS_ATTEMPT;
-        if (spk != RIDICULOUS_ATTEMPT && LIQUID() == WATER && HERE(BOTTLE)) {
+        if (obj != NO_OBJECT && obj != WATER) {
+            rspeak(RIDICULOUS_ATTEMPT);
+        } else if (LIQUID() == WATER && HERE(BOTTLE)) {
             game.prop[BOTTLE] = EMPTY_BOTTLE;
             game.place[WATER] = LOC_NOWHERE;
-            spk = BOTTLE_EMPTY;
+            rspeak(BOTTLE_EMPTY);
+        } else {
+            rspeak(actions[verb].message);
         }
-        rspeak(spk);
     } else {
         DESTROY(BLOOD);
         state_change(DRAGON, DRAGON_BLOODLESS);
@@ -656,10 +656,10 @@ int fill(token_t verb, token_t obj)
         spk = WATER_URN + game.prop[URN];
         rspeak(spk);
         return GO_CLEAROBJ;
-    } else if (obj != 0 && obj != BOTTLE) {
+    } else if (obj != NO_OBJECT && obj != BOTTLE) {
         rspeak(spk);
         return GO_CLEAROBJ;
-    } else if (obj == 0 && !HERE(BOTTLE))
+    } else if (obj == NO_OBJECT && !HERE(BOTTLE))
         return GO_UNKNOWN;
     spk = BOTTLED_WATER;
     if (LIQLOC(game.loc) == 0)
@@ -832,7 +832,7 @@ static int lock(token_t verb, token_t obj)
             obj = GRATE;
         if (HERE(CHAIN))
             obj = CHAIN;
-        if (obj == 0 || obj == INTRANSITIVE) {
+        if (obj == NO_OBJECT || obj == INTRANSITIVE) {
             rspeak(spk);
             return GO_CLEAROBJ;
         }
@@ -875,9 +875,9 @@ static int pour(token_t verb, token_t obj)
  *  special tests for pouring water or oil on plant or rusty door. */
 {
     int spk = actions[verb].message;
-    if (obj == BOTTLE || obj == 0)
+    if (obj == BOTTLE || obj == NO_OBJECT)
         obj = LIQUID();
-    if (obj == 0)
+    if (obj == NO_OBJECT)
         return GO_UNKNOWN;
     if (!TOTING(obj)) {
         rspeak(spk);
@@ -1018,23 +1018,21 @@ static int throw (struct command_t *command)
  *  (Only way to do so!)  Axe also special for dragon, bear, and
  *  troll.  Treasures special for troll. */
 {
-    int spk = actions[command->verb].message;
     if (TOTING(ROD2) && command->obj == ROD && !TOTING(ROD))
         command->obj = ROD2;
     if (!TOTING(command->obj)) {
-        rspeak(spk);
+        rspeak(actions[command->verb].message);
         return GO_CLEAROBJ;
     }
     if (objects[command->obj].is_treasure && AT(TROLL)) {
-        spk = TROLL_SATISFIED;
         /*  Snarf a treasure for the troll. */
-        drop(command->obj, 0);
-        move(TROLL, 0);
-        move(TROLL + NOBJECTS, 0);
+        drop(command->obj, LOC_NOWHERE);
+        move(TROLL, LOC_NOWHERE);
+        move(TROLL + NOBJECTS, LOC_NOWHERE);
         drop(TROLL2, objects[TROLL].plac);
         drop(TROLL2 + NOBJECTS, objects[TROLL].fixd);
         juggle(CHASM);
-        rspeak(spk);
+        rspeak(TROLL_SATISFIED);
         return GO_CLEAROBJ;
     }
     if (command->obj == FOOD && HERE(BEAR)) {
@@ -1045,8 +1043,7 @@ static int throw (struct command_t *command)
     if (command->obj != AXE)
         return (discard(command->verb, command->obj, false));
     else {
-        int i = atdwrf(game.loc);
-        if (i <= 0) {
+        if (atdwrf(game.loc) <= 0) {
             if (AT(DRAGON) && game.prop[DRAGON] == DRAGON_BARS)
                 return throw_support(DRAGON_SCALES);
             if (AT(TROLL))
@@ -1057,18 +1054,18 @@ static int throw (struct command_t *command)
                 /* This'll teach him to throw the axe at the bear! */
                 drop(AXE, game.loc);
                 game.fixed[AXE] = -1;
-                game.prop[AXE] = 1;
                 juggle(BEAR);
-                rspeak(AXE_LOST);
+                state_change(AXE, AXE_LOST);
                 return GO_CLEAROBJ;
             }
-            command->obj = 0;
+            command->obj = NO_OBJECT;
             return (attack(command));
         }
 
         if (randrange(NDWARVES + 1) < game.dflag) {
             return throw_support(DWARF_DODGES);
         } else {
+            long i = atdwrf(game.loc);
             game.dseen[i] = false;
             game.dloc[i] = 0;
             return throw_support((++game.dkill == 1)

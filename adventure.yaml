@@ -2975,7 +2975,6 @@ arbitrary_messages:  !!omap
 - TROLL_SCAMPERS: |-
     The bear lumbers toward the troll, who lets out a startled shriek and
     scurries away.  The bear soon gives up the pursuit and wanders back.
-- AXE_LOST: 'The axe misses and lands near the bear where you can''t get at it.'
 - BEAR_HANDS: 'With what?  Your bare hands?  Against *HIS* bear hands??'
 - BEAR_CONFUSED: 'The bear is confused; he only wants to be your friend.'
 - ALREADY_DEAD: 'For crying out loud, the poor thing is already dead!'
@@ -3202,7 +3201,7 @@ turn_thresholds:
     twenty points lost for taking so long.
   
 objects: !!omap
-- OBJ_0:
+- NO_OBJECT:
     inventory: !!null
     descriptions: !!null
 - KEYS:
@@ -3444,8 +3443,11 @@ objects: !!omap
     inventory: 'Dwarf''s axe'
     locations: LOC_NOWHERE
     descriptions:
-    - 'There is a little axe here.'
-    - 'There is a little axe lying beside the bear.'
+    - [AXE_HERE, 'There is a little axe here.']
+    - [AXE_LOST, 'There is a little axe lying beside the bear.']
+    changes:
+    - ''
+    - 'The axe misses and lands near the bear where you can''t get at it.'
 - OBJ_29:
     words: ['drawi']
     inventory: '*cave drawings'
