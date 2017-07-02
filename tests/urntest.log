@@ -341,7 +341,9 @@ drink oil
 light urn
 fill urn
 read urn
+look
 extinguish
+look
 extinguish urn
-extinguish urn
+look
 fly

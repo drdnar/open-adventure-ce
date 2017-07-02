@@ -2001,17 +2001,43 @@ The urn is already full of oil.
 
 I'm afraid I don't understand.
 
+> look
+
+Sorry, but I am not allowed to give more detail.  I will repeat the
+long description of your location.
+
+The forest thins out here to reveal a steep cliff.  There is no way
+down, but a small ledge can be seen to the west across the chasm.
+
+A small oil flame extrudes from an urn embedded in the rock.
+
 > extinguish
 
 I'm afraid I don't understand.
 
+> look
+
+Sorry, but I am not allowed to give more detail.  I will repeat the
+long description of your location.
+
+The forest thins out here to reveal a steep cliff.  There is no way
+down, but a small ledge can be seen to the west across the chasm.
+
+A small oil flame extrudes from an urn embedded in the rock.
+
 > extinguish urn
 
 The urn is now dark.
 
-> extinguish urn
+> look
 
-The urn is now dark.
+Sorry, but I am not allowed to give more detail.  I will repeat the
+long description of your location.
+
+The forest thins out here to reveal a steep cliff.  There is no way
+down, but a small ledge can be seen to the west across the chasm.
+
+A small urn full of oil is embedded in the rock.
 
 > fly
 
@@ -2019,7 +2045,7 @@ If you mean to use the persian rug, it does not appear inclined to
 cooperate.
 
 
-You scored 267 out of a possible 430, using 341 turns.
+You scored 267 out of a possible 430, using 343 turns.
 
 You have reached "Junior Master" status.
 
