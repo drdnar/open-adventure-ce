@@ -65,6 +65,8 @@ buildregress: savegames
 savecheck: savegames
 	$(ECHO) "TEST cheat: Bogus option for save file generation"
 	../cheat -QqQ 2> /tmp/coverage_cheat_batopt | true
+	$(ECHO) "TEST cheat: No save file specified"
+	../cheat 2>/dev/null | true
 	$(ECHO) "TEST cheat: Fail to save because we omit -o"
 	../cheat -d 1 2> /tmp/coverage_cheat_nooutput | true
 	$(ECHO) "TEST cheat: Fail to save to invalid path"
