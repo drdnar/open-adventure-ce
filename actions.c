@@ -19,40 +19,62 @@ static int attack(struct command_t *command)
 {
     vocab_t verb = command->verb;
     vocab_t obj = command->obj;
+
+    if (obj == INTRANSITIVE) {
+        return GO_UNKNOWN;
+    }
     long spk = actions[verb].message;
     if (obj == 0 || obj == INTRANSITIVE) {
-        if (atdwrf(game.loc) > 0)
+        int changes = 0;
+        if (atdwrf(game.loc) > 0) {
             obj = DWARF;
-        if (HERE(SNAKE))
-            obj = obj * NOBJECTS + SNAKE;
-        if (AT(DRAGON) && game.prop[DRAGON] == DRAGON_BARS)
-            obj = obj * NOBJECTS + DRAGON;
-        if (AT(TROLL))
-            obj = obj * NOBJECTS + TROLL;
-        if (AT(OGRE))
-            obj = obj * NOBJECTS + OGRE;
-        if (HERE(BEAR) && game.prop[BEAR] == UNTAMED_BEAR)
-            obj = obj * NOBJECTS + BEAR;
-        if (obj > NOBJECTS)
-            return GO_UNKNOWN;
+            ++changes;
+        }
+        if (HERE(SNAKE)) {
+            obj = SNAKE;
+            ++changes;
+        }
+        if (AT(DRAGON) && game.prop[DRAGON] == DRAGON_BARS) {
+            obj = DRAGON;
+            ++changes;
+        }
+        if (AT(TROLL)) {
+            obj = TROLL;
+            ++changes;
+        }
+        if (AT(OGRE)) {
+            obj = OGRE;
+            ++changes;
+        }
+        if (HERE(BEAR) && game.prop[BEAR] == UNTAMED_BEAR) {
+            obj = BEAR;
+            ++changes;
+        }
+        /* check for low-priority targets */
         if (obj == 0) {
             /* Can't attack bird or machine by throwing axe. */
-            if (HERE(BIRD) && verb != THROW)
+            if (HERE(BIRD) && verb != THROW) {
                 obj = BIRD;
-            if (HERE(VEND) && verb != THROW)
-                obj = obj * NOBJECTS + VEND;
+                ++changes;
+            }
+            if (HERE(VEND) && verb != THROW) {
+                obj = VEND;
+                ++changes;
+            }
             /* Clam and oyster both treated as clam for intransitive case;
              * no harm done. */
-            if (HERE(CLAM) || HERE(OYSTER))
-                obj = NOBJECTS * obj + CLAM;
-            if (obj > NOBJECTS)
-                return GO_UNKNOWN;
+            if (HERE(CLAM) || HERE(OYSTER)) {
+                obj = CLAM;
+                ++changes;
+            }
         }
+        if (changes >= 2)
+            return GO_UNKNOWN;
+
     }
     if (obj == BIRD) {
-        spk = UNHAPPY_BIRD;
         if (game.closed) {
-            rspeak(spk);
+            rspeak(UNHAPPY_BIRD);
             return GO_CLEAROBJ;
         }
         DESTROY(BIRD);
@@ -529,8 +551,8 @@ static int extinguish(token_t verb, int obj)
         if (HERE(URN) && game.prop[URN] == URN_LIT)
             obj = URN;
         if (obj == INTRANSITIVE ||
-            HERE(LAMP) && game.prop[LAMP] == LAMP_BRIGHT &&
-            HERE(URN) && game.prop[URN] == URN_LIT)
+            (HERE(LAMP) && game.prop[LAMP] == LAMP_BRIGHT &&
+             HERE(URN) && game.prop[URN] == URN_LIT))
             return GO_UNKNOWN;
     }
 
@@ -742,8 +764,8 @@ static int light(token_t verb, token_t obj)
         if (HERE(URN) && game.prop[URN] == URN_DARK)
             obj =  URN;
         if (obj == INTRANSITIVE ||
-            HERE(LAMP) && game.prop[LAMP] == LAMP_DARK && game.limit >= 0 &&
-            HERE(URN) && game.prop[URN] == URN_DARK)
+            (HERE(LAMP) && game.prop[LAMP] == LAMP_DARK && game.limit >= 0 &&
+             HERE(URN) && game.prop[URN] == URN_DARK))
             return GO_UNKNOWN;
     }
 

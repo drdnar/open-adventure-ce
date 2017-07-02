@@ -652,7 +652,7 @@ void set_seed(long seedval)
 /* Set the LCG seed */
 {
     game.lcg_x = (unsigned long) seedval % game.lcg_m;
-    
+
     // once seed is set, we need to generate the Z`ZZZ word
     make_zzword(game.zzword);
 }
