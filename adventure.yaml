@@ -2805,7 +2805,6 @@ arbitrary_messages:  !!omap
 - NOT_LOCKABLE: 'I don''t know how to lock or unlock such a thing.'
 - ALREADY_LOCKED: 'It was already locked.'
 - ALREADY_UNLOCKED: 'It was already unlocked.'
-- URN_EMPTY: 'The urn is empty and will not light.'
 - BEAR_BLOCKS: 'There is no way to get past the bear to unlock the chain, which is\nprobably just as well.'
 - NOTHING_HAPPENS: 'Nothing happens.'
 - WHERE_QUERY: 'Where?'
@@ -2952,8 +2951,6 @@ arbitrary_messages:  !!omap
 - FREE_FLY: 'The bird flies about agitatedly for a moment.'
 - CAGE_FLY: 'The bird flies agitatedly about the cage.'
 - NECKLACE_FLY: 'The bird flies about agitatedly for a moment, then disappears through\nthe crack.  It reappears shortly, carrying in its beak a jade\nnecklace, which it drops at your feet.'
-- URN_LIT: 'The urn is now lit.'
-- URN_DARK: 'The urn is now dark.'
 - WATER_URN: 'You empty the bottle into the urn, which promptly ejects the water\nwith uncanny accuracy, squirting you directly between the eyes.'
 - OIL_URN: 'Your bottle is now empty and the urn is full of oil.'
 - FULL_URN: 'The urn is already full of oil.'
@@ -3406,9 +3403,13 @@ objects: !!omap
     locations: LOC_CLIFF
     immovable: true
     descriptions:
-    - 'A small urn is embedded in the rock.'
-    - 'A small urn full of oil is embedded in the rock.'
-    - 'A small oil flame extrudes from an urn embedded in the rock.'
+    - [URN_EMPTY, 'A small urn is embedded in the rock.']
+    - [URN_DARK, 'A small urn full of oil is embedded in the rock.']
+    - [URN_LIT, 'A small oil flame extrudes from an urn embedded in the rock.']
+    changes:
+    - 'The urn is empty and will not light.'
+    - 'The urn is now dark.'
+    - 'The urn is now lit.'
 - CAVITY:
     words: ['cavit']
     inventory: '*cavity'

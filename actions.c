@@ -527,15 +527,19 @@ static int extinguish(token_t verb, int obj)
     if (obj == INTRANSITIVE) {
         if (HERE(LAMP) && game.prop[LAMP] == LAMP_BRIGHT)
             obj = LAMP;
-        if (HERE(URN) && game.prop[URN] == 2)
+        if (HERE(URN) && game.prop[URN] == URN_LIT)
             obj = obj * NOBJECTS + URN;
         if (obj == INTRANSITIVE || obj == 0 || obj > NOBJECTS)
             return GO_UNKNOWN;
     }
 
     if (obj == URN) {
-        game.prop[URN] = game.prop[URN] / 2;
-        spk = URN_DARK;
+        if (game.prop[URN] != URN_EMPTY) {
+            state_change(URN, URN_DARK);
+        } else {
+            pspeak(URN, change, URN_DARK);
+        }
+        return GO_CLEAROBJ;
     } else if (obj == LAMP) {
         state_change(LAMP, LAMP_DARK);
         spk = DARK(game.loc) ? PITCH_DARK : NO_MESSAGE;
@@ -728,32 +732,25 @@ static int inven(void)
 static int light(token_t verb, token_t obj)
 /*  Light.  Applicable only to lamp and urn. */
 {
-    int spk = actions[verb].message;
     if (obj == INTRANSITIVE) {
         if (HERE(LAMP) && game.prop[LAMP] == LAMP_DARK && game.limit >= 0)
             obj = LAMP;
-        if (HERE(URN) && game.prop[URN] == 1)
-            obj = obj * NOBJECTS + URN;
+        if (HERE(URN) && game.prop[URN] == URN_DARK)
+            obj =  URN;
         if (obj == INTRANSITIVE || obj == 0 || obj > NOBJECTS)
             return GO_UNKNOWN;
     }
 
     if (obj == URN) {
-        if (game.prop[URN] == 0) {
-            rspeak(URN_EMPTY);
-        } else {
-            game.prop[URN] = 2;
-            rspeak(URN_LIT);
-        }
+        state_change(URN, game.prop[URN] == URN_EMPTY ? URN_EMPTY : URN_LIT);
         return GO_CLEAROBJ;
     } else {
         if (obj != LAMP) {
-            rspeak(spk);
+            rspeak(actions[verb].message);
             return GO_CLEAROBJ;
         }
-        spk = LAMP_OUT;
         if (game.limit < 0) {
-            rspeak(spk);
+            rspeak(LAMP_OUT);
             return GO_CLEAROBJ;
         }
         state_change(LAMP, LAMP_BRIGHT);
