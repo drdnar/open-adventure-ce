@@ -680,14 +680,6 @@ void make_zzword(char zzword[6])
     zzword[5] = '\0';
 }
 
-void datime(long* d, long* t)
-{
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    *d = (long) tv.tv_sec;
-    *t = (long) tv.tv_usec;
-}
-
 // LCOV_EXCL_START
 void bug(enum bugtype num, const char *error_string)
 {

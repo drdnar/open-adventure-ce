@@ -206,7 +206,6 @@ extern long atdwrf(long);
 extern long setbit(long);
 extern bool tstbit(long, int);
 extern void make_zzword(char*);
-extern void datime(long*, long*);
 extern void set_seed(long);
 extern unsigned long get_next_lcg_value(void);
 extern long randrange(long);

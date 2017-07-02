@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <editline/readline.h>
+#include <time.h>
 
 #include "advent.h"
 #include "dungeon.h"
@@ -31,12 +32,8 @@ struct save_t save;
 int savefile(FILE *fp, long version)
 /* Save game to file. No input or output from user. */
 {
-    long i, k;
-    datime(&i, &k);
-    k = i + 650 * k;
-    save.savetime = k;
+    save.savetime = time(NULL);
     save.mode = -1;
-
     save.version = (version == 0) ? VRSION : version;
 
     memcpy(&save.game, &game, sizeof(struct game_t));
