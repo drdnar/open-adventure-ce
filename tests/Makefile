@@ -4,6 +4,7 @@
 # scripts from parent directory.  Note that using $PWD seems to fail
 # here under Gitlab's CI environment.
 PATH := $(realpath ..):$(realpath .):${PATH}
+GCOV?=gcov
 
 # Defeat annoying behavior under Mac OS X - builtin echo doesn't do -n
 ECHO := /bin/echo
@@ -20,7 +21,7 @@ check: savecheck regress
 	@-advent -l /dev/null <pitfall.log >/dev/null
 
 coverage: check
-	lcov -t "advent" -o ../advent.info -c -d ..
+	lcov -t "advent" -o ../advent.info -c -d .. --gcov-tool=$(GCOV)
 	genhtml -o ../coverage/ ../advent.info
 
 .SUFFIXES: .chk
