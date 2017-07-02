@@ -1697,6 +1697,10 @@ The axe misses and lands near the bear where you can't get at it.
 The bear eagerly wolfs down your food, after which he seems to calm
 down considerably and even becomes rather friendly.
 
+> attack bear
+
+The bear is confused; he only wants to be your friend.
+
 > take chain
 
 The chain is still locked.
@@ -1757,6 +1761,10 @@ There is nothing here to which the chain can be locked.
 
 OK
 
+> attack bear
+
+The bear is confused; he only wants to be your friend.
+
 > back
 
 You're in Barren Room.
@@ -1768,7 +1776,7 @@ There is a little axe here.
 The chain is now locked.
 
 
-You scored 225 out of a possible 430, using 309 turns.
+You scored 225 out of a possible 430, using 311 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 

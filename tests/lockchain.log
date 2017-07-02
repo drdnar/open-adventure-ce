@@ -298,6 +298,7 @@ in
 attack bear
 throw axe
 throw food
+attack bear
 take chain
 unlock chain
 unlock chain
@@ -312,5 +313,6 @@ take chain
 out
 lock chain
 drop bear
+attack bear
 back
 lock chain
