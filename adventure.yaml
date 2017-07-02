@@ -2865,8 +2865,6 @@ arbitrary_messages:  !!omap
 - RIDICULOUS_ATTEMPT: 'Don''t be ridiculous!'
 - RUSTY_DOOR: 'The door is extremely rusty and refuses to open.'
 - SHAKING_LEAVES: 'The plant indignantly shakes the oil off its leaves and asks, "Water?"'
-- RUSTED_HINGES: 'The hinges are quite thoroughly rusted now and won''t budge.'
-- OILED_NINGES: 'The oil has freed up the hinges so that the door will now move,\nalthough it requires some effort.'
 - DEEP_ROOTS: 'The plant has exceptionally deep roots and cannot be pulled free.'
 - KNIVES_VANISH: 'The dwarves'' knives vanish as they strike the walls of the cave.'
 - MUST_DROP: 'Something you''re carrying won''t fit through the tunnel with you.\nYou''d best take inventory and drop something.'
@@ -3131,8 +3129,11 @@ objects: !!omap
     locations: LOC_IMMENSE
     immovable: true
     descriptions:
-    - 'The way north is barred by a massive, rusty, iron door.'
-    - 'The way north leads through a massive, rusty, iron door.'
+    - [DOOR_RUSTED, 'The way north is barred by a massive, rusty, iron door.']
+    - [DOOR_UNRUSTED, 'The way north leads through a massive, rusty, iron door.']
+    changes:
+    - 'The hinges are quite thoroughly rusted now and won''t budge.'
+    - 'The oil has freed up the hinges so that the door will now move,\nalthough it requires some effort.'
 - PILLOW:
     words: ['pillo', 'velve']
     inventory: 'Velvet pillow'

@@ -692,7 +692,7 @@ static bool playermove( int motion)
                      * stuff for bear. */
                     if (game.prop[TROLL] == TROLL_PAIDONCE) {
                         pspeak(TROLL, look, TROLL_PAIDONCE);
-                        game.prop[TROLL] = 0;
+                        game.prop[TROLL] = TROLL_UNPAID;
                         move(TROLL2, 0);
                         move(TROLL2 + NOBJECTS, 0);
                         move(TROLL, objects[TROLL].plac);

@@ -888,11 +888,7 @@ static int pour(token_t verb, token_t obj)
         game.prop[PLANT2] = game.prop[PLANT];
         return GO_MOVE;
     } else {
-        game.prop[DOOR] = 0;
-        if (obj == OIL)
-            game.prop[DOOR] = 1;
-        spk = RUSTED_HINGES + game.prop[DOOR];
-        rspeak(spk);
+	state_change(DOOR, (obj == OIL) ? DOOR_UNRUSTED: DOOR_RUSTED);
         return GO_CLEAROBJ;
     }
 }
@@ -1086,7 +1082,7 @@ static int wave(token_t verb, token_t obj)
         rspeak(spk);
         return GO_CLEAROBJ;
     }
-    /* FIXME: Arithemetic on proprty values */
+    /* FIXME: Arithemetic on property values */
     if (HERE(BIRD))
         spk = FREE_FLY + MOD(game.prop[BIRD], 2);
     if (spk == FREE_FLY && game.loc == game.place[STEPS] && game.prop[JADE] < 0) {
