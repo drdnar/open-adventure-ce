@@ -191,6 +191,7 @@ d
 climb
 w
 n
+unlock
 oil door
 drop bottle
 n
@@ -273,6 +274,7 @@ ne
 barren
 in
 feed bear
+unlock
 unlock chain
 take chain
 take bear
@@ -468,6 +470,7 @@ e
 # Everything to here is from endgame428
 attack
 take oyster
+lock
 lock oyster
 drop oyster
 take oyster
