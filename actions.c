@@ -639,7 +639,7 @@ int fill(token_t verb, token_t obj)
         return (discard(verb, obj, true));
     } else if (obj == URN) {
         spk = FULL_URN;
-        if (game.prop[URN] != 0) {
+        if (game.prop[URN] != URN_EMPTY) {
             rspeak(spk);
             return GO_CLEAROBJ;
         }
@@ -652,7 +652,7 @@ int fill(token_t verb, token_t obj)
         game.place[k] = LOC_NOWHERE;
         game.prop[BOTTLE] = EMPTY_BOTTLE;
         if (k == OIL)
-            game.prop[URN] = 1;
+            game.prop[URN] = URN_DARK;
         spk = WATER_URN + game.prop[URN];
         rspeak(spk);
         return GO_CLEAROBJ;
@@ -664,7 +664,7 @@ int fill(token_t verb, token_t obj)
     spk = BOTTLED_WATER;
     if (LIQLOC(game.loc) == 0)
         spk = NO_LIQUID;
-    if (HERE(URN) && game.prop[URN] != 0)
+    if (HERE(URN) && game.prop[URN] != URN_EMPTY)
         spk = URN_NOPOUR;
     if (LIQUID() != 0)
         spk = BOTTLE_FULL;
@@ -974,7 +974,7 @@ static int rub(token_t verb, token_t obj)
     if (obj == URN && game.prop[URN] == URN_LIT) {
         DESTROY(URN);
         drop(AMBER, game.loc);
-        game.prop[AMBER] = 1;
+        game.prop[AMBER] = AMBER_IN_ROCK;
         --game.tally;
         drop(CAVITY, game.loc);
         spk = URN_GENIES;
@@ -992,12 +992,11 @@ static int say(struct command_t *command)
         b = command->wd2x;
         command->wd1 = command->wd2;
     }
-    //int wd = vocab(command->wd1, -1);
     char word1[6];
     packed_to_token(command->wd1, word1);
     int wd = (int) get_vocab_id(word1);
     /* FIXME: magic numbers */
-    if (wd == XYZZY || wd == PLUGH || wd == PLOVER || wd == ACTION_WORD(GIANTWORDS) || wd == ACTION_WORD(PART)) {
+    if (wd == MOTION_WORD(XYZZY) || wd == MOTION_WORD(PLUGH) || wd == MOTION_WORD(PLOVER) || wd == ACTION_WORD(GIANTWORDS) || wd == ACTION_WORD(PART)) {
         /* FIXME: scribbles on the interpreter's command block */
         wordclear(&command->wd2);
         return GO_LOOKUP;

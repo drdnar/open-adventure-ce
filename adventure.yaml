@@ -3784,8 +3784,8 @@ objects: !!omap
     locations: LOC_NOWHERE
     treasure: true
     descriptions:
-    - 'There is a rare amber gemstone here!'
-    - 'There is an amber gemstone resting in a small cavity in the rock!'
+    - [AMBER_IN_URN, 'There is a rare amber gemstone here!']
+    - [AMBER_IN_ROCK, 'There is an amber gemstone resting in a small cavity in the rock!']
 - SAPPH:
     words: ['sapph']
     inventory: 'Star sapphire'
