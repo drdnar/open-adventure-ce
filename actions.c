@@ -559,7 +559,7 @@ static int extinguish(token_t verb, int obj)
         if (game.prop[URN] != URN_EMPTY) {
             state_change(URN, URN_DARK);
         } else {
-	  pspeak(URN, change, URN_DARK, true);
+            pspeak(URN, change, URN_DARK, true);
         }
 
     } else if (obj == LAMP) {
@@ -941,7 +941,7 @@ static int read(struct command_t command)
     } else if (objects[command.obj].texts[0] == NULL || game.prop[command.obj] < 0) {
         rspeak(actions[command.verb].message);
     } else
-      pspeak(command.obj, study, game.prop[command.obj], true);
+        pspeak(command.obj, study, game.prop[command.obj], true);
     return GO_CLEAROBJ;
 }
 
@@ -952,7 +952,7 @@ static int reservoir(void)
         rspeak(NOTHING_HAPPENS);
         return GO_CLEAROBJ;
     } else {
-      pspeak(RESER, look, game.prop[RESER] + 1, true);
+        pspeak(RESER, look, game.prop[RESER] + 1, true);
         game.prop[RESER] = 1 - game.prop[RESER];
         if (AT(RESER))
             return GO_CLEAROBJ;
@@ -968,18 +968,18 @@ static int reservoir(void)
 static int rub(token_t verb, token_t obj)
 /* Rub.  Yields various snide remarks except for lit urn. */
 {
-    int spk = actions[verb].message;
-    if (obj != LAMP)
-        spk = PECULIAR_NOTHING;
     if (obj == URN && game.prop[URN] == URN_LIT) {
         DESTROY(URN);
         drop(AMBER, game.loc);
         game.prop[AMBER] = AMBER_IN_ROCK;
         --game.tally;
         drop(CAVITY, game.loc);
-        spk = URN_GENIES;
+        rspeak(URN_GENIES);
+    } else if (obj != LAMP) {
+        rspeak(PECULIAR_NOTHING);
+    } else {
+        rspeak(actions[verb].message);
     }
-    rspeak(spk);
     return GO_CLEAROBJ;
 }
 

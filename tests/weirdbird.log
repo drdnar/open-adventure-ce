@@ -4,6 +4,7 @@ seed 694608006
 in
 take lamp
 take keys
+rub keys
 out
 go s
 walk s
