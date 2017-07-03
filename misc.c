@@ -60,7 +60,8 @@ void packed_to_token(long packed, char token[6])
 
     // Replace trailing whitespace with \0.
     for (int i = 4; i >= 0; --i) {
-        if (token[i] == ' ' || token[i] == '\t')
+        if (token[i] == ' ' ||
+            token[i] == '\t')
             token[i] = '\0';
         else
             break;
@@ -225,7 +226,8 @@ void vspeak(const char* msg, bool blank, va_list ap)
             }
 
             // All-lowercase specifier.
-            if (msg[i] == 'L' || msg[i] == 'C') {
+            if (msg[i] == 'L' ||
+                msg[i] == 'C') {
                 packed_to_token(arg, renderp); /* unpack directly to destination */
                 int len = strlen(renderp);
                 for (int j = 0; j < len; ++j) {
@@ -387,10 +389,12 @@ bool silent_yes()
 
         free(firstword);
 
-        if (yes == 0 || y == 0) {
+        if (yes == 0 ||
+            y == 0) {
             outcome = true;
             break;
-        } else if (no == 0 || n == 0) {
+        } else if (no == 0 ||
+                   n == 0) {
             outcome = false;
             break;
         } else
@@ -434,11 +438,13 @@ bool yes(const char* question, const char* yes_response, const char* no_response
 
         free(firstword);
 
-        if (yes == 0 || y == 0) {
+        if (yes == 0 ||
+            y == 0) {
             speak(yes_response);
             outcome = true;
             break;
-        } else if (no == 0 || n == 0) {
+        } else if (no == 0 ||
+                   n == 0) {
             speak(no_response);
             outcome = false;
             break;
@@ -457,7 +463,9 @@ int get_motion_vocab_id(const char* word)
 {
     for (int i = 0; i < NMOTIONS; ++i) {
         for (int j = 0; j < motions[i].words.n; ++j) {
-            if (strcasecmp(word, motions[i].words.strs[j]) == 0 && (strlen(word) > 1 || strchr(ignore, word[0]) == NULL || !settings.oldstyle))
+            if (strcasecmp(word, motions[i].words.strs[j]) == 0 && (strlen(word) > 1 ||
+                    strchr(ignore, word[0]) == NULL ||
+                    !settings.oldstyle))
                 return (i);
         }
     }
@@ -483,7 +491,9 @@ int get_action_vocab_id(const char* word)
 {
     for (int i = 0; i < NACTIONS; ++i) {
         for (int j = 0; j < actions[i].words.n; ++j) {
-            if (strcasecmp(word, actions[i].words.strs[j]) == 0 && (strlen(word) > 1 || strchr(ignore, word[0]) == NULL || !settings.oldstyle))
+            if (strcasecmp(word, actions[i].words.strs[j]) == 0 && (strlen(word) > 1 ||
+                    strchr(ignore, word[0]) == NULL ||
+                    !settings.oldstyle))
                 return (i);
         }
     }

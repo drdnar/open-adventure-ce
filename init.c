@@ -58,7 +58,8 @@ long initialise(void)
     }
 
     for (int i = 1; i <= NLOCATIONS; i++) {
-        if (!(locations[i].description.big == 0 || tkey[i] == 0)) {
+        if (!(locations[i].description.big == 0 ||
+              tkey[i] == 0)) {
             int k = tkey[i];
             if (T_TERMINATE(travel[k]))
                 conditions[i] |= (1 << COND_FORCED);

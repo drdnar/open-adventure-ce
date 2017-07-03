@@ -245,7 +245,8 @@ static bool spotted_by_pirate(int i)
      *  that game.place[CHEST] = LOC_NOWHERE might mean that he's thrown
      *  it to the troll, but in that case he's seen the chest
      *  (game.prop=0). */
-    if (game.loc == game.chloc || game.prop[CHEST] >= 0)
+    if (game.loc == game.chloc ||
+        game.prop[CHEST] >= 0)
         return true;
     int snarfed = 0;
     bool movechest = false, robplayer = false;
@@ -254,10 +255,12 @@ static bool spotted_by_pirate(int i)
             continue;
         /*  Pirate won't take pyramid from plover room or dark
          *  room (too easy!). */
-        if (treasure == PYRAMID && (game.loc == objects[PYRAMID].plac || game.loc == objects[EMERALD].plac)) {
+        if (treasure == PYRAMID && (game.loc == objects[PYRAMID].plac ||
+                                    game.loc == objects[EMERALD].plac)) {
             continue;
         }
-        if (TOTING(treasure) || HERE(treasure))
+        if (TOTING(treasure) ||
+            HERE(treasure))
             ++snarfed;
         if (TOTING(treasure)) {
             movechest = true;
@@ -288,7 +291,8 @@ static bool spotted_by_pirate(int i)
         for (int treasure = 1; treasure <= NOBJECTS; treasure++) {
             if (!objects[treasure].is_treasure)
                 continue;
-            if (!(treasure == PYRAMID && (game.loc == objects[PYRAMID].plac || game.loc == objects[EMERALD].plac))) {
+            if (!(treasure == PYRAMID && (game.loc == objects[PYRAMID].plac ||
+                                          game.loc == objects[EMERALD].plac))) {
                 if (AT(treasure) && game.fixed[treasure] == 0)
                     carry(treasure, game.loc);
                 if (TOTING(treasure))
@@ -319,7 +323,9 @@ static bool dwarfmove(void)
      *  means dwarves won't follow him into dead end in maze, but
      *  c'est la vie.  They'll wait for him outside the dead
      *  end. */
-    if (game.loc == 0 || FORCED(game.loc) || CNDBIT(game.newloc, COND_NOARRR))
+    if (game.loc == 0 ||
+        FORCED(game.loc) ||
+        CNDBIT(game.newloc, COND_NOARRR))
         return true;
 
     /* Dwarf activity level ratchets up */
@@ -333,7 +339,9 @@ static bool dwarfmove(void)
      *  the 5 dwarves.  If any of the survivors is at loc,
      *  replace him with the alternate. */
     if (game.dflag == 1) {
-        if (!INDEEP(game.loc) || (PCT(95) && (!CNDBIT(game.loc, COND_NOBACK) || PCT(85))))
+        if (!INDEEP(game.loc) ||
+            (PCT(95) && (!CNDBIT(game.loc, COND_NOBACK) ||
+                         PCT(85))))
             return true;
         game.dflag = 2;
         for (int i = 1; i <= 2; i++) {
@@ -400,7 +408,9 @@ static bool dwarfmove(void)
         j = 1 + randrange(j);
         game.odloc[i] = game.dloc[i];
         game.dloc[i] = tk[j];
-        game.dseen[i] = (game.dseen[i] && INDEEP(game.loc)) || (game.dloc[i] == game.loc || game.odloc[i] == game.loc);
+        game.dseen[i] = (game.dseen[i] && INDEEP(game.loc)) ||
+                        (game.dloc[i] == game.loc ||
+                         game.odloc[i] == game.loc);
         if (!game.dseen[i])
             continue;
         game.dloc[i] = game.loc;
@@ -471,7 +481,8 @@ static void croak(void)
          *  death and exit. */
         rspeak(DEATH_CLOSING);
         terminate(endgame);
-    } else if (game.numdie == NDEATHS || !yes(query, yes_response, arbitrary_messages[OK_MAN]))
+    } else if (game.numdie == NDEATHS ||
+               !yes(query, yes_response, arbitrary_messages[OK_MAN]))
         terminate(endgame);
     else {
         game.place[WATER] = game.place[OIL] = LOC_NOWHERE;
@@ -578,7 +589,8 @@ static bool playermove( int motion)
     /* Look for a way to fulfil the motion verb passed in - travel_entry indexes
      * the beginning of the motion entries for here (game.loc). */
     for (;;) {
-        if (T_TERMINATE(travel[travel_entry]) || travel[travel_entry].motion == motion)
+        if (T_TERMINATE(travel[travel_entry]) ||
+            travel[travel_entry].motion == motion)
             break;
         if (travel[travel_entry].stop) {
             /*  Couldn't find an entry matching the motion word passed
@@ -586,13 +598,18 @@ static bool playermove( int motion)
             int spk = CANT_APPLY;
             if (motion >= EAST && motion <= NW)
                 spk = BAD_DIRECTION;
-            if (motion == UP || motion == DOWN)
+            if (motion == UP ||
+                motion == DOWN)
                 spk = BAD_DIRECTION;
-            if (motion == FORWARD || motion == LEFT || motion == RIGHT)
+            if (motion == FORWARD ||
+                motion == LEFT ||
+                motion == RIGHT)
                 spk = UNSURE_FACING;
-            if (motion == OUTSIDE || motion == INSIDE)
+            if (motion == OUTSIDE ||
+                motion == INSIDE)
                 spk = NO_INOUT_HERE;
-            if (motion == XYZZY || motion == PLUGH)
+            if (motion == XYZZY ||
+                motion == PLUGH)
                 spk = NOTHING_HAPPENS;
             if (motion == CRAWL)
                 spk = WHICH_WAY;
@@ -614,12 +631,14 @@ static bool playermove( int motion)
                 if (!SPECIAL(cond)) {
                     /* YAML N and [pct N] conditionals */
                     if (cond <= 100) {
-                        if (cond == 0 || PCT(cond))
+                        if (cond == 0 ||
+                            PCT(cond))
                             break;
                         /* else fall through */
                     }
                     /* YAML [with OBJ] clause */
-                    if (TOTING(arg) || (cond > 200 && AT(arg)))
+                    if (TOTING(arg) ||
+                        (cond > 200 && AT(arg)))
                         break;
                     /* else fall through to check [not OBJ STATE] */
                 } else if (game.prop[arg] != cond / 100 - 3)
@@ -657,7 +676,8 @@ static bool playermove( int motion)
                      * for actual motion, but can be spotted by "go back". */
                     /* FIXME: Arithmetic on location numbers */
                     game.newloc = 99 + 100 - game.loc;
-                    if (game.holdng > 1 || (game.holdng == 1 && !TOTING(EMERALD))) {
+                    if (game.holdng > 1 ||
+                        (game.holdng == 1 && !TOTING(EMERALD))) {
                         game.newloc = game.loc;
                         rspeak(MUST_DROP);
                     }
@@ -964,7 +984,8 @@ static bool do_command()
         if (game.loc == 0)
             croak();
         const char* msg = locations[game.loc].description.small;
-        if (MOD(game.abbrev[game.loc], game.abbnum) == 0 || msg == 0)
+        if (MOD(game.abbrev[game.loc], game.abbnum) == 0 ||
+            msg == 0)
             msg = locations[game.loc].description.big;
         if (!FORCED(game.loc) && DARK(game.loc)) {
             /*  The easiest way to get killed is to fall into a pit in
@@ -1076,7 +1097,8 @@ L2607:
         packed_to_token(command.wd2, word2);
         V1 = get_vocab_id(word1);
         V2 = get_vocab_id(word2);
-        if (V1 == ENTER && (V2 == STREAM || V2 == PROMOTE_WORD(WATER))) {
+        if (V1 == ENTER && (V2 == STREAM ||
+                            V2 == PROMOTE_WORD(WATER))) {
             if (LIQLOC(game.loc) == WATER) {
                 rspeak(FEET_WET);
             } else {

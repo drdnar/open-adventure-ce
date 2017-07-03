@@ -85,7 +85,8 @@ int resume(void)
 #endif
     FILE *fp = NULL;
 
-    if (game.loc != 1 || game.abbrev[1] != 1) {
+    if (game.loc != 1 ||
+        game.abbrev[1] != 1) {
         rspeak(RESUME_ABANDON);
         if (!yes(arbitrary_messages[THIS_ACCEPTABLE], arbitrary_messages[OK_MAN], arbitrary_messages[OK_MAN]))
             return GO_CLEAROBJ;
