@@ -171,7 +171,7 @@ static int bigwords(token_t foo)
  *  Look up foo in special section of vocab to determine which word we've got.
  *  Last word zips the eggs back to the giant room (unless already there). */
 {
-    char word[6];
+    char word[TOKLEN+1];
     packed_to_token(foo, word);
     int k = (int) get_special_vocab_id(word);
     int spk = NOTHING_HAPPENS;
@@ -1043,7 +1043,7 @@ static int say(struct command_t *command)
         b = command->wd2x;
         command->wd1 = command->wd2;
     }
-    char word1[6];
+    char word1[TOKLEN+1];
     packed_to_token(command->wd1, word1);
     int wd = (int) get_vocab_id(word1);
     /* FIXME: magic numbers */

@@ -6,6 +6,7 @@
 #include "dungeon.h"
 
 #define LINESIZE       1024
+#define TOKLEN	       5	  // # sigificant character sin a token */
 #define NDWARVES       6          // number of dwarves
 #define PIRATE         NDWARVES   // must be NDWARVES-1 when zero-origin
 #define DALTLC         LOC_NUGGET // alternate dwarf location
@@ -151,7 +152,7 @@ struct game_t {
     long trnluz;                 // # points lost so far due to number of turns used
     long turns;                  // how many commands he's given (ignores yes/no)
     bool wzdark;                 // whether the loc he's leaving was dark
-    char zzword[6];              // randomly generated magic word from bird
+    char zzword[TOKLEN+1];       // randomly generated magic word from bird
     bool blooded;                // has player drunk of dragon's blood?
     long abbrev[NLOCATIONS + 1];
     long atloc[NLOCATIONS + 1];
@@ -190,7 +191,7 @@ extern struct settings_t settings;
 extern char* xstrdup(const char* s);
 extern void* xmalloc(size_t size);
 extern void packed_to_token(long, char token[]);
-extern long token_to_packed(const char token[6]);
+extern long token_to_packed(const char token[TOKLEN+1]);
 extern void tokenize(char*, long tokens[4]);
 extern void vspeak(const char*, bool, va_list);
 extern bool wordeq(token_t, token_t);

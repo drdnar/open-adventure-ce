@@ -1089,8 +1089,8 @@ L2607:
         } else
             lampcheck();
 
-        char word1[6];
-        char word2[6];
+        char word1[TOKLEN+1];
+        char word2[TOKLEN+1];
         packed_to_token(command.wd1, word1);
         packed_to_token(command.wd2, word2);
         V1 = get_vocab_id(word1);

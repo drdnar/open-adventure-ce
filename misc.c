@@ -35,7 +35,7 @@ void* xmalloc(size_t size)
     return (ptr);
 }
 
-void packed_to_token(long packed, char token[6])
+void packed_to_token(long packed, char token[TOKLEN+1])
 {
     // The advent->ascii mapping.
     const char advent_to_ascii[] = {
@@ -68,7 +68,7 @@ void packed_to_token(long packed, char token[6])
     }
 }
 
-long token_to_packed(const char token[6])
+long token_to_packed(const char token[TOKLEN+1])
 {
     const char ascii_to_advent[] = {
         63, 63, 63, 63, 63, 63, 63, 63,
@@ -113,7 +113,7 @@ void tokenize(char* raw, long tokens[4])
     int word_count = sscanf(raw, "%s%s", words[0], words[1]);
 
     // make space for substrings and zero it out
-    char chunk_data[][6] = {
+    char chunk_data[][TOKLEN+1] = {
         {"\0\0\0\0\0"},
         {"\0\0\0\0\0"},
         {"\0\0\0\0\0"},
@@ -679,7 +679,7 @@ long randrange(long range)
     return range * get_next_lcg_value() / game.lcg_m;
 }
 
-void make_zzword(char zzword[6])
+void make_zzword(char zzword[TOKLEN+1])
 {
     for (int i = 0; i < 5; ++i) {
         zzword[i] = 'A' + randrange(26);
