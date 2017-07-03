@@ -1,4 +1,5 @@
 ## Break the mirror in endgame and die
+## Also, try to lock door after oiling it
 n
 seed 1838473132
 in
@@ -470,6 +471,7 @@ e
 # Everything to here is from endgame428
 attack
 take oyster
+find oyster
 lock
 lock oyster
 drop oyster

@@ -1164,6 +1164,14 @@ The way north is barred by a massive, rusty, iron door.
 The oil has freed up the hinges so that the door will now move,
 although it requires some effort.
 
+> lock door
+
+OK
+
+> unlock door
+
+OK
+
 > drop bottle
 
 OK
@@ -2018,7 +2026,7 @@ There is nothing here with which to fill it.
 The urn is now dark.
 
 
-You scored 267 out of a possible 430, using 341 turns.
+You scored 267 out of a possible 430, using 343 turns.
 
 You have reached "Junior Master" status.
 

@@ -2921,6 +2921,10 @@ OK
 Interesting.  There seems to be something written on the underside of
 the oyster.
 
+> find oyster
+
+You are already carrying it!
+
 > lock
 
 Huh?
@@ -2969,7 +2973,7 @@ The resulting ruckus has awakened the dwarves.  There are now several
 threatening little dwarves in the room with you!  Most of them throw
 knives at you!  All of them get you!
 
-You scored 383 out of a possible 430, using 473 turns.
+You scored 383 out of a possible 430, using 474 turns.
 
 Your score puts you in Master Adventurer Class B.
 
