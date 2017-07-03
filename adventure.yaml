@@ -89,7 +89,7 @@
 #                    the associated state, numbered from zero upwards; it
 #                    is also a state label that can be used in travel-rule
 #                    'not' clauses.
-#       changes:     State-change messages to be emitted whenever the obect
+#       changes:     State-change messages to be emitted whenever the object
 #                    *changes* to the (0-origin) state that is the index of the
 #                    message in this array.
 #       words:       The vocabulary word(s) referring to this object.
@@ -110,7 +110,7 @@
 # message when the message is printed.  These sequences are:
 #       %d = an integer
 #       %s = an ASCII string
-#	%S = The letter 'S' or nothing (if a given value is exactly 1)
+#	%S = The letter 's' or nothing (if a previous %d value is exactly 1)
 #	%V = substitute program version string
 
 motions: !!omap
