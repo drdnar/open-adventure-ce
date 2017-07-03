@@ -1,5 +1,4 @@
 ## Break the mirror in endgame and die
-## Also, try to lock door after oiling it
 n
 seed 1838473132
 in
@@ -479,6 +478,6 @@ take oyster
 read oyster
 y
 sw
+attack bird
 break mirror
-
 
