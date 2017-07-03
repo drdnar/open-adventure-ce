@@ -20,9 +20,6 @@ static int attack(struct command_t *command)
     vocab_t verb = command->verb;
     vocab_t obj = command->obj;
 
-    if (obj == INTRANSITIVE) {
-        return GO_UNKNOWN;
-    }
     long spk = actions[verb].message;
     if (obj == NO_OBJECT || obj == INTRANSITIVE) {
         int changes = 0;
