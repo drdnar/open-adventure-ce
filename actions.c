@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include "advent.h"
 #include "dungeon.h"
 
@@ -1037,11 +1038,11 @@ static int rub(token_t verb, token_t obj)
 static int say(struct command_t *command)
 /* Say.  Echo WD2 (or WD1 if no WD2 (SAY WHAT?, etc.).)  Magic words override. */
 {
-    long a = command->wd1, b = command->wd1x;
+    long a = command->wd1;
     if (command->wd2 > 0) {
         a = command->wd2;
-        b = command->wd2x;
         command->wd1 = command->wd2;
+	strcpy(command->raw1, command->raw2);
     }
     char word1[TOKLEN+1];
     packed_to_token(command->wd1, word1);
@@ -1056,7 +1057,7 @@ static int say(struct command_t *command)
         wordclear(&command->wd2);
         return GO_LOOKUP;
     }
-    rspeak(OKEY_DOKEY, a, b);
+    sspeak(OKEY_DOKEY, command->raw1);
     return GO_CLEAROBJ;
 }
 

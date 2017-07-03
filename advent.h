@@ -181,8 +181,8 @@ struct command_t {
     enum speechpart part;
     vocab_t verb;
     vocab_t obj;
-    token_t wd1, wd1x;
-    token_t wd2, wd2x;
+    token_t wd1;
+    token_t wd2;
     char raw1[BUFSIZ], raw2[BUFSIZ];
 };
 
