@@ -1775,8 +1775,52 @@ There is a little axe here.
 
 The chain is now locked.
 
+> out
 
-You scored 225 out of a possible 430, using 311 turns.
+You're in front of Barren Room.
+
+There is a contented-looking bear wandering about nearby.
+
+> fork
+
+The path forks here.  The left fork leads northeast.  A dull rumbling
+seems to get louder in that direction.  The right fork leads southeast
+down a gentle slope.  The main corridor enters from the west.
+
+> go left
+
+The walls are quite warm here.  From the north can be heard a steady
+roar, so loud that the entire cave seems to be trembling.  Another
+passage leads south, and a low crawl goes east.
+
+> north
+
+You are on the edge of a breath-taking view.  Far below you is an
+active volcano, from which great gouts of molten lava come surging
+out, cascading back down into the depths.  The glowing rock fills the
+farthest reaches of the cavern with a blood-red glare, giving every-
+thing an eerie, macabre appearance.  The air is filled with flickering
+sparks of ash and a heavy smell of brimstone.  The walls are hot to
+the touch, and the thundering of the volcano drowns out all other
+sounds.  Embedded in the jagged roof far overhead are myriad twisted
+formations composed of pure white alabaster, which scatter the murky
+light into sinister apparitions upon the walls.  To one side is a deep
+gorge, filled with a bizarre chaos of tortured rock which seems to
+have been crafted by the devil himself.  An immense river of fire
+crashes out from the depths of the volcano, burns its way through the
+gorge, and plummets into a bottomless pit far off to your left.  To
+the right, an immense geyser of blistering steam erupts continuously
+from a barren island in the center of a sulfurous lake, which bubbles
+ominously.  The far right wall is aflame with an incandescence of its
+own, which lends an additional infernal splendor to the already
+hellish scene.  A dark, foreboding passage exits to the south.
+
+> extinguish volcano
+
+It is beyond your power to do that.
+
+
+You scored 225 out of a possible 430, using 316 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 
