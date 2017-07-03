@@ -788,15 +788,12 @@ static int light(token_t verb, token_t obj)
 static int listen(void)
 /*  Listen.  Intransitive only.  Print stuff based on objsnd/locsnd. */
 {
-    long k;
-    int spk = ALL_SILENT;
-    k = locations[game.loc].sound;
-    if (k != SILENT) {
-        rspeak(k);
-        if (locations[game.loc].loud)
-            return GO_CLEAROBJ;
-        else
-            spk = NO_MESSAGE;
+    long sound = locations[game.loc].sound;
+    if (sound != SILENT) {
+        rspeak(sound);
+        if (!locations[game.loc].loud)
+            rspeak(NO_MESSAGE);
+        return GO_CLEAROBJ;
     }
     for (int i = 1; i <= NOBJECTS; i++) {
         if (!HERE(i) || objects[i].sounds[0] == NULL || game.prop[i] < 0)
@@ -806,21 +803,20 @@ static int listen(void)
             mi += 3 * game.blooded;
         long packed_zzword = token_to_packed(game.zzword);
         pspeak(i, hear, mi, true, packed_zzword);
-        spk = NO_MESSAGE;
+        rspeak(NO_MESSAGE);
         /* FIXME: Magic number, sensitive to bird state logic */
         if (i == BIRD && game.prop[i] == 5)
             DESTROY(BIRD);
+        return GO_CLEAROBJ;
     }
-    rspeak(spk);
+    rspeak(ALL_SILENT);
     return GO_CLEAROBJ;
 }
 
 static int lock(token_t verb, token_t obj)
 /* Lock, unlock, no object given.  Assume various things if present. */
 {
-    int spk = actions[verb].message;
     if (obj == INTRANSITIVE) {
-        spk = NOTHING_LOCKED;
         if (HERE(CLAM))
             obj = CLAM;
         if (HERE(OYSTER))
@@ -832,19 +828,18 @@ static int lock(token_t verb, token_t obj)
         if (HERE(CHAIN))
             obj = CHAIN;
         if (obj == NO_OBJECT || obj == INTRANSITIVE) {
-            rspeak(spk);
+            rspeak(NOTHING_LOCKED);
             return GO_CLEAROBJ;
         }
     }
 
     /*  Lock, unlock object.  Special stuff for opening clam/oyster
      *  and for chain. */
+    int spk = actions[verb].message;
     if (obj == CLAM || obj == OYSTER)
         return bivalve(verb, obj);
     if (obj == DOOR)
-        spk = RUSTY_DOOR;
-    if (obj == DOOR && game.prop[DOOR] == DOOR_UNRUSTED)
-        spk = OK_MAN;
+        spk = (game.prop[DOOR] == DOOR_UNRUSTED) ? OK_MAN : RUSTY_DOOR;
     if (obj == CAGE)
         spk = NO_LOCK;
     if (obj == KEYS)
