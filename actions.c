@@ -700,36 +700,36 @@ static int find(token_t verb, token_t obj)
 static int fly(token_t verb, token_t obj)
 /* Fly.  Snide remarks unless hovering rug is here. */
 {
-    int spk = actions[verb].message;
     if (obj == INTRANSITIVE) {
-        if (game.prop[RUG] != RUG_HOVER)
-            spk = RUG_NOTHING2;
-        if (!HERE(RUG))
-            spk = FLAP_ARMS;
-        if (spk == RUG_NOTHING2 || spk == FLAP_ARMS) {
-            rspeak(spk);
+        if (!HERE(RUG)) {
+            rspeak(FLAP_ARMS);
+            return GO_CLEAROBJ;
+        }
+        if (game.prop[RUG] != RUG_HOVER) {
+            rspeak(RUG_NOTHING2);
             return GO_CLEAROBJ;
         }
         obj = RUG;
     }
 
     if (obj != RUG) {
-        rspeak(spk);
+        rspeak(actions[verb].message);
         return GO_CLEAROBJ;
     }
-    spk = RUG_NOTHING1;
     if (game.prop[RUG] != RUG_HOVER) {
-        rspeak(spk);
+        rspeak(RUG_NOTHING1);
         return GO_CLEAROBJ;
     }
     game.oldlc2 = game.oldloc;
     game.oldloc = game.loc;
     /* FIXME: Arithmetic on location values */
     game.newloc = game.place[RUG] + game.fixed[RUG] - game.loc;
-    spk = RUG_GOES;
-    if (game.prop[SAPPH] >= 0)
-        spk = RUG_RETURNS;
-    rspeak(spk);
+
+    if (game.prop[SAPPH] >= 0) {
+        rspeak(RUG_RETURNS);
+    } else {
+        rspeak(RUG_GOES);
+    }
     return GO_TERMINATE;
 }
 
