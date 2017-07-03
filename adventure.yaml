@@ -618,7 +618,8 @@ locations: !!omap
       short: 'You''re below the grate.'
     conditions: {LIT: true}
     travel: [
-      {verbs: [OUT, UPWAR], cond: [not, GRATE, GRATE_CLOSED], action: [goto, LOC_GRATE]},
+      {verbs: [OUT, UPWAR], cond: [not, GRATE, GRATE_CLOSED],
+                            action: [goto, LOC_GRATE]},
       {verbs: [OUT], action: [speak, GRATE_NOWAY]},
       {verbs: [CRAWL, COBBL, INWAR, WEST], action: [goto, LOC_COBBLE]},
       {verbs: [PIT], action: [goto, LOC_PITTOP]},
@@ -646,10 +647,10 @@ locations: !!omap
       short: 'You''re in debris room.'
     conditions: {}
     travel: [
-      {verbs: [DEPRE], cond: [not, GRATE, GRATE_CLOSED], action: [goto, LOC_GRATE]},
+      {verbs: [DEPRE], cond: [not, GRATE, GRATE_CLOSED],
+                       action: [goto, LOC_GRATE]},
       {verbs: [ENTRA], action: [goto, LOC_BELOWGRATE]},
-      {verbs: [CRAWL, COBBL, PASSA, LOW, EAST],
-                                                     action: [goto, LOC_COBBLE]},
+      {verbs: [CRAWL, COBBL, PASSA, LOW, EAST], action: [goto, LOC_COBBLE]},
       {verbs: [CANYO, INWAR, UPWAR, WEST], action: [goto, LOC_AWKWARD]},
       {verbs: [XYZZY], action: [goto, LOC_FOOF2]},
       {verbs: [PIT], action: [goto, LOC_PITTOP]},
@@ -660,7 +661,8 @@ locations: !!omap
       short: !!null
     conditions: {}
     travel: [
-      {verbs: [DEPRE], cond: [not, GRATE, GRATE_CLOSED], action: [goto, LOC_GRATE]},
+      {verbs: [DEPRE], cond: [not, GRATE, GRATE_CLOSED],
+                       action: [goto, LOC_GRATE]},
       {verbs: [ENTRA], action: [goto, LOC_BELOWGRATE]},
       {verbs: [D, EAST, DEBRI], action: [goto, LOC_DEBRIS]},
       {verbs: [INWAR, UPWAR, WEST], action: [goto, LOC_BIRD]},
@@ -676,7 +678,8 @@ locations: !!omap
     conditions: {}
     hints: [*bird] 
     travel: [
-      {verbs: [DEPRE], cond: [not, GRATE, GRATE_CLOSED], action: [goto, LOC_GRATE]},
+      {verbs: [DEPRE], cond: [not, GRATE, GRATE_CLOSED],
+                       action: [goto, LOC_GRATE]},
       {verbs: [ENTRA], action: [goto, LOC_BELOWGRATE]},
       {verbs: [DEBRI], action: [goto, LOC_DEBRIS]},
       {verbs: [CANYO, EAST], action: [goto, LOC_AWKWARD]},
@@ -690,7 +693,8 @@ locations: !!omap
       short: 'You''re at top of small pit.'
     conditions: {}
     travel: [
-      {verbs: [DEPRE], cond: [not, GRATE, GRATE_CLOSED], action: [goto, LOC_GRATE]},
+      {verbs: [DEPRE], cond: [not, GRATE, GRATE_CLOSED],
+                       action: [goto, LOC_GRATE]},
       {verbs: [ENTRA], action: [goto, LOC_BELOWGRATE]},
       {verbs: [DEBRI], action: [goto, LOC_DEBRIS]},
       {verbs: [PASSA, EAST], action: [goto, LOC_BIRD]},
@@ -835,7 +839,8 @@ locations: !!omap
     conditions: {DEEP: true}
     travel: [
       {verbs: [UPWAR, OUT], action: [goto, LOC_WESTEND]},
-      {verbs: [CLIMB], cond: [not, PLANT, 2], action: [goto, LOC_BUILDING1]},
+      {verbs: [CLIMB], cond: [not, PLANT, PLANT_GROWN],
+                       action: [goto, LOC_BUILDING1]},
       {verbs: [CLIMB], action: [goto, LOC_CLIMBSTALK]},
     ]
 - LOC_CLIMBSTALK:
@@ -900,7 +905,8 @@ locations: !!omap
       short: !!null
     conditions: {DEEP: true}
     travel: [
-      {verbs: [], cond: [not, PLANT, 1], action: [goto, LOC_NOCLIMB]},
+      {verbs: [], cond: [not, PLANT, PLANT_BELLOWING],
+                  action: [goto, LOC_NOCLIMB]},
       {verbs: [], action: [goto, LOC_PLANTTOP]},
     ]
 - LOC_SNAKEBLOCK:
@@ -1874,7 +1880,7 @@ locations: !!omap
     sound: STREAM_SPLASHES
     travel: [
       {verbs: [SOUTH, OUT], action: [goto, LOC_MIRRORCANYON]},
-      {verbs: [NORTH, ACROS, CROSS], cond: [not, RESER, 1], action: [speak, BAD_DIRECTION]},
+      {verbs: [NORTH, ACROS, CROSS], cond: [not, RESER, WATERS_PARTED], action: [speak, BAD_DIRECTION]},
       {verbs: [NORTH], action: [goto, LOC_RESBOTTOM]},
     ]
 - LOC_DEADEND12:
@@ -3405,10 +3411,8 @@ objects: !!omap
     immovable: true
     descriptions:
     - 'There is a tiny little plant in the pit, murmuring "water, water, ..."'
-    - |-
-      There is a 12-foot-tall beanstalk stretching up out of the pit,
-      bellowing "WATER!! WATER!!"
-    - 'There is a gigantic beanstalk stretching all the way up to the hole.'
+    - [PLANT_BELLOWING, 'There is a 12-foot-tall beanstalk stretching up out of the pit,\nbellowing "WATER!! WATER!!"']
+    - [PLANT_GROWN, 'There is a gigantic beanstalk stretching all the way up to the hole.']
     - 'The plant spurts into furious growth for a few seconds.'
     - 'The plant grows explosively, almost filling the bottom of the pit.'
     - 'You''ve over-watered the plant!  It''s shriveling up!  And now . . .'
