@@ -183,6 +183,7 @@ struct command_t {
     vocab_t obj;
     token_t wd1, wd1x;
     token_t wd2, wd2x;
+    char raw1[BUFSIZ], raw2[BUFSIZ];
 };
 
 extern struct game_t game;
@@ -192,7 +193,7 @@ extern char* xstrdup(const char* s);
 extern void* xmalloc(size_t size);
 extern void packed_to_token(long, char token[]);
 extern long token_to_packed(const char token[TOKLEN+1]);
-extern void tokenize(char*, long tokens[4]);
+extern void tokenize(char*, struct command_t *);
 extern void vspeak(const char*, bool, va_list);
 extern bool wordeq(token_t, token_t);
 extern bool wordempty(token_t);

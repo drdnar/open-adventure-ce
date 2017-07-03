@@ -100,17 +100,12 @@ long token_to_packed(const char token[TOKLEN+1])
     return (packed);
 }
 
-void tokenize(char* raw, long tokens[4])
+void tokenize(char* raw, struct command_t *cmd)
 {
-    // set each token to 0
-    for (int i = 0; i < 4; ++i)
-        tokens[i] = 0;
+    memset(cmd, '\0', sizeof(struct command_t));
 
-    // grab the first two words
-    char* words[2];
-    words[0] = (char*) xmalloc(strlen(raw) + 1);
-    words[1] = (char*) xmalloc(strlen(raw) + 1);
-    int word_count = sscanf(raw, "%s%s", words[0], words[1]);
+    /* FIXME: put a bound prefix on the %s to prevent buffer overflow */
+    int word_count = sscanf(raw, "%s%s", cmd->raw1, cmd->raw2);
 
     // make space for substrings and zero it out
     char chunk_data[][TOKLEN+1] = {
@@ -121,11 +116,9 @@ void tokenize(char* raw, long tokens[4])
     };
 
     // break the words into up to 4 5-char substrings
-    sscanf(words[0], "%5s%5s", chunk_data[0], chunk_data[1]);
+    sscanf(cmd->raw1, "%5s%5s", chunk_data[0], chunk_data[1]);
     if (word_count == 2)
-        sscanf(words[1], "%5s%5s", chunk_data[2], chunk_data[3]);
-    free(words[0]);
-    free(words[1]);
+        sscanf(cmd->raw2, "%5s%5s", chunk_data[2], chunk_data[3]);
 
     // uppercase all the substrings
     for (int i = 0; i < 4; ++i)
@@ -133,8 +126,10 @@ void tokenize(char* raw, long tokens[4])
             chunk_data[i][j] = (char) toupper(chunk_data[i][j]);
 
     // pack the substrings
-    for (int i = 0; i < 4; ++i)
-        tokens[i] = token_to_packed(chunk_data[i]);
+    cmd->wd1  = token_to_packed(chunk_data[0]);
+    cmd->wd1x = token_to_packed(chunk_data[1]);
+    cmd->wd2  = token_to_packed(chunk_data[2]);
+    cmd->wd2x = token_to_packed(chunk_data[3]);
 }
 
 /* Hide the fact that wods are corrently packed longs */

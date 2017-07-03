@@ -1054,12 +1054,7 @@ L2600:
         strncpy(inputbuf, input, LINESIZE - 1);
         free(input);
 
-        long tokens[4];
-        tokenize(inputbuf, tokens);
-        command.wd1 = tokens[0];
-        command.wd1x = tokens[1];
-        command.wd2 = tokens[2];
-        command.wd2x = tokens[3];
+        tokenize(inputbuf, &command);
 
         /*  Every input, check "game.foobar" flag.  If zero, nothing's
          *  going on.  If pos, make neg.  If neg, he skipped a word,
