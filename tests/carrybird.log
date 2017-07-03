@@ -1,4 +1,4 @@
-## Try to carry bird without cage
+## Try to carry bird without cage, then kill bird
 n
 seed 1071883378
 in
@@ -10,3 +10,5 @@ eat grate
 w
 w
 take bird
+# test intransitive attack on bird
+attack
