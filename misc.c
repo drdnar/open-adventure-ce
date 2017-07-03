@@ -10,7 +10,7 @@
 #include "advent.h"
 #include "dungeon.h"
 
-char* xstrdup(const char* s)
+static char* xstrdup(const char* s)
 {
     char* ptr = strdup(s);
     if (ptr == NULL) {
@@ -22,7 +22,7 @@ char* xstrdup(const char* s)
     return (ptr);
 }
 
-void* xmalloc(size_t size)
+static void* xmalloc(size_t size)
 {
     void* ptr = malloc(size);
     if (ptr == NULL) {

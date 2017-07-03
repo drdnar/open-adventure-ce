@@ -189,8 +189,6 @@ struct command_t {
 extern struct game_t game;
 extern struct settings_t settings;
 
-extern char* xstrdup(const char* s);
-extern void* xmalloc(size_t size);
 extern void packed_to_token(long, char token[]);
 extern long token_to_packed(const char token[]);
 extern void tokenize(char*, struct command_t *);
