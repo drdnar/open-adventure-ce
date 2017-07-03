@@ -190,20 +190,6 @@ void vspeak(const char* msg, bool blank, va_list ap)
                 size -= len;
             }
 
-            // All-lowercase specifier.
-            if (msg[i] == 'L' ||
-                msg[i] == 'C') {
-                packed_to_token(arg, renderp); /* unpack directly to destination */
-                int len = strlen(renderp);
-                for (int j = 0; j < len; ++j) {
-                    renderp[j] = tolower(renderp[j]);
-                }
-                if (msg[i] == 'C') // First char uppercase, rest lowercase.
-                    renderp[0] = toupper(renderp[0]);
-                renderp += len;
-                size -= len;
-            }
-
             previous_arg = arg;
         }
     }
