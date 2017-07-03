@@ -10,18 +10,6 @@
 #include "advent.h"
 #include "dungeon.h"
 
-static char* xstrdup(const char* s)
-{
-    char* ptr = strdup(s);
-    if (ptr == NULL) {
-        // LCOV_EXCL_START
-        // exclude from coverage analysis because we can't simulate an out of memory error in testing
-        fprintf(stderr, "Out of memory!\n");
-        exit(EXIT_FAILURE);
-    }
-    return (ptr);
-}
-
 static void* xmalloc(size_t size)
 {
     void* ptr = malloc(size);
@@ -293,19 +281,24 @@ void echo_input(FILE* destination, const char* input_prompt, const char* input)
     free(prompt_and_input);
 }
 
-int word_count(char* s)
+int word_count(char* str)
 {
-    char* copy = xstrdup(s);
     char delims[] = " \t";
     int count = 0;
-    char* word;
+    int inblanks = true;
 
-    word = strtok(copy, delims);
-    while (word != NULL) {
-        word = strtok(NULL, delims);
-        ++count;
-    }
-    free(copy);
+    for (char *s = str; *s; s++)
+	if (inblanks) {
+	    if (strchr(delims, *s) == 0) {
+		++count;
+		inblanks = false;
+	    }
+	} else {
+	    if (strchr(delims, *s) != 0) {
+		inblanks = true;
+	    }
+	}
+
     return (count);
 }
 
