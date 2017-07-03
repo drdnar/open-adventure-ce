@@ -19,8 +19,8 @@ int main(int argc, char *argv[])
 
     // Initialize game variables
     initialise();
-    
-    /* we're generating a saved game, so saved once by default, 
+
+    /* we're generating a saved game, so saved once by default,
      * unless overridden with command-line options below.
      */
     game.saved = 1;

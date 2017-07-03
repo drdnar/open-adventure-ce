@@ -873,33 +873,30 @@ static int pour(token_t verb, token_t obj)
 /*  Pour.  If no object, or object is bottle, assume contents of bottle.
  *  special tests for pouring water or oil on plant or rusty door. */
 {
-    int spk = actions[verb].message;
     if (obj == BOTTLE || obj == NO_OBJECT)
         obj = LIQUID();
     if (obj == NO_OBJECT)
         return GO_UNKNOWN;
     if (!TOTING(obj)) {
-        rspeak(spk);
+        rspeak(actions[verb].message);
         return GO_CLEAROBJ;
     }
-    spk = CANT_POUR;
+
     if (obj != OIL && obj != WATER) {
-        rspeak(spk);
+        rspeak(CANT_POUR);
         return GO_CLEAROBJ;
     }
     if (HERE(URN) && game.prop[URN] == URN_EMPTY)
         return fill(verb, URN);
     game.prop[BOTTLE] = EMPTY_BOTTLE;
     game.place[obj] = LOC_NOWHERE;
-    spk = GROUND_WET;
     if (!(AT(PLANT) || AT(DOOR))) {
-        rspeak(spk);
+        rspeak(GROUND_WET);
         return GO_CLEAROBJ;
     }
     if (!AT(DOOR)) {
-        spk = SHAKING_LEAVES;
         if (obj != WATER) {
-            rspeak(spk);
+            rspeak(SHAKING_LEAVES);
             return GO_CLEAROBJ;
         }
         pspeak(PLANT, look, game.prop[PLANT] + 3, true);

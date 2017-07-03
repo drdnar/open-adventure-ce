@@ -166,7 +166,7 @@ void vspeak(const char* msg, bool blank, va_list ap)
         return;
 
     if (blank == true)
-      printf("\n");
+        printf("\n");
 
     int msglen = strlen(msg);
 
@@ -267,19 +267,19 @@ void pspeak(vocab_t msg, enum speaktype mode, int skip, bool blank, ...)
     va_start(ap, blank);
     switch (mode) {
     case touch:
-      vspeak(objects[msg].inventory, blank, ap);
+        vspeak(objects[msg].inventory, blank, ap);
         break;
     case look:
-      vspeak(objects[msg].descriptions[skip], blank, ap);
+        vspeak(objects[msg].descriptions[skip], blank, ap);
         break;
     case hear:
-      vspeak(objects[msg].sounds[skip], blank, ap);
+        vspeak(objects[msg].sounds[skip], blank, ap);
         break;
     case study:
-      vspeak(objects[msg].texts[skip], blank, ap);
+        vspeak(objects[msg].texts[skip], blank, ap);
         break;
     case change:
-      vspeak(objects[msg].changes[skip], blank, ap);
+        vspeak(objects[msg].changes[skip], blank, ap);
         break;
     }
     va_end(ap);

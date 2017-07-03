@@ -689,7 +689,7 @@ static bool playermove( int motion)
                      * entries check for game.prop(TROLL)=0.)  Special
                      * stuff for bear. */
                     if (game.prop[TROLL] == TROLL_PAIDONCE) {
-		      pspeak(TROLL, look, TROLL_PAIDONCE, true);
+                        pspeak(TROLL, look, TROLL_PAIDONCE, true);
                         game.prop[TROLL] = TROLL_UNPAID;
                         move(TROLL2, 0);
                         move(TROLL2 + NOBJECTS, 0);
@@ -1006,7 +1006,7 @@ L2600:
          *  tick game.clock1 unless well into cave (and not at Y2). */
         if (game.closed) {
             if (game.prop[OYSTER] < 0 && TOTING(OYSTER))
-	      pspeak(OYSTER, look, 1, true);
+                pspeak(OYSTER, look, 1, true);
             for (size_t i = 1; i <= NOBJECTS; i++) {
                 if (TOTING(i) && game.prop[i] < 0)
                     game.prop[i] = -1 - game.prop[i];
