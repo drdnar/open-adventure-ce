@@ -483,6 +483,10 @@ int get_special_vocab_id(const char* word)
 long get_vocab_id(const char* word)
 // Search the vocab categories in order for the supplied word.
 {
+    /* Check for an empty string */
+    if (strncmp(word, "", sizeof("")) == 0)
+      return (WORD_EMPTY);
+
     long ref_num;
 
     /* FIXME: Magic numbers related to vocabulary */
