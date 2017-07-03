@@ -515,14 +515,14 @@ static bool traveleq(long a, long b)
  *  him, so we need game.oldlc2, which is the last place he was
  *  safe.) */
 
-static bool playermove( int motion)
+static void playermove( int motion)
 {
     int scratchloc, travel_entry = tkey[game.loc];
     game.newloc = game.loc;
     if (travel_entry == 0)
         BUG(LOCATION_HAS_NO_TRAVEL_ENTRIES); // LCOV_EXCL_LINE
     if (motion == NUL)
-        return true;
+        return;
     else if (motion == BACK) {
         /*  Handle "go back".  Look for verb which goes from game.loc to
          *  game.oldloc, or to game.oldlc2 If game.oldloc has forced-motion.
@@ -554,7 +554,7 @@ static bool playermove( int motion)
                     travel_entry = te_tmp;
                     if (travel_entry == 0) {
                         rspeak(NOT_CONNECTED);
-                        return true;
+                        return;
                     }
                 }
 
@@ -564,7 +564,7 @@ static bool playermove( int motion)
             }
         } else {
             rspeak(spk);
-            return true;
+            return;
         }
     } else if (motion == LOOK) {
         /*  Look.  Can't give more detail.  Pretend it wasn't dark
@@ -575,11 +575,11 @@ static bool playermove( int motion)
         ++game.detail;
         game.wzdark = false;
         game.abbrev[game.loc] = 0;
-        return true;
+        return;
     } else if (motion == CAVE) {
         /*  Cave.  Different messages depending on whether above ground. */
         rspeak((OUTSID(game.loc) && game.loc != LOC_GRATE) ? FOLLOW_STREAM : NEED_DETAIL);
-        return true;
+        return;
     } else {
         /* none of the specials */
         game.oldlc2 = game.oldloc;
@@ -614,7 +614,7 @@ static bool playermove( int motion)
             if (motion == CRAWL)
                 spk = WHICH_WAY;
             rspeak(spk);
-            return true;
+            return;
         }
         ++travel_entry;
     }
@@ -659,13 +659,13 @@ static bool playermove( int motion)
             /* Found an eligible rule, now execute it */
             game.newloc = travel[travel_entry].dest;
             if (!SPECIAL(game.newloc))
-                return true;
+                return;
 
             if (game.newloc > 500) {
                 /* Execute a speak rule */
                 rspeak(L_SPEAK(game.newloc));
                 game.newloc = game.loc;
-                return true;
+                return;
             } else {
                 game.newloc -= SPECIALBASE;
                 switch (game.newloc) {
@@ -681,7 +681,7 @@ static bool playermove( int motion)
                         game.newloc = game.loc;
                         rspeak(MUST_DROP);
                     }
-                    return true;
+                    return;
                 case 2:
                     /* Travel 302.  Plover transport.  Drop the
                      * emerald (only use special travel if toting
@@ -717,13 +717,13 @@ static bool playermove( int motion)
                         move(TROLL + NOBJECTS, objects[TROLL].fixd);
                         juggle(CHASM);
                         game.newloc = game.loc;
-                        return true;
+                        return;
                     } else {
                         game.newloc = objects[TROLL].plac + objects[TROLL].fixd - game.loc;
                         if (game.prop[TROLL] == TROLL_UNPAID)
                             game.prop[TROLL] = TROLL_PAIDONCE;
                         if (!TOTING(BEAR))
-                            return true;
+                            return;
                         rspeak(BRIDGE_COLLAPSE);
                         game.prop[CHASM] = BRIDGE_WRECKED;
                         game.prop[TROLL] = TROLL_GONE;
@@ -732,7 +732,7 @@ static bool playermove( int motion)
                         game.prop[BEAR] = BEAR_DEAD;
                         game.oldlc2 = game.newloc;
                         croak();
-                        return true;
+                        return;
                     }
                 default:
                     BUG(SPECIAL_TRAVEL_500_GT_L_GT_300_EXCEEDS_GOTO_LIST); // LCOV_EXCL_LINE
@@ -1002,10 +1002,8 @@ static bool do_command()
             rspeak(TAME_BEAR);
         speak(msg);
         if (FORCED(game.loc)) {
-            if (playermove(HERE))
-                return true;
-            else
-                continue;	/* back to top of main interpreter loop */
+            playermove(HERE);
+	    return true;
         }
         if (game.loc == LOC_Y2 && PCT(25) && !game.closng)
             rspeak(SAYS_PLUGH);
@@ -1144,10 +1142,8 @@ Lookup:
         kmod = MOD(defn, 1000);
         switch (defn / 1000) {
         case 0:
-            if (playermove(kmod))
-                return true;
-            else
-                continue;	/* back to top of main interpreter loop */
+            playermove(kmod);
+	    return true;
         case 1:
             command.part = unknown;
             command.obj = kmod;
