@@ -306,8 +306,18 @@ w
 fee
 fie
 foe
+foe
+# intentionally mess up above
+fee
+fie
+foe
 foo
 take eggs
+# say big words again after we take the eggs
+fee
+fie
+foe
+foo
 s
 d
 u

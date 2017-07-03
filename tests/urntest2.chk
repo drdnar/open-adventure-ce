@@ -1823,6 +1823,22 @@ OK
 
 OK
 
+> foe
+
+What's the matter, can't you read?  Now you'd best start over.
+
+> fee
+
+OK
+
+> fie
+
+OK
+
+> foe
+
+OK
+
 > foo
 
 There is a large nest here, full of golden eggs!
@@ -1830,6 +1846,22 @@ There is a large nest here, full of golden eggs!
 > take eggs
 
 OK
+
+> fee
+
+OK
+
+> fie
+
+OK
+
+> foe
+
+OK
+
+> foo
+
+Nothing happens.
 
 > s
 
@@ -1986,7 +2018,7 @@ There is nothing here with which to fill it.
 The urn is now dark.
 
 
-You scored 267 out of a possible 430, using 333 turns.
+You scored 267 out of a possible 430, using 341 turns.
 
 You have reached "Junior Master" status.
 
