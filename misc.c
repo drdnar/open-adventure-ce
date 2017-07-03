@@ -68,7 +68,7 @@ void packed_to_token(long packed, char token[TOKLEN+1])
     }
 }
 
-long token_to_packed(const char token[TOKLEN+1])
+long token_to_packed(const char token[])
 {
     const char ascii_to_advent[] = {
         63, 63, 63, 63, 63, 63, 63, 63,
@@ -92,9 +92,11 @@ long token_to_packed(const char token[TOKLEN+1])
     };
 
     size_t t_len = strlen(token);
+    if (t_len > TOKLEN)
+	t_len = TOKLEN;
     long packed = 0;
     for (size_t i = 0; i < t_len; ++i) {
-        char mapped = ascii_to_advent[(int) token[i]];
+        char mapped = ascii_to_advent[(int) toupper(token[i])];
         packed |= (mapped << (6 * i));
     }
     return (packed);
@@ -107,27 +109,9 @@ void tokenize(char* raw, struct command_t *cmd)
     /* FIXME: put a bound prefix on the %s to prevent buffer overflow */
     int word_count = sscanf(raw, "%s%s", cmd->raw1, cmd->raw2);
 
-    // make space for substrings and zero it out
-    char chunk_data[][TOKLEN+1] = {
-        {"\0\0\0\0\0"},
-        {"\0\0\0\0\0"},
-        {"\0\0\0\0\0"},
-        {"\0\0\0\0\0"},
-    };
-
-    // break the words into up to 4 5-char substrings
-    sscanf(cmd->raw1, "%5s%5s", chunk_data[0], chunk_data[1]);
-    if (word_count == 2)
-        sscanf(cmd->raw2, "%5s%5s", chunk_data[2], chunk_data[3]);
-
-    // uppercase all the substrings
-    for (int i = 0; i < 4; ++i)
-        for (unsigned int j = 0; j < strlen(chunk_data[i]); ++j)
-            chunk_data[i][j] = (char) toupper(chunk_data[i][j]);
-
     // pack the substrings
-    cmd->wd1  = token_to_packed(chunk_data[0]);
-    cmd->wd2  = token_to_packed(chunk_data[2]);
+    cmd->wd1  = token_to_packed(cmd->raw1);
+    cmd->wd2  = token_to_packed(cmd->raw2);
 }
 
 /* Hide the fact that wods are corrently packed longs */
