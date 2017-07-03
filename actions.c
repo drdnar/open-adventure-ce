@@ -205,21 +205,26 @@ static int bigwords(token_t foo)
 static int bivalve(token_t verb, token_t obj)
 /* Clam/oyster actions */
 {
-    int spk;
     bool is_oyster = (obj == OYSTER);
-    spk = is_oyster ? OYSTER_OPENS : PEARL_FALLS;
-    if (TOTING(obj))
-        spk = is_oyster ? DROP_OYSTER : DROP_CLAM;
-    if (!TOTING(TRIDENT))
-        spk = is_oyster ? OYSTER_OPENER : CLAM_OPENER;
-    if (verb == LOCK)
-        spk = HUH_MAN;
-    if (spk == PEARL_FALLS) {
+    if (verb == LOCK) {
+        rspeak(HUH_MAN);
+        return GO_CLEAROBJ;
+    }
+    if (!TOTING(TRIDENT)) {
+        rspeak(is_oyster ? OYSTER_OPENER : CLAM_OPENER);
+        return GO_CLEAROBJ;
+    }
+    if (TOTING(obj)) {
+        rspeak( is_oyster ? DROP_OYSTER : DROP_CLAM);
+        return GO_CLEAROBJ;
+    }
+
+    if (!is_oyster) {
         DESTROY(CLAM);
         drop(OYSTER, game.loc);
         drop(PEARL, LOC_CULDESAC);
     }
-    rspeak(spk);
+    rspeak(is_oyster ? OYSTER_OPENS : PEARL_FALLS);
     return GO_CLEAROBJ;
 }
 
