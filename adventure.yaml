@@ -519,7 +519,7 @@ locations: !!omap
       {verbs: [WEST], action: [goto, LOC_ROADEND]},
       {verbs: [NORTH], action: [goto, LOC_FOREST20]},
       {verbs: [SOUTH, FORES], action: [goto, LOC_FOREST13]},
-      {verbs: [D], action: [speak, WHICH_WAY]},
+      {verbs: [DOWN], action: [speak, WHICH_WAY]},
     ]
 - LOC_BUILDING:
     description:
@@ -588,7 +588,7 @@ locations: !!omap
       {verbs: [EAST, FORES], action: [goto, LOC_FOREST6]},
       {verbs: [WEST], action: [goto, LOC_FOREST10]},
       {verbs: [DOWNS, BED, SOUTH, DEPRE], action: [goto, LOC_GRATE]},
-      {verbs: [SLIT, STREA, D, INWAR, ENTER], action: [speak, DONT_FIT]},
+      {verbs: [SLIT, STREA, DOWN, INWAR, ENTER], action: [speak, DONT_FIT]},
     ]
 - LOC_GRATE:
     description:
@@ -664,7 +664,7 @@ locations: !!omap
       {verbs: [DEPRE], cond: [not, GRATE, GRATE_CLOSED],
                        action: [goto, LOC_GRATE]},
       {verbs: [ENTRA], action: [goto, LOC_BELOWGRATE]},
-      {verbs: [D, EAST, DEBRI], action: [goto, LOC_DEBRIS]},
+      {verbs: [DOWN, EAST, DEBRI], action: [goto, LOC_DEBRIS]},
       {verbs: [INWAR, UPWAR, WEST], action: [goto, LOC_BIRD]},
       {verbs: [PIT], action: [goto, LOC_PITTOP]},
     ]
@@ -698,9 +698,9 @@ locations: !!omap
       {verbs: [ENTRA], action: [goto, LOC_BELOWGRATE]},
       {verbs: [DEBRI], action: [goto, LOC_DEBRIS]},
       {verbs: [PASSA, EAST], action: [goto, LOC_BIRD]},
-      {verbs: [D, PIT, STEPS], cond: [carry, NUGGET],
+      {verbs: [DOWN, PIT, STEPS], cond: [carry, NUGGET],
                                action: [goto, LOC_NECKBROKE]},
-      {verbs: [D], action: [goto, LOC_MISTHALL]},
+      {verbs: [DOWN], action: [goto, LOC_MISTHALL]},
       {verbs: [CRACK, WEST], action: [goto, LOC_CRACK]},
     ]
 - LOC_MISTHALL:
@@ -718,7 +718,7 @@ locations: !!omap
     travel: [
       {verbs: [LEFT, SOUTH], action: [goto, LOC_NUGGET]},
       {verbs: [FORWA, HALL, WEST], action: [goto, LOC_EASTBANK]},
-      {verbs: [STAIR, D, NORTH], action: [goto, LOC_KINGHALL]},
+      {verbs: [STAIR, DOWN, NORTH], action: [goto, LOC_KINGHALL]},
       {verbs: [UPWAR, PIT, STEPS, DOME, PASSA, EAST],
                               cond: [carry, NUGGET], action: [goto, LOC_DOME]},
       {verbs: [UPWAR], action: [goto, LOC_PITTOP]},
@@ -817,7 +817,7 @@ locations: !!omap
     travel: [
       {verbs: [EAST, ACROS], action: [goto, LOC_EASTEND]},
       {verbs: [WEST, SLAB], action: [goto, LOC_SLAB]},
-      {verbs: [D, PIT], action: [goto, LOC_WESTPIT]},
+      {verbs: [DOWN, PIT], action: [goto, LOC_WESTPIT]},
       {verbs: [HOLE], action: [speak, TOO_FAR]},
     ]
 - LOC_EASTPIT:
@@ -878,7 +878,7 @@ locations: !!omap
     travel: [
       {verbs: [HALL, OUT, SOUTH], action: [goto, LOC_KINGHALL]},
       {verbs: [NORTH, Y2], action: [goto, LOC_Y2]},
-      {verbs: [D, HOLE], action: [goto, LOC_BROKEN]},
+      {verbs: [DOWN, HOLE], action: [goto, LOC_BROKEN]},
     ]
 - LOC_SOUTHSIDE:
     description:
@@ -939,7 +939,7 @@ locations: !!omap
       short: !!null
     conditions: {DEEP: true}
     travel: [
-      {verbs: [D, Y2], action: [goto, LOC_Y2]},
+      {verbs: [DOWN, Y2], action: [goto, LOC_Y2]},
       {verbs: [UPWAR], action: [goto, LOC_MISTHALL]},
     ]
 - LOC_WINDOW1:
@@ -980,7 +980,7 @@ locations: !!omap
     conditions: {DEEP: true}
     travel: [
       {verbs: [WEST, CRAWL], action: [goto, LOC_BROKEN]},
-      {verbs: [D, PIT, CLIMB], action: [goto, LOC_SMALLPIT]},
+      {verbs: [DOWN, PIT, CLIMB], action: [goto, LOC_SMALLPIT]},
     ]
 - LOC_SMALLPIT:
     description:
@@ -992,7 +992,7 @@ locations: !!omap
     sound: STREAM_GURGLES
     travel: [
       {verbs: [CLIMB, UPWAR, OUT], action: [goto, LOC_SMALLPITBRINK]},
-      {verbs: [SLIT, STREA, D, UPSTR, DOWNS, ENTER, INWAR],
+      {verbs: [SLIT, STREA, DOWN, UPSTR, DOWNS, ENTER, INWAR],
                                    action: [speak, DONT_FIT]},
     ]
 - LOC_DUSTY:
@@ -1004,7 +1004,7 @@ locations: !!omap
     conditions: {DEEP: true}
     travel: [
       {verbs: [EAST, PASSA], action: [goto, LOC_BROKEN]},
-      {verbs: [D, HOLE, FLOOR], action: [goto, LOC_COMPLEX]},
+      {verbs: [DOWN, HOLE, FLOOR], action: [goto, LOC_COMPLEX]},
       {verbs: [BEDQU], action: [goto, LOC_BEDQUILT]},
     ]
 - LOC_PARALLEL1:
@@ -1063,7 +1063,7 @@ locations: !!omap
     hints: [*maze]
     travel: [
       {verbs: [EAST], action: [goto, LOC_ALIKE2]},
-      {verbs: [D], action: [goto, LOC_DEADEND3]},
+      {verbs: [DOWN], action: [goto, LOC_DEADEND3]},
       {verbs: [SOUTH], action: [goto, LOC_ALIKE6]},
       {verbs: [NORTH], action: [goto, LOC_DEADEND9]},
     ]
@@ -1126,7 +1126,7 @@ locations: !!omap
     travel: [
       {verbs: [EAST], action: [goto, LOC_ALIKE3]},
       {verbs: [WEST], action: [goto, LOC_ALIKE5]},
-      {verbs: [D], action: [goto, LOC_ALIKE7]},
+      {verbs: [DOWN], action: [goto, LOC_ALIKE7]},
       {verbs: [SOUTH], action: [goto, LOC_ALIKE8]},
     ]
 - LOC_ALIKE7:
@@ -1153,7 +1153,7 @@ locations: !!omap
       {verbs: [SOUTH], action: [goto, LOC_ALIKE8]},
       {verbs: [UPWAR], action: [goto, LOC_ALIKE9]},
       {verbs: [NORTH], action: [goto, LOC_ALIKE10]},
-      {verbs: [D], action: [goto, LOC_DEADEND11]},
+      {verbs: [DOWN], action: [goto, LOC_DEADEND11]},
     ]
 - LOC_ALIKE9:
     description:
@@ -1184,7 +1184,7 @@ locations: !!omap
     travel: [
       {verbs: [WEST], action: [goto, LOC_ALIKE8]},
       {verbs: [NORTH], action: [goto, LOC_ALIKE10]},
-      {verbs: [D], action: [goto, LOC_DEADEND5]},
+      {verbs: [DOWN], action: [goto, LOC_DEADEND5]},
       {verbs: [EAST], action: [goto, LOC_PITBRINK]},
     ]
 - LOC_DEADEND5:
@@ -1205,7 +1205,7 @@ locations: !!omap
       short: 'You''re at brink of pit.'
     conditions: {DEEP: true, NOBACK: true}
     travel: [
-      {verbs: [D, CLIMB], action: [goto, LOC_BIRD]},
+      {verbs: [DOWN, CLIMB], action: [goto, LOC_BIRD]},
       {verbs: [WEST], action: [goto, LOC_ALIKE10]},
       {verbs: [SOUTH], action: [goto, LOC_DEADEND6]},
       {verbs: [NORTH], action: [goto, LOC_ALIKE12]},
@@ -1240,7 +1240,7 @@ locations: !!omap
     travel: [
       {verbs: [EAST, UPWAR, CRAWL], action: [goto, LOC_MISTWEST]},
       {verbs: [WEST], action: [goto, LOC_LONGWEST]},
-      {verbs: [NORTH, D, HOLE], action: [goto, LOC_CROSSOVER]},
+      {verbs: [NORTH, DOWN, HOLE], action: [goto, LOC_CROSSOVER]},
     ]
 - LOC_LONGWEST:
     description:
@@ -1307,8 +1307,8 @@ locations: !!omap
       {verbs: [NORTH], cond: [pct, 50], action: [speak, FUTILE_CRAWL]},
       {verbs: [NORTH], cond: [pct, 75], action: [goto, LOC_LOWROOM]},
       {verbs: [NORTH], action: [goto, LOC_THREEJUNCTION]},
-      {verbs: [D], cond: [pct, 65], action: [speak, FUTILE_CRAWL]},
-      {verbs: [D], action: [goto, LOC_ANTEROOM]},
+      {verbs: [DOWN], cond: [pct, 65], action: [speak, FUTILE_CRAWL]},
+      {verbs: [DOWN], action: [goto, LOC_ANTEROOM]},
     ]
 - LOC_SWISSCHEESE:
     description:
@@ -1340,7 +1340,7 @@ locations: !!omap
     travel: [
       {verbs: [EAST], action: [goto, LOC_SWISSCHEESE]},
       {verbs: [WEST, ACROS], action: [goto, LOC_WESTEND]},
-      {verbs: [D, PIT], action: [goto, LOC_EASTPIT]},
+      {verbs: [DOWN, PIT], action: [goto, LOC_EASTPIT]},
     ]
 - LOC_SLAB:
     description:
@@ -1363,7 +1363,7 @@ locations: !!omap
       short: !!null
     conditions: {DEEP: true}
     travel: [
-      {verbs: [D, SLAB], action: [goto, LOC_SLAB]},
+      {verbs: [DOWN, SLAB], action: [goto, LOC_SLAB]},
       {verbs: [SOUTH], cond: [not, DRAGON, DRAGON_BARS],
                          action: [goto, LOC_SECRET5]},
       {verbs: [SOUTH], action: [goto, LOC_SECRET4]},
@@ -1377,7 +1377,7 @@ locations: !!omap
     conditions: {DEEP: true}
     travel: [
       {verbs: [NORTH], action: [goto, LOC_THREEJUNCTION]},
-      {verbs: [D, PASSA], action: [goto, LOC_BEDQUILT]},
+      {verbs: [DOWN, PASSA], action: [goto, LOC_BEDQUILT]},
       {verbs: [SOUTH], action: [goto, LOC_TOPSTALACTITE]},
     ]
 - LOC_THREEJUNCTION:
@@ -1424,7 +1424,7 @@ locations: !!omap
       {verbs: [EAST], action: [goto, LOC_KINGHALL]},
       {verbs: [WEST], cond: [not, DRAGON, DRAGON_BARS], action: [goto, LOC_SECRET5]},
       {verbs: [WEST], action: [goto, LOC_SECRET6]},
-      {verbs: [D], action: [goto, LOC_WIDEPLACE]},
+      {verbs: [DOWN], action: [goto, LOC_WIDEPLACE]},
     ]
 - LOC_WIDEPLACE:
     description:
@@ -1558,7 +1558,7 @@ locations: !!omap
       short: 'You''re in narrow corridor.'
     conditions: {DEEP: true}
     travel: [
-      {verbs: [D, CLIMB, EAST], action: [goto, LOC_WESTPIT]},
+      {verbs: [DOWN, CLIMB, EAST], action: [goto, LOC_WESTPIT]},
       {verbs: [JUMP], action: [goto, LOC_NECKBROKE]},
       {verbs: [WEST, GIANT], action: [goto, LOC_GIANTROOM]},
     ]
@@ -1588,7 +1588,7 @@ locations: !!omap
     conditions: {DEEP: true}
     travel: [
       {verbs: [NORTH, CAVER, PASSA], action: [goto, LOC_WATERFALL]},
-      {verbs: [D, CLIMB], action: [goto, LOC_LOWROOM]},
+      {verbs: [DOWN, CLIMB], action: [goto, LOC_LOWROOM]},
     ]
 - LOC_GIANTROOM:
     description:
@@ -1720,7 +1720,7 @@ locations: !!omap
       short: 'You''re in arched hall.'
     conditions: {DEEP: true}
     travel: [
-      {verbs: [D, SHELL, OUT], action: [goto, LOC_SHELLROOM]},
+      {verbs: [DOWN, SHELL, OUT], action: [goto, LOC_SHELLROOM]},
     ]
 - LOC_SHELLROOM:
     description:
@@ -1733,7 +1733,7 @@ locations: !!omap
     conditions: {DEEP: true}
     travel: [
       {verbs: [UPWAR, HALL], action: [goto, LOC_ARCHED]},
-      {verbs: [D], action: [goto, LOC_SLOPING1]},
+      {verbs: [DOWN], action: [goto, LOC_SLOPING1]},
       {verbs: [SOUTH], cond: [carry, CLAM],
                          action: [speak, CLAM_BLOCKER]},
       {verbs: [SOUTH], cond: [carry, OYSTER],
@@ -1747,7 +1747,7 @@ locations: !!omap
     conditions: {DEEP: true}
     travel: [
       {verbs: [UPWAR, SHELL], action: [goto, LOC_SHELLROOM]},
-      {verbs: [D], action: [goto, LOC_CULDESAC]},
+      {verbs: [DOWN], action: [goto, LOC_CULDESAC]},
     ]
 - LOC_CULDESAC:
     description:
@@ -1787,7 +1787,7 @@ locations: !!omap
       {verbs: [EAST], action: [goto, LOC_DIFFERENT9]},
       {verbs: [WEST], action: [goto, LOC_DIFFERENT10]},
       {verbs: [NORTH], action: [goto, LOC_DIFFERENT11]},
-      {verbs: [D], action: [goto, LOC_LONGWEST]},
+      {verbs: [DOWN], action: [goto, LOC_LONGWEST]},
     ]
 - LOC_WITTSEND:
     description:
@@ -1845,10 +1845,10 @@ locations: !!omap
     conditions: {DEEP: true}
     travel: [
       {verbs: [NORTH], action: [goto, LOC_SECRET2]},
-      {verbs: [D, JUMP, CLIMB], cond: [pct, 40],
+      {verbs: [DOWN, JUMP, CLIMB], cond: [pct, 40],
                                       action: [goto, LOC_ALIKE6]},
-      {verbs: [D], cond: [pct, 50], action: [goto, LOC_ALIKE9]},
-      {verbs: [D], action: [goto, LOC_ALIKE4]},
+      {verbs: [DOWN], cond: [pct, 50], action: [goto, LOC_ALIKE9]},
+      {verbs: [DOWN], action: [goto, LOC_ALIKE4]},
     ]
 - LOC_DIFFERENT2:
     description:
@@ -1863,7 +1863,7 @@ locations: !!omap
       {verbs: [SE], action: [goto, LOC_DIFFERENT7]},
       {verbs: [NE], action: [goto, LOC_DIFFERENT8]},
       {verbs: [WEST], action: [goto, LOC_DIFFERENT9]},
-      {verbs: [D], action: [goto, LOC_DIFFERENT10]},
+      {verbs: [DOWN], action: [goto, LOC_DIFFERENT10]},
       {verbs: [UPWAR], action: [goto, LOC_DIFFERENT11]},
       {verbs: [SOUTH], action: [goto, LOC_DEADEND13]},
     ]
@@ -1927,7 +1927,7 @@ locations: !!omap
     sound: SNAKES_HISSING
     travel: [
       {verbs: [NE], action: [goto, LOC_NE]},
-      {verbs: [D], action: [speak, GRATE_NOWAY]},
+      {verbs: [DOWN], action: [speak, GRATE_NOWAY]},
     ]
 - LOC_SWCHASM:
     description:
@@ -1956,7 +1956,7 @@ locations: !!omap
       short: 'You''re in sloping corridor.'
     conditions: {DEEP: true}
     travel: [
-      {verbs: [D], action: [goto, LOC_LOWROOM]},
+      {verbs: [DOWN], action: [goto, LOC_LOWROOM]},
       {verbs: [UPWAR], action: [goto, LOC_SWCHASM]},
     ]
 - LOC_SECRET4:
@@ -2076,7 +2076,7 @@ locations: !!omap
     travel: [
       {verbs: [SOUTH, PASSA, OUT], action: [goto, LOC_WARMWALLS]},
       {verbs: [FORK], action: [goto, LOC_FORK]},
-      {verbs: [D], action: [speak, RIDICULOUS_ATTEMPT]},
+      {verbs: [DOWN], action: [speak, RIDICULOUS_ATTEMPT]},
       {verbs: [JUMP], action: [goto, LOC_GRUESOME]},
     ]
 - LOC_BOULDERS2:
@@ -2103,7 +2103,7 @@ locations: !!omap
     conditions: {NOARRR: true, DEEP: true}
     travel: [
       {verbs: [NORTH, UPWAR, FORK], action: [goto, LOC_FORK]},
-      {verbs: [SOUTH, D, BARRE], action: [goto, LOC_BARRENFRONT]},
+      {verbs: [SOUTH, DOWN, BARRE], action: [goto, LOC_BARRENFRONT]},
       {verbs: [VIEW], action: [goto, LOC_BREATHTAKING]},
     ]
 - LOC_BARRENFRONT:
@@ -2144,7 +2144,7 @@ locations: !!omap
       {verbs: [SW], action: [goto, LOC_DIFFERENT6]},
       {verbs: [NE], action: [goto, LOC_DIFFERENT7]},
       {verbs: [UPWAR], action: [goto, LOC_DIFFERENT8]},
-      {verbs: [D], action: [goto, LOC_DIFFERENT9]},
+      {verbs: [DOWN], action: [goto, LOC_DIFFERENT9]},
       {verbs: [NORTH], action: [goto, LOC_DIFFERENT10]},
       {verbs: [SOUTH], action: [goto, LOC_DIFFERENT11]},
       {verbs: [EAST], action: [goto, LOC_DIFFERENT2]},
@@ -2163,7 +2163,7 @@ locations: !!omap
       {verbs: [SW], action: [goto, LOC_DIFFERENT8]},
       {verbs: [NE], action: [goto, LOC_DIFFERENT9]},
       {verbs: [EAST], action: [goto, LOC_DIFFERENT10]},
-      {verbs: [D], action: [goto, LOC_DIFFERENT11]},
+      {verbs: [DOWN], action: [goto, LOC_DIFFERENT11]},
       {verbs: [SE], action: [goto, LOC_DIFFERENT2]},
     ]
 - LOC_DIFFERENT5:
@@ -2173,7 +2173,7 @@ locations: !!omap
     conditions: {DEEP: true, NOBACK: true}
     travel: [
       {verbs: [UPWAR], action: [goto, LOC_DIFFERENT1]},
-      {verbs: [D], action: [goto, LOC_DIFFERENT3]},
+      {verbs: [DOWN], action: [goto, LOC_DIFFERENT3]},
       {verbs: [WEST], action: [goto, LOC_DIFFERENT4]},
       {verbs: [NE], action: [goto, LOC_DIFFERENT6]},
       {verbs: [SW], action: [goto, LOC_DIFFERENT7]},
@@ -2194,7 +2194,7 @@ locations: !!omap
       {verbs: [NW], action: [goto, LOC_DIFFERENT4]},
       {verbs: [SE], action: [goto, LOC_DIFFERENT5]},
       {verbs: [EAST], action: [goto, LOC_DIFFERENT7]},
-      {verbs: [D], action: [goto, LOC_DIFFERENT8]},
+      {verbs: [DOWN], action: [goto, LOC_DIFFERENT8]},
       {verbs: [SOUTH], action: [goto, LOC_DIFFERENT9]},
       {verbs: [UPWAR], action: [goto, LOC_DIFFERENT10]},
       {verbs: [WEST], action: [goto, LOC_DIFFERENT11]},
@@ -2208,7 +2208,7 @@ locations: !!omap
     travel: [
       {verbs: [NORTH], action: [goto, LOC_DIFFERENT1]},
       {verbs: [SE], action: [goto, LOC_DIFFERENT3]},
-      {verbs: [D], action: [goto, LOC_DIFFERENT4]},
+      {verbs: [DOWN], action: [goto, LOC_DIFFERENT4]},
       {verbs: [SOUTH], action: [goto, LOC_DIFFERENT5]},
       {verbs: [EAST], action: [goto, LOC_DIFFERENT6]},
       {verbs: [WEST], action: [goto, LOC_DIFFERENT8]},
@@ -2227,7 +2227,7 @@ locations: !!omap
       {verbs: [WEST], action: [goto, LOC_DIFFERENT3]},
       {verbs: [UPWAR], action: [goto, LOC_DIFFERENT4]},
       {verbs: [SW], action: [goto, LOC_DIFFERENT5]},
-      {verbs: [D], action: [goto, LOC_DIFFERENT6]},
+      {verbs: [DOWN], action: [goto, LOC_DIFFERENT6]},
       {verbs: [SOUTH], action: [goto, LOC_DIFFERENT7]},
       {verbs: [NW], action: [goto, LOC_DIFFERENT9]},
       {verbs: [SE], action: [goto, LOC_DIFFERENT10]},
@@ -2243,7 +2243,7 @@ locations: !!omap
       {verbs: [SE], action: [goto, LOC_DIFFERENT1]},
       {verbs: [NE], action: [goto, LOC_DIFFERENT3]},
       {verbs: [SOUTH], action: [goto, LOC_DIFFERENT4]},
-      {verbs: [D], action: [goto, LOC_DIFFERENT5]},
+      {verbs: [DOWN], action: [goto, LOC_DIFFERENT5]},
       {verbs: [UPWAR], action: [goto, LOC_DIFFERENT6]},
       {verbs: [NW], action: [goto, LOC_DIFFERENT7]},
       {verbs: [NORTH], action: [goto, LOC_DIFFERENT8]},
@@ -2257,7 +2257,7 @@ locations: !!omap
       short: !!null
     conditions: {DEEP: true, NOBACK: true}
     travel: [
-      {verbs: [D], action: [goto, LOC_DIFFERENT1]},
+      {verbs: [DOWN], action: [goto, LOC_DIFFERENT1]},
       {verbs: [EAST], action: [goto, LOC_DIFFERENT3]},
       {verbs: [NE], action: [goto, LOC_DIFFERENT4]},
       {verbs: [UPWAR], action: [goto, LOC_DIFFERENT5]},
@@ -2279,7 +2279,7 @@ locations: !!omap
       {verbs: [EAST], action: [goto, LOC_DIFFERENT4]},
       {verbs: [WEST], action: [goto, LOC_DIFFERENT5]},
       {verbs: [NORTH], action: [goto, LOC_DIFFERENT6]},
-      {verbs: [D], action: [goto, LOC_DIFFERENT7]},
+      {verbs: [DOWN], action: [goto, LOC_DIFFERENT7]},
       {verbs: [SE], action: [goto, LOC_DIFFERENT8]},
       {verbs: [UPWAR], action: [goto, LOC_DIFFERENT9]},
       {verbs: [SOUTH], action: [goto, LOC_DIFFERENT10]},
@@ -2635,7 +2635,7 @@ locations: !!omap
     conditions: {DEEP: true}
     travel: [
       {verbs: [UPWAR, NW], action: [goto, LOC_STEEP]},
-      {verbs: [D, SE], action: [goto, LOC_RESNORTH]},
+      {verbs: [DOWN, SE], action: [goto, LOC_RESNORTH]},
     ]
 - LOC_STEEP:
     description:
@@ -2643,7 +2643,7 @@ locations: !!omap
       short: !!null
     conditions: {DEEP: true}
     travel: [
-      {verbs: [D, SE], action: [goto, LOC_TREACHEROUS]},
+      {verbs: [DOWN, SE], action: [goto, LOC_TREACHEROUS]},
       {verbs: [UPWAR, NW], action: [goto, LOC_CLIFFBASE]},
     ]
 - LOC_CLIFFBASE:
@@ -2656,7 +2656,7 @@ locations: !!omap
       short: 'You''re at base of cliff.'
     conditions: {DEEP: true}
     travel: [
-      {verbs: [D, SE], action: [goto, LOC_STEEP]},
+      {verbs: [DOWN, SE], action: [goto, LOC_STEEP]},
       {verbs: [UPWAR, CLIMB], action: [goto, LOC_CLIFFACE]},
     ]
 - LOC_CLIFFACE:
@@ -2665,7 +2665,7 @@ locations: !!omap
       short: !!null
     conditions: {DEEP: true}
     travel: [
-      {verbs: [D], action: [goto, LOC_CLIFFBASE]},
+      {verbs: [DOWN], action: [goto, LOC_CLIFFBASE]},
       {verbs: [UPWAR], cond: [carry, OBJ_46], action: [goto, LOC_CLIFFTOP]},
       {verbs: [UPWAR], action: [goto, LOC_FOOTSLIP]},
     ]
