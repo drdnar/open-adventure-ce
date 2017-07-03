@@ -251,7 +251,7 @@ Nothing happens.
 
 > find bar
 
-Sorry, I don't know the word "BAR".
+Sorry, I don't know the word "bar".
 
 > carry
 
@@ -388,7 +388,7 @@ you come to it.  To get the full description, say "look".
 
 > frob grate
 
-Sorry, I don't know the word "FROB".
+Sorry, I don't know the word "frob".
 
 > read grate
 

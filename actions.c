@@ -983,7 +983,7 @@ static int read(struct command_t command)
     }
 
     if (DARK(game.loc)) {
-        rspeak(NO_SEE, command.wd1, command.wd1x);
+        sspeak(NO_SEE, command.raw1);
     } else if (command.obj == OYSTER && !game.clshnt && game.closed) {
         game.clshnt = yes(arbitrary_messages[CLUE_QUERY], arbitrary_messages[WAYOUT_CLUE], arbitrary_messages[OK_MAN]);
     } else if (objects[command.obj].texts[0] == NULL ||
@@ -1240,7 +1240,7 @@ int action(struct command_t *command)
                     command->verb == INVENTORY) && command->wd2 <= 0)
             /* FALL THROUGH */;
         else {
-            rspeak(NO_SEE, command->wd1, command->wd1x);
+            sspeak(NO_SEE, command->raw1);
             return GO_CLEAROBJ;
         }
 
@@ -1437,7 +1437,7 @@ int action(struct command_t *command)
         }
     case unknown:
         /* Unknown verb, couldn't deduce object - might need hint */
-        rspeak(WHAT_DO, command->wd1, command->wd1x);
+        sspeak(WHAT_DO, command->raw1);
         return GO_CHECKHINT;
     default:
         BUG(SPEECHPART_NOT_TRANSITIVE_OR_INTRANSITIVE_OR_UNKNOWN); // LCOV_EXCL_LINE

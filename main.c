@@ -20,6 +20,7 @@
 #include <getopt.h>
 #include <signal.h>
 #include <string.h>
+#include <ctype.h>
 #include "advent.h"
 #include "dungeon.h"
 
@@ -1101,7 +1102,6 @@ L2607:
         }
         if (V1 == ENTER && command.wd2 > 0) {
             command.wd1 = command.wd2;
-            command.wd1x = command.wd2x;
             wordclear(&command.wd2);
         } else {
             /* FIXME: Magic numbers related to vocabulary */
@@ -1130,7 +1130,7 @@ Lookup:
             /* Gee, I don't understand. */
             if (fallback_handler(inputbuf))
                 continue;
-            rspeak(DONT_KNOW, command.wd1, command.wd1x);
+            sspeak(DONT_KNOW, command.raw1);
             goto L2600;
         }
         /* FIXME: magic numbers related to vocabulary */
@@ -1174,13 +1174,15 @@ Laction:
         case GO_WORD2:
             /* Get second word for analysis. */
             command.wd1 = command.wd2;
-            command.wd1x = command.wd2x;
+	    strcpy(command.raw1, command.raw2);
             wordclear(&command.wd2);
+	    command.raw2[0] = '\0';
             goto L2620;
         case GO_UNKNOWN:
             /*  Random intransitive verbs come here.  Clear obj just in case
              *  (see attack()). */
-            rspeak(DO_WHAT, command.wd1, command.wd1x);
+	    command.raw1[0] = toupper(command.raw1[0]);
+            sspeak(DO_WHAT, command.raw1);
             command.obj = 0;
             goto L2600;
         case GO_DWARFWAKE:

@@ -127,9 +127,7 @@ void tokenize(char* raw, struct command_t *cmd)
 
     // pack the substrings
     cmd->wd1  = token_to_packed(chunk_data[0]);
-    cmd->wd1x = token_to_packed(chunk_data[1]);
     cmd->wd2  = token_to_packed(chunk_data[2]);
-    cmd->wd2x = token_to_packed(chunk_data[3]);
 }
 
 /* Hide the fact that wods are corrently packed longs */
@@ -149,7 +147,7 @@ void wordclear(token_t *v)
     *v = 0;
 }
 
-/*  I/O routines (speak, pspeak, rspeak, get_input, yes) */
+/*  I/O routines (speak, pspeak, rspeak, sspeak, get_input, yes) */
 
 void vspeak(const char* msg, bool blank, va_list ap)
 {
@@ -250,6 +248,16 @@ void speak(const char* msg, ...)
     va_list ap;
     va_start(ap, msg);
     vspeak(msg, true, ap);
+    va_end(ap);
+}
+
+void sspeak(const long msg, ...)
+{
+    va_list ap;
+    va_start(ap, msg);
+    fputc('\n', stdout);
+    vprintf(arbitrary_messages[msg], ap);
+    fputc('\n', stdout);
     va_end(ap);
 }
 

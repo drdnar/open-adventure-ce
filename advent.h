@@ -199,6 +199,7 @@ extern bool wordeq(token_t, token_t);
 extern bool wordempty(token_t);
 extern void wordclear(token_t *);
 extern void speak(const char*, ...);
+extern void sspeak(long msg, ...);
 extern void pspeak(vocab_t, enum speaktype, int, bool, ...);
 extern void rspeak(vocab_t, ...);
 extern void echo_input(FILE*, const char*, const char*);
