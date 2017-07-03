@@ -1083,16 +1083,6 @@ static int wake(token_t verb, token_t obj)
     }
 }
 
-static token_t birdspeak(void)
-{
-    switch (game.prop[BIRD]) {
-    case BIRD_CAGED:
-        return CAGE_FLY;
-    default:
-        return FREE_FLY;
-    }
-}
-
 static int wave(token_t verb, token_t obj)
 /* Wave.  No effect unless waving rod at fissure or at bird. */
 {
@@ -1111,15 +1101,15 @@ static int wave(token_t verb, token_t obj)
         return GO_CLEAROBJ;
     } else {
         if (game.closed) {
-            rspeak(birdspeak());
+            rspeak((game.prop[BIRD] == BIRD_CAGED) ? CAGE_FLY : FREE_FLY);
             return GO_DWARFWAKE;
         }
         if (game.closng || !AT(FISSURE)) {
-            rspeak(birdspeak());
+            rspeak((game.prop[BIRD] == BIRD_CAGED) ? CAGE_FLY : FREE_FLY);
             return GO_CLEAROBJ;
         }
         if (HERE(BIRD))
-            rspeak(birdspeak());
+            rspeak((game.prop[BIRD] == BIRD_CAGED) ? CAGE_FLY : FREE_FLY);
 
         /* FIXME: Arithemetic on property values */
         game.prop[FISSURE] = 1 - game.prop[FISSURE];
