@@ -518,23 +518,25 @@ static int eat(token_t verb, token_t obj)
 /*  Eat.  Intransitive: assume food if present, else ask what.  Transitive: food
  *  ok, some things lose appetite, rest are ridiculous. */
 {
-    int spk = actions[verb].message;
     if (obj == INTRANSITIVE) {
         if (!HERE(FOOD))
             return GO_UNKNOWN;
         DESTROY(FOOD);
-        spk = THANKS_DELICIOUS;
-    } else {
-        if (obj == FOOD) {
-            DESTROY(FOOD);
-            spk = THANKS_DELICIOUS;
-        }
-        if (obj == BIRD || obj == SNAKE || obj == CLAM || obj == OYSTER || obj ==
-            DWARF || obj == DRAGON || obj == TROLL || obj == BEAR || obj ==
-            OGRE)
-            spk = LOST_APPETITE;
+        rspeak(THANKS_DELICIOUS);
+        return GO_CLEAROBJ;
     }
-    rspeak(spk);
+    if (obj == FOOD) {
+        DESTROY(FOOD);
+        rspeak(THANKS_DELICIOUS);
+        return GO_CLEAROBJ;
+    }
+    if (obj == BIRD || obj == SNAKE || obj == CLAM || obj == OYSTER || obj ==
+        DWARF || obj == DRAGON || obj == TROLL || obj == BEAR || obj ==
+        OGRE) {
+        rspeak(LOST_APPETITE);
+        return GO_CLEAROBJ;
+    }
+    rspeak(actions[verb].message);
     return GO_CLEAROBJ;
 }
 
