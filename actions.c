@@ -1136,8 +1136,6 @@ static int throw (struct command_t *command)
  *  (Only way to do so!)  Axe also special for dragon, bear, and
  *  troll.  Treasures special for troll. */
 {
-    if (TOTING(ROD2) && command->obj == ROD && !TOTING(ROD))
-        command->obj = ROD2;
     if (!TOTING(command->obj)) {
         rspeak(actions[command->verb].message);
         return GO_CLEAROBJ;
