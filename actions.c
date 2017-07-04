@@ -582,9 +582,7 @@ static int extinguish(token_t verb, int obj)
             obj = LAMP;
         if (HERE(URN) && game.prop[URN] == URN_LIT)
             obj = URN;
-        if (obj == INTRANSITIVE ||
-            (HERE(LAMP) && game.prop[LAMP] == LAMP_BRIGHT &&
-             HERE(URN) && game.prop[URN] == URN_LIT))
+        if (obj == INTRANSITIVE)
             return GO_UNKNOWN;
     }
 
@@ -594,20 +592,24 @@ static int extinguish(token_t verb, int obj)
         } else {
             pspeak(URN, change, URN_DARK, true);
         }
+        return GO_CLEAROBJ;
+    }
 
-    } else if (obj == LAMP) {
+    if (obj == LAMP) {
         state_change(LAMP, LAMP_DARK);
         rspeak(DARK(game.loc) ?
                PITCH_DARK :
                NO_MESSAGE);
-
-    } else if (obj == DRAGON ||
-               obj == VOLCANO) {
-        rspeak(BEYOND_POWER);
-
-    } else {
-        rspeak(actions[verb].message);
+        return GO_CLEAROBJ;
     }
+
+    if (obj == DRAGON ||
+        obj == VOLCANO) {
+        rspeak(BEYOND_POWER);
+        return GO_CLEAROBJ;
+    }
+
+    rspeak(actions[verb].message);
     return GO_CLEAROBJ;
 }
 
