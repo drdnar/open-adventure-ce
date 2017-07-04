@@ -172,14 +172,15 @@ static int bigwords(token_t foo)
  *  Look up foo in special section of vocab to determine which word we've got.
  *  Last word zips the eggs back to the giant room (unless already there). */
 {
-    char word[TOKLEN+1];
+    char word[TOKLEN + 1];
     packed_to_token(foo, word);
     int k = (int) get_special_vocab_id(word);
-    int spk = NOTHING_HAPPENS;
     if (game.foobar != 1 - k) {
-        if (game.foobar != 0 && game.loc == LOC_GIANTROOM)
-            spk = START_OVER;
-        rspeak(spk);
+        if (game.foobar != 0 && game.loc == LOC_GIANTROOM) {
+            rspeak( START_OVER);
+        } else {
+            rspeak(NOTHING_HAPPENS);
+        }
         return GO_CLEAROBJ;
     } else {
         game.foobar = k;
@@ -190,7 +191,7 @@ static int bigwords(token_t foo)
         game.foobar = 0;
         if (game.place[EGGS] == objects[EGGS].plac ||
             (TOTING(EGGS) && game.loc == objects[EGGS].plac)) {
-            rspeak(spk);
+            rspeak(NOTHING_HAPPENS);
             return GO_CLEAROBJ;
         } else {
             /*  Bring back troll if we steal the eggs back from him before
@@ -1041,9 +1042,9 @@ static int say(struct command_t *command)
     if (command->wd2 > 0) {
         a = command->wd2;
         command->wd1 = command->wd2;
-	strcpy(command->raw1, command->raw2);
+        strcpy(command->raw1, command->raw2);
     }
-    char word1[TOKLEN+1];
+    char word1[TOKLEN + 1];
     packed_to_token(command->wd1, word1);
     int wd = (int) get_vocab_id(word1);
     /* FIXME: magic numbers */
