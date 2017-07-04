@@ -1052,9 +1052,8 @@ static int reservoir(void)
         rspeak(NOTHING_HAPPENS);
         return GO_CLEAROBJ;
     } else {
-        /* FIXME: Arithmetic on state numbers */
-        pspeak(RESER, look, game.prop[RESER] + 1, true);
-        game.prop[RESER] = 1 - game.prop[RESER];
+	state_change(RESER,
+		     game.prop[RESER] == WATERS_PARTED ? WATERS_UNPARTED : WATERS_PARTED);
         if (AT(RESER))
             return GO_CLEAROBJ;
         else {

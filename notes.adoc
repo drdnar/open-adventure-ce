@@ -47,7 +47,7 @@ Bug fixes:
 * Reading the relocated Witt's End sign in the endgame didn't work right.
 
 * Behavior when saying the giant's magic words outside his room wasn't
-  quite corrected - the game responded as though the player were in
+  quite correct - the game responded as though the player were in
   the room.
  
 * Attempting to extinguish an unlit urn caused it to lose its oil.

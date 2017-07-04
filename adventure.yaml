@@ -3627,11 +3627,13 @@ objects: !!omap
     inventory: '*reservoir'
     locations: [LOC_RESERVOIR, LOC_RESNORTH]
     immovable: true
-    states: [WATERS_UNPARTED, WATERS_PARTED, WATERS_CRASH]
+    states: [WATERS_UNPARTED, WATERS_PARTED]
     descriptions:
     - ''
     - 'The waters have parted to form a narrow path across the reservoir.'
+    changes:
     - 'The waters crash together again.'
+    - 'The waters have parted to form a narrow path across the reservoir.'
 - OBJ_46:
     words: ['appen', 'lepor']
     inventory: 'Leporine appendage'
