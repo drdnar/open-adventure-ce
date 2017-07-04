@@ -23,7 +23,7 @@ static void* xmalloc(size_t size)
     return (ptr);
 }
 
-void packed_to_token(long packed, char token[TOKLEN+1])
+void packed_to_token(long packed, char token[TOKLEN + 1])
 {
     // The advent->ascii mapping.
     const char advent_to_ascii[] = {
@@ -81,7 +81,7 @@ long token_to_packed(const char token[])
 
     size_t t_len = strlen(token);
     if (t_len > TOKLEN)
-	t_len = TOKLEN;
+        t_len = TOKLEN;
     long packed = 0;
     for (size_t i = 0; i < t_len; ++i) {
         char mapped = ascii_to_advent[(int) toupper(token[i])];
@@ -95,7 +95,7 @@ void tokenize(char* raw, struct command_t *cmd)
     memset(cmd, '\0', sizeof(struct command_t));
 
     /* FIXME: put a bound prefix on the %s to prevent buffer overflow */
-    int word_count = sscanf(raw, "%s%s", cmd->raw1, cmd->raw2);
+    sscanf(raw, "%s%s", cmd->raw1, cmd->raw2);
 
     // pack the substrings
     cmd->wd1  = token_to_packed(cmd->raw1);
@@ -274,16 +274,16 @@ int word_count(char* str)
     int inblanks = true;
 
     for (char *s = str; *s; s++)
-	if (inblanks) {
-	    if (strchr(delims, *s) == 0) {
-		++count;
-		inblanks = false;
-	    }
-	} else {
-	    if (strchr(delims, *s) != 0) {
-		inblanks = true;
-	    }
-	}
+        if (inblanks) {
+            if (strchr(delims, *s) == 0) {
+                ++count;
+                inblanks = false;
+            }
+        } else {
+            if (strchr(delims, *s) != 0) {
+                inblanks = true;
+            }
+        }
 
     return (count);
 }
@@ -485,7 +485,7 @@ long get_vocab_id(const char* word)
 {
     /* Check for an empty string */
     if (strncmp(word, "", sizeof("")) == 0)
-      return (WORD_EMPTY);
+        return (WORD_EMPTY);
 
     long ref_num;
 
@@ -649,7 +649,7 @@ long randrange(long range)
     return range * get_next_lcg_value() / game.lcg_m;
 }
 
-void make_zzword(char zzword[TOKLEN+1])
+void make_zzword(char zzword[TOKLEN + 1])
 {
     for (int i = 0; i < 5; ++i) {
         zzword[i] = 'A' + randrange(26);

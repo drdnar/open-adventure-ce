@@ -1038,9 +1038,7 @@ static int rub(token_t verb, token_t obj)
 static int say(struct command_t *command)
 /* Say.  Echo WD2 (or WD1 if no WD2 (SAY WHAT?, etc.).)  Magic words override. */
 {
-    long a = command->wd1;
     if (command->wd2 > 0) {
-        a = command->wd2;
         command->wd1 = command->wd2;
         strcpy(command->raw1, command->raw2);
     }
