@@ -482,13 +482,12 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
             DESTROY(BIRD);
             return GO_CLEAROBJ;
         } else if (obj == BEAR && AT(TROLL)) {
-            rspeak(TROLL_SCAMPERS);
+            state_change(TROLL, TROLL_GONE);
             move(TROLL, LOC_NOWHERE);
             move(TROLL + NOBJECTS, LOC_NOWHERE);
             move(TROLL2, objects[TROLL].plac);
             move(TROLL2 + NOBJECTS, objects[TROLL].fixd);
             juggle(CHASM);
-            game.prop[TROLL] = TROLL_GONE;
         } else if (obj != VASE ||
                    game.loc == objects[PILLOW].plac) {
             rspeak(OK_MAN);

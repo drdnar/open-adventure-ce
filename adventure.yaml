@@ -2971,9 +2971,6 @@ arbitrary_messages:  !!omap
     weight of the bear, which was still following you around.  You
     scrabble desperately for support, but as the bridge collapses you
     stumble back and fall into the chasm.
-- TROLL_SCAMPERS: |-
-    The bear lumbers toward the troll, who lets out a startled shriek and
-    scurries away.  The bear soon gives up the pursuit and wanders back.
 - BEAR_HANDS: 'With what?  Your bare hands?  Against *HIS* bear hands??'
 - BEAR_CONFUSED: 'The bear is confused; he only wants to be your friend.'
 - ALREADY_DEAD: 'For crying out loud, the poor thing is already dead!'
@@ -3506,9 +3503,16 @@ objects: !!omap
     - 'A burly troll stands by the bridge and insists you throw him a\ntreasure before you may cross.'
     - 'The troll steps out from beneath the bridge and blocks your way.'
     - '' # chased away
+    changes:
+    - ''
+    - ''
+    - |-
+        The bear lumbers toward the troll, who lets out a startled shriek and
+        scurries away.  The bear soon gives up the pursuit and wanders back.
     sounds:
     - 'The troll sounds quite adamant in his demand for a treasure.'
     - 'The troll sounds quite adamant in his demand for a treasure.'
+    - ''
 - TROLL2:
     words: ['troll']
     inventory: '*phony troll'
