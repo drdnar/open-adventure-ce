@@ -946,7 +946,6 @@ static void listobjects(void)
 static bool do_command()
 /* Get and execute a command */
 {
-    long V1, V2;
     long kmod, defn;
     static long igo = 0;
     static struct command_t command;
@@ -1057,6 +1056,13 @@ L2600:
 
         tokenize(inputbuf, &command);
 
+	char word1[TOKLEN+1];
+        char word2[TOKLEN+1];
+        packed_to_token(command.wd1, word1);
+        packed_to_token(command.wd2, word2);
+        command.id1 = get_vocab_id(word1);
+        command.id2 = get_vocab_id(word2);
+
         /*  Every input, check "game.foobar" flag.  If zero, nothing's
          *  going on.  If pos, make neg.  If neg, he skipped a word,
          *  so make it zero. */
@@ -1073,7 +1079,7 @@ L2607:
             }
         }
 
-        if (command.verb == SAY && command.wd2 > 0)
+        if (command.verb == SAY && command.id2 != WORD_NOT_FOUND && command.id2 != WORD_EMPTY)
             command.verb = 0;
         if (command.verb == SAY) {
             command.part = transitive;
@@ -1085,14 +1091,8 @@ L2607:
         } else
             lampcheck();
 
-        char word1[TOKLEN+1];
-        char word2[TOKLEN+1];
-        packed_to_token(command.wd1, word1);
-        packed_to_token(command.wd2, word2);
-        V1 = get_vocab_id(word1);
-        V2 = get_vocab_id(word2);
-        if (V1 == ENTER && (V2 == STREAM ||
-                            V2 == PROMOTE_WORD(WATER))) {
+        if (command.id1 == ENTER && (command.id2 == STREAM ||
+                            command.id2 == PROMOTE_WORD(WATER))) {
             if (LIQLOC(game.loc) == WATER) {
                 rspeak(FEET_WET);
             } else {
@@ -1100,17 +1100,19 @@ L2607:
             }
             goto L2012;
         }
-        if (V1 == ENTER && command.wd2 > 0) {
-            command.wd1 = command.wd2;
-            wordclear(&command.wd2);
+        if (command.id1 == ENTER && command.id2 != WORD_NOT_FOUND && command.id2 != WORD_EMPTY) {
+            /* command.wd1 = command.wd2; */
+            /* wordclear(&command.wd2); */
+	  command.id1 = command.id2;
+	  command.id2 = WORD_EMPTY;
         } else {
             /* FIXME: Magic numbers related to vocabulary */
-            if (!((V1 != PROMOTE_WORD(WATER) && V1 != PROMOTE_WORD(OIL)) ||
-                  (V2 != PROMOTE_WORD(PLANT) && V2 != PROMOTE_WORD(DOOR)))) {
-                if (AT(DEMOTE_WORD(V2)))
+            if (!((command.id1 != PROMOTE_WORD(WATER) && command.id1 != PROMOTE_WORD(OIL)) ||
+                  (command.id2 != PROMOTE_WORD(PLANT) && command.id2 != PROMOTE_WORD(DOOR)))) {
+                if (AT(DEMOTE_WORD(command.id2)))
                     command.wd2 = token_to_packed("POUR");
             }
-            if (V1 == PROMOTE_WORD(CAGE) && V2 == PROMOTE_WORD(BIRD) && HERE(CAGE) && HERE(BIRD))
+            if (command.id1 == PROMOTE_WORD(CAGE) && command.id2 == PROMOTE_WORD(BIRD) && HERE(CAGE) && HERE(BIRD))
                 command.wd1 = token_to_packed("CATCH");
         }
 L2620:
@@ -1126,7 +1128,7 @@ L2620:
 Lookup:
         packed_to_token(command.wd1, word1);
         defn = get_vocab_id(word1);
-        if (defn == -1) {
+        if (defn == WORD_NOT_FOUND) {
             /* Gee, I don't understand. */
             if (fallback_handler(inputbuf))
                 continue;

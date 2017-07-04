@@ -184,6 +184,8 @@ struct command_t {
     vocab_t obj;
     token_t wd1;
     token_t wd2;
+  long id1;
+  long id2;
     char raw1[BUFSIZ], raw2[BUFSIZ];
 };
 
