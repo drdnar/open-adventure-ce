@@ -943,15 +943,15 @@ static int pour(token_t verb, token_t obj)
         return GO_CLEAROBJ;
     }
     if (!AT(DOOR)) {
-        if (obj != WATER) {
+        if (obj == WATER) {
+	    /* cycle through the three plant states */
+	    state_change(PLANT, MOD(game.prop[PLANT] + 1, 3));
+	    game.prop[PLANT2] = game.prop[PLANT];
+	    return GO_MOVE;
+        } else {
             rspeak(SHAKING_LEAVES);
             return GO_CLEAROBJ;
-        }
-        /* FIXME: Arithmetic on state numbers */
-        pspeak(PLANT, look, game.prop[PLANT] + 3, true);
-        game.prop[PLANT] = MOD(game.prop[PLANT] + 1, 3);
-        game.prop[PLANT2] = game.prop[PLANT];
-        return GO_MOVE;
+	}
     } else {
         state_change(DOOR, (obj == OIL) ?
                      DOOR_UNRUSTED :

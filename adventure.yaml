@@ -3311,6 +3311,7 @@ objects: !!omap
     - '' # chased away
     sounds:
     - 'The snake is hissing venomously.'
+    - ''
 - FISSURE:
     words: ['fissu']
     inventory: '*fissure'
@@ -3412,9 +3413,10 @@ objects: !!omap
     - 'There is a tiny little plant in the pit, murmuring "water, water, ..."'
     - 'There is a 12-foot-tall beanstalk stretching up out of the pit,\nbellowing "WATER!! WATER!!"'
     - 'There is a gigantic beanstalk stretching all the way up to the hole.'
+    changes:
+    - 'You''ve over-watered the plant!  It''s shriveling up!  And now . . .'
     - 'The plant spurts into furious growth for a few seconds.'
     - 'The plant grows explosively, almost filling the bottom of the pit.'
-    - 'You''ve over-watered the plant!  It''s shriveling up!  And now . . .'
     sounds:
     - 'The plant continues to ask plaintively for water.'
     - 'The plant continues to demand water.'
