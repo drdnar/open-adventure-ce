@@ -447,12 +447,11 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
  *  bird (might attack snake or dragon) and cage (might contain bird) and vase.
  *  Drop coins at vending machine for extra batteries. */
 {
-    int spk = actions[verb].message;
     if (!just_do_it) {
         if (TOTING(ROD2) && obj == ROD && !TOTING(ROD))
             obj = ROD2;
         if (!TOTING(obj)) {
-            rspeak(spk);
+            rspeak(actions[verb].message;);
             return GO_CLEAROBJ;
         }
         if (obj == BIRD && HERE(SNAKE)) {
@@ -469,7 +468,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
             game.prop[CAVITY] = CAVITY_FULL;
             if (HERE(RUG) && ((obj == EMERALD && game.prop[RUG] != RUG_HOVER) ||
                               (obj == RUBY && game.prop[RUG] == RUG_HOVER))) {
-                spk = RUG_RISES;
+                int spk = RUG_RISES;
                 if (TOTING(RUG))
                     spk = RUG_WIGGLES;
                 if (obj == RUBY)
@@ -515,7 +514,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
     int k = LIQUID();
     if (k == obj)
         obj = BOTTLE;
-    if (obj == BOTTLE && k != 0)
+    if (obj == BOTTLE && k != NO_OBJECT)
         game.place[k] = LOC_NOWHERE;
     if (obj == CAGE && game.prop[BIRD] == BIRD_CAGED)
         drop(BIRD, game.loc);
