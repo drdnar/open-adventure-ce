@@ -1,14 +1,15 @@
-## Fill the vase
+## Try to open clam without trident and fail
 n
-seed 1838473132
+seed 1635997320
 in
 take lamp
 xyzzy
-on
 take rod
 e
+lock cage
 take cage
 w
+on
 w
 w
 drop rod
@@ -17,57 +18,47 @@ take rod
 w
 free bird
 wave rod
-take necklace
 drop rod
 take bird
+take jade
+e
+e
+e
+off
+xyzzy
+drop jade
+xyzzy
+on
+w
+w
+w
 take rod
 d
-d
-free bird
-drop rod
-drop cage
-take cage
-take bird
 w
-take coins
+wave rod
+drop rod
 e
+n
+free bird
+take bird
 s
 take jewelry
 n
-up
-s
-take gold
-n
-d
-n
-n
-plugh
-extinguish lamp
-drop coins
-drop jewelry
-drop necklace
-drop gold
-plugh
-on
-s
-take silver
-s
 sw
-take axe
 w
-kill dragon
+feed dragon
+attack
 yes
 drink blood
 take rug
 e
 e
-up
-d
 n
+take silver
 n
 off
 plugh
-inven
+drop jewelry
 drop rug
 drop silver
 out
@@ -91,16 +82,17 @@ take pyramid
 s
 plover
 s
+d
+take axe
+u
 s
-take rod
 up
 w
-wave rod
-drop rod
-west
-take diamonds
 w
 w
+w
+throw axe
+take axe
 w
 s
 sw
@@ -109,6 +101,7 @@ s
 kill machine
 s
 s
+attack
 kill ogre
 n
 take ruby
@@ -122,29 +115,34 @@ d
 e
 e
 e
+take diamonds
 e
 e
-throw axe
-take axe
+drop bottle
+s
+take gold
+n
 n
 n
 n
 off
 plugh
-drop ruby
+drop gold
 drop diamonds
 drop pyramid
+drop ruby
 plugh
 on
 s
 s
 u
+take water
+throw axe
+take axe
 n
 n
 d
 bedquilt
-throw axe
-take axe
 slab
 s
 d
@@ -153,7 +151,7 @@ u
 w
 u
 reservoir
-H'CFL
+F'UNJ
 n
 n
 nw
@@ -179,11 +177,9 @@ s
 d
 water plant
 u
-drop appendage
 e
 d
 get oil
-
 u
 w
 d
@@ -192,6 +188,7 @@ w
 n
 oil door
 drop bottle
+drop appendage
 n
 take trident
 w
@@ -199,6 +196,7 @@ d
 se
 n
 w
+inven
 drop trident
 drop ebony
 drop axe
@@ -209,37 +207,14 @@ w
 take lamp
 take axe
 take ebony
-take trident
 nw
 s
 take vase
-# Inserted
-fill vase
 se
-throw axe
-take axe
 e
 take pillow
 w
-drop axe
 ne
 e
 n
 open clam
-s
-u
-e
-u
-n
-off
-plugh
-out
-# Everything not marked 'Inserted' above this from endgame428
-inven
-stream
-drop pillow
-drop vase
-fill vase
-carry vase
-read vase
-fill vase

@@ -1,4 +1,5 @@
-## Break the mirror in endgame and die
+## Test filling urn when you have no bottle
+# Also, try to lock door after oiling it
 n
 seed 1838473132
 in
@@ -149,6 +150,7 @@ slab
 s
 d
 water plant
+drink plant
 u
 w
 u
@@ -173,26 +175,26 @@ take water
 s
 s
 s
-break mirror
 s
 d
 s
 d
 water plant
+oil plant
 u
 drop appendage
 e
 d
 get oil
-
 u
 w
 d
 climb
 w
 n
-unlock
 oil door
+lock door
+unlock door
 drop bottle
 n
 take trident
@@ -274,7 +276,6 @@ ne
 barren
 in
 feed bear
-unlock
 unlock chain
 take chain
 take bear
@@ -296,7 +297,6 @@ se
 se
 w
 d
-get oil
 up
 e
 take axe
@@ -305,6 +305,11 @@ w
 d
 climb
 w
+fee
+fie
+foe
+foe
+# intentionally mess up above
 fee
 fie
 foe
@@ -329,157 +334,13 @@ drop chain
 take rug
 take ruby
 take emerald
+fill bottle
 out
 w
 n
 n
 n
-inven
 fill urn
-light urn
-rub urn
-take amber
-drop rug
-drop emerald
-fly rug
-take sapphire
-fly rug
-take emerald
-drop ruby
-take rug
-drop bottle
-take ruby
-e
+fill urn
 s
-e
-e
-in
-drop ruby
-drop sapphire
-drop amber
-drop rug
-look
-plugh
-on
-s
-s
-u
-w
-w
-w
-s
-e
-s
-throw axe
-take axe
-s
-s
-n
-e
-e
-nw
-take emerald
-take chest
-se
-n
-d
-e
-e
-off
-xyzzy
-drop emerald
-drop chest
-plugh
-on
-s
-d
-w
-d
-e
-take magazine
-e
-drop magazine
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-u
-u
-e
-u
-n
-plover
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-e
-# Everything to here is from endgame428
-attack
-take oyster
-find oyster
-lock
-lock oyster
-unlock oyster
-drop oyster
-take oyster
-read oyster
-y
-sw
-attack bird
-find bird
-break mirror
-
+fill bottle

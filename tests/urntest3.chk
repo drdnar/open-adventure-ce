@@ -1763,10 +1763,6 @@ There is a huge beanstalk growing out of the west pit up to the hole.
 
 You're in east pit.
 
-> get oil
-
-Your bottle is now full of oil.
-
 > up
 
 You're at east end of Twopit Room.
@@ -1854,22 +1850,6 @@ There is a large nest here, full of golden eggs!
 > take eggs
 
 OK
-
-> fee
-
-OK
-
-> fie
-
-OK
-
-> foe
-
-OK
-
-> foo
-
-Nothing happens.
 
 > s
 
@@ -1989,6 +1969,10 @@ OK
 
 OK
 
+> fill bottle
+
+Your bottle is now full of water.
+
 > out
 
 You're in front of building.
@@ -2006,14 +1990,6 @@ You are wandering aimlessly through the forest.
 
 You are wandering aimlessly through the forest.
 
-> drop bottle
-
-OK
-
-> fill something
-
-Sorry, I don't know the word "something".
-
 > n
 
 The forest thins out here to reveal a steep cliff.  There is no way
@@ -2023,14 +1999,23 @@ A small urn is embedded in the rock.
 
 > fill urn
 
+You empty the bottle into the urn, which promptly ejects the water
+with uncanny accuracy, squirting you directly between the eyes.
+
+> fill urn
+
 There is nothing here with which to fill it.
 
-> extinguish urn
+> s
 
-The urn is now dark.
+You are wandering aimlessly through the forest.
+
+> fill bottle
+
+There is nothing here with which to fill the bottle.
 
 
-You scored 267 out of a possible 430, using 344 turns.
+You scored 267 out of a possible 430, using 340 turns.
 
 You have reached "Junior Master" status.
 

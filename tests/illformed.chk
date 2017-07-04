@@ -179,6 +179,14 @@ things.  I cannot tell you where remote things are.
 
 I'm afraid I don't understand.
 
+> lock food
+
+I don't know how to lock or unlock such a thing.
+
+> unlock food
+
+I don't know how to lock or unlock such a thing.
+
 > extinguish food
 
 I'm afraid I don't understand.
@@ -583,7 +591,7 @@ Okay, "boo".
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 101 turns.
+You have garnered 27 out of a possible 430 points, using 103 turns.
 
 > z
 
@@ -591,7 +599,7 @@ OK
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 103 turns.
+You have garnered 27 out of a possible 430 points, using 105 turns.
 
 > quit keys
 
@@ -605,7 +613,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 27 out of a possible 430, using 105 turns.
+You scored 27 out of a possible 430, using 107 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 
