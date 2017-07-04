@@ -915,7 +915,7 @@ static void listobjects(void)
             if (game.prop[obj] < 0) {
                 if (game.closed)
                     continue;
-                game.prop[obj] = 0;
+                game.prop[obj] = STATE_FOUND;
                 if (obj == RUG)
                     game.prop[RUG] = RUG_DRAGON;
                 if (obj == CHAIN)

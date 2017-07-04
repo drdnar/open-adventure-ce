@@ -47,7 +47,7 @@ long score(enum termination mode)
                 k = 16;
             if (game.prop[i] > STATE_NOTFOUND)
                 score += 2;
-            if (game.place[i] == LOC_BUILDING && game.prop[i] == STATE_GROUND)
+            if (game.place[i] == LOC_BUILDING && game.prop[i] == STATE_FOUND)
                 score += k - 2;
             mxscor += k;
         }

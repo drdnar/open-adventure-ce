@@ -386,8 +386,8 @@ static int vcarry(token_t verb, token_t obj)
     carry(obj, game.loc);
     if (obj == BOTTLE && LIQUID() != NO_OBJECT)
         game.place[LIQUID()] = CARRIED;
-    if (GSTONE(obj) && game.prop[obj] != STATE_GROUND) {
-        game.prop[obj] = STATE_GROUND;
+    if (GSTONE(obj) && game.prop[obj] != STATE_FOUND) {
+        game.prop[obj] = STATE_FOUND;
         game.prop[CAVITY] = CAVITY_EMPTY;
     }
     rspeak(OK_MAN);
@@ -662,7 +662,7 @@ static int feed(token_t verb, token_t obj)
             DESTROY(FOOD);
             game.prop[BEAR] = SITTING_BEAR;
             game.fixed[AXE] = 0;
-            game.prop[AXE] = 0;
+            game.prop[AXE] = AXE_HERE;
             spk = BEAR_TAMED;
         }
     } else if (obj == OGRE) {
@@ -1110,7 +1110,6 @@ static int say(struct command_t *command)
     char word1[TOKLEN + 1];
     packed_to_token(command->wd1, word1);
     int wd = (int) get_vocab_id(word1);
-    /* FIXME: magic numbers */
     if (wd == MOTION_WORD(XYZZY) ||
         wd == MOTION_WORD(PLUGH) ||
         wd == MOTION_WORD(PLOVER) ||
@@ -1224,7 +1223,7 @@ static int wave(token_t verb, token_t obj)
 
     if (game.prop[BIRD] == BIRD_UNCAGED && game.loc == game.place[STEPS] && game.prop[JADE] < 0) {
         drop(JADE, game.loc);
-        game.prop[JADE] = 0;
+        game.prop[JADE] = STATE_FOUND;
         --game.tally;
         rspeak(NECKLACE_FLY);
         return GO_CLEAROBJ;

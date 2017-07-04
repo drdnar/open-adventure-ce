@@ -27,7 +27,7 @@
 
 /* Special object-state values - integers > 0 are object-specific */
 #define STATE_NOTFOUND  -1	  // 'Not found" state of treasures */
-#define STATE_GROUND	0	  // After discovered, before messed with
+#define STATE_FOUND	0	  // After discovered, before messed with
 #define STATE_IN_CAVITY	1	  // State value common to all gemstones
 
 /* Map a state property value to a negative range, where the object cannot be
