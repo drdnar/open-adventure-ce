@@ -47,10 +47,9 @@
 #define TOTING(OBJ)  (game.place[OBJ] == CARRIED)
 #define AT(OBJ)      (game.place[OBJ] == game.loc || game.fixed[OBJ] == game.loc)
 #define HERE(OBJ)    (AT(OBJ) || TOTING(OBJ))
-#define LIQ2(PBOTL)  ((1-(PBOTL))*WATER+((PBOTL)/2)*(WATER+OIL))
-#define LIQUID()     (LIQ2(game.prop[BOTTLE]<0 ? -1-game.prop[BOTTLE] : game.prop[BOTTLE]))
-#define LIQLOC(LOC)  (LIQ2((MOD(conditions[LOC]/2*2,8)-5)*MOD(conditions[LOC]/4,2)+1))
 #define CNDBIT(L,N)  (tstbit(conditions[L],N))
+#define LIQUID()     (game.prop[BOTTLE] == WATER_BOTTLE? WATER : game.prop[BOTTLE] == OIL_BOTTLE ? OIL : NO_OBJECT )
+#define LIQLOC(LOC)  (CNDBIT((LOC),COND_FLUID)? CNDBIT((LOC),COND_OILY) ? OIL : WATER : NO_OBJECT)
 #define FORCED(LOC)  CNDBIT(LOC, COND_FORCED)
 #define DARK(DUMMY)  ((!tstbit(conditions[game.loc],COND_LIT)) && (game.prop[LAMP] == LAMP_DARK || !HERE(LAMP)))
 #define PCT(N)       (randrange(100) < (N))
@@ -153,7 +152,7 @@ struct game_t {
     long trnluz;                 // # points lost so far due to number of turns used
     long turns;                  // how many commands he's given (ignores yes/no)
     bool wzdark;                 // whether the loc he's leaving was dark
-    char zzword[TOKLEN+1];       // randomly generated magic word from bird
+    char zzword[TOKLEN + 1];     // randomly generated magic word from bird
     bool blooded;                // has player drunk of dragon's blood?
     long abbrev[NLOCATIONS + 1];
     long atloc[NLOCATIONS + 1];
@@ -168,7 +167,7 @@ struct game_t {
     long prop[NOBJECTS + 1];
 };
 
-/* 
+/*
  * Game application settings - settings, but not state of the game, per se.
  * This data is not saved in a saved game.
  */
@@ -184,8 +183,8 @@ struct command_t {
     vocab_t obj;
     token_t wd1;
     token_t wd2;
-  long id1;
-  long id2;
+    long id1;
+    long id2;
     char raw1[BUFSIZ], raw2[BUFSIZ];
 };
 
