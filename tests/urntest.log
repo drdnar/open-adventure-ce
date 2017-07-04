@@ -180,10 +180,20 @@ s
 d
 water plant
 u
+w
+u
+reservoir
+take water
+s
+s
+d
+s
 drop appendage
 e
 d
 drink oil
+get
+drink water
 get oil
 u
 w
@@ -215,8 +225,6 @@ nw
 s
 take vase
 se
-throw axe
-take axe
 e
 take pillow
 w

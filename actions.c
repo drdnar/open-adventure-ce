@@ -281,7 +281,6 @@ static int vcarry(token_t verb, token_t obj)
  *  take one without the other).  Liquids also special, since they depend on
  *  status of bottle.  Also various side effects, etc. */
 {
-    int spk;
     if (obj == INTRANSITIVE) {
         /*  Carry, no object given yet.  OK if only one object present. */
         if (game.atloc[game.loc] == 0 ||
@@ -295,46 +294,63 @@ static int vcarry(token_t verb, token_t obj)
         rspeak(ALREADY_CARRYING);
         return GO_CLEAROBJ;
     }
-    spk = YOU_JOKING;
-    if (obj == PLANT && game.prop[PLANT] <= 0)
-        spk = DEEP_ROOTS;
-    if (obj == BEAR && game.prop[BEAR] == SITTING_BEAR)
-        spk = BEAR_CHAINED;
-    if (obj == CHAIN && game.prop[BEAR] != UNTAMED_BEAR)
-        spk = STILL_LOCKED;
-    if (obj == URN)
-        spk = URN_NOBUDGE;
-    if (obj == CAVITY)
-        spk = DOUGHNUT_HOLES;
-    if (obj == BLOOD)
-        spk = FEW_DROPS;
-    if (obj == RUG && game.prop[RUG] == RUG_HOVER)
-        spk = RUG_HOVERS;
-    if (obj == SIGN)
-        spk = HAND_PASSTHROUGH;
+
     if (obj == MESSAG) {
         rspeak(REMOVE_MESSAGE);
         DESTROY(MESSAG);
         return GO_CLEAROBJ;
     }
+
     if (game.fixed[obj] != 0) {
-        rspeak(spk);
+        if (obj == PLANT && game.prop[PLANT] <= 0) {
+            rspeak(DEEP_ROOTS);
+            return GO_CLEAROBJ;
+        }
+        if (obj == BEAR && game.prop[BEAR] == SITTING_BEAR) {
+            rspeak(BEAR_CHAINED);
+            return GO_CLEAROBJ;
+        }
+        if (obj == CHAIN && game.prop[BEAR] != UNTAMED_BEAR) {
+            rspeak(STILL_LOCKED);
+            return GO_CLEAROBJ;
+        }
+        if (obj == URN) {
+            rspeak(URN_NOBUDGE);
+            return GO_CLEAROBJ;
+        }
+        if (obj == CAVITY) {
+            rspeak(DOUGHNUT_HOLES);
+            return GO_CLEAROBJ;
+        }
+        if (obj == BLOOD) {
+            rspeak(FEW_DROPS);
+            return GO_CLEAROBJ;
+        }
+        if (obj == RUG && game.prop[RUG] == RUG_HOVER) {
+            rspeak(RUG_HOVERS);
+            return GO_CLEAROBJ;
+        }
+        if (obj == SIGN) {
+            rspeak(HAND_PASSTHROUGH);
+            return GO_CLEAROBJ;
+        }
+        rspeak(YOU_JOKING);
         return GO_CLEAROBJ;
     }
+    int spk;
     if (obj == WATER ||
         obj == OIL) {
         if (!HERE(BOTTLE) ||
             LIQUID() != obj) {
-            if (TOTING(BOTTLE) && game.prop[BOTTLE] == EMPTY_BOTTLE)
-                return (fill(verb, BOTTLE));
-            else {
-                if (game.prop[BOTTLE] != EMPTY_BOTTLE)
-                    spk = BOTTLE_FULL;
-                if (!TOTING(BOTTLE))
-                    spk = NO_CONTAINER;
-                rspeak(spk);
+            if (TOTING(BOTTLE)) {
+                if (game.prop[BOTTLE] == EMPTY_BOTTLE) {
+                    return (fill(verb, BOTTLE));
+                } else if (game.prop[BOTTLE] != EMPTY_BOTTLE)
+                    rspeak(BOTTLE_FULL);
                 return GO_CLEAROBJ;
             }
+            rspeak(NO_CONTAINER);
+            return GO_CLEAROBJ;
         }
         obj = BOTTLE;
     }
@@ -367,10 +383,11 @@ static int vcarry(token_t verb, token_t obj)
          -1 - game.prop[BIRD] == 1))
         carry(BIRD + CAGE - obj, game.loc);
     carry(obj, game.loc);
-    if (obj == BOTTLE && LIQUID() != 0)
+    if (obj == BOTTLE && LIQUID() != NO_OBJECT)
         game.place[LIQUID()] = CARRIED;
     if (GSTONE(obj) && game.prop[obj] != 0) {
-        game.prop[obj] = STATE_GROUND;
+        game.prop[obj]
+            = STATE_GROUND;
         game.prop[CAVITY] = CAVITY_EMPTY;
     }
     rspeak(OK_MAN);
