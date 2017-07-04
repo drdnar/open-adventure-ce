@@ -87,15 +87,17 @@
 #                    becomes a #define, and is also a state label that
 #                    can be used in travel-rule 'not' clauses.
 #      descriptions: Messages describing the object in different states.
-#       changes:     State-change messages to be emitted whenever the object
+#                    Must correspond 1:1 with state labels if the latter exist.
+#      changes:      State-change messages to be emitted whenever the object
 #                    *changes* to the (0-origin) state that is the index of the
-#                    message in this array.
-#       words:       The vocabulary word(s) referring to this object.
-#       treasure:    A boolean "treasure" used for point-scoring and pirate
+#                    message in this array. Must correspond 1:1 with state
+#                    labels if the latter exist.
+#      words:        The vocabulary word(s) referring to this object.
+#      treasure:     A boolean "treasure" used for point-scoring and pirate
 #                    snatches, defaulting to false.
-#       immovable:   An object may also be flagged
+#      immovable:    An object may also be flagged
 #                    immovable, meaning it cannot be carried.
-#       locations:   An object may have one or two start locations (the gate
+#      locations:    An object may have one or two start locations (the gate
 #                    is an example of a two-location object; it can be accessed
 #                    from above or below).
 #
@@ -492,7 +494,7 @@ locations: !!omap
     travel: [
       {verbs: [ROAD, WEST, UPWAR], action: [goto, LOC_HILL]},
       {verbs: [ENTER, BUILD, INWAR, EAST], action: [goto, LOC_BUILDING]},
-      {verbs: [DOWNS, GULLY, STREA, SOUTH, D], action: [goto, LOC_VALLEY]},
+      {verbs: [DOWNS, GULLY, STREA, SOUTH, DOWN], action: [goto, LOC_VALLEY]},
       {verbs: [FORES, NORTH], action: [goto, LOC_FOREST1]},
       {verbs: [DEPRE], action: [goto, LOC_GRATE]},
     ]
@@ -534,7 +536,7 @@ locations: !!omap
       {verbs: [UPSTR, BUILD, NORTH], action: [goto, LOC_START]},
       {verbs: [EAST, FORES], action: [goto, LOC_FOREST6]},
       {verbs: [WEST], action: [goto, LOC_FOREST12]},
-      {verbs: [DOWNS, SOUTH, D], action: [goto, LOC_SLIT]},
+      {verbs: [DOWNS, SOUTH, DOWN], action: [goto, LOC_SLIT]},
       {verbs: [DEPRE], action: [goto, LOC_GRATE]},
       {verbs: [STREA], action: [speak, UPSTREAM_DOWNSTREAM]},
     ]
@@ -594,7 +596,7 @@ locations: !!omap
       {verbs: [WEST], action: [goto, LOC_FOREST9]},
       {verbs: [BUILD], action: [goto, LOC_START]},
       {verbs: [UPSTR, GULLY, NORTH], action: [goto, LOC_SLIT]},
-      {verbs: [ENTER, INWAR, D],
+      {verbs: [ENTER, INWAR, DOWN],
                              cond: [not, GRATE, GRATE_CLOSED],
                              action: [goto, LOC_BELOWGRATE]},
       {verbs: [ENTER], action: [speak, GRATE_NOWAY]},
@@ -1067,7 +1069,7 @@ locations: !!omap
       {verbs: [NORTH], action: [goto, LOC_ALIKE2]},
       {verbs: [EAST], action: [goto, LOC_DEADEND1]},
       {verbs: [SOUTH], action: [goto, LOC_DEADEND2]},
-      {verbs: [UPWAR, D], action: [goto, LOC_ALIKE14]},
+      {verbs: [UPWAR, DOWN], action: [goto, LOC_ALIKE14]},
     ]
 - LOC_DEADEND1:
     description:
@@ -1536,7 +1538,7 @@ locations: !!omap
     conditions: {DEEP: true, NOBACK: true}
     hints: [*maze]
     travel: [
-      {verbs: [UPWAR, D], action: [goto, LOC_ALIKE4]},
+      {verbs: [UPWAR, DOWN], action: [goto, LOC_ALIKE4]},
     ]
 - LOC_NARROW:
     description:
@@ -1785,7 +1787,7 @@ locations: !!omap
     conditions: {DEEP: true, NOBACK: true}
     hints: [*witt]
     travel: [
-      {verbs: [EAST, NORTH, SOUTH, NE, SE, SW, NW, UPWAR, D],
+      {verbs: [EAST, NORTH, SOUTH, NE, SE, SW, NW, UPWAR, DOWN],
               cond: [pct, 95], action: [speak, FUTILE_CRAWL]},
       {verbs: [EAST], action: [goto, LOC_ANTEROOM]},
       {verbs: [WEST], action: [speak, WAY_BLOCKED]},
@@ -2017,7 +2019,7 @@ locations: !!omap
     travel: [
       {verbs: [WEST], action: [goto, LOC_CORRIDOR]},
       {verbs: [NE, LEFT], action: [goto, LOC_WARMWALLS]},
-      {verbs: [SE, RIGHT, D], action: [goto, LOC_LIMESTONE]},
+      {verbs: [SE, RIGHT, DOWN], action: [goto, LOC_LIMESTONE]},
       {verbs: [VIEW], action: [goto, LOC_BREATHTAKING]},
       {verbs: [BARRE], action: [goto, LOC_BARRENFRONT]},
     ]
@@ -2687,7 +2689,7 @@ locations: !!omap
       short: 'You''re at top of cliff.'
     conditions: {DEEP: true}
     travel: [
-      {verbs: [CLIMB, D], action: [goto, LOC_CLIFFACE]},
+      {verbs: [CLIMB, DOWN], action: [goto, LOC_CLIFFACE]},
       {verbs: [NE, CRAWL], action: [goto, LOC_REACHDEAD]},
     ]
 - LOC_REACHDEAD:
