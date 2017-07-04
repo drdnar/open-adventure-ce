@@ -874,8 +874,7 @@ static int lock(token_t verb, token_t obj)
             obj = GRATE;
         if (HERE(CHAIN))
             obj = CHAIN;
-        if (obj == NO_OBJECT ||
-            obj == INTRANSITIVE) {
+        if (obj == INTRANSITIVE) {
             rspeak(NOTHING_LOCKED);
             return GO_CLEAROBJ;
         }
@@ -883,26 +882,17 @@ static int lock(token_t verb, token_t obj)
 
     /*  Lock, unlock object.  Special stuff for opening clam/oyster
      *  and for chain. */
-    int spk = actions[verb].message;
-    if (obj == CLAM || obj == OYSTER)
-        return bivalve(verb, obj);
-    if (obj == DOOR)
-        spk = (game.prop[DOOR] == DOOR_UNRUSTED) ? OK_MAN : RUSTY_DOOR;
-    if (obj == CAGE)
-        spk = NO_LOCK;
-    if (obj == KEYS)
-        spk = CANNOT_UNLOCK;
     if (obj == GRATE ||
         obj == CHAIN) {
-        spk = NO_KEYS;
         if (HERE(KEYS)) {
             if (obj == CHAIN)
                 return chain(verb);
             if (game.closng) {
-                spk = EXIT_CLOSED;
+                rspeak(EXIT_CLOSED);
                 if (!game.panic)
                     game.clock2 = PANICTIME;
                 game.panic = true;
+                return GO_CLEAROBJ ;
             } else {
                 state_change(GRATE, (verb == LOCK) ?
                              GRATE_CLOSED :
@@ -910,8 +900,27 @@ static int lock(token_t verb, token_t obj)
                 return GO_CLEAROBJ;
             }
         }
+        rspeak(NO_KEYS);
+        return GO_CLEAROBJ;
     }
-    rspeak(spk);
+
+    switch (obj) {
+    case CLAM:
+    case OYSTER:
+        return bivalve(verb, obj);
+    case DOOR:
+        rspeak((game.prop[DOOR] == DOOR_UNRUSTED) ? OK_MAN : RUSTY_DOOR);
+        break;
+    case CAGE:
+        rspeak( NO_LOCK);
+        break;
+    case KEYS:
+        rspeak(CANNOT_UNLOCK);
+        break;
+    default:
+        rspeak(actions[verb].message);
+    }
+
     return GO_CLEAROBJ;
 }
 
