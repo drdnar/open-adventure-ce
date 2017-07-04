@@ -96,9 +96,24 @@ full description of a place unless you explicitly ask me to.
 
 Don't be ridiculous!
 
-> in
+> eat building
 
 You are inside a building, a well house for a large spring.
+
+There are some keys on the ground here.
+
+There is a shiny brass lamp nearby.
+
+There is food here.
+
+There is a bottle of water here.
+
+> in
+
+I don't know in from out here.  Use compass points or name something
+in the general direction you want to go.
+
+You're inside building.
 
 There are some keys on the ground here.
 
@@ -413,7 +428,7 @@ OK
 
 There is no way to go that direction.
 
-You're inside building.
+You are inside a building, a well house for a large spring.
 
 There are some keys on the ground here.
 
@@ -568,7 +583,7 @@ Okay, "boo".
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 100 turns.
+You have garnered 27 out of a possible 430 points, using 101 turns.
 
 > z
 
@@ -576,7 +591,7 @@ OK
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 102 turns.
+You have garnered 27 out of a possible 430 points, using 103 turns.
 
 > quit keys
 
@@ -590,7 +605,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 27 out of a possible 430, using 104 turns.
+You scored 27 out of a possible 430, using 105 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 
