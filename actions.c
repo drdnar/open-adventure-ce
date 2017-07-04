@@ -210,38 +210,6 @@ static int bigwords(token_t foo)
     }
 }
 
-static int bivalve(token_t verb, token_t obj)
-/* Clam/oyster actions */
-{
-    bool is_oyster = (obj == OYSTER);
-    if (verb == LOCK) {
-        rspeak(HUH_MAN);
-        return GO_CLEAROBJ;
-    }
-    if (!TOTING(TRIDENT)) {
-        rspeak(is_oyster ?
-               OYSTER_OPENER :
-               CLAM_OPENER);
-        return GO_CLEAROBJ;
-    }
-    if (TOTING(obj)) {
-        rspeak( is_oyster ?
-                DROP_OYSTER :
-                DROP_CLAM);
-        return GO_CLEAROBJ;
-    }
-
-    if (!is_oyster) {
-        DESTROY(CLAM);
-        drop(OYSTER, game.loc);
-        drop(PEARL, LOC_CULDESAC);
-    }
-    rspeak(is_oyster ?
-           OYSTER_OPENS :
-           PEARL_FALLS);
-    return GO_CLEAROBJ;
-}
-
 static void blast(void)
 /*  Blast.  No effect unless you've got dynamite, which is a neat trick! */
 {
@@ -946,8 +914,24 @@ static int lock(token_t verb, token_t obj)
 
     switch (obj) {
     case CLAM:
+        if (verb == LOCK)
+            rspeak(HUH_MAN);
+        else if (!TOTING(TRIDENT))
+            rspeak(OYSTER_OPENER);
+        else {
+            DESTROY(CLAM);
+            drop(OYSTER, game.loc);
+            drop(PEARL, LOC_CULDESAC);
+            rspeak(PEARL_FALLS);
+        }
+        return GO_CLEAROBJ;
     case OYSTER:
-        return bivalve(verb, obj);
+        if (verb == LOCK)
+            rspeak(HUH_MAN);
+        else
+            rspeak(OYSTER_OPENER);
+
+        return GO_CLEAROBJ;
     case DOOR:
         rspeak((game.prop[DOOR] == DOOR_UNRUSTED) ? OK_MAN : RUSTY_DOOR);
         break;
