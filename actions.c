@@ -395,39 +395,47 @@ static int vcarry(token_t verb, token_t obj)
 static int chain(token_t verb)
 /* Do something to the bear's chain */
 {
-    int spk;
     if (verb != LOCK) {
-        spk = CHAIN_UNLOCKED;
-        if (game.prop[BEAR] == UNTAMED_BEAR)
-            spk = BEAR_BLOCKS;
-        if (game.prop[CHAIN] == CHAIN_HEAP)
-            spk = ALREADY_UNLOCKED;
-        if (spk != CHAIN_UNLOCKED) {
-            rspeak(spk);
+        if (game.prop[BEAR] == UNTAMED_BEAR) {
+            rspeak(BEAR_BLOCKS);
+            return GO_CLEAROBJ;
+        }
+        if (game.prop[CHAIN] == CHAIN_HEAP) {
+            rspeak(ALREADY_UNLOCKED);
             return GO_CLEAROBJ;
         }
         game.prop[CHAIN] = CHAIN_HEAP;
         game.fixed[CHAIN] = CHAIN_HEAP;
         if (game.prop[BEAR] != BEAR_DEAD)
             game.prop[BEAR] = CONTENTED_BEAR;
-        /* FIXME: Arithmetic on state numbers */
-        game.fixed[BEAR] = 2 - game.prop[BEAR];
-    } else {
-        spk = CHAIN_LOCKED;
-        if (game.prop[CHAIN] != CHAIN_HEAP)
-            spk = ALREADY_LOCKED;
-        if (game.loc != objects[CHAIN].plac)
-            spk = NO_LOCKSITE;
-        if (spk != CHAIN_LOCKED) {
-            rspeak(spk);
-            return GO_CLEAROBJ;
+
+        switch (game.prop[BEAR]) {
+        case BEAR_DEAD:
+            game.fixed[BEAR] = -1;
+            break;
+        default:
+            game.fixed[BEAR] = 0;
         }
-        game.prop[CHAIN] = CHAIN_FIXED;
-        if (TOTING(CHAIN))
-            drop(CHAIN, game.loc);
-        game.fixed[CHAIN] = -1;
+        rspeak(CHAIN_UNLOCKED);
+        return GO_CLEAROBJ;
     }
-    rspeak(spk);
+
+    if (game.prop[CHAIN] != CHAIN_HEAP) {
+        rspeak(ALREADY_LOCKED);
+        return GO_CLEAROBJ;
+    }
+    if (game.loc != objects[CHAIN].plac) {
+        rspeak(NO_LOCKSITE);
+        return GO_CLEAROBJ;
+    }
+
+    game.prop[CHAIN] = CHAIN_FIXED;
+
+    if (TOTING(CHAIN))
+        drop(CHAIN, game.loc);
+    game.fixed[CHAIN] = -1;
+
+    rspeak(CHAIN_LOCKED);
     return GO_CLEAROBJ;
 }
 
