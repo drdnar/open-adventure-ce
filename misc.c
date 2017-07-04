@@ -94,7 +94,9 @@ void tokenize(char* raw, struct command_t *cmd)
 {
     memset(cmd, '\0', sizeof(struct command_t));
 
-    /* FIXME: put a bound prefix on the %s to prevent buffer overflow */
+    /* Bound prefix on the %s would be needed to prevent buffer
+     * overflow.  but we shortstop this more simply by making each
+     * raw-input buffer as long as the enrire inout buffer. */
     sscanf(raw, "%s%s", cmd->raw1, cmd->raw2);
 
     // pack the substrings

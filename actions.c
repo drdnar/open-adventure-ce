@@ -7,6 +7,7 @@
 static int fill(token_t, token_t);
 
 static void state_change(long obj, long state)
+/* Object must have a change-message list for this to be useful; only some do */
 {
     game.prop[obj] = state;
     pspeak(obj, change, state, true);
@@ -377,17 +378,16 @@ static int vcarry(token_t verb, token_t obj)
         }
         game.prop[BIRD] = BIRD_CAGED;
     }
-    /* FIXME: Arithmetic on state numbers */
     if ((obj == BIRD ||
          obj == CAGE) &&
         (game.prop[BIRD] == BIRD_CAGED || STASHED(BIRD) == BIRD_CAGED))
+	/* expression maps BIRD to CAGE and CAGE to BIRD */
         carry(BIRD + CAGE - obj, game.loc);
     carry(obj, game.loc);
     if (obj == BOTTLE && LIQUID() != NO_OBJECT)
         game.place[LIQUID()] = CARRIED;
-    if (GSTONE(obj) && game.prop[obj] != 0) {
-        game.prop[obj]
-            = STATE_GROUND;
+    if (GSTONE(obj) && game.prop[obj] != STATE_GROUND) {
+        game.prop[obj] = STATE_GROUND;
         game.prop[CAVITY] = CAVITY_EMPTY;
     }
     rspeak(OK_MAN);
@@ -463,7 +463,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
 
         } else if ((GSTONE(obj) && AT(CAVITY) && game.prop[CAVITY] != CAVITY_FULL)) {
             rspeak(GEM_FITS);
-            game.prop[obj] = 1;
+            game.prop[obj] = STATE_IN_CAVITY;
             game.prop[CAVITY] = CAVITY_FULL;
             if (HERE(RUG) && ((obj == EMERALD && game.prop[RUG] != RUG_HOVER) ||
                               (obj == RUBY && game.prop[RUG] == RUG_HOVER))) {

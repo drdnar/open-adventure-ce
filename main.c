@@ -765,6 +765,7 @@ static bool closecheck(void)
  *  problems arise from the use of negative prop numbers to suppress
  *  the object descriptions until he's actually moved the objects. */
 {
+    /*  Don't tick game.clock1 unless well into cave (and not at Y2). */
     if (game.tally == 0 && INDEEP(game.loc) && game.loc != LOC_Y2)
         --game.clock1;
 
@@ -936,8 +937,10 @@ static void listobjects(void)
                  *  (so goes the rationalisation). */
             }
             int kk = game.prop[obj];
-            if (obj == STEPS && game.loc == game.fixed[STEPS])
-                kk = 1;
+            if (obj == STEPS)
+		kk = (game.loc == game.fixed[STEPS])
+		    ? STEPS_UP
+		    : STEPS_DOWN;
             pspeak(obj, look, kk, true);
         }
     }
@@ -1019,10 +1022,9 @@ L2600:
         checkhints();
 
         /*  If closing time, check for any objects being toted with
-         *  game.prop < 0 and set the prop to -1-game.prop.  This way
-         *  objects won't be described until they've been picked up
-         *  and put down separate from their respective piles.  Don't
-         *  tick game.clock1 unless well into cave (and not at Y2). */
+         *  game.prop < 0 and stash them.  This way objects won't be
+         *  described until they've been picked up and put down
+         *  separate from their respective piles. */
         if (game.closed) {
             if (game.prop[OYSTER] < 0 && TOTING(OYSTER))
                 pspeak(OYSTER, look, 1, true);

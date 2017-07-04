@@ -28,6 +28,7 @@
 /* Special object-state values - integers > 0 are object-specific */
 #define STATE_NOTFOUND  -1	  // 'Not found" state of treasures */
 #define STATE_GROUND	0	  // After discovered, before messed with
+#define STATE_IN_CAVITY	1	  // State value common to all gemstones
 
 /* Map a state property value to a negative range, where the object cannot be
  * picked up but the value can be recovered later.  Avoid colliding with -1,
@@ -190,7 +191,7 @@ struct command_t {
     token_t wd2;
     long id1;
     long id2;
-    char raw1[BUFSIZ], raw2[BUFSIZ];
+    char raw1[LINESIZE], raw2[LINESIZE];
 };
 
 extern struct game_t game;

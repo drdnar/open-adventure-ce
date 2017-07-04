@@ -3251,6 +3251,7 @@ objects: !!omap
     inventory: '*steps'
     locations: [LOC_PITTOP, LOC_MISTHALL]
     immovable: true
+    states: [STEPS_DOWN, STEPS_UP]
     descriptions:
     - 'Rough stone steps lead down the pit.'
     - 'Rough stone steps lead up the dome.'
