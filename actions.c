@@ -21,7 +21,6 @@ static int attack(struct command_t *command)
     vocab_t verb = command->verb;
     vocab_t obj = command->obj;
 
-    long spk = actions[verb].message;
     if (obj == NO_OBJECT ||
         obj == INTRANSITIVE) {
         int changes = 0;
@@ -69,69 +68,41 @@ static int attack(struct command_t *command)
         }
         if (changes >= 2)
             return GO_UNKNOWN;
-
     }
+
     if (obj == BIRD) {
         if (game.closed) {
             rspeak(UNHAPPY_BIRD);
-            return GO_CLEAROBJ;
+        } else {
+            DESTROY(BIRD);
+            rspeak(BIRD_DEAD);
         }
-        DESTROY(BIRD);
-        spk = BIRD_DEAD;
-    } else if (obj == VEND) {
+        return GO_CLEAROBJ;
+    }
+    if (obj == VEND) {
         state_change(VEND,
                      game.prop[VEND] == VEND_BLOCKS ? VEND_UNBLOCKS : VEND_BLOCKS);
         return GO_CLEAROBJ;
     }
 
-    if (obj == NO_OBJECT)
-        spk = NO_TARGET;
-    if (obj == CLAM ||
-        obj == OYSTER)
-        spk = SHELL_IMPERVIOUS;
-    if (obj == SNAKE)
-        spk = SNAKE_WARNING;
-    if (obj == DWARF)
-        spk = BARE_HANDS_QUERY;
-    if (obj == DWARF && game.closed)
-        return GO_DWARFWAKE;
-    if (obj == DRAGON)
-        spk = ALREADY_DEAD;
-    if (obj == TROLL)
-        spk = ROCKY_TROLL;
-    if (obj == OGRE)
-        spk = OGRE_DODGE;
-    if (obj == OGRE && atdwrf(game.loc) > 0) {
-        rspeak(spk);
-        rspeak(KNIFE_THROWN);
-        DESTROY(OGRE);
-        int dwarves = 0;
-        for (int i = 1; i < PIRATE; i++) {
-            if (game.dloc[i] == game.loc) {
-                ++dwarves;
-                game.dloc[i] = LOC_LONGWEST;
-                game.dseen[i] = false;
-            }
-        }
-        spk = (dwarves > 1) ?
-              OGRE_PANIC1 :
-              OGRE_PANIC2;
-    } else if (obj == BEAR) {
+    if (obj == BEAR) {
         switch (game.prop[BEAR]) {
         case UNTAMED_BEAR:
-            spk = BEAR_HANDS;
+            rspeak(BEAR_HANDS);
             break;
         case SITTING_BEAR:
-            spk = BEAR_CONFUSED;
+            rspeak(BEAR_CONFUSED);
             break;
         case CONTENTED_BEAR:
-            spk = BEAR_CONFUSED;
+            rspeak(BEAR_CONFUSED);
             break;
         case BEAR_DEAD:
-            spk = ALREADY_DEAD;
+            rspeak(ALREADY_DEAD);
             break;
         }
-    } else if (obj == DRAGON && game.prop[DRAGON] == DRAGON_BARS) {
+        return GO_CLEAROBJ;
+    }
+    if (obj == DRAGON && game.prop[DRAGON] == DRAGON_BARS) {
         /*  Fun stuff for dragon.  If he insists on attacking it, win!
          *  Set game.prop to dead, move dragon to central loc (still
          *  fixed), move rug there (not fixed), and move him there,
@@ -163,7 +134,53 @@ static int attack(struct command_t *command)
         return GO_MOVE;
     }
 
-    rspeak(spk);
+    if (obj == OGRE) {
+        rspeak(OGRE_DODGE);
+        if (atdwrf(game.loc) == 0)
+            return GO_CLEAROBJ;
+
+        rspeak(KNIFE_THROWN);
+        DESTROY(OGRE);
+        int dwarves = 0;
+        for (int i = 1; i < PIRATE; i++) {
+            if (game.dloc[i] == game.loc) {
+                ++dwarves;
+                game.dloc[i] = LOC_LONGWEST;
+                game.dseen[i] = false;
+            }
+        }
+        rspeak((dwarves > 1) ?
+               OGRE_PANIC1 :
+               OGRE_PANIC2);
+        return GO_CLEAROBJ;
+    }
+
+    switch (obj) {
+    case NO_OBJECT:
+        rspeak(NO_TARGET);
+        break;
+    case CLAM:
+    case OYSTER:
+        rspeak(SHELL_IMPERVIOUS);
+        break;
+    case SNAKE:
+        rspeak(SNAKE_WARNING);
+        break;
+    case DWARF:
+        if (game.closed) {
+            return GO_DWARFWAKE;
+        }
+        rspeak(BARE_HANDS_QUERY);
+        break;
+    case DRAGON:
+        rspeak(ALREADY_DEAD);
+        break;
+    case TROLL:
+        rspeak(ROCKY_TROLL);
+        break;
+    default:
+        rspeak(actions[verb].message);
+    }
     return GO_CLEAROBJ;
 }
 
@@ -977,14 +994,14 @@ static int pour(token_t verb, token_t obj)
     }
     if (!AT(DOOR)) {
         if (obj == WATER) {
-	    /* cycle through the three plant states */
-	    state_change(PLANT, MOD(game.prop[PLANT] + 1, 3));
-	    game.prop[PLANT2] = game.prop[PLANT];
-	    return GO_MOVE;
+            /* cycle through the three plant states */
+            state_change(PLANT, MOD(game.prop[PLANT] + 1, 3));
+            game.prop[PLANT2] = game.prop[PLANT];
+            return GO_MOVE;
         } else {
             rspeak(SHAKING_LEAVES);
             return GO_CLEAROBJ;
-	}
+        }
     } else {
         state_change(DOOR, (obj == OIL) ?
                      DOOR_UNRUSTED :
@@ -1036,8 +1053,8 @@ static int reservoir(void)
         rspeak(NOTHING_HAPPENS);
         return GO_CLEAROBJ;
     } else {
-	state_change(RESER,
-		     game.prop[RESER] == WATERS_PARTED ? WATERS_UNPARTED : WATERS_PARTED);
+        state_change(RESER,
+                     game.prop[RESER] == WATERS_PARTED ? WATERS_UNPARTED : WATERS_PARTED);
         if (AT(RESER))
             return GO_CLEAROBJ;
         else {
@@ -1215,7 +1232,7 @@ static int wave(token_t verb, token_t obj)
                    FREE_FLY);
 
         state_change(FISSURE,
-	    game.prop[FISSURE] == BRIDGED ? UNBRIDGED : BRIDGED);
+                     game.prop[FISSURE] == BRIDGED ? UNBRIDGED : BRIDGED);
         return GO_CLEAROBJ;
     }
 }
@@ -1286,7 +1303,7 @@ int action(struct command_t *command)
             return GO_WORD2;
         if (command->verb == SAY)
             command->obj = command->wd2;
-        if (command->obj == 0 ||
+        if (command->obj == NO_OBJECT ||
             command->obj == INTRANSITIVE) {
             /*  Analyse an intransitive verb (ie, no object given yet). */
             switch (command->verb) {
