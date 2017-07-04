@@ -725,17 +725,26 @@ int fill(token_t verb, token_t obj)
 static int find(token_t verb, token_t obj)
 /* Find.  Might be carrying it, or it might be here.  Else give caveat. */
 {
-    int spk = actions[verb].message;
+    if (TOTING(obj)) {
+        rspeak(ALREADY_CARRYING);
+        return GO_CLEAROBJ;
+    }
+
+    if (game.closed) {
+        rspeak(NEEDED_NEARBY);
+        return GO_CLEAROBJ;
+    }
+
     if (AT(obj) ||
         (LIQUID() == obj && AT(BOTTLE)) ||
         obj == LIQLOC(game.loc) ||
-        (obj == DWARF && atdwrf(game.loc) > 0))
-        spk = YOU_HAVEIT;
-    if (game.closed)
-        spk = NEEDED_NEARBY;
-    if (TOTING(obj))
-        spk = ALREADY_CARRYING;
-    rspeak(spk);
+        (obj == DWARF && atdwrf(game.loc) > 0)) {
+        rspeak(YOU_HAVEIT);
+        return GO_CLEAROBJ;
+    }
+
+
+    rspeak(actions[verb].message);
     return GO_CLEAROBJ;
 }
 
