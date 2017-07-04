@@ -778,19 +778,21 @@ static int fly(token_t verb, token_t obj)
 static int inven(void)
 /* Inventory. If object, treat same as find.  Else report on current burden. */
 {
-    int spk = NO_CARRY;
+    bool empty = true;
     for (int i = 1; i <= NOBJECTS; i++) {
         if (i == BEAR ||
             !TOTING(i))
             continue;
-        if (spk == NO_CARRY)
+        if (empty) {
             rspeak(NOW_HOLDING);
+            empty = false;
+        }
         pspeak(i, touch, -1, false);
-        spk = NO_MESSAGE;
     }
     if (TOTING(BEAR))
-        spk = TAME_BEAR;
-    rspeak(spk);
+        rspeak(TAME_BEAR);
+    if (empty)
+        rspeak(NO_CARRY);
     return GO_CLEAROBJ;
 }
 
