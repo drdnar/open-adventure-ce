@@ -451,7 +451,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
         if (TOTING(ROD2) && obj == ROD && !TOTING(ROD))
             obj = ROD2;
         if (!TOTING(obj)) {
-            rspeak(actions[verb].message;);
+            rspeak(actions[verb].message);
             return GO_CLEAROBJ;
         }
         if (obj == BIRD && HERE(SNAKE)) {
@@ -692,7 +692,7 @@ int fill(token_t verb, token_t obj)
         rspeak(SHATTER_VASE);
         game.prop[VASE] = VASE_BROKEN;
         game.fixed[VASE] = -1;
-        return (discard(verb, obj, true));
+        return (discard(verb, VASE, true));
     }
 
     if (obj == URN) {
