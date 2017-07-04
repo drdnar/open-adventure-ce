@@ -1028,7 +1028,7 @@ L2600:
                 pspeak(OYSTER, look, 1, true);
             for (size_t i = 1; i <= NOBJECTS; i++) {
                 if (TOTING(i) && game.prop[i] < 0)
-                    game.prop[i] = -1 - game.prop[i];
+                    game.prop[i] = STASHED(i);
             }
         }
         game.wzdark = DARK(game.loc);

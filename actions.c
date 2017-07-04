@@ -361,7 +361,7 @@ static int vcarry(token_t verb, token_t obj)
 
     }
 
-    if (obj == BIRD && game.prop[BIRD] != BIRD_CAGED && -1 - game.prop[BIRD] != BIRD_CAGED) {
+    if (obj == BIRD && game.prop[BIRD] != BIRD_CAGED && STASHED(BIRD) != BIRD_CAGED) {
         if (game.prop[BIRD] == BIRD_FOREST_UNCAGED) {
             DESTROY(BIRD);
             rspeak(BIRD_CRAP);
@@ -380,8 +380,7 @@ static int vcarry(token_t verb, token_t obj)
     /* FIXME: Arithmetic on state numbers */
     if ((obj == BIRD ||
          obj == CAGE) &&
-        (game.prop[BIRD] == BIRD_CAGED ||
-         -1 - game.prop[BIRD] == 1))
+        (game.prop[BIRD] == BIRD_CAGED || STASHED(BIRD) == BIRD_CAGED))
         carry(BIRD + CAGE - obj, game.loc);
     carry(obj, game.loc);
     if (obj == BOTTLE && LIQUID() != NO_OBJECT)

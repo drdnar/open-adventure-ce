@@ -29,6 +29,11 @@
 #define STATE_NOTFOUND  -1	  // 'Not found" state of treasures */
 #define STATE_GROUND	0	  // After discovered, before messed with
 
+/* Map a state property value to a negative range, where the object cannot be
+ * picked up but the value can be recovered later.  Avoid colliding with -1,
+ * which has its own meaning. */
+#define STASHED(obj)	(-1 - game.prop[obj])
+
 /*
  *  MOD(N,M)    = Arithmetic modulus
  *  AT(OBJ)     = true if on either side of two-placed object
