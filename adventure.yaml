@@ -3314,11 +3314,13 @@ objects: !!omap
     inventory: '*fissure'
     locations: [LOC_EASTBANK, LOC_WESTBANK]
     immovable: true
-    states: [UNBRIDGED, BRIDGED, VANISHED]
+    states: [UNBRIDGED, BRIDGED]
     descriptions:
     - ''
-    - 'A crystal bridge now spans the fissure.'
+    - 'A crystal bridge spans the fissure.'
+    changes:
     - 'The crystal bridge has vanished!'
+    - 'A crystal bridge now spans the fissure.'
 - OBJ_13:
     words: ['table']
     inventory: '*stone tablet'

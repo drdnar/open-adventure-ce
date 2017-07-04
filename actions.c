@@ -1231,9 +1231,8 @@ static int wave(token_t verb, token_t obj)
                    CAGE_FLY :
                    FREE_FLY);
 
-        /* FIXME: Arithemetic on property values */
-        game.prop[FISSURE] = 1 - game.prop[FISSURE];
-        pspeak(FISSURE, look, 2 - game.prop[FISSURE], true);
+        state_change(FISSURE,
+	    game.prop[FISSURE] == BRIDGED ? UNBRIDGED : BRIDGED);
         return GO_CLEAROBJ;
     }
 }

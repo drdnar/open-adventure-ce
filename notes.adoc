@@ -55,6 +55,10 @@ Bug fixes:
 * Unrecognized words are no longer truncated to 5 characters and
   uppercased when they are echoed.
 
+* "A crystal bridge now spans the fissure." (progressive present) was
+  incorrect most places it appeared and has been replaced by "A crystal 
+  bridge spans the fissure." (timeless present).
+
 By default, advent issues "> " as a command prompt.  This feature
 became common in many variants after the original 350-point version,
 but was never backported into Crowther & Woods's main line before now.
