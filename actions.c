@@ -662,47 +662,54 @@ int fill(token_t verb, token_t obj)
 /*  Fill.  Bottle or urn must be empty, and liquid available.  (Vase
  *  is nasty.) */
 {
-    int k;
-    int spk = actions[verb].message;
     if (obj == VASE) {
-        spk = ARENT_CARRYING;
-        if (LIQLOC(game.loc) == 0)
-            spk = FILL_INVALID;
-        if (LIQLOC(game.loc) == 0 ||
-            !TOTING(VASE)) {
-            rspeak(spk);
+        if (LIQLOC(game.loc) == NO_OBJECT) {
+            rspeak(FILL_INVALID);
+            return GO_CLEAROBJ;
+        }
+        if (!TOTING(VASE)) {
+            rspeak(ARENT_CARRYING);
             return GO_CLEAROBJ;
         }
         rspeak(SHATTER_VASE);
         game.prop[VASE] = VASE_BROKEN;
         game.fixed[VASE] = -1;
         return (discard(verb, obj, true));
-    } else if (obj == URN) {
-        spk = FULL_URN;
+    }
+
+    if (obj == URN) {
         if (game.prop[URN] != URN_EMPTY) {
-            rspeak(spk);
+            rspeak(FULL_URN);
             return GO_CLEAROBJ;
         }
-        spk = FILL_INVALID;
-        k = LIQUID();
-        if (k == 0 ||
-            !HERE(BOTTLE)) {
-            rspeak(spk);
+        if (!HERE(BOTTLE)) {
+            rspeak(FILL_INVALID);
+            return GO_CLEAROBJ;
+        }
+        int k = LIQUID();
+        switch (k) {
+        case WATER:
+            game.prop[BOTTLE] = EMPTY_BOTTLE;
+            rspeak(WATER_URN);
+            break;
+        case OIL:
+            game.prop[URN] = URN_DARK;
+            game.prop[BOTTLE] = EMPTY_BOTTLE;
+            rspeak(OIL_URN);
+            break;
+        case NO_OBJECT:
+        default:
+            rspeak(FILL_INVALID);
             return GO_CLEAROBJ;
         }
         game.place[k] = LOC_NOWHERE;
-        game.prop[BOTTLE] = EMPTY_BOTTLE;
-        if (k == OIL)
-            game.prop[URN] = URN_DARK;
-        spk = WATER_URN + game.prop[URN];
-        rspeak(spk);
         return GO_CLEAROBJ;
     } else if (obj != NO_OBJECT && obj != BOTTLE) {
-        rspeak(spk);
+        rspeak(actions[verb].message);
         return GO_CLEAROBJ;
     } else if (obj == NO_OBJECT && !HERE(BOTTLE))
         return GO_UNKNOWN;
-    spk = BOTTLED_WATER;
+    int spk = BOTTLED_WATER;
     if (LIQLOC(game.loc) == 0)
         spk = NO_LIQUID;
     if (HERE(URN) && game.prop[URN] != URN_EMPTY)
@@ -712,10 +719,9 @@ int fill(token_t verb, token_t obj)
     if (spk == BOTTLED_WATER) {
         /* FIXME: Arithmetic on property values */
         game.prop[BOTTLE] = MOD(conditions[game.loc], 4) / 2 * 2;
-        k = LIQUID();
         if (TOTING(BOTTLE))
-            game.place[k] = CARRIED;
-        if (k == OIL)
+            game.place[LIQUID()] = CARRIED;
+        if (LIQUID() == OIL)
             spk = BOTTLED_OIL;
     }
     rspeak(spk);
