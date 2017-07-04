@@ -337,7 +337,7 @@ static int vcarry(token_t verb, token_t obj)
         rspeak(YOU_JOKING);
         return GO_CLEAROBJ;
     }
-    int spk;
+
     if (obj == WATER ||
         obj == OIL) {
         if (!HERE(BOTTLE) ||
@@ -355,23 +355,24 @@ static int vcarry(token_t verb, token_t obj)
         obj = BOTTLE;
     }
 
-    spk = CARRY_LIMIT;
     if (game.holdng >= INVLIMIT) {
-        rspeak(spk);
+        rspeak(CARRY_LIMIT);
         return GO_CLEAROBJ;
-    } else if (obj == BIRD && game.prop[BIRD] != BIRD_CAGED && -1 - game.prop[BIRD] != BIRD_CAGED) {
+
+    }
+
+    if (obj == BIRD && game.prop[BIRD] != BIRD_CAGED && -1 - game.prop[BIRD] != BIRD_CAGED) {
         if (game.prop[BIRD] == BIRD_FOREST_UNCAGED) {
             DESTROY(BIRD);
             rspeak(BIRD_CRAP);
             return GO_CLEAROBJ;
         }
-        if (!TOTING(CAGE))
-            spk = CANNOT_CARRY;
-        if (TOTING(ROD))
-            spk = BIRD_EVADES;
-        if (spk == CANNOT_CARRY ||
-            spk == BIRD_EVADES) {
-            rspeak(spk);
+        if (!TOTING(CAGE)) {
+            rspeak(CANNOT_CARRY);
+            return GO_CLEAROBJ;
+        }
+        if (TOTING(ROD)) {
+            rspeak(BIRD_EVADES);
             return GO_CLEAROBJ;
         }
         game.prop[BIRD] = BIRD_CAGED;
