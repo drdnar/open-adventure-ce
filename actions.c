@@ -521,24 +521,30 @@ static int drink(token_t verb, token_t obj)
 /*  Drink.  If no object, assume water and look for it here.  If water is in
  *  the bottle, drink that, else must be at a water loc, so drink stream. */
 {
-    if (obj == NO_OBJECT && LIQLOC(game.loc) != WATER && (LIQUID() != WATER ||
-            !HERE(BOTTLE)))
+    if (obj == NO_OBJECT && LIQLOC(game.loc) != WATER &&
+        (LIQUID() != WATER || !HERE(BOTTLE))) {
         return GO_UNKNOWN;
-    if (obj != BLOOD) {
-        if (obj != NO_OBJECT && obj != WATER) {
-            rspeak(RIDICULOUS_ATTEMPT);
-        } else if (LIQUID() == WATER && HERE(BOTTLE)) {
-            game.prop[BOTTLE] = EMPTY_BOTTLE;
-            game.place[WATER] = LOC_NOWHERE;
-            rspeak(BOTTLE_EMPTY);
-        } else {
-            rspeak(actions[verb].message);
-        }
-    } else {
+    }
+
+    if (obj == BLOOD) {
         DESTROY(BLOOD);
         state_change(DRAGON, DRAGON_BLOODLESS);
         game.blooded = true;
+        return GO_CLEAROBJ;
     }
+
+    if (obj != NO_OBJECT && obj != WATER) {
+        rspeak(RIDICULOUS_ATTEMPT);
+        return GO_CLEAROBJ;
+    }
+    if (LIQUID() == WATER && HERE(BOTTLE)) {
+        game.prop[BOTTLE] = EMPTY_BOTTLE;
+        game.place[WATER] = LOC_NOWHERE;
+        rspeak(BOTTLE_EMPTY);
+        return GO_CLEAROBJ;
+    }
+
+    rspeak(actions[verb].message);
     return GO_CLEAROBJ;
 }
 
