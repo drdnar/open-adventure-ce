@@ -407,18 +407,15 @@ def get_objects(obj):
         else:
             labels = []
             for l_msg in attr["descriptions"]:
-                if not isinstance(l_msg, str):
-                    labels.append(l_msg)
-                    l_msg = l_msg[1]
                 descriptions_str += " " * 12 + make_c_string(l_msg) + ",\n"
+            for label in attr.get("states", []):
+                labels.append(label)
             descriptions_str = descriptions_str[:-1] # trim trailing newline
             if labels:
                 global statedefines
                 statedefines += "/* States for %s */\n" % item[0]
-                for (i, (label, message)) in enumerate(labels):
-                    if len(message) >= 45:
-                        message = message[:45] + "..."
-                    statedefines += "#define %s\t%d /* %s */\n" % (label, i, message)
+                for (i, label) in enumerate(labels):
+                    statedefines += "#define %s\t%d\n" % (label, i)
                 statedefines += "\n"
         sounds_str = ""
         if attr.get("sounds") == None:
@@ -651,6 +648,8 @@ def buildtravel(locs, objs):
                 obj = objnames.index(cond[1])
                 if type(cond[2]) == int:
                     state = cond[2]
+                elif cond[2] in objs[obj][1].get("states", []):
+                    state = objs[obj][1].get("states").index(cond[2])
                 else:
                     for (i, stateclause) in enumerate(objs[obj][1]["descriptions"]):
                         if type(stateclause) == list:
