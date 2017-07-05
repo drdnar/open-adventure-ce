@@ -624,46 +624,56 @@ static int feed(token_t verb, token_t obj)
 /*  Feed.  If bird, no seed.  Snake, dragon, troll: quip.  If dwarf, make him
  *  mad.  Bear, special. */
 {
-    int spk = actions[verb].message;
-    if (obj == BIRD) {
+    switch (obj) {
+    case BIRD:
         rspeak(BIRD_PINING);
-        return GO_CLEAROBJ;
-    } else if (obj == SNAKE ||
-               obj == DRAGON ||
-               obj == TROLL) {
-        spk = NOTHING_EDIBLE;
-        if (obj == DRAGON && game.prop[DRAGON] != DRAGON_BARS)
-            spk = RIDICULOUS_ATTEMPT;
-        if (obj == TROLL)
-            spk = TROLL_VICES;
-        if (obj == SNAKE && !game.closed && HERE(BIRD)) {
+        break;
+
+    case DRAGON:
+        if (game.prop[DRAGON] != DRAGON_BARS)
+            rspeak(RIDICULOUS_ATTEMPT);
+        else
+            rspeak(NOTHING_EDIBLE);
+        break;
+    case SNAKE:
+        if (!game.closed && HERE(BIRD)) {
             DESTROY(BIRD);
-            spk = BIRD_DEVOURED;
-        }
-    } else if (obj == DWARF) {
+            rspeak(BIRD_DEVOURED);
+        } else
+            rspeak(NOTHING_EDIBLE);
+        break;
+    case TROLL:
+        rspeak(TROLL_VICES);
+        break;
+    case DWARF:
         if (HERE(FOOD)) {
             game.dflag += 2;
-            spk = REALLY_MAD;
+            rspeak(REALLY_MAD);
         }
-    } else if (obj == BEAR) {
-        if (game.prop[BEAR] == UNTAMED_BEAR)
-            spk = NOTHING_EDIBLE;
-        if (game.prop[BEAR] == BEAR_DEAD)
-            spk = RIDICULOUS_ATTEMPT;
-        if (HERE(FOOD)) {
-            DESTROY(FOOD);
-            game.prop[BEAR] = SITTING_BEAR;
-            game.fixed[AXE] = IS_FREE;
-            game.prop[AXE] = AXE_HERE;
-            spk = BEAR_TAMED;
+        break;
+    case BEAR:
+        if (game.prop[BEAR] == BEAR_DEAD) {
+            rspeak(RIDICULOUS_ATTEMPT);
+            break;
         }
-    } else if (obj == OGRE) {
+        if (game.prop[BEAR] == UNTAMED_BEAR) {
+            if (HERE(FOOD)) {
+                DESTROY(FOOD);
+                game.fixed[AXE] = IS_FREE;
+                game.prop[AXE] = AXE_HERE;
+                state_change(BEAR, SITTING_BEAR);
+            } else
+                rspeak(NOTHING_EDIBLE);
+        }
+        break;
+    case OGRE:
         if (HERE(FOOD))
-            spk = OGRE_FULL;
-    } else {
-        spk = AM_GAME;
+            rspeak(OGRE_FULL);
+        else rspeak(actions[verb].message);
+        break;
+    default:
+        rspeak(AM_GAME);
     }
-    rspeak(spk);
     return GO_CLEAROBJ;
 }
 

@@ -402,7 +402,7 @@ bool yes(const char* question, const char* yes_response, const char* no_response
     for (;;) {
         speak(question);
 
-        char*        reply = get_input();
+        char* reply = get_input();
         if (reply == NULL) {
             // LCOV_EXCL_START
             // Should be unreachable. Reply should never be NULL

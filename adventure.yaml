@@ -2966,9 +2966,6 @@ arbitrary_messages:  !!omap
 - BEAR_HANDS: 'With what?  Your bare hands?  Against *HIS* bear hands??'
 - BEAR_CONFUSED: 'The bear is confused; he only wants to be your friend.'
 - ALREADY_DEAD: 'For crying out loud, the poor thing is already dead!'
-- BEAR_TAMED: |-
-    The bear eagerly wolfs down your food, after which he seems to calm
-    down considerably and even becomes rather friendly.
 - BEAR_CHAINED: 'The bear is still chained to the wall.'
 - STILL_LOCKED: 'The chain is still locked.'
 - CHAIN_UNLOCKED: 'The chain is now unlocked.'
@@ -3536,6 +3533,11 @@ objects: !!omap
     - 'There is a ferocious cave bear eying you from the far end of the room!'
     - 'There is a gentle cave bear sitting placidly in one corner.'
     - 'There is a contented-looking bear wandering about nearby.'
+    - ''
+    changes:
+    - ''
+    - 'The bear eagerly wolfs down your food, after which he seems to calm\ndown considerably and even becomes rather friendly.'
+    - ''
     - ''
 - MESSAG:
     words: ['messa']
