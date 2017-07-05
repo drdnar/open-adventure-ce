@@ -303,7 +303,7 @@ static int vcarry(token_t verb, token_t obj)
     }
 
     if (game.fixed[obj] != IS_FREE) {
-	/* Next guard tests whether plant is tiny or stashed */
+        /* Next guard tests whether plant is tiny or stashed */
         if (obj == PLANT && game.prop[PLANT] <= PLANT_THIRSTY) {
             rspeak(DEEP_ROOTS);
             return GO_CLEAROBJ;
@@ -503,9 +503,9 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
                    game.loc == objects[PILLOW].plac) {
             rspeak(OK_MAN);
         } else {
-	    state_change(VASE, AT(PILLOW)
-			 ? VASE_WHOLE
-			 : VASE_DROPPED);
+            state_change(VASE, AT(PILLOW)
+                         ? VASE_WHOLE
+                         : VASE_DROPPED);
             if (game.prop[VASE] != VASE_WHOLE)
                 game.fixed[VASE] = IS_FIXED;
         }
@@ -742,8 +742,8 @@ int fill(token_t verb, token_t obj)
     }
 
     state_change(BOTTLE, (LIQLOC(game.loc) == OIL)
-		 ? OIL_BOTTLE
-		 : WATER_BOTTLE);
+                 ? OIL_BOTTLE
+                 : WATER_BOTTLE);
     if (TOTING(BOTTLE))
         game.place[LIQUID()] = CARRIED;
     return GO_CLEAROBJ;

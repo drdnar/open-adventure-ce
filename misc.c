@@ -118,11 +118,11 @@ void tokenize(char* raw, struct command_t *cmd)
      * possible an emulation of the original UI.
      */
     if (settings.oldstyle) {
-	cmd->raw1[TOKLEN+TOKLEN] = cmd->raw1[TOKLEN+TOKLEN] = '\0';
-	for (int i = 0; i < strlen(cmd->raw1); i++)
-	    cmd->raw1[i] = toupper(cmd->raw1[i]);
-	for (int i = 0; i < strlen(cmd->raw2); i++)
-	    cmd->raw2[i] = toupper(cmd->raw2[i]);
+        cmd->raw1[TOKLEN + TOKLEN] = cmd->raw2[TOKLEN + TOKLEN] = '\0';
+        for (size_t i = 0; i < strlen(cmd->raw1); i++)
+            cmd->raw1[i] = toupper(cmd->raw1[i]);
+        for (size_t i = 0; i < strlen(cmd->raw2); i++)
+            cmd->raw2[i] = toupper(cmd->raw2[i]);
     }
 }
 
@@ -351,11 +351,10 @@ char* get_input()
 
 bool silent_yes()
 {
-    char* reply;
     bool outcome;
 
     for (;;) {
-        reply = get_input();
+        char* reply = get_input();
         if (reply == NULL) {
             // LCOV_EXCL_START
             // Should be unreachable. Reply should never be NULL
@@ -398,13 +397,12 @@ bool yes(const char* question, const char* yes_response, const char* no_response
 /*  Print message X, wait for yes/no answer.  If yes, print Y and return true;
  *  if no, print Z and return false. */
 {
-    char* reply;
     bool outcome;
 
     for (;;) {
         speak(question);
 
-        reply = get_input();
+        char*        reply = get_input();
         if (reply == NULL) {
             // LCOV_EXCL_START
             // Should be unreachable. Reply should never be NULL
