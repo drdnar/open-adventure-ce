@@ -3880,21 +3880,6 @@ specials: !!omap
 - SPC_0:
     message: !!null
     words: !!null
-- SPC_1:
-    message: !!null
-    words: ['fee']
-- SPC_2:
-    message: !!null
-    words: ['fie']
-- SPC_3:
-    message: !!null
-    words: ['foe']
-- SPC_4:
-    message: !!null
-    words: ['foo']
-- SPC_5:
-    message: !!null
-    words: ['fum']
 - SPC_13:
     message: 'You''re quite welcome.'
     words: ['thank']
