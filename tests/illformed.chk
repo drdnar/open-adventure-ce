@@ -605,6 +605,41 @@ You have garnered 27 out of a possible 430 points, using 105 turns.
 
 Huh?
 
+> out
+
+You're in front of building.
+
+> s
+
+You're in valley.
+
+> s
+
+At your feet all the water of the stream splashes into a 2-inch slit
+in the rock.  Downstream the streambed is bare rock.
+
+> down
+
+You don't fit through a two-inch slit!
+
+You're at slit in streambed.
+
+> s
+
+You are in a 20-foot depression floored with bare dirt.  Set into the
+dirt is a strong steel grate mounted in concrete.  A dry streambed
+leads into the depression.
+
+The grate is locked.
+
+> in
+
+You can't go through a locked steel grate!
+
+You're outside grate.
+
+The grate is locked.
+
 > quit
 
 Do you really want to quit now?
@@ -613,7 +648,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 27 out of a possible 430, using 107 turns.
+You scored 27 out of a possible 430, using 113 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 
