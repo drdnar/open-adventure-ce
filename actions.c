@@ -173,7 +173,7 @@ static int attack(struct command_t *command)
         rspeak(ROCKY_TROLL);
         break;
     default:
-        rspeak(actions[verb].message);
+        speak(actions[verb].message);
     }
     return GO_CLEAROBJ;
 }
@@ -264,7 +264,7 @@ static int vbreak(token_t verb, token_t obj)
         game.fixed[VASE] = IS_FIXED;
         return GO_CLEAROBJ;
     }
-    rspeak(actions[verb].message);
+    speak(actions[verb].message);
     return (GO_CLEAROBJ);
 }
 
@@ -451,7 +451,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
         if (TOTING(ROD2) && obj == ROD && !TOTING(ROD))
             obj = ROD2;
         if (!TOTING(obj)) {
-            rspeak(actions[verb].message);
+            speak(actions[verb].message);
             return GO_CLEAROBJ;
         }
         if (obj == BIRD && HERE(SNAKE)) {
@@ -552,7 +552,7 @@ static int drink(token_t verb, token_t obj)
         return GO_CLEAROBJ;
     }
 
-    rspeak(actions[verb].message);
+    speak(actions[verb].message);
     return GO_CLEAROBJ;
 }
 
@@ -584,7 +584,7 @@ static int eat(token_t verb, token_t obj)
         rspeak(LOST_APPETITE);
         return GO_CLEAROBJ;
     }
-    rspeak(actions[verb].message);
+    speak(actions[verb].message);
     return GO_CLEAROBJ;
 }
 
@@ -623,7 +623,7 @@ static int extinguish(token_t verb, int obj)
         return GO_CLEAROBJ;
     }
 
-    rspeak(actions[verb].message);
+    speak(actions[verb].message);
     return GO_CLEAROBJ;
 }
 
@@ -656,7 +656,7 @@ static int feed(token_t verb, token_t obj)
             game.dflag += 2;
             rspeak(REALLY_MAD);
         } else
-            rspeak(actions[verb].message);
+            speak(actions[verb].message);
         break;
     case BEAR:
         if (game.prop[BEAR] == BEAR_DEAD) {
@@ -673,13 +673,13 @@ static int feed(token_t verb, token_t obj)
                 rspeak(NOTHING_EDIBLE);
             break;
         }
-        rspeak(actions[verb].message);
+        speak(actions[verb].message);
         break;
     case OGRE:
         if (HERE(FOOD))
             rspeak(OGRE_FULL);
         else
-            rspeak(actions[verb].message);
+            speak(actions[verb].message);
         break;
     default:
         rspeak(AM_GAME);
@@ -735,7 +735,7 @@ int fill(token_t verb, token_t obj)
         return GO_CLEAROBJ;
     }
     if (obj != NO_OBJECT && obj != BOTTLE) {
-        rspeak(actions[verb].message);
+        speak(actions[verb].message);
         return GO_CLEAROBJ;
     }
     if (obj == NO_OBJECT && !HERE(BOTTLE))
@@ -784,7 +784,7 @@ static int find(token_t verb, token_t obj)
     }
 
 
-    rspeak(actions[verb].message);
+    speak(actions[verb].message);
     return GO_CLEAROBJ;
 }
 
@@ -804,7 +804,7 @@ static int fly(token_t verb, token_t obj)
     }
 
     if (obj != RUG) {
-        rspeak(actions[verb].message);
+        speak(actions[verb].message);
         return GO_CLEAROBJ;
     }
     if (game.prop[RUG] != RUG_HOVER) {
@@ -866,7 +866,7 @@ static int light(token_t verb, token_t obj)
         return GO_CLEAROBJ;
     } else {
         if (obj != LAMP) {
-            rspeak(actions[verb].message);
+            speak(actions[verb].message);
             return GO_CLEAROBJ;
         }
         if (game.limit < 0) {
@@ -984,7 +984,7 @@ static int lock(token_t verb, token_t obj)
         rspeak(CANNOT_UNLOCK);
         break;
     default:
-        rspeak(actions[verb].message);
+        speak(actions[verb].message);
     }
 
     return GO_CLEAROBJ;
@@ -1000,7 +1000,7 @@ static int pour(token_t verb, token_t obj)
     if (obj == NO_OBJECT)
         return GO_UNKNOWN;
     if (!TOTING(obj)) {
-        rspeak(actions[verb].message);
+        speak(actions[verb].message);
         return GO_CLEAROBJ;
     }
 
@@ -1064,7 +1064,7 @@ static int read(struct command_t command)
         game.clshnt = yes(arbitrary_messages[CLUE_QUERY], arbitrary_messages[WAYOUT_CLUE], arbitrary_messages[OK_MAN]);
     } else if (objects[command.obj].texts[0] == NULL ||
                game.prop[command.obj] < 0) {
-        rspeak(actions[command.verb].message);
+        speak(actions[command.verb].message);
     } else
         pspeak(command.obj, study, game.prop[command.obj], true);
     return GO_CLEAROBJ;
@@ -1104,7 +1104,7 @@ static int rub(token_t verb, token_t obj)
     } else if (obj != LAMP) {
         rspeak(PECULIAR_NOTHING);
     } else {
-        rspeak(actions[verb].message);
+        speak(actions[verb].message);
     }
     return GO_CLEAROBJ;
 }
@@ -1150,7 +1150,7 @@ static int throw (struct command_t *command)
  *  troll.  Treasures special for troll. */
 {
     if (!TOTING(command->obj)) {
-        rspeak(actions[command->verb].message);
+        speak(actions[command->verb].message);
         return GO_CLEAROBJ;
     }
     if (objects[command->obj].is_treasure && AT(TROLL)) {
@@ -1209,7 +1209,7 @@ static int wake(token_t verb, token_t obj)
 {
     if (obj != DWARF ||
         !game.closed) {
-        rspeak(actions[verb].message);
+        speak(actions[verb].message);
         return GO_CLEAROBJ;
     } else {
         rspeak(PROD_DWARF);
@@ -1225,9 +1225,9 @@ static int wave(token_t verb, token_t obj)
         (!HERE(BIRD) &&
          (game.closng ||
           !AT(FISSURE)))) {
-        rspeak(((!TOTING(obj)) && (obj != ROD ||
+        speak(((!TOTING(obj)) && (obj != ROD ||
                                    !TOTING(ROD2))) ?
-               ARENT_CARRYING :
+               arbitrary_messages[ARENT_CARRYING] :
                actions[verb].message);
         return GO_CLEAROBJ;
     }
@@ -1356,7 +1356,7 @@ int action(struct command_t *command)
             case  TAME:
                 return GO_UNKNOWN;
             case GO: {
-                rspeak(actions[command->verb].message);
+                speak(actions[command->verb].message);
                 return GO_CLEAROBJ;
             }
             case ATTACK:
@@ -1441,11 +1441,11 @@ int action(struct command_t *command)
         case WAVE:
             return wave(command->verb, command->obj);
         case TAME: {
-            rspeak(actions[command->verb].message);
+            speak(actions[command->verb].message);
             return GO_CLEAROBJ;
         }
         case GO: {
-            rspeak(actions[command->verb].message);
+            speak(actions[command->verb].message);
             return GO_CLEAROBJ;
         }
         case ATTACK:
@@ -1461,7 +1461,7 @@ int action(struct command_t *command)
         case THROW:
             return throw (command);
         case QUIT: {
-            rspeak(actions[command->verb].message);
+            speak(actions[command->verb].message);
             return GO_CLEAROBJ;
         }
         case FIND:
@@ -1476,7 +1476,7 @@ int action(struct command_t *command)
             blast();
             return GO_CLEAROBJ;
         case SCORE: {
-            rspeak(actions[command->verb].message);
+            speak(actions[command->verb].message);
             return GO_CLEAROBJ;
         }
 	case FEE:
@@ -1484,11 +1484,11 @@ int action(struct command_t *command)
 	case FOE:
 	case FOO:
         case FUM: {
-            rspeak(actions[command->verb].message);
+            speak(actions[command->verb].message);
             return GO_CLEAROBJ;
         }
         case BRIEF: {
-            rspeak(actions[command->verb].message);
+            speak(actions[command->verb].message);
             return GO_CLEAROBJ;
         }
         case READ:
@@ -1498,17 +1498,17 @@ int action(struct command_t *command)
         case WAKE:
             return wake(command->verb, command->obj);
         case SAVE: {
-            rspeak(actions[command->verb].message);
+            speak(actions[command->verb].message);
             return GO_CLEAROBJ;
         }
         case RESUME: {
-            rspeak(actions[command->verb].message);
+            speak(actions[command->verb].message);
             return GO_CLEAROBJ;
         }
         case FLY:
             return fly(command->verb, command->obj);
         case LISTEN: {
-            rspeak(actions[command->verb].message);
+            speak(actions[command->verb].message);
             return GO_CLEAROBJ;
         }
         case PART:

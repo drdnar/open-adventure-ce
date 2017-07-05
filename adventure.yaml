@@ -270,133 +270,6 @@ motions: !!omap
 - FORWARD6:
     words: ['main', 'offic']
 
-actions: !!omap
-- ACT_0:
-    message: !!null
-    words: !!null
-- CARRY:
-    message: ALREADY_CARRYING
-    words: ['g', 'carry', 'take', 'keep', 'catch',
-            'steal', 'captu', 'get', 'tote', 'snarf']
-    oldstyle: false
-- DROP:
-    message: ARENT_CARRYING
-    words: ['drop', 'relea', 'free', 'disca', 'dump']
-- SAY:
-    message: NO_MESSAGE
-    words: ['say', 'chant', 'sing', 'utter', 'mumbl']
-- UNLOCK:
-    message: NOT_LOCKABLE
-    words: ['unloc', 'open']
-- NOTHING:
-    message: NO_MESSAGE
-    words: ['z', 'nothi']
-    oldstyle: false
-- LOCK:
-    message: NOT_LOCKABLE
-    words: ['lock', 'close']
-- LIGHT:
-    message: DONT_UNDERSTAND
-    words: ['light', 'on']
-- EXTINGUISH:
-    message: DONT_UNDERSTAND
-    words: ['extin', 'off']
-- WAVE:
-    message: NOTHING_HAPPENS
-    words: ['wave', 'shake', 'swing']
-- TAME:
-    message: AM_GAME
-    words: ['calm', 'placa', 'tame']
-- GO:
-    message: WHERE_QUERY
-    words: ['walk', 'run', 'trave', 'go', 'proce',
-            'conti', 'explo', 'follo', 'turn']
-- ATTACK:
-    message: RIDICULOUS_ATTEMPT
-    words: ['attac', 'kill', 'fight', 'hit', 'strik', 'slay']
-- POUR:
-    message: ARENT_CARRYING
-    words: ['pour']
-- EAT:
-    message: RIDICULOUS_ATTEMPT
-    words: ['eat', 'devou']
-- DRINK:
-    message: STREAM_WATER
-    words: ['drink']
-- RUB:
-    message: RUB_NOGO
-    words: ['rub']
-- THROW:
-    message: ARENT_CARRYING
-    words: ['throw', 'toss']
-- QUIT:
-    message: HUH_MAN
-    words: ['quit']
-- FIND:
-    message: NEARBY
-    words: ['find', 'where']
-- INVENTORY:
-    message: NEARBY
-    words: ['i', 'inven']
-    oldstyle: false
-- FEED:
-    message: NO_EDIBLES
-    words: ['feed']
-- FILL:
-    message: CANT_FILL
-    words: ['fill']
-- BLAST:
-    message: REQUIRES_DYNAMITE
-    words: ['blast', 'deton', 'ignit', 'blowu']
-- SCORE:
-    message: HUH_MAN
-    words: ['score']
-- FEE:
-    message: NOT_KNOWHOW
-    words: ['fee']
-- FIE:
-    message: NOT_KNOWHOW
-    words: ['fie']
-- FOE:
-    message: NOT_KNOWHOW
-    words: ['foe']
-- FOO:
-    message: NOT_KNOWHOW
-    words: ['foo']
-- FUM:
-    message: NOT_KNOWHOW
-    words: ['fum']
-- BRIEF:
-    message: ON_WHAT
-    words: ['brief']
-- READ:
-    message: DONT_UNDERSTAND
-    words: ['read', 'perus']
-- BREAK:
-    message: BEYOND_POWER
-    words: ['break', 'shatt', 'smash']
-- WAKE:
-    message: RIDICULOUS_ATTEMPT
-    words: ['wake', 'distu']
-- SAVE:
-    message: HUH_MAN
-    words: ['suspe', 'pause', 'save']
-- RESUME:
-    message: HUH_MAN
-    words: ['resum', 'resta']
-- FLY:
-    message: AM_GAME
-    words: ['fly']
-- LISTEN:
-    message: DONT_UNDERSTAND
-    words: ['liste']
-- PART:
-    message: NOTHING_HAPPENS
-    words: ['z''zzz']
-- ACT_35:
-    message: HUH_MAN
-    words: !!null
-
 hints:
   - hint: &grate
       name: CAVE
@@ -2798,7 +2671,7 @@ arbitrary_messages:  !!omap
     I don't know in from out here.  Use compass points or name something
     in the general direction you want to go.
 - CANT_APPLY: 'I don''t know how to apply that word here.'
-- AM_GAME: 'I''m game.  Would you care to explain how?'
+- AM_GAME: &am_game 'I''m game.  Would you care to explain how?'
 - NO_MORE_DETAIL: |-
       Sorry, but I am not allowed to give more detail.  I will repeat the
       long description of your location.
@@ -2806,27 +2679,27 @@ arbitrary_messages:  !!omap
 - W_IS_WEST: 'If you prefer, simply type w rather than west.'
 - REALLY_QUIT: 'Do you really want to quit now?'
 - PIT_FALL: 'You fell into a pit and broke every bone in your body!'
-- ALREADY_CARRYING: 'You are already carrying it!'
+- ALREADY_CARRYING: &already_carrying 'You are already carrying it!'
 - YOU_JOKING: 'You can''t be serious!'
 - BIRD_EVADES: |-
     The bird seemed unafraid at first, but as you approach it becomes
     disturbed and you cannot catch it.
 - CANNOT_CARRY: 'You can catch the bird, but you cannot carry it.'
 - NOTHING_LOCKED: 'There is nothing here with a lock!'
-- ARENT_CARRYING: 'You aren''t carrying it!'
+- ARENT_CARRYING: &arent_carrying 'You aren''t carrying it!'
 - BIRD_ATTACKS: |-
     The little bird attacks the green snake, and in an astounding flurry
     drives the snake away.
 - NO_KEYS: 'You have no keys!'
 - NO_LOCK: 'It has no lock.'
-- NOT_LOCKABLE: 'I don''t know how to lock or unlock such a thing.'
+- NOT_LOCKABLE: &not_lockable 'I don''t know how to lock or unlock such a thing.'
 - ALREADY_LOCKED: 'It was already locked.'
 - ALREADY_UNLOCKED: 'It was already unlocked.'
 - BEAR_BLOCKS: |-
     There is no way to get past the bear to unlock the chain, which is
     probably just as well.
-- NOTHING_HAPPENS: 'Nothing happens.'
-- WHERE_QUERY: 'Where?'
+- NOTHING_HAPPENS: &nothing_happens 'Nothing happens.'
+- WHERE_QUERY: &where_query 'Where?'
 - NO_TARGET: 'There is nothing here to attack.'
 - BIRD_DEAD: 'The little bird is now dead.  Its body disappears.'
 - SNAKE_WARNING: 'Attacking the snake both doesn''t work and is very dangerous.'
@@ -2844,22 +2717,16 @@ arbitrary_messages:  !!omap
       I don't know where the cave is, but hereabouts no stream can run on
       the surface for long.  I would try the stream.
 - NEED_DETAIL: 'I need more detailed instructions to do that.'
-- NEARBY: |-
+- NEARBY: &nearby |-
       I can only tell you what you see as you move about and manipulate
       things.  I cannot tell you where remote things are.
 - OGRE_SNARL: 'The ogre snarls and shoves you back.'
-- HUH_MAN: 'Huh?'
+- HUH_MAN: &huh_man 'Huh?'
 - WELCOME_YOU: 'Welcome to Adventure!!  Would you like instructions?'
-- REQUIRES_DYNAMITE: 'Blasting requires dynamite.'
+- REQUIRES_DYNAMITE: &requires_dynamite 'Blasting requires dynamite.'
 - FEET_WET: 'Your feet are now wet.'
 - LOST_APPETITE: 'I think I just lost my appetite.'
 - THANKS_DELICIOUS: 'Thank you, it was delicious!'
-- STREAM_WATER: |-
-    You have taken a drink from the stream.  The water tastes strongly of
-    minerals, but is not unpleasant.  It is extremely cold.
-- RUB_NOGO: |-
-    Rubbing the electric lamp is not particularly rewarding.  Anyway,
-    nothing exciting happens.
 - PECULIAR_NOTHING: 'Peculiar.  Nothing unexpected happens.'
 - GROUND_WET: 'Your bottle is empty and the ground is wet.'
 - CANT_POUR: 'You can''t pour that.'
@@ -2882,8 +2749,7 @@ arbitrary_messages:  !!omap
 - NO_CONTAINER: 'You have nothing in which to carry it.'
 - BOTTLE_FULL: 'Your bottle is already full.'
 - NO_LIQUID: 'There is nothing here with which to fill the bottle.'
-- CANT_FILL: 'You can''t fill that.'
-- RIDICULOUS_ATTEMPT: 'Don''t be ridiculous!'
+- RIDICULOUS_ATTEMPT: &ridiculous_attempt 'Don''t be ridiculous!'
 - RUSTY_DOOR: 'The door is extremely rusty and refuses to open.'
 - SHAKING_LEAVES: 'The plant indignantly shakes the oil off its leaves and asks, "Water?"'
 - DEEP_ROOTS: 'The plant has exceptionally deep roots and cannot be pulled free.'
@@ -2949,7 +2815,7 @@ arbitrary_messages:  !!omap
 - WITHOUT_SUSPENDS: 'Now let''s see you do it without suspending in mid-Adventure.'
 - FILL_INVALID: 'There is nothing here with which to fill it.'
 - SHATTER_VASE: 'The sudden change in temperature has delicately shattered the vase.'
-- BEYOND_POWER: 'It is beyond your power to do that.'
+- BEYOND_POWER: &beyond_power 'It is beyond your power to do that.'
 - NOT_KNOWHOW: &not_knowhow 'I don''t know how.'
 - TOO_FAR: 'It is too far up for you to reach.'
 - DWARF_SMOKE: |-
@@ -2963,7 +2829,6 @@ arbitrary_messages:  !!omap
 - BIRD_BURNT: |-
     The little bird attacks the green dragon, and in an astounding flurry
     gets burnt to a cinder.  The ashes blow away.
-- ON_WHAT: 'On what?'
 - BRIEF_CONFIRM: |-
     Okay, from now on I'll only describe a place in full the first time
     you come to it.  To get the full description, say "look".
@@ -2984,7 +2849,6 @@ arbitrary_messages:  !!omap
 - CHAIN_UNLOCKED: 'The chain is now unlocked.'
 - CHAIN_LOCKED: 'The chain is now locked.'
 - NO_LOCKSITE: 'There is nothing here to which the chain can be locked.'
-- NO_EDIBLES: 'There is nothing here to eat.'
 - WANT_HINT: 'Do you want the hint?'
 - TROLL_VICES: 'Gluttony is not one of the troll''s vices.  Avarice, however, is.'
 - LAMP_DIM: |-
@@ -3015,7 +2879,7 @@ arbitrary_messages:  !!omap
 - WAYOUT_CLUE: |-
     It says, "There is a way out of this place.  Do you need any more
     information to escape?  Sorry, but this initial hint is all you get."
-- DONT_UNDERSTAND: 'I''m afraid I don''t understand.'
+- DONT_UNDERSTAND: &dont_understand 'I''m afraid I don''t understand.'
 - HAND_PASSTHROUGH: 'Your hand passes through it as though it weren''t there.'
 - BREAK_MIRROR: |-
     You strike the mirror a resounding blow, whereupon it shatters into a
@@ -3876,6 +3740,137 @@ obituaries:
         Now you''ve really done it!  I'm out of orange smoke!  You don''t expect
         me to do a decent reincarnation without any orange smoke, do you?
     yes_response: 'Okay, if you''re so smart, do it yourself!  I''m leaving!'
+
+actions: !!omap
+- ACT_0:
+    message: !!null
+    words: !!null
+- CARRY:
+    message: *already_carrying
+    words: ['g', 'carry', 'take', 'keep', 'catch',
+            'steal', 'captu', 'get', 'tote', 'snarf']
+    oldstyle: false
+- DROP:
+    message: *arent_carrying
+    words: ['drop', 'relea', 'free', 'disca', 'dump']
+- SAY:
+    message: NO_MESSAGE
+    words: ['say', 'chant', 'sing', 'utter', 'mumbl']
+- UNLOCK:
+    message: *not_lockable
+    words: ['unloc', 'open']
+- NOTHING:
+    message: NO_MESSAGE
+    words: ['z', 'nothi']
+    oldstyle: false
+- LOCK:
+    message: *not_lockable
+    words: ['lock', 'close']
+- LIGHT:
+    message: *dont_understand
+    words: ['light', 'on']
+- EXTINGUISH:
+    message: *dont_understand
+    words: ['extin', 'off']
+- WAVE:
+    message: *nothing_happens
+    words: ['wave', 'shake', 'swing']
+- TAME:
+    message: *am_game
+    words: ['calm', 'placa', 'tame']
+- GO:
+    message: *where_query
+    words: ['walk', 'run', 'trave', 'go', 'proce',
+            'conti', 'explo', 'follo', 'turn']
+- ATTACK:
+    message: *ridiculous_attempt
+    words: ['attac', 'kill', 'fight', 'hit', 'strik', 'slay']
+- POUR:
+    message: *arent_carrying
+    words: ['pour']
+- EAT:
+    message: *ridiculous_attempt
+    words: ['eat', 'devou']
+- DRINK:
+    message: |-
+      You have taken a drink from the stream.  The water tastes strongly of
+      minerals, but is not unpleasant.  It is extremely cold.
+    words: ['drink']
+- RUB:
+    message: |-
+      Rubbing the electric lamp is not particularly rewarding.  Anyway,
+      nothing exciting happens.
+    words: ['rub']
+- THROW:
+    message: *arent_carrying
+    words: ['throw', 'toss']
+- QUIT:
+    message: *huh_man
+    words: ['quit']
+- FIND:
+    message: *nearby
+    words: ['find', 'where']
+- INVENTORY:
+    message: *nearby
+    words: ['i', 'inven']
+    oldstyle: false
+- FEED:
+    message: 'There is nothing here to eat.'
+    words: ['feed']
+- FILL:
+    message: 'You can''t fill that.'
+    words: ['fill']
+- BLAST:
+    message: *requires_dynamite
+    words: ['blast', 'deton', 'ignit', 'blowu']
+- SCORE:
+    message: *huh_man
+    words: ['score']
+- FEE:
+    message: *not_knowhow
+    words: ['fee']
+- FIE:
+    message: *not_knowhow
+    words: ['fie']
+- FOE:
+    message: *not_knowhow
+    words: ['foe']
+- FOO:
+    message: *not_knowhow
+    words: ['foo']
+- FUM:
+    message: *not_knowhow
+    words: ['fum']
+- BRIEF:
+    message: 'On what?'
+    words: ['brief']
+- READ:
+    message: *dont_understand
+    words: ['read', 'perus']
+- BREAK:
+    message: *beyond_power
+    words: ['break', 'shatt', 'smash']
+- WAKE:
+    message: *ridiculous_attempt
+    words: ['wake', 'distu']
+- SAVE:
+    message: *huh_man
+    words: ['suspe', 'pause', 'save']
+- RESUME:
+    message: *huh_man
+    words: ['resum', 'resta']
+- FLY:
+    message: *am_game
+    words: ['fly']
+- LISTEN:
+    message: *dont_understand
+    words: ['liste']
+- PART:
+    message: *nothing_happens
+    words: ['z''zzz']
+- ACT_35:
+    message: *huh_man
+    words: !!null
 
 specials: !!omap
 - SPC_0:

@@ -141,7 +141,7 @@ typedef struct {{
 
 typedef struct {{
   const string_group_t words;
-  const long message;
+  const char* message;
 }} action_t;
 
 typedef struct {{
@@ -763,7 +763,7 @@ if __name__ == "__main__":
         get_hints(db["hints"], db["arbitrary_messages"]),
         get_condbits(db["locations"]),
         get_motions(db["motions"]),
-        get_actions(db["actions"]),
+        get_specials(db["actions"]),
         get_specials(db["specials"]),
         bigdump(tkey),
         get_travel(travel), 
