@@ -2957,6 +2957,7 @@ arbitrary_messages:  !!omap
       black smoke.
 - SHELL_IMPERVIOUS: 'The shell is very strong and is impervious to attack.'
 - START_OVER: 'What''s the matter, can''t you read?  Now you''d best start over.'
+- WELL_POINTLESS: 'Well, that was remarkably pointless.'
 - DRAGON_SCALES: 'The axe bounces harmlessly off the dragon''s thick scales.'
 - NASTY_DRAGON: 'The dragon looks rather nasty.  You''d best not try to get by.'
 - BIRD_BURNT: |-

@@ -49,7 +49,8 @@ Bug fixes:
 
 * Behavior when saying the giant's magic words outside his room wasn't
   quite correct - the game responded as though the player were in
-  the room.
+  the room ("...can't you read?"). The new message is "Well, that was
+  remarkably pointless."
  
 * Attempting to extinguish an unlit urn caused it to lose its oil.
 

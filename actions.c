@@ -217,9 +217,11 @@ static int bigwords(long id)
   else
     {
       if (game.loc == LOC_GIANTROOM) {
-	rspeak( START_OVER);
+	rspeak(START_OVER);
       } else {
-	rspeak(NOTHING_HAPPENS);
+	  /* This is new begavior in Open Adventure - sounds better when
+	   * player isn't in the Giant Room. */
+	rspeak(WELL_POINTLESS);
       }
       game.foobar = WORD_EMPTY;
       return GO_CLEAROBJ;
