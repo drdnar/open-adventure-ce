@@ -516,19 +516,19 @@ long get_vocab_id(const char* word)
     /* FIXME: Magic numbers related to vocabulary */
     ref_num = get_motion_vocab_id(word);
     if (ref_num != WORD_NOT_FOUND)
-        return (ref_num + 0); // FIXME: replace with a proper hash
+        return MOTION_WORD(ref_num);
 
     ref_num = get_object_vocab_id(word);
     if (ref_num != WORD_NOT_FOUND)
-        return (ref_num + 1000); // FIXME: replace with a proper hash
+        return OBJECT_WORD(ref_num);
 
     ref_num = get_action_vocab_id(word);
     if (ref_num != WORD_NOT_FOUND)
-        return (ref_num + 2000); // FIXME: replace with a proper hash
+        return ACTION_WORD(ref_num);
 
     ref_num = get_special_vocab_id(word);
     if (ref_num != WORD_NOT_FOUND)
-        return (ref_num + 3000); // FIXME: replace with a proper hash
+        return SPECIAL_WORD(ref_num);
 
     // Check for the reservoir magic word.
     if (strcasecmp(word, game.zzword) == 0)
