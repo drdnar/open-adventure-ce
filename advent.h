@@ -30,6 +30,10 @@
 #define STATE_FOUND	0	  // After discovered, before messed with
 #define STATE_IN_CAVITY	1	  // State value common to all gemstones
 
+/* Special fixed object-state values - integers > 0 are location */
+#define IS_FIXED -1
+#define IS_FREE 0
+
 /* Map a state property value to a negative range, where the object cannot be
  * picked up but the value can be recovered later.  Avoid colliding with -1,
  * which has its own meaning. */

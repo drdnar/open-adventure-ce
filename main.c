@@ -294,7 +294,7 @@ static bool spotted_by_pirate(int i)
                 continue;
             if (!(treasure == PYRAMID && (game.loc == objects[PYRAMID].plac ||
                                           game.loc == objects[EMERALD].plac))) {
-                if (AT(treasure) && game.fixed[treasure] == 0)
+                if (AT(treasure) && game.fixed[treasure] == IS_FREE)
                     carry(treasure, game.loc);
                 if (TOTING(treasure))
                     drop(treasure, game.chloc);
@@ -676,8 +676,8 @@ static void playermove( int motion)
                      * entries going through passage, which can never be used
                      * for actual motion, but can be spotted by "go back". */
                     game.newloc = (game.loc == LOC_PLOVER)
-			? LOC_ALCOVE
-			: LOC_PLOVER;
+                                  ? LOC_ALCOVE
+                                  : LOC_PLOVER;
                     if (game.holdng > 1 ||
                         (game.holdng == 1 && !TOTING(EMERALD))) {
                         game.newloc = game.loc;
@@ -730,7 +730,7 @@ static void playermove( int motion)
                         game.prop[CHASM] = BRIDGE_WRECKED;
                         game.prop[TROLL] = TROLL_GONE;
                         drop(BEAR, game.newloc);
-                        game.fixed[BEAR] = -1;
+                        game.fixed[BEAR] = IS_FIXED;
                         game.prop[BEAR] = BEAR_DEAD;
                         game.oldlc2 = game.newloc;
                         croak();
@@ -798,9 +798,9 @@ static bool closecheck(void)
         if (game.prop[BEAR] != BEAR_DEAD)
             DESTROY(BEAR);
         game.prop[CHAIN] = CHAIN_HEAP;
-        game.fixed[CHAIN] = CHAIN_HEAP;
-        game.prop[AXE] = 0;
-        game.fixed[AXE] = 0;
+        game.fixed[CHAIN] = IS_FREE;
+        game.prop[AXE] = AXE_HERE;
+        game.fixed[AXE] = IS_FREE;
         rspeak(CAVE_CLOSING);
         game.clock1 = -1;
         game.closng = true;
@@ -939,9 +939,9 @@ static void listobjects(void)
             }
             int kk = game.prop[obj];
             if (obj == STEPS)
-		kk = (game.loc == game.fixed[STEPS])
-		    ? STEPS_UP
-		    : STEPS_DOWN;
+                kk = (game.loc == game.fixed[STEPS])
+                     ? STEPS_UP
+                     : STEPS_DOWN;
             pspeak(obj, look, kk, true);
         }
     }
@@ -1007,7 +1007,7 @@ static bool do_command()
         speak(msg);
         if (FORCED(game.loc)) {
             playermove(HERE);
-	    return true;
+            return true;
         }
         if (game.loc == LOC_Y2 && PCT(25) && !game.closng)
             rspeak(SAYS_PLUGH);
@@ -1059,8 +1059,8 @@ L2600:
 
         tokenize(inputbuf, &command);
 
-	char word1[TOKLEN+1];
-        char word2[TOKLEN+1];
+        char word1[TOKLEN + 1];
+        char word2[TOKLEN + 1];
         packed_to_token(command.wd1, word1);
         packed_to_token(command.wd2, word2);
         command.id1 = get_vocab_id(word1);
@@ -1095,7 +1095,7 @@ L2607:
             lampcheck();
 
         if (command.id1 == ENTER && (command.id2 == STREAM ||
-                            command.id2 == PROMOTE_WORD(WATER))) {
+                                     command.id2 == PROMOTE_WORD(WATER))) {
             if (LIQLOC(game.loc) == WATER) {
                 rspeak(FEET_WET);
             } else {
@@ -1106,8 +1106,8 @@ L2607:
         if (command.id1 == ENTER && command.id2 != WORD_NOT_FOUND && command.id2 != WORD_EMPTY) {
             /* command.wd1 = command.wd2; */
             /* wordclear(&command.wd2); */
-	  command.id1 = command.id2;
-	  command.id2 = WORD_EMPTY;
+            command.id1 = command.id2;
+            command.id2 = WORD_EMPTY;
         } else {
             /* FIXME: Magic numbers related to vocabulary */
             if (!((command.id1 != PROMOTE_WORD(WATER) && command.id1 != PROMOTE_WORD(OIL)) ||
@@ -1143,7 +1143,7 @@ Lookup:
         switch (defn / 1000) {
         case 0:
             playermove(kmod);
-	    return true;
+            return true;
         case 1:
             command.part = unknown;
             command.obj = kmod;
@@ -1179,14 +1179,14 @@ Laction:
         case GO_WORD2:
             /* Get second word for analysis. */
             command.wd1 = command.wd2;
-	    strcpy(command.raw1, command.raw2);
+            strcpy(command.raw1, command.raw2);
             wordclear(&command.wd2);
-	    command.raw2[0] = '\0';
+            command.raw2[0] = '\0';
             goto L2620;
         case GO_UNKNOWN:
             /*  Random intransitive verbs come here.  Clear obj just in case
              *  (see attack()). */
-	    command.raw1[0] = toupper(command.raw1[0]);
+            command.raw1[0] = toupper(command.raw1[0]);
             sspeak(DO_WHAT, command.raw1);
             command.obj = 0;
             goto L2600;

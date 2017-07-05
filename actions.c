@@ -261,7 +261,7 @@ static int vbreak(token_t verb, token_t obj)
         if (TOTING(VASE))
             drop(VASE, game.loc);
         state_change(VASE, VASE_BROKEN);
-        game.fixed[VASE] = -1;
+        game.fixed[VASE] = IS_FIXED;
         return GO_CLEAROBJ;
     }
     rspeak(actions[verb].message);
@@ -302,8 +302,8 @@ static int vcarry(token_t verb, token_t obj)
         return GO_CLEAROBJ;
     }
 
-    if (game.fixed[obj] != 0) {
-        if (obj == PLANT && game.prop[PLANT] <= 0) {
+    if (game.fixed[obj] != IS_FREE) {
+        if (obj == PLANT && game.prop[PLANT] <= 0) { // FIXME: magical state assertion
             rspeak(DEEP_ROOTS);
             return GO_CLEAROBJ;
         }
@@ -381,7 +381,7 @@ static int vcarry(token_t verb, token_t obj)
     if ((obj == BIRD ||
          obj == CAGE) &&
         (game.prop[BIRD] == BIRD_CAGED || STASHED(BIRD) == BIRD_CAGED))
-	/* expression maps BIRD to CAGE and CAGE to BIRD */
+        /* expression maps BIRD to CAGE and CAGE to BIRD */
         carry(BIRD + CAGE - obj, game.loc);
     carry(obj, game.loc);
     if (obj == BOTTLE && LIQUID() != NO_OBJECT)
@@ -407,16 +407,16 @@ static int chain(token_t verb)
             return GO_CLEAROBJ;
         }
         game.prop[CHAIN] = CHAIN_HEAP;
-        game.fixed[CHAIN] = CHAIN_HEAP;
+        game.fixed[CHAIN] = IS_FREE;
         if (game.prop[BEAR] != BEAR_DEAD)
             game.prop[BEAR] = CONTENTED_BEAR;
 
         switch (game.prop[BEAR]) {
         case BEAR_DEAD:
-            game.fixed[BEAR] = -1;
+            game.fixed[BEAR] = IS_FIXED;
             break;
         default:
-            game.fixed[BEAR] = 0;
+            game.fixed[BEAR] = IS_FREE;
         }
         rspeak(CHAIN_UNLOCKED);
         return GO_CLEAROBJ;
@@ -435,7 +435,7 @@ static int chain(token_t verb)
 
     if (TOTING(CHAIN))
         drop(CHAIN, game.loc);
-    game.fixed[CHAIN] = -1;
+    game.fixed[CHAIN] = IS_FIXED;
 
     rspeak(CHAIN_LOCKED);
     return GO_CLEAROBJ;
@@ -506,7 +506,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
 			 ? VASE_WHOLE
 			 : VASE_DROPPED);
             if (game.prop[VASE] != VASE_WHOLE)
-                game.fixed[VASE] = -1;
+                game.fixed[VASE] = IS_FIXED;
         }
     }
     int k = LIQUID();
@@ -660,7 +660,7 @@ static int feed(token_t verb, token_t obj)
         if (HERE(FOOD)) {
             DESTROY(FOOD);
             game.prop[BEAR] = SITTING_BEAR;
-            game.fixed[AXE] = 0;
+            game.fixed[AXE] = IS_FREE;
             game.prop[AXE] = AXE_HERE;
             spk = BEAR_TAMED;
         }
@@ -689,7 +689,7 @@ int fill(token_t verb, token_t obj)
         }
         rspeak(SHATTER_VASE);
         game.prop[VASE] = VASE_BROKEN;
-        game.fixed[VASE] = -1;
+        game.fixed[VASE] = IS_FIXED;
         return (discard(verb, VASE, true));
     }
 
@@ -1168,7 +1168,7 @@ static int throw (struct command_t *command)
             else if (HERE(BEAR) && game.prop[BEAR] == UNTAMED_BEAR) {
                 /* This'll teach him to throw the axe at the bear! */
                 drop(AXE, game.loc);
-                game.fixed[AXE] = -1;
+                game.fixed[AXE] = IS_FIXED;
                 juggle(BEAR);
                 state_change(AXE, AXE_LOST);
                 return GO_CLEAROBJ;
