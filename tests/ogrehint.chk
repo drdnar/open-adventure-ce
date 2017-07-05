@@ -691,8 +691,35 @@ Do you want the hint?
 There is nothing the presence of which will prevent you from defeating
 him; thus it can't hurt to fetch everything you possibly can.
 
+> w
 
-You scored 101 out of a possible 430, using 103 turns.
+You are in a long, rough-hewn, north/south corridor.
+
+> drop food
+
+OK
+
+> back
+
+You are in a large chamber with passages to the west and north.
+
+There is a little axe here.
+
+A formidable ogre bars the northern exit.
+
+> feed ogre
+
+There is nothing here to eat.
+
+> inven
+
+You are currently holding the following:
+Brass lantern
+Leporine appendage
+Platinum pyramid
+
+
+You scored 101 out of a possible 430, using 108 turns.
 
 Your score qualifies you as a novice class adventurer.
 

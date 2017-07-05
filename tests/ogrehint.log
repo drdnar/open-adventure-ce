@@ -108,3 +108,8 @@ throw axe
 feed ogre
 y
 y
+w
+drop food
+back
+feed ogre
+inven
