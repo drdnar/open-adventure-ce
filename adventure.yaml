@@ -3738,15 +3738,14 @@ objects: !!omap
     inventory: 'Ming vase'
     locations: LOC_ORIENTAL
     treasure: true
-    states: [VASE_WHOLE, VASE_RESTING, VASE_BROKEN, VASE_DROPS]
+    states: [VASE_WHOLE, VASE_DROPPED, VASE_BROKEN]
     descriptions:
     - 'There is a delicate, precious, ming vase here!'
-    - 'The vase is now resting, delicately, on a velvet pillow.'
     - 'The floor is littered with worthless shards of pottery.'
-    - 'The ming vase drops with a delicate crash.'
+    - 'The floor is littered with worthless shards of pottery.'
     changes:
-    - ''
-    - ''
+    - 'The vase is now resting, delicately, on a velvet pillow.'
+    - 'The ming vase drops with a delicate crash.'
     - 'You have taken the vase and hurled it delicately to the ground.'
 - EMERALD:
     words: ['emera']

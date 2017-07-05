@@ -502,10 +502,9 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
                    game.loc == objects[PILLOW].plac) {
             rspeak(OK_MAN);
         } else {
-            game.prop[VASE] = VASE_BROKEN;
-            if (AT(PILLOW))
-                game.prop[VASE] = VASE_WHOLE;
-            pspeak(VASE, look, game.prop[VASE] + 1, true);
+	    state_change(VASE, AT(PILLOW)
+			 ? VASE_WHOLE
+			 : VASE_DROPPED);
             if (game.prop[VASE] != VASE_WHOLE)
                 game.fixed[VASE] = -1;
         }
