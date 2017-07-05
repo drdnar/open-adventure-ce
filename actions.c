@@ -649,7 +649,8 @@ static int feed(token_t verb, token_t obj)
         if (HERE(FOOD)) {
             game.dflag += 2;
             rspeak(REALLY_MAD);
-        }
+        } else
+            rspeak(actions[verb].message);
         break;
     case BEAR:
         if (game.prop[BEAR] == BEAR_DEAD) {
@@ -669,7 +670,8 @@ static int feed(token_t verb, token_t obj)
     case OGRE:
         if (HERE(FOOD))
             rspeak(OGRE_FULL);
-        else rspeak(actions[verb].message);
+        else
+            rspeak(actions[verb].message);
         break;
     default:
         rspeak(AM_GAME);
