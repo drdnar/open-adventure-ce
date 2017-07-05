@@ -116,6 +116,8 @@ enum phase_codes {
 
 typedef long token_t;  // word token - someday this will be char[TOKLEN+1]
 typedef long vocab_t;  // index into a vocabulary array */
+typedef long obj_t;    // index into the object array */
+typedef long loc_t;    // index into the locations array */
 
 struct game_t {
     unsigned long lcg_a, lcg_c, lcg_m, lcg_x;
@@ -167,11 +169,11 @@ struct game_t {
     long abbrev[NLOCATIONS + 1];
     long atloc[NLOCATIONS + 1];
     long dseen[NDWARVES + 1];    // true if dwarf has seen him
-    long dloc[NDWARVES + 1];     // location of dwarves, initially hard-wired in
-    long odloc[NDWARVES + 1];    // prior loc of each dwarf, initially garbage
-    long fixed[NOBJECTS + 1];
+    loc_t dloc[NDWARVES + 1];     // location of dwarves, initially hard-wired in
+    loc_t odloc[NDWARVES + 1];    // prior loc of each dwarf, initially garbage
+    loc_t fixed[NOBJECTS + 1];
     long link[NOBJECTS * 2 + 1];
-    long place[NOBJECTS + 1];
+    loc_t place[NOBJECTS + 1];
     long hinted[NHINTS];         // hintlc[i] is how long he's been at LOC with cond bit i
     long hintlc[NHINTS];         // hinted[i] is true iff hint i has been used.
     long prop[NOBJECTS + 1];
@@ -222,12 +224,12 @@ extern int get_object_vocab_id(const char*);
 extern int get_action_vocab_id(const char*);
 extern int get_special_vocab_id(const char*);
 extern long get_vocab_id(const char*);
-extern void juggle(long);
-extern void move(long, long);
-extern long put(long, long, long);
-extern void carry(long, long);
-extern void drop(long, long);
-extern long atdwrf(long);
+extern void juggle(obj_t);
+extern void move(obj_t, loc_t);
+extern long put(obj_t, long, long);
+extern void carry(obj_t, loc_t);
+extern void drop(obj_t, loc_t);
+extern long atdwrf(loc_t);
 extern long setbit(long);
 extern bool tstbit(long, int);
 extern void make_zzword(char*);
@@ -242,7 +244,7 @@ extern int resume(void);
 extern int restore(FILE *);
 extern long initialise(void);
 extern int action(struct command_t *command);
-extern void state_change(long obj, long state);
+extern void state_change(obj_t, long);
 
 
 void bug(enum bugtype, const char *) __attribute__((__noreturn__));

@@ -535,11 +535,11 @@ long get_vocab_id(const char* word)
     return (WORD_NOT_FOUND);
 }
 
-void juggle(long object)
+void juggle(obj_t object)
 /*  Juggle an object by picking it up and putting it down again, the purpose
  *  being to get the object to the front of the chain of things at its loc. */
 {
-    long i, j;
+    loc_t i, j;
 
     i = game.place[object];
     j = game.fixed[object];
@@ -547,7 +547,7 @@ void juggle(long object)
     move(object + NOBJECTS, j);
 }
 
-void move(long object, long where)
+void move(obj_t object, loc_t where)
 /*  Place any object anywhere by picking it up and dropping it.  May
  *  already be toting, in which case the carry is a no-op.  Mustn't
  *  pick up objects which are not at any loc, since carry wants to
@@ -564,15 +564,15 @@ void move(long object, long where)
     drop(object, where);
 }
 
-long put(long object, long where, long pval)
-/*  PUT is the same as MOVE, except it returns a value used to set up the
+long put(obj_t object, loc_t where, long pval)
+/*  put() is the same as move(), except it returns a value used to set up the
  *  negated game.prop values for the repository objects. */
 {
     move(object, where);
-    return (-1) - pval;;
+    return STASHED(pval);
 }
 
-void carry(long object, long where)
+void carry(obj_t object, loc_t where)
 /*  Start toting an object, removing it from the list of things at its former
  *  location.  Incr holdng unless it was already being toted.  If object>NOBJECTS
  *  (moving "fixed" second loc), don't change game.place or game.holdng. */
@@ -596,7 +596,7 @@ void carry(long object, long where)
     game.link[temp] = game.link[object];
 }
 
-void drop(long object, long where)
+void drop(obj_t object, loc_t where)
 /*  Place an object at a given loc, prefixing it onto the game.atloc list.  Decr
  *  game.holdng if the object was being toted. */
 {
@@ -613,7 +613,7 @@ void drop(long object, long where)
     game.atloc[where] = object;
 }
 
-long atdwrf(long where)
+long atdwrf(loc_t where)
 /*  Return the index of first dwarf at the given location, zero if no dwarf is
  *  there (or if dwarves not active yet), -1 if all dwarves are dead.  Ignore
  *  the pirate (6th dwarf). */
@@ -690,9 +690,11 @@ void bug(enum bugtype num, const char *error_string)
 
 /* end */
 
-void state_change(long obj, long state)
+void state_change(obj_t obj, long state)
 /* Object must have a change-message list for this to be useful; only some do */
 {
     game.prop[obj] = state;
     pspeak(obj, change, state, true);
 }
+
+/* end */
