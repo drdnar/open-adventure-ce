@@ -469,7 +469,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
                 rspeak(spk);
                 if (spk != RUG_WIGGLES) {
                     /* FIXME: Arithmetic on state numbers */
-                    int k = 2 - game.prop[RUG];
+                    int k = (game.prop[RUG] == RUG_HOVER) ? RUG_FLOOR : RUG_HOVER;
                     game.prop[RUG] = k;
                     if (k == RUG_HOVER)
                         k = objects[SAPPH].plac;
