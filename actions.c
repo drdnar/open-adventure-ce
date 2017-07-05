@@ -178,46 +178,51 @@ static int attack(struct command_t *command)
     return GO_CLEAROBJ;
 }
 
-static int bigwords(token_t foo)
+static int bigwords(long id)
 /*  FEE FIE FOE FOO (AND FUM).  Advance to next state if given in proper order.
  *  Look up foo in special section of vocab to determine which word we've got.
  *  Last word zips the eggs back to the giant room (unless already there). */
 {
-    char word[TOKLEN + 1];
-    packed_to_token(foo, word);
-    int k = (int) get_special_vocab_id(word);
-    if (game.foobar != 1 - k) {
-        if (game.foobar != 0 && game.loc == LOC_GIANTROOM) {
-            rspeak( START_OVER);
-        } else {
-            rspeak(NOTHING_HAPPENS);
-        }
-        return GO_CLEAROBJ;
-    } else {
-        game.foobar = k;
-        if (k != 4) {
-            rspeak(OK_MAN);
-            return GO_CLEAROBJ;
-        }
-        game.foobar = 0;
-        if (game.place[EGGS] == objects[EGGS].plac ||
-            (TOTING(EGGS) && game.loc == objects[EGGS].plac)) {
-            rspeak(NOTHING_HAPPENS);
-            return GO_CLEAROBJ;
-        } else {
-            /*  Bring back troll if we steal the eggs back from him before
-             *  crossing. */
-            if (game.place[EGGS] == LOC_NOWHERE && game.place[TROLL] == LOC_NOWHERE && game.prop[TROLL] == TROLL_UNPAID)
-                game.prop[TROLL] = TROLL_PAIDONCE;
-            k = EGGS_DONE;
-            if (HERE(EGGS))
-                k = EGGS_VANISHED;
-            if (game.loc == objects[EGGS].plac)
-                k = EGGS_HERE;
-            move(EGGS, objects[EGGS].plac);
-            pspeak(EGGS, look, k, true);
-            return GO_CLEAROBJ;
-        }
+  if ((game.foobar == WORD_EMPTY && id == ACTION_WORD(FEE)) ||
+      (game.foobar == ACTION_WORD(FEE) && id == ACTION_WORD(FIE)) ||
+      (game.foobar == ACTION_WORD(FIE) && id == ACTION_WORD(FOE)) ||
+      (game.foobar == ACTION_WORD(FOE) && id == ACTION_WORD(FOO)) ||
+      (game.foobar == ACTION_WORD(FOE) && id == ACTION_WORD(FUM)))
+    {
+      game.foobar = id;
+      if ((id != ACTION_WORD(FOO)) && (id != ACTION_WORD(FUM))) {
+	rspeak(OK_MAN);
+	return GO_CLEAROBJ;
+      }
+      game.foobar = WORD_EMPTY;
+      if (game.place[EGGS] == objects[EGGS].plac ||
+	  (TOTING(EGGS) && game.loc == objects[EGGS].plac)) {
+	rspeak(NOTHING_HAPPENS);
+	return GO_CLEAROBJ;
+      } else {
+	/*  Bring back troll if we steal the eggs back from him before
+	 *  crossing. */
+	if (game.place[EGGS] == LOC_NOWHERE && game.place[TROLL] == LOC_NOWHERE && game.prop[TROLL] == TROLL_UNPAID)
+	  game.prop[TROLL] = TROLL_PAIDONCE;
+	int k = EGGS_DONE;
+	if (HERE(EGGS))
+	  k = EGGS_VANISHED;
+	if (game.loc == objects[EGGS].plac)
+	  k = EGGS_HERE;
+	move(EGGS, objects[EGGS].plac);
+	pspeak(EGGS, look, k, true);
+	return GO_CLEAROBJ;
+      }
+    }
+  else
+    {
+      if (game.loc == LOC_GIANTROOM) {
+	rspeak( START_OVER);
+      } else {
+	rspeak(NOTHING_HAPPENS);
+      }
+      game.foobar = WORD_EMPTY;
+      return GO_CLEAROBJ;
     }
 }
 
@@ -1115,7 +1120,11 @@ static int say(struct command_t *command)
     if (wd == MOTION_WORD(XYZZY) ||
         wd == MOTION_WORD(PLUGH) ||
         wd == MOTION_WORD(PLOVER) ||
-        wd == ACTION_WORD(GIANTWORDS) ||
+        wd == ACTION_WORD(FEE) ||
+	wd == ACTION_WORD(FIE) ||
+	wd == ACTION_WORD(FOE) ||
+	wd == ACTION_WORD(FOO) ||
+	wd == ACTION_WORD(FUM) ||
         wd == ACTION_WORD(PART)) {
         /* FIXME: scribbles on the interpreter's command block */
         wordclear(&command->wd2);
@@ -1376,8 +1385,12 @@ int action(struct command_t *command)
             case SCORE:
                 score(scoregame);
                 return GO_CLEAROBJ;
-            case GIANTWORDS:
-                return bigwords(command->wd1);
+	    case FEE:
+	    case FIE:
+	    case FOE:
+	    case FOO:
+            case FUM:
+                return bigwords(command->id1);
             case BRIEF:
                 return brief();
             case READ:
@@ -1464,7 +1477,11 @@ int action(struct command_t *command)
             rspeak(actions[command->verb].message);
             return GO_CLEAROBJ;
         }
-        case GIANTWORDS: {
+	case FEE:
+	case FIE:
+	case FOE:
+	case FOO:
+        case FUM: {
             rspeak(actions[command->verb].message);
             return GO_CLEAROBJ;
         }

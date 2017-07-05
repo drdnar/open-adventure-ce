@@ -351,9 +351,21 @@ actions: !!omap
 - SCORE:
     message: HUH_MAN
     words: ['score']
-- GIANTWORDS:
+- FEE:
     message: NOT_KNOWHOW
-    words: ['fee', 'fie', 'foe', 'foo', 'fum']
+    words: ['fee']
+- FIE:
+    message: NOT_KNOWHOW
+    words: ['fie']
+- FOE:
+    message: NOT_KNOWHOW
+    words: ['foe']
+- FOO:
+    message: NOT_KNOWHOW
+    words: ['foo']
+- FUM:
+    message: NOT_KNOWHOW
+    words: ['fum']
 - BRIEF:
     message: ON_WHAT
     words: ['brief']

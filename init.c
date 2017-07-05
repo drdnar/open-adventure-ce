@@ -36,6 +36,7 @@ struct game_t game = {
     .newloc  = LOC_START,
     .loc     = LOC_START,
     .limit   = GAMELIMIT,
+    .foobar  = WORD_EMPTY,
 
     /* Initialize our LCG PRNG with parameters tested against
      * Knuth vol. 2. by the original authors */

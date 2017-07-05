@@ -1065,11 +1065,7 @@ L2600:
         command.id1 = get_vocab_id(word1);
         command.id2 = get_vocab_id(word2);
 
-        /*  Every input, check "game.foobar" flag.  If zero, nothing's
-         *  going on.  If pos, make neg.  If neg, he skipped a word,
-         *  so make it zero. */
 L2607:
-        game.foobar = (game.foobar > 0 ? -game.foobar : 0);
         ++game.turns;
 
         /* If a turn threshold has been met, apply penalties and tell
