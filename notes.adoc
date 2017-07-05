@@ -11,8 +11,9 @@ The principal maintainers of this code are Eric S. Raymond and Jason
 Ninneman.  Eric received Don Woods's encouragement to update and ship
 the game; Jason signed on early in the process to help. The assistance
 of Peje Nilsson in restructuring some particularly grotty gotos is
-gratefully acknowledged. Petr Voropaev contributed fuzz testing. Aaron
-Traas did a lot of painstaking work to improve test coverage.
+gratefully acknowledged. Petr Voropaev contributed fuzz testing and
+code cleanups. Aaron Traas did a lot of painstaking work to improve
+test coverage.
 
 == Nomenclature ==
 
@@ -52,10 +53,6 @@ Bug fixes:
  
 * Attempting to extinguish an unlit urn caused it to lose its oil.
 
-* Unrecognized words are no longer truncated to 5 characters and
-  uppercased when they are echoed. (This behavior is restored by the
-  oldstyle switch.)
-
 * "A crystal bridge now spans the fissure." (progressive present) was
   incorrect most places it appeared and has been replaced by "A crystal 
   bridge spans the fissure." (timeless present).
@@ -70,6 +67,10 @@ text adventure games; 'l' and 'x'; for 'look' (or 'examine'), 'z' to do nothing
 for a turn, 'i' for 'inventory', 'g' for 'get', and 'd' for 'drop'.  The 'd'
 alias collides with 'd' for 'down', but the others have been implemented.
 The "-o" (oldstyle) option disables them.
+
+Unrecognized words are no longer truncated to 5 characters and
+uppercased when they are echoed. The "-o" (oldstyle) option restores
+this behavior.
 
 A "seed" command has been added.  This is not intended for human use
 but as a way for game logs to set the PRNG (pseudorandom-number generator) so
