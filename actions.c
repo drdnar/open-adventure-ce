@@ -889,8 +889,7 @@ static int listen(void)
         long packed_zzword = token_to_packed(game.zzword);
         pspeak(i, hear, mi, true, packed_zzword);
         rspeak(NO_MESSAGE);
-        /* FIXME: Magic number, sensitive to bird state logic */
-        if (i == BIRD && game.prop[i] == 5)
+        if (i == BIRD && mi == BIRD_ENDSTATE)
             DESTROY(BIRD);
         return GO_CLEAROBJ;
     }

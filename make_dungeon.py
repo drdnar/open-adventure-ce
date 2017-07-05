@@ -192,6 +192,8 @@ extern const char *ignore;
 #define NTRAVEL		{}
 #define NKEYS		{}
 
+#define BIRD_ENDSTATE	{}
+
 enum arbitrary_messages_refs {{
 {}
 }};
@@ -768,6 +770,10 @@ if __name__ == "__main__":
         ignore,
     )
 
+    # 0-origin index of birds's last song.  Bird should
+    # die after player hears this.
+    deathbird = len(dict(db["objects"])["BIRD"]["sounds"]) - 1
+
     h = h_template.format(
         len(db["locations"])-1,
         len(db["objects"])-1,
@@ -780,6 +786,7 @@ if __name__ == "__main__":
         len(db["specials"]),
         len(travel),
         len(tkey),
+        deathbird,
         get_refs(db["arbitrary_messages"]),
         get_refs(db["locations"]),
         get_refs(db["objects"]),
