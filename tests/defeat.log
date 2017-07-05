@@ -348,6 +348,8 @@ drop ruby
 take rug
 drop bottle
 take ruby
+drop emerald
+take emerald
 e
 s
 e

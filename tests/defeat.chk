@@ -2065,6 +2065,17 @@ OK
 
 OK
 
+> drop emerald
+
+The gem fits easily into the cavity.
+
+The persian rug draped over your shoulder seems to wriggle for a
+moment, but then subsides.
+
+> take emerald
+
+OK
+
 > e
 
 You are wandering aimlessly through the forest.
@@ -2119,6 +2130,9 @@ There are many coins here!
 
 > drop ruby
 
+Tsk!  A wizard wouldn't have to take 350 turns.  This is going to cost
+you a couple of points.
+
 OK
 
 > drop sapphire
@@ -2126,9 +2140,6 @@ OK
 OK
 
 > drop amber
-
-Tsk!  A wizard wouldn't have to take 350 turns.  This is going to cost
-you a couple of points.
 
 OK
 
@@ -2964,7 +2975,7 @@ There is a loud explosion, and a twenty-foot hole appears in the far
 wall, burying the snakes in the rubble.  A river of molten lava pours
 in through the hole, destroying everything in its path, including you!
 
-You scored 399 out of a possible 430, using 471 turns.
+You scored 399 out of a possible 430, using 473 turns.
 
 Your score puts you in Master Adventurer Class B.
 
