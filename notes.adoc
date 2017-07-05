@@ -31,7 +31,7 @@ with the BSD Games version.
 Extreme care has been taken not to make changes that would alter the
 logic of the game as we received it from Don Woods, except to fix
 glitches that were clearly bugs.  By policy, all user-visible
-changes must be revertible with the -o (oldstyle) option.
+changes to gameplay must be revertible with the -o (oldstyle) option.
 
 It is a goal of this project to exactly preserve the *intended
 behavior* of 430-point Adventure, but the implementation of it is fair
@@ -53,7 +53,8 @@ Bug fixes:
 * Attempting to extinguish an unlit urn caused it to lose its oil.
 
 * Unrecognized words are no longer truncated to 5 characters and
-  uppercased when they are echoed.
+  uppercased when they are echoed. (This behavior is restored by the
+  oldstyle switch.)
 
 * "A crystal bridge now spans the fissure." (progressive present) was
   incorrect most places it appeared and has been replaced by "A crystal 

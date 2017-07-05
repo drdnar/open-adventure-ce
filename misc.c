@@ -102,6 +102,28 @@ void tokenize(char* raw, struct command_t *cmd)
     // pack the substrings
     cmd->wd1  = token_to_packed(cmd->raw1);
     cmd->wd2  = token_to_packed(cmd->raw2);
+
+    /* (ESR) In oldstyle mode, simulate the uppercasing and truncating
+     * effect on raw tokens of packing them into sixbit characters, 5
+     * to a 32-bit word.  This is something the FORTRAN version did
+     * becuse archaic FORTRAN had no string types.  Don Wood's
+     * mechanical translation of 2.5 to C retained the packing and
+     * thus this misfeature.
+     *
+     * It's philosophically questionable whether this is the right
+     * thing to do even in oldstyle mode.  On one hand, the text
+     * mangling was not authorial intent, but a result of limitations
+     * in their tools. On the other, not simulating this misbehavior
+     * goes against the goal of making oldstyle as accurate as
+     * possible an emulation of the original UI.
+     */
+    if (settings.oldstyle) {
+	cmd->raw1[TOKLEN+TOKLEN] = cmd->raw1[TOKLEN+TOKLEN] = '\0';
+	for (int i = 0; i < strlen(cmd->raw1); i++)
+	    cmd->raw1[i] = toupper(cmd->raw1[i]);
+	for (int i = 0; i < strlen(cmd->raw2); i++)
+	    cmd->raw2[i] = toupper(cmd->raw2[i]);
+    }
 }
 
 /* Hide the fact that wods are corrently packed longs */

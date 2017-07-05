@@ -43,7 +43,8 @@ There have been no gameplay changes.
 -r:: Restore game from specified file
 
 -o:: Old-style.  Restores original interface, no prompt or line editing.
-     Also ignores new-school one-letter commands l, x, g, z, i.
+     Also ignores new-school one-letter commands l, x, g, z, i. Also
+     case-smashes and truncates unrecognized text when echoed.
 
 == BUGS ==
 
