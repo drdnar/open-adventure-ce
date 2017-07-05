@@ -2845,7 +2845,6 @@ arbitrary_messages:  !!omap
 - STREAM_WATER: |-
     You have taken a drink from the stream.  The water tastes strongly of
     minerals, but is not unpleasant.  It is extremely cold.
-- BOTTLE_EMPTY: 'The bottle of water is now empty.'
 - RUB_NOGO: |-
     Rubbing the electric lamp is not particularly rewarding.  Anyway,
     nothing exciting happens.
@@ -2871,8 +2870,6 @@ arbitrary_messages:  !!omap
 - NO_CONTAINER: 'You have nothing in which to carry it.'
 - BOTTLE_FULL: 'Your bottle is already full.'
 - NO_LIQUID: 'There is nothing here with which to fill the bottle.'
-- BOTTLED_WATER: 'Your bottle is now full of water.'
-- BOTTLED_OIL: 'Your bottle is now full of oil.'
 - CANT_FILL: 'You can''t fill that.'
 - RIDICULOUS_ATTEMPT: 'Don''t be ridiculous!'
 - RUSTY_DOOR: 'The door is extremely rusty and refuses to open.'
@@ -3387,6 +3384,10 @@ objects: !!omap
     - 'There is a bottle of water here.'
     - 'There is an empty bottle here.'
     - 'There is a bottle of oil here.'
+    changes:
+    - 'Your bottle is now full of water.'
+    - 'The bottle of water is now empty.'
+    - 'Your bottle is now full of oil.'
 - WATER:
     words: ['water', 'h2o']
     inventory: 'Water in the bottle'

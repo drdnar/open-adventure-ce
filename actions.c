@@ -546,9 +546,8 @@ static int drink(token_t verb, token_t obj)
         return GO_CLEAROBJ;
     }
     if (LIQUID() == WATER && HERE(BOTTLE)) {
-        game.prop[BOTTLE] = EMPTY_BOTTLE;
         game.place[WATER] = LOC_NOWHERE;
-        rspeak(BOTTLE_EMPTY);
+        state_change(BOTTLE, EMPTY_BOTTLE);
         return GO_CLEAROBJ;
     }
 
@@ -741,13 +740,11 @@ int fill(token_t verb, token_t obj)
         return GO_CLEAROBJ;
     }
 
-    game.prop[BOTTLE] = (LIQLOC(game.loc) == OIL) ? OIL_BOTTLE : WATER_BOTTLE;
+    state_change(BOTTLE, (LIQLOC(game.loc) == OIL)
+		 ? OIL_BOTTLE
+		 : WATER_BOTTLE);
     if (TOTING(BOTTLE))
         game.place[LIQUID()] = CARRIED;
-    if (LIQUID() == OIL)
-        rspeak(BOTTLED_OIL);
-    else
-        rspeak(BOTTLED_WATER);
     return GO_CLEAROBJ;
 }
 
