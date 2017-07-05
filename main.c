@@ -671,12 +671,13 @@ static void playermove( int motion)
                 game.newloc -= SPECIALBASE;
                 switch (game.newloc) {
                 case 1:
-                    /* Travel 301.  Plover-alcove passage.  Can carry only
+                    /* Special travel 1.  Plover-alcove passage.  Can carry only
                      * emerald.  Note: travel table must include "useless"
                      * entries going through passage, which can never be used
                      * for actual motion, but can be spotted by "go back". */
-                    /* FIXME: Arithmetic on location numbers */
-                    game.newloc = 99 + 100 - game.loc;
+                    game.newloc = (game.loc == LOC_PLOVER)
+			? LOC_ALCOVE
+			: LOC_PLOVER;
                     if (game.holdng > 1 ||
                         (game.holdng == 1 && !TOTING(EMERALD))) {
                         game.newloc = game.loc;
@@ -684,7 +685,7 @@ static void playermove( int motion)
                     }
                     return;
                 case 2:
-                    /* Travel 302.  Plover transport.  Drop the
+                    /* Special travel 2.  Plover transport.  Drop the
                      * emerald (only use special travel if toting
                      * it), so he's forced to use the plover-passage
                      * to get it out.  Having dropped it, go back and
@@ -700,11 +701,11 @@ static void playermove( int motion)
                     travel_entry = te_tmp;
                     continue; /* goto L12 */
                 case 3:
-                    /* Travel 303.  Troll bridge.  Must be done only
-                     * as special motion so that dwarves won't wander
-                     * across and encounter the bear.  (They won't
-                     * follow the player there because that region is
-                     * forbidden to the pirate.)  If
+                    /* Special travel 3.  Troll bridge.  Must be done
+                     * only as special motion so that dwarves won't
+                     * wander across and encounter the bear.  (They
+                     * won't follow the player there because that
+                     * region is forbidden to the pirate.)  If
                      * game.prop(TROLL)=1, he's crossed since paying,
                      * so step out and block him.  (standard travel
                      * entries check for game.prop(TROLL)=0.)  Special
