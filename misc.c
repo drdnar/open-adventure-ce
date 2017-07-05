@@ -689,3 +689,10 @@ void bug(enum bugtype num, const char *error_string)
 // LCOV_EXCL_STOP
 
 /* end */
+
+void state_change(long obj, long state)
+/* Object must have a change-message list for this to be useful; only some do */
+{
+    game.prop[obj] = state;
+    pspeak(obj, change, state, true);
+}

@@ -6,13 +6,6 @@
 
 static int fill(token_t, token_t);
 
-static void state_change(long obj, long state)
-/* Object must have a change-message list for this to be useful; only some do */
-{
-    game.prop[obj] = state;
-    pspeak(obj, change, state, true);
-}
-
 static int attack(struct command_t *command)
 /*  Attack.  Assume target if unambiguous.  "Throw" also links here.
  *  Attackable objects fall into two categories: enemies (snake,

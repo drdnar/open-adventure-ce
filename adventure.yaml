@@ -2963,11 +2963,6 @@ arbitrary_messages:  !!omap
 - TROLL_SATISFIED: 'The troll catches your treasure and scurries away out of sight.'
 - TROLL_BLOCKS: 'The troll refuses to let you cross.'
 - BRIDGE_GONE: 'There is no longer any way across the chasm.'
-- BRIDGE_COLLAPSE: |-
-    Just as you reach the other side, the bridge buckles beneath the
-    weight of the bear, which was still following you around.  You
-    scrabble desperately for support, but as the bridge collapses you
-    stumble back and fall into the chasm.
 - BEAR_HANDS: 'With what?  Your bare hands?  Against *HIS* bear hands??'
 - BEAR_CONFUSED: 'The bear is confused; he only wants to be your friend.'
 - ALREADY_DEAD: 'For crying out loud, the poor thing is already dead!'
@@ -3497,6 +3492,13 @@ objects: !!omap
     descriptions:
     - 'A rickety wooden bridge extends across the chasm, vanishing into the\nmist.  A notice posted on the bridge reads, "Stop! Pay troll!"'
     - 'The wreckage of a bridge (and a dead bear) can be seen at the bottom\nof the chasm.'
+    changes:
+    - ''
+    - |- 
+        Just as you reach the other side, the bridge buckles beneath the
+        weight of the bear, which was still following you around.  You
+        scrabble desperately for support, but as the bridge collapses you
+        stumble back and fall into the chasm.
 - TROLL:
     words: ['troll']
     inventory: '*troll'

@@ -242,6 +242,8 @@ extern int resume(void);
 extern int restore(FILE *);
 extern long initialise(void);
 extern int action(struct command_t *command);
+extern void state_change(long obj, long state);
+
 
 void bug(enum bugtype, const char *) __attribute__((__noreturn__));
 

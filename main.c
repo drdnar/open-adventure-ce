@@ -726,8 +726,7 @@ static void playermove( int motion)
                             game.prop[TROLL] = TROLL_PAIDONCE;
                         if (!TOTING(BEAR))
                             return;
-                        rspeak(BRIDGE_COLLAPSE);
-                        game.prop[CHASM] = BRIDGE_WRECKED;
+                        state_change(CHASM, BRIDGE_WRECKED);
                         game.prop[TROLL] = TROLL_GONE;
                         drop(BEAR, game.newloc);
                         game.fixed[BEAR] = IS_FIXED;
