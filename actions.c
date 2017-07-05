@@ -303,7 +303,8 @@ static int vcarry(token_t verb, token_t obj)
     }
 
     if (game.fixed[obj] != IS_FREE) {
-        if (obj == PLANT && game.prop[PLANT] <= 0) { // FIXME: magical state assertion
+	/* Next guard tests whether plant is tiny or stashed */
+        if (obj == PLANT && game.prop[PLANT] <= PLANT_THIRSTY) {
             rspeak(DEEP_ROOTS);
             return GO_CLEAROBJ;
         }
@@ -802,10 +803,10 @@ static int fly(token_t verb, token_t obj)
     /* FIXME: Arithmetic on location values */
     game.newloc = game.place[RUG] + game.fixed[RUG] - game.loc;
 
-    if (game.prop[SAPPH] >= 0) {
-        rspeak(RUG_RETURNS);
-    } else {
+    if (game.prop[SAPPH] == STATE_NOTFOUND) {
         rspeak(RUG_GOES);
+    } else {
+        rspeak(RUG_RETURNS);
     }
     return GO_TERMINATE;
 }
@@ -868,7 +869,7 @@ static int light(token_t verb, token_t obj)
 }
 
 static int listen(void)
-/*  Listen.  Intransitive only.  Print stuff based on objsnd/locsnd. */
+/*  Listen.  Intransitive only.  Print stuff based on object sound proprties. */
 {
     long sound = locations[game.loc].sound;
     if (sound != SILENT) {
