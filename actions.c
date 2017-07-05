@@ -628,7 +628,6 @@ static int feed(token_t verb, token_t obj)
     case BIRD:
         rspeak(BIRD_PINING);
         break;
-
     case DRAGON:
         if (game.prop[DRAGON] != DRAGON_BARS)
             rspeak(RIDICULOUS_ATTEMPT);
@@ -665,7 +664,9 @@ static int feed(token_t verb, token_t obj)
                 state_change(BEAR, SITTING_BEAR);
             } else
                 rspeak(NOTHING_EDIBLE);
+            break;
         }
+        rspeak(actions[verb].message);
         break;
     case OGRE:
         if (HERE(FOOD))
