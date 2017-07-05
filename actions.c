@@ -477,7 +477,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
                     /* FIXME: Arithmetic on state numbers */
                     int k = 2 - game.prop[RUG];
                     game.prop[RUG] = k;
-                    if (k == 2)
+                    if (k == RUG_HOVER)
                         k = objects[SAPPH].plac;
                     move(RUG + NOBJECTS, k);
                 }
