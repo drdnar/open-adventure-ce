@@ -532,7 +532,7 @@ long get_vocab_id(const char* word)
 
     // Check for the reservoir magic word.
     if (strcasecmp(word, game.zzword) == 0)
-        return (PART + 2000); // FIXME: replace with a proper hash
+        return ACTION_WORD(PART);
 
     return (WORD_NOT_FOUND);
 }
