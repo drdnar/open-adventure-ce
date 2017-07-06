@@ -15,8 +15,7 @@ static int attack(struct command_t *command)
     vocab_t verb = command->verb;
     obj_t obj = command->obj;
 
-    if (obj == NO_OBJECT ||
-        obj == INTRANSITIVE) {
+    if (obj == INTRANSITIVE) {
         int changes = 0;
         if (atdwrf(game.loc) > 0) {
             obj = DWARF;
@@ -43,7 +42,7 @@ static int attack(struct command_t *command)
             ++changes;
         }
         /* check for low-priority targets */
-        if (obj == NO_OBJECT) {
+        if (obj == INTRANSITIVE) {
             /* Can't attack bird or machine by throwing axe. */
             if (HERE(BIRD) && verb != THROW) {
                 obj = BIRD;
@@ -153,7 +152,7 @@ static int attack(struct command_t *command)
     }
 
     switch (obj) {
-    case NO_OBJECT:
+    case INTRANSITIVE:
         rspeak(NO_TARGET);
         break;
     case CLAM:
@@ -527,7 +526,7 @@ static int drink(token_t verb, obj_t obj)
 /*  Drink.  If no object, assume water and look for it here.  If water is in
  *  the bottle, drink that, else must be at a water loc, so drink stream. */
 {
-    if (obj == NO_OBJECT && LIQLOC(game.loc) != WATER &&
+    if (obj == INTRANSITIVE && LIQLOC(game.loc) != WATER &&
         (LIQUID() != WATER || !HERE(BOTTLE))) {
         return GO_UNKNOWN;
     }
@@ -539,7 +538,7 @@ static int drink(token_t verb, obj_t obj)
         return GO_CLEAROBJ;
     }
 
-    if (obj != NO_OBJECT && obj != WATER) {
+    if (obj != INTRANSITIVE && obj != WATER) {
         rspeak(RIDICULOUS_ATTEMPT);
         return GO_CLEAROBJ;
     }
@@ -726,11 +725,11 @@ int fill(token_t verb, obj_t obj)
         game.place[k] = LOC_NOWHERE;
         return GO_CLEAROBJ;
     }
-    if (obj != NO_OBJECT && obj != BOTTLE) {
+    if (obj != INTRANSITIVE && obj != BOTTLE) {
         speak(actions[verb].message);
         return GO_CLEAROBJ;
     }
-    if (obj == NO_OBJECT && !HERE(BOTTLE))
+    if (obj == INTRANSITIVE && !HERE(BOTTLE))
         return GO_UNKNOWN;
 
     if (HERE(URN) && game.prop[URN] != URN_EMPTY) {
@@ -989,7 +988,7 @@ static int pour(token_t verb, obj_t obj)
  *  special tests for pouring water or oil on plant or rusty door. */
 {
     if (obj == BOTTLE ||
-        obj == NO_OBJECT)
+        obj == INTRANSITIVE)
         obj = LIQUID();
     if (obj == NO_OBJECT)
         return GO_UNKNOWN;
@@ -1180,7 +1179,7 @@ static int throw (struct command_t *command)
                 state_change(AXE, AXE_LOST);
                 return GO_CLEAROBJ;
             }
-            command->obj = NO_OBJECT;
+            command->obj = INTRANSITIVE;
             return (attack(command));
         }
 
@@ -1353,13 +1352,14 @@ int action(struct command_t *command)
                 return GO_CLEAROBJ;
             }
             case ATTACK:
+                command->obj = INTRANSITIVE;
                 return attack(command);
             case POUR:
-                return pour(command->verb, command->obj);
+                return pour(command->verb, INTRANSITIVE);
             case EAT:
                 return eat(command->verb, INTRANSITIVE);
             case DRINK:
-                return drink(command->verb, command->obj);
+                return drink(command->verb, INTRANSITIVE);
             case RUB:
                 return GO_UNKNOWN;
             case THROW:
@@ -1373,7 +1373,7 @@ int action(struct command_t *command)
             case FEED:
                 return GO_UNKNOWN;
             case FILL:
-                return fill(command->verb, command->obj);
+                return fill(command->verb, INTRANSITIVE);
             case BLAST:
                 blast();
                 return GO_CLEAROBJ;
