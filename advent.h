@@ -114,8 +114,9 @@ enum phase_codes {
     GO_DWARFWAKE,
 };
 
-typedef long token_t;  // word token - someday this will be char[TOKLEN+1]
+typedef long token_t;  // word token - someday this will be char[TOKLEN+1] */
 typedef long vocab_t;  // index into a vocabulary array */
+typedef long verb_t;   // index into an actions array */
 typedef long obj_t;    // index into the object array */
 typedef long loc_t;    // index into the locations array */
 
@@ -191,7 +192,7 @@ struct settings_t {
 
 struct command_t {
     enum speechpart part;
-    vocab_t verb;
+    verb_t verb;
     obj_t   obj;
     token_t wd1;
     token_t wd2;

@@ -4,7 +4,7 @@
 #include "advent.h"
 #include "dungeon.h"
 
-static int fill(token_t, token_t);
+static int fill(verb_t, obj_t);
 
 static int attack(struct command_t *command)
 /*  Attack.  Assume target if unambiguous.  "Throw" also links here.
@@ -12,7 +12,7 @@ static int attack(struct command_t *command)
  *  dwarf, etc.)  and others (bird, clam, machine).  Ambiguous if 2
  *  enemies, or no enemies but 2 others. */
 {
-    vocab_t verb = command->verb;
+    verb_t verb = command->verb;
     obj_t obj = command->obj;
 
     if (obj == INTRANSITIVE) {
@@ -245,7 +245,7 @@ static void blast(void)
     }
 }
 
-static int vbreak(vocab_t verb, obj_t obj)
+static int vbreak(verb_t verb, obj_t obj)
 /*  Break.  Only works for mirror in repository and, of course, the vase. */
 {
     switch (obj) {
@@ -280,14 +280,14 @@ static int brief(void)
     return GO_CLEAROBJ;
 }
 
-static int vcarry(token_t verb, obj_t obj)
+static int vcarry(verb_t verb, obj_t obj)
 /*  Carry an object.  Special cases for bird and cage (if bird in cage, can't
  *  take one without the other).  Liquids also special, since they depend on
  *  status of bottle.  Also various side effects, etc. */
 {
     if (obj == INTRANSITIVE) {
         /*  Carry, no object given yet.  OK if only one object present. */
-        if (game.atloc[game.loc] == 0 ||
+        if (game.atloc[game.loc] == NO_OBJECT ||
             game.link[game.atloc[game.loc]] != 0 ||
             atdwrf(game.loc) > 0)
             return GO_UNKNOWN;
@@ -295,7 +295,7 @@ static int vcarry(token_t verb, obj_t obj)
     }
 
     if (TOTING(obj)) {
-        rspeak(ALREADY_CARRYING);
+        speak(actions[verb].message);
         return GO_CLEAROBJ;
     }
 
@@ -398,7 +398,7 @@ static int vcarry(token_t verb, obj_t obj)
     return GO_CLEAROBJ;
 }
 
-static int chain(token_t verb)
+static int chain(verb_t verb)
 /* Do something to the bear's chain */
 {
     if (verb != LOCK) {
@@ -445,7 +445,7 @@ static int chain(token_t verb)
     return GO_CLEAROBJ;
 }
 
-static int discard(token_t verb, obj_t obj)
+static int discard(verb_t verb, obj_t obj)
 /*  Discard object.  "Throw" also comes here for most objects.  Special cases for
  *  bird (might attack snake or dragon) and cage (might contain bird) and vase.
  *  Drop coins at vending machine for extra batteries. */
@@ -526,7 +526,7 @@ static int discard(token_t verb, obj_t obj)
     return GO_CLEAROBJ;
 }
 
-static int drink(token_t verb, obj_t obj)
+static int drink(verb_t verb, obj_t obj)
 /*  Drink.  If no object, assume water and look for it here.  If water is in
  *  the bottle, drink that, else must be at a water loc, so drink stream. */
 {
@@ -556,7 +556,7 @@ static int drink(token_t verb, obj_t obj)
     return GO_CLEAROBJ;
 }
 
-static int eat(token_t verb, obj_t obj)
+static int eat(verb_t verb, obj_t obj)
 /*  Eat.  Intransitive: assume food if present, else ask what.  Transitive: food
  *  ok, some things lose appetite, rest are ridiculous. */
 {
@@ -585,7 +585,7 @@ static int eat(token_t verb, obj_t obj)
     return GO_CLEAROBJ;
 }
 
-static int extinguish(token_t verb, obj_t obj)
+static int extinguish(verb_t verb, obj_t obj)
 /* Extinguish.  Lamp, urn, dragon/volcano (nice try). */
 {
     if (obj == INTRANSITIVE) {
@@ -621,7 +621,7 @@ static int extinguish(token_t verb, obj_t obj)
     return GO_CLEAROBJ;
 }
 
-static int feed(token_t verb, obj_t obj)
+static int feed(verb_t verb, obj_t obj)
 /*  Feed.  If bird, no seed.  Snake, dragon, troll: quip.  If dwarf, make him
  *  mad.  Bear, special. */
 {
@@ -681,7 +681,7 @@ static int feed(token_t verb, obj_t obj)
     return GO_CLEAROBJ;
 }
 
-int fill(token_t verb, obj_t obj)
+int fill(verb_t verb, obj_t obj)
 /*  Fill.  Bottle or urn must be empty, and liquid available.  (Vase
  *  is nasty.) */
 {
@@ -757,7 +757,7 @@ int fill(token_t verb, obj_t obj)
     return GO_CLEAROBJ;
 }
 
-static int find(token_t verb, obj_t obj)
+static int find(verb_t verb, obj_t obj)
 /* Find.  Might be carrying it, or it might be here.  Else give caveat. */
 {
     if (TOTING(obj)) {
@@ -783,7 +783,7 @@ static int find(token_t verb, obj_t obj)
     return GO_CLEAROBJ;
 }
 
-static int fly(token_t verb, obj_t obj)
+static int fly(verb_t verb, obj_t obj)
 /* Fly.  Snide remarks unless hovering rug is here. */
 {
     if (obj == INTRANSITIVE) {
@@ -840,7 +840,7 @@ static int inven(void)
     return GO_CLEAROBJ;
 }
 
-static int light(token_t verb, obj_t obj)
+static int light(verb_t verb, obj_t obj)
 /*  Light.  Applicable only to lamp and urn. */
 {
     if (obj == INTRANSITIVE) {
@@ -908,7 +908,7 @@ static int listen(void)
     return GO_CLEAROBJ;
 }
 
-static int lock(token_t verb, obj_t obj)
+static int lock(verb_t verb, obj_t obj)
 /* Lock, unlock, no object given.  Assume various things if present. */
 {
     if (obj == INTRANSITIVE) {
@@ -987,7 +987,7 @@ static int lock(token_t verb, obj_t obj)
     return GO_CLEAROBJ;
 }
 
-static int pour(token_t verb, obj_t obj)
+static int pour(verb_t verb, obj_t obj)
 /*  Pour.  If no object, or object is bottle, assume contents of bottle.
  *  special tests for pouring water or oil on plant or rusty door. */
 {
@@ -1087,7 +1087,7 @@ static int reservoir(void)
     }
 }
 
-static int rub(token_t verb, obj_t obj)
+static int rub(verb_t verb, obj_t obj)
 /* Rub.  Yields various snide remarks except for lit urn. */
 {
     if (obj == URN && game.prop[URN] == URN_LIT) {
@@ -1200,7 +1200,7 @@ static int throw (struct command_t *command)
     }
 }
 
-static int wake(token_t verb, obj_t obj)
+static int wake(verb_t verb, obj_t obj)
 /* Wake.  Only use is to disturb the dwarves. */
 {
     if (obj != DWARF ||
@@ -1213,7 +1213,7 @@ static int wake(token_t verb, obj_t obj)
     }
 }
 
-static int wave(token_t verb, obj_t obj)
+static int wave(verb_t verb, obj_t obj)
 /* Wave.  No effect unless waving rod at fissure or at bird. */
 {
     if (obj != ROD ||
