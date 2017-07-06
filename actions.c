@@ -230,15 +230,16 @@ static int bigwords(long id)
 static void blast(void)
 /*  Blast.  No effect unless you've got dynamite, which is a neat trick! */
 {
-    if (game.prop[ROD2] < 0 ||
+    if (game.prop[ROD2] == STATE_NOTFOUND ||
         !game.closed)
         rspeak(REQUIRES_DYNAMITE);
     else {
-        game.bonus = VICTORY_MESSAGE;
-        if (game.loc == LOC_NE)
-            game.bonus = DEFEAT_MESSAGE;
         if (HERE(ROD2))
             game.bonus = SPLATTER_MESSAGE;
+        else if (game.loc == LOC_NE)
+            game.bonus = DEFEAT_MESSAGE;
+        else
+            game.bonus = VICTORY_MESSAGE;
         rspeak(game.bonus);
         terminate(endgame);
     }
