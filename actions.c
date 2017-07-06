@@ -121,10 +121,10 @@ static int attack(struct command_t *command)
         move(DRAGON, LOC_SECRET5);
         move(RUG, LOC_SECRET5);
         drop(BLOOD, LOC_SECRET5);
-        for (obj = 1; obj <= NOBJECTS; obj++) {
-            if (game.place[obj] == objects[DRAGON].plac ||
-                game.place[obj] == objects[DRAGON].fixd)
-                move(obj, LOC_SECRET5);
+        for (obj_t i = 1; i <= NOBJECTS; i++) {
+            if (game.place[i] == objects[DRAGON].plac ||
+                game.place[i] == objects[DRAGON].fixd)
+                move(i, LOC_SECRET5);
         }
         game.loc = LOC_SECRET5;
         return GO_MOVE;
