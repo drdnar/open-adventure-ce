@@ -607,7 +607,8 @@ void drop(obj_t object, loc_t where)
             --game.holdng;
         game.place[object] = where;
     }
-    if (where <= 0)
+    if (where == LOC_NOWHERE ||
+        where == CARRIED)
         return;
     game.link[object] = game.atloc[where];
     game.atloc[where] = object;

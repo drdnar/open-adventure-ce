@@ -113,12 +113,12 @@ static int attack(struct command_t *command)
         state_change(DRAGON, DRAGON_DEAD);
         game.prop[RUG] = RUG_FLOOR;
         /* Hardcoding LOC_SECRET5 as the dragon's death location is ugly.
-         * The way it was computed before was wirse; it depended on the
+         * The way it was computed before was worse; it depended on the
          * two dragon locations being LOC_SECRET4 and LOC_SECRET6 and
          * LOC_SECRET5 being right between them.
          */
-        move(DRAGON + NOBJECTS, -1);
-        move(RUG + NOBJECTS, LOC_NOWHERE);
+        move(DRAGON + NOBJECTS, IS_FIXED);
+        move(RUG + NOBJECTS, IS_FREE);
         move(DRAGON, LOC_SECRET5);
         move(RUG, LOC_SECRET5);
         drop(BLOOD, LOC_SECRET5);
@@ -493,7 +493,7 @@ static int discard(token_t verb, obj_t obj)
     } else if (obj == BEAR && AT(TROLL)) {
         state_change(TROLL, TROLL_GONE);
         move(TROLL, LOC_NOWHERE);
-        move(TROLL + NOBJECTS, LOC_NOWHERE);
+        move(TROLL + NOBJECTS, IS_FREE);
         move(TROLL2, objects[TROLL].plac);
         move(TROLL2 + NOBJECTS, objects[TROLL].fixd);
         juggle(CHASM);
@@ -1150,7 +1150,7 @@ static int throw (struct command_t *command)
         /*  Snarf a treasure for the troll. */
         drop(command->obj, LOC_NOWHERE);
         move(TROLL, LOC_NOWHERE);
-        move(TROLL + NOBJECTS, LOC_NOWHERE);
+        move(TROLL + NOBJECTS, IS_FREE);
         drop(TROLL2, objects[TROLL].plac);
         drop(TROLL2 + NOBJECTS, objects[TROLL].fixd);
         juggle(CHASM);
