@@ -317,6 +317,10 @@ attack bear
 back
 lock chain
 out
+drop keys
+in
+unlock chain
+out
 fork
 go left
 north

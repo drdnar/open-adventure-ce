@@ -860,17 +860,6 @@ down to an e/w passage.
 
 You're in Hall of Mt King.
 
-> u
-
-You're in Hall of Mists.
-
-Rough stone steps lead up the dome.
-
-> n
-
-You are in the Hall of the Mountain King, with passages off in all
-directions.
-
 > n
 
 You're in n/s passage above e/w passage.
@@ -882,22 +871,8 @@ west is a large passage.  Above you is a hole to another passage.
 
 > bedquilt
 
-There is a threatening little dwarf in the room with you!
-
 You are in Bedquilt, a long east/west passage with holes everywhere.
 To explore at random select north, south, up, or down.
-
-> throw axe
-
-You killed a little dwarf.
-
-You're in Bedquilt.
-
-There is a little axe here.
-
-> take axe
-
-OK
 
 > slab
 
@@ -983,7 +958,7 @@ to try to reincarnate you?
 
 OK
 
-You scored 177 out of a possible 430, using 157 turns.
+You scored 177 out of a possible 430, using 153 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 

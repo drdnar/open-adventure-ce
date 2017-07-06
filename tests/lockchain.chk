@@ -1781,6 +1781,30 @@ You're in front of Barren Room.
 
 There is a contented-looking bear wandering about nearby.
 
+> drop keys
+
+OK
+
+> in
+
+You're in Barren Room.
+
+There is a golden chain locked to the wall!
+
+There is a little axe here.
+
+> unlock chain
+
+You have no keys!
+
+> out
+
+You're in front of Barren Room.
+
+There are some keys on the ground here.
+
+There is a contented-looking bear wandering about nearby.
+
 > fork
 
 The path forks here.  The left fork leads northeast.  A dull rumbling
@@ -1820,7 +1844,7 @@ hellish scene.  A dark, foreboding passage exits to the south.
 It is beyond your power to do that.
 
 
-You scored 225 out of a possible 430, using 316 turns.
+You scored 225 out of a possible 430, using 320 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 
