@@ -444,9 +444,7 @@ def get_objects(obj):
         immovable = attr.get("immovable", False)
         try:
             if type(locs) == str:
-                locs = [locnames.index(locs), -1 if immovable else 0]
-            else:
-                locs = [locnames.index(x) for x in locs]
+                locs = [locs, -1 if immovable else 0]
         except IndexError:
             sys.stderr.write("dungeon: unknown object location in %s\n" % locs)
             sys.exit(1)

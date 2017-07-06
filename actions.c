@@ -112,19 +112,22 @@ static int attack(struct command_t *command)
         }
         state_change(DRAGON, DRAGON_DEAD);
         game.prop[RUG] = RUG_FLOOR;
-        /* FIXME: Arithmetic on location values */
-        int k = (objects[DRAGON].plac + objects[DRAGON].fixd) / 2;
+        /* Hardcoding LOC_SECRET5 as the dragon's death location is ugly.
+	 * The way it was computed before was wirse; it depended on the
+	 * two dragon locations being LOC_SECRET4 and LOC_SECRET6 and 
+	 * LOC_SECRET5 being right between them.
+	 */
         move(DRAGON + NOBJECTS, -1);
         move(RUG + NOBJECTS, 0);
-        move(DRAGON, k);
-        move(RUG, k);
-        drop(BLOOD, k);
+        move(DRAGON, LOC_SECRET5);
+        move(RUG, LOC_SECRET5);
+        drop(BLOOD, LOC_SECRET5);
         for (obj = 1; obj <= NOBJECTS; obj++) {
             if (game.place[obj] == objects[DRAGON].plac ||
                 game.place[obj] == objects[DRAGON].fixd)
-                move(obj, k);
+                move(obj, LOC_SECRET5);
         }
-        game.loc = k;
+        game.loc = LOC_SECRET5;
         return GO_MOVE;
     }
 
@@ -475,7 +478,6 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
                     spk = RUG_SETTLES;
                 rspeak(spk);
                 if (spk != RUG_WIGGLES) {
-                    /* FIXME: Arithmetic on state numbers */
                     int k = (game.prop[RUG] == RUG_HOVER) ? RUG_FLOOR : RUG_HOVER;
                     game.prop[RUG] = k;
                     if (k == RUG_HOVER)
