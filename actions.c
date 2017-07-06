@@ -13,7 +13,7 @@ static int attack(struct command_t *command)
  *  enemies, or no enemies but 2 others. */
 {
     vocab_t verb = command->verb;
-    vocab_t obj = command->obj;
+    obj_t obj = command->obj;
 
     if (obj == NO_OBJECT ||
         obj == INTRANSITIVE) {
@@ -113,12 +113,12 @@ static int attack(struct command_t *command)
         state_change(DRAGON, DRAGON_DEAD);
         game.prop[RUG] = RUG_FLOOR;
         /* Hardcoding LOC_SECRET5 as the dragon's death location is ugly.
-	 * The way it was computed before was wirse; it depended on the
-	 * two dragon locations being LOC_SECRET4 and LOC_SECRET6 and 
-	 * LOC_SECRET5 being right between them.
-	 */
+         * The way it was computed before was wirse; it depended on the
+         * two dragon locations being LOC_SECRET4 and LOC_SECRET6 and
+         * LOC_SECRET5 being right between them.
+         */
         move(DRAGON + NOBJECTS, -1);
-        move(RUG + NOBJECTS, 0);
+        move(RUG + NOBJECTS, LOC_NOWHERE);
         move(DRAGON, LOC_SECRET5);
         move(RUG, LOC_SECRET5);
         drop(BLOOD, LOC_SECRET5);
@@ -186,48 +186,45 @@ static int bigwords(long id)
  *  Look up foo in special section of vocab to determine which word we've got.
  *  Last word zips the eggs back to the giant room (unless already there). */
 {
-  if ((game.foobar == WORD_EMPTY && id == ACTION_WORD(FEE)) ||
-      (game.foobar == ACTION_WORD(FEE) && id == ACTION_WORD(FIE)) ||
-      (game.foobar == ACTION_WORD(FIE) && id == ACTION_WORD(FOE)) ||
-      (game.foobar == ACTION_WORD(FOE) && id == ACTION_WORD(FOO)) ||
-      (game.foobar == ACTION_WORD(FOE) && id == ACTION_WORD(FUM)))
-    {
-      game.foobar = id;
-      if ((id != ACTION_WORD(FOO)) && (id != ACTION_WORD(FUM))) {
-	rspeak(OK_MAN);
-	return GO_CLEAROBJ;
-      }
-      game.foobar = WORD_EMPTY;
-      if (game.place[EGGS] == objects[EGGS].plac ||
-	  (TOTING(EGGS) && game.loc == objects[EGGS].plac)) {
-	rspeak(NOTHING_HAPPENS);
-	return GO_CLEAROBJ;
-      } else {
-	/*  Bring back troll if we steal the eggs back from him before
-	 *  crossing. */
-	if (game.place[EGGS] == LOC_NOWHERE && game.place[TROLL] == LOC_NOWHERE && game.prop[TROLL] == TROLL_UNPAID)
-	  game.prop[TROLL] = TROLL_PAIDONCE;
-	int k = EGGS_DONE;
-	if (HERE(EGGS))
-	  k = EGGS_VANISHED;
-	if (game.loc == objects[EGGS].plac)
-	  k = EGGS_HERE;
-	move(EGGS, objects[EGGS].plac);
-	pspeak(EGGS, look, k, true);
-	return GO_CLEAROBJ;
-      }
-    }
-  else
-    {
-      if (game.loc == LOC_GIANTROOM) {
-	rspeak(START_OVER);
-      } else {
-	  /* This is new begavior in Open Adventure - sounds better when
-	   * player isn't in the Giant Room. */
-	rspeak(WELL_POINTLESS);
-      }
-      game.foobar = WORD_EMPTY;
-      return GO_CLEAROBJ;
+    if ((game.foobar == WORD_EMPTY && id == ACTION_WORD(FEE)) ||
+        (game.foobar == ACTION_WORD(FEE) && id == ACTION_WORD(FIE)) ||
+        (game.foobar == ACTION_WORD(FIE) && id == ACTION_WORD(FOE)) ||
+        (game.foobar == ACTION_WORD(FOE) && id == ACTION_WORD(FOO)) ||
+        (game.foobar == ACTION_WORD(FOE) && id == ACTION_WORD(FUM))) {
+        game.foobar = id;
+        if ((id != ACTION_WORD(FOO)) && (id != ACTION_WORD(FUM))) {
+            rspeak(OK_MAN);
+            return GO_CLEAROBJ;
+        }
+        game.foobar = WORD_EMPTY;
+        if (game.place[EGGS] == objects[EGGS].plac ||
+            (TOTING(EGGS) && game.loc == objects[EGGS].plac)) {
+            rspeak(NOTHING_HAPPENS);
+            return GO_CLEAROBJ;
+        } else {
+            /*  Bring back troll if we steal the eggs back from him before
+             *  crossing. */
+            if (game.place[EGGS] == LOC_NOWHERE && game.place[TROLL] == LOC_NOWHERE && game.prop[TROLL] == TROLL_UNPAID)
+                game.prop[TROLL] = TROLL_PAIDONCE;
+            int k = EGGS_DONE;
+            if (HERE(EGGS))
+                k = EGGS_VANISHED;
+            if (game.loc == objects[EGGS].plac)
+                k = EGGS_HERE;
+            move(EGGS, objects[EGGS].plac);
+            pspeak(EGGS, look, k, true);
+            return GO_CLEAROBJ;
+        }
+    } else {
+        if (game.loc == LOC_GIANTROOM) {
+            rspeak(START_OVER);
+        } else {
+            /* This is new begavior in Open Adventure - sounds better when
+             * player isn't in the Giant Room. */
+            rspeak(WELL_POINTLESS);
+        }
+        game.foobar = WORD_EMPTY;
+        return GO_CLEAROBJ;
     }
 }
 
@@ -248,7 +245,7 @@ static void blast(void)
     }
 }
 
-static int vbreak(token_t verb, token_t obj)
+static int vbreak(vocab_t verb, obj_t obj)
 /*  Break.  Only works for mirror in repository and, of course, the vase. */
 {
     if (obj == MIRROR) {
@@ -280,7 +277,7 @@ static int brief(void)
     return GO_CLEAROBJ;
 }
 
-static int vcarry(token_t verb, token_t obj)
+static int vcarry(token_t verb, obj_t obj)
 /*  Carry an object.  Special cases for bird and cage (if bird in cage, can't
  *  take one without the other).  Liquids also special, since they depend on
  *  status of bottle.  Also various side effects, etc. */
@@ -445,7 +442,7 @@ static int chain(token_t verb)
     return GO_CLEAROBJ;
 }
 
-static int discard(token_t verb, token_t obj, bool just_do_it)
+static int discard(token_t verb, obj_t obj, bool just_do_it)
 /*  Discard object.  "Throw" also comes here for most objects.  Special cases for
  *  bird (might attack snake or dragon) and cage (might contain bird) and vase.
  *  Drop coins at vending machine for extra batteries. */
@@ -528,7 +525,7 @@ static int discard(token_t verb, token_t obj, bool just_do_it)
     return GO_CLEAROBJ;
 }
 
-static int drink(token_t verb, token_t obj)
+static int drink(token_t verb, obj_t obj)
 /*  Drink.  If no object, assume water and look for it here.  If water is in
  *  the bottle, drink that, else must be at a water loc, so drink stream. */
 {
@@ -558,7 +555,7 @@ static int drink(token_t verb, token_t obj)
     return GO_CLEAROBJ;
 }
 
-static int eat(token_t verb, token_t obj)
+static int eat(token_t verb, obj_t obj)
 /*  Eat.  Intransitive: assume food if present, else ask what.  Transitive: food
  *  ok, some things lose appetite, rest are ridiculous. */
 {
@@ -590,7 +587,7 @@ static int eat(token_t verb, token_t obj)
     return GO_CLEAROBJ;
 }
 
-static int extinguish(token_t verb, int obj)
+static int extinguish(token_t verb, obj_t obj)
 /* Extinguish.  Lamp, urn, dragon/volcano (nice try). */
 {
     if (obj == INTRANSITIVE) {
@@ -629,7 +626,7 @@ static int extinguish(token_t verb, int obj)
     return GO_CLEAROBJ;
 }
 
-static int feed(token_t verb, token_t obj)
+static int feed(token_t verb, obj_t obj)
 /*  Feed.  If bird, no seed.  Snake, dragon, troll: quip.  If dwarf, make him
  *  mad.  Bear, special. */
 {
@@ -689,7 +686,7 @@ static int feed(token_t verb, token_t obj)
     return GO_CLEAROBJ;
 }
 
-int fill(token_t verb, token_t obj)
+int fill(token_t verb, obj_t obj)
 /*  Fill.  Bottle or urn must be empty, and liquid available.  (Vase
  *  is nasty.) */
 {
@@ -764,7 +761,7 @@ int fill(token_t verb, token_t obj)
     return GO_CLEAROBJ;
 }
 
-static int find(token_t verb, token_t obj)
+static int find(token_t verb, obj_t obj)
 /* Find.  Might be carrying it, or it might be here.  Else give caveat. */
 {
     if (TOTING(obj)) {
@@ -790,7 +787,7 @@ static int find(token_t verb, token_t obj)
     return GO_CLEAROBJ;
 }
 
-static int fly(token_t verb, token_t obj)
+static int fly(token_t verb, obj_t obj)
 /* Fly.  Snide remarks unless hovering rug is here. */
 {
     if (obj == INTRANSITIVE) {
@@ -817,10 +814,10 @@ static int fly(token_t verb, token_t obj)
     game.oldloc = game.loc;
 
     if (game.prop[SAPPH] == STATE_NOTFOUND) {
-	game.newloc = game.place[SAPPH];
+        game.newloc = game.place[SAPPH];
         rspeak(RUG_GOES);
     } else {
-	game.newloc = LOC_CLIFF;
+        game.newloc = LOC_CLIFF;
         rspeak(RUG_RETURNS);
     }
     return GO_TERMINATE;
@@ -830,7 +827,7 @@ static int inven(void)
 /* Inventory. If object, treat same as find.  Else report on current burden. */
 {
     bool empty = true;
-    for (int i = 1; i <= NOBJECTS; i++) {
+    for (obj_t i = 1; i <= NOBJECTS; i++) {
         if (i == BEAR ||
             !TOTING(i))
             continue;
@@ -847,7 +844,7 @@ static int inven(void)
     return GO_CLEAROBJ;
 }
 
-static int light(token_t verb, token_t obj)
+static int light(token_t verb, obj_t obj)
 /*  Light.  Applicable only to lamp and urn. */
 {
     if (obj == INTRANSITIVE) {
@@ -893,12 +890,13 @@ static int listen(void)
             rspeak(NO_MESSAGE);
         return GO_CLEAROBJ;
     }
-    for (int i = 1; i <= NOBJECTS; i++) {
+    for (obj_t i = 1; i <= NOBJECTS; i++) {
         if (!HERE(i) ||
             objects[i].sounds[0] == NULL ||
             game.prop[i] < 0)
             continue;
         int mi =  game.prop[i];
+        /* FIXME: Weird magic on object states */
         if (i == BIRD)
             mi += 3 * game.blooded;
         long packed_zzword = token_to_packed(game.zzword);
@@ -912,7 +910,7 @@ static int listen(void)
     return GO_CLEAROBJ;
 }
 
-static int lock(token_t verb, token_t obj)
+static int lock(token_t verb, obj_t obj)
 /* Lock, unlock, no object given.  Assume various things if present. */
 {
     if (obj == INTRANSITIVE) {
@@ -992,7 +990,7 @@ static int lock(token_t verb, token_t obj)
     return GO_CLEAROBJ;
 }
 
-static int pour(token_t verb, token_t obj)
+static int pour(token_t verb, obj_t obj)
 /*  Pour.  If no object, or object is bottle, assume contents of bottle.
  *  special tests for pouring water or oil on plant or rusty door. */
 {
@@ -1049,13 +1047,13 @@ static int read(struct command_t command)
 /*  Read.  Print stuff based on objtxt.  Oyster (?) is special case. */
 {
     if (command.obj == INTRANSITIVE) {
-        command.obj = 0;
+        command.obj = NO_OBJECT;
         for (int i = 1; i <= NOBJECTS; i++) {
             if (HERE(i) && objects[i].texts[0] != NULL && game.prop[i] >= 0)
                 command.obj = command.obj * NOBJECTS + i;
         }
         if (command.obj > NOBJECTS ||
-            command.obj == 0 ||
+            command.obj == NO_OBJECT ||
             DARK(game.loc))
             return GO_UNKNOWN;
     }
@@ -1065,7 +1063,7 @@ static int read(struct command_t command)
     } else if (command.obj == OYSTER && !game.clshnt && game.closed) {
         game.clshnt = yes(arbitrary_messages[CLUE_QUERY], arbitrary_messages[WAYOUT_CLUE], arbitrary_messages[OK_MAN]);
     } else if (objects[command.obj].texts[0] == NULL ||
-               game.prop[command.obj] < 0) {
+               game.prop[command.obj] == STATE_NOTFOUND) {
         speak(actions[command.verb].message);
     } else
         pspeak(command.obj, study, game.prop[command.obj], true);
@@ -1092,7 +1090,7 @@ static int reservoir(void)
     }
 }
 
-static int rub(token_t verb, token_t obj)
+static int rub(token_t verb, obj_t obj)
 /* Rub.  Yields various snide remarks except for lit urn. */
 {
     if (obj == URN && game.prop[URN] == URN_LIT) {
@@ -1124,10 +1122,10 @@ static int say(struct command_t *command)
         wd == MOTION_WORD(PLUGH) ||
         wd == MOTION_WORD(PLOVER) ||
         wd == ACTION_WORD(FEE) ||
-	wd == ACTION_WORD(FIE) ||
-	wd == ACTION_WORD(FOE) ||
-	wd == ACTION_WORD(FOO) ||
-	wd == ACTION_WORD(FUM) ||
+        wd == ACTION_WORD(FIE) ||
+        wd == ACTION_WORD(FOE) ||
+        wd == ACTION_WORD(FOO) ||
+        wd == ACTION_WORD(FUM) ||
         wd == ACTION_WORD(PART)) {
         /* FIXME: scribbles on the interpreter's command block */
         wordclear(&command->wd2);
@@ -1205,7 +1203,7 @@ static int throw (struct command_t *command)
     }
 }
 
-static int wake(token_t verb, token_t obj)
+static int wake(token_t verb, obj_t obj)
 /* Wake.  Only use is to disturb the dwarves. */
 {
     if (obj != DWARF ||
@@ -1218,7 +1216,7 @@ static int wake(token_t verb, token_t obj)
     }
 }
 
-static int wave(token_t verb, token_t obj)
+static int wave(token_t verb, obj_t obj)
 /* Wave.  No effect unless waving rod at fissure or at bird. */
 {
     if (obj != ROD ||
@@ -1227,13 +1225,13 @@ static int wave(token_t verb, token_t obj)
          (game.closng ||
           !AT(FISSURE)))) {
         speak(((!TOTING(obj)) && (obj != ROD ||
-                                   !TOTING(ROD2))) ?
-               arbitrary_messages[ARENT_CARRYING] :
-               actions[verb].message);
+                                  !TOTING(ROD2))) ?
+              arbitrary_messages[ARENT_CARRYING] :
+              actions[verb].message);
         return GO_CLEAROBJ;
     }
 
-    if (game.prop[BIRD] == BIRD_UNCAGED && game.loc == game.place[STEPS] && game.prop[JADE] < 0) {
+    if (game.prop[BIRD] == BIRD_UNCAGED && game.loc == game.place[STEPS] && game.prop[JADE] == STATE_NOTFOUND) {
         drop(JADE, game.loc);
         game.prop[JADE] = STATE_FOUND;
         --game.tally;
@@ -1388,10 +1386,10 @@ int action(struct command_t *command)
             case SCORE:
                 score(scoregame);
                 return GO_CLEAROBJ;
-	    case FEE:
-	    case FIE:
-	    case FOE:
-	    case FOO:
+            case FEE:
+            case FIE:
+            case FOE:
+            case FOO:
             case FUM:
                 return bigwords(command->id1);
             case BRIEF:
@@ -1480,10 +1478,10 @@ int action(struct command_t *command)
             speak(actions[command->verb].message);
             return GO_CLEAROBJ;
         }
-	case FEE:
-	case FIE:
-	case FOE:
-	case FOO:
+        case FEE:
+        case FIE:
+        case FOE:
+        case FOO:
         case FUM: {
             speak(actions[command->verb].message);
             return GO_CLEAROBJ;

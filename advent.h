@@ -192,7 +192,7 @@ struct settings_t {
 struct command_t {
     enum speechpart part;
     vocab_t verb;
-    vocab_t obj;
+    obj_t   obj;
     token_t wd1;
     token_t wd2;
     long id1;
