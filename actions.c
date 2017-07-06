@@ -1073,8 +1073,7 @@ static int read(struct command_t command)
 static int reservoir(void)
 /*  Z'ZZZ (word gets recomputed at startup; different each game). */
 {
-    /* FIXME: Arithmetic on state numbers */
-    if (!AT(RESER) && game.loc != game.fixed[RESER] - 1) {
+    if (!AT(RESER) && game.loc != LOC_RESBOTTOM) {
         rspeak(NOTHING_HAPPENS);
         return GO_CLEAROBJ;
     } else {
