@@ -594,30 +594,27 @@ static int extinguish(token_t verb, obj_t obj)
             return GO_UNKNOWN;
     }
 
-    if (obj == URN) {
+    switch (obj) {
+    case URN:
         if (game.prop[URN] != URN_EMPTY) {
             state_change(URN, URN_DARK);
         } else {
             pspeak(URN, change, URN_DARK, true);
         }
-        return GO_CLEAROBJ;
-    }
-
-    if (obj == LAMP) {
+        break;
+    case LAMP:
         state_change(LAMP, LAMP_DARK);
         rspeak(DARK(game.loc) ?
                PITCH_DARK :
                NO_MESSAGE);
-        return GO_CLEAROBJ;
-    }
-
-    if (obj == DRAGON ||
-        obj == VOLCANO) {
+        break;
+    case DRAGON:
+    case VOLCANO:
         rspeak(BEYOND_POWER);
-        return GO_CLEAROBJ;
+        break;
+    default:
+        speak(actions[verb].message);
     }
-
-    speak(actions[verb].message);
     return GO_CLEAROBJ;
 }
 
@@ -844,36 +841,38 @@ static int light(token_t verb, obj_t obj)
 /*  Light.  Applicable only to lamp and urn. */
 {
     if (obj == INTRANSITIVE) {
-        if (HERE(LAMP) && game.prop[LAMP] == LAMP_DARK && game.limit >= 0)
+        int selects = 0;
+        if (HERE(LAMP) && game.prop[LAMP] == LAMP_DARK && game.limit >= 0) {
             obj = LAMP;
-        if (HERE(URN) && game.prop[URN] == URN_DARK)
+            selects++;
+        }
+        if (HERE(URN) && game.prop[URN] == URN_DARK) {
             obj =  URN;
-        if (obj == INTRANSITIVE ||
-            (HERE(LAMP) && game.prop[LAMP] == LAMP_DARK && game.limit >= 0 &&
-             HERE(URN) && game.prop[URN] == URN_DARK))
+            selects++;
+        }
+        if (selects != 1)
             return GO_UNKNOWN;
     }
 
-    if (obj == URN) {
+    switch (obj) {
+    case URN:
         state_change(URN, game.prop[URN] == URN_EMPTY ?
                      URN_EMPTY :
                      URN_LIT);
-        return GO_CLEAROBJ;
-    } else {
-        if (obj != LAMP) {
-            speak(actions[verb].message);
-            return GO_CLEAROBJ;
-        }
+        break;
+    case LAMP:
         if (game.limit < 0) {
             rspeak(LAMP_OUT);
-            return GO_CLEAROBJ;
+            break;
         }
         state_change(LAMP, LAMP_BRIGHT);
         if (game.wzdark)
             return GO_TOP;
-        else
-            return GO_CLEAROBJ;
+        break;
+    default:
+        speak(actions[verb].message);
     }
+    return GO_CLEAROBJ;
 }
 
 static int listen(void)
