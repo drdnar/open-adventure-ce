@@ -813,12 +813,12 @@ static int fly(token_t verb, token_t obj)
     }
     game.oldlc2 = game.oldloc;
     game.oldloc = game.loc;
-    /* FIXME: Arithmetic on location values */
-    game.newloc = game.place[RUG] + game.fixed[RUG] - game.loc;
 
     if (game.prop[SAPPH] == STATE_NOTFOUND) {
+	game.newloc = game.place[SAPPH];
         rspeak(RUG_GOES);
     } else {
+	game.newloc = LOC_CLIFF;
         rspeak(RUG_RETURNS);
     }
     return GO_TERMINATE;
