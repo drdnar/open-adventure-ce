@@ -1289,10 +1289,10 @@ int action(struct command_t *command)
         else if ((LIQUID() == command->obj && HERE(BOTTLE)) ||
                  command->obj == LIQLOC(game.loc))
             /* FALL THROUGH */;
-        else if (command->obj == OIL && HERE(URN) && game.prop[URN] != 0) {
+        else if (command->obj == OIL && HERE(URN) && game.prop[URN] != URN_EMPTY) {
             command->obj = URN;
             /* FALL THROUGH */;
-        } else if (command->obj == PLANT && AT(PLANT2) && game.prop[PLANT2] != 0) {
+        } else if (command->obj == PLANT && AT(PLANT2) && game.prop[PLANT2] != PLANT_THIRSTY) {
             command->obj = PLANT2;
             /* FALL THROUGH */;
         } else if (command->obj == KNIFE && game.knfloc == game.loc) {
