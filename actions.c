@@ -1170,9 +1170,9 @@ static int throw (struct command_t *command)
                 return throw_support(DRAGON_SCALES);
             if (AT(TROLL))
                 return throw_support(TROLL_RETURNS);
-            else if (AT(OGRE))
+            if (AT(OGRE))
                 return throw_support(OGRE_DODGE);
-            else if (HERE(BEAR) && game.prop[BEAR] == UNTAMED_BEAR) {
+            if (HERE(BEAR) && game.prop[BEAR] == UNTAMED_BEAR) {
                 /* This'll teach him to throw the axe at the bear! */
                 drop(AXE, game.loc);
                 game.fixed[AXE] = IS_FIXED;
