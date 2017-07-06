@@ -702,7 +702,7 @@ def buildtravel(locs, objs):
     #
     # In order to de-crypticize the runtime code, we're going to break these
     # magic numbers up into a struct.
-    travel = [[0, 0, 0, "false", "false"]]
+    travel = [[0, "LOC_NOWHERE", 0, 0, 0, "false", "false"]]
     tkey = [0]
     oldloc = 0
     while ltravel:
@@ -716,16 +716,19 @@ def buildtravel(locs, objs):
             travel[-1][-1] = "false" if travel[-1][-1] == "true" else "true" 
         while rule:
             cond = newloc // 1000
-            travel.append([rule.pop(0),
+            dest = newloc % 1000
+            travel.append([len(tkey)-1,
+                           locnames[len(tkey)-1],
+                           rule.pop(0),
                            cond,
-                           newloc % 1000,
+                           locnames[dest] if dest <= 300 else dest,
                            "true" if cond==100 else "false",
                            "false"])
         travel[-1][-1] = "true"
     return (travel, tkey)
 
 def get_travel(travel):
-    template = """    {{
+    template = """    {{ // from {}: {}
         .motion = {},
         .cond = {},
         .dest = {},
