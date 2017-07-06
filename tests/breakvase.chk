@@ -1298,6 +1298,10 @@ OK
 
 You have taken the vase and hurled it delicately to the ground.
 
+> break vase
+
+It is beyond your power to do that.
+
 > quit
 
 Do you really want to quit now?
@@ -1306,7 +1310,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 139 out of a possible 430, using 211 turns.
+You scored 139 out of a possible 430, using 212 turns.
 
 You have achieved the rating: "Experienced Adventurer".
 

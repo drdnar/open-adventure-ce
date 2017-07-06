@@ -248,23 +248,26 @@ static void blast(void)
 static int vbreak(vocab_t verb, obj_t obj)
 /*  Break.  Only works for mirror in repository and, of course, the vase. */
 {
-    if (obj == MIRROR) {
+    switch (obj) {
+    case MIRROR:
         if (game.closed) {
             rspeak(BREAK_MIRROR);
             return GO_DWARFWAKE;
         } else {
             rspeak(TOO_FAR);
-            return GO_CLEAROBJ;
+            break;
         }
+    case VASE:
+        if (game.prop[VASE] == VASE_WHOLE) {
+            if (TOTING(VASE))
+                drop(VASE, game.loc);
+            state_change(VASE, VASE_BROKEN);
+            game.fixed[VASE] = IS_FIXED;
+            break;
+        }
+    default:
+        speak(actions[verb].message);
     }
-    if (obj == VASE && game.prop[VASE] == VASE_WHOLE) {
-        if (TOTING(VASE))
-            drop(VASE, game.loc);
-        state_change(VASE, VASE_BROKEN);
-        game.fixed[VASE] = IS_FIXED;
-        return GO_CLEAROBJ;
-    }
-    speak(actions[verb].message);
     return (GO_CLEAROBJ);
 }
 
