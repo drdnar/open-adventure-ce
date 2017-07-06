@@ -673,7 +673,7 @@ def buildtravel(locs, objs):
                 tt = [i]
                 dest = dencode(rule["action"], name) + 1000 * cencode(rule.get("cond"), name)
                 tt.append(dest)
-                tt += [verbmap[e] for e in rule["verbs"]]
+                tt += [motionnames[verbmap[e]].upper() for e in rule["verbs"]]
                 if not rule["verbs"]:
                     tt.append(1)
                 ltravel.append(tuple(tt))
@@ -702,7 +702,7 @@ def buildtravel(locs, objs):
     #
     # In order to de-crypticize the runtime code, we're going to break these
     # magic numbers up into a struct.
-    travel = [[0, 0, 0, False, False]]
+    travel = [[0, 0, 0, "false", "false"]]
     tkey = [0]
     oldloc = 0
     while ltravel:
@@ -713,15 +713,15 @@ def buildtravel(locs, objs):
             tkey.append(len(travel))
             oldloc = loc 
         elif travel:
-            travel[-1][-1] = not travel[-1][-1]
+            travel[-1][-1] = "false" if travel[-1][-1] == "true" else "true" 
         while rule:
             cond = newloc // 1000
             travel.append([rule.pop(0),
                            cond,
                            newloc % 1000,
-                           cond==100,
-                           False])
-        travel[-1][-1] = True
+                           "true" if cond==100 else "false",
+                           "false"])
+        travel[-1][-1] = "true"
     return (travel, tkey)
 
 def get_travel(travel):
@@ -735,7 +735,7 @@ def get_travel(travel):
 """
     out = ""
     for entry in travel:
-        out += template.format(*entry).lower()
+        out += template.format(*entry)
     out = out[:-1] # trim trailing newline
     return out
 
@@ -746,6 +746,7 @@ if __name__ == "__main__":
     locnames = [x[0] for x in db["locations"]]
     msgnames = [el[0] for el in db["arbitrary_messages"]]
     objnames = [el[0] for el in db["objects"]]
+    motionnames = [el[0] for el in db["motions"]]
 
     (travel, tkey) = buildtravel(db["locations"],
                                  db["objects"])
