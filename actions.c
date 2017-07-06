@@ -442,72 +442,70 @@ static int chain(token_t verb)
     return GO_CLEAROBJ;
 }
 
-static int discard(token_t verb, obj_t obj, bool just_do_it)
+static int discard(token_t verb, obj_t obj)
 /*  Discard object.  "Throw" also comes here for most objects.  Special cases for
  *  bird (might attack snake or dragon) and cage (might contain bird) and vase.
  *  Drop coins at vending machine for extra batteries. */
 {
-    if (!just_do_it) {
-        if (TOTING(ROD2) && obj == ROD && !TOTING(ROD))
-            obj = ROD2;
-        if (!TOTING(obj)) {
-            speak(actions[verb].message);
-            return GO_CLEAROBJ;
-        }
-        if (obj == BIRD && HERE(SNAKE)) {
-            rspeak(BIRD_ATTACKS);
-            if (game.closed)
-                return GO_DWARFWAKE;
-            DESTROY(SNAKE);
-            /* Set game.prop for use by travel options */
-            game.prop[SNAKE] = SNAKE_CHASED;
+    if (TOTING(ROD2) && obj == ROD && !TOTING(ROD))
+        obj = ROD2;
+    if (!TOTING(obj)) {
+        speak(actions[verb].message);
+        return GO_CLEAROBJ;
+    }
+    if (obj == BIRD && HERE(SNAKE)) {
+        rspeak(BIRD_ATTACKS);
+        if (game.closed)
+            return GO_DWARFWAKE;
+        DESTROY(SNAKE);
+        /* Set game.prop for use by travel options */
+        game.prop[SNAKE] = SNAKE_CHASED;
 
-        } else if ((GSTONE(obj) && AT(CAVITY) && game.prop[CAVITY] != CAVITY_FULL)) {
-            rspeak(GEM_FITS);
-            game.prop[obj] = STATE_IN_CAVITY;
-            game.prop[CAVITY] = CAVITY_FULL;
-            if (HERE(RUG) && ((obj == EMERALD && game.prop[RUG] != RUG_HOVER) ||
-                              (obj == RUBY && game.prop[RUG] == RUG_HOVER))) {
-                int spk = RUG_RISES;
-                if (TOTING(RUG))
-                    spk = RUG_WIGGLES;
-                if (obj == RUBY)
-                    spk = RUG_SETTLES;
-                rspeak(spk);
-                if (spk != RUG_WIGGLES) {
-                    int k = (game.prop[RUG] == RUG_HOVER) ? RUG_FLOOR : RUG_HOVER;
-                    game.prop[RUG] = k;
-                    if (k == RUG_HOVER)
-                        k = objects[SAPPH].plac;
-                    move(RUG + NOBJECTS, k);
-                }
+    } else if ((GSTONE(obj) && AT(CAVITY) && game.prop[CAVITY] != CAVITY_FULL)) {
+        rspeak(GEM_FITS);
+        game.prop[obj] = STATE_IN_CAVITY;
+        game.prop[CAVITY] = CAVITY_FULL;
+        if (HERE(RUG) && ((obj == EMERALD && game.prop[RUG] != RUG_HOVER) ||
+                          (obj == RUBY && game.prop[RUG] == RUG_HOVER))) {
+            int spk = RUG_RISES;
+            if (TOTING(RUG))
+                spk = RUG_WIGGLES;
+            if (obj == RUBY)
+                spk = RUG_SETTLES;
+            rspeak(spk);
+            if (spk != RUG_WIGGLES) {
+                int k = (game.prop[RUG] == RUG_HOVER) ? RUG_FLOOR : RUG_HOVER;
+                game.prop[RUG] = k;
+                if (k == RUG_HOVER)
+                    k = objects[SAPPH].plac;
+                move(RUG + NOBJECTS, k);
             }
-        } else if (obj == COINS && HERE(VEND)) {
-            DESTROY(COINS);
-            drop(BATTERY, game.loc);
-            pspeak(BATTERY, look, FRESH_BATTERIES, true);
-            return GO_CLEAROBJ;
-        } else if (obj == BIRD && AT(DRAGON) && game.prop[DRAGON] == DRAGON_BARS) {
-            rspeak(BIRD_BURNT);
-            DESTROY(BIRD);
-            return GO_CLEAROBJ;
-        } else if (obj == BEAR && AT(TROLL)) {
-            state_change(TROLL, TROLL_GONE);
-            move(TROLL, LOC_NOWHERE);
-            move(TROLL + NOBJECTS, LOC_NOWHERE);
-            move(TROLL2, objects[TROLL].plac);
-            move(TROLL2 + NOBJECTS, objects[TROLL].fixd);
-            juggle(CHASM);
-        } else if (obj != VASE ||
-                   game.loc == objects[PILLOW].plac) {
-            rspeak(OK_MAN);
-        } else {
-            state_change(VASE, AT(PILLOW)
-                         ? VASE_WHOLE
-                         : VASE_DROPPED);
-            if (game.prop[VASE] != VASE_WHOLE)
-                game.fixed[VASE] = IS_FIXED;
         }
+    } else if (obj == COINS && HERE(VEND)) {
+        DESTROY(COINS);
+        drop(BATTERY, game.loc);
+        pspeak(BATTERY, look, FRESH_BATTERIES, true);
+        return GO_CLEAROBJ;
+    } else if (obj == BIRD && AT(DRAGON) && game.prop[DRAGON] == DRAGON_BARS) {
+        rspeak(BIRD_BURNT);
+        DESTROY(BIRD);
+        return GO_CLEAROBJ;
+    } else if (obj == BEAR && AT(TROLL)) {
+        state_change(TROLL, TROLL_GONE);
+        move(TROLL, LOC_NOWHERE);
+        move(TROLL + NOBJECTS, LOC_NOWHERE);
+        move(TROLL2, objects[TROLL].plac);
+        move(TROLL2 + NOBJECTS, objects[TROLL].fixd);
+        juggle(CHASM);
+    } else if (obj != VASE ||
+               game.loc == objects[PILLOW].plac) {
+        rspeak(OK_MAN);
+    } else {
+        state_change(VASE, AT(PILLOW)
+                     ? VASE_WHOLE
+                     : VASE_DROPPED);
+        if (game.prop[VASE] != VASE_WHOLE)
+            game.fixed[VASE] = IS_FIXED;
     }
     int k = LIQUID();
     if (k == obj)
@@ -702,7 +700,8 @@ int fill(token_t verb, obj_t obj)
         rspeak(SHATTER_VASE);
         game.prop[VASE] = VASE_BROKEN;
         game.fixed[VASE] = IS_FIXED;
-        return (discard(verb, VASE, true));
+        drop(VASE, game.loc);
+        return GO_CLEAROBJ;
     }
 
     if (obj == URN) {
@@ -1168,7 +1167,7 @@ static int throw (struct command_t *command)
         return (feed(command->verb, command->obj));
     }
     if (command->obj != AXE)
-        return (discard(command->verb, command->obj, false));
+        return (discard(command->verb, command->obj));
     else {
         if (atdwrf(game.loc) <= 0) {
             if (AT(DRAGON) && game.prop[DRAGON] == DRAGON_BARS)
@@ -1421,7 +1420,7 @@ int action(struct command_t *command)
         case  CARRY:
             return vcarry(command->verb, command->obj);
         case  DROP:
-            return discard(command->verb, command->obj, false);
+            return discard(command->verb, command->obj);
         case  SAY:
             return say(command);
         case  UNLOCK:
