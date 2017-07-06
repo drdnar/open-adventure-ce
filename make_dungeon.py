@@ -355,7 +355,7 @@ def get_turn_thresholds(trn):
     return trn_str
 
 def get_locations(loc):
-    template = """    {{ // {}
+    template = """    {{ // {}: {}
         .description = {{
             .small = {},
             .big = {},
@@ -370,12 +370,12 @@ def get_locations(loc):
         long_d = make_c_string(item[1]["description"]["long"])
         sound = item[1].get("sound", "SILENT")
         loud = "true" if item[1].get("loud") else "false"
-        loc_str += template.format(i, short_d, long_d, sound, loud)
+        loc_str += template.format(i, item[0], short_d, long_d, sound, loud)
     loc_str = loc_str[:-1] # trim trailing newline
     return loc_str
 
 def get_objects(obj):
-    template = """    {{ // {}
+    template = """    {{ // {}: {}
         .words = {},
         .inventory = {},
         .plac = {},
@@ -449,7 +449,7 @@ def get_objects(obj):
             sys.stderr.write("dungeon: unknown object location in %s\n" % locs)
             sys.exit(1)
         treasure = "true" if attr.get("treasure") else "false"
-        obj_str += template.format(i, words_str, i_msg, locs[0], locs[1], treasure, descriptions_str, sounds_str, texts_str, changes_str)
+        obj_str += template.format(i, item[0], words_str, i_msg, locs[0], locs[1], treasure, descriptions_str, sounds_str, texts_str, changes_str)
     obj_str = obj_str[:-1] # trim trailing newline
     return obj_str
 
