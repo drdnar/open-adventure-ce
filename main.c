@@ -178,9 +178,9 @@ static void checkhints(void)
                     game.hintlc[hint] = 0;
                     return;
                 case 3:	/* maze */
-                    if (game.atloc[game.loc] == 0 &&
-                        game.atloc[game.oldloc] == 0 &&
-                        game.atloc[game.oldlc2] == 0 &&
+                    if (game.atloc[game.loc] == NO_OBJECT &&
+                        game.atloc[game.oldloc] == NO_OBJECT &&
+                        game.atloc[game.oldlc2] == NO_OBJECT &&
                         game.holdng > 1)
                         break;
                     game.hintlc[hint] = 0;
@@ -198,9 +198,9 @@ static void checkhints(void)
                     game.hintlc[hint] = 0;
                     return;
                 case 7:	/* woods */
-                    if (game.atloc[game.loc] == 0 &&
-                        game.atloc[game.oldloc] == 0 &&
-                        game.atloc[game.oldlc2] == 0)
+                    if (game.atloc[game.loc] == NO_OBJECT &&
+                        game.atloc[game.oldloc] == NO_OBJECT &&
+                        game.atloc[game.oldlc2] == NO_OBJECT)
                         break;
                     return;
                 case 8:	/* ogre */
@@ -247,7 +247,7 @@ static bool spotted_by_pirate(int i)
      *  it to the troll, but in that case he's seen the chest
      *  (game.prop=0). */
     if (game.loc == game.chloc ||
-        game.prop[CHEST] >= 0)
+        game.prop[CHEST] != STATE_NOTFOUND)
         return true;
     int snarfed = 0;
     bool movechest = false, robplayer = false;
@@ -324,7 +324,7 @@ static bool dwarfmove(void)
      *  means dwarves won't follow him into dead end in maze, but
      *  c'est la vie.  They'll wait for him outside the dead
      *  end. */
-    if (game.loc == 0 ||
+    if (game.loc == LOC_NOWHERE ||
         FORCED(game.loc) ||
         CNDBIT(game.newloc, COND_NOARRR))
         return true;
@@ -713,8 +713,8 @@ static void playermove( int motion)
                     if (game.prop[TROLL] == TROLL_PAIDONCE) {
                         pspeak(TROLL, look, TROLL_PAIDONCE, true);
                         game.prop[TROLL] = TROLL_UNPAID;
-                        move(TROLL2, 0);
-                        move(TROLL2 + NOBJECTS, 0);
+                        move(TROLL2, LOC_NOWHERE);
+                        move(TROLL2 + NOBJECTS, IS_FREE);
                         move(TROLL, objects[TROLL].plac);
                         move(TROLL + NOBJECTS, objects[TROLL].fixd);
                         juggle(CHASM);
@@ -787,10 +787,10 @@ static bool closecheck(void)
         game.prop[FISSURE] = UNBRIDGED;
         for (int i = 1; i <= NDWARVES; i++) {
             game.dseen[i] = false;
-            game.dloc[i] = 0;
+            game.dloc[i] = LOC_NOWHERE;
         }
-        move(TROLL, 0);
-        move(TROLL + NOBJECTS, 0);
+        move(TROLL, LOC_NOWHERE);
+        move(TROLL + NOBJECTS, IS_FREE);
         move(TROLL2, objects[TROLL].plac);
         move(TROLL2 + NOBJECTS, objects[TROLL].fixd);
         juggle(CHASM);
@@ -823,10 +823,10 @@ static bool closecheck(void)
          *  could cause trouble, such as the keys).  We describe the
          *  flash of light and trundle back. */
         game.prop[BOTTLE] = put(BOTTLE, LOC_NE, EMPTY_BOTTLE);
-        game.prop[PLANT] = put(PLANT, LOC_NE, 0);
-        game.prop[OYSTER] = put(OYSTER, LOC_NE, 0);
-        game.prop[LAMP] = put(LAMP, LOC_NE, 0);
-        game.prop[ROD] = put(ROD, LOC_NE, 0);
+        game.prop[PLANT] = put(PLANT, LOC_NE, PLANT_THIRSTY);
+        game.prop[OYSTER] = put(OYSTER, LOC_NE, STATE_FOUND);
+        game.prop[LAMP] = put(LAMP, LOC_NE, LAMP_DARK);
+        game.prop[ROD] = put(ROD, LOC_NE, STATE_FOUND);
         game.prop[DWARF] = put(DWARF, LOC_NE, 0);
         game.loc = LOC_NE;
         game.oldloc = LOC_NE;
@@ -836,13 +836,13 @@ static bool closecheck(void)
         put(GRATE, LOC_SW, 0);
         put(SIGN, LOC_SW, 0);
         game.prop[SIGN] = ENDGAME_SIGN;
-        game.prop[SNAKE] = put(SNAKE, LOC_SW, 1);
-        game.prop[BIRD] = put(BIRD, LOC_SW, 1);
-        game.prop[CAGE] = put(CAGE, LOC_SW, 0);
-        game.prop[ROD2] = put(ROD2, LOC_SW, 0);
-        game.prop[PILLOW] = put(PILLOW, LOC_SW, 0);
+        game.prop[SNAKE] = put(SNAKE, LOC_SW, SNAKE_CHASED);
+        game.prop[BIRD] = put(BIRD, LOC_SW, BIRD_CAGED);
+        game.prop[CAGE] = put(CAGE, LOC_SW, STATE_FOUND);
+        game.prop[ROD2] = put(ROD2, LOC_SW, STATE_FOUND);
+        game.prop[PILLOW] = put(PILLOW, LOC_SW, STATE_FOUND);
 
-        game.prop[MIRROR] = put(MIRROR, LOC_NE, 0);
+        game.prop[MIRROR] = put(MIRROR, LOC_NE, STATE_FOUND);
         game.fixed[MIRROR] = LOC_SW;
 
         for (int i = 1; i <= NOBJECTS; i++) {
