@@ -1050,6 +1050,7 @@ L2600:
             }
             if (strcmp(input, "") != 0)
                 break;
+            free(input);
         }
 
         strncpy(inputbuf, input, LINESIZE - 1);
