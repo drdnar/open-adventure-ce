@@ -352,7 +352,7 @@ char* get_input()
 
 bool silent_yes()
 {
-    bool outcome;
+    bool outcome = false;
 
     for (;;) {
         char* reply = get_input();
@@ -362,6 +362,11 @@ bool silent_yes()
             free(reply);
             exit(EXIT_SUCCESS);
             // LCOV_EXCL_STOP
+        }
+        if (strlen(reply) == 0) {
+            free(reply);
+            rspeak(PLEASE_ANSWER);
+            continue;
         }
 
         char* firstword = (char*) xmalloc(strlen(reply) + 1);
@@ -398,7 +403,7 @@ bool yes(const char* question, const char* yes_response, const char* no_response
 /*  Print message X, wait for yes/no answer.  If yes, print Y and return true;
  *  if no, print Z and return false. */
 {
-    bool outcome;
+    bool outcome = false;
 
     for (;;) {
         speak(question);
@@ -410,6 +415,12 @@ bool yes(const char* question, const char* yes_response, const char* no_response
             free(reply);
             exit(EXIT_SUCCESS);
             // LCOV_EXCL_STOP
+        }
+
+        if (strlen(reply) == 0) {
+            free(reply);
+            rspeak(PLEASE_ANSWER);
+            continue;
         }
 
         char* firstword = (char*) xmalloc(strlen(reply) + 1);
