@@ -116,6 +116,10 @@ int main(int argc, char *argv[])
     } else {
         restore(rfp);
     }
+#else
+    game.novice = yes(arbitrary_messages[WELCOME_YOU], arbitrary_messages[CAVE_NEARBY], arbitrary_messages[NO_MESSAGE]);
+    if (game.novice)
+        game.limit = NOVICELIMIT;
 #endif
 
     if (settings.logfp)
