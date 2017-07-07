@@ -149,11 +149,14 @@ typedef struct {{
   const char* message;
 }} special_t;
 
+enum condtype_t {{cond_goto, cond_pct, cond_carry, cond_with, cond_not}};
 enum desttype_t {{dest_goto, dest_special, dest_speak}};
 
 typedef struct {{
   const long motion;
-  const long cond;
+  const long condtype;
+  const long condarg1;
+  const long condarg2;
   const enum desttype_t desttype;
   const long destval;
   const bool nodwarves;
@@ -704,7 +707,7 @@ def buildtravel(locs, objs):
     #
     # In order to de-crypticize the runtime code, we're going to break these
     # magic numbers up into a struct.
-    travel = [[0, "LOC_NOWHERE", 0, 0, 0, 0, "false", "false"]]
+    travel = [[0, "LOC_NOWHERE", 0, 0, 0, 0, 0, 0, "false", "false"]]
     tkey = [0]
     oldloc = 0
     while ltravel:
@@ -718,6 +721,30 @@ def buildtravel(locs, objs):
             travel[-1][-1] = "false" if travel[-1][-1] == "true" else "true" 
         while rule:
             cond = newloc // 1000
+            nodwarves = (cond == 100)
+            if cond == 0:
+                condtype = "cond_goto"
+                condarg1 = condarg2 = 0
+            elif cond < 100:
+                condtype = "cond_pct"
+                condarg1 = cond
+                condarg2 = 0
+            elif cond == 100:
+                condtype = "cond_goto"
+                condarg1 = 100
+                condarg2 = 0
+            elif cond <= 200:
+                condtype = "cond_carry"
+                condarg1 = objnames[cond - 100]
+                condarg2 = 0
+            elif cond <= 300:
+                condtype = "cond_with"
+                condarg1 = objnames[cond - 200]
+                condarg2 = 0
+            else:
+                condtype = "cond_not"
+                condarg1 = cond % 100
+                condarg2 = (cond - 300) // 100.
             dest = newloc % 1000
             if dest <= 300:
                 desttype = "dest_goto";
@@ -731,10 +758,12 @@ def buildtravel(locs, objs):
             travel.append([len(tkey)-1,
                            locnames[len(tkey)-1],
                            rule.pop(0),
-                           cond,
+                           condtype,
+                           condarg1,
+                           condarg2,
                            desttype,
                            destval,
-                           "true" if cond==100 else "false",
+                           "true" if nodwarves else "false",
                            "false"])
         travel[-1][-1] = "true"
     return (travel, tkey)
@@ -742,7 +771,9 @@ def buildtravel(locs, objs):
 def get_travel(travel):
     template = """    {{ // from {}: {}
         .motion = {},
-        .cond = {},
+        .condtype = {},
+        .condarg1 = {},
+        .condarg2 = {},
         .desttype = {},
         .destval = {},
         .nodwarves = {},

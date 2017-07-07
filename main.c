@@ -509,7 +509,9 @@ static void croak(void)
 static bool traveleq(long a, long b)
 /* Are two travel entries equal for purposes of skip after failed condition? */
 {
-    return (travel[a].cond == travel[b].cond)
+    return (travel[a].condtype == travel[b].condtype)
+	   && (travel[a].condarg1 == travel[b].condarg1)
+	   && (travel[a].condarg2 == travel[b].condarg2)
            && (travel[a].desttype == travel[b].desttype)
            && (travel[a].destval == travel[b].destval);
 }
@@ -634,22 +636,23 @@ static void playermove( int motion)
     do {
         for (;;) { /* L12 loop */
             for (;;) {
-                long cond = travel[travel_entry].cond;
-                long arg = MOD(cond, 100);
-                if (!SPECIAL(cond)) {
+		enum condtype_t condtype = travel[travel_entry].condtype;
+                long condarg1 = travel[travel_entry].condarg1;
+                long condarg2 = travel[travel_entry].condarg2;
+                if (condtype < cond_not) {
                     /* YAML N and [pct N] conditionals */
-                    if (cond <= 100) {
-                        if (cond == 0 ||
-                            PCT(cond))
+                    if (condtype == cond_goto || condtype == cond_pct) {
+                        if (condarg1 == 0 ||
+                            PCT(condarg1))
                             break;
                         /* else fall through */
                     }
                     /* YAML [with OBJ] clause */
-                    if (TOTING(arg) ||
-                        (cond > 200 && AT(arg)))
+                    if (TOTING(condarg1) ||
+                        (condtype == cond_with && AT(condarg1)))
                         break;
                     /* else fall through to check [not OBJ STATE] */
-                } else if (game.prop[arg] != cond / 100 - 3)
+                } else if (game.prop[condarg1] != condarg2)
                     break;
 
                 /* We arrive here on conditional failure.

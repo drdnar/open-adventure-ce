@@ -12,7 +12,6 @@
 #define DALTLC         LOC_NUGGET // alternate dwarf location
 #define INVLIMIT       7          // inverntory limit (# of objects)
 #define INTRANSITIVE   -1         // illegal object number
-#define SPECIALBASE    300        // base number of special rooms
 #define GAMELIMIT      330        // base limit of turns
 #define NOVICELIMIT    1000       // limit of turns for novice
 #define WARNTIME       30         // late game starts at game.limit-this
@@ -65,7 +64,6 @@
 #define PCT(N)       (randrange(100) < (N))
 #define GSTONE(OBJ)  ((OBJ) == EMERALD || (OBJ) == RUBY || (OBJ) == AMBER || (OBJ) == SAPPH)
 #define FOREST(LOC)  CNDBIT(LOC, COND_FOREST)
-#define SPECIAL(LOC) ((LOC) > SPECIALBASE)
 #define OUTSID(LOC)  (CNDBIT(LOC, COND_ABOVE) || FOREST(LOC))
 #define INDEEP(LOC)  ((LOC) >= LOC_MISTHALL && !OUTSID(LOC))
 #define BUG(x)       bug(x, #x)

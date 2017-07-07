@@ -571,7 +571,8 @@ void move(obj_t object, loc_t where)
         from = game.fixed[object - NOBJECTS];
     else
         from = game.place[object];
-    if (from != LOC_NOWHERE && from != CARRIED && !SPECIAL(from))
+    /* (ESR) Used to check for !SPECIAL(from). I *think* that was wrong... */
+    if (from != LOC_NOWHERE && from != CARRIED)
         carry(object, from);
     drop(object, where);
 }
