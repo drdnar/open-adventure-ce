@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 
-# This is the new open-adventure dungeon generator. It'll eventually
-# replace the existing dungeon.c It currently outputs a .h and .c pair
-# for C code.
+# This is the open-adventure dungeon generator. It consumes a YAML description of
+# the dungeon and outputs a dungeon.h and dungeon.c pair of C code files.
 #
 # The nontrivial part of this is the compilation of the YAML for
 # movement rules to the travel array that's actually used by
@@ -611,8 +610,8 @@ def buildtravel(locs, objs):
     # him to 22 if he's carrying object 10, and otherwise will go to 14.
     #		11	303008	49
     #		11	9	50
-    # This says that, from 11, 49 takes him to 8 unless game.prop(3)=0, in which
-    # case he goes to 9.  Verb 50 takes him to 9 regardless of game.prop(3).
+    # This says that, from 11, 49 takes him to 8 unless game.prop[3]=0, in which
+    # case he goes to 9.  Verb 50 takes him to 9 regardless of game.prop[3].
     ltravel = []
     verbmap = {}
     for i, motion in enumerate(db["motions"]):
@@ -689,7 +688,7 @@ def buildtravel(locs, objs):
                 tt.append(dest)
                 tt += [motionnames[verbmap[e]].upper() for e in rule["verbs"]]
                 if not rule["verbs"]:
-                    tt.append(1)
+                    tt.append(1)	# Magic dummy entry for null rules
                 ltravel.append(tuple(tt))
 
     # At this point the ltravel data is in the Section 3
