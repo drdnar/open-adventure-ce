@@ -648,8 +648,8 @@ static void playermove( int motion)
                         /* else fall through */
                     }
                     /* YAML [with OBJ] clause */
-                    if (TOTING(condarg1) ||
-                        (condtype == cond_with && AT(condarg1)))
+                    else if (TOTING(condarg1) ||
+                             (condtype == cond_with && AT(condarg1)))
                         break;
                     /* else fall through to check [not OBJ STATE] */
                 } else if (game.prop[condarg1] != condarg2)
