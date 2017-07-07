@@ -205,11 +205,13 @@ static int bigwords(long id)
              *  crossing. */
             if (game.place[EGGS] == LOC_NOWHERE && game.place[TROLL] == LOC_NOWHERE && game.prop[TROLL] == TROLL_UNPAID)
                 game.prop[TROLL] = TROLL_PAIDONCE;
-            int k = EGGS_DONE;
+            int k;
             if (HERE(EGGS))
                 k = EGGS_VANISHED;
-            if (game.loc == objects[EGGS].plac)
+            else if (game.loc == objects[EGGS].plac)
                 k = EGGS_HERE;
+            else
+                k = EGGS_DONE;
             move(EGGS, objects[EGGS].plac);
             pspeak(EGGS, look, k, true);
             return GO_CLEAROBJ;
@@ -470,11 +472,13 @@ static int discard(verb_t verb, obj_t obj)
         game.prop[CAVITY] = CAVITY_FULL;
         if (HERE(RUG) && ((obj == EMERALD && game.prop[RUG] != RUG_HOVER) ||
                           (obj == RUBY && game.prop[RUG] == RUG_HOVER))) {
-            int spk = RUG_RISES;
-            if (TOTING(RUG))
-                spk = RUG_WIGGLES;
+            int spk;
             if (obj == RUBY)
                 spk = RUG_SETTLES;
+            else if (TOTING(RUG))
+                spk = RUG_WIGGLES;
+            else
+                spk = RUG_RISES;
             rspeak(spk);
             if (spk != RUG_WIGGLES) {
                 int k = (game.prop[RUG] == RUG_HOVER) ? RUG_FLOOR : RUG_HOVER;
