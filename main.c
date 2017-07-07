@@ -384,9 +384,10 @@ static bool dwarfmove(void)
         kk = tkey[game.dloc[i]];
         if (kk != 0)
             do {
-                game.newloc = travel[kk].dest;
+		enum desttype_t desttype = travel[kk].desttype;
+                game.newloc = travel[kk].destval;
                 /* Have we avoided a dwarf encounter? */
-                if (SPECIAL(game.newloc))
+                if (desttype != dest_goto)
                     continue;
                 else if (!INDEEP(game.newloc))
                     continue;
@@ -509,7 +510,8 @@ static bool traveleq(long a, long b)
 /* Are two travel entries equal for purposes of skip after failed condition? */
 {
     return (travel[a].cond == travel[b].cond)
-           && (travel[a].dest == travel[b].dest);
+           && (travel[a].desttype == travel[b].desttype)
+           && (travel[a].destval == travel[b].destval);
 }
 
 /*  Given the current location in "game.loc", and a motion verb number in
@@ -545,10 +547,11 @@ static void playermove( int motion)
         if (spk == 0) {
             int te_tmp = 0;
             for (;;) {
-                scratchloc = travel[travel_entry].dest;
-                if (scratchloc != motion) {
-                    if (!SPECIAL(scratchloc)) {
-                        if (FORCED(scratchloc) && travel[tkey[scratchloc]].dest == motion)
+		enum desttype_t desttype = travel[travel_entry].desttype;
+                scratchloc = travel[travel_entry].destval;
+                if (desttype != dest_goto || scratchloc != motion) {
+                    if (desttype == dest_goto) {
+                        if (FORCED(scratchloc) && travel[tkey[scratchloc]].destval == motion)
                             te_tmp = travel_entry;
                     }
                     if (!travel[travel_entry].stop) {
@@ -662,17 +665,17 @@ static void playermove( int motion)
             }
 
             /* Found an eligible rule, now execute it */
-            game.newloc = travel[travel_entry].dest;
-            if (!SPECIAL(game.newloc))
+	    enum desttype_t desttype = travel[travel_entry].desttype;
+            game.newloc = travel[travel_entry].destval;
+            if (desttype == dest_goto)
                 return;
 
-            if (game.newloc > 500) {
+            if (desttype == dest_speak) {
                 /* Execute a speak rule */
-                rspeak(L_SPEAK(game.newloc));
+                rspeak(game.newloc);
                 game.newloc = game.loc;
                 return;
             } else {
-                game.newloc -= SPECIALBASE;
                 switch (game.newloc) {
                 case 1:
                     /* Special travel 1.  Plover-alcove passage.  Can carry only

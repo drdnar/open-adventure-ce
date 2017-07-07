@@ -149,10 +149,13 @@ typedef struct {{
   const char* message;
 }} special_t;
 
+enum desttype_t {{dest_goto, dest_special, dest_speak}};
+
 typedef struct {{
   const long motion;
   const long cond;
-  const long dest;
+  const enum desttype_t desttype;
+  const long destval;
   const bool nodwarves;
   const bool stop;
 }} travelop_t;
@@ -163,7 +166,6 @@ typedef struct {{
  * encoding description for travel.
  */
 #define T_TERMINATE(entry)	((entry).motion == 1)
-#define L_SPEAK(loc)		((loc) - 500)
 
 extern const location_t locations[];
 extern const object_t objects[];
@@ -702,7 +704,7 @@ def buildtravel(locs, objs):
     #
     # In order to de-crypticize the runtime code, we're going to break these
     # magic numbers up into a struct.
-    travel = [[0, "LOC_NOWHERE", 0, 0, 0, "false", "false"]]
+    travel = [[0, "LOC_NOWHERE", 0, 0, 0, 0, "false", "false"]]
     tkey = [0]
     oldloc = 0
     while ltravel:
@@ -717,11 +719,21 @@ def buildtravel(locs, objs):
         while rule:
             cond = newloc // 1000
             dest = newloc % 1000
+            if dest <= 300:
+                desttype = "dest_goto";
+                destval = locnames[dest]
+            elif dest > 500:
+                desttype = "dest_speak";
+                destval = msgnames[dest - 500]
+            else:
+                desttype = "dest_special";
+                destval = locnames[dest - 300]
             travel.append([len(tkey)-1,
                            locnames[len(tkey)-1],
                            rule.pop(0),
                            cond,
-                           locnames[dest] if dest <= 300 else dest,
+                           desttype,
+                           destval,
                            "true" if cond==100 else "false",
                            "false"])
         travel[-1][-1] = "true"
@@ -731,7 +743,8 @@ def get_travel(travel):
     template = """    {{ // from {}: {}
         .motion = {},
         .cond = {},
-        .dest = {},
+        .desttype = {},
+        .destval = {},
         .nodwarves = {},
         .stop = {},
     }},
