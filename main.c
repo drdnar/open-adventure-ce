@@ -1014,9 +1014,7 @@ static bool do_command()
         listobjects();
 
 L2012:
-        command.verb = 0;
         game.oldobj = command.obj;
-        command.obj = 0;
 
 L2600:
         checkhints();
@@ -1047,6 +1045,7 @@ L2600:
                 return (false);
             if (word_count(input) > 2) {
                 rspeak(TWO_WORDS);
+                free(input);
                 continue;
             }
             if (strcmp(input, "") != 0)

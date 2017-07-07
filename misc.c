@@ -328,11 +328,12 @@ char* get_input()
 
         if (input == NULL) // Got EOF; return with it.
             return (input);
-        else if (input[0] == '#') { // Ignore comments.
+        if (input[0] == '#') { // Ignore comments.
             free(input);
             continue;
-        } else // We have a 'normal' line; leave the loop.
-            break;
+        }
+        // We have a 'normal' line; leave the loop.
+        break;
     }
 
     // Strip trailing newlines from the input
