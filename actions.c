@@ -1114,7 +1114,7 @@ static int say(struct command_t *command)
 {
     if (command->wd2 > 0) {
         command->wd1 = command->wd2;
-        strcpy(command->raw1, command->raw2);
+        strncpy(command->raw1, command->raw2, LINESIZE - 1);
     }
     char word1[TOKLEN + 1];
     packed_to_token(command->wd1, word1);

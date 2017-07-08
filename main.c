@@ -1197,7 +1197,7 @@ Laction:
         case GO_WORD2:
             /* Get second word for analysis. */
             command.wd1 = command.wd2;
-            strcpy(command.raw1, command.raw2);
+            strncpy(command.raw1, command.raw2, LINESIZE - 1);
             wordclear(&command.wd2);
             command.raw2[0] = '\0';
             goto L2620;
