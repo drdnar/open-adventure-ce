@@ -613,8 +613,6 @@ static void playermove( int motion)
             case NW:
             case SW:
             case SE:
-                rspeak(BAD_DIRECTION);
-                break;
             case UP:
             case DOWN:
                 rspeak(BAD_DIRECTION);
