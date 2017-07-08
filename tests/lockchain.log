@@ -320,8 +320,12 @@ out
 drop keys
 in
 unlock chain
+# Now let's go look at the volcano
 out
 fork
 go left
 north
 extinguish volcano
+s
+n
+jump
