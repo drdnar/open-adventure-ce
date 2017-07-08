@@ -26,14 +26,13 @@ at the Rand Corporation in 1977; this version was later, and still is,
 included in the BSD Games collection.  I have it from Don Woods directly
 that "[Jim Gillogly] was one of the first to request and receive a copy 
 of the source" but that Woods did not actually know of the BSD port
-until I brefed him on it in 2017.  (This contradicts some implications
+until I briefed him on it in 2017.  (This contradicts some implications
 in third-party histories.)
 
 Many other people ported and extended the game in various directions.
 A notable version was the first game shipped for the IBM Personal
-Computer in 1981; this, for which neither Crowther nor Woods nor
-Gillogly were paid royalties, what "The Original" was competing
-against.
+Computer in 1981; neither Crowther nor Woods nor Gillogly were paid
+royalties.
 
 The history of these non-mainline versions is complex and
 murky. Functional differences were generally marked by changes in the
