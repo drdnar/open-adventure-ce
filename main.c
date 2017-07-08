@@ -384,7 +384,7 @@ static bool dwarfmove(void)
         kk = tkey[game.dloc[i]];
         if (kk != 0)
             do {
-		enum desttype_t desttype = travel[kk].desttype;
+                enum desttype_t desttype = travel[kk].desttype;
                 game.newloc = travel[kk].destval;
                 /* Have we avoided a dwarf encounter? */
                 if (desttype != dest_goto)
@@ -509,8 +509,8 @@ static bool traveleq(long a, long b)
 /* Are two travel entries equal for purposes of skip after failed condition? */
 {
     return (travel[a].condtype == travel[b].condtype)
-	   && (travel[a].condarg1 == travel[b].condarg1)
-	   && (travel[a].condarg2 == travel[b].condarg2)
+           && (travel[a].condarg1 == travel[b].condarg1)
+           && (travel[a].condarg2 == travel[b].condarg2)
            && (travel[a].desttype == travel[b].desttype)
            && (travel[a].destval == travel[b].destval);
 }
@@ -548,7 +548,7 @@ static void playermove( int motion)
         if (spk == 0) {
             int te_tmp = 0;
             for (;;) {
-		enum desttype_t desttype = travel[travel_entry].desttype;
+                enum desttype_t desttype = travel[travel_entry].desttype;
                 scratchloc = travel[travel_entry].destval;
                 if (desttype != dest_goto || scratchloc != motion) {
                     if (desttype == dest_goto) {
@@ -635,7 +635,7 @@ static void playermove( int motion)
     do {
         for (;;) { /* L12 loop */
             for (;;) {
-		enum condtype_t condtype = travel[travel_entry].condtype;
+                enum condtype_t condtype = travel[travel_entry].condtype;
                 long condarg1 = travel[travel_entry].condarg1;
                 long condarg2 = travel[travel_entry].condarg2;
                 if (condtype < cond_not) {
@@ -667,7 +667,7 @@ static void playermove( int motion)
             }
 
             /* Found an eligible rule, now execute it */
-	    enum desttype_t desttype = travel[travel_entry].desttype;
+            enum desttype_t desttype = travel[travel_entry].desttype;
             game.newloc = travel[travel_entry].destval;
             if (desttype == dest_goto)
                 return;
@@ -879,28 +879,29 @@ static void lampcheck(void)
      *  here, in which case we replace the batteries and continue.
      *  Second is for other cases of lamp dying.  Eve after it goes
      *  out, he can explore outside for a while if desired. */
-    if (game.limit <= WARNTIME && HERE(BATTERY) && game.prop[BATTERY] == FRESH_BATTERIES && HERE(LAMP)) {
-        rspeak(REPLACE_BATTERIES);
-        game.prop[BATTERY] = DEAD_BATTERIES;
-        if (TOTING(BATTERY))
-            drop(BATTERY, game.loc);
-        game.limit += BATTERYLIFE;
-        game.lmwarn = false;
-    } else if (game.limit == 0) {
+    if (game.limit <= WARNTIME) {
+        if (HERE(BATTERY) && game.prop[BATTERY] == FRESH_BATTERIES && HERE(LAMP)) {
+            rspeak(REPLACE_BATTERIES);
+            game.prop[BATTERY] = DEAD_BATTERIES;
+            if (TOTING(BATTERY))
+                drop(BATTERY, game.loc);
+            game.limit += BATTERYLIFE;
+            game.lmwarn = false;
+        } else if (!game.lmwarn && HERE(LAMP)) {
+            game.lmwarn = true;
+            if (game.prop[BATTERY] == DEAD_BATTERIES)
+                rspeak(MISSING_BATTERIES);
+            else if (game.place[BATTERY] == LOC_NOWHERE)
+                rspeak(LAMP_DIM);
+            else
+                rspeak(GET_BATTERIES);
+        }
+    }
+    if (game.limit == 0) {
         game.limit = -1;
         game.prop[LAMP] = LAMP_DARK;
         if (HERE(LAMP))
             rspeak(LAMP_OUT);
-    } else if (game.limit <= WARNTIME) {
-        if (!game.lmwarn && HERE(LAMP)) {
-            game.lmwarn = true;
-            int spk = GET_BATTERIES;
-            if (game.place[BATTERY] == LOC_NOWHERE)
-                spk = LAMP_DIM;
-            if (game.prop[BATTERY] == DEAD_BATTERIES)
-                spk = MISSING_BATTERIES;
-            rspeak(spk);
-        }
     }
 }
 
