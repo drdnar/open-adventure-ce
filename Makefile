@@ -121,3 +121,6 @@ debug: CCFLAGS += -O0 --coverage -ggdb
 debug: linty
 debug: cheat
 
+CSUPPRESSIONS = --suppress=missingIncludeSystem --suppress=invalidscanf
+cppcheck:
+	cppcheck -I. --template gcc --enable=all $(CSUPPRESSIONS) *.[ch]
