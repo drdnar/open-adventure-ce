@@ -1,6 +1,6 @@
 # Test-suite makefile for reposurgeon
 
-# Use absolute path so tests that change working directory still use 
+# Use absolute path so tests that change working directory still use
 # scripts from parent directory.  Note that using $PWD seems to fail
 # here under Gitlab's CI environment.
 PATH := $(realpath ..):$(realpath .):${PATH}
@@ -26,6 +26,7 @@ check: savecheck regress
 coverage: check
 	lcov -t "advent" -o ../advent.info -c -d .. --gcov-tool=$(GCOV)
 	genhtml -o ../coverage/ ../advent.info
+	python3 coverage_dungeon.py
 
 .SUFFIXES: .chk
 
