@@ -1739,80 +1739,12 @@ Oh dear, you seem to have gotten yourself killed.  I might be able to
 help you out, but I've never really done this before.  Do you want me
 to try to reincarnate you?
 
-> y
+> yes
 
 All right.  But don't blame me if something goes wr......
                     --- POOF!! ---
 You are engulfed in a cloud of orange smoke.  Coughing and gasping,
 you emerge from the smoke and find....
-
-It is now pitch dark.  If you proceed you will likely fall into a pit.
-
-> inven
-
-You're not carrying anything.
-
-> xyzzy
-
-Nothing happens.
-
-It is now pitch dark.  If you proceed you will likely fall into a pit.
-
-> light lamp
-
-I see no lamp here.
-
-> back
-
-Sorry, but I no longer seem to remember how it was you got here.
-
-It is now pitch dark.  If you proceed you will likely fall into a pit.
-
-> west
-
-There is no way to go that direction.
-
-It is now pitch dark.  If you proceed you will likely fall into a pit.
-
-> up
-
-There is no way to go that direction.
-
-It is now pitch dark.  If you proceed you will likely fall into a pit.
-
-> north
-
-There is no way to go that direction.
-
-It is now pitch dark.  If you proceed you will likely fall into a pit.
-
-> east
-
-There is no way to go that direction.
-
-It is now pitch dark.  If you proceed you will likely fall into a pit.
-
-> outside
-
-I don't know in from out here.  Use compass points or name something
-in the general direction you want to go.
-
-It is now pitch dark.  If you proceed you will likely fall into a pit.
-
-> out
-
-I don't know in from out here.  Use compass points or name something
-in the general direction you want to go.
-
-You fell into a pit and broke every bone in your body!
-
-You clumsy oaf, you've done it again!  I don''t know how long I can
-keep this up.  Do you want me to try reincarnating you again?
-
-> yes
-
-Okay, now where did I put my orange smoke?....  >POOF!<
-Everything disappears in a dense cloud of orange smoke.
 
 You're inside building.
 
@@ -1914,50 +1846,37 @@ You're in Bedquilt.
 
 > n
 
-You have crawled around in some little holes and wound up back in the
-main passage.
-
-You are in Bedquilt, a long east/west passage with holes everywhere.
-To explore at random select north, south, up, or down.
+You're in large low room.
 
 > n
 
-You're in large low room.
+Dead end crawl.
 
 > sw
 
-You're in sloping corridor.
+There is no way to go that direction.
+
+Dead end crawl.
 
 > up
 
-You're on sw side of chasm.
+There is no way to go that direction.
 
-There is an empty bottle here.
-
-Off to one side lies a glistening pearl!
-
-There are rare spices here!
-
-There is a golden chain lying in a heap on the floor!
-
-The wreckage of a bridge (and a dead bear) can be seen at the bottom
-of the chasm.
-
-The troll is nowhere to be seen.
+Dead end crawl.
 
 > 
 
 > feed bear
 
-Don't be ridiculous!
+I see no bear here.
 
 > attack bear
 
-For crying out loud, the poor thing is already dead!
+I see no bear here.
 
 
-You scored 233 out of a possible 430, using 314 turns.
+You scored 243 out of a possible 430, using 304 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 
-To achieve the next higher rating, you need 18 more points.
+To achieve the next higher rating, you need 8 more points.

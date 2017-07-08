@@ -501,8 +501,7 @@ static void croak(void)
                 drop(i, (i == LAMP) ? LOC_START : game.oldlc2);
             }
         }
-        game.loc = LOC_BUILDING;
-        game.oldloc = game.loc;
+        game.oldloc = game.loc = game.newloc = LOC_BUILDING;
     }
 }
 
