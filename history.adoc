@@ -23,9 +23,11 @@ in the 1995 release of Adventure 2.5, also known as 430-point Adventure
 
 The earliest port to C was by Jim Gillogly under an early Unix running
 at the Rand Corporation in 1977; this version was later, and still is,
-included in the BSD Games collection.  It was blessed by Crowther and
-Woods and briefly marketed in 1981 under the name "The Original
-Adventure".
+included in the BSD Games collection.  I have it from Don Woods directly
+that "[Jim Gillogly] was one of the first to request and receive a copy 
+of the source" but that Woods did not actually know of the BSD port
+until I brefed him on it in 2017.  (This contradicts some implications
+in third-party histories.)
 
 Many other people ported and extended the game in various directions.
 A notable version was the first game shipped for the IBM Personal

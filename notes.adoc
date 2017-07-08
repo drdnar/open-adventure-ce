@@ -101,8 +101,8 @@ necessarily pretty ugly by modern standards. Encryption and
 checksumming have been discarded - it's pointless to try
 tamper-proofing saves when everyone has the source code.
 
-A -r command-line been added. When it is given (with a file path
-argument) it is functionally equivalent to a RESTORE command.
+A -r command-line option has been added. When it is given (with a file
+path argument) it is functionally equivalent to a RESTORE command.
 
 == Translation ==
 
@@ -113,7 +113,7 @@ ugly and quite unreadable.
 Jason Ninneman and I have moved it to what is almost, but not quite,
 idiomatic modern C.  We refactored the right way, checking correctness
 against a comprehensive test suite that we built first and verified
-with coverage tools (we have over 95% coverage, with the remaining
+with coverage tools (we have over 98% coverage, with the remaining
 confined to exception cases that are very difficult to reach). This is
 what you are running when you do "make check".
 
