@@ -604,25 +604,40 @@ static void playermove( int motion)
         if (travel[travel_entry].stop) {
             /*  Couldn't find an entry matching the motion word passed
              *  in.  Various messages depending on word given. */
-            int spk = CANT_APPLY;
-            if (motion >= EAST && motion <= NW)
-                spk = BAD_DIRECTION;
-            if (motion == UP ||
-                motion == DOWN)
-                spk = BAD_DIRECTION;
-            if (motion == FORWARD ||
-                motion == LEFT ||
-                motion == RIGHT)
-                spk = UNSURE_FACING;
-            if (motion == OUTSIDE ||
-                motion == INSIDE)
-                spk = NO_INOUT_HERE;
-            if (motion == XYZZY ||
-                motion == PLUGH)
-                spk = NOTHING_HAPPENS;
-            if (motion == CRAWL)
-                spk = WHICH_WAY;
-            rspeak(spk);
+            switch (motion) {
+            case EAST:
+            case WEST:
+            case SOUTH:
+            case NORTH:
+            case NE:
+            case NW:
+            case SW:
+            case SE:
+                rspeak(BAD_DIRECTION);
+                break;
+            case UP:
+            case DOWN:
+                rspeak(BAD_DIRECTION);
+                break;
+            case FORWARD:
+            case LEFT:
+            case RIGHT:
+                rspeak(UNSURE_FACING);
+                break;
+            case OUTSIDE:
+            case INSIDE:
+                rspeak(NO_INOUT_HERE);
+                break;
+            case XYZZY:
+            case PLUGH:
+                rspeak(NOTHING_HAPPENS);
+                break;
+            case CRAWL:
+                rspeak(WHICH_WAY);
+                break;
+            default:
+                rspeak(CANT_APPLY);
+            }
             return;
         }
         ++travel_entry;

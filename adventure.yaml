@@ -204,9 +204,9 @@ motions: !!omap
     words: ['east', 'e']
 - WEST:
     words: ['west', 'w']
-- MOT_45:
+- NORTH:
     words: ['north', 'n']
-- MOT_46:
+- SOUTH:
     words: ['south', 's']
 - NE:
     words: ['ne']
