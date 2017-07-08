@@ -1,9 +1,15 @@
 #!/usr/bin/python3
 
+# This is the open-adventure dungeon text coverage report generator. It
+# consumes a YAML description of the dungeon and determines whether the
+# various strings contained are present within the test check files.
+#
+# Currently, only the location descriptions, arbitrary messages, and object
+# descriptions are supported. This may be expanded in the future.
+
 import os
 import yaml
-
-import pprint
+import re
 
 test_dir = "."
 yaml_name = "../adventure.yaml"
@@ -32,17 +38,30 @@ object_row = """
     </tr>
 """
 
+def search(needle, haystack):
+    # Search for needle in haystack, first escaping needle for regex, then
+    # replacing %s, %d, etc. with regex wildcards, so the variable messages
+    # within the dungeon definition will actually match
+    needle = re.escape(needle) \
+             .replace("\%S", ".*") \
+             .replace("\%s", ".*") \
+             .replace("\%d", ".*") \
+             .replace("\%V", ".*")
+
+    return re.search(needle, haystack)
+
 def loc_coverage(locations, text):
     for locname, loc in locations:
         if loc["description"]["long"] == None or loc["description"]["long"] == '':
             loc["description"]["long"] = True
         if loc["description"]["long"] != True:
-            if text.find(loc["description"]["long"]) != -1:
+            if search(loc["description"]["long"], text):
                 loc["description"]["long"] = True
         if loc["description"]["short"] == None or loc["description"]["short"] == '':
             loc["description"]["short"] = True
         if loc["description"]["short"] != True:
-            if text.find(loc["description"]["short"]) != -1:
+            #if text.find(loc["description"]["short"]) != -1:
+            if search(loc["description"]["short"], text):
                 loc["description"]["short"] = True
 
 def arb_coverage(arb_msgs, text):
@@ -51,7 +70,7 @@ def arb_coverage(arb_msgs, text):
         if msg_text == None or msg_text == '':
             arb_msgs[i] = (msg_name, True)
         elif msg_text != True:
-            if text.find(msg_text) != -1:
+            if search(msg_text, text):
                 arb_msgs[i] = (msg_name, True)
 
 def obj_coverage(objects, text):
@@ -63,7 +82,7 @@ def obj_coverage(objects, text):
                     obj["descriptions"][j] = True
                     objects[i] = (obj_name, obj)
                 elif desc != True:
-                    if text.find(desc) != -1:
+                    if search(desc, text):
                         obj["descriptions"][j] = True
                         objects[i] = (obj_name, obj)
 
@@ -87,42 +106,38 @@ if __name__ == "__main__":
                 arb_coverage(arb_msgs, text)
                 obj_coverage(objects, text)
 
-    print("\nadventure.yaml coverage rate:")
-
     location_html = ""
     location_total = len(locations) * 2
     location_covered = 0
     for locouter in locations:
         locname = locouter[0]
         loc = locouter[1]
-        long_success = "covered"
-        short_success = "covered"
         if loc["description"]["long"] != True:
             long_success = "uncovered"
         else:
+            long_success = "covered"
             location_covered += 1
 
         if loc["description"]["short"] != True:
             short_success = "uncovered"
         else:
+            short_success = "covered"
             location_covered += 1
 
         location_html += location_row.format(locname, long_success, short_success)
     location_percent = round((location_covered / location_total) * 100, 1)
-    print("  locations..........: {}% covered ({} of {})".format(location_percent, location_covered, location_total))
 
     arb_msg_html = ""
     arb_total = len(arb_msgs)
     arb_covered = 0
     for name, msg in arb_msgs:
-        success = "covered"
         if msg != True:
             success = "uncovered"
         else:
+            success = "covered"
             arb_covered += 1
         arb_msg_html += arb_msg_row.format(name, success)
     arb_percent = round((arb_covered / arb_total) * 100, 1)
-    print("  arbitrary_messages.: {}% covered ({} of {})".format(arb_percent, arb_covered, arb_total))
 
     object_html = ""
     objects_total = 0
@@ -131,15 +146,21 @@ if __name__ == "__main__":
         if obj["descriptions"]:
             for j, desc in enumerate(obj["descriptions"]):
                 objects_total += 1
-                success = "covered"
                 if desc != True:
                     success = "uncovered"
                 else:
+                    success = "covered"
                     objects_covered += 1
                 object_html += object_row.format("%s[%d]" % (obj_name, j), success)
     objects_percent = round((objects_covered / objects_total) * 100, 1)
+
+    # output some quick report stats
+    print("\nadventure.yaml coverage rate:")
+    print("  locations..........: {}% covered ({} of {})".format(location_percent, location_covered, location_total))
+    print("  arbitrary_messages.: {}% covered ({} of {})".format(arb_percent, arb_covered, arb_total))
     print("  objects............: {}% covered ({} of {})".format(objects_percent, objects_covered, objects_total))
 
+    # render HTML report
     with open(html_output_path, "w") as f:
         f.write(html_template.format(
                 location_total, location_covered, location_percent,
