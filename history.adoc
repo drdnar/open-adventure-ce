@@ -65,7 +65,7 @@ open-source licensing were not yet fully established. The Makefile
 contained a rights reservation by Don Woods and that was it.
 
 I wrote to Don asking permission to release 2.5 under 2-clause BSD;
-he replied on 15 May giving both permission and encouragement.
+he replied on 15 May 2017 giving both permission and encouragement.
 
 Here is what Don said about differences between the original Adventure
 and 2.5:
