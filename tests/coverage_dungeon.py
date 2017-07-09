@@ -109,6 +109,7 @@ if __name__ == "__main__":
     location_html = ""
     location_total = len(locations) * 2
     location_covered = 0
+    locations.sort()
     for locouter in locations:
         locname = locouter[0]
         loc = locouter[1]
@@ -127,6 +128,7 @@ if __name__ == "__main__":
         location_html += location_row.format(locname, long_success, short_success)
     location_percent = round((location_covered / location_total) * 100, 1)
 
+    arb_msgs.sort()
     arb_msg_html = ""
     arb_total = len(arb_msgs)
     arb_covered = 0
@@ -142,6 +144,7 @@ if __name__ == "__main__":
     object_html = ""
     objects_total = 0
     objects_covered = 0
+    objects.sort()
     for (obj_name, obj) in objects:
         if obj["descriptions"]:
             for j, desc in enumerate(obj["descriptions"]):
