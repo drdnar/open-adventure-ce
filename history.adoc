@@ -41,12 +41,12 @@ ports of some versions existed - some in FORTRAN, some in C,
 some in other languages - so the maximum point score is not
 completely disambiguating.
 
-Same articles at <<DA>> are a narrative of the history of the
-game.  There is an in-depth study of its origins at <<SN>>.
-Many versions are collected at The Interactive Fiction Archive
-<<IFA>>; note however that its dates for the earliest releases
-don't match other comments in the code or the careful reconstruction
-in <<SN>>.
+Same articles at <<DA>> are a narrative of the history of the game.
+There is an in-depth study of its origins at <<SN>>.  Many versions
+are collected at The Interactive Fiction Archive <<IFA>>; note however
+that IFA's historical claims are thinly sourced and its dates for the
+earliest releases don't match either comments in the code or the
+careful reconstruction in <<SN>>.
 
 Future versions of this document may attempt to untangle some of the
 non-mainline history. For now, it will suffice to explain the chain of
@@ -127,11 +127,12 @@ and minicomputer-centered culture Crowther and Woods were part of
 until well after Adventure was written.
 
 (I was a developer of the Nethack roguelike early in that game's
-history; we knew of Hunt The Wumpus then from its early Unix port, but
-it didn't influence us either, nor in any apparent way the designers
-of other early roguelikes. After my time the wumpus was included as a
-monster in Nethack, but this was done in a spirit of conscious
-museumization after historians rediscovered Yob's game.)
+history, in the late 1980s; we knew nothing of PLATO dnd.  We did know
+of Hunt The Wumpus then from its early Unix port, but it didn't
+influence us either, nor in any apparent way the designers of other
+early roguelikes. After my time the wumpus was included as a monster
+in Nethack, but this was done in a spirit of conscious museumization
+after historians rediscovered Yob's game.)
 
 Neither of these games used an attempt at a natural-language parser
 even as primitive as Adventure's.
