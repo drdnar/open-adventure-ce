@@ -1,0 +1,26 @@
+## Try to attack ogre with no dwarves present (fuzzed)
+n
+seed 25508795
+in
+take lamp
+xyzzy
+on
+take rod
+w
+w
+w
+d
+w
+wave rod
+w
+w
+w
+w
+s
+sw
+se
+s
+kill machine
+s
+s
+attack
