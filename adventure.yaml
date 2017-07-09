@@ -1835,6 +1835,8 @@ locations: !!omap
       {verbs: [DOWN], action: [goto, LOC_LOWROOM]},
       {verbs: [UPWAR], action: [goto, LOC_SWCHASM]},
     ]
+  # Following three rooms are where the dragon lives.  The code has a
+  # wired-in assumption that the dragon corpse goes to LOC_SECRET5,
 - LOC_SECRET4:
     description:
       long: 'You are in a secret canyon which exits to the north and east.'

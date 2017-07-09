@@ -433,9 +433,7 @@ static bool dwarfmove(void)
         }
     }
 
-    /*  Now we know what's happening.  Let's tell the poor sucker about it.
-     *  Note that various of the "knife" messages must have specific relative
-     *  positions in the rspeak database. */
+    /*  Now we know what's happening.  Let's tell the poor sucker about it. */
     if (game.dtotal == 0)
         return true;
     rspeak(game.dtotal == 1 ? DWARF_SINGLE : DWARF_PACK, game.dtotal);
