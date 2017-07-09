@@ -1,0 +1,10 @@
+# Check that dwarf spawns in alternative location (fuzzed)
+n
+seed 383847
+in
+xyzzy
+w
+w
+w
+d
+d
