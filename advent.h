@@ -60,7 +60,7 @@
 #define LIQUID()     (game.prop[BOTTLE] == WATER_BOTTLE? WATER : game.prop[BOTTLE] == OIL_BOTTLE ? OIL : NO_OBJECT )
 #define LIQLOC(LOC)  (CNDBIT((LOC),COND_FLUID)? CNDBIT((LOC),COND_OILY) ? OIL : WATER : NO_OBJECT)
 #define FORCED(LOC)  CNDBIT(LOC, COND_FORCED)
-#define DARK(DUMMY)  ((!tstbit(conditions[game.loc],COND_LIT)) && (game.prop[LAMP] == LAMP_DARK || !HERE(LAMP)))
+#define DARK(DUMMY)  (!CNDBIT(game.loc,COND_LIT) && (game.prop[LAMP] == LAMP_DARK || !HERE(LAMP)))
 #define PCT(N)       (randrange(100) < (N))
 #define GSTONE(OBJ)  ((OBJ) == EMERALD || (OBJ) == RUBY || (OBJ) == AMBER || (OBJ) == SAPPH)
 #define FOREST(LOC)  CNDBIT(LOC, COND_FOREST)

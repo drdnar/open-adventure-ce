@@ -98,6 +98,18 @@ how much it will affect your score to accept the hints.  Finally, to
 save time, you may specify "brief", which tells me never to repeat the
 full description of a place unless you explicitly ask me to.
 
+> _
+
+I don't know how to apply that word here.
+
+You're in front of building.
+
+> back
+
+Sorry, but I no longer seem to remember how it was you got here.
+
+You're in front of building.
+
 > eat grate
 
 Don't be ridiculous!
@@ -242,7 +254,9 @@ Blasting requires dynamite.
 
 > building
 
-You're in front of building.
+You are standing at the end of a road before a small brick building.
+Around you is a forest.  A small stream flows out of the building and
+down a gully.
 
 > cave
 
@@ -271,9 +285,7 @@ Carry what?
 
 I am unsure how you are facing.  Use compass points or nearby objects.
 
-You are standing at the end of a road before a small brick building.
-Around you is a forest.  A small stream flows out of the building and
-down a gully.
+You're in front of building.
 
 > eat
 
@@ -597,7 +609,7 @@ Okay, "boo".
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 103 turns.
+You have garnered 27 out of a possible 430 points, using 105 turns.
 
 > z
 
@@ -605,7 +617,7 @@ OK
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 105 turns.
+You have garnered 27 out of a possible 430 points, using 107 turns.
 
 > quit keys
 
@@ -654,7 +666,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 27 out of a possible 430, using 113 turns.
+You scored 27 out of a possible 430, using 115 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 
