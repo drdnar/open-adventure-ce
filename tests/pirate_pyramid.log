@@ -1,4 +1,4 @@
-## Checks that pirate is unable to steal pyramid from plover room or dark room (fuzzed)
+## Pirate mustn't take pyramid from plover/dark rooms (fuzzed)
 n
 seed 1830473132
 in

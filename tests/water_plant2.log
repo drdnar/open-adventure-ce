@@ -1,4 +1,4 @@
-## Chech that action correctly switches between plant states (fuzzed)
+## Check that pour correctly switches among plant states (fuzzed)
 n
 seed 183847312
 in
