@@ -1,4 +1,4 @@
-## Spot pirate to force chest placement before finding last treasure (fuzzed)
+## Fail to get ogre hint by qualifying at it all dwarves are dead (fuzzed)
 n
 seed 1838473132
 in
@@ -13,20 +13,15 @@ w
 w
 drop rod
 take bird
-take rod
+take
 w
-free bird
-wave rod
-drop rod
-take bird
-take rod
 d
 d
 free bird
 w
 e
 s
-take n
+n
 u
 s
 n
@@ -44,7 +39,6 @@ take
 w
 kill drago
 y
-take rug
 e
 e
 u
@@ -53,13 +47,10 @@ n
 n
 off
 plugh
-drop rug
 out
 s
 w
 n
-take appen
-drop cage
 s
 s
 n
@@ -68,7 +59,7 @@ take water
 plugh
 on
 plove
-ne
+e
 s
 plove
 s
@@ -76,7 +67,6 @@ s
 u
 w
 wave rod
-drop rod
 west
 w
 w
@@ -89,7 +79,7 @@ kill machi
 s
 s
 kill ogre
-n
+ 
 s
 w
 n
@@ -131,13 +121,13 @@ reser
 H'CFL
 n
 n
-nw
+w
 u
 u
 u
 u
-ne
-sw
+n
+w
 d
 d
 d
@@ -153,10 +143,9 @@ s
 d
 water plant
 u
-drop appen
 e
 d
-g oil
+get oil
 u
 w
 d
@@ -164,23 +153,14 @@ climb
 w
 n
 oil door
-drop bottl
 n
-take tride
 w
 d
 se
 n
 w
-drop tride
-drop axe
-drop lante
 e
-take emera
 w
-take lamp
-take axe
-take tride
 nw
 s
 se
@@ -189,8 +169,6 @@ e
 w
 ne
 e
-n
-open clam
 s
 u
 e
@@ -198,9 +176,6 @@ u
 n
 off
 plugh
-drop tride
-take key
-take food
 plugh
 on
 s
@@ -217,46 +192,28 @@ w
 w
 w
 w
-d
 climb
 w
-g
 n
-take bottl
 n
 w
-d
-sw
-u
-toss egg
-ne
+e
 barre
-in
-feed bear
-unloc
-take bear
-fork
-ne
+n
+w
+w
+n
+s
+s
+d
 e
-fork
-w
-w
-sw
-free bear
-sw
-sw
-d
-se
-se
+e
 w
 d
-g oil
 u
 e
+take
 w
-w
-d
-climb
 w
 s
 d
@@ -265,35 +222,46 @@ w
 u
 s
 e
+n
+n
+n
+n
 e
+u
+w
+w
+w
+s
+e
+s
+throw axe
+s
+s
 n
-n
-off
+e
+d
+e
+e
+xyzzy
 plugh
-take rug
-out
-w
-n
-n
-n
-fill urn
-light urn
-rub urn
-take amber
-drop rug
-drop emera
-fly
-fly
-e
 s
-e
-e
-in
-drop amber
-look
-plugh
-on
 s
 w
+w
+w
+w
 s
-e
+sw
+se
+s
+s
+s
+z
+z
+z
+z
+z
+z
+z
+z
+z
