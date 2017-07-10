@@ -144,6 +144,7 @@ struct game_t {
     long dtotal;
     long foobar;                 // current progress in saying "FEE FIE FOE FOO".
     long holdng;                 // number of objects being carried
+    long igo;                    // How many times he's said "go" instead of the direction
     long iwest;                  // How many times he's said "west" instead of "w"
     long knfloc;                 // 0 if no knife here, loc if knife , -1 after caveat
     long limit;                  // lifetime of lamp (not set here)
