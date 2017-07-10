@@ -970,15 +970,49 @@ static void listobjects(void)
     }
 }
 
+static bool get_command_input(struct command_t *command)
+{
+    char inputbuf[LINESIZE];
+    char word1[TOKLEN + 1];
+    char word2[TOKLEN + 1];
+    char* input;
+
+    for (;;) {
+        input = get_input();
+        if (input == NULL)
+            return false;
+        if (word_count(input) > 2) {
+            rspeak(TWO_WORDS);
+            free(input);
+            continue;
+        }
+        if (strcmp(input, "") != 0)
+            break;
+        free(input);
+    }
+
+    strncpy(inputbuf, input, LINESIZE - 1);
+    free(input);
+
+    tokenize(inputbuf, command);
+
+    packed_to_token(command->wd1, word1);
+    packed_to_token(command->wd2, word2);
+    command->id1 = get_vocab_id(word1);
+    command->id2 = get_vocab_id(word2);
+    
+    return true;
+}
+
 static bool do_command()
 /* Get and execute a command */
 {
     long kmod, defn;
     static long igo = 0;
     static struct command_t command;
-    char inputbuf[LINESIZE];
+    //char inputbuf[LINESIZE];
     char word1[TOKLEN + 1];
-    char word2[TOKLEN + 1];
+    //char word2[TOKLEN + 1];
 
     command.verb = 0;
 
@@ -1062,35 +1096,10 @@ L2600:
         game.wzdark = DARK(game.loc);
         if (game.knfloc > 0 && game.knfloc != game.loc)
             game.knfloc = 0;
-
-        /* This is where we get a new command from the user */
-        char* input;
-
-        for (;;) {
-            input = get_input();
-            if (input == NULL)
-                return (false);
-            if (word_count(input) > 2) {
-                rspeak(TWO_WORDS);
-                free(input);
-                continue;
-            }
-            if (strcmp(input, "") != 0)
-                break;
-            free(input);
-        }
-
-        strncpy(inputbuf, input, LINESIZE - 1);
-        free(input);
-
-        tokenize(inputbuf, &command);
-
-        packed_to_token(command.wd1, word1);
-        packed_to_token(command.wd2, word2);
-        command.id1 = get_vocab_id(word1);
-        command.id2 = get_vocab_id(word2);
         
-        //command = get_command_input();
+        if(!get_command_input(&command)) {
+            return false;
+        }
 L2607:
         ++game.turns;
 
@@ -1107,80 +1116,78 @@ L2607:
             command.verb = 0;
         if (command.verb == SAY) {
             command.part = transitive;
-            goto Laction;
-        }
-        if (closecheck()) {
-            if (game.closed)
-                return true;
-        } else
-            lampcheck();
-
-        if (command.id1 == ENTER && (command.id2 == STREAM ||
-                                     command.id2 == PROMOTE_WORD(WATER))) {
-            if (LIQLOC(game.loc) == WATER) {
-                rspeak(FEET_WET);
-            } else {
-                rspeak(WHERE_QUERY);
-            }
-            goto Lclearobj;
-        }
-        if (command.id1 == ENTER && command.id2 != WORD_NOT_FOUND && command.id2 != WORD_EMPTY) {
-            /* command.wd1 = command.wd2; */
-            /* wordclear(&command.wd2); */
-            command.id1 = command.id2;
-            command.id2 = WORD_EMPTY;
         } else {
-            /* FIXME: Magic numbers related to vocabulary */
-            if (!((command.id1 != PROMOTE_WORD(WATER) && command.id1 != PROMOTE_WORD(OIL)) ||
-                  (command.id2 != PROMOTE_WORD(PLANT) && command.id2 != PROMOTE_WORD(DOOR)))) {
-                if (AT(DEMOTE_WORD(command.id2)))
-                    command.wd2 = token_to_packed("POUR");
-            }
-            if (command.id1 == PROMOTE_WORD(CAGE) && command.id2 == PROMOTE_WORD(BIRD) && HERE(CAGE) && HERE(BIRD))
-                command.wd1 = token_to_packed("CATCH");
-        }
-L2620:
-        if (wordeq(command.wd1, token_to_packed("WEST"))) {
-            ++game.iwest;
-            if (game.iwest == 10)
-                rspeak(W_IS_WEST);
-        }
-        if (wordeq(command.wd1, token_to_packed("GO")) && !wordempty(command.wd2)) {
-            if (++igo == 10)
-                rspeak(GO_UNNEEDED);
-        }
-Lookup:
-        packed_to_token(command.wd1, word1);
-        defn = get_vocab_id(word1);
-        if (defn == WORD_NOT_FOUND) {
-            /* Gee, I don't understand. */
-            if (fallback_handler(command))
-                continue;
-            sspeak(DONT_KNOW, command.raw1);
-            goto L2600;
-        }
-        /* FIXME: magic numbers related to vocabulary */
-        kmod = MOD(defn, 1000);
-        switch (defn / 1000) {
-        case 0:
-            playermove(kmod);
-            return true;
-        case 1:
-            command.part = unknown;
-            command.obj = kmod;
-            break;
-        case 2:
-            command.part = intransitive;
-            command.verb = kmod;
-            break;
-        case 3:
-            speak(specials[kmod].message);
-            goto Lclearobj;
-        default:
-            BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3); // LCOV_EXCL_LINE
-        }
+            if (closecheck()) {
+                if (game.closed)
+                    return true;
+            } else
+                lampcheck();
 
-Laction:
+            if (command.id1 == ENTER && (command.id2 == STREAM ||
+                                         command.id2 == PROMOTE_WORD(WATER))) {
+                if (LIQLOC(game.loc) == WATER) {
+                    rspeak(FEET_WET);
+                } else {
+                    rspeak(WHERE_QUERY);
+                }
+                goto Lclearobj;
+            }
+            if (command.id1 == ENTER && command.id2 != WORD_NOT_FOUND && command.id2 != WORD_EMPTY) {
+                /* command.wd1 = command.wd2; */
+                /* wordclear(&command.wd2); */
+                command.id1 = command.id2;
+                command.id2 = WORD_EMPTY;
+            } else {
+                /* FIXME: Magic numbers related to vocabulary */
+                if (!((command.id1 != PROMOTE_WORD(WATER) && command.id1 != PROMOTE_WORD(OIL)) ||
+                      (command.id2 != PROMOTE_WORD(PLANT) && command.id2 != PROMOTE_WORD(DOOR)))) {
+                    if (AT(DEMOTE_WORD(command.id2)))
+                        command.wd2 = token_to_packed("POUR");
+                }
+                if (command.id1 == PROMOTE_WORD(CAGE) && command.id2 == PROMOTE_WORD(BIRD) && HERE(CAGE) && HERE(BIRD))
+                    command.wd1 = token_to_packed("CATCH");
+            }
+L2620:
+            if (wordeq(command.wd1, token_to_packed("WEST"))) {
+                ++game.iwest;
+                if (game.iwest == 10)
+                    rspeak(W_IS_WEST);
+            }
+            if (wordeq(command.wd1, token_to_packed("GO")) && !wordempty(command.wd2)) {
+                if (++igo == 10)
+                    rspeak(GO_UNNEEDED);
+            }
+Lookup:
+            packed_to_token(command.wd1, word1);
+            defn = get_vocab_id(word1);
+            if (defn == WORD_NOT_FOUND) {
+                /* Gee, I don't understand. */
+                if (fallback_handler(command))
+                    continue;
+                sspeak(DONT_KNOW, command.raw1);
+                goto L2600;
+            }
+            /* FIXME: magic numbers related to vocabulary */
+            kmod = MOD(defn, 1000);
+            switch (defn / 1000) {
+            case 0:
+                playermove(kmod);
+                return true;
+            case 1:
+                command.part = unknown;
+                command.obj = kmod;
+                break;
+            case 2:
+                command.part = intransitive;
+                command.verb = kmod;
+                break;
+            case 3:
+                speak(specials[kmod].message);
+                goto Lclearobj;
+            default:
+                BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3); // LCOV_EXCL_LINE
+            }
+        }
         switch (action(&command)) {
         case GO_TERMINATE:
             return true;
