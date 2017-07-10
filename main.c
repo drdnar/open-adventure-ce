@@ -134,10 +134,13 @@ int main(int argc, char *argv[])
     terminate(quitgame);
 }
 
-static bool fallback_handler(char *buf)
+static bool fallback_handler(struct command_t command)
 /* fallback handler for commands not handled by FORTRANish parser */
 {
     long sv;
+    char buf[LINESIZE];
+    sprintf(buf, "%s %s", command.raw1, command.raw2);
+
     if (sscanf(buf, "seed %ld", &sv) == 1) {
         set_seed(sv);
         printf("Seed set to %ld\n", sv);
@@ -973,6 +976,10 @@ static bool do_command()
     long kmod, defn;
     static long igo = 0;
     static struct command_t command;
+    char inputbuf[LINESIZE];
+    char word1[TOKLEN + 1];
+    char word2[TOKLEN + 1];
+
     command.verb = 0;
 
     /*  Can't leave cave once it's closing (except by main office). */
@@ -1034,7 +1041,7 @@ static bool do_command()
 
         listobjects();
 
-L2012:
+Lclearobj:
         game.oldobj = command.obj;
 
 L2600:
@@ -1058,7 +1065,6 @@ L2600:
 
         /* This is where we get a new command from the user */
         char* input;
-        char inputbuf[LINESIZE];
 
         for (;;) {
             input = get_input();
@@ -1079,13 +1085,12 @@ L2600:
 
         tokenize(inputbuf, &command);
 
-        char word1[TOKLEN + 1];
-        char word2[TOKLEN + 1];
         packed_to_token(command.wd1, word1);
         packed_to_token(command.wd2, word2);
         command.id1 = get_vocab_id(word1);
         command.id2 = get_vocab_id(word2);
-
+        
+        //command = get_command_input();
 L2607:
         ++game.turns;
 
@@ -1117,7 +1122,7 @@ L2607:
             } else {
                 rspeak(WHERE_QUERY);
             }
-            goto L2012;
+            goto Lclearobj;
         }
         if (command.id1 == ENTER && command.id2 != WORD_NOT_FOUND && command.id2 != WORD_EMPTY) {
             /* command.wd1 = command.wd2; */
@@ -1149,7 +1154,7 @@ Lookup:
         defn = get_vocab_id(word1);
         if (defn == WORD_NOT_FOUND) {
             /* Gee, I don't understand. */
-            if (fallback_handler(inputbuf))
+            if (fallback_handler(command))
                 continue;
             sspeak(DONT_KNOW, command.raw1);
             goto L2600;
@@ -1170,7 +1175,7 @@ Lookup:
             break;
         case 3:
             speak(specials[kmod].message);
-            goto L2012;
+            goto Lclearobj;
         default:
             BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3); // LCOV_EXCL_LINE
         }
@@ -1185,7 +1190,7 @@ Laction:
         case GO_TOP:
             continue;	/* back to top of main interpreter loop */
         case GO_CLEAROBJ:
-            goto L2012;
+            goto Lclearobj;
         case GO_CHECKHINT:
             goto L2600;
         case GO_CHECKFOO:
