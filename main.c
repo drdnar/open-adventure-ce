@@ -1075,7 +1075,6 @@ static bool do_command()
 Lclearobj:
         game.oldobj = command.obj;
 
-L2600:
         checkhints();
 
         /*  If closing time, check for any objects being toted with
@@ -1098,7 +1097,7 @@ L2600:
         if(!get_command_input(&command)) 
             return false;
 
-L2607:
+Lthreshold:
         ++game.turns;
 
         /* If a turn threshold has been met, apply penalties and tell
@@ -1154,7 +1153,7 @@ Lookup:
                 continue;
             /* Gee, I don't understand. */
             sspeak(DONT_KNOW, command.raw1);
-            goto L2600;
+            goto Lclearobj;
         }
         /* FIXME: magic numbers related to vocabulary */
         kmod = MOD(defn, 1000);
@@ -1185,12 +1184,8 @@ Lookup:
             return true;
         case GO_TOP:
             continue;	/* back to top of main interpreter loop */
-        case GO_CLEAROBJ:
-            goto Lclearobj;
-        case GO_CHECKHINT:
-            goto L2600;
         case GO_CHECKFOO:
-            goto L2607;
+            goto Lthreshold;
         case GO_LOOKUP:
             goto Lookup;
         case GO_WORD2:
@@ -1206,7 +1201,10 @@ Lookup:
             command.raw1[0] = toupper(command.raw1[0]);
             sspeak(DO_WHAT, command.raw1);
             command.obj = 0;
-            goto L2600;
+            // Fallthrough
+        case GO_CHECKHINT: // Fallthrough
+        case GO_CLEAROBJ:
+            goto Lclearobj;
         case GO_DWARFWAKE:
             /*  Oh dear, he's disturbed the dwarves. */
             rspeak(DWARVES_AWAKEN);
