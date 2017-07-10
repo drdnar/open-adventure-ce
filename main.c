@@ -788,6 +788,15 @@ static bool closecheck(void)
  *  problems arise from the use of negative prop numbers to suppress
  *  the object descriptions until he's actually moved the objects. */
 {
+    /* If a turn threshold has been met, apply penalties and tell
+     * the player about it. */
+    for (int i = 0; i < NTHRESHOLDS; ++i) {
+        if (game.turns == turn_thresholds[i].threshold + 1) {
+            game.trnluz += turn_thresholds[i].point_loss;
+            speak(turn_thresholds[i].message);
+        }
+    }
+
     /*  Don't tick game.clock1 unless well into cave (and not at Y2). */
     if (game.tally == 0 && INDEEP(game.loc) && game.loc != LOC_Y2)
         --game.clock1;
@@ -1097,17 +1106,8 @@ Lclearobj:
         if(!get_command_input(&command)) 
             return false;
 
-Lthreshold:
+Lclosecheck:
         ++game.turns;
-
-        /* If a turn threshold has been met, apply penalties and tell
-         * the player about it. */
-        for (int i = 0; i < NTHRESHOLDS; ++i) {
-            if (game.turns == turn_thresholds[i].threshold + 1) {
-                game.trnluz += turn_thresholds[i].point_loss;
-                speak(turn_thresholds[i].message);
-            }
-        }
 
         if (closecheck()) {
             if (game.closed)
@@ -1117,11 +1117,11 @@ Lthreshold:
 
         if (command.id1 == ENTER && (command.id2 == STREAM ||
                                      command.id2 == PROMOTE_WORD(WATER))) {
-            if (LIQLOC(game.loc) == WATER) {
+            if (LIQLOC(game.loc) == WATER) 
                 rspeak(FEET_WET);
-            } else {
+            else
                 rspeak(WHERE_QUERY);
-            }
+            
             goto Lclearobj;
         }
         if (command.id1 == ENTER && command.id2 != WORD_NOT_FOUND && command.id2 != WORD_EMPTY) {
@@ -1185,7 +1185,7 @@ Lookup:
         case GO_TOP:
             continue;	/* back to top of main interpreter loop */
         case GO_CHECKFOO:
-            goto Lthreshold;
+            goto Lclosecheck;
         case GO_LOOKUP:
             goto Lookup;
         case GO_WORD2:
