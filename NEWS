@@ -1,6 +1,6 @@
 = Open Adventure project news =
 
-Repository head:
+1.2: 2017-07-10::
   Under oldstyle, new-school single-letter command synonyms are ignored.
   Switched from linenoise to editline for new-style line input.
   The -s option is no longer required to paste command input; it is removed.
