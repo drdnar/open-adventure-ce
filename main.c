@@ -1138,7 +1138,7 @@ L2607:
             if (command.id1 == PROMOTE_WORD(CAGE) && command.id2 == PROMOTE_WORD(BIRD) && HERE(CAGE) && HERE(BIRD))
                 command.wd1 = token_to_packed("CATCH");
         }
-Lmovehint:
+Lookup:
         if (wordeq(command.wd1, token_to_packed("WEST"))) {
             if (++game.iwest == 10)
                 rspeak(W_IS_WEST);
@@ -1147,7 +1147,6 @@ Lmovehint:
             if (++game.igo == 10)
                 rspeak(GO_UNNEEDED);
         }
-Lookup:
         packed_to_token(command.wd1, word1);
         defn = get_vocab_id(word1);
         if (defn == WORD_NOT_FOUND) {
@@ -1200,7 +1199,7 @@ Lookup:
             strncpy(command.raw1, command.raw2, LINESIZE - 1);
             wordclear(&command.wd2);
             command.raw2[0] = '\0';
-            goto Lmovehint;
+            goto Lookup;
         case GO_UNKNOWN:
             /*  Random intransitive verbs come here.  Clear obj just in case
              *  (see attack()). */
