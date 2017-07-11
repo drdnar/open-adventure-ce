@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python
 
 # This is the open-adventure dungeon text coverage report generator. It
 # consumes a YAML description of the dungeon and determines whether the

@@ -26,7 +26,7 @@ check: savecheck regress
 coverage: check
 	lcov -t "advent" -o ../advent.info -c -d .. --gcov-tool=$(GCOV)
 	genhtml -o ../coverage/ ../advent.info
-	python3 coverage_dungeon.py
+	./coverage_dungeon.py
 
 .SUFFIXES: .chk
 
