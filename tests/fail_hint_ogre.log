@@ -1,4 +1,4 @@
-## Fail to get ogre hint by qualifying at it all dwarves are dead (fuzzed)
+## Qualify for ogre hint but fail due to dwarves dead (fuzzed)
 n
 seed 1838473132
 in

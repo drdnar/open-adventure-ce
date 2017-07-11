@@ -1,4 +1,4 @@
-## Fail to get ogre hint by qualifying for it but having a dwarf near ogre (fuzzed)
+## Quaify for ogre hint but fail due to nearby dwarf (fuzzed)
 n
 seed 25508795
 in
