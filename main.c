@@ -9,9 +9,8 @@
  * to idiomatic C, the following is more appropriate:
  *
  * ESR apologizes for the remaing gotos (now confined to one function
- * in this file - there used to be over 350 of them, *everywhere*),
- * and for the offensive globals.  Applying the Structured Program
- * Theorem can be hard.
+ * in this file - there used to be over 350 of them, *everywhere*).
+ * Applying the Structured Program Theorem can be hard.
  */
 
 #include <stdlib.h>
@@ -729,10 +728,11 @@ static void playermove( int motion)
                      * wander across and encounter the bear.  (They
                      * won't follow the player there because that
                      * region is forbidden to the pirate.)  If
-                     * game.prop(TROLL)=1, he's crossed since paying,
-                     * so step out and block him.  (standard travel
-                     * entries check for game.prop(TROLL)=0.)  Special
-                     * stuff for bear. */
+                     * game.prop[TROLL]=TROLL_PAIDONCE, he's crossed
+                     * since paying, so step out and block him.
+                     * (standard travel entries check for
+                     * game.prop[TROLL]=TROLL_UNPAID.)  Special stuff
+                     * for bear. */
                     if (game.prop[TROLL] == TROLL_PAIDONCE) {
                         pspeak(TROLL, look, TROLL_PAIDONCE, true);
                         game.prop[TROLL] = TROLL_UNPAID;
