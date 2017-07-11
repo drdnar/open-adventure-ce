@@ -397,7 +397,8 @@ static bool dwarfmove(void)
                 else if (j > 1 && game.newloc == tk[j - 1])
                     continue;
                 else if (j >= DIM(tk) - 1)
-                    continue;
+		    /* This can't actually happen. */
+                    continue; // LCOV_EXCL_LINE
                 else if (game.newloc == game.dloc[i])
                     continue;
                 else if (FORCED(game.newloc))
