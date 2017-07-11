@@ -1,5 +1,9 @@
 = Installing Open Adventure =
 
+The instructions below assume your system uses Python 3 by default,
+but the actual Python code in Open Adventure is 2/3 agnostic. Adjust
+the example commands below accordingly.
+
 1. Install PyYAML for Python 3 (which requires Python 3), and libedit
 (aka: editline) on your system.
 

@@ -40,7 +40,7 @@ dungeon.o:	dungeon.c dungeon.h
 	$(CC) $(CCFLAGS) $(DBX) -c dungeon.c
 
 dungeon.c dungeon.h: make_dungeon.py adventure.yaml
-	python3 make_dungeon.py
+	./make_dungeon.py
 
 clean:
 	rm -f *.o advent cheat *.html *.gcno *.gcda
