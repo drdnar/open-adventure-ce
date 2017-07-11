@@ -626,7 +626,7 @@ def buildtravel(locs, objs):
             try:
                 return locnames.index(action[1])
             except ValueError:
-                sys.stderr.write("dungeon: unknown location %s in goto clause of %s\n" % (cond[1], name))
+                sys.stderr.write("dungeon: unknown location %s in goto clause of %s\n" % (action[1], name))
         elif action[0] == "special":
             return 300 + action[1]
         elif action[0] == "speak":
