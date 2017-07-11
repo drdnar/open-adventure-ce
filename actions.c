@@ -420,12 +420,12 @@ static int chain(verb_t verb)
         switch (game.prop[BEAR]) {
         case BEAR_DEAD:
             // LCOV_EXCL_START
-	    /* Can't be reached as long as the only way for the bear to die
-	     * is from a bridge collapse. Leave in in case this changes, but 
-	     * exclude from coverage testing. */
+            /* Can't be reached as long as the only way for the bear to die
+             * is from a bridge collapse. Leave in in case this changes, but
+             * exclude from coverage testing. */
             game.fixed[BEAR] = IS_FIXED;
             break;
-            // LCOV_EXCL_STOP
+        // LCOV_EXCL_STOP
         default:
             game.fixed[BEAR] = IS_FREE;
         }

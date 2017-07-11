@@ -1009,7 +1009,7 @@ static bool get_command_input(struct command_t *command)
     packed_to_token(command->wd2, word2);
     command->id1 = get_vocab_id(word1);
     command->id2 = get_vocab_id(word2);
-    
+
     return true;
 }
 
@@ -1101,9 +1101,9 @@ Lclearobj:
         game.wzdark = DARK(game.loc);
         if (game.knfloc > 0 && game.knfloc != game.loc)
             game.knfloc = 0;
-        
+
         // Get command input from user
-        if(!get_command_input(&command)) 
+        if (!get_command_input(&command))
             return false;
 
 Lclosecheck:
@@ -1117,11 +1117,11 @@ Lclosecheck:
 
         if (command.id1 == ENTER && (command.id2 == STREAM ||
                                      command.id2 == PROMOTE_WORD(WATER))) {
-            if (LIQLOC(game.loc) == WATER) 
+            if (LIQLOC(game.loc) == WATER)
                 rspeak(FEET_WET);
             else
                 rspeak(WHERE_QUERY);
-            
+
             goto Lclearobj;
         }
         if (command.id1 == ENTER && command.id2 != WORD_NOT_FOUND && command.id2 != WORD_EMPTY) {
@@ -1175,7 +1175,7 @@ Lookup:
         default:
             BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3); // LCOV_EXCL_LINE
         }
-        
+
         switch (action(&command)) {
         case GO_TERMINATE:
             return true;
@@ -1201,7 +1201,7 @@ Lookup:
             command.raw1[0] = toupper(command.raw1[0]);
             sspeak(DO_WHAT, command.raw1);
             command.obj = 0;
-            // Fallthrough
+        // Fallthrough
         case GO_CHECKHINT: // Fallthrough
         case GO_CLEAROBJ:
             goto Lclearobj;
