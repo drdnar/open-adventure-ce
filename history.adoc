@@ -48,10 +48,11 @@ that IFA's historical claims are thinly sourced and its dates for the
 earliest releases don't match either comments in the code or the
 careful reconstruction in <<SN>>.
 
-Future versions of this document may attempt to untangle some of the
-non-mainline history. For now, it will suffice to explain the chain of
-provenance that led from the original Adventure to the version
-distributed with this document.
+An attempt to untangle and document a lot of the non-mainline history
+has been made by Arthur O'Dwyer at <<QUUX>>.  For our purposes, it
+will suffice to explain the chain of provenance that led from the
+original Adventure to the Open Adventure distributed with this
+document.
 
 The original 350-point ADVENT on the PDP-10 had been one of my
 formative experiences as a fledgling hacker in 1976-77. Forty years
@@ -150,3 +151,5 @@ even as primitive as Adventure's.
 - [[[DND]]] https://en.wikipedia.org/wiki/Dnd_(video_game)
 
 - [[[WUMPUS]]] https://en.wikipedia.org/wiki/Hunt_the_Wumpus
+
+- [[[QUUX]]] https://github.com/Quuxplusone/Advent
