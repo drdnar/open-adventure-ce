@@ -10,7 +10,7 @@ binary:debug:
   stage: build
   before_script:
     - apk update
-    - apk add make gcc musl-dev python libedit-dev
+    - apk add make gcc musl-dev python py2-pip libedit-dev
     - pip install PyYAML
   script:
     - make debug
@@ -29,7 +29,7 @@ binary:release:
   stage: build
   before_script:
     - apk update
-    - apk add make gcc musl-dev python libedit-dev
+    - apk add make gcc musl-dev python py2-pip libedit-dev
     - pip install PyYAML
   script:
     - make advent cheat
@@ -81,7 +81,7 @@ test:debug:
   stage: test
   before_script:
     - apk update
-    - apk add make gcc python libedit-dev
+    - apk add make gcc python py2-pip libedit-dev
     - pip install PyYAML
     - apk add lcov --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted
   script:
