@@ -10,6 +10,8 @@
 # your inventory (KNUT0350), or... So you get to pick your behavior! From the
 # code, I think you're faithfully emulating WOOD0430's bug.
 #
+# Turns out we fixed this, perhaps inadvertently.
+#
 n
 seed 1838473132
 in
