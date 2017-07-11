@@ -1137,11 +1137,11 @@ Lclosecheck:
                 command.wd1 = token_to_packed("CATCH");
         }
 Lookup:
-        if (wordeq(command.wd1, token_to_packed("WEST"))) {
+        if (strncasecmp(command.raw1, "west", sizeof("west")) == 0) {
             if (++game.iwest == 10)
                 rspeak(W_IS_WEST);
         }
-        if (wordeq(command.wd1, token_to_packed("GO")) && !wordempty(command.wd2)) {
+        if (strncasecmp(command.raw1, "go", sizeof("go")) == 0 && !wordempty(command.wd2)) {
             if (++game.igo == 10)
                 rspeak(GO_UNNEEDED);
         }
