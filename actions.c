@@ -425,7 +425,7 @@ static int chain(verb_t verb)
 	     * exclude from coverage testing. */
             game.fixed[BEAR] = IS_FIXED;
             break;
-            // LCOV_EXCL_END
+            // LCOV_EXCL_STOP
         default:
             game.fixed[BEAR] = IS_FREE;
         }
