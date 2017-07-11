@@ -10,12 +10,17 @@ s
 s
 open grate
 d
+# go back up and down again because of coverage
+u
+d
 w
 w
 light lamp
 w
 w
 w
+# attempt and fail to traverse the crack because coverage
+crack
 down
 w
 jump

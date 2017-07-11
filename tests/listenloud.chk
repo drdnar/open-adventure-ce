@@ -382,138 +382,87 @@ You're in Plover Room.
 
 There is an emerald here the size of a plover's egg!
 
+> dark
+
+You're in dark-room.
+
+A massive stone tablet imbedded in the wall reads:
+"Congratulations on bringing light into the dark-room!"
+
+> s
+
+You're in Plover Room.
+
+There is an emerald here the size of a plover's egg!
+
 > plover
 
 >>Foof!<<
 
-There is a threatening little dwarf in the room with you!
-
 You're at "Y2".
 
-A hollow voice says "PLUGH".
-
 > s
-
-There is a threatening little dwarf in the room with you!
 
 You're in n/s passage above e/w passage.
 
 > d
-
-There is a threatening little dwarf in the room with you!
 
 You are in a dirty broken passage.  To the east is a crawl.  To the
 west is a large passage.  Above you is a hole to another passage.
 
 > u
 
-A little dwarf with a big knife blocks your way.
-
-There is a threatening little dwarf in the room with you!
-
-One sharp nasty knife is thrown at you!
-
-It misses!
-
-You're in dirty passage.
+You're in n/s passage above e/w passage.
 
 > u
 
-There are 2 threatening little dwarves in the room with you.
+There is no way to go that direction.
 
 You're in n/s passage above e/w passage.
 
 > throw axe
 
-You attack a little dwarf, but he dodges out of the way.
-
-There are 2 threatening little dwarves in the room with you.
-
-2 of them throw knives at you!
-
-None of them hits you!
-
-You're in n/s passage above e/w passage.
-
-There is a little axe here.
+There is nothing here to attack.
 
 > take axe
 
-OK
+You are already carrying it!
 
 > throw axe
 
-You attack a little dwarf, but he dodges out of the way.
-
-There are 2 threatening little dwarves in the room with you.
-
-2 of them throw knives at you!
-
-None of them hits you!
-
-You're in n/s passage above e/w passage.
-
-There is a little axe here.
+There is nothing here to attack.
 
 > take axe
 
-OK
+You are already carrying it!
 
 > throw axe
 
-You attack a little dwarf, but he dodges out of the way.
-
-There are 2 threatening little dwarves in the room with you.
-
-2 of them throw knives at you!
-
-None of them hits you!
-
-You are in a low n/s passage at a hole in the floor.  The hole goes
-down to an e/w passage.
-
-There is a little axe here.
+There is nothing here to attack.
 
 > take axe
 
-OK
+You are already carrying it!
 
 > throw axe
 
-You killed a little dwarf.  The body vanishes in a cloud of greasy
-black smoke.
-
-There is a threatening little dwarf in the room with you!
-
-One sharp nasty knife is thrown at you!
-
-It misses!
-
-You're in n/s passage above e/w passage.
-
-There is a little axe here.
+There is nothing here to attack.
 
 > take axe
 
-OK
+You are already carrying it!
 
 > s
-
-There is a threatening little dwarf in the room with you!
 
 You're in Hall of Mt King.
 
 > e
-
-There is a threatening little dwarf in the room with you!
 
 You're in Hall of Mists.
 
 Rough stone steps lead up the dome.
 
 > w
-
-There is a threatening little dwarf in the room with you!
 
 You're on east bank of fissure.
 
@@ -527,8 +476,6 @@ OK
 
 > w
 
-There is a threatening little dwarf in the room with you!
-
 You are on the west side of the fissure in the Hall of Mists.
 
 There are diamonds here!
@@ -537,8 +484,6 @@ A crystal bridge spans the fissure.
 
 > w
 
-There is a threatening little dwarf in the room with you!
-
 You are at the west end of the Hall of Mists.  A low wide crawl
 continues west and another goes north.  To the south is a little
 passage 6 feet off the floor.
@@ -546,6 +491,10 @@ passage 6 feet off the floor.
 > w
 
 There is a threatening little dwarf in the room with you!
+
+One sharp nasty knife is thrown at you!
+
+It misses!
 
 You are at the east end of a very long hall apparently without side
 chambers.  To the east a low wide crawl slants up.  To the north a
@@ -688,11 +637,15 @@ A crystal bridge spans the fissure.
 
 > e
 
+There is a threatening little dwarf in the room with you!
+
 You're in Hall of Mists.
 
 Rough stone steps lead up the dome.
 
 > s
+
+There is a threatening little dwarf in the room with you!
 
 This is a low room with a crude note on the wall.  The note says,
 "You won't get it up the steps".
@@ -705,173 +658,206 @@ You can't carry anything more.  You'll have to drop something first.
 
 > n
 
-You're in Hall of Mists.
+A little dwarf with a big knife blocks your way.
 
-Rough stone steps lead up the dome.
+There is a threatening little dwarf in the room with you!
+
+One sharp nasty knife is thrown at you!
+
+It misses!
+
+You're in nugget-of-gold room.
+
+There is a large sparkling nugget of gold here!
 
 > y2
 
-You are in a jumble of rock, with cracks everywhere.
+I don't know how to apply that word here.
+
+There is a threatening little dwarf in the room with you!
+
+One sharp nasty knife is thrown at you!
+
+It misses!
+
+Oh dear, you seem to have gotten yourself killed.  I might be able to
+help you out, but I've never really done this before.  Do you want me
+to try to reincarnate you?
 
 > d
 
-You're at "Y2".
+Please answer the question.
+
+Oh dear, you seem to have gotten yourself killed.  I might be able to
+help you out, but I've never really done this before.  Do you want me
+to try to reincarnate you?
 
 > plugh
 
->>Foof!<<
+Please answer the question.
 
-You're inside building.
-
-There is a persian rug spread out on the floor!
-
-A precious jade necklace has been dropped here!
-
-There is precious jewelry here!
-
-There are bars of silver here!
-
-There are some keys on the ground here.
-
-There is food here.
+Oh dear, you seem to have gotten yourself killed.  I might be able to
+help you out, but I've never really done this before.  Do you want me
+to try to reincarnate you?
 
 > drop diamonds
 
-OK
+Please answer the question.
+
+Oh dear, you seem to have gotten yourself killed.  I might be able to
+help you out, but I've never really done this before.  Do you want me
+to try to reincarnate you?
 
 > drop pyramid
 
-OK
+Please answer the question.
+
+Oh dear, you seem to have gotten yourself killed.  I might be able to
+help you out, but I've never really done this before.  Do you want me
+to try to reincarnate you?
 
 > drop ruby
 
-OK
+Please answer the question.
+
+Oh dear, you seem to have gotten yourself killed.  I might be able to
+help you out, but I've never really done this before.  Do you want me
+to try to reincarnate you?
 
 > plugh
 
->>Foof!<<
+Please answer the question.
 
-You're at "Y2".
-
-A hollow voice says "PLUGH".
+Oh dear, you seem to have gotten yourself killed.  I might be able to
+help you out, but I've never really done this before.  Do you want me
+to try to reincarnate you?
 
 > plugh
 
->>Foof!<<
+Please answer the question.
 
-You're inside building.
-
-There is an enormous ruby here!
-
-There is a platinum pyramid here, 8 inches on a side!
-
-There are diamonds here!
-
-There is a persian rug spread out on the floor!
-
-A precious jade necklace has been dropped here!
-
-There is precious jewelry here!
-
-There are bars of silver here!
-
-There are some keys on the ground here.
-
-There is food here.
+Oh dear, you seem to have gotten yourself killed.  I might be able to
+help you out, but I've never really done this before.  Do you want me
+to try to reincarnate you?
 
 > drop coins
 
-I see no coins here.
+Please answer the question.
+
+Oh dear, you seem to have gotten yourself killed.  I might be able to
+help you out, but I've never really done this before.  Do you want me
+to try to reincarnate you?
 
 > plugh
 
->>Foof!<<
+Please answer the question.
 
-You are in a large room, with a passage to the south, a passage to the
-west, and a wall of broken rock to the east.  There is a large "Y2" on
-a rock in the room's center.
+Oh dear, you seem to have gotten yourself killed.  I might be able to
+help you out, but I've never really done this before.  Do you want me
+to try to reincarnate you?
 
 > s
 
-You're in n/s passage above e/w passage.
+Please answer the question.
+
+Oh dear, you seem to have gotten yourself killed.  I might be able to
+help you out, but I've never really done this before.  Do you want me
+to try to reincarnate you?
 
 > d
 
-You're in dirty passage.
+Please answer the question.
+
+Oh dear, you seem to have gotten yourself killed.  I might be able to
+help you out, but I've never really done this before.  Do you want me
+to try to reincarnate you?
 
 > bedquilt
 
-You are in Bedquilt, a long east/west passage with holes everywhere.
-To explore at random select north, south, up, or down.
+Please answer the question.
+
+Oh dear, you seem to have gotten yourself killed.  I might be able to
+help you out, but I've never really done this before.  Do you want me
+to try to reincarnate you?
 
 > slab
 
-You are in a large low circular chamber whose floor is an immense slab
-fallen from the ceiling (Slab Room).  East and west there once were
-large passages, but they are now filled with boulders.  Low small
-passages go north and south, and the south one quickly bends west
-around the boulders.
+Please answer the question.
+
+Oh dear, you seem to have gotten yourself killed.  I might be able to
+help you out, but I've never really done this before.  Do you want me
+to try to reincarnate you?
 
 > s
 
-You are at the west end of the Twopit Room.  There is a large hole in
-the wall above the pit at this end of the room.
+Please answer the question.
+
+Oh dear, you seem to have gotten yourself killed.  I might be able to
+help you out, but I've never really done this before.  Do you want me
+to try to reincarnate you?
 
 > d
 
-You are at the bottom of the western pit in the Twopit Room.  There is
-a large hole in the wall about 25 feet above you.
+Please answer the question.
 
-There is a tiny little plant in the pit, murmuring "water, water, ..."
+Oh dear, you seem to have gotten yourself killed.  I might be able to
+help you out, but I've never really done this before.  Do you want me
+to try to reincarnate you?
 
 > water plant
 
-The plant spurts into furious growth for a few seconds.
+Please answer the question.
 
-You're in west pit.
-
-There is a 12-foot-tall beanstalk stretching up out of the pit,
-bellowing "WATER!! WATER!!"
+Oh dear, you seem to have gotten yourself killed.  I might be able to
+help you out, but I've never really done this before.  Do you want me
+to try to reincarnate you?
 
 > u
 
-You're at west end of Twopit Room.
+Please answer the question.
 
-The top of a 12-foot-tall beanstalk is poking out of the west pit.
+Oh dear, you seem to have gotten yourself killed.  I might be able to
+help you out, but I've never really done this before.  Do you want me
+to try to reincarnate you?
 
 > w
 
-You're in Slab Room.
+Please answer the question.
+
+Oh dear, you seem to have gotten yourself killed.  I might be able to
+help you out, but I've never really done this before.  Do you want me
+to try to reincarnate you?
 
 > u
 
-You are in a secret n/s canyon above a large room.
+Please answer the question.
+
+Oh dear, you seem to have gotten yourself killed.  I might be able to
+help you out, but I've never really done this before.  Do you want me
+to try to reincarnate you?
 
 > reservoir
 
-You are at the edge of a large underground reservoir.  An opaque cloud
-of white mist fills the room and rises rapidly upward.  The lake is
-fed by a stream, which tumbles out of a hole in the wall about 10 feet
-overhead and splashes noisily into the water somewhere within the
-mist.  There is a passage going back toward the south.
+Please answer the question.
+
+Oh dear, you seem to have gotten yourself killed.  I might be able to
+help you out, but I've never really done this before.  Do you want me
+to try to reincarnate you?
 
 > Q'IBJ
 
-The waters have parted to form a narrow path across the reservoir.
+Please answer the question.
+
+Oh dear, you seem to have gotten yourself killed.  I might be able to
+help you out, but I've never really done this before.  Do you want me
+to try to reincarnate you?
 
 > n
 
-You are walking across the bottom of the reservoir.  Walls of water
-rear up on either side.  The roar of the water cascading past is
-nearly deafening, and the mist is so thick you can barely see.
+OK
 
-> listen
+You scored 117 out of a possible 430, using 114 turns.
 
-The roaring is so loud that it drowns out all other sound.
+Your score qualifies you as a novice class adventurer.
 
-
-You scored 161 out of a possible 430, using 135 turns.
-
-You have achieved the rating: "Experienced Adventurer".
-
-To achieve the next higher rating, you need 10 more points.
+To achieve the next higher rating, you need 4 more points.

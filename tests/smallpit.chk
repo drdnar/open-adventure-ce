@@ -249,194 +249,31 @@ There are bars of silver here!
 You are in a dirty broken passage.  To the east is a crawl.  To the
 west is a large passage.  Above you is a hole to another passage.
 
-> bedqu
+> crawl
 
-You are in Bedquilt, a long east/west passage with holes everywhere.
-To explore at random select north, south, up, or down.
+You are on the brink of a small clean climbable pit.  A crawl leads
+west.
 
-> slab
+> pit
 
-You are in a large low circular chamber whose floor is an immense slab
-fallen from the ceiling (Slab Room).  East and west there once were
-large passages, but they are now filled with boulders.  Low small
-passages go north and south, and the south one quickly bends west
-around the boulders.
+You are in the bottom of a small pit with a little stream, which
+enters and exits through tiny slits.
 
-> s
+> listen
 
-You are at the west end of the Twopit Room.  There is a large hole in
-the wall above the pit at this end of the room.
+The stream is gurgling placidly.
 
-> d
+> out
 
-You are at the bottom of the western pit in the Twopit Room.  There is
-a large hole in the wall about 25 feet above you.
+You're at brink of small pit.
 
-There is a tiny little plant in the pit, murmuring "water, water, ..."
+> pit
 
-> water plant
+You're at bottom of pit with stream.
 
-The plant spurts into furious growth for a few seconds.
 
-You're in west pit.
-
-There is a 12-foot-tall beanstalk stretching up out of the pit,
-bellowing "WATER!! WATER!!"
-
-> u
-
-You're at west end of Twopit Room.
-
-The top of a 12-foot-tall beanstalk is poking out of the west pit.
-
-> w
-
-You're in Slab Room.
-
-> u
-
-You are in a secret n/s canyon above a large room.
-
-> reser
-
-You are at the edge of a large underground reservoir.  An opaque cloud
-of white mist fills the room and rises rapidly upward.  The lake is
-fed by a stream, which tumbles out of a hole in the wall about 10 feet
-overhead and splashes noisily into the water somewhere within the
-mist.  There is a passage going back toward the south.
-
-> H'CFL
-
-The waters have parted to form a narrow path across the reservoir.
-
-> n
-
-You are walking across the bottom of the reservoir.  Walls of water
-rear up on either side.  The roar of the water cascading past is
-nearly deafening, and the mist is so thick you can barely see.
-
-> n
-
-You are at the northern edge of the reservoir.  A northwest passage
-leads sharply up from here.
-
-The waters have parted to form a narrow path across the reservoir.
-
-> take water
-
-Your bottle is now full of water.
-
-> s
-
-You're at bottom of reservoir.
-
-> s
-
-You're at reservoir.
-
-The waters have parted to form a narrow path across the reservoir.
-
-> s
-
-You are in a north/south canyon about 25 feet across.  The floor is
-covered by white mist seeping in from the north.  The walls extend
-upward for well over 100 feet.  Suspended from some unseen point far
-above you, an enormous two-sided mirror is hanging parallel to and
-midway between the canyon walls.  (The mirror is obviously provided
-for the use of the dwarves who, as you know, are extremely vain.)  A
-small window can be seen in either wall, some fifty feet up.
-
-> s
-
-You are in a secret n/s canyon above a large room.
-
-> d
-
-You're in Slab Room.
-
-> s
-
-You're at west end of Twopit Room.
-
-The top of a 12-foot-tall beanstalk is poking out of the west pit.
-
-> d
-
-A little dwarf just walked around a corner, saw you, threw a little
-axe at you which missed, cursed, and ran away.
-
-You're in west pit.
-
-There is a little axe here.
-
-There is a 12-foot-tall beanstalk stretching up out of the pit,
-bellowing "WATER!! WATER!!"
-
-> water plant
-
-The plant grows explosively, almost filling the bottom of the pit.
-
-You're in west pit.
-
-There is a little axe here.
-
-There is a gigantic beanstalk stretching all the way up to the hole.
-
-> climb
-
-You clamber up the plant and scurry through the hole at the top.
-
-You are in a long, narrow corridor stretching out of sight to the
-west.  At the eastern end is a hole through which you can see a
-profusion of leaves.
-
-> w
-
-You are in the Giant Room.  The ceiling here is too high up for your
-lamp to show it.  Cavernous passages lead east, north, and south.  On
-the west wall is scrawled the inscription, "FEE FIE FOE FOO" [sic].
-
-There is a large nest here, full of golden eggs!
-
-> g
-
-OK
-
-> n
-
-You are at one end of an immense north/south passage.
-
-The way north is barred by a massive, rusty, iron door.
-
-> fee
-
-OK
-
-> fie
-
-OK
-
-> foe
-
-OK
-
-> foo
-
-The nest of golden eggs has vanished!
-
-> s
-
-You're in Giant Room.
-
-There is a large nest here, full of golden eggs!
-
-> e
-
-The passage here is blocked by a recent cave-in.
-
-
-You scored 67 out of a possible 430, using 66 turns.
+You scored 65 out of a possible 430, using 40 turns.
 
 Your score qualifies you as a novice class adventurer.
 
-To achieve the next higher rating, you need 54 more points.
+To achieve the next higher rating, you need 56 more points.

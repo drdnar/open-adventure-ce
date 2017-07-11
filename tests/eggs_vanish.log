@@ -65,3 +65,6 @@ fee
 fie
 foe
 foo
+# go south, east to arrive at LOC_CAVEIN for coverage
+s
+e

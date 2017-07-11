@@ -230,6 +230,11 @@ feed bear
 unloc
 take bear
 fork
+# next 4 lines are for coverage of LOC_LIMESTONE
+d
+fork
+d
+fork
 ne
 e
 fork

@@ -7,8 +7,8 @@ You are standing at the end of a road before a small brick building.
 Around you is a forest.  A small stream flows out of the building and
 down a gully.
 
-> seed 1495774850
-Seed set to 1495774850
+> seed 1071883378
+Seed set to 1071883378
 
 You're in front of building.
 
@@ -24,71 +24,36 @@ There is food here.
 
 There is a bottle of water here.
 
-> take keys
-
-OK
-
 > take lamp
 
 OK
 
-> out
+> say xyzzy
 
-You're in front of building.
+>>Foof!<<
 
-> s
+It is now pitch dark.  If you proceed you will likely fall into a pit.
 
-You are in a valley in the forest beside a stream tumbling along a
-rocky bed.
+> take rod
 
-> s
+OK
 
-At your feet all the water of the stream splashes into a 2-inch slit
-in the rock.  Downstream the streambed is bare rock.
-
-> s
-
-You are in a 20-foot depression floored with bare dirt.  Set into the
-dirt is a strong steel grate mounted in concrete.  A dry streambed
-leads into the depression.
-
-The grate is locked.
-
-> open grate
-
-The grate is now unlocked.
-
-> d
-
-You are in a small chamber beneath a 3x3 steel grate to the surface.
-A low crawl over cobbles leads inward to the west.
-
-The grate is open.
-
-> u
-
-You're outside grate.
-
-The grate is open.
-
-> d
-
-You're below the grate.
-
-The grate is open.
-
-> w
+> e
 
 You are crawling over cobbles in a low passage.  There is a dim light
 at the east end of the passage.
 
 There is a small wicker cage discarded nearby.
 
+> take cage
+
+OK
+
 > w
 
 It is now pitch dark.  If you proceed you will likely fall into a pit.
 
-> light lamp
+> on
 
 Your lamp is now on.
 
@@ -96,8 +61,6 @@ You are in a debris room filled with stuff washed in from the surface.
 A low wide passage with cobbles becomes plugged with mud and debris
 here, but an awkward canyon leads upward and west.  In the mud someone
 has scrawled, "MAGIC WORD XYZZY".
-
-A three foot black rod with a rusty star on an end lies nearby.
 
 > w
 
@@ -111,6 +74,18 @@ from east and west sides of the chamber.
 
 A cheerful little bird is sitting here singing.
 
+> drop rod
+
+OK
+
+> take bird
+
+OK
+
+> take rod
+
+OK
+
 > w
 
 At your feet is a small pit breathing traces of white mist.  An east
@@ -118,16 +93,95 @@ passage ends here except for a small crack leading on.
 
 Rough stone steps lead down the pit.
 
-> crack
+> free bird
 
-The crack is far too small for you to follow.  At its widest it is
-barely wide enough to admit your foot.'
+OK
+
+> wave rod
+
+The bird flies about agitatedly for a moment, then disappears through
+the crack.  It reappears shortly, carrying in its beak a jade
+necklace, which it drops at your feet.
+
+> drop rod
+
+OK
+
+> take bird
+
+OK
+
+> take jade
+
+OK
+
+> e
+
+You're in bird chamber.
+
+> e
+
+You are in an awkward sloping east/west canyon.
+
+> e
+
+You're in debris room.
+
+> off
+
+Your lamp is now off.
+
+It is now pitch dark.  If you proceed you will likely fall into a pit.
+
+> xyzzy
+
+>>Foof!<<
+
+You're inside building.
+
+There are some keys on the ground here.
+
+There is food here.
+
+There is a bottle of water here.
+
+> drop jade
+
+OK
+
+> xyzzy
+
+>>Foof!<<
+
+It is now pitch dark.  If you proceed you will likely fall into a pit.
+
+> on
+
+Your lamp is now on.
+
+You're in debris room.
+
+> w
+
+You are in an awkward sloping east/west canyon.
+
+> w
+
+You're in bird chamber.
+
+> w
 
 You're at top of small pit.
 
+A three foot black rod with a rusty star on an end lies nearby.
+
 Rough stone steps lead down the pit.
 
-> down
+> take rod
+
+OK
+
+> d
 
 You are at one end of a vast hall stretching forward out of sight to
 the west.  There are openings to either side.  Nearby, a wide stone
@@ -142,20 +196,36 @@ Rough stone steps lead up the dome.
 You are on the east bank of a fissure slicing clear across the hall.
 The mist is quite thick here, and the fissure is too wide to jump.
 
-> jump
+> wave rod
 
-You didn't make it.
+The bird flies agitatedly about the cage.
 
-Oh dear, you seem to have gotten yourself killed.  I might be able to
-help you out, but I've never really done this before.  Do you want me
-to try to reincarnate you?
+A crystal bridge now spans the fissure.
 
-> n
+> drop rod
 
 OK
 
-You scored 51 out of a possible 430, using 21 turns.
+> w
+
+You are on the west side of the fissure in the Hall of Mists.
+
+There are diamonds here!
+
+A crystal bridge spans the fissure.
+
+> n
+
+You have crawled through a very low wide passage parallel to and north
+of the Hall of Mists.
+
+You are at the west end of the Hall of Mists.  A low wide crawl
+continues west and another goes north.  To the south is a little
+passage 6 feet off the floor.
+
+
+You scored 75 out of a possible 430, using 37 turns.
 
 Your score qualifies you as a novice class adventurer.
 
-To achieve the next higher rating, you need 70 more points.
+To achieve the next higher rating, you need 46 more points.
