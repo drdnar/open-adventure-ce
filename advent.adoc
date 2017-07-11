@@ -52,6 +52,24 @@ The binary save file format is fragile, dependent on your machine word
 size and endianness, and unlikely to survive through version bumps. There
 is a version check.
 
+The input parser was the first attempt *ever* at natural-language
+parsing in a game and has some known deficiencies.  While later text
+adventures distinguished between transitive and intransitive verbs,
+Adventure's grammar distinguishes only between motion and action
+verbs. Motions are always immediate in their behavior, so both ACTION
+MOTION and MOTION ACTION (and even MOTION NOUN and MOTION MOTION) are
+invariably equivalent to MOTION (thus GO NORTH means NORTH and JUMP
+DOWN means JUMP). Whereas, with actions and nouns, the parser collects
+words until it's seen one of each, and then dispatches; if it reaches
+the end of the command without seeing a noun, it'll dispatch an
+"intransitive" action. This makes ACTION1 ACTION2 equivalent to
+ACTION2 (thus TAKE INVENTORY means INVENTORY), and NOUN ACTION
+equivalent to ACTION NOUN.
+
+Thus you get anomalies like "eat building" interpreted as a command
+to move to the building. These should not be reported as bugs; instead,
+consider them historical curiosities.
+
 == REPORTING BUGS ==
 Report bugs to Eric S. Raymond <esr@thyrsus.com>.  The project page is
 at http://catb.org/~esr/open-adventure
