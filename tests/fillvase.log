@@ -1,4 +1,15 @@
 ## Fill the vase
+# Arthur O'Dwyer <arthur.j.odwyer@gmail.com> writes:
+#
+# (4) Lastly, here's a test case for you! Go get the VASE; then get the
+# PILLOW; then go back to the stream (any stream) and DROP PILLOW; then FILL
+# VASE. What should happen? This is a trick question, because literally every
+# historical version of Adventure has *some* bug here. They duplicate
+# messages (MCDO0551), or the vase shatters and then shows up re-formed but
+# immobile (WOOD0350, WOOD0430), or the vase shows up shattered but still in
+# your inventory (KNUT0350), or... So you get to pick your behavior! From the
+# code, I think you're faithfully emulating WOOD0430's bug.
+#
 n
 seed 1838473132
 in
@@ -243,3 +254,6 @@ fill vase
 carry vase
 read vase
 fill vase
+inven
+look
+take vase
