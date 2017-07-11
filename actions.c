@@ -903,7 +903,11 @@ static int listen(void)
             game.prop[i] < 0)
             continue;
         int mi =  game.prop[i];
-        /* FIXME: Weird magic on object states */
+        /* (ESR) Some unpleasant magic on object states here. Ideally
+         * we'd have liked the bird to be a normal object that we can
+         * use state_change() on; can't do it, because there are
+         * actually two different series of per-state birdsounds
+         * depending on whether player has drunk dragon's blood. */
         if (i == BIRD)
             mi += 3 * game.blooded;
         long packed_zzword = token_to_packed(game.zzword);

@@ -246,12 +246,12 @@ static bool spotted_by_pirate(int i)
     if (i != PIRATE)
         return false;
 
-    /*  The pirate's spotted him.  He leaves him alone once we've
+    /*  The pirate's spotted him.  Pirate leaves him alone once we've
      *  found chest.  K counts if a treasure is here.  If not, and
      *  tally=1 for an unseen chest, let the pirate be spotted.  Note
      *  that game.place[CHEST] = LOC_NOWHERE might mean that he's thrown
      *  it to the troll, but in that case he's seen the chest
-     *  (game.prop=0). */
+     *  (game.prop[CHEST] == STATE_FOUND). */
     if (game.loc == game.chloc ||
         game.prop[CHEST] != STATE_NOTFOUND)
         return true;
@@ -321,15 +321,14 @@ static bool dwarfmove(void)
      *  variables.  Remember sixth dwarf is pirate and is thus
      *  very different except for motion rules. */
 
-    /*  First off, don't let the dwarves follow him into a pit or
-     *  a wall.  Activate the whole mess the first time he gets as
-     *  far as the hall of mists (loc 15).  If game.newloc is
-     *  forbidden to pirate (in particular, if it's beyond the
+    /*  First off, don't let the dwarves follow him into a pit or a
+     *  wall.  Activate the whole mess the first time he gets as far
+     *  as the Hall of Mists (what INDEEP() tests).  If game.newloc
+     *  is forbidden to pirate (in particular, if it's beyond the
      *  troll bridge), bypass dwarf stuff.  That way pirate can't
      *  steal return toll, and dwarves can't meet the bear.  Also
      *  means dwarves won't follow him into dead end in maze, but
-     *  c'est la vie.  They'll wait for him outside the dead
-     *  end. */
+     *  c'est la vie.  They'll wait for him outside the dead end. */
     if (game.loc == LOC_NOWHERE ||
         FORCED(game.loc) ||
         CNDBIT(game.newloc, COND_NOARRR))
@@ -343,7 +342,7 @@ static bool dwarfmove(void)
     }
 
     /*  When we encounter the first dwarf, we kill 0, 1, or 2 of
-     *  the 5 dwarves.  If any of the survivors is at loc,
+     *  the 5 dwarves.  If any of the survivors is at game.loc,
      *  replace him with the alternate. */
     if (game.dflag == 1) {
         if (!INDEEP(game.loc) ||
@@ -644,7 +643,6 @@ static void playermove( int motion)
     /* (ESR) We've found a destination that goes with the motion verb.
      * Next we need to check any conditional(s) on this destination, and
      * possibly on following entries. */
-    /* FIXME: Magic numbers related to move opcodes */
     do {
         for (;;) { /* L12 loop */
             for (;;) {
