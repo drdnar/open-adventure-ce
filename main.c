@@ -1123,18 +1123,26 @@ Lclosecheck:
         }
         if (command.id1 == ENTER && command.id2 != WORD_NOT_FOUND && command.id2 != WORD_EMPTY) {
             command.id1 = command.id2;
+	    command.type1 = command.type2;
+	    strncpy(command.raw1, command.raw2, LINESIZE + 1);
             command.id2 = WORD_EMPTY;
+	    command.type2 = NO_WORD_TYPE;
+	    strncpy(command.raw2, "", LINESIZE + 1);
         } else {
             if (!((command.id1 != WATER && command.id1 != OIL) || (command.id2 != PLANT && command.id2 != DOOR))) {
                 if (AT(command.id2))
 		  {
 		    command.id2 = POUR;
+		    command.type2 = ACTION;
+		    strncpy(command.raw2, "POUR", LINESIZE + 1);
                     command.wd2 = token_to_packed("POUR");
 		  }
             }
             if (command.id1 == CAGE && command.id2 == BIRD && HERE(CAGE) && HERE(BIRD))
 	      {
 		command.id1 = CARRY;
+		command.type1 = ACTION;
+		strncpy(command.raw2, "CATCH", LINESIZE + 1);
                 command.wd1 = token_to_packed("CATCH");
 	      }
         }
@@ -1148,10 +1156,10 @@ Lookup:
                 rspeak(GO_UNNEEDED);
         }
         packed_to_token(command.wd1, word1);
-        long defn;
-        enum wordtype type;
-        get_vocab_metadata(word1, &defn, &type);
-        if (defn == WORD_NOT_FOUND) {
+	long defn;
+	enum wordtype type;
+	get_vocab_metadata(word1, &defn, &type);
+        if (command.id1 == WORD_NOT_FOUND) {
             if (fallback_handler(command))
                 continue;
             /* Gee, I don't understand. */
@@ -1193,11 +1201,13 @@ Lookup:
         case GO_WORD2:
             /* Get second word for analysis. */
 	    command.id1 = command.id2;
+	    command.type1 = command.type2;
+	    strncpy(command.raw1, command.raw2, LINESIZE - 1);
+	    command.wd1 = command.wd2;
 	    command.id2 = WORD_EMPTY;
-            command.wd1 = command.wd2;
-            strncpy(command.raw1, command.raw2, LINESIZE - 1);
+	    command.type2 = NO_WORD_TYPE;
+	    command.raw2[0] = '\0';
             wordclear(&command.wd2);
-            command.raw2[0] = '\0';
             goto Lookup;
         case GO_UNKNOWN:
             /*  Random intransitive verbs come here.  Clear obj just in case
