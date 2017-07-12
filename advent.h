@@ -65,8 +65,10 @@
 #define GSTONE(OBJ)  ((OBJ) == EMERALD || (OBJ) == RUBY || (OBJ) == AMBER || (OBJ) == SAPPH)
 #define FOREST(LOC)  CNDBIT(LOC, COND_FOREST)
 #define OUTSID(LOC)  (CNDBIT(LOC, COND_ABOVE) || FOREST(LOC))
+#define INSIDE(LOC)  (!OUTSID(LOC) || LOC == LOC_BUILDING)
 #define INDEEP(LOC)  ((LOC) >= LOC_MISTHALL && !OUTSID(LOC))
 #define BUG(x)       bug(x, #x)
+
 #define MOTION_WORD(n)  ((n) + 0)
 #define OBJECT_WORD(n)  ((n) + 1000)
 #define ACTION_WORD(n)  ((n) + 2000)

@@ -58,6 +58,9 @@ Bug fixes:
   incorrect most places it appeared and has been replaced by "A crystal 
   bridge spans the fissure." (timeless present).
 
+* Under odd circumstances (dropping rug or vase outdoors) the game could
+  say "floor" when it should say "ground" (or "dirt", or something).
+
 By default, advent issues "> " as a command prompt.  This feature
 became common in many variants after the original 350-point version,
 but was never backported into Crowther & Woods's main line before now.

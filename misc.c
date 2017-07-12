@@ -171,8 +171,17 @@ void vspeak(const char* msg, bool blank, va_list ap)
     long previous_arg = 0;
     for (int i = 0; i < msglen; i++) {
         if (msg[i] != '%') {
-            *renderp++ = msg[i];
-            size--;
+	    /* Ugh.  Least obtrusive way to deal with artifacts "on the floor"
+	     * being dropped outside of both cave and building. */
+	    if (strncmp(msg + i, "floor", 5) == 0 && strchr(" .", msg[i+5]) && !INSIDE(game.loc)) {
+		strcpy(renderp, "ground");
+		renderp += 6;
+		i += 4;
+		size -= 5;
+	    } else {
+		*renderp++ = msg[i];
+		size--;
+	    }
         } else {
             long arg = va_arg(ap, long);
             if (arg == -1)
