@@ -1151,7 +1151,7 @@ Lookup:
             if (++game.iwest == 10)
                 rspeak(W_IS_WEST);
         }
-        if (strncasecmp(command.raw1, "go", sizeof("go")) == 0 && !wordempty(command.wd2)) {
+        if (strncasecmp(command.raw1, "go", sizeof("go")) == 0 && command.id2 != WORD_EMPTY) {
             if (++game.igo == 10)
                 rspeak(GO_UNNEEDED);
         }
@@ -1169,18 +1169,18 @@ Lookup:
         switch (type) {
         case NO_WORD_TYPE: // FIXME: treating NO_WORD_TYPE as a motion word is confusing
         case MOTION:
-            playermove(defn);
+            playermove(command.id1);
             return true;
         case OBJECT:
             command.part = unknown;
-            command.obj = defn;
+            command.obj = command.id1;
             break;
         case ACTION:
             command.part = intransitive;
             command.verb = defn;
             break;
         case SPECIAL:
-            speak(specials[defn].message);
+            speak(specials[command.id1].message);
             goto Lclearobj;
         default:
             BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3); // LCOV_EXCL_LINE
