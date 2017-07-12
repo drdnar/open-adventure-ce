@@ -523,37 +523,61 @@ int get_special_vocab_id(const char* word)
     return (WORD_NOT_FOUND);
 }
 
-long get_vocab_id(const char* word)
-// Search the vocab categories in order for the supplied word.
+void get_vocab_metadata(const char* word, long* id, enum wordtype* type)
 {
-    /* Check for an empty string */
-    if (strncmp(word, "", sizeof("")) == 0)
-        return (WORD_EMPTY);
+  /* Check for an empty string */
+  if (strncmp(word, "", sizeof("")) == 0)
+    {
+      *id = WORD_EMPTY;
+      *type = NO_WORD_TYPE;
+      return;
+    }
 
-    long ref_num;
+  long ref_num;
 
-    /* FIXME: Magic numbers related to vocabulary */
-    ref_num = get_motion_vocab_id(word);
-    if (ref_num != WORD_NOT_FOUND)
-        return MOTION_WORD(ref_num);
+  ref_num = get_motion_vocab_id(word);
+  if (ref_num != WORD_NOT_FOUND)
+    {
+      *id = ref_num;
+      *type = MOTION;
+      return;
+    }
 
-    ref_num = get_object_vocab_id(word);
-    if (ref_num != WORD_NOT_FOUND)
-        return OBJECT_WORD(ref_num);
+  ref_num = get_object_vocab_id(word);
+  if (ref_num != WORD_NOT_FOUND)
+    {
+      *id = ref_num;
+      *type = OBJECT;
+      return;
+    }
 
-    ref_num = get_action_vocab_id(word);
-    if (ref_num != WORD_NOT_FOUND)
-        return ACTION_WORD(ref_num);
+  ref_num = get_action_vocab_id(word);
+  if (ref_num != WORD_NOT_FOUND)
+    {
+      *id = ref_num;
+      *type = ACTION;
+      return;
+    }
 
-    ref_num = get_special_vocab_id(word);
-    if (ref_num != WORD_NOT_FOUND)
-        return SPECIAL_WORD(ref_num);
+  ref_num = get_special_vocab_id(word);
+  if (ref_num != WORD_NOT_FOUND)
+    {
+      *id = ref_num;
+      *type = SPECIAL;
+      return;
+    }
 
-    // Check for the reservoir magic word.
-    if (strcasecmp(word, game.zzword) == 0)
-        return ACTION_WORD(PART);
+  // Check for the reservoir magic word.
+  if (strcasecmp(word, game.zzword) == 0)
+    {
+      *id = PART;
+      *type = ACTION;
+      return;
+    }
 
-    return (WORD_NOT_FOUND);
+  *id = WORD_NOT_FOUND;
+  *type = NO_WORD_TYPE;
+  return;
 }
 
 void juggle(obj_t object)

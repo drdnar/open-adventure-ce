@@ -1006,8 +1006,8 @@ static bool get_command_input(struct command_t *command)
 
     packed_to_token(command->wd1, word1);
     packed_to_token(command->wd2, word2);
-    command->id1 = get_vocab_id(word1);
-    command->id2 = get_vocab_id(word2);
+    get_vocab_metadata(word1, &(command->id1), &(command->type1));
+    get_vocab_metadata(word2, &(command->id2), &(command->type2));
 
     return true;
 }
@@ -1015,7 +1015,6 @@ static bool get_command_input(struct command_t *command)
 static bool do_command()
 /* Get and execute a command */
 {
-    long kmod, defn;
     static struct command_t command;
     char word1[TOKLEN + 1];
 
@@ -1115,7 +1114,7 @@ Lclosecheck:
             lampcheck();
 
         if (command.id1 == ENTER && (command.id2 == STREAM ||
-                                     command.id2 == PROMOTE_WORD(WATER))) {
+                                     command.id2 == WATER)) {
             if (LIQLOC(game.loc) == WATER)
                 rspeak(FEET_WET);
             else
@@ -1127,13 +1126,11 @@ Lclosecheck:
             command.id1 = command.id2;
             command.id2 = WORD_EMPTY;
         } else {
-            /* FIXME: Magic numbers related to vocabulary */
-            if (!((command.id1 != PROMOTE_WORD(WATER) && command.id1 != PROMOTE_WORD(OIL)) ||
-                  (command.id2 != PROMOTE_WORD(PLANT) && command.id2 != PROMOTE_WORD(DOOR)))) {
-                if (AT(DEMOTE_WORD(command.id2)))
+	  if (!((command.id1 != WATER && command.id1 != OIL) || (command.id2 != PLANT && command.id2 != DOOR))) {
+                if (AT(command.id2))
                     command.wd2 = token_to_packed("POUR");
             }
-            if (command.id1 == PROMOTE_WORD(CAGE) && command.id2 == PROMOTE_WORD(BIRD) && HERE(CAGE) && HERE(BIRD))
+            if (command.id1 == CAGE && command.id2 == BIRD && HERE(CAGE) && HERE(BIRD))
                 command.wd1 = token_to_packed("CATCH");
         }
 Lookup:
@@ -1146,7 +1143,9 @@ Lookup:
                 rspeak(GO_UNNEEDED);
         }
         packed_to_token(command.wd1, word1);
-        defn = get_vocab_id(word1);
+	long defn;
+	enum wordtype type;
+	get_vocab_metadata(word1, &defn, &type);
         if (defn == WORD_NOT_FOUND) {
             if (fallback_handler(command))
                 continue;
@@ -1154,22 +1153,21 @@ Lookup:
             sspeak(DONT_KNOW, command.raw1);
             goto Lclearobj;
         }
-        /* FIXME: magic numbers related to vocabulary */
-        kmod = MOD(defn, 1000);
-        switch (defn / 1000) {
-        case 0:
-            playermove(kmod);
+        switch (type) {
+	case NO_WORD_TYPE: // FIXME: treating NO_WORD_TYPE as a motion word is confusing
+        case MOTION:
+            playermove(defn);
             return true;
-        case 1:
+        case OBJECT:
             command.part = unknown;
-            command.obj = kmod;
+            command.obj = defn;
             break;
-        case 2:
+        case ACTION:
             command.part = intransitive;
-            command.verb = kmod;
+            command.verb = defn;
             break;
-        case 3:
-            speak(specials[kmod].message);
+        case SPECIAL:
+            speak(specials[defn].message);
             goto Lclearobj;
         default:
             BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3); // LCOV_EXCL_LINE

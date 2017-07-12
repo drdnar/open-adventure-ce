@@ -185,13 +185,13 @@ static int bigwords(long id)
  *  Look up foo in special section of vocab to determine which word we've got.
  *  Last word zips the eggs back to the giant room (unless already there). */
 {
-    if ((game.foobar == WORD_EMPTY && id == ACTION_WORD(FEE)) ||
-        (game.foobar == ACTION_WORD(FEE) && id == ACTION_WORD(FIE)) ||
-        (game.foobar == ACTION_WORD(FIE) && id == ACTION_WORD(FOE)) ||
-        (game.foobar == ACTION_WORD(FOE) && id == ACTION_WORD(FOO)) ||
-        (game.foobar == ACTION_WORD(FOE) && id == ACTION_WORD(FUM))) {
+    if ((game.foobar == WORD_EMPTY && id == FEE) ||
+        (game.foobar == FEE && id == FIE) ||
+        (game.foobar == FIE && id == FOE) ||
+        (game.foobar == FOE && id == FOO) ||
+        (game.foobar == FOE && id == FUM)) {
         game.foobar = id;
-        if ((id != ACTION_WORD(FOO)) && (id != ACTION_WORD(FUM))) {
+        if ((id != FOO) && (id != FUM)) {
             rspeak(OK_MAN);
             return GO_CLEAROBJ;
         }
@@ -1127,16 +1127,18 @@ static int say(struct command_t *command)
     }
     char word1[TOKLEN + 1];
     packed_to_token(command->wd1, word1);
-    int wd = (int) get_vocab_id(word1);
-    if (wd == MOTION_WORD(XYZZY) ||
-        wd == MOTION_WORD(PLUGH) ||
-        wd == MOTION_WORD(PLOVER) ||
-        wd == ACTION_WORD(FEE) ||
-        wd == ACTION_WORD(FIE) ||
-        wd == ACTION_WORD(FOE) ||
-        wd == ACTION_WORD(FOO) ||
-        wd == ACTION_WORD(FUM) ||
-        wd == ACTION_WORD(PART)) {
+    long wd;
+    enum wordtype type;
+    get_vocab_metadata(word1, &wd, &type);
+    if (wd == XYZZY ||
+        wd == PLUGH ||
+        wd == PLOVER ||
+        wd == FEE ||
+        wd == FIE ||
+        wd == FOE ||
+        wd == FOO ||
+        wd == FUM ||
+        wd == PART) {
         /* FIXME: scribbles on the interpreter's command block */
         wordclear(&command->wd2);
         return GO_LOOKUP;

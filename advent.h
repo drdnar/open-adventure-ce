@@ -69,13 +69,6 @@
 #define INDEEP(LOC)  ((LOC) >= LOC_MISTHALL && !OUTSID(LOC))
 #define BUG(x)       bug(x, #x)
 
-#define MOTION_WORD(n)  ((n) + 0)
-#define OBJECT_WORD(n)  ((n) + 1000)
-#define ACTION_WORD(n)  ((n) + 2000)
-#define SPECIAL_WORD(n) ((n) + 3000)
-#define PROMOTE_WORD(n) ((n) + 1000)
-#define DEMOTE_WORD(n)  ((n) - 1000)
-
 enum bugtype {
     SPECIAL_TRAVEL_500_GT_L_GT_300_EXCEEDS_GOTO_LIST,
     VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3,
@@ -93,6 +86,8 @@ enum speaktype {touch, look, hear, study, change};
 enum termination {endgame, quitgame, scoregame};
 
 enum speechpart {unknown, intransitive, transitive};
+
+enum wordtype {NO_WORD_TYPE, MOTION, OBJECT, ACTION, SPECIAL};
 
 /* Phase codes for action returns.
  * These were at one time FORTRAN line numbers.
@@ -200,6 +195,8 @@ struct command_t {
     long id1;
     long id2;
     char raw1[LINESIZE], raw2[LINESIZE];
+    enum wordtype type1;
+    enum wordtype type2;
 };
 
 extern struct game_t game;
@@ -225,7 +222,7 @@ extern int get_motion_vocab_id(const char*);
 extern int get_object_vocab_id(const char*);
 extern int get_action_vocab_id(const char*);
 extern int get_special_vocab_id(const char*);
-extern long get_vocab_id(const char*);
+extern void get_vocab_metadata(const char*, long*, enum wordtype*);
 extern void juggle(obj_t);
 extern void move(obj_t, loc_t);
 extern long put(obj_t, long, long);
