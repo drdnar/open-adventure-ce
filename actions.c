@@ -101,14 +101,11 @@ static int attack(struct command_t *command)
          *  fixed), move rug there (not fixed), and move him there,
          *  too.  Then do a null motion to get new description. */
         rspeak(BARE_HANDS_QUERY);
-        if (silent_yes()) {
-            // FIXME: setting wd1 is a workaround for broken logic
-            command->wd1 = token_to_packed("Y");
-        } else {
-            // FIXME: setting wd1 is a workaround for broken logic
-            command->wd1 = token_to_packed("N");
-            return GO_CHECKFOO;
-        }
+	if (!silent_yes())
+	  {
+	    speak(arbitrary_messages[NASTY_DRAGON]);
+	    return GO_MOVE;
+	  }
         state_change(DRAGON, DRAGON_DEAD);
         game.prop[RUG] = RUG_FLOOR;
         /* Hardcoding LOC_SECRET5 as the dragon's death location is ugly.
