@@ -3404,7 +3404,7 @@ objects: !!omap
     - 'The troll is nowhere to be seen.'
 - BEAR:
     words: ['bear']
-    inventory: !!null # bear uses rtext 141
+    inventory: !!null
     locations: LOC_BARRENROOM
     immovable: true
     states: [UNTAMED_BEAR, SITTING_BEAR, CONTENTED_BEAR, BEAR_DEAD]
