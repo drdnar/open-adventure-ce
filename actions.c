@@ -1347,14 +1347,14 @@ int action(struct command_t *command)
             command->obj = ROD2;
             /* FALL THROUGH */;
         } else if ((command->verb == FIND ||
-                    command->verb == INVENTORY) && command->wd2 <= 0)
+                    command->verb == INVENTORY) && (command->id2 == WORD_EMPTY || command->id2 == WORD_NOT_FOUND))
             /* FALL THROUGH */;
         else {
             sspeak(NO_SEE, command->raw1);
             return GO_CLEAROBJ;
         }
 
-        if (command->wd2 > 0)
+        if (command->id2 != WORD_EMPTY && command->id2 != WORD_NOT_FOUND)
             return GO_WORD2;
         if (command->verb != 0)
             command->part = transitive;
