@@ -1127,10 +1127,16 @@ Lclosecheck:
         } else {
             if (!((command.id1 != WATER && command.id1 != OIL) || (command.id2 != PLANT && command.id2 != DOOR))) {
                 if (AT(command.id2))
+		  {
+		    command.id2 = POUR;
                     command.wd2 = token_to_packed("POUR");
+		  }
             }
             if (command.id1 == CAGE && command.id2 == BIRD && HERE(CAGE) && HERE(BIRD))
+	      {
+		command.id1 = CARRY;
                 command.wd1 = token_to_packed("CATCH");
+	      }
         }
 Lookup:
         if (strncasecmp(command.raw1, "west", sizeof("west")) == 0) {
@@ -1186,6 +1192,8 @@ Lookup:
             goto Lookup;
         case GO_WORD2:
             /* Get second word for analysis. */
+	    command.id1 = command.id2;
+	    command.id2 = WORD_EMPTY;
             command.wd1 = command.wd2;
             strncpy(command.raw1, command.raw2, LINESIZE - 1);
             wordclear(&command.wd2);
