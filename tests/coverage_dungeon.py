@@ -126,7 +126,7 @@ if __name__ == "__main__":
             location_covered += 1
 
         location_html += location_row.format(locname, long_success, short_success)
-    location_percent = round((location_covered / location_total) * 100, 1)
+    location_percent = round((location_covered / float(location_total)) * 100, 1)
 
     arb_msgs.sort()
     arb_msg_html = ""
@@ -139,7 +139,7 @@ if __name__ == "__main__":
             success = "covered"
             arb_covered += 1
         arb_msg_html += arb_msg_row.format(name, success)
-    arb_percent = round((arb_covered / arb_total) * 100, 1)
+    arb_percent = round((arb_covered / float(arb_total)) * 100, 1)
 
     object_html = ""
     objects_total = 0
@@ -155,7 +155,7 @@ if __name__ == "__main__":
                     success = "covered"
                     objects_covered += 1
                 object_html += object_row.format("%s[%d]" % (obj_name, j), success)
-    objects_percent = round((objects_covered / objects_total) * 100, 1)
+    objects_percent = round((objects_covered / float(objects_total)) * 100, 1)
 
     # output some quick report stats
     print("\nadventure.yaml coverage rate:")
