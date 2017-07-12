@@ -65,6 +65,33 @@
                 <td class="headerCovTableEntry">{}</td>
                 <td class="headerCovTableEntry">{}%</td>
               </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="headerItem">Hints:</td>
+                <td class="headerCovTableEntry">{}</td>
+                <td class="headerCovTableEntry">{}</td>
+                <td class="headerCovTableEntry">{}%</td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="headerItem">Classes:</td>
+                <td class="headerCovTableEntry">{}</td>
+                <td class="headerCovTableEntry">{}</td>
+                <td class="headerCovTableEntry">{}%</td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="headerItem">Turn threshold:</td>
+                <td class="headerCovTableEntry">{}</td>
+                <td class="headerCovTableEntry">{}</td>
+                <td class="headerCovTableEntry">{}%</td>
+              </tr>
               <tr><td><img src="glass.png" width=3 height=3 alt=""></td></tr>
             </table>
           </td>
@@ -100,6 +127,43 @@
             </tr>
             {}
         </table>
+        <br>
+        
+        <table width="60%" cellpadding=1 cellspacing=1 border=0>
+            <tr>
+                <td class="tableHead">Hint Name</td>
+                <td class="tableHead">Question</td>
+                <td class="tableHead">Hint</td>
+            </tr>
+            {}
+        </table>
+        <br>
+
+        <table width="60%" cellpadding=1 cellspacing=1 border=0>
+            <tr>
+                <td class="tableHead">Class threshold</td>
+                <td class="tableHead">Message</td>
+            </tr>
+            {}
+        </table>
+        <br>
+
+        <table width="60%" cellpadding=1 cellspacing=1 border=0>
+            <tr>
+                <td class="tableHead">Turn threshold</td>
+                <td class="tableHead">Message</td>
+            </tr>
+            {}
+        </table>
+        <br>
+
+        <table width="60%" cellpadding=1 cellspacing=1 border=0>
+            <tr>
+                <td class="tableHead">Special ID</td>
+                <td class="tableHead">Message</td>
+            </tr>
+        </table>
+
     </center>
     <br>
 

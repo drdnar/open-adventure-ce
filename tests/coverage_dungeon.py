@@ -4,12 +4,14 @@
 # consumes a YAML description of the dungeon and determines whether the
 # various strings contained are present within the test check files.
 #
-# Currently, only the location descriptions, arbitrary messages, and object
-# descriptions are supported. This may be expanded in the future.
+# Currently, only the location descriptions, arbitrary messages, object
+# descriptions, hints, classes and turn thrusholds are supported. This will 
+# be expanded in the future.
 
 import os
 import yaml
 import re
+import pprint
 
 test_dir = "."
 yaml_name = "../adventure.yaml"
@@ -60,7 +62,6 @@ def loc_coverage(locations, text):
         if loc["description"]["short"] == None or loc["description"]["short"] == '':
             loc["description"]["short"] = True
         if loc["description"]["short"] != True:
-            #if text.find(loc["description"]["short"]) != -1:
             if search(loc["description"]["short"], text):
                 loc["description"]["short"] = True
 
@@ -86,6 +87,26 @@ def obj_coverage(objects, text):
                         obj["descriptions"][j] = True
                         objects[i] = (obj_name, obj)
 
+
+def hint_coverage(hints, text):
+    for name, hint in hints:
+        if hint["question"] != True:
+            if search(hint["question"], text):
+                hint["question"] = True
+        if hint["hint"] != True:
+            if search(hint["hint"], text):
+                hint["hint"] = True
+        continue
+
+def threshold_coverage(classes, text):
+    for i, msg in enumerate(classes):
+        if msg["message"] == None:
+            msg["message"] = True
+        elif msg["message"] != True:
+            if search(msg["message"], text):
+                msg["message"] = True
+
+
 if __name__ == "__main__":
     with open(yaml_name, "r") as f:
         db = yaml.load(f)
@@ -96,6 +117,13 @@ if __name__ == "__main__":
     locations = db["locations"]
     arb_msgs = db["arbitrary_messages"]
     objects = db["objects"]
+    hintsraw = db["hints"]
+    classes = db["classes"]
+    turn_thresholds = db["turn_thresholds"]
+
+    hints = []
+    for hint in hintsraw:
+        hints.append((hint["hint"]["name"], {"question" : hint["hint"]["question"],"hint" : hint["hint"]["hint"]}))
 
     text = ""
     for filename in os.listdir(test_dir):
@@ -105,6 +133,9 @@ if __name__ == "__main__":
                 loc_coverage(locations, text)
                 arb_coverage(arb_msgs, text)
                 obj_coverage(objects, text)
+                hint_coverage(hints, text)
+                threshold_coverage(classes, text)
+                threshold_coverage(turn_thresholds, text)
 
     location_html = ""
     location_total = len(locations) * 2
@@ -157,11 +188,56 @@ if __name__ == "__main__":
                 object_html += object_row.format("%s[%d]" % (obj_name, j), success)
     objects_percent = round((objects_covered / float(objects_total)) * 100, 1)
 
+    hints.sort()
+    hints_html = "";
+    hints_total = len(hints) * 2
+    hints_covered = 0
+    for name, hint in hints:
+        if hint["question"] != True:
+            question_success = "uncovered"
+        else:
+            question_success = "covered"
+            hints_covered += 1
+        if hint["hint"] != True:
+            hint_success = "uncovered"
+        else:
+            hint_success = "covered"
+            hints_covered += 1
+        hints_html += location_row.format(name, question_success, hint_success)
+    hints_percent = round((hints_covered / float(hints_total)) * 100, 1)
+
+    class_html = ""
+    class_total = len(classes)
+    class_covered = 0
+    for name, msg in enumerate(classes):
+        if msg["message"] != True:
+            success = "uncovered"
+        else:
+            success = "covered"
+            class_covered += 1
+        class_html += arb_msg_row.format(msg["threshold"], success)
+    class_percent = round((class_covered / float(class_total)) * 100, 1)
+
+    turn_html = ""
+    turn_total = len(turn_thresholds)
+    turn_covered = 0
+    for name, msg in enumerate(turn_thresholds):
+        if msg["message"] != True:
+            success = "uncovered"
+        else:
+            success = "covered"
+            turn_covered += 1
+        turn_html += arb_msg_row.format(msg["threshold"], success)
+    turn_percent = round((turn_covered / float(turn_total)) * 100, 1)
+
     # output some quick report stats
     print("\nadventure.yaml coverage rate:")
     print("  locations..........: {}% covered ({} of {})".format(location_percent, location_covered, location_total))
     print("  arbitrary_messages.: {}% covered ({} of {})".format(arb_percent, arb_covered, arb_total))
     print("  objects............: {}% covered ({} of {})".format(objects_percent, objects_covered, objects_total))
+    print("  hints..............: {}% covered ({} of {})".format(hints_percent, hints_covered, hints_total))
+    print("  classes............: {}% covered ({} of {})".format(class_percent, class_covered, class_total))
+    print("  turn_thresholds....: {}% covered ({} of {})".format(turn_percent, turn_covered, turn_total))
 
     # render HTML report
     with open(html_output_path, "w") as f:
@@ -169,5 +245,8 @@ if __name__ == "__main__":
                 location_total, location_covered, location_percent,
                 arb_total, arb_covered, arb_percent,
                 objects_total, objects_covered, objects_percent,
-                location_html, arb_msg_html, object_html
+                hints_total, hints_covered, hints_percent,
+                class_total, class_covered, class_percent,
+                turn_total, turn_covered, turn_percent,
+                location_html, arb_msg_html, object_html, hints_html, class_html, turn_html
         ))
