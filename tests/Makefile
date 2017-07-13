@@ -43,8 +43,10 @@ listcheck:
 
 # Generate bogus savegames.
 savegames:
+	@$(ECHO) "cheat: Generate save file with -900 deaths"
+	@../cheat -d -900 -o cheat_numdie.adv > /tmp/cheat_numdie
 	@$(ECHO) "cheat: Generate save file with -1000 deaths"
-	@../cheat -d -1000 -o cheat_numdie.adv > /tmp/cheat_numdie
+	@../cheat -d -1000 -o cheat_numdie1000.adv > /tmp/cheat_numdie1000
 	@$(ECHO) "cheat: Generate save file with version -1337"
 	@../cheat -v -1337 -o resume_badversion.adv > /tmp/cheat_badversion
 	@$(ECHO) "cheat: Generate save file 1000 saves"
