@@ -1,4 +1,5 @@
 ## Test throwing axe at non-dwarves.
+# Added coverage of LOC_DEADCRAWL and CROSS_BRIDGE
 n
 seed 1838473132
 in
@@ -110,8 +111,10 @@ throw axe
 take axe
 n
 n
+n
+out
 sw
 up
 # Troll bridge
 throw axe
-
+jump

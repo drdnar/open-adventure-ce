@@ -597,6 +597,14 @@ You're in Bedquilt.
 
 You are in a large low room.  Crawls lead north, se, and sw.
 
+> n
+
+Dead end crawl.
+
+> out
+
+You're in large low room.
+
 > sw
 
 You are in a long winding corridor sloping out of sight in both
@@ -629,10 +637,22 @@ mist.  A notice posted on the bridge reads, "Stop! Pay troll!"
 A burly troll stands by the bridge and insists you throw him a
 treasure before you may cross.
 
-> 
+> jump
+
+I respectfully suggest you go across the bridge instead of jumping.
+
+You're on sw side of chasm.
+
+There is a little axe here.
+
+A rickety wooden bridge extends across the chasm, vanishing into the
+mist.  A notice posted on the bridge reads, "Stop! Pay troll!"
+
+A burly troll stands by the bridge and insists you throw him a
+treasure before you may cross.
 
 
-You scored 105 out of a possible 430, using 106 turns.
+You scored 105 out of a possible 430, using 109 turns.
 
 Your score qualifies you as a novice class adventurer.
 
