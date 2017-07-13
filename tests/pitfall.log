@@ -1,7 +1,14 @@
 ## Death by pitfall
+# Die 3 times so we can cover all the opituary messages
 n
 seed 780351908
 enter building
 xyzzy
 s
+y
+xyzzy
+n
+y
+xyzzy
+w
 y

@@ -39,19 +39,19 @@
                 <td width="10%" class="headerCovTableHead">% Coverage</td>
               </tr>
               <tr>
-                <td class="headerItem">Test:</td>
+                <td class="headerItem">Test:</a></td>
                 <td class="headerValue">adventure.yaml</td>
                 <td></td>
-                <td class="headerItem">Locations:</td>
+                <td class="headerItem"><a href="#locations">Locations:</a></td>
                 <td class="headerCovTableEntry">{}</td>
                 <td class="headerCovTableEntry">{}</td>
                 <td class="headerCovTableEntry">{}%</td>
               </tr>
               <tr>
-                <td class="headerItem">Date:</td>
+                <td class="headerItem">Date:</a></td>
                 <td class="headerValue">2017-07-07 21:47:56</td>
                 <td></td>
-                <td class="headerItem">Arbitrary Messages:</td>
+                <td class="headerItem"><a href="#arbitrary_messages">Arbitrary Messages:</a></td>
                 <td class="headerCovTableEntry">{}</td>
                 <td class="headerCovTableEntry">{}</td>
                 <td class="headerCovTableEntry">{}%</td>
@@ -60,7 +60,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td class="headerItem">Objects:</td>
+                <td class="headerItem"><a href="#objects">Objects:</a></td>
                 <td class="headerCovTableEntry">{}</td>
                 <td class="headerCovTableEntry">{}</td>
                 <td class="headerCovTableEntry">{}%</td>
@@ -69,7 +69,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td class="headerItem">Hints:</td>
+                <td class="headerItem"><a href="#hints">Hints:</a></td>
                 <td class="headerCovTableEntry">{}</td>
                 <td class="headerCovTableEntry">{}</td>
                 <td class="headerCovTableEntry">{}%</td>
@@ -78,7 +78,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td class="headerItem">Classes:</td>
+                <td class="headerItem"><a href="#classes">Classes:</a></td>
                 <td class="headerCovTableEntry">{}</td>
                 <td class="headerCovTableEntry">{}</td>
                 <td class="headerCovTableEntry">{}%</td>
@@ -87,7 +87,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td class="headerItem">Turn threshold:</td>
+                <td class="headerItem"><a href="#turn_thresholds">Turn threshold:</a></td>
                 <td class="headerCovTableEntry">{}</td>
                 <td class="headerCovTableEntry">{}</td>
                 <td class="headerCovTableEntry">{}%</td>
@@ -96,7 +96,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td class="headerItem">Obituaries:</td>
+                <td class="headerItem"><a href="#obituaries">Obituaries:</a></td>
                 <td class="headerCovTableEntry">{}</td>
                 <td class="headerCovTableEntry">{}</td>
                 <td class="headerCovTableEntry">{}%</td>
@@ -105,7 +105,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td class="headerItem">Actions:</td>
+                <td class="headerItem"><a href="#actions">Actions:</a></td>
                 <td class="headerCovTableEntry">{}</td>
                 <td class="headerCovTableEntry">{}</td>
                 <td class="headerCovTableEntry">{}%</td>
@@ -114,7 +114,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td class="headerItem">Specials:</td>
+                <td class="headerItem"><a href="#specials">Specials:</a></td>
                 <td class="headerCovTableEntry">{}</td>
                 <td class="headerCovTableEntry">{}</td>
                 <td class="headerCovTableEntry">{}%</td>
@@ -128,7 +128,7 @@
     <br>
 
     <center>
-        <table width="60%" cellpadding=1 cellspacing=1 border=0>
+        <table id="locations" width="60%" cellpadding=1 cellspacing=1 border=0>
             <tr>
                 <td class="tableHead">Location</td>
                 <td class="tableHead">long</td>
@@ -138,7 +138,7 @@
         </table>
         <br>
 
-        <table width="60%" cellpadding=1 cellspacing=1 border=0>
+        <table id="arbitrary_messages" width="60%" cellpadding=1 cellspacing=1 border=0>
             <tr>
                 <td class="tableHead">Arbitrary Message</td>
                 <td class="tableHead">Covered?</td>
@@ -147,7 +147,7 @@
         </table>
         <br>
 
-        <table width="60%" cellpadding=1 cellspacing=1 border=0>
+        <table id="objects" width="60%" cellpadding=1 cellspacing=1 border=0>
             <tr>
                 <td class="tableHead">Objects</td>
                 <td class="tableHead">Covered?</td>
@@ -156,7 +156,7 @@
         </table>
         <br>
         
-        <table width="60%" cellpadding=1 cellspacing=1 border=0>
+        <table id="hints" width="60%" cellpadding=1 cellspacing=1 border=0>
             <tr>
                 <td class="tableHead">Hint Name</td>
                 <td class="tableHead">Question</td>
@@ -166,7 +166,7 @@
         </table>
         <br>
 
-        <table width="60%" cellpadding=1 cellspacing=1 border=0>
+        <table id="classes" width="60%" cellpadding=1 cellspacing=1 border=0>
             <tr>
                 <td class="tableHead">Class threshold</td>
                 <td class="tableHead">Message</td>
@@ -175,7 +175,7 @@
         </table>
         <br>
 
-        <table width="60%" cellpadding=1 cellspacing=1 border=0>
+        <table id="turn_thresholds" width="60%" cellpadding=1 cellspacing=1 border=0>
             <tr>
                 <td class="tableHead">Turn threshold</td>
                 <td class="tableHead">Message</td>
@@ -184,7 +184,7 @@
         </table>
         <br>
 
-        <table width="60%" cellpadding=1 cellspacing=1 border=0>
+        <table id="obituaries" width="60%" cellpadding=1 cellspacing=1 border=0>
             <tr>
                 <td class="tableHead">Obituary</td>
                 <td class="tableHead">Query</td>
@@ -194,7 +194,7 @@
         </table>
         <br>
 
-        <table width="60%" cellpadding=1 cellspacing=1 border=0>
+        <table id="actions" width="60%" cellpadding=1 cellspacing=1 border=0>
             <tr>
                 <td class="tableHead">Action ID</td>
                 <td class="tableHead">Message</td>
@@ -203,7 +203,7 @@
         </table>
         <br>
 
-        <table width="60%" cellpadding=1 cellspacing=1 border=0>
+        <table id="specials" width="60%" cellpadding=1 cellspacing=1 border=0>
             <tr>
                 <td class="tableHead">Special ID</td>
                 <td class="tableHead">Message</td>

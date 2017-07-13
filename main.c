@@ -487,8 +487,8 @@ static void croak(void)
          *  death and exit. */
         rspeak(DEATH_CLOSING);
         terminate(endgame);
-    } else if (game.numdie == NDEATHS ||
-               !yes(query, yes_response, arbitrary_messages[OK_MAN]))
+    } else if ( !yes(query, yes_response, arbitrary_messages[OK_MAN])
+                || game.numdie == NDEATHS)
         terminate(endgame);
     else {
         game.place[WATER] = game.place[OIL] = LOC_NOWHERE;
