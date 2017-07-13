@@ -356,7 +356,7 @@ hints:
       penalty: 4
       question: 'You''re missing only one other treasure.  Do you need help finding it?'
       hint: |-
-        Once you''ve found all the other treasures, it is no longer possible to
+        Once you've found all the other treasures, it is no longer possible to
         locate the one you''re now missing.'
 
 locations: !!omap
