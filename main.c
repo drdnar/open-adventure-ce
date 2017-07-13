@@ -397,7 +397,7 @@ static bool dwarfmove(void)
                 else if (j > 1 && game.newloc == tk[j - 1])
                     continue;
                 else if (j >= DIM(tk) - 1)
-		    /* This can't actually happen. */
+                    /* This can't actually happen. */
                     continue; // LCOV_EXCL_LINE
                 else if (game.newloc == game.dloc[i])
                     continue;
@@ -1126,7 +1126,7 @@ Lclosecheck:
             command.id1 = command.id2;
             command.id2 = WORD_EMPTY;
         } else {
-	  if (!((command.id1 != WATER && command.id1 != OIL) || (command.id2 != PLANT && command.id2 != DOOR))) {
+            if (!((command.id1 != WATER && command.id1 != OIL) || (command.id2 != PLANT && command.id2 != DOOR))) {
                 if (AT(command.id2))
                     command.wd2 = token_to_packed("POUR");
             }
@@ -1143,9 +1143,9 @@ Lookup:
                 rspeak(GO_UNNEEDED);
         }
         packed_to_token(command.wd1, word1);
-	long defn;
-	enum wordtype type;
-	get_vocab_metadata(word1, &defn, &type);
+        long defn;
+        enum wordtype type;
+        get_vocab_metadata(word1, &defn, &type);
         if (defn == WORD_NOT_FOUND) {
             if (fallback_handler(command))
                 continue;
@@ -1154,7 +1154,7 @@ Lookup:
             goto Lclearobj;
         }
         switch (type) {
-	case NO_WORD_TYPE: // FIXME: treating NO_WORD_TYPE as a motion word is confusing
+        case NO_WORD_TYPE: // FIXME: treating NO_WORD_TYPE as a motion word is confusing
         case MOTION:
             playermove(defn);
             return true;

@@ -128,11 +128,6 @@ void tokenize(char* raw, struct command_t *cmd)
 
 /* Hide the fact that wods are corrently packed longs */
 
-bool wordeq(token_t a, token_t b)
-{
-    return a == b;
-}
-
 bool wordempty(token_t a)
 {
     return a == 0;
@@ -171,17 +166,17 @@ void vspeak(const char* msg, bool blank, va_list ap)
     long previous_arg = 0;
     for (int i = 0; i < msglen; i++) {
         if (msg[i] != '%') {
-	    /* Ugh.  Least obtrusive way to deal with artifacts "on the floor"
-	     * being dropped outside of both cave and building. */
-	    if (strncmp(msg + i, "floor", 5) == 0 && strchr(" .", msg[i+5]) && !INSIDE(game.loc)) {
-		strcpy(renderp, "ground");
-		renderp += 6;
-		i += 4;
-		size -= 5;
-	    } else {
-		*renderp++ = msg[i];
-		size--;
-	    }
+            /* Ugh.  Least obtrusive way to deal with artifacts "on the floor"
+             * being dropped outside of both cave and building. */
+            if (strncmp(msg + i, "floor", 5) == 0 && strchr(" .", msg[i + 5]) && !INSIDE(game.loc)) {
+                strcpy(renderp, "ground");
+                renderp += 6;
+                i += 4;
+                size -= 5;
+            } else {
+                *renderp++ = msg[i];
+                size--;
+            }
         } else {
             long arg = va_arg(ap, long);
             if (arg == -1)
@@ -525,59 +520,53 @@ int get_special_vocab_id(const char* word)
 
 void get_vocab_metadata(const char* word, long* id, enum wordtype* type)
 {
-  /* Check for an empty string */
-  if (strncmp(word, "", sizeof("")) == 0)
-    {
-      *id = WORD_EMPTY;
-      *type = NO_WORD_TYPE;
-      return;
+    /* Check for an empty string */
+    if (strncmp(word, "", sizeof("")) == 0) {
+        *id = WORD_EMPTY;
+        *type = NO_WORD_TYPE;
+        return;
     }
 
-  long ref_num;
+    long ref_num;
 
-  ref_num = get_motion_vocab_id(word);
-  if (ref_num != WORD_NOT_FOUND)
-    {
-      *id = ref_num;
-      *type = MOTION;
-      return;
+    ref_num = get_motion_vocab_id(word);
+    if (ref_num != WORD_NOT_FOUND) {
+        *id = ref_num;
+        *type = MOTION;
+        return;
     }
 
-  ref_num = get_object_vocab_id(word);
-  if (ref_num != WORD_NOT_FOUND)
-    {
-      *id = ref_num;
-      *type = OBJECT;
-      return;
+    ref_num = get_object_vocab_id(word);
+    if (ref_num != WORD_NOT_FOUND) {
+        *id = ref_num;
+        *type = OBJECT;
+        return;
     }
 
-  ref_num = get_action_vocab_id(word);
-  if (ref_num != WORD_NOT_FOUND)
-    {
-      *id = ref_num;
-      *type = ACTION;
-      return;
+    ref_num = get_action_vocab_id(word);
+    if (ref_num != WORD_NOT_FOUND) {
+        *id = ref_num;
+        *type = ACTION;
+        return;
     }
 
-  ref_num = get_special_vocab_id(word);
-  if (ref_num != WORD_NOT_FOUND)
-    {
-      *id = ref_num;
-      *type = SPECIAL;
-      return;
+    ref_num = get_special_vocab_id(word);
+    if (ref_num != WORD_NOT_FOUND) {
+        *id = ref_num;
+        *type = SPECIAL;
+        return;
     }
 
-  // Check for the reservoir magic word.
-  if (strcasecmp(word, game.zzword) == 0)
-    {
-      *id = PART;
-      *type = ACTION;
-      return;
+    // Check for the reservoir magic word.
+    if (strcasecmp(word, game.zzword) == 0) {
+        *id = PART;
+        *type = ACTION;
+        return;
     }
 
-  *id = WORD_NOT_FOUND;
-  *type = NO_WORD_TYPE;
-  return;
+    *id = WORD_NOT_FOUND;
+    *type = NO_WORD_TYPE;
+    return;
 }
 
 void juggle(obj_t object)
