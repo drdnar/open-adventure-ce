@@ -44,6 +44,8 @@ def search(needle, haystack):
     # replacing %s, %d, etc. with regex wildcards, so the variable messages
     # within the dungeon definition will actually match
     needle = re.escape(needle) \
+             .replace("\\n", "\n") \
+             .replace("\\t", "\t") \
              .replace("\%S", ".*") \
              .replace("\%s", ".*") \
              .replace("\%d", ".*") \
