@@ -3,10 +3,6 @@
 # This is the open-adventure dungeon text coverage report generator. It
 # consumes a YAML description of the dungeon and determines whether the
 # various strings contained are present within the test check files.
-#
-# Currently, only the location descriptions, arbitrary messages, object
-# descriptions, hints, classes and turn thrusholds are supported. This will 
-# be expanded in the future.
 
 import os
 import yaml
@@ -17,7 +13,7 @@ yaml_name = "../adventure.yaml"
 html_template_path = "coverage_dungeon.html.tpl"
 html_output_path = "../coverage/adventure.yaml.html"
 
-location_row = """
+row_3_fields = """
     <tr>
         <td class="coverFile">{}</td>
         <td class="{}">&nbsp;</td>
@@ -25,14 +21,7 @@ location_row = """
     </tr>
 """
 
-arb_msg_row = """
-    <tr>
-        <td class="coverFile">{}</td>
-        <td class="{}">&nbsp;</td>
-    </tr>
-"""
-
-object_row = """
+row_2_fields = """
     <tr>
         <td class="coverFile">{}</td>
         <td class="{}">&nbsp;</td>
@@ -54,6 +43,8 @@ def search(needle, haystack):
     return re.search(needle, haystack)
 
 def loc_coverage(locations, text):
+    # locations have a long and a short description, that each have to 
+    # be checked seperately
     for locname, loc in locations:
         if loc["description"]["long"] == None or loc["description"]["long"] == '':
             loc["description"]["long"] = True
@@ -67,6 +58,7 @@ def loc_coverage(locations, text):
                 loc["description"]["short"] = True
 
 def arb_coverage(arb_msgs, text):
+    # arbitrary messages are a map to tuples
     for i, msg in enumerate(arb_msgs):
         (msg_name, msg_text) = msg
         if msg_text == None or msg_text == '':
@@ -76,6 +68,7 @@ def arb_coverage(arb_msgs, text):
                 arb_msgs[i] = (msg_name, True)
 
 def obj_coverage(objects, text):
+    # objects have multiple descriptions based on state
     for i, objouter in enumerate(objects):
         (obj_name, obj) = objouter
         if obj["descriptions"]:
@@ -89,6 +82,8 @@ def obj_coverage(objects, text):
                         objects[i] = (obj_name, obj)
 
 def hint_coverage(hints, text):
+    # hints have a "question" where the hint is offered, followed
+    # by the actual hint if the player requests it
     for name, hint in hints:
         if hint["question"] != True:
             if search(hint["question"], text):
@@ -97,23 +92,9 @@ def hint_coverage(hints, text):
             if search(hint["hint"], text):
                 hint["hint"] = True
 
-def special_coverage(specials, text):
-    for name, special in specials:
-        if special["message"] == None:
-            special["message"] = True
-        if special["message"] != True:
-            if search(special["message"], text):
-                special["message"] = True
-
-def threshold_coverage(classes, text):
-    for i, msg in enumerate(classes):
-        if msg["message"] == None:
-            msg["message"] = True
-        elif msg["message"] != True:
-            if search(msg["message"], text):
-                msg["message"] = True
-
 def obit_coverage(obituaries, text):
+    # obituaries have a "query" where it asks the player for a resurrection, 
+    # followed by a snarky comment if the player says yes
     for i, obit in enumerate(obituaries):
         if obit["query"] != True:
             if search(obit["query"], text):
@@ -122,13 +103,24 @@ def obit_coverage(obituaries, text):
             if search(obit["yes_response"], text):
                 obit["yes_response"] = True
 
-def actions_coverage(actions, text):
-    for name, action in actions:
-        if action["message"] == None or action["message"] == "NO_MESSAGE":
-            action["message"] = True
-        if action["message"] != True:
-            if search(action["message"], text):
-                action["message"] = True
+def threshold_coverage(classes, text):
+    # works for class thresholds and turn threshold, which have a "message" 
+    # property
+    for i, msg in enumerate(classes):
+        if msg["message"] == None:
+            msg["message"] = True
+        elif msg["message"] != True:
+            if search(msg["message"], text):
+                msg["message"] = True
+
+def specials_actions_coverage(items, text):
+    # works for actions or specials
+    for name, item in items:
+        if item["message"] == None or item["message"] == "NO_MESSAGE":
+            item["message"] = True
+        if item["message"] != True:
+            if search(item["message"], text):
+                item["message"] = True
 
 if __name__ == "__main__":
     with open(yaml_name, "r") as f:
@@ -164,8 +156,8 @@ if __name__ == "__main__":
                 threshold_coverage(classes, text)
                 threshold_coverage(turn_thresholds, text)
                 obit_coverage(obituaries, text)
-                actions_coverage(actions, text)
-                special_coverage(specials, text)
+                specials_actions_coverage(actions, text)
+                specials_actions_coverage(specials, text)
 
     location_html = ""
     location_total = len(locations) * 2
@@ -186,7 +178,7 @@ if __name__ == "__main__":
             short_success = "covered"
             location_covered += 1
 
-        location_html += location_row.format(locname, long_success, short_success)
+        location_html += row_3_fields.format(locname, long_success, short_success)
     location_percent = round((location_covered / float(location_total)) * 100, 1)
 
     arb_msgs.sort()
@@ -199,7 +191,7 @@ if __name__ == "__main__":
         else:
             success = "covered"
             arb_covered += 1
-        arb_msg_html += arb_msg_row.format(name, success)
+        arb_msg_html += row_2_fields.format(name, success)
     arb_percent = round((arb_covered / float(arb_total)) * 100, 1)
 
     object_html = ""
@@ -215,7 +207,7 @@ if __name__ == "__main__":
                 else:
                     success = "covered"
                     objects_covered += 1
-                object_html += object_row.format("%s[%d]" % (obj_name, j), success)
+                object_html += row_2_fields.format("%s[%d]" % (obj_name, j), success)
     objects_percent = round((objects_covered / float(objects_total)) * 100, 1)
 
     hints.sort()
@@ -233,7 +225,7 @@ if __name__ == "__main__":
         else:
             hint_success = "covered"
             hints_covered += 1
-        hints_html += location_row.format(name, question_success, hint_success)
+        hints_html += row_3_fields.format(name, question_success, hint_success)
     hints_percent = round((hints_covered / float(hints_total)) * 100, 1)
 
     class_html = ""
@@ -245,7 +237,7 @@ if __name__ == "__main__":
         else:
             success = "covered"
             class_covered += 1
-        class_html += arb_msg_row.format(msg["threshold"], success)
+        class_html += row_2_fields.format(msg["threshold"], success)
     class_percent = round((class_covered / float(class_total)) * 100, 1)
 
     turn_html = ""
@@ -257,7 +249,7 @@ if __name__ == "__main__":
         else:
             success = "covered"
             turn_covered += 1
-        turn_html += arb_msg_row.format(msg["threshold"], success)
+        turn_html += row_2_fields.format(msg["threshold"], success)
     turn_percent = round((turn_covered / float(turn_total)) * 100, 1)
 
     obituaries_html = "";
@@ -274,7 +266,7 @@ if __name__ == "__main__":
         else:
             obit_success = "covered"
             obituaries_covered += 1
-        obituaries_html += location_row.format(i, query_success, obit_success)
+        obituaries_html += row_3_fields.format(i, query_success, obit_success)
     obituaries_percent = round((obituaries_covered / float(obituaries_total)) * 100, 1)
 
     actions.sort()
@@ -287,7 +279,7 @@ if __name__ == "__main__":
         else:
             success = "covered"
             actions_covered += 1
-        actions_html += arb_msg_row.format(name, success)
+        actions_html += row_2_fields.format(name, success)
     actions_percent = round((actions_covered / float(actions_total)) * 100, 1)
 
     special_html = ""
@@ -299,7 +291,7 @@ if __name__ == "__main__":
         else:
             success = "covered"
             special_covered += 1
-        special_html += arb_msg_row.format(name, success)
+        special_html += row_2_fields.format(name, success)
     special_percent = round((special_covered / float(special_total)) * 100, 1)
 
     # output some quick report stats
