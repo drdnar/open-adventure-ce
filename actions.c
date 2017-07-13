@@ -477,15 +477,13 @@ static int discard(verb_t verb, obj_t obj)
         game.prop[CAVITY] = CAVITY_FULL;
         if (HERE(RUG) && ((obj == EMERALD && game.prop[RUG] != RUG_HOVER) ||
                           (obj == RUBY && game.prop[RUG] == RUG_HOVER))) {
-            int spk;
             if (obj == RUBY)
-                spk = RUG_SETTLES;
+                rspeak(RUG_SETTLES);
             else if (TOTING(RUG))
-                spk = RUG_WIGGLES;
+                rspeak(RUG_WIGGLES);
             else
-                spk = RUG_RISES;
-            rspeak(spk);
-            if (spk != RUG_WIGGLES) {
+                rspeak(RUG_RISES);
+            if (!TOTING(RUG) || obj == RUBY) {
                 int k = (game.prop[RUG] == RUG_HOVER) ? RUG_FLOOR : RUG_HOVER;
                 game.prop[RUG] = k;
                 if (k == RUG_HOVER)

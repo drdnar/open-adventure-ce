@@ -540,40 +540,39 @@ static void playermove( int motion)
             motion = game.oldlc2;
         game.oldlc2 = game.oldloc;
         game.oldloc = game.loc;
-        int spk = 0;
-        if (motion == game.loc)
-            spk = FORGOT_PATH;
-        if (CNDBIT(game.loc, COND_NOBACK))
-            spk = TWIST_TURN;
-        if (spk == 0) {
-            int te_tmp = 0;
-            for (;;) {
-                enum desttype_t desttype = travel[travel_entry].desttype;
-                scratchloc = travel[travel_entry].destval;
-                if (desttype != dest_goto || scratchloc != motion) {
-                    if (desttype == dest_goto) {
-                        if (FORCED(scratchloc) && travel[tkey[scratchloc]].destval == motion)
-                            te_tmp = travel_entry;
-                    }
-                    if (!travel[travel_entry].stop) {
-                        ++travel_entry;	/* go to next travel entry for this location */
-                        continue;
-                    }
-                    /* we've reached the end of travel entries for game.loc */
-                    travel_entry = te_tmp;
-                    if (travel_entry == 0) {
-                        rspeak(NOT_CONNECTED);
-                        return;
-                    }
-                }
-
-                motion = travel[travel_entry].motion;
-                travel_entry = tkey[game.loc];
-                break; /* fall through to ordinary travel */
-            }
-        } else {
-            rspeak(spk);
+        if (CNDBIT(game.loc, COND_NOBACK)) {
+            rspeak(TWIST_TURN);
             return;
+        }
+        if (motion == game.loc) {
+            rspeak(FORGOT_PATH);
+            return;
+        }
+
+        int te_tmp = 0;
+        for (;;) {
+            enum desttype_t desttype = travel[travel_entry].desttype;
+            scratchloc = travel[travel_entry].destval;
+            if (desttype != dest_goto || scratchloc != motion) {
+                if (desttype == dest_goto) {
+                    if (FORCED(scratchloc) && travel[tkey[scratchloc]].destval == motion)
+                        te_tmp = travel_entry;
+                }
+                if (!travel[travel_entry].stop) {
+                    ++travel_entry;	/* go to next travel entry for this location */
+                    continue;
+                }
+                /* we've reached the end of travel entries for game.loc */
+                travel_entry = te_tmp;
+                if (travel_entry == 0) {
+                    rspeak(NOT_CONNECTED);
+                    return;
+                }
+            }
+
+            motion = travel[travel_entry].motion;
+            travel_entry = tkey[game.loc];
+            break; /* fall through to ordinary travel */
         }
     } else if (motion == LOOK) {
         /*  Look.  Can't give more detail.  Pretend it wasn't dark
