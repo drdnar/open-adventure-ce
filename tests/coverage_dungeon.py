@@ -111,6 +111,22 @@ def threshold_coverage(classes, text):
             if search(msg["message"], text):
                 msg["message"] = True
 
+def obit_coverage(obituaries, text):
+    for i, obit in enumerate(obituaries):
+        if obit["query"] != True:
+            if search(obit["query"], text):
+                obit["query"] = True
+        if obit["yes_response"] != True:
+            if search(obit["yes_response"], text):
+                obit["yes_response"] = True
+
+def actions_coverage(actions, text):
+    for name, action in actions:
+        if action["message"] == None:
+            action["message"] = True
+        if action["message"] != True:
+            if search(action["message"], text):
+                action["message"] = True
 
 if __name__ == "__main__":
     with open(yaml_name, "r") as f:
@@ -119,12 +135,15 @@ if __name__ == "__main__":
     with open(html_template_path, "r") as f:
         html_template = f.read()
 
+    motions = db["motions"]
     locations = db["locations"]
     arb_msgs = db["arbitrary_messages"]
     objects = db["objects"]
     hintsraw = db["hints"]
     classes = db["classes"]
     turn_thresholds = db["turn_thresholds"]
+    obituaries = db["obituaries"]
+    actions = db["actions"]
     specials = db["specials"]
 
     hints = []
@@ -142,6 +161,8 @@ if __name__ == "__main__":
                 hint_coverage(hints, text)
                 threshold_coverage(classes, text)
                 threshold_coverage(turn_thresholds, text)
+                obit_coverage(obituaries, text)
+                actions_coverage(actions, text)
                 special_coverage(specials, text)
 
     location_html = ""
@@ -237,6 +258,36 @@ if __name__ == "__main__":
         turn_html += arb_msg_row.format(msg["threshold"], success)
     turn_percent = round((turn_covered / float(turn_total)) * 100, 1)
 
+    obituaries_html = "";
+    obituaries_total = len(obituaries) * 2
+    obituaries_covered = 0
+    for i, obit in enumerate(obituaries):
+        if obit["query"] != True:
+            query_success = "uncovered"
+        else:
+            query_success = "covered"
+            obituaries_covered += 1
+        if obit["yes_response"] != True:
+            obit_success = "uncovered"
+        else:
+            obit_success = "covered"
+            obituaries_covered += 1
+        obituaries_html += location_row.format(i, query_success, obit_success)
+    obituaries_percent = round((obituaries_covered / float(obituaries_total)) * 100, 1)
+
+    actions.sort()
+    actions_html = "";
+    actions_total = len(actions)
+    actions_covered = 0
+    for name, action in actions:
+        if action["message"] != True:
+            success = "uncovered"
+        else:
+            success = "covered"
+            actions_covered += 1
+        actions_html += arb_msg_row.format(name, success)
+    actions_percent = round((actions_covered / float(actions_total)) * 100, 1)
+
     special_html = ""
     special_total = len(specials)
     special_covered = 0
@@ -257,6 +308,8 @@ if __name__ == "__main__":
     print("  hints..............: {}% covered ({} of {})".format(hints_percent, hints_covered, hints_total))
     print("  classes............: {}% covered ({} of {})".format(class_percent, class_covered, class_total))
     print("  turn_thresholds....: {}% covered ({} of {})".format(turn_percent, turn_covered, turn_total))
+    print("  obituaries.........: {}% covered ({} of {})".format(obituaries_percent, obituaries_covered, obituaries_total))
+    print("  actions............: {}% covered ({} of {})".format(actions_percent, actions_covered, actions_total))
     print("  specials...........: {}% covered ({} of {})".format(special_percent, special_covered, special_total))
 
     # render HTML report
@@ -268,7 +321,9 @@ if __name__ == "__main__":
                 hints_total, hints_covered, hints_percent,
                 class_total, class_covered, class_percent,
                 turn_total, turn_covered, turn_percent,
+                obituaries_total, obituaries_covered, obituaries_percent,
+                actions_total, actions_covered, actions_percent,
                 special_total, special_covered, special_percent,
                 location_html, arb_msg_html, object_html, hints_html, 
-                class_html, turn_html, special_html
+                class_html, turn_html, obituaries_html, actions_html, special_html
         ))

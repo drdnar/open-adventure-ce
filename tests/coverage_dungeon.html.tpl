@@ -96,6 +96,24 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td class="headerItem">Obituaries:</td>
+                <td class="headerCovTableEntry">{}</td>
+                <td class="headerCovTableEntry">{}</td>
+                <td class="headerCovTableEntry">{}%</td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="headerItem">Actions:</td>
+                <td class="headerCovTableEntry">{}</td>
+                <td class="headerCovTableEntry">{}</td>
+                <td class="headerCovTableEntry">{}%</td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td class="headerItem">Specials:</td>
                 <td class="headerCovTableEntry">{}</td>
                 <td class="headerCovTableEntry">{}</td>
@@ -160,6 +178,25 @@
         <table width="60%" cellpadding=1 cellspacing=1 border=0>
             <tr>
                 <td class="tableHead">Turn threshold</td>
+                <td class="tableHead">Message</td>
+            </tr>
+            {}
+        </table>
+        <br>
+
+        <table width="60%" cellpadding=1 cellspacing=1 border=0>
+            <tr>
+                <td class="tableHead">Obituary</td>
+                <td class="tableHead">Query</td>
+                <td class="tableHead">Yes Response</td>
+            </tr>
+            {}
+        </table>
+        <br>
+
+        <table width="60%" cellpadding=1 cellspacing=1 border=0>
+            <tr>
+                <td class="tableHead">Action ID</td>
                 <td class="tableHead">Message</td>
             </tr>
             {}
