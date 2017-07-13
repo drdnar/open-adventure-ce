@@ -11,7 +11,6 @@
 import os
 import yaml
 import re
-import pprint
 
 test_dir = "."
 yaml_name = "../adventure.yaml"
@@ -87,7 +86,6 @@ def obj_coverage(objects, text):
                         obj["descriptions"][j] = True
                         objects[i] = (obj_name, obj)
 
-
 def hint_coverage(hints, text):
     for name, hint in hints:
         if hint["question"] != True:
@@ -96,7 +94,14 @@ def hint_coverage(hints, text):
         if hint["hint"] != True:
             if search(hint["hint"], text):
                 hint["hint"] = True
-        continue
+
+def special_coverage(specials, text):
+    for name, special in specials:
+        if special["message"] == None:
+            special["message"] = True
+        if special["message"] != True:
+            if search(special["message"], text):
+                special["message"] = True
 
 def threshold_coverage(classes, text):
     for i, msg in enumerate(classes):
@@ -120,6 +125,7 @@ if __name__ == "__main__":
     hintsraw = db["hints"]
     classes = db["classes"]
     turn_thresholds = db["turn_thresholds"]
+    specials = db["specials"]
 
     hints = []
     for hint in hintsraw:
@@ -136,6 +142,7 @@ if __name__ == "__main__":
                 hint_coverage(hints, text)
                 threshold_coverage(classes, text)
                 threshold_coverage(turn_thresholds, text)
+                special_coverage(specials, text)
 
     location_html = ""
     location_total = len(locations) * 2
@@ -230,6 +237,18 @@ if __name__ == "__main__":
         turn_html += arb_msg_row.format(msg["threshold"], success)
     turn_percent = round((turn_covered / float(turn_total)) * 100, 1)
 
+    special_html = ""
+    special_total = len(specials)
+    special_covered = 0
+    for name, special in specials:
+        if special["message"] != True:
+            success = "uncovered"
+        else:
+            success = "covered"
+            special_covered += 1
+        special_html += arb_msg_row.format(name, success)
+    special_percent = round((special_covered / float(special_total)) * 100, 1)
+
     # output some quick report stats
     print("\nadventure.yaml coverage rate:")
     print("  locations..........: {}% covered ({} of {})".format(location_percent, location_covered, location_total))
@@ -238,6 +257,7 @@ if __name__ == "__main__":
     print("  hints..............: {}% covered ({} of {})".format(hints_percent, hints_covered, hints_total))
     print("  classes............: {}% covered ({} of {})".format(class_percent, class_covered, class_total))
     print("  turn_thresholds....: {}% covered ({} of {})".format(turn_percent, turn_covered, turn_total))
+    print("  specials...........: {}% covered ({} of {})".format(special_percent, special_covered, special_total))
 
     # render HTML report
     with open(html_output_path, "w") as f:
@@ -248,5 +268,7 @@ if __name__ == "__main__":
                 hints_total, hints_covered, hints_percent,
                 class_total, class_covered, class_percent,
                 turn_total, turn_covered, turn_percent,
-                location_html, arb_msg_html, object_html, hints_html, class_html, turn_html
+                special_total, special_covered, special_percent,
+                location_html, arb_msg_html, object_html, hints_html, 
+                class_html, turn_html, special_html
         ))

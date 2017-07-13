@@ -92,6 +92,15 @@
                 <td class="headerCovTableEntry">{}</td>
                 <td class="headerCovTableEntry">{}%</td>
               </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="headerItem">Specials:</td>
+                <td class="headerCovTableEntry">{}</td>
+                <td class="headerCovTableEntry">{}</td>
+                <td class="headerCovTableEntry">{}%</td>
+              </tr>
               <tr><td><img src="glass.png" width=3 height=3 alt=""></td></tr>
             </table>
           </td>
@@ -162,6 +171,7 @@
                 <td class="tableHead">Special ID</td>
                 <td class="tableHead">Message</td>
             </tr>
+            {}
         </table>
 
     </center>
