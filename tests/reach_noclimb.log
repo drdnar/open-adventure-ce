@@ -1,0 +1,27 @@
+## LOC_NOCLIMB (fuzzed)
+n
+seed 1838473132
+in
+take lamp
+xyzzy
+on
+e
+take cage
+w
+w
+w
+take bird
+w
+d
+d
+free bird
+n
+d
+w
+d
+w
+w
+w
+w
+d
+climb
