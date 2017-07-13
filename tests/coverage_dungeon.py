@@ -122,7 +122,7 @@ def obit_coverage(obituaries, text):
 
 def actions_coverage(actions, text):
     for name, action in actions:
-        if action["message"] == None:
+        if action["message"] == None or action["message"] == "NO_MESSAGE":
             action["message"] = True
         if action["message"] != True:
             if search(action["message"], text):
