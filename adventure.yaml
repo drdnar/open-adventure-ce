@@ -2891,9 +2891,9 @@ arbitrary_messages:  !!omap
     you, curses, and grabs for his axe.
 - THIS_ACCEPTABLE: 'Is this acceptable?'
 # This message is not currently used
-- ALREADY_OVER: |-
-    This adventure is already over.  To start a new adventure, or to
-    resume an earlier adventure, please run a fresh copy of the program.
+#- ALREADY_OVER: |-
+#    This adventure is already over.  To start a new adventure, or to
+#    resume an earlier adventure, please run a fresh copy of the program.
 - OGRE_FULL: 'The ogre doesn''t appear to be hungry.'
 - OGRE_DODGE: |-
     The ogre, who despite his bulk is quite agile, easily dodges your
@@ -2989,26 +2989,26 @@ arbitrary_messages:  !!omap
 - OFF_SCALE: 'You just went off my scale!!'
 - RESUME_HELP: 'To resume your Adventure, start a new game and then say "RESUME".'
 # This message is not currently used
-- TABLE_SPACE: |-
-    Table space used:
-    %d of %d words of messages   %d of %d travel options
-    %d of %d vocabulary words    %d of %d locations
-    %d of %d objects             %d of %d action verbs
-    %d of %d "random" messages   %d of %d "class" messages
-    %d of %d hints               %d of %d turn threshholds'
+#- TABLE_SPACE: |-
+#    Table space used:
+#    %d of %d words of messages   %d of %d travel options
+#    %d of %d vocabulary words    %d of %d locations
+#    %d of %d objects             %d of %d action verbs
+#    %d of %d "random" messages   %d of %d "class" messages
+#    %d of %d hints               %d of %d turn threshholds'
 - RESUME_ABANDON: 'To resume an earlier Adventure, you must abandon the current one.'
 - VERSION_SKEW: |-
     I'm sorry, but that Adventure was begun using Version %d.%d of the
     save file format, and this program uses Version %d.%d.  You must find an instance
     using that other version in order to resume that Adventure.
 # This message is not currently used
-- SAVE_TAMPERING: |-
-    A dark fog creeps in to surround you.  From somewhere in the fog you
-    hear a stern voice.  "This Adventure has been tampered with!  You have
-    been dabbling in magic, knowing not the havoc you might cause thereby.
-    Leave at once, before you do irrevocable harm!"  The fog thickens,
-    until at last you can see nothing at all.  Your vision then clears,
-    and you find yourself back in The Real World.
+#- SAVE_TAMPERING: |-
+#    A dark fog creeps in to surround you.  From somewhere in the fog you
+#    hear a stern voice.  "This Adventure has been tampered with!  You have
+#    been dabbling in magic, knowing not the havoc you might cause thereby.
+#    Leave at once, before you do irrevocable harm!"  The fog thickens,
+#    until at last you can see nothing at all.  Your vision then clears,
+#    and you find yourself back in The Real World.
 - TWIST_TURN: |-
     Sorry, but the path twisted and turned so much that I can't figure
     out which way to go to get back.
