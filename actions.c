@@ -311,40 +311,35 @@ static int vcarry(verb_t verb, obj_t obj)
     }
 
     if (game.fixed[obj] != IS_FREE) {
-        /* Next guard tests whether plant is tiny or stashed */
-        if (obj == PLANT && game.prop[PLANT] <= PLANT_THIRSTY) {
-            rspeak(DEEP_ROOTS);
-            return GO_CLEAROBJ;
-        }
-        if (obj == BEAR && game.prop[BEAR] == SITTING_BEAR) {
-            rspeak(BEAR_CHAINED);
-            return GO_CLEAROBJ;
-        }
-        if (obj == CHAIN && game.prop[BEAR] != UNTAMED_BEAR) {
-            rspeak(STILL_LOCKED);
-            return GO_CLEAROBJ;
-        }
-        if (obj == URN) {
+        switch (obj) {
+        case PLANT:
+            /* Next guard tests whether plant is tiny or stashed */
+            rspeak(game.prop[PLANT] <= PLANT_THIRSTY ? DEEP_ROOTS : YOU_JOKING);
+            break;
+        case BEAR:
+            rspeak( game.prop[BEAR] == SITTING_BEAR ? BEAR_CHAINED : YOU_JOKING);
+            break;
+        case CHAIN:
+            rspeak( game.prop[BEAR] != UNTAMED_BEAR ? STILL_LOCKED : YOU_JOKING);
+            break;
+        case RUG:
+            rspeak(game.prop[RUG] == RUG_HOVER ? RUG_HOVERS : YOU_JOKING);
+            break;
+        case URN:
             rspeak(URN_NOBUDGE);
-            return GO_CLEAROBJ;
-        }
-        if (obj == CAVITY) {
+            break;
+        case CAVITY:
             rspeak(DOUGHNUT_HOLES);
-            return GO_CLEAROBJ;
-        }
-        if (obj == BLOOD) {
+            break;
+        case BLOOD:
             rspeak(FEW_DROPS);
-            return GO_CLEAROBJ;
-        }
-        if (obj == RUG && game.prop[RUG] == RUG_HOVER) {
-            rspeak(RUG_HOVERS);
-            return GO_CLEAROBJ;
-        }
-        if (obj == SIGN) {
+            break;
+        case SIGN:
             rspeak(HAND_PASSTHROUGH);
-            return GO_CLEAROBJ;
+            break;
+        default:
+            rspeak(YOU_JOKING);
         }
-        rspeak(YOU_JOKING);
         return GO_CLEAROBJ;
     }
 
@@ -352,14 +347,14 @@ static int vcarry(verb_t verb, obj_t obj)
         obj == OIL) {
         if (!HERE(BOTTLE) ||
             LIQUID() != obj) {
-            if (TOTING(BOTTLE)) {
-                if (game.prop[BOTTLE] == EMPTY_BOTTLE) {
-                    return (fill(verb, BOTTLE));
-                } else if (game.prop[BOTTLE] != EMPTY_BOTTLE)
-                    rspeak(BOTTLE_FULL);
+            if (!TOTING(BOTTLE)) {
+                rspeak(NO_CONTAINER);
                 return GO_CLEAROBJ;
             }
-            rspeak(NO_CONTAINER);
+            if (game.prop[BOTTLE] == EMPTY_BOTTLE) {
+                return (fill(verb, BOTTLE));
+            } else
+                rspeak(BOTTLE_FULL);
             return GO_CLEAROBJ;
         }
         obj = BOTTLE;
@@ -389,12 +384,16 @@ static int vcarry(verb_t verb, obj_t obj)
     }
     if ((obj == BIRD ||
          obj == CAGE) &&
-        (game.prop[BIRD] == BIRD_CAGED || STASHED(BIRD) == BIRD_CAGED))
+        (game.prop[BIRD] == BIRD_CAGED || STASHED(BIRD) == BIRD_CAGED)) {
         /* expression maps BIRD to CAGE and CAGE to BIRD */
         carry(BIRD + CAGE - obj, game.loc);
+    }
+
     carry(obj, game.loc);
+
     if (obj == BOTTLE && LIQUID() != NO_OBJECT)
         game.place[LIQUID()] = CARRIED;
+
     if (GSTONE(obj) && game.prop[obj] != STATE_FOUND) {
         game.prop[obj] = STATE_FOUND;
         game.prop[CAVITY] = CAVITY_EMPTY;
