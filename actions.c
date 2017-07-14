@@ -459,21 +459,16 @@ static int discard(verb_t verb, obj_t obj)
  *  bird (might attack snake or dragon) and cage (might contain bird) and vase.
  *  Drop coins at vending machine for extra batteries. */
 {
-    if (TOTING(ROD2) && obj == ROD && !TOTING(ROD))
+    if (obj == ROD && !TOTING(ROD) && TOTING(ROD2)) {
         obj = ROD2;
+    }
+
     if (!TOTING(obj)) {
         speak(actions[verb].message);
         return GO_CLEAROBJ;
     }
-    if (obj == BIRD && HERE(SNAKE)) {
-        rspeak(BIRD_ATTACKS);
-        if (game.closed)
-            return GO_DWARFWAKE;
-        DESTROY(SNAKE);
-        /* Set game.prop for use by travel options */
-        game.prop[SNAKE] = SNAKE_CHASED;
 
-    } else if ((GSTONE(obj) && AT(CAVITY) && game.prop[CAVITY] != CAVITY_FULL)) {
+    if (GSTONE(obj) && AT(CAVITY) && game.prop[CAVITY] != CAVITY_FULL) {
         rspeak(GEM_FITS);
         game.prop[obj] = STATE_IN_CAVITY;
         game.prop[CAVITY] = CAVITY_FULL;
@@ -493,45 +488,75 @@ static int discard(verb_t verb, obj_t obj)
                 move(RUG + NOBJECTS, k);
             }
         }
-    } else if (obj == COINS && HERE(VEND)) {
+        drop(obj, game.loc);
+        return GO_CLEAROBJ;
+    }
+
+    if (obj == COINS && HERE(VEND)) {
         DESTROY(COINS);
         drop(BATTERY, game.loc);
         pspeak(BATTERY, look, FRESH_BATTERIES, true);
         return GO_CLEAROBJ;
-    } else if (obj == BIRD && AT(DRAGON) && game.prop[DRAGON] == DRAGON_BARS) {
-        rspeak(BIRD_BURNT);
-        DESTROY(BIRD);
-        return GO_CLEAROBJ;
-    } else if (obj == BEAR && AT(TROLL)) {
+    }
+
+    if (LIQUID() == obj)
+        obj = BOTTLE;
+    if (obj == BOTTLE && LIQUID() != NO_OBJECT) {
+        game.place[LIQUID()] = LOC_NOWHERE;
+    }
+
+    if (obj == BEAR && AT(TROLL)) {
         state_change(TROLL, TROLL_GONE);
         move(TROLL, LOC_NOWHERE);
         move(TROLL + NOBJECTS, IS_FREE);
         move(TROLL2, objects[TROLL].plac);
         move(TROLL2 + NOBJECTS, objects[TROLL].fixd);
         juggle(CHASM);
-    } else if (obj != VASE ||
-               game.loc == objects[PILLOW].plac) {
-        rspeak(OK_MAN);
-    } else {
-        state_change(VASE, AT(PILLOW)
-                     ? VASE_WHOLE
-                     : VASE_DROPPED);
-        if (game.prop[VASE] != VASE_WHOLE)
-            game.fixed[VASE] = IS_FIXED;
-    }
-    int k = LIQUID();
-    if (k == obj)
-        obj = BOTTLE;
-    if (obj == BOTTLE && k != NO_OBJECT)
-        game.place[k] = LOC_NOWHERE;
-    if (obj == CAGE && game.prop[BIRD] == BIRD_CAGED)
-        drop(BIRD, game.loc);
-    drop(obj, game.loc);
-    if (obj != BIRD)
+        drop(obj, game.loc);
         return GO_CLEAROBJ;
-    game.prop[BIRD] = BIRD_UNCAGED;
-    if (FOREST(game.loc))
-        game.prop[BIRD] = BIRD_FOREST_UNCAGED;
+    }
+
+    if (obj == VASE) {
+        if (game.loc != objects[PILLOW].plac) {
+            state_change(VASE, AT(PILLOW)
+                         ? VASE_WHOLE
+                         : VASE_DROPPED);
+            if (game.prop[VASE] != VASE_WHOLE)
+                game.fixed[VASE] = IS_FIXED;
+            drop(obj, game.loc);
+            return GO_CLEAROBJ;
+        }
+    }
+
+    if (obj == CAGE && game.prop[BIRD] == BIRD_CAGED) {
+        drop(BIRD, game.loc);
+    }
+
+    if (obj == BIRD) {
+        if (AT(DRAGON) && game.prop[DRAGON] == DRAGON_BARS) {
+            rspeak(BIRD_BURNT);
+            DESTROY(BIRD);
+            return GO_CLEAROBJ;
+        }
+        if (HERE(SNAKE)) {
+            rspeak(BIRD_ATTACKS);
+            if (game.closed)
+                return GO_DWARFWAKE;
+            DESTROY(SNAKE);
+            /* Set game.prop for use by travel options */
+            game.prop[SNAKE] = SNAKE_CHASED;
+        } else
+            rspeak(OK_MAN);
+
+        game.prop[BIRD] = BIRD_UNCAGED;
+        if (FOREST(game.loc))
+            game.prop[BIRD] = BIRD_FOREST_UNCAGED;
+        drop(obj, game.loc);
+        return GO_CLEAROBJ;
+    }
+
+    rspeak(OK_MAN);
+    drop(obj, game.loc);
     return GO_CLEAROBJ;
 }
 
