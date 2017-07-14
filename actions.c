@@ -545,9 +545,7 @@ static int discard(verb_t verb, obj_t obj)
         } else
             rspeak(OK_MAN);
 
-        game.prop[BIRD] = BIRD_UNCAGED;
-        if (FOREST(game.loc))
-            game.prop[BIRD] = BIRD_FOREST_UNCAGED;
+	game.prop[BIRD] = FOREST(game.loc) ? BIRD_FOREST_UNCAGED : BIRD_UNCAGED;
         drop(obj, game.loc);
         return GO_CLEAROBJ;
     }

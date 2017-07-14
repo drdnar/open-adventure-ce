@@ -128,11 +128,6 @@ void tokenize(char* raw, struct command_t *cmd)
 
 /* Hide the fact that wods are corrently packed longs */
 
-bool wordempty(token_t a)
-{
-    return a == 0;
-}
-
 void wordclear(token_t *v)
 {
     *v = 0;

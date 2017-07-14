@@ -208,7 +208,6 @@ extern void packed_to_token(long, char token[]);
 extern long token_to_packed(const char token[]);
 extern void tokenize(char*, struct command_t *);
 extern void vspeak(const char*, bool, va_list);
-extern bool wordempty(token_t);
 extern void wordclear(token_t *);
 extern void speak(const char*, ...);
 extern void sspeak(long msg, ...);
