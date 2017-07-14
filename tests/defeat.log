@@ -481,6 +481,9 @@ read sign
 carry sign
 take rod
 drop rod
+# look to see dropped rod on ground. Different state than
+# before we picked it up.
+look
 ne
 listen
 blast rod
