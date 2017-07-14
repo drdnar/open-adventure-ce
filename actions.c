@@ -995,7 +995,7 @@ static int lock(verb_t verb, obj_t obj)
         if (verb == LOCK)
             rspeak(HUH_MAN);
         else if (!TOTING(TRIDENT))
-            rspeak(OYSTER_OPENER);
+            rspeak(CLAM_OPENER);
         else {
             DESTROY(CLAM);
             drop(OYSTER, game.loc);
@@ -1006,8 +1006,12 @@ static int lock(verb_t verb, obj_t obj)
     case OYSTER:
         if (verb == LOCK)
             rspeak(HUH_MAN);
-        else
+	else if (TOTING(OYSTER))
+	    rspeak(DROP_OYSTER);
+        else if (!TOTING(TRIDENT))
             rspeak(OYSTER_OPENER);
+	else
+	    rspeak(OYSTER_OPENS);
         break;
     case DOOR:
         rspeak((game.prop[DOOR] == DOOR_UNRUSTED) ? OK_MAN : RUSTY_DOOR);

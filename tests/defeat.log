@@ -468,7 +468,10 @@ e
 e
 e
 e
-e
+# Expecting failure here
+take oyster
+drop oyster
+open oyster
 sw
 # We want the xyzzy and plugh words to fail here
 xyzzy

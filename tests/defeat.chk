@@ -2914,11 +2914,20 @@ not disturb the dwarves!"  An immense mirror is hanging against one
 wall, and stretches to the other end of the room, where various other
 sundry objects can be glimpsed dimly in the distance.
 
-> e
+> take oyster
 
-There is no way to go that direction.
+OK
 
-You're at ne end.
+Interesting.  There seems to be something written on the underside of
+the oyster.
+
+> drop oyster
+
+OK
+
+> open oyster
+
+You don't have anything strong enough to open the oyster.
 
 > sw
 
@@ -2969,6 +2978,8 @@ OK
 
 You're at ne end.
 
+There is an enormous oyster here with its shell tightly closed.
+
 > listen
 
 You can hear the murmuring of the beanstalks and the snoring of the
@@ -2980,7 +2991,7 @@ There is a loud explosion, and a twenty-foot hole appears in the far
 wall, burying the snakes in the rubble.  A river of molten lava pours
 in through the hole, destroying everything in its path, including you!
 
-You scored 399 out of a possible 430, using 474 turns.
+You scored 399 out of a possible 430, using 476 turns.
 
 Your score puts you in Master Adventurer Class B.
 
