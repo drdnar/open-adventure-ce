@@ -236,13 +236,16 @@ static void blast(void)
         !game.closed)
         rspeak(REQUIRES_DYNAMITE);
     else {
-        if (HERE(ROD2))
-            game.bonus = SPLATTER_MESSAGE;
-        else if (game.loc == LOC_NE)
-            game.bonus = DEFEAT_MESSAGE;
-        else
-            game.bonus = VICTORY_MESSAGE;
-        rspeak(game.bonus);
+        if (HERE(ROD2)) {
+            game.bonus = splatter;
+            rspeak(SPLATTER_MESSAGE);
+        } else if (game.loc == LOC_NE) {
+            game.bonus = defeat;
+            rspeak(DEFEAT_MESSAGE);
+        } else {
+            game.bonus = victory;
+            rspeak(VICTORY_MESSAGE);
+        }
         terminate(endgame);
     }
 }

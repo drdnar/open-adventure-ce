@@ -89,6 +89,8 @@ enum speechpart {unknown, intransitive, transitive};
 
 enum wordtype {NO_WORD_TYPE, MOTION, OBJECT, ACTION, SPECIAL};
 
+typedef enum scorebonus {none, splatter, defeat, victory} score_t;
+
 /* Phase codes for action returns.
  * These were at one time FORTRAN line numbers.
  * The values don't matter, but perturb their order at your peril.
@@ -118,7 +120,7 @@ typedef long loc_t;    // index into the locations array */
 struct game_t {
     unsigned long lcg_a, lcg_c, lcg_m, lcg_x;
     long abbnum;                 // How often to print non-abbreviated descriptions
-    long bonus;
+    score_t bonus;                  // What kind of bonus we are getting for finishing the game
     long chloc;
     long chloc2;
     long clock1;                 // # turns from finding last treasure till closing

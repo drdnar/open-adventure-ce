@@ -71,13 +71,13 @@ long score(enum termination mode)
         score += 25;
     mxscor += 25;
     if (game.closed) {
-        if (game.bonus == 0)
+        if (game.bonus == none)
             score += 10;
-        if (game.bonus == SPLATTER_MESSAGE)
+        if (game.bonus == splatter)
             score += 25;
-        if (game.bonus == DEFEAT_MESSAGE)
+        if (game.bonus == defeat)
             score += 30;
-        if (game.bonus == VICTORY_MESSAGE)
+        if (game.bonus == victory)
             score += 45;
     }
     mxscor += 45;
