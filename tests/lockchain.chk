@@ -919,6 +919,10 @@ leads sharply up from here.
 
 The waters have parted to form a narrow path across the reservoir.
 
+> listen
+
+The waters are crashing loudly against the shore.
+
 > nw
 
 You are scrambling along a treacherously steep, rocky passage.
@@ -1811,6 +1815,10 @@ The path forks here.  The left fork leads northeast.  A dull rumbling
 seems to get louder in that direction.  The right fork leads southeast
 down a gentle slope.  The main corridor enters from the west.
 
+> listen
+
+The air is filled with a dull rumbling sound.
+
 > go left
 
 The walls are quite warm here.  From the north can be heard a steady
@@ -1839,6 +1847,10 @@ ominously.  The far right wall is aflame with an incandescence of its
 own, which lends an additional infernal splendor to the already
 hellish scene.  A dark, foreboding passage exits to the south.
 
+> listen
+
+The roaring is so loud that it drowns out all other sound.
+
 > extinguish volcano
 
 It is beyond your power to do that.
@@ -1846,6 +1858,10 @@ It is beyond your power to do that.
 > s
 
 You're at junction with warm walls.
+
+> listen
+
+The roar is quite loud here.
 
 > n
 

@@ -1264,6 +1264,10 @@ Far below, through a heavy white mist, strange splashing noises can be
 heard.  The mist rises up through a fissure in the ceiling.  The path
 exits to the south and west.
 
+> listen
+
+You are unable to make anything of the splashing noise.
+
 > w
 
 You're in alcove.
@@ -1416,7 +1420,7 @@ Your lamp is now on.
 You're at "Y2".
 
 
-You scored 167 out of a possible 430, using 230 turns.
+You scored 167 out of a possible 430, using 231 turns.
 
 You have achieved the rating: "Experienced Adventurer".
 

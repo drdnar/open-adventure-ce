@@ -1,4 +1,4 @@
-## Coverage of LOC_WINDOW1
+## Coverage of LOC_WINDOW1 and WIND_WHISTLES
 n
 seed 183847312
 in
@@ -13,6 +13,7 @@ w
 take bird
 w
 d
+listen
 d
 free bird
 w

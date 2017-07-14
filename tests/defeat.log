@@ -478,4 +478,5 @@ carry sign
 take rod
 drop rod
 ne
+listen
 blast rod

@@ -155,6 +155,7 @@ reservoir
 F'UNJ
 n
 n
+listen
 nw
 u
 u
@@ -323,9 +324,12 @@ unlock chain
 # Now let's go look at the volcano
 out
 fork
+listen
 go left
 north
+listen
 extinguish volcano
 s
+listen
 n
 jump

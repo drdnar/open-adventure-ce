@@ -1,4 +1,4 @@
-## Attempt to kill snake with bird in the endgame 
+## Attempt to kill snake with bird in the endgame
 n
 seed 1838473132
 in
@@ -465,6 +465,7 @@ e
 e
 e
 sw
+listen
 take cage
 take bird
 free bird

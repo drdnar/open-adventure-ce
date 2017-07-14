@@ -208,6 +208,7 @@ take axe
 # Don't take trident now or pirate will snatch it on next move.
 nw
 look
+listen
 w
 take bottle
 take trident
