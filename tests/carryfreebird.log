@@ -54,5 +54,8 @@ s
 w
 n
 take appendage
+drop cage
+look
+take cage
 free bird
 carry bird

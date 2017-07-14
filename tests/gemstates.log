@@ -1,14 +1,14 @@
-## Test the case where your lamp goes dim
+## Observe amber, ruby, sapphire after state change
 n
-seed 1838473132
+seed 1635997320
 in
 take lamp
 xyzzy
-on
 take rod
 e
 take cage
 w
+on
 w
 w
 drop rod
@@ -17,43 +17,33 @@ take rod
 w
 free bird
 wave rod
-take necklace
 drop rod
 take bird
+take jade
+e
+e
+e
+off
+xyzzy
+drop jade
+xyzzy
+on
+w
+w
+w
 take rod
 d
-d
-free bird
-drop rod
-drop cage
-take cage
-take bird
 w
-take coins
+wave rod
+drop rod
 e
+n
+free bird
+take bird
 s
 take jewelry
 n
-up
-s
-take gold
-n
-d
-n
-n
-plugh
-extinguish lamp
-drop coins
-drop jewelry
-drop necklace
-drop gold
-plugh
-on
-s
-take silver
-s
 sw
-take axe
 w
 kill dragon
 yes
@@ -61,13 +51,12 @@ drink blood
 take rug
 e
 e
-up
-d
 n
+take silver
 n
 off
 plugh
-inven
+drop jewelry
 drop rug
 drop silver
 out
@@ -91,16 +80,17 @@ take pyramid
 s
 plover
 s
+d
+take axe
+u
 s
-take rod
 up
 w
-wave rod
-drop rod
-west
-take diamonds
 w
 w
+w
+throw axe
+take axe
 w
 s
 sw
@@ -122,29 +112,34 @@ d
 e
 e
 e
+take diamonds
 e
 e
-throw axe
-take axe
+drop bottle
+s
+take gold
+n
 n
 n
 n
 off
 plugh
-drop ruby
+drop gold
 drop diamonds
 drop pyramid
+drop ruby
 plugh
 on
 s
 s
 u
+take water
+throw axe
+take axe
 n
 n
 d
 bedquilt
-throw axe
-take axe
 slab
 s
 d
@@ -153,7 +148,7 @@ u
 w
 u
 reservoir
-H'CFL
+F'UNJ
 n
 n
 nw
@@ -179,11 +174,9 @@ s
 d
 water plant
 u
-drop appendage
 e
 d
 get oil
-
 u
 w
 d
@@ -192,6 +185,7 @@ w
 n
 oil door
 drop bottle
+drop appendage
 n
 take trident
 w
@@ -199,6 +193,7 @@ d
 se
 n
 w
+inven
 drop trident
 drop ebony
 drop axe
@@ -214,12 +209,9 @@ nw
 s
 take vase
 se
-throw axe
-take axe
 e
 take pillow
 w
-drop axe
 ne
 e
 n
@@ -228,14 +220,39 @@ s
 u
 e
 u
+s
+drop axe
+e
+w
+w
+w
+s
+e
+s
+s
+s
 n
+e
+e
+nw
+inven
+take ebony
+take vase
+take trident
+take chest
+take emerald
+se
+n
+d
+e
+e
 off
-plugh
+xyzzy
+drop chest
+drop ebony
 drop pillow
 drop vase
 drop trident
-drop emerald
-drop ebony
 take keys
 take food
 plugh
@@ -272,20 +289,21 @@ ne
 barren
 in
 feed bear
+look
+take chain
 unlock chain
 take chain
 take bear
 fork
 ne
 e
-take spices
 drop keys
+take spices
 fork
 w
 w
 sw
 free bear
-inven
 sw
 sw
 d
@@ -295,9 +313,6 @@ w
 d
 get oil
 up
-e
-take axe
-w
 w
 d
 climb
@@ -332,82 +347,23 @@ n
 n
 n
 inven
+drop bottle
+look
+take bottle
 fill urn
 light urn
 rub urn
-take cavity
+look
 take amber
+look
 drop rug
 drop emerald
-get rug
 fly rug
 take sapphire
 fly rug
 take emerald
-drop ruby
-take rug
-drop bottle
-take ruby
-e
-s
-e
-e
-in
-drop ruby
 drop sapphire
-drop amber
-drop rug
 look
-plugh
-on
-s
-s
-u
-w
-w
-w
-s
-e
-s
-throw axe
-take axe
-s
-s
-n
-e
-e
-nw
-take emerald
-take chest
-se
-n
-d
-e
-e
-off
-xyzzy
-drop emerald
-drop chest
-take coins
-plugh
-on
-s
-s
-u
-# Go to vending machine and get batteries.
-w
-wave rod
-w
-w
-w
-w
-s
-sw
-se
-s
-drop coins
-take batteries
-# Lamp dim message should follow
-inventory
-drop batteries
+take sapphire
+drop ruby
 look

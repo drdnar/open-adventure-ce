@@ -297,6 +297,25 @@ Your keen eye spots a severed leporine appendage lying on the ground.
 
 OK
 
+> drop cage
+
+OK
+
+> look
+
+Sorry, but I am not allowed to give more detail.  I will repeat the
+long description of your location.
+
+You are wandering aimlessly through the forest.
+
+There is a small wicker cage discarded nearby.
+
+There is a little bird in the cage.
+
+> take cage
+
+OK
+
 > free bird
 
 OK
@@ -308,7 +327,7 @@ feel something wet land on your head, but upon looking up you can see
 no sign of the culprit.
 
 
-You scored 113 out of a possible 430, using 54 turns.
+You scored 113 out of a possible 430, using 57 turns.
 
 Your score qualifies you as a novice class adventurer.
 

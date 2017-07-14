@@ -1,4 +1,4 @@
-## Test the case where your lamp goes dim
+## Observe axe after throwing at bear
 n
 seed 1838473132
 in
@@ -219,7 +219,6 @@ take axe
 e
 take pillow
 w
-drop axe
 ne
 e
 n
@@ -271,143 +270,5 @@ ne
 ne
 barren
 in
-feed bear
-unlock chain
-take chain
-take bear
-fork
-ne
-e
-take spices
-drop keys
-fork
-w
-w
-sw
-free bear
-inven
-sw
-sw
-d
-se
-se
-w
-d
-get oil
-up
-e
-take axe
-w
-w
-d
-climb
-w
-fee
-fie
-foe
-foo
-take eggs
-s
-d
-u
-w
-u
-s
-e
-e
-n
-n
-off
-plugh
-drop eggs
-drop pearl
-drop spices
-drop chain
-take rug
-take ruby
-take emerald
-out
-w
-n
-n
-n
-inven
-fill urn
-light urn
-rub urn
-take cavity
-take amber
-drop rug
-drop emerald
-get rug
-fly rug
-take sapphire
-fly rug
-take emerald
-drop ruby
-take rug
-drop bottle
-take ruby
-e
-s
-e
-e
-in
-drop ruby
-drop sapphire
-drop amber
-drop rug
-look
-plugh
-on
-s
-s
-u
-w
-w
-w
-s
-e
-s
 throw axe
-take axe
-s
-s
-n
-e
-e
-nw
-take emerald
-take chest
-se
-n
-d
-e
-e
-off
-xyzzy
-drop emerald
-drop chest
-take coins
-plugh
-on
-s
-s
-u
-# Go to vending machine and get batteries.
-w
-wave rod
-w
-w
-w
-w
-s
-sw
-se
-s
-drop coins
-take batteries
-# Lamp dim message should follow
-inventory
-drop batteries
 look
