@@ -3,8 +3,12 @@
 # This is the open-adventure dungeon text coverage report generator. It
 # consumes a YAML description of the dungeon and determines whether the
 # various strings contained are present within the test check files.
+#
+# The default HTML output is appropriate for use with Gitlab CI.
+# You can override it with a command-line argument.
 
 import os
+import sys
 import yaml
 import re
 
@@ -305,6 +309,9 @@ if __name__ == "__main__":
     print("  obituaries.........: {}% covered ({} of {})".format(obituaries_percent, obituaries_covered, obituaries_total))
     print("  actions............: {}% covered ({} of {})".format(actions_percent, actions_covered, actions_total))
     print("  specials...........: {}% covered ({} of {})".format(special_percent, special_covered, special_total))
+
+    if len(sys.argv) > 1:
+        html_output_path = sys.argv[1]
 
     # render HTML report
     with open(html_output_path, "w") as f:

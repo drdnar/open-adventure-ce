@@ -1342,6 +1342,11 @@ A glistening pearl falls out of the clam and rolls away.  Goodness,
 this must really be an oyster.  (I never was very good at identifying
 bivalves.)  Whatever it is, it has now snapped shut again.
 
+> open oyster
+
+The oyster creaks open, revealing nothing but oyster inside.  It
+promptly snaps shut again.
+
 > s
 
 You're at complex junction.
@@ -2096,6 +2101,9 @@ down a gully.
 
 > in
 
+Tsk!  A wizard wouldn't have to take 350 turns.  This is going to cost
+you a couple of points.
+
 You're inside building.
 
 There is a golden chain lying in a heap on the floor!
@@ -2129,9 +2137,6 @@ There is precious jewelry here!
 There are many coins here!
 
 > drop ruby
-
-Tsk!  A wizard wouldn't have to take 350 turns.  This is going to cost
-you a couple of points.
 
 OK
 
@@ -2418,13 +2423,13 @@ You're in dusty rock room.
 
 > d
 
-You're at complex junction.
-
-> e
-
 Your lamp is getting dim.  You'd best start wrapping this up, unless
 you can find some fresh batteries.  I seem to recall there's a vending
 machine in the maze.  Bring some coins with you.
+
+You're at complex junction.
+
+> e
 
 You are in an anteroom leading to a large passage to the east.  Small
 passages go west and up.  The remnants of recent digging are evident.
@@ -2642,13 +2647,13 @@ You're in Plover Room.
 
 > e
 
+Your lamp has run out of power.
+
 There is no way to go that direction.
 
 You're in Plover Room.
 
 > e
-
-Your lamp has run out of power.
 
 There is no way to go that direction.
 
@@ -2991,7 +2996,7 @@ There is a loud explosion, and a twenty-foot hole appears in the far
 wall, burying the snakes in the rubble.  A river of molten lava pours
 in through the hole, destroying everything in its path, including you!
 
-You scored 399 out of a possible 430, using 476 turns.
+You scored 399 out of a possible 430, using 477 turns.
 
 Your score puts you in Master Adventurer Class B.
 
