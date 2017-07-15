@@ -12,12 +12,46 @@ import sys
 import yaml
 import re
 
-test_dir = "."
-yaml_name = "../adventure.yaml"
-html_template_path = "coverage_dungeon.html.tpl"
-html_output_path = "../coverage/adventure.yaml.html"
+TEST_DIR = "."
+YAML_PATH = "../adventure.yaml"
+HTML_TEMPLATE_PATH = "coverage_dungeon.html.tpl"
+DEFAULT_HTML_OUTPUT_PATH = "../coverage/adventure.yaml.html"
 
-row_3_fields = """
+STDOUT_REPORT_CATEGORY = "  {name:.<19}: {percent}% covered ({covered} of {total}))\n"
+
+HTML_SUMMARY_ROW = """
+    <tr>
+        <td class="headerItem"><a href="#{name}">{name}:</a></td>
+        <td class="headerCovTableEntry">{total}</td>
+        <td class="headerCovTableEntry">{covered}</td>
+        <td class="headerCovTableEntry">{percent}%</td>
+    </tr>
+"""
+
+HTML_CATEGORY_TABLE = """
+    <tr id="{id}"></tr>
+    {rows}
+    <tr>
+        <td>&nbsp;</td>
+    </tr>
+"""
+
+HTML_CATEGORY_TABLE_HEADER_3_FIELDS = """
+    <tr>
+        <td class="tableHead" width="60%">{}</td>
+        <td class="tableHead" width="20%">{}</td>
+        <td class="tableHead" width="20%">{}</td>
+    </tr>
+"""
+
+HTML_CATEGORY_TABLE_HEADER_2_FIELDS = """
+    <tr>
+        <td class="tableHead" colspan="2">{}</td>
+        <td class="tableHead">{}</td>
+    </tr>
+"""
+
+HTML_CATEGORY_ROW_3_FIELDS = """
     <tr>
         <td class="coverFile">{}</td>
         <td class="{}">&nbsp;</td>
@@ -25,9 +59,9 @@ row_3_fields = """
     </tr>
 """
 
-row_2_fields = """
+HTML_CATEGORY_ROW_2_FIELDS = """
     <tr>
-        <td class="coverFile">{}</td>
+        <td class="coverFile" colspan="2">{}</td>
         <td class="{}">&nbsp;</td>
     </tr>
 """
@@ -47,7 +81,7 @@ def search(needle, haystack):
     return re.search(needle, haystack)
 
 def loc_coverage(locations, text):
-    # locations have a long and a short description, that each have to 
+    # locations have a long and a short description, that each have to
     # be checked seperately
     for locname, loc in locations:
         if loc["description"]["long"] == None or loc["description"]["long"] == '':
@@ -88,16 +122,16 @@ def obj_coverage(objects, text):
 def hint_coverage(hints, text):
     # hints have a "question" where the hint is offered, followed
     # by the actual hint if the player requests it
-    for name, hint in hints:
-        if hint["question"] != True:
-            if search(hint["question"], text):
-                hint["question"] = True
-        if hint["hint"] != True:
-            if search(hint["hint"], text):
-                hint["hint"] = True
+    for i, hint in enumerate(hints):
+        if hint["hint"]["question"] != True:
+            if search(hint["hint"]["question"], text):
+                hint["hint"]["question"] = True
+        if hint["hint"]["hint"] != True:
+            if search(hint["hint"]["hint"], text):
+                hint["hint"]["hint"] = True
 
 def obit_coverage(obituaries, text):
-    # obituaries have a "query" where it asks the player for a resurrection, 
+    # obituaries have a "query" where it asks the player for a resurrection,
     # followed by a snarky comment if the player says yes
     for i, obit in enumerate(obituaries):
         if obit["query"] != True:
@@ -108,7 +142,7 @@ def obit_coverage(obituaries, text):
                 obit["yes_response"] = True
 
 def threshold_coverage(classes, text):
-    # works for class thresholds and turn threshold, which have a "message" 
+    # works for class thresholds and turn threshold, which have a "message"
     # property
     for i, msg in enumerate(classes):
         if msg["message"] == None:
@@ -127,29 +161,34 @@ def specials_actions_coverage(items, text):
                 item["message"] = True
 
 if __name__ == "__main__":
-    with open(yaml_name, "r") as f:
+    with open(YAML_PATH, "r") as f:
         db = yaml.load(f)
 
-    with open(html_template_path, "r") as f:
-        html_template = f.read()
+    # Create report for each catagory, including HTML table, total items,
+    # and number of items covered
+    report = {}
+    for name in db.keys():
+        # initialize each catagory
+        report[name] = {
+            "name" : name, # convenience for string formatting
+            "html" : "",
+            "total" : 0,
+            "covered" : 0
+        }
 
     motions = db["motions"]
     locations = db["locations"]
     arb_msgs = db["arbitrary_messages"]
     objects = db["objects"]
-    hintsraw = db["hints"]
+    hints = db["hints"]
     classes = db["classes"]
     turn_thresholds = db["turn_thresholds"]
     obituaries = db["obituaries"]
     actions = db["actions"]
     specials = db["specials"]
 
-    hints = []
-    for hint in hintsraw:
-        hints.append((hint["hint"]["name"], {"question" : hint["hint"]["question"],"hint" : hint["hint"]["hint"]}))
-
     text = ""
-    for filename in os.listdir(test_dir):
+    for filename in os.listdir(TEST_DIR):
         if filename.endswith(".chk"):
             with open(filename, "r") as chk:
                 text = chk.read()
@@ -163,9 +202,8 @@ if __name__ == "__main__":
                 specials_actions_coverage(actions, text)
                 specials_actions_coverage(specials, text)
 
-    location_html = ""
-    location_total = len(locations) * 2
-    location_covered = 0
+    report["locations"]["total"] = len(locations) * 2
+    report["locations"]["html"] = HTML_CATEGORY_TABLE_HEADER_3_FIELDS.format("Location ID", "long", "short")
     locations.sort()
     for locouter in locations:
         locname = locouter[0]
@@ -174,157 +212,146 @@ if __name__ == "__main__":
             long_success = "uncovered"
         else:
             long_success = "covered"
-            location_covered += 1
+            report["locations"]["covered"] += 1
 
         if loc["description"]["short"] != True:
             short_success = "uncovered"
         else:
             short_success = "covered"
-            location_covered += 1
+            report["locations"]["covered"] += 1
 
-        location_html += row_3_fields.format(locname, long_success, short_success)
-    location_percent = round((location_covered / float(location_total)) * 100, 1)
+        report["locations"]["html"] += HTML_CATEGORY_ROW_3_FIELDS.format(locname, long_success, short_success)
 
     arb_msgs.sort()
-    arb_msg_html = ""
-    arb_total = len(arb_msgs)
-    arb_covered = 0
+    report["arbitrary_messages"]["total"] = len(arb_msgs)
+    report["arbitrary_messages"]["html"] = HTML_CATEGORY_TABLE_HEADER_2_FIELDS.format("Arbitrary Message ID", "covered")
     for name, msg in arb_msgs:
         if msg != True:
             success = "uncovered"
         else:
             success = "covered"
-            arb_covered += 1
-        arb_msg_html += row_2_fields.format(name, success)
-    arb_percent = round((arb_covered / float(arb_total)) * 100, 1)
+            report["arbitrary_messages"]["covered"] += 1
+        report["arbitrary_messages"]["html"] += HTML_CATEGORY_ROW_2_FIELDS.format(name, success)
 
-    object_html = ""
-    objects_total = 0
-    objects_covered = 0
     objects.sort()
+    report["objects"]["html"] = HTML_CATEGORY_TABLE_HEADER_2_FIELDS.format("Object ID", "covered")
     for (obj_name, obj) in objects:
         if obj["descriptions"]:
             for j, desc in enumerate(obj["descriptions"]):
-                objects_total += 1
+                report["objects"]["total"] += 1
                 if desc != True:
                     success = "uncovered"
                 else:
                     success = "covered"
-                    objects_covered += 1
-                object_html += row_2_fields.format("%s[%d]" % (obj_name, j), success)
-    objects_percent = round((objects_covered / float(objects_total)) * 100, 1)
+                    report["objects"]["covered"] += 1
+                report["objects"]["html"] += HTML_CATEGORY_ROW_2_FIELDS.format("%s[%d]" % (obj_name, j), success)
 
     hints.sort()
-    hints_html = "";
-    hints_total = len(hints) * 2
-    hints_covered = 0
-    for name, hint in hints:
-        if hint["question"] != True:
+    report["hints"]["total"] = len(hints) * 2
+    report["hints"]["html"] = HTML_CATEGORY_TABLE_HEADER_3_FIELDS.format("Hint ID", "question", "hint")
+    for i, hint in enumerate(hints):
+        hintname = hint["hint"]["name"]
+        if hint["hint"]["question"] != True:
             question_success = "uncovered"
         else:
             question_success = "covered"
-            hints_covered += 1
-        if hint["hint"] != True:
+            report["hints"]["covered"] += 1
+        if hint["hint"]["hint"] != True:
             hint_success = "uncovered"
         else:
             hint_success = "covered"
-            hints_covered += 1
-        hints_html += row_3_fields.format(name, question_success, hint_success)
-    hints_percent = round((hints_covered / float(hints_total)) * 100, 1)
+            report["hints"]["covered"] += 1
+        report["hints"]["html"] += HTML_CATEGORY_ROW_3_FIELDS.format(name, question_success, hint_success)
 
-    class_html = ""
-    class_total = len(classes)
-    class_covered = 0
+    report["classes"]["total"] = len(classes)
+    report["classes"]["html"] = HTML_CATEGORY_TABLE_HEADER_2_FIELDS.format("Adventurer Class #", "covered")
     for name, msg in enumerate(classes):
         if msg["message"] != True:
             success = "uncovered"
         else:
             success = "covered"
-            class_covered += 1
-        class_html += row_2_fields.format(msg["threshold"], success)
-    class_percent = round((class_covered / float(class_total)) * 100, 1)
+            report["classes"]["covered"] += 1
+        report["classes"]["html"] += HTML_CATEGORY_ROW_2_FIELDS.format(msg["threshold"], success)
 
-    turn_html = ""
-    turn_total = len(turn_thresholds)
-    turn_covered = 0
+    report["turn_thresholds"]["total"] = len(turn_thresholds)
+    report["turn_thresholds"]["html"] = HTML_CATEGORY_TABLE_HEADER_2_FIELDS.format("Turn Threshold", "covered")
     for name, msg in enumerate(turn_thresholds):
         if msg["message"] != True:
             success = "uncovered"
         else:
             success = "covered"
-            turn_covered += 1
-        turn_html += row_2_fields.format(msg["threshold"], success)
-    turn_percent = round((turn_covered / float(turn_total)) * 100, 1)
+            report["turn_thresholds"]["covered"] += 1
+        report["turn_thresholds"]["html"] += HTML_CATEGORY_ROW_2_FIELDS.format(msg["threshold"], success)
 
-    obituaries_html = "";
-    obituaries_total = len(obituaries) * 2
-    obituaries_covered = 0
+    report["obituaries"]["total"] = len(obituaries) * 2
+    report["obituaries"]["html"] = HTML_CATEGORY_TABLE_HEADER_3_FIELDS.format("Obituary #", "query", "yes_response")
     for i, obit in enumerate(obituaries):
         if obit["query"] != True:
             query_success = "uncovered"
         else:
             query_success = "covered"
-            obituaries_covered += 1
+            report["obituaries"]["covered"] += 1
         if obit["yes_response"] != True:
             obit_success = "uncovered"
         else:
             obit_success = "covered"
-            obituaries_covered += 1
-        obituaries_html += row_3_fields.format(i, query_success, obit_success)
-    obituaries_percent = round((obituaries_covered / float(obituaries_total)) * 100, 1)
+            report["obituaries"]["covered"] += 1
+        report["obituaries"]["html"] += HTML_CATEGORY_ROW_3_FIELDS.format(i, query_success, obit_success)
 
     actions.sort()
-    actions_html = "";
-    actions_total = len(actions)
-    actions_covered = 0
+    report["actions"]["total"] = len(actions)
+    report["actions"]["html"] = HTML_CATEGORY_TABLE_HEADER_2_FIELDS.format("Action ID", "covered")
     for name, action in actions:
         if action["message"] != True:
             success = "uncovered"
         else:
             success = "covered"
-            actions_covered += 1
-        actions_html += row_2_fields.format(name, success)
-    actions_percent = round((actions_covered / float(actions_total)) * 100, 1)
+            report["actions"]["covered"] += 1
+        report["actions"]["html"] += HTML_CATEGORY_ROW_2_FIELDS.format(name, success)
 
-    special_html = ""
-    special_total = len(specials)
-    special_covered = 0
+    report["specials"]["total"] = len(specials)
+    report["specials"]["html"] = HTML_CATEGORY_TABLE_HEADER_2_FIELDS.format("Special ID", "covered")
     for name, special in specials:
         if special["message"] != True:
             success = "uncovered"
         else:
             success = "covered"
-            special_covered += 1
-        special_html += row_2_fields.format(name, success)
-    special_percent = round((special_covered / float(special_total)) * 100, 1)
+            report["specials"]["covered"] += 1
+        report["specials"]["html"] += HTML_CATEGORY_ROW_2_FIELDS.format(name, success)
+
+    # calculate percentages for each catagory and HTML for category tables
+    categories_html = ""
+    summary_html = ""
+    summary_stdout = "adventure.yaml coverage rate:\n"
+    for name, category in sorted(report.items()):
+        if(category["total"] > 0):
+            report[name]["percent"] = round((category["covered"] / float(category["total"])) * 100, 1)
+            summary_stdout += STDOUT_REPORT_CATEGORY.format(**report[name])
+            categories_html += HTML_CATEGORY_TABLE.format(id=name, rows=category["html"])
+            summary_html += HTML_SUMMARY_ROW.format(**report[name])
+        else:
+            report[name]["percent"] = 100;
 
     # output some quick report stats
-    print("\nadventure.yaml coverage rate:")
-    print("  locations..........: {}% covered ({} of {})".format(location_percent, location_covered, location_total))
-    print("  arbitrary_messages.: {}% covered ({} of {})".format(arb_percent, arb_covered, arb_total))
-    print("  objects............: {}% covered ({} of {})".format(objects_percent, objects_covered, objects_total))
-    print("  hints..............: {}% covered ({} of {})".format(hints_percent, hints_covered, hints_total))
-    print("  classes............: {}% covered ({} of {})".format(class_percent, class_covered, class_total))
-    print("  turn_thresholds....: {}% covered ({} of {})".format(turn_percent, turn_covered, turn_total))
-    print("  obituaries.........: {}% covered ({} of {})".format(obituaries_percent, obituaries_covered, obituaries_total))
-    print("  actions............: {}% covered ({} of {})".format(actions_percent, actions_covered, actions_total))
-    print("  specials...........: {}% covered ({} of {})".format(special_percent, special_covered, special_total))
+    print(summary_stdout)
 
     if len(sys.argv) > 1:
         html_output_path = sys.argv[1]
+    else:
+        html_output_path = DEFAULT_HTML_OUTPUT_PATH
 
     # render HTML report
-    with open(html_output_path, "w") as f:
-        f.write(html_template.format(
-                location_total, location_covered, location_percent,
-                arb_total, arb_covered, arb_percent,
-                objects_total, objects_covered, objects_percent,
-                hints_total, hints_covered, hints_percent,
-                class_total, class_covered, class_percent,
-                turn_total, turn_covered, turn_percent,
-                obituaries_total, obituaries_covered, obituaries_percent,
-                actions_total, actions_covered, actions_percent,
-                special_total, special_covered, special_percent,
-                location_html, arb_msg_html, object_html, hints_html, 
-                class_html, turn_html, obituaries_html, actions_html, special_html
-        ))
+    try:
+        with open(HTML_TEMPLATE_PATH, "r") as f:
+            # read in HTML template
+            html_template = f.read()
+    except IOError as e:
+        print 'ERROR: reading HTML report template failed (%s)' % e.strerror
+        exit(-1)
+
+    # parse template with report and write it out
+    try:
+        with open(html_output_path, "w") as f:
+            f.write(html_template.format(categories=categories_html, summary=summary_html))
+    except IOError as e:
+        print 'ERROR: writing HTML report failed (%s)' % e.strerror
