@@ -3744,7 +3744,7 @@ obituaries:
     yes_response: 'Okay, if you''re so smart, do it yourself!  I''m leaving!'
 
 actions: !!omap
-- ACT_0:
+- ACT_NULL:
     message: !!null
     words: !!null
 - CARRY:
@@ -3870,21 +3870,18 @@ actions: !!omap
 - PART:
     message: *nothing_happens
     words: ['z''zzz']
-- ACT_35:
+- ACT_UNKNOWN:
     message: *huh_man
     words: !!null
 
 specials: !!omap
-- SPC_0:
-    message: !!null
-    words: !!null
-- SPC_13:
+- SPC_THANKYOU:
     message: 'You''re quite welcome.'
     words: ['thank']
-- SPC_50:
+- SPC_INVALIDMAGIC:
     message: 'Good try, but that is an old worn-out magic word.'
     words: ['sesam', 'opens', 'abra', 'abrac', 'shaza', 'hocus', 'pocus']
-- SPC_51:
+- SPC_HELP:
     message: |-
       I know of places, actions, and things.  Most of my vocabulary
       describes places and is used to move you there.  To move, try words
@@ -3916,10 +3913,10 @@ specials: !!omap
       though the direction that takes you back might not be the reverse of
       what got you here.  Good luck, and have fun!
     words: ['help', '?']
-- SPC_54:
+- SPC_NO:
     message: *ok_man
     words: ['no']
-- SPC_64:
+- SPC_TREE:
     message: |-
       The trees of the forest are large hardwood oak and maple, with an
       occasional grove of pine or spruce.  There is quite a bit of under-
@@ -3928,27 +3925,27 @@ specials: !!omap
       all the leaves, but travel is quite easy if you detour around the
       spruce and berry bushes.
     words: ['tree', 'trees']
-- SPC_66:
+- SPC_DIG:
     message: |-
       Digging without a shovel is quite impractical.  Even with a shovel
       progress is unlikely.
     words: ['dig', 'excav']
-- SPC_68:
+- SPC_LOST:
     message: 'I''m as confused as you are.'
     words: ['lost']
-- SPC_69:
+- SPC_MIST:
     message: |-
       Mist is a white vapor, usually water, seen from time to time in
       caverns.  It can be found anywhere but is frequently a sign of a deep
       pit leading down to water.'
     words: ['mist']
-- SPC_79:
+- SPC_FBOMB:
     message: 'Watch it!'
     words: ['fuck']
-- SPC_139:
+- SPC_STOP:
     message: 'I don''t know the word "stop".  Use "quit" if you want to give up.'
     words: ['stop']
-- SPC_142:
+- SPC_INFO:
     message: |-
       For a summary of the most recent changes to the game, say "news".
       If you want to end your adventure early, say "quit".  To suspend your
@@ -3972,16 +3969,16 @@ specials: !!omap
       save time, you may specify "brief", which tells me never to repeat the
       full description of a place unless you explicitly ask me to.
     words: ['info', 'infor']
-- SPC_147:
+- SPC_SWIM:
     message: *not_knowhow
     words: ['swim']
-- SPC_246:
+- SPC_WIZARD:
     message: 'Wizards are not to be disturbed by such as you.'
     words: ['wizar']
-- SPC_271:
+- SPC_YES:
     message: 'Guess again.'
     words: ['yes']
-- SPC_275:
+- SPC_NEWS:
     message: |-
       Open Adventure is an author-approved open-source release of
       Version 2.5 with, as yet, no gameplay changes.
@@ -3993,7 +3990,7 @@ specials: !!omap
       while first), but it now costs you a few points each time you save the
       game.  Saved games are now stored in much smaller files than before.
     words: ['news']
-- SPC_276:
+- SPC_VERSION:
     message: |-
       There is a puff of orange smoke; within it, fiery runes spell out:
       
