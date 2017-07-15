@@ -117,7 +117,12 @@ linty: CCFLAGS += -Winit-self
 linty: CCFLAGS += -Wpointer-arith
 linty: advent cheat
 
-debug: CCFLAGS += -O0 --coverage -ggdb -U_FORTIFY_SOURCE
+debug: CCFLAGS += -O0
+debug: CCFLAGS += --coverage
+debug: CCFLAGS += -ggdb
+debug: CCFLAGS += -U_FORTIFY_SOURCE
+debug: CCFLAGS += -fsanitize=address
+debug: CCFLAGS += -fsanitize=undefined
 debug: linty
 
 CSUPPRESSIONS = --suppress=missingIncludeSystem --suppress=invalidscanf
