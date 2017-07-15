@@ -2456,55 +2456,10 @@ You are at Witt's End.  Passages lead off in *ALL* directions.
 
 OK
 
-> e
+> w
 
-You have crawled around in some little holes and wound up back in the
-main passage.
-
-You're at Witt's End.
-
-There are a few recent issues of "Spelunker Today" magazine here.
-
-> e
-
-You have crawled around in some little holes and wound up back in the
-main passage.
-
-You're at Witt's End.
-
-There are a few recent issues of "Spelunker Today" magazine here.
-
-> e
-
-You have crawled around in some little holes and wound up back in the
-main passage.
-
-You're at Witt's End.
-
-There are a few recent issues of "Spelunker Today" magazine here.
-
-> e
-
-You have crawled around in some little holes and wound up back in the
-main passage.
-
-You're at Witt's End.
-
-There are a few recent issues of "Spelunker Today" magazine here.
-
-> e
-
-You have crawled around in some little holes and wound up back in the
-main passage.
-
-You are at Witt's End.  Passages lead off in *ALL* directions.
-
-There are a few recent issues of "Spelunker Today" magazine here.
-
-> e
-
-You have crawled around in some little holes and wound up back in the
-main passage.
+You have crawled around in some little holes and found your way
+blocked by a recent cave-in.  You are now back in the main passage.
 
 You're at Witt's End.
 
@@ -2595,10 +2550,56 @@ There are a few recent issues of "Spelunker Today" magazine here.
 
 You're in anteroom.
 
-> u
+> e
+
+You're at Witt's End.
+
+There are a few recent issues of "Spelunker Today" magazine here.
+
+> e
+
+You have crawled around in some little holes and wound up back in the
+main passage.
+
+You're at Witt's End.
+
+There are a few recent issues of "Spelunker Today" magazine here.
+
+> e
+
+You have crawled around in some little holes and wound up back in the
+main passage.
+
+You're at Witt's End.
+
+There are a few recent issues of "Spelunker Today" magazine here.
+
+> e
+
+You have crawled around in some little holes and wound up back in the
+main passage.
+
+You're at Witt's End.
+
+There are a few recent issues of "Spelunker Today" magazine here.
+
+> e
+
+You have crawled around in some little holes and wound up back in the
+main passage.
+
+You are at Witt's End.  Passages lead off in *ALL* directions.
+
+There are a few recent issues of "Spelunker Today" magazine here.
+
+> e
 
 A sepulchral voice reverberating through the cave, says, "Cave closing
 soon.  All adventurers exit immediately through main office."
+
+You're in anteroom.
+
+> u
 
 You are at a complex junction.  A low hands and knees passage from the
 north joins a higher crawl from the east to make a walking passage
@@ -2641,12 +2642,6 @@ narrow tunnel exits to the west.  A dark corridor leads ne.
 
 > e
 
-There is no way to go that direction.
-
-You're in Plover Room.
-
-> e
-
 Your lamp has run out of power.
 
 There is no way to go that direction.
@@ -2669,31 +2664,6 @@ You're in Plover Room.
 
 There is no way to go that direction.
 
-You're in a small chamber lit by an eerie green light.  An extremely
-narrow tunnel exits to the west.  A dark corridor leads ne.
-
-> e
-
-There is no way to go that direction.
-
-You're in Plover Room.
-
-> e
-
-There is no way to go that direction.
-
-You're in Plover Room.
-
-> e
-
-There is no way to go that direction.
-
-You're in Plover Room.
-
-> e
-
-There is no way to go that direction.
-
 You're in Plover Room.
 
 > e
@@ -2894,6 +2864,31 @@ narrow tunnel exits to the west.  A dark corridor leads ne.
 There is no way to go that direction.
 
 You're in Plover Room.
+
+> e
+
+There is no way to go that direction.
+
+You're in Plover Room.
+
+> e
+
+There is no way to go that direction.
+
+You're in Plover Room.
+
+> e
+
+There is no way to go that direction.
+
+You're in Plover Room.
+
+> e
+
+There is no way to go that direction.
+
+You're in a small chamber lit by an eerie green light.  An extremely
+narrow tunnel exits to the west.  A dark corridor leads ne.
 
 > e
 
@@ -2918,6 +2913,12 @@ are sleeping on the floor, snoring loudly.  A notice nearby reads: "Do
 not disturb the dwarves!"  An immense mirror is hanging against one
 wall, and stretches to the other end of the room, where various other
 sundry objects can be glimpsed dimly in the distance.
+
+> e
+
+There is no way to go that direction.
+
+You're at ne end.
 
 > take oyster
 
@@ -3014,7 +3015,7 @@ There is a loud explosion, and a twenty-foot hole appears in the far
 wall, burying the snakes in the rubble.  A river of molten lava pours
 in through the hole, destroying everything in its path, including you!
 
-You scored 399 out of a possible 430, using 478 turns.
+You scored 399 out of a possible 430, using 479 turns.
 
 Your score puts you in Master Adventurer Class B.
 

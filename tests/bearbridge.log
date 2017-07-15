@@ -305,6 +305,22 @@ bedquilt
 n
 sw
 up
-
+over
 feed bear
 attack bear
+# Back to fissure to test OVER
+sw
+d
+se
+se
+ne
+e
+up
+e
+up
+s
+up
+w
+take rod
+wave rod
+across

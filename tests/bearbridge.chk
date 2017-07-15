@@ -1869,7 +1869,24 @@ of the chasm.
 
 The troll is nowhere to be seen.
 
-> 
+> over
+
+There is no longer any way across the chasm.
+
+You're on sw side of chasm.
+
+There is an empty bottle here.
+
+Off to one side lies a glistening pearl!
+
+There are rare spices here!
+
+There is a golden chain lying in a heap on the floor!
+
+The wreckage of a bridge (and a dead bear) can be seen at the bottom
+of the chasm.
+
+The troll is nowhere to be seen.
 
 > feed bear
 
@@ -1879,8 +1896,80 @@ Don't be ridiculous!
 
 For crying out loud, the poor thing is already dead!
 
+> sw
 
-You scored 243 out of a possible 430, using 303 turns.
+You're in sloping corridor.
+
+> d
+
+You're in large low room.
+
+> se
+
+You're in Oriental Room.
+
+> se
+
+You're in Swiss Cheese Room.
+
+There is a little axe here.
+
+> ne
+
+You are in Bedquilt, a long east/west passage with holes everywhere.
+To explore at random select north, south, up, or down.
+
+> e
+
+You're at complex junction.
+
+> up
+
+You're in dusty rock room.
+
+> e
+
+You're in dirty passage.
+
+> up
+
+You are in a low n/s passage at a hole in the floor.  The hole goes
+down to an e/w passage.
+
+> s
+
+You're in Hall of Mt King.
+
+> up
+
+You're in Hall of Mists.
+
+Rough stone steps lead up the dome.
+
+> w
+
+You're on east bank of fissure.
+
+A three foot black rod with a rusty star on an end lies nearby.
+
+A crystal bridge spans the fissure.
+
+> take rod
+
+OK
+
+> wave rod
+
+The crystal bridge has vanished!
+
+> across
+
+There is no way across the fissure.
+
+You're on east bank of fissure.
+
+
+You scored 243 out of a possible 430, using 319 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 
