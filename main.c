@@ -898,7 +898,7 @@ static void lampcheck(void)
      *  lamp give out.  When it gets close, we come here to warn him.
      *  First following arm checks if the lamp and fresh batteries are
      *  here, in which case we replace the batteries and continue.
-     *  Second is for other cases of lamp dying.  Eve after it goes
+     *  Second is for other cases of lamp dying.  Even after it goes
      *  out, he can explore outside for a while if desired. */
     if (game.limit <= WARNTIME) {
         if (HERE(BATTERY) && game.prop[BATTERY] == FRESH_BATTERIES && HERE(LAMP)) {
