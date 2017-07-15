@@ -8,7 +8,7 @@ VERS=$(shell sed -n <NEWS '/^[0-9]/s/:.*//p' | head -1)
 .PHONY: check coverage
 
 CC?=gcc
-CCFLAGS+=-std=c99 -D_DEFAULT_SOURCE -DVERSION=\"$(VERS)\" -O2
+CCFLAGS+=-std=c99 -D_DEFAULT_SOURCE -DVERSION=\"$(VERS)\" -O2 -D_FORTIFY_SOURCE=2 -fstack-protector-all
 LIBS=$(shell pkg-config --libs libedit)
 INC+=$(shell pkg-config --cflags libedit)
 
@@ -117,7 +117,7 @@ linty: CCFLAGS += -Winit-self
 linty: CCFLAGS += -Wpointer-arith
 linty: advent cheat
 
-debug: CCFLAGS += -O0 --coverage -ggdb
+debug: CCFLAGS += -O0 --coverage -ggdb -U_FORTIFY_SOURCE
 debug: linty
 
 CSUPPRESSIONS = --suppress=missingIncludeSystem --suppress=invalidscanf
