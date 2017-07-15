@@ -17,18 +17,18 @@ YAML_PATH = "../adventure.yaml"
 HTML_TEMPLATE_PATH = "coverage_dungeon.html.tpl"
 DEFAULT_HTML_OUTPUT_PATH = "../coverage/adventure.yaml.html"
 
-STDOUT_REPORT_CATEGORY = "  {name:.<19}: {percent}% covered ({covered} of {total}))\n"
+STDOUT_REPORT_CATEGORY = "  {name:.<19}: {percent:5.1f}% covered ({covered} of {total})\n"
 
 HTML_SUMMARY_ROW = """
     <tr>
         <td class="headerItem"><a href="#{name}">{name}:</a></td>
         <td class="headerCovTableEntry">{total}</td>
         <td class="headerCovTableEntry">{covered}</td>
-        <td class="headerCovTableEntry">{percent}%</td>
+        <td class="headerCovTableEntry">{percent:.1f}%</td>
     </tr>
 """
 
-HTML_CATEGORY_TABLE = """
+HTML_CATEGORY_SECTION = """
     <tr id="{id}"></tr>
     {rows}
     <tr>
@@ -36,33 +36,21 @@ HTML_CATEGORY_TABLE = """
     </tr>
 """
 
-HTML_CATEGORY_TABLE_HEADER_3_FIELDS = """
+HTML_CATEGORY_HEADER = """
     <tr>
-        <td class="tableHead" width="60%">{}</td>
-        <td class="tableHead" width="20%">{}</td>
-        <td class="tableHead" width="20%">{}</td>
+        <td class="tableHead" width="60%" colspan="{colspan}">{label}</td>
+        {cells}
     </tr>
 """
 
-HTML_CATEGORY_TABLE_HEADER_2_FIELDS = """
-    <tr>
-        <td class="tableHead" colspan="2">{}</td>
-        <td class="tableHead">{}</td>
-    </tr>
-"""
+HTML_CATEGORY_HEADER_CELL = '<td class="tableHead" width="15%">{}</td>\n'
 
-HTML_CATEGORY_ROW_3_FIELDS = """
-    <tr>
-        <td class="coverFile">{}</td>
-        <td class="{}">&nbsp;</td>
-        <td class="{}">&nbsp;</td>
-    </tr>
-"""
+HTML_CATEGORY_COVERAGE_CELL = '<td class="{}">&nbsp;</td>\n'
 
-HTML_CATEGORY_ROW_2_FIELDS = """
+HTML_CATEGORY_ROW = """
     <tr>
-        <td class="coverFile" colspan="2">{}</td>
-        <td class="{}">&nbsp;</td>
+        <td class="coverFile" colspan="{colspan}">{id}</td>
+        {cells}
     </tr>
 """
 
@@ -80,257 +68,175 @@ def search(needle, haystack):
 
     return re.search(needle, haystack)
 
-def loc_coverage(locations, text):
-    # locations have a long and a short description, that each have to
-    # be checked seperately
-    for locname, loc in locations:
-        if loc["description"]["long"] == None or loc["description"]["long"] == '':
-            loc["description"]["long"] = True
-        if loc["description"]["long"] != True:
-            if search(loc["description"]["long"], text):
-                loc["description"]["long"] = True
-        if loc["description"]["short"] == None or loc["description"]["short"] == '':
-            loc["description"]["short"] = True
-        if loc["description"]["short"] != True:
-            if search(loc["description"]["short"], text):
-                loc["description"]["short"] = True
-
-def arb_coverage(arb_msgs, text):
-    # arbitrary messages are a map to tuples
-    for i, msg in enumerate(arb_msgs):
-        (msg_name, msg_text) = msg
-        if msg_text == None or msg_text == '':
-            arb_msgs[i] = (msg_name, True)
-        elif msg_text != True:
-            if search(msg_text, text):
-                arb_msgs[i] = (msg_name, True)
-
-def obj_coverage(objects, text):
+def obj_coverage(objects, text, report):
     # objects have multiple descriptions based on state
     for i, objouter in enumerate(objects):
         (obj_name, obj) = objouter
         if obj["descriptions"]:
             for j, desc in enumerate(obj["descriptions"]):
-                if desc == None or desc == '':
-                    obj["descriptions"][j] = True
-                    objects[i] = (obj_name, obj)
-                elif desc != True:
-                    if search(desc, text):
-                        obj["descriptions"][j] = True
-                        objects[i] = (obj_name, obj)
+                name = "{}[{}]".format(obj_name, j)
+                if name not in report["messages"]:
+                    report["messages"][name] = {"covered" : False}
+                    report["total"] += 1
+                if report["messages"][name]["covered"] != True:
+                    if desc == None or desc == '' or search(desc, text):
+                        report["messages"][name]["covered"] = True
+                        report["covered"] += 1
 
-def hint_coverage(hints, text):
+def loc_coverage(locations, text, report):
+    # locations have a long and a short description, that each have to
+    # be checked seperately
+    for name, loc in locations:
+        if name not in report["messages"]:
+            report["messages"][name] = {"long" : False, "short": False}
+            report["total"] += 2
+        if report["messages"][name]["long"] != True:
+            if loc["description"]["long"] == None or loc["description"]["long"] == '' or search(loc["description"]["long"], text):
+                report["messages"][name]["long"] = True
+                report["covered"] += 1
+        if report["messages"][name]["short"] != True:
+            if loc["description"]["short"] == None or loc["description"]["short"] == '' or search(loc["description"]["short"], text):
+                report["messages"][name]["short"] = True
+                report["covered"] += 1
+
+def hint_coverage(obituaries, text, report):
     # hints have a "question" where the hint is offered, followed
     # by the actual hint if the player requests it
-    for i, hint in enumerate(hints):
-        if hint["hint"]["question"] != True:
-            if search(hint["hint"]["question"], text):
-                hint["hint"]["question"] = True
-        if hint["hint"]["hint"] != True:
-            if search(hint["hint"]["hint"], text):
-                hint["hint"]["hint"] = True
+    for i, hintouter in enumerate(obituaries):
+        hint = hintouter["hint"]
+        name = hint["name"]
+        if name not in report["messages"]:
+            report["messages"][name] = {"question" : False, "hint": False}
+            report["total"] += 2
+        if report["messages"][name]["question"] != True and search(hint["question"], text):
+            report["messages"][name]["question"] = True
+            report["covered"] += 1
+        if report["messages"][name]["hint"] != True and search(hint["hint"], text):
+            report["messages"][name]["hint"] = True
+            report["covered"] += 1
 
-def obit_coverage(obituaries, text):
+def obit_coverage(obituaries, text, report):
     # obituaries have a "query" where it asks the player for a resurrection,
     # followed by a snarky comment if the player says yes
-    for i, obit in enumerate(obituaries):
-        if obit["query"] != True:
-            if search(obit["query"], text):
-                obit["query"] = True
-        if obit["yes_response"] != True:
-            if search(obit["yes_response"], text):
-                obit["yes_response"] = True
+    for name, obit in enumerate(obituaries):
+        if name not in report["messages"]:
+            report["messages"][name] = {"query" : False, "yes_response": False}
+            report["total"] += 2
+        if report["messages"][name]["query"] != True and search(obit["query"], text):
+            report["messages"][name]["query"] = True
+            report["covered"] += 1
+        if report["messages"][name]["yes_response"] != True and search(obit["yes_response"], text):
+            report["messages"][name]["yes_response"] = True
+            report["covered"] += 1
 
-def threshold_coverage(classes, text):
+def threshold_coverage(classes, text, report):
     # works for class thresholds and turn threshold, which have a "message"
     # property
-    for i, msg in enumerate(classes):
-        if msg["message"] == None:
-            msg["message"] = True
-        elif msg["message"] != True:
-            if search(msg["message"], text):
-                msg["message"] = True
+    for name, item in enumerate(classes):
+        if name not in report["messages"]:
+            report["messages"][name] = {"covered" : "False"}
+            report["total"] += 1
+        if report["messages"][name]["covered"] != True:
+            if item["message"] == None or item["message"] == "NO_MESSAGE" or search(item["message"], text):
+                report["messages"][name]["covered"] = True
+                report["covered"] += 1
 
-def specials_actions_coverage(items, text):
+def arb_coverage(arb_msgs, text, report):
+    for name, message in arb_msgs:
+        if name not in report["messages"]:
+            report["messages"][name] = {"covered" : False}
+            report["total"] += 1
+        if report["messages"][name]["covered"] != True:
+            if message == None or search(message, text):
+                report["messages"][name]["covered"] = True
+                report["covered"] += 1
+
+def specials_actions_coverage(items, text, report):
     # works for actions or specials
     for name, item in items:
-        if item["message"] == None or item["message"] == "NO_MESSAGE":
-            item["message"] = True
-        if item["message"] != True:
-            if search(item["message"], text):
-                item["message"] = True
+        if name not in report["messages"]:
+            report["messages"][name] = {"covered" : False}
+            report["total"] += 1
+        if report["messages"][name]["covered"] != True:
+            if item["message"] == None or item["message"] == "NO_MESSAGE" or search(item["message"], text):
+                report["messages"][name]["covered"] = True
+                report["covered"] += 1
 
-if __name__ == "__main__":
-    with open(YAML_PATH, "r") as f:
-        db = yaml.load(f)
-
-    # Create report for each catagory, including HTML table, total items,
-    # and number of items covered
+def coverage_report(db, check_file_contents):
+    # Create report for each catagory, including total items,  number of items
+    # covered, and a list of the covered messages
     report = {}
     for name in db.keys():
         # initialize each catagory
         report[name] = {
             "name" : name, # convenience for string formatting
-            "html" : "",
             "total" : 0,
-            "covered" : 0
+            "covered" : 0,
+            "messages" : {}
         }
 
-    motions = db["motions"]
-    locations = db["locations"]
-    arb_msgs = db["arbitrary_messages"]
-    objects = db["objects"]
-    hints = db["hints"]
-    classes = db["classes"]
-    turn_thresholds = db["turn_thresholds"]
-    obituaries = db["obituaries"]
-    actions = db["actions"]
-    specials = db["specials"]
+    # search for each message in ever test check file
+    for chk in check_file_contents:
+        arb_coverage(db["arbitrary_messages"], chk, report["arbitrary_messages"])
+        hint_coverage(db["hints"], chk, report["hints"])
+        loc_coverage(db["locations"], chk, report["locations"])
+        obit_coverage(db["obituaries"], chk, report["obituaries"])
+        obj_coverage(db["objects"], chk, report["objects"])
+        specials_actions_coverage(db["actions"], chk, report["actions"])
+        specials_actions_coverage(db["specials"], chk, report["specials"])
+        threshold_coverage(db["classes"], chk, report["classes"])
+        threshold_coverage(db["turn_thresholds"], chk, report["turn_thresholds"])
 
-    text = ""
+    return report
+
+if __name__ == "__main__":
+    # load DB
+    try:
+        with open(YAML_PATH, "r") as f:
+            db = yaml.load(f)
+    except IOError as e:
+        print('ERROR: could not load {} ({}})'.format(YAML_PATH, e.strerror))
+        exit(-1)
+
+    # get contents of all the check files
+    check_file_contents = []
     for filename in os.listdir(TEST_DIR):
         if filename.endswith(".chk"):
-            with open(filename, "r") as chk:
-                text = chk.read()
-                loc_coverage(locations, text)
-                arb_coverage(arb_msgs, text)
-                obj_coverage(objects, text)
-                hint_coverage(hints, text)
-                threshold_coverage(classes, text)
-                threshold_coverage(turn_thresholds, text)
-                obit_coverage(obituaries, text)
-                specials_actions_coverage(actions, text)
-                specials_actions_coverage(specials, text)
+            with open(filename, "r") as f:
+                check_file_contents.append(f.read())
 
-    report["locations"]["total"] = len(locations) * 2
-    report["locations"]["html"] = HTML_CATEGORY_TABLE_HEADER_3_FIELDS.format("Location ID", "long", "short")
-    locations.sort()
-    for locouter in locations:
-        locname = locouter[0]
-        loc = locouter[1]
-        if loc["description"]["long"] != True:
-            long_success = "uncovered"
-        else:
-            long_success = "covered"
-            report["locations"]["covered"] += 1
+    # run coverage analysis report on dungeon database
+    report = coverage_report(db, check_file_contents)
 
-        if loc["description"]["short"] != True:
-            short_success = "uncovered"
-        else:
-            short_success = "covered"
-            report["locations"]["covered"] += 1
-
-        report["locations"]["html"] += HTML_CATEGORY_ROW_3_FIELDS.format(locname, long_success, short_success)
-
-    arb_msgs.sort()
-    report["arbitrary_messages"]["total"] = len(arb_msgs)
-    report["arbitrary_messages"]["html"] = HTML_CATEGORY_TABLE_HEADER_2_FIELDS.format("Arbitrary Message ID", "covered")
-    for name, msg in arb_msgs:
-        if msg != True:
-            success = "uncovered"
-        else:
-            success = "covered"
-            report["arbitrary_messages"]["covered"] += 1
-        report["arbitrary_messages"]["html"] += HTML_CATEGORY_ROW_2_FIELDS.format(name, success)
-
-    objects.sort()
-    report["objects"]["html"] = HTML_CATEGORY_TABLE_HEADER_2_FIELDS.format("Object ID", "covered")
-    for (obj_name, obj) in objects:
-        if obj["descriptions"]:
-            for j, desc in enumerate(obj["descriptions"]):
-                report["objects"]["total"] += 1
-                if desc != True:
-                    success = "uncovered"
-                else:
-                    success = "covered"
-                    report["objects"]["covered"] += 1
-                report["objects"]["html"] += HTML_CATEGORY_ROW_2_FIELDS.format("%s[%d]" % (obj_name, j), success)
-
-    hints.sort()
-    report["hints"]["total"] = len(hints) * 2
-    report["hints"]["html"] = HTML_CATEGORY_TABLE_HEADER_3_FIELDS.format("Hint ID", "question", "hint")
-    for i, hint in enumerate(hints):
-        hintname = hint["hint"]["name"]
-        if hint["hint"]["question"] != True:
-            question_success = "uncovered"
-        else:
-            question_success = "covered"
-            report["hints"]["covered"] += 1
-        if hint["hint"]["hint"] != True:
-            hint_success = "uncovered"
-        else:
-            hint_success = "covered"
-            report["hints"]["covered"] += 1
-        report["hints"]["html"] += HTML_CATEGORY_ROW_3_FIELDS.format(name, question_success, hint_success)
-
-    report["classes"]["total"] = len(classes)
-    report["classes"]["html"] = HTML_CATEGORY_TABLE_HEADER_2_FIELDS.format("Adventurer Class #", "covered")
-    for name, msg in enumerate(classes):
-        if msg["message"] != True:
-            success = "uncovered"
-        else:
-            success = "covered"
-            report["classes"]["covered"] += 1
-        report["classes"]["html"] += HTML_CATEGORY_ROW_2_FIELDS.format(msg["threshold"], success)
-
-    report["turn_thresholds"]["total"] = len(turn_thresholds)
-    report["turn_thresholds"]["html"] = HTML_CATEGORY_TABLE_HEADER_2_FIELDS.format("Turn Threshold", "covered")
-    for name, msg in enumerate(turn_thresholds):
-        if msg["message"] != True:
-            success = "uncovered"
-        else:
-            success = "covered"
-            report["turn_thresholds"]["covered"] += 1
-        report["turn_thresholds"]["html"] += HTML_CATEGORY_ROW_2_FIELDS.format(msg["threshold"], success)
-
-    report["obituaries"]["total"] = len(obituaries) * 2
-    report["obituaries"]["html"] = HTML_CATEGORY_TABLE_HEADER_3_FIELDS.format("Obituary #", "query", "yes_response")
-    for i, obit in enumerate(obituaries):
-        if obit["query"] != True:
-            query_success = "uncovered"
-        else:
-            query_success = "covered"
-            report["obituaries"]["covered"] += 1
-        if obit["yes_response"] != True:
-            obit_success = "uncovered"
-        else:
-            obit_success = "covered"
-            report["obituaries"]["covered"] += 1
-        report["obituaries"]["html"] += HTML_CATEGORY_ROW_3_FIELDS.format(i, query_success, obit_success)
-
-    actions.sort()
-    report["actions"]["total"] = len(actions)
-    report["actions"]["html"] = HTML_CATEGORY_TABLE_HEADER_2_FIELDS.format("Action ID", "covered")
-    for name, action in actions:
-        if action["message"] != True:
-            success = "uncovered"
-        else:
-            success = "covered"
-            report["actions"]["covered"] += 1
-        report["actions"]["html"] += HTML_CATEGORY_ROW_2_FIELDS.format(name, success)
-
-    report["specials"]["total"] = len(specials)
-    report["specials"]["html"] = HTML_CATEGORY_TABLE_HEADER_2_FIELDS.format("Special ID", "covered")
-    for name, special in specials:
-        if special["message"] != True:
-            success = "uncovered"
-        else:
-            success = "covered"
-            report["specials"]["covered"] += 1
-        report["specials"]["html"] += HTML_CATEGORY_ROW_2_FIELDS.format(name, success)
-
-    # calculate percentages for each catagory and HTML for category tables
+    # render report output
     categories_html = ""
     summary_html = ""
     summary_stdout = "adventure.yaml coverage rate:\n"
     for name, category in sorted(report.items()):
-        if(category["total"] > 0):
-            report[name]["percent"] = round((category["covered"] / float(category["total"])) * 100, 1)
-            summary_stdout += STDOUT_REPORT_CATEGORY.format(**report[name])
-            categories_html += HTML_CATEGORY_TABLE.format(id=name, rows=category["html"])
-            summary_html += HTML_SUMMARY_ROW.format(**report[name])
-        else:
-            report[name]["percent"] = 100;
+        # ignore categories with zero entries
+        if category["total"] > 0:
+            # Calculate percent coverage
+            category["percent"] = (category["covered"] / float(category["total"])) * 100
+
+            # render section header
+            cat_keys = category["messages"].items()[0][1].keys()
+            headers_html = ""
+            colspan = 10 - len(cat_keys)
+            for key in cat_keys:
+                headers_html += HTML_CATEGORY_HEADER_CELL.format(key)
+            category_html = HTML_CATEGORY_HEADER.format(colspan=colspan, label=category["name"], cells=headers_html)
+
+            # render message coverage row
+            for message_id, covered in sorted(category["messages"].items()):
+                category_html_row = ""
+                for key, value in covered.items():
+                    category_html_row += HTML_CATEGORY_COVERAGE_CELL.format("uncovered" if value != True else "covered")
+                category_html += HTML_CATEGORY_ROW.format(id=message_id,colspan=colspan, cells=category_html_row)
+            categories_html += HTML_CATEGORY_SECTION.format(id=name, rows=category_html)
+
+            # render category summaries
+            summary_stdout += STDOUT_REPORT_CATEGORY.format(**category)
+            summary_html += HTML_SUMMARY_ROW.format(**category)
 
     # output some quick report stats
     print(summary_stdout)
@@ -346,7 +252,7 @@ if __name__ == "__main__":
             # read in HTML template
             html_template = f.read()
     except IOError as e:
-        print 'ERROR: reading HTML report template failed (%s)' % e.strerror
+        print('ERROR: reading HTML report template failed ({})'.format(e.strerror))
         exit(-1)
 
     # parse template with report and write it out
@@ -354,4 +260,4 @@ if __name__ == "__main__":
         with open(html_output_path, "w") as f:
             f.write(html_template.format(categories=categories_html, summary=summary_html))
     except IOError as e:
-        print 'ERROR: writing HTML report failed (%s)' % e.strerror
+        print('ERROR: writing HTML report failed ({})'.format(e.strerror))
