@@ -115,11 +115,10 @@ linty: CCFLAGS += -Wwrite-strings
 linty: CCFLAGS += -Wunreachable-code
 linty: CCFLAGS += -Winit-self
 linty: CCFLAGS += -Wpointer-arith
-linty: advent
+linty: advent cheat
 
 debug: CCFLAGS += -O0 --coverage -ggdb
 debug: linty
-debug: cheat
 
 CSUPPRESSIONS = --suppress=missingIncludeSystem --suppress=invalidscanf
 cppcheck:
