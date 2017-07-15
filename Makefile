@@ -58,7 +58,7 @@ cheat: $(CHEAT_OBJS) dungeon.o
 check: advent cheat
 	cd tests; $(MAKE) --quiet
 
-coverage: debug cheat
+coverage: debug
 	cd tests; $(MAKE) coverage --quiet
 
 .SUFFIXES: .adoc .html .6

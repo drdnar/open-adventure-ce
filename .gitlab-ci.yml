@@ -1,4 +1,4 @@
-image: alpine
+image: fedora
 
 stages:
   - build
@@ -9,44 +9,36 @@ stages:
 binary:debug:
   stage: build
   before_script:
-    - apk update
-    - apk add make gcc musl-dev python py2-pip libedit-dev
-    - pip install PyYAML
+    - dnf install make gcc libedit-devel libasan libubsan python2 PyYAML lcov -y
   script:
     - make debug
   artifacts:
     paths:
       - advent
       - cheat
-      - "*.gcda"
-      - "*.gcno"
-  # cache outputs to reduce the build time
-  cache:
-    paths:
       - "*.o"
+      - dungeon.c
+      - dungeon.h
+      - "*.gcno"
 
 binary:release:
   stage: build
   before_script:
-    - apk update
-    - apk add make gcc musl-dev python py2-pip libedit-dev
-    - pip install PyYAML
+    - dnf install make gcc libedit-devel python2 PyYAML -y
   script:
     - make advent cheat
   artifacts:
     paths:
       - advent
       - cheat
-  # cache outputs to reduce the build time
-  cache:
-    paths:
       - "*.o"
+      - dungeon.c
+      - dungeon.h
 
 manpage:
   stage: build
   before_script:
-    - apk update
-    - apk add make asciidoc
+    - dnf install make asciidoc -y
   script:
     - make advent.6
   artifacts:
@@ -56,8 +48,7 @@ manpage:
 html:
   stage: build
   before_script:
-    - apk update
-    - apk add make asciidoc libxslt
+    - dnf install make asciidoc libxslt -y
   script:
     - make html
   artifacts:
@@ -67,8 +58,7 @@ html:
 dist:
   stage: build
   before_script:
-    - apk update
-    - apk add make asciidoc
+    - dnf install make asciidoc -y
   script:
     - export VERS=${CI_COMMIT_REF_NAME}
     - make dist -e
@@ -80,26 +70,23 @@ dist:
 test:debug:
   stage: test
   before_script:
-    - apk update
-    - apk add make gcc python py2-pip libedit-dev
-    - pip install PyYAML
-    - apk add lcov --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted
+    - dnf install make gcc libedit-devel libasan libubsan python2 PyYAML lcov -y
   script:
+    - make debug
+    - make check
+    - lcov -t "advent" -o advent.info -c -d .
+    - genhtml -o coverage advent.info
     - cd tests
-    - make
-    - make coverage
+    - ./coverage_dungeon.py
     - cd ..
   artifacts:
     paths:
       - coverage
-  dependencies:
-    - binary:debug
 
 test:release:
   stage: test
   before_script:
-    - apk update
-    - apk add make libedit
+    - dnf install make libedit -y
   script:
     - cd tests
     - make
