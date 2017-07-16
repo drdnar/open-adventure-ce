@@ -19,40 +19,40 @@ DEFAULT_HTML_OUTPUT_PATH = "../coverage/adventure.yaml.html"
 
 STDOUT_REPORT_CATEGORY = "  {name:.<19}: {percent:5.1f}% covered ({covered} of {total})\n"
 
-HTML_SUMMARY_ROW = """
+HTML_SUMMARY_ROW = '''
     <tr>
         <td class="headerItem"><a href="#{name}">{name}:</a></td>
         <td class="headerCovTableEntry">{total}</td>
         <td class="headerCovTableEntry">{covered}</td>
         <td class="headerCovTableEntry">{percent:.1f}%</td>
     </tr>
-"""
+'''
 
-HTML_CATEGORY_SECTION = """
+HTML_CATEGORY_SECTION = '''
     <tr id="{id}"></tr>
     {rows}
     <tr>
         <td>&nbsp;</td>
     </tr>
-"""
+'''
 
-HTML_CATEGORY_HEADER = """
+HTML_CATEGORY_HEADER = '''
     <tr>
         <td class="tableHead" width="60%" colspan="{colspan}">{label}</td>
         {cells}
     </tr>
-"""
+'''
 
 HTML_CATEGORY_HEADER_CELL = '<td class="tableHead" width="15%">{}</td>\n'
 
 HTML_CATEGORY_COVERAGE_CELL = '<td class="{}">&nbsp;</td>\n'
 
-HTML_CATEGORY_ROW = """
+HTML_CATEGORY_ROW = '''
     <tr>
         <td class="coverFile" colspan="{colspan}">{id}</td>
         {cells}
     </tr>
-"""
+'''
 
 def search(needle, haystack):
     # Search for needle in haystack, first escaping needle for regex, then
