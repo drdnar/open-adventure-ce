@@ -1315,14 +1315,14 @@ int action(struct command_t *command)
             if (game.loc == LOC_START ||
                 game.loc == LOC_VALLEY ||
                 game.loc == LOC_SLIT) {
-                command->obj = DPRSSN;
+                command->obj = DEPRESSION;
             }
             if (game.loc == LOC_COBBLE ||
                 game.loc == LOC_DEBRIS ||
                 game.loc == LOC_AWKWARD ||
                 game.loc == LOC_BIRD ||
                 game.loc == LOC_PITTOP) {
-                command->obj = ENTRNC;
+                command->obj = ENTRANCE;
             }
         } else if (command->obj == DWARF && atdwrf(game.loc) > 0)
             /* FALL THROUGH */;

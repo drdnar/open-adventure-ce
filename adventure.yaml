@@ -246,9 +246,9 @@ motions: !!omap
     words: ['slab', 'slabr']
 - XYZZY:
     words: ['xyzzy']
-- DPRSSN:
+- DEPRESSION:
     words: ['depre']
-- ENTRNC:
+- ENTRANCE:
     words: ['entra']
 - PLUGH:
     words: ['plugh']
@@ -256,23 +256,21 @@ motions: !!omap
     words: ['secre']
 - CAVE:
     words: ['cave']
-- MOT_68:
-    words: !!null
-- MOT_69:
+- CROSS:
     words: ['cross']
 - BEDQUILT:
     words: ['bedqu']
 - PLOVER:
     words: ['plove']
-- FORWARD2:
+- ORIENTAL:
     words: ['orien']
-- FORWARD3:
+- CAVERN:
     words: ['caver']
-- FORWARD4:
+- SHELLROOM:
     words: ['shell']
-- FORWARD5:
+- RESERVOIR:
     words: ['reser']
-- FORWARD6:
+- OFFICE:
     words: ['main', 'offic']
 
 hints:
