@@ -9,9 +9,14 @@
 # motions: Motion words, grouped into synonyms.  The 'oldstyle'
 #    attribute, if false, means that single-letter synonyms should be
 #    accepted in oldstyle mode; it defaults to true.
-
+#
 # actions: Action words, grouped into synonyms, and their corresponding
 #    default messages. The 'oldstyle' attribute is as for motions.
+#
+# specials: Special action words, grouped into synonyms, and their
+#    messages. These differ from the regular action words above in that
+#    they only display their corresponding message; no other logic is
+#    invoked. In the future, these will be merged into the regular actions.
 #
 # hints: Each item contains a hint number, a hint label (used to
 #    generate the value macro for the hint) the number of turns he
