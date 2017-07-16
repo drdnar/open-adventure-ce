@@ -1,4 +1,4 @@
-## Bear collapses bridge
+## Bear collapses bridge; also test bivalve predicates and unbridged fissure. 
 n
 seed 1838473132
 in
@@ -223,8 +223,16 @@ drop axe
 ne
 e
 n
-open clam
+# Here we are at the Shell Room
+take clam
 s
+drop clam
+open clam
+take oyster
+s
+drop oyster
+s
+# OK, bivalve-carry test is done
 u
 e
 u
@@ -269,6 +277,7 @@ u
 toss eggs
 ne
 ne
+# Bear-verb test
 barren
 in
 attack

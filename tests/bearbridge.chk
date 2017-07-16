@@ -1331,11 +1331,39 @@ up.  A low hands and knees passage enters from the south.
 
 There is an enormous clam here with its shell tightly closed.
 
+> take clam
+
+OK
+
+> s
+
+You can't fit this five-foot clam through that little passage!
+
+You're in Shell Room.
+
+> drop clam
+
+OK
+
 > open clam
 
 A glistening pearl falls out of the clam and rolls away.  Goodness,
 this must really be an oyster.  (I never was very good at identifying
 bivalves.)  Whatever it is, it has now snapped shut again.
+
+> take oyster
+
+OK
+
+> s
+
+You can't fit this five-foot oyster through that little passage!
+
+You're in Shell Room.
+
+> drop oyster
+
+OK
 
 > s
 
@@ -1357,6 +1385,8 @@ You're in n/s passage above e/w passage.
 > n
 
 You're at "Y2".
+
+A hollow voice says "PLUGH".
 
 > off
 
@@ -1426,15 +1456,11 @@ OK
 
 It is now pitch dark.  If you proceed you will likely fall into a pit.
 
-A hollow voice says "PLUGH".
-
 > on
 
 Your lamp is now on.
 
 You're at "Y2".
-
-A hollow voice says "PLUGH".
 
 > s
 
@@ -1969,7 +1995,7 @@ There is no way across the fissure.
 You're on east bank of fissure.
 
 
-You scored 243 out of a possible 430, using 319 turns.
+You scored 243 out of a possible 430, using 325 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 
