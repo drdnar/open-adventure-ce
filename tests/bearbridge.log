@@ -1,4 +1,4 @@
-## Bear collapses bridge; also test bivalve predicates and unbridged fissure. 
+## Bridge destruction; also test bivalve predicates and bear feeding. 
 n
 seed 1838473132
 in
@@ -277,11 +277,16 @@ u
 toss eggs
 ne
 ne
-# Bear-verb test
+# Bear-verb test. Try feeding without food before feeding with
 barren
+drop food
 in
 attack
 unlock chain
+feed bear
+out
+take food
+in
 feed bear
 carry bear
 unlock chain

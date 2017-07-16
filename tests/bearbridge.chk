@@ -1625,6 +1625,10 @@ heard in the distance.
 You are standing at the entrance to a large, barren room.  A notice
 above the entrance reads:  "Caution!  Bear in room!"
 
+> drop food
+
+OK
+
 > in
 
 You are inside a barren room.  The center of the room is completely
@@ -1643,6 +1647,28 @@ With what?  Your bare hands?  Against *HIS* bear hands??
 
 There is no way to get past the bear to unlock the chain, which is
 probably just as well.
+
+> feed bear
+
+There's nothing here it wants to eat (except perhaps you).
+
+> out
+
+You're in front of Barren Room.
+
+There is food here.
+
+> take food
+
+OK
+
+> in
+
+You're in Barren Room.
+
+There is a ferocious cave bear eying you from the far end of the room!
+
+The bear is locked to the wall with a golden chain!
 
 > feed bear
 
@@ -1995,7 +2021,7 @@ There is no way across the fissure.
 You're on east bank of fissure.
 
 
-You scored 243 out of a possible 430, using 325 turns.
+You scored 243 out of a possible 430, using 330 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 
