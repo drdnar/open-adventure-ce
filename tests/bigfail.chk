@@ -2445,6 +2445,22 @@ You are in a large room, with a passage to the south, a passage to the
 west, and a wall of broken rock to the east.  There is a large "Y2" on
 a rock in the room's center.
 
+> w
+
+You're at a low window overlooking a huge pit, which extends up out of
+sight.  A floor is indistinctly visible over 50 feet below.  Traces of
+white mist cover the floor of the pit, becoming thicker to the right.
+Marks in the dust around the window would seem to indicate that
+someone has been here recently.  Directly across the pit from you and
+25 feet away there is a similar window looking into a lighted room.  A
+shadowy figure can be seen there peering back at you.
+
+The shadowy figure seems to be trying to attract your attention.
+
+> e
+
+You're at "Y2".
+
 > s
 
 You're in n/s passage above e/w passage.
@@ -2465,10 +2481,12 @@ Rough stone steps lead up the dome.
 
 OK
 
-> 
+> listen
+
+The wind whistles coldly past your ears.
 
 
-You scored 207 out of a possible 430, using 402 turns.
+You scored 207 out of a possible 430, using 405 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 

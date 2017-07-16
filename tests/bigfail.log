@@ -423,9 +423,12 @@ in
 downstream
 plugh
 on lamp
+# Cover WINDOW1
+w
+e
 # Retrieve axe
 s
 s
 e
 take axe
-
+listen
