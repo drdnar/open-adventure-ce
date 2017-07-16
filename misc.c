@@ -135,7 +135,7 @@ void wordclear(token_t *v)
 
 /*  I/O routines (speak, pspeak, rspeak, sspeak, get_input, yes) */
 
-void vspeak(const char* msg, bool blank, va_list ap)
+static void vspeak(const char* msg, bool blank, va_list ap)
 {
     // Do nothing if we got a null pointer.
     if (msg == NULL)
