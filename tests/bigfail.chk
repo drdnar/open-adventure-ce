@@ -1306,17 +1306,9 @@ the floor with a thick pile carpet.  Moss covers the ceiling.
 
 A small velvet pillow lies on the floor.
 
-> take pillow
-
-OK
-
 > w
 
 You're in Swiss Cheese Room.
-
-> drop axe
-
-OK
 
 > ne
 
@@ -1430,7 +1422,7 @@ There is food here.
 
 > drop pillow
 
-OK
+I see no pillow here.
 
 > drop trident
 
@@ -1526,8 +1518,6 @@ You're in Bedquilt.
 
 You're in Swiss Cheese Room.
 
-There is a little axe here.
-
 > w
 
 You're at east end of Twopit Room.
@@ -1576,7 +1566,7 @@ The way north leads through a massive, rusty, iron door.
 
 > take bottle
 
-OK
+You can't carry anything more.  You'll have to drop something first.
 
 > n
 
@@ -1812,8 +1802,6 @@ There is an emerald here the size of a plover's egg!
 
 There is a jewel-encrusted trident here!
 
-A small velvet pillow lies on the floor.
-
 There is a platinum pyramid here, 8 inches on a side!
 
 There are diamonds here!
@@ -1857,8 +1845,6 @@ There is a richly-carved ebony statuette here!
 There is an emerald here the size of a plover's egg!
 
 There is a jewel-encrusted trident here!
-
-A small velvet pillow lies on the floor.
 
 There is a platinum pyramid here, 8 inches on a side!
 
@@ -1906,7 +1892,7 @@ You're in sloping corridor.
 
 You're on sw side of chasm.
 
-There is an empty bottle here.
+There is a little axe here.
 
 There are many coins here!
 
@@ -1925,7 +1911,7 @@ There is no longer any way across the chasm.
 
 You're on sw side of chasm.
 
-There is an empty bottle here.
+There is a little axe here.
 
 There are many coins here!
 
@@ -1950,6 +1936,10 @@ For crying out loud, the poor thing is already dead!
 
 OK
 
+> take axe
+
+OK
+
 > sw
 
 You're in sloping corridor.
@@ -1967,8 +1957,6 @@ The floor is littered with worthless shards of pottery.
 > se
 
 You're in Swiss Cheese Room.
-
-There is a little axe here.
 
 > ne
 
@@ -2099,6 +2087,10 @@ OK
 
 > z
 
+OK
+
+> z
+
 Your lamp is getting dim.  You'd best go back for those batteries.
 
 OK
@@ -2107,14 +2099,10 @@ OK
 
 OK
 
-> z
+> s
 
 Tsk!  A wizard wouldn't have to take 350 turns.  This is going to cost
 you a couple of points.
-
-OK
-
-> s
 
 Dead end
 
@@ -2174,64 +2162,92 @@ You're on west bank of fissure.
 
 A crystal bridge spans the fissure.
 
-> inven
+> w
 
-You are currently holding the following:
-Brass lantern
-Black rod
-Batteries
+You're at west end of Hall of Mists.
+
+> w
+
+You're at east end of long hall.
+
+> n
+
+You are at a crossover of a high n/s passage and a low e/w one.
 
 > e
 
-You're on east bank of fissure.
+You're in the west side chamber.
 
-A crystal bridge spans the fissure.
+> d
+
+There is no way to go that direction.
+
+You're in the west side chamber.
 
 > e
+
+You're in Hall of Mt King.
+
+> u
 
 There is a threatening little dwarf in the room with you!
 
-One sharp nasty knife is thrown at you!
+You're in Hall of Mists.
 
-It gets you!
+Rough stone steps lead up the dome.
 
-You clumsy oaf, you've done it again!  I don''t know how long I can
-keep this up.  Do you want me to try reincarnating you again?
+> throw axe
 
-> y
+You killed a little dwarf.
 
-Okay, now where did I put my orange smoke?....  >POOF!<
-Everything disappears in a dense cloud of orange smoke.
+You are at one end of a vast hall stretching forward out of sight to
+the west.  There are openings to either side.  Nearby, a wide stone
+staircase leads downward.  The hall is filled with wisps of white mist
+swaying to and fro almost as if alive.  A cold wind blows up the
+staircase.  There is a passage at the top of a dome behind you.
 
-You're inside building.
+There is a little axe here.
 
-There is a richly-carved ebony statuette here!
+Rough stone steps lead up the dome.
 
-There is an emerald here the size of a plover's egg!
+> take axe
 
-There is a jewel-encrusted trident here!
+OK
 
-A small velvet pillow lies on the floor.
+> d
 
-There is a platinum pyramid here, 8 inches on a side!
+You're in Hall of Mt King.
 
-There are diamonds here!
+> n
 
-There is an enormous ruby here!
+You're in n/s passage above e/w passage.
 
-There are bars of silver here!
+> d
 
-There is a persian rug spread out on the floor!
+You are in a dirty broken passage.  To the east is a crawl.  To the
+west is a large passage.  Above you is a hole to another passage.
 
-There is a large sparkling nugget of gold here!
+> e
 
-A precious jade necklace has been dropped here!
+You are on the brink of a small clean climbable pit.  A crawl leads
+west.
 
-There is precious jewelry here!
+> d
+
+You are in the bottom of a small pit with a little stream, which
+enters and exits through tiny slits.
+
+> listen
+
+The stream is gurgling placidly.
+
+> u
+
+You're at brink of small pit.
 
 
-You scored 207 out of a possible 430, using 365 turns.
+You scored 217 out of a possible 430, using 377 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 
-To achieve the next higher rating, you need 44 more points.
+To achieve the next higher rating, you need 34 more points.

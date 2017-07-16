@@ -2014,6 +2014,10 @@ OK
 
 OK
 
+> fly rug
+
+The rug does not appear inclined to cooperate.
+
 > drop emerald
 
 The gem fits easily into the cavity.
@@ -2095,14 +2099,14 @@ You're at hill in road.
 
 > e
 
+Tsk!  A wizard wouldn't have to take 350 turns.  This is going to cost
+you a couple of points.
+
 You are standing at the end of a road before a small brick building.
 Around you is a forest.  A small stream flows out of the building and
 down a gully.
 
 > in
-
-Tsk!  A wizard wouldn't have to take 350 turns.  This is going to cost
-you a couple of points.
 
 You're inside building.
 
@@ -3015,7 +3019,7 @@ There is a loud explosion, and a twenty-foot hole appears in the far
 wall, burying the snakes in the rubble.  A river of molten lava pours
 in through the hole, destroying everything in its path, including you!
 
-You scored 399 out of a possible 430, using 479 turns.
+You scored 399 out of a possible 430, using 480 turns.
 
 Your score puts you in Master Adventurer Class B.
 

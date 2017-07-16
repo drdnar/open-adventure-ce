@@ -2,7 +2,8 @@
 foo
 
 y
-seed 1801426495
+seed 1635997320
+back
 version
 help
 info
@@ -11,6 +12,13 @@ back
 eat grate
 eat building
 in
+# Z'ZZZ Word correct, but does nothing
+say F'UNJ
+# Say bigwords when giant isn't around
+say fee
+say fie
+say foe
+say fum
 in
 throw food
 nothing food

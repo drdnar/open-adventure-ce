@@ -340,6 +340,8 @@ light urn
 rub urn
 take amber
 drop rug
+# fly rug before dropping emerald, triggering RUG_NOTHING1
+fly rug
 drop emerald
 fly rug
 take sapphire
