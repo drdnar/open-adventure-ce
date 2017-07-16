@@ -397,3 +397,20 @@ e
 d
 listen
 u
+w
+# Coverage of LOC_THREEJUNCTION, LOC_WINDOW2, LOC_SECRET2,
+# LOC_TOPSTALACTITE. Only accessible via stalactite from big maze or
+# by random exit from Bedquilt.
+bedquilt
+n
+n
+n
+n
+n
+w
+n
+w
+s
+s
+d
+# In Maze All Alike.
