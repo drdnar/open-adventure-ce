@@ -101,11 +101,10 @@ static int attack(struct command_t *command)
          *  fixed), move rug there (not fixed), and move him there,
          *  too.  Then do a null motion to get new description. */
         rspeak(BARE_HANDS_QUERY);
-	if (!silent_yes())
-	  {
-	    speak(arbitrary_messages[NASTY_DRAGON]);
-	    return GO_MOVE;
-	  }
+        if (!silent_yes()) {
+            speak(arbitrary_messages[NASTY_DRAGON]);
+            return GO_MOVE;
+        }
         state_change(DRAGON, DRAGON_DEAD);
         game.prop[RUG] = RUG_FLOOR;
         /* Hardcoding LOC_SECRET5 as the dragon's death location is ugly.
@@ -417,8 +416,8 @@ static int chain(verb_t verb)
             game.prop[BEAR] = CONTENTED_BEAR;
 
         switch (game.prop[BEAR]) {
+        // LCOV_EXCL_START
         case BEAR_DEAD:
-            // LCOV_EXCL_START
             /* Can't be reached as long as the only way for the bear to die
              * is from a bridge collapse. Leave in in case this changes, but
              * exclude from coverage testing. */
@@ -545,7 +544,7 @@ static int discard(verb_t verb, obj_t obj)
         } else
             rspeak(OK_MAN);
 
-	game.prop[BIRD] = FOREST(game.loc) ? BIRD_FOREST_UNCAGED : BIRD_UNCAGED;
+        game.prop[BIRD] = FOREST(game.loc) ? BIRD_FOREST_UNCAGED : BIRD_UNCAGED;
         drop(obj, game.loc);
         return GO_CLEAROBJ;
     }
@@ -1001,12 +1000,12 @@ static int lock(verb_t verb, obj_t obj)
     case OYSTER:
         if (verb == LOCK)
             rspeak(HUH_MAN);
-	else if (TOTING(OYSTER))
-	    rspeak(DROP_OYSTER);
+        else if (TOTING(OYSTER))
+            rspeak(DROP_OYSTER);
         else if (!TOTING(TRIDENT))
             rspeak(OYSTER_OPENER);
-	else
-	    rspeak(OYSTER_OPENS);
+        else
+            rspeak(OYSTER_OPENS);
         break;
     case DOOR:
         rspeak((game.prop[DOOR] == DOOR_UNRUSTED) ? OK_MAN : RUSTY_DOOR);
@@ -1448,7 +1447,7 @@ int action(struct command_t *command)
                 return listen();
             case PART:
                 return reservoir();
-            default:
+            default: // LCOV_EXCL_LINE
                 BUG(INTRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST); // LCOV_EXCL_LINE
             }
         }
@@ -1549,14 +1548,14 @@ int action(struct command_t *command)
         }
         case PART:
             return reservoir();
-        default:
+        default: // LCOV_EXCL_LINE
             BUG(TRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST); // LCOV_EXCL_LINE
         }
     case unknown:
         /* Unknown verb, couldn't deduce object - might need hint */
         sspeak(WHAT_DO, command->raw1);
         return GO_CHECKHINT;
-    default:
+    default: // LCOV_EXCL_LINE
         BUG(SPEECHPART_NOT_TRANSITIVE_OR_INTRANSITIVE_OR_UNKNOWN); // LCOV_EXCL_LINE
     }
 }

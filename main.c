@@ -223,9 +223,8 @@ static void checkhints(void)
                         break;
                     game.hintlc[hint] = 0;
                     return;
-                default:
+                default: // LCOV_EXCL_LINE
                     BUG(HINT_NUMBER_EXCEEDS_GOTO_LIST); // LCOV_EXCL_LINE
-                    break;
                 }
 
                 /* Fall through to hint display */
@@ -756,7 +755,7 @@ static void playermove( int motion)
                         croak();
                         return;
                     }
-                default:
+                default: // LCOV_EXCL_LINE
                     BUG(SPECIAL_TRAVEL_500_GT_L_GT_300_EXCEEDS_GOTO_LIST); // LCOV_EXCL_LINE
                 }
             }
@@ -1122,28 +1121,26 @@ Lclearobj:
         }
         if (command.id1 == ENTER && command.id2 != WORD_NOT_FOUND && command.id2 != WORD_EMPTY) {
             command.id1 = command.id2;
-	    command.type1 = command.type2;
-	    strncpy(command.raw1, command.raw2, LINESIZE - 1);
+            command.type1 = command.type2;
+            strncpy(command.raw1, command.raw2, LINESIZE - 1);
             command.id2 = WORD_EMPTY;
-	    command.type2 = NO_WORD_TYPE;
-	    strncpy(command.raw2, "", LINESIZE - 1);
+            command.type2 = NO_WORD_TYPE;
+            strncpy(command.raw2, "", LINESIZE - 1);
         } else {
             if (!((command.id1 != WATER && command.id1 != OIL) || (command.id2 != PLANT && command.id2 != DOOR))) {
-                if (AT(command.id2))
-		  {
-		    command.id2 = POUR;
-		    command.type2 = ACTION;
-		    strncpy(command.raw2, "POUR", LINESIZE - 1);
+                if (AT(command.id2)) {
+                    command.id2 = POUR;
+                    command.type2 = ACTION;
+                    strncpy(command.raw2, "POUR", LINESIZE - 1);
                     command.wd2 = token_to_packed("POUR");
-		  }
+                }
             }
-            if (command.id1 == CAGE && command.id2 == BIRD && HERE(CAGE) && HERE(BIRD))
-	      {
-		command.id1 = CARRY;
-		command.type1 = ACTION;
-		strncpy(command.raw2, "CATCH", LINESIZE - 1);
+            if (command.id1 == CAGE && command.id2 == BIRD && HERE(CAGE) && HERE(BIRD)) {
+                command.id1 = CARRY;
+                command.type1 = ACTION;
+                strncpy(command.raw2, "CATCH", LINESIZE - 1);
                 command.wd1 = token_to_packed("CATCH");
-	      }
+            }
         }
 Lookup:
         if (strncasecmp(command.raw1, "west", sizeof("west")) == 0) {
@@ -1155,9 +1152,9 @@ Lookup:
                 rspeak(GO_UNNEEDED);
         }
         packed_to_token(command.wd1, word1);
-	long defn;
-	enum wordtype type;
-	get_vocab_metadata(word1, &defn, &type);
+        long defn;
+        enum wordtype type;
+        get_vocab_metadata(word1, &defn, &type);
         if (command.id1 == WORD_NOT_FOUND) {
             if (fallback_handler(command))
                 continue;
@@ -1181,7 +1178,7 @@ Lookup:
         case SPECIAL:
             speak(specials[command.id1].message);
             goto Lclearobj;
-        default:
+        default: // LCOV_EXCL_LINE
             BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3); // LCOV_EXCL_LINE
         }
 
@@ -1197,13 +1194,13 @@ Lookup:
             goto Lookup;
         case GO_WORD2:
             /* Get second word for analysis. */
-	    command.id1 = command.id2;
-	    command.type1 = command.type2;
-	    strncpy(command.raw1, command.raw2, LINESIZE - 1);
-	    command.wd1 = command.wd2;
-	    command.id2 = WORD_EMPTY;
-	    command.type2 = NO_WORD_TYPE;
-	    command.raw2[0] = '\0';
+            command.id1 = command.id2;
+            command.type1 = command.type2;
+            strncpy(command.raw1, command.raw2, LINESIZE - 1);
+            command.wd1 = command.wd2;
+            command.id2 = WORD_EMPTY;
+            command.type2 = NO_WORD_TYPE;
+            command.raw2[0] = '\0';
             wordclear(&command.wd2);
             goto Lookup;
         case GO_UNKNOWN:
@@ -1220,7 +1217,7 @@ Lookup:
             /*  Oh dear, he's disturbed the dwarves. */
             rspeak(DWARVES_AWAKEN);
             terminate(endgame);
-        default:
+        default: // LCOV_EXCL_LINE
             BUG(ACTION_RETURNED_PHASE_CODE_BEYOND_END_OF_SWITCH); // LCOV_EXCL_LINE
         }
     }
