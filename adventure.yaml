@@ -2666,7 +2666,7 @@ arbitrary_messages:  !!omap
 - DWARF_SINGLE: 'There is a threatening little dwarf in the room with you!'
 - KNIFE_THROWN: 'One sharp nasty knife is thrown at you!'
 - SAYS_PLUGH: 'A hollow voice says "PLUGH".'
-#- GETS_YOU: 'It gets you!'
+- GETS_YOU: 'It gets you!'
 - MISSES_YOU: 'It misses!'
 - UNSURE_FACING: 'I am unsure how you are facing.  Use compass points or nearby objects.'
 - NO_INOUT_HERE: |-

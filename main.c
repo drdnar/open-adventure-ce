@@ -448,7 +448,7 @@ static bool dwarfmove(void)
         rspeak(stick > 1 ? MULTIPLE_HITS : (stick == 1 ? ONE_HIT : NONE_HIT), stick);
     } else {
         rspeak(KNIFE_THROWN);
-        rspeak(MISSES_YOU);
+        rspeak(stick ? GETS_YOU : MISSES_YOU);
     }
     if (stick == 0)
         return true;
