@@ -201,15 +201,14 @@ static int bigwords(long id)
              *  crossing. */
             if (game.place[EGGS] == LOC_NOWHERE && game.place[TROLL] == LOC_NOWHERE && game.prop[TROLL] == TROLL_UNPAID)
                 game.prop[TROLL] = TROLL_PAIDONCE;
-            int k;
             if (HERE(EGGS))
-                k = EGGS_VANISHED;
+                pspeak(EGGS, look, EGGS_VANISHED, true);
             else if (game.loc == objects[EGGS].plac)
-                k = EGGS_HERE;
+                pspeak(EGGS, look, EGGS_HERE, true);
             else
-                k = EGGS_DONE;
+                pspeak(EGGS, look, EGGS_DONE, true);
             move(EGGS, objects[EGGS].plac);
-            pspeak(EGGS, look, k, true);
+
             return GO_CLEAROBJ;
         }
     } else {

@@ -137,7 +137,7 @@ static bool fallback_handler(struct command_t command)
 /* fallback handler for commands not handled by FORTRANish parser */
 {
     long sv;
-    char buf[LINESIZE];
+    char buf[2 * LINESIZE + 1];
     sprintf(buf, "%s %s", command.raw1, command.raw2);
 
     if (sscanf(buf, "seed %ld", &sv) == 1) {
