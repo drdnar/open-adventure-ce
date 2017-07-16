@@ -357,7 +357,7 @@ hints:
       question: 'You''re missing only one other treasure.  Do you need help finding it?'
       hint: |-
         Once you've found all the other treasures, it is no longer possible to
-        locate the one you''re now missing.'
+        locate the one you're now missing.
 
 locations: !!omap
 - LOC_NOWHERE:
@@ -3224,7 +3224,7 @@ objects: !!omap
     - 'There are a few recent issues of "Spelunker Today" magazine here.'
     texts:
     - |-
-      I''m afraid the magazine is written in dwarvish.  But pencilled on one
+      I'm afraid the magazine is written in dwarvish.  But pencilled on one
       cover you see, "Please leave the magazines at the construction site."
 - DWARF:
     words: ['dwarf', 'dwarv']
@@ -3738,13 +3738,13 @@ obituaries:
         You are engulfed in a cloud of orange smoke.  Coughing and gasping,
         you emerge from the smoke and find....
   - query: |-
-        You clumsy oaf, you've done it again!  I don''t know how long I can
+        You clumsy oaf, you've done it again!  I don't know how long I can
         keep this up.  Do you want me to try reincarnating you again?
     yes_response: |-
         Okay, now where did I put my orange smoke?....  >POOF!<
         Everything disappears in a dense cloud of orange smoke.
   - query: |-
-        Now you''ve really done it!  I'm out of orange smoke!  You don''t expect
+        Now you've really done it!  I'm out of orange smoke!  You don't expect
         me to do a decent reincarnation without any orange smoke, do you?
     yes_response: 'Okay, if you''re so smart, do it yourself!  I''m leaving!'
 
