@@ -253,7 +253,7 @@ static int vbreak(verb_t verb, obj_t obj)
     switch (obj) {
     case MIRROR:
         if (game.closed) {
-            rspeak(BREAK_MIRROR);
+            state_change(MIRROR, MIRROR_BROKEN);
             return GO_DWARFWAKE;
         } else {
             rspeak(TOO_FAR);

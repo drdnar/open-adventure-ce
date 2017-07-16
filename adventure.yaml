@@ -2883,9 +2883,6 @@ arbitrary_messages:  !!omap
     information to escape?  Sorry, but this initial hint is all you get."
 - DONT_UNDERSTAND: &dont_understand 'I''m afraid I don''t understand.'
 - HAND_PASSTHROUGH: 'Your hand passes through it as though it weren''t there.'
-- BREAK_MIRROR: |-
-    You strike the mirror a resounding blow, whereupon it shatters into a
-    myriad tiny fragments.
 - PROD_DWARF: |-
     You prod the nearest dwarf, who wakes up grumpily, takes one look at
     you, curses, and grabs for his axe.
@@ -3274,7 +3271,15 @@ objects: !!omap
     inventory: '*mirror'
     locations: LOC_MIRRORCANYON
     immovable: true
-    descriptions: !!null
+    states: [MIRROR_UNBROKEN, MIRROR_BROKEN]
+    descriptions:
+    - ''
+    - ''
+    changes:
+    - ''
+    - |-
+        You strike the mirror a resounding blow, whereupon it shatters into a
+        myriad tiny fragments.
 - PLANT:
     words: ['plant', 'beans']
     inventory: '*plant'
