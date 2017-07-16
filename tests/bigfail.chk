@@ -1109,8 +1109,6 @@ a small pool of oil in one corner of the pit.
 
 Your bottle is now full of oil.
 
-> 
-
 > u
 
 You're at east end of Twopit Room.
@@ -1273,6 +1271,14 @@ There is a delicate, precious, ming vase here!
 
 OK
 
+> break vase
+
+You have taken the vase and hurled it delicately to the ground.
+
+> break vase
+
+It is beyond your power to do that.
+
 > se
 
 There is a threatening little dwarf in the room with you!
@@ -1425,10 +1431,6 @@ There is food here.
 > drop pillow
 
 OK
-
-> drop vase
-
-The vase is now resting, delicately, on a velvet pillow.
 
 > drop trident
 
@@ -1810,8 +1812,6 @@ There is an emerald here the size of a plover's egg!
 
 There is a jewel-encrusted trident here!
 
-There is a delicate, precious, ming vase here!
-
 A small velvet pillow lies on the floor.
 
 There is a platinum pyramid here, 8 inches on a side!
@@ -1857,8 +1857,6 @@ There is a richly-carved ebony statuette here!
 There is an emerald here the size of a plover's egg!
 
 There is a jewel-encrusted trident here!
-
-There is a delicate, precious, ming vase here!
 
 A small velvet pillow lies on the floor.
 
@@ -1963,6 +1961,8 @@ You're in large low room.
 > se
 
 You're in Oriental Room.
+
+The floor is littered with worthless shards of pottery.
 
 > se
 
@@ -2099,21 +2099,84 @@ OK
 
 > z
 
-OK
-
-> z
-
-OK
-
-> z
-
 Your lamp is getting dim.  You'd best go back for those batteries.
 
 OK
 
+> z
 
-You scored 233 out of a possible 430, using 350 turns.
+OK
+
+> z
+
+Tsk!  A wizard wouldn't have to take 350 turns.  This is going to cost
+you a couple of points.
+
+OK
+
+> s
+
+Dead end
+
+There are fresh batteries here.
+
+There is a massive vending machine here, swung back to reveal a
+southward passage.
+
+> take batteries
+
+Your lamp is getting dim.  I'm taking the liberty of replacing the
+batteries.
+
+OK
+
+> n
+
+You are in a little maze of twisting passages, all different.
+
+> back
+
+Sorry, but the path twisted and turned so much that I can't figure
+out which way to go to get back.
+
+You are in a little maze of twisting passages, all different.
+
+> n
+
+You are in a little maze of twisty passages, all different.
+
+> nw
+
+You are in a maze of twisty little passages, all different.
+
+> d
+
+You're at west end of long hall.
+
+> drink
+
+Drink what?
+
+> e
+
+You're at east end of long hall.
+
+> e
+
+You're at west end of Hall of Mists.
+
+> n
+
+You have crawled through a very low wide passage parallel to and north
+of the Hall of Mists.
+
+You're on west bank of fissure.
+
+A crystal bridge spans the fissure.
+
+
+You scored 217 out of a possible 430, using 362 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 
-To achieve the next higher rating, you need 18 more points.
+To achieve the next higher rating, you need 34 more points.

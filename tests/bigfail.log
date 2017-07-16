@@ -1,4 +1,5 @@
-## Bridge destruction; also test bivalve predicates and bear feeding. 
+## Test many nonlethal failure conditions
+# See comments in this log
 n
 seed 1838473132
 in
@@ -183,7 +184,6 @@ drop appendage
 e
 d
 get oil
-
 u
 w
 d
@@ -213,6 +213,9 @@ take trident
 nw
 s
 take vase
+# Test vase breakage
+break vase
+break vase
 se
 throw axe
 take axe
@@ -223,7 +226,7 @@ drop axe
 ne
 e
 n
-# Here we are at the Shell Room
+# Here we are at the Shell Room.  Fail to carry out bivalves
 take clam
 s
 drop clam
@@ -240,7 +243,6 @@ n
 off
 plugh
 drop pillow
-drop vase
 drop trident
 drop emerald
 drop ebony
@@ -325,7 +327,7 @@ feed bear
 attack bear
 # We'll need these when the game times out
 take coins
-# Back to fissure to test OVER
+# Back to fissure to vanish the bridge and then test OVER
 sw
 d
 se
@@ -361,3 +363,18 @@ z
 z
 z
 # Battery warning happens here.
+s
+take batteries
+# We now have 2500 more turns of life. Into the maze...
+n
+# Show that trying to back up in the maze fails
+back
+n
+nw
+d
+# Out of maze. Drink where nothing is eligible.
+drink
+e
+e
+# PARALLEL1 coverage
+n
