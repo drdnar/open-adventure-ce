@@ -2210,10 +2210,6 @@ There is a little axe here.
 
 Rough stone steps lead up the dome.
 
-> take axe
-
-OK
-
 > d
 
 You're in Hall of Mt King.
@@ -2316,13 +2312,164 @@ A large stalactite extends from the roof and almost reaches the floor
 below.  You could climb down it, and jump from it to the floor, but
 having done so you would be unable to reach it to climb back up.
 
-> d
+> n
 
-You are in a maze of twisty little passages, all alike.
+You are in a secret n/s canyon above a sizable passage.
+
+> n
+
+You're at junction of three secret canyons.
+
+> n
+
+There are faint rustling noises from the darkness behind you.
+
+You're at window on pit.
+
+The shadowy figure seems to be trying to attract your attention.
+
+> jump
+
+You are at the bottom of the pit with a broken neck.
+
+You clumsy oaf, you've done it again!  I don''t know how long I can
+keep this up.  Do you want me to try reincarnating you again?
+
+> y
+
+Okay, now where did I put my orange smoke?....  >POOF!<
+Everything disappears in a dense cloud of orange smoke.
+
+You're inside building.
+
+There is a richly-carved ebony statuette here!
+
+There is an emerald here the size of a plover's egg!
+
+There is a jewel-encrusted trident here!
+
+There is a platinum pyramid here, 8 inches on a side!
+
+There are diamonds here!
+
+There is an enormous ruby here!
+
+There are bars of silver here!
+
+There is a persian rug spread out on the floor!
+
+There is a large sparkling nugget of gold here!
+
+A precious jade necklace has been dropped here!
+
+There is precious jewelry here!
+
+> out
+
+You are standing at the end of a road before a small brick building.
+Around you is a forest.  A small stream flows out of the building and
+down a gully.
+
+There is a shiny brass lamp nearby.
+
+> take lamp
+
+OK
+
+> in
+
+You're inside building.
+
+There is a richly-carved ebony statuette here!
+
+There is an emerald here the size of a plover's egg!
+
+There is a jewel-encrusted trident here!
+
+There is a platinum pyramid here, 8 inches on a side!
+
+There are diamonds here!
+
+There is an enormous ruby here!
+
+There are bars of silver here!
+
+There is a persian rug spread out on the floor!
+
+There is a large sparkling nugget of gold here!
+
+A precious jade necklace has been dropped here!
+
+There is precious jewelry here!
+
+> downstream
+
+The stream flows out through a pair of 1 foot diameter sewer pipes.
+It would be advisable to use the exit.
+
+You are inside a building, a well house for a large spring.
+
+There is a richly-carved ebony statuette here!
+
+There is an emerald here the size of a plover's egg!
+
+There is a jewel-encrusted trident here!
+
+There is a platinum pyramid here, 8 inches on a side!
+
+There are diamonds here!
+
+There is an enormous ruby here!
+
+There are bars of silver here!
+
+There is a persian rug spread out on the floor!
+
+There is a large sparkling nugget of gold here!
+
+A precious jade necklace has been dropped here!
+
+There is precious jewelry here!
+
+> plugh
+
+>>Foof!<<
+
+It is now pitch dark.  If you proceed you will likely fall into a pit.
+
+> on lamp
+
+Your lamp is now on.
+
+You are in a large room, with a passage to the south, a passage to the
+west, and a wall of broken rock to the east.  There is a large "Y2" on
+a rock in the room's center.
+
+> s
+
+You're in n/s passage above e/w passage.
+
+> s
+
+You're in Hall of Mt King.
+
+> e
+
+You're in Hall of Mists.
+
+There is a little axe here.
+
+Rough stone steps lead up the dome.
+
+> take axe
+
+OK
+
+> 
 
 
-You scored 217 out of a possible 430, using 390 turns.
+You scored 207 out of a possible 430, using 402 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 
-To achieve the next higher rating, you need 34 more points.
+To achieve the next higher rating, you need 44 more points.

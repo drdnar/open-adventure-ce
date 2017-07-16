@@ -388,7 +388,6 @@ d
 e
 u
 throw axe
-take axe
 d
 n
 d
@@ -398,9 +397,9 @@ d
 listen
 u
 w
-# Coverage of LOC_THREEJUNCTION, LOC_WINDOW2, LOC_SECRET2,
-# LOC_TOPSTALACTITE. Only accessible via stalactite from big maze or
-# by random exit from Bedquilt.
+# Coverage of LOC_THREEJUNCTION, LOC_WINDOW2, LOC_SECRET2, LOC_TOPSTALACTITE,
+# LOC_NECKBROKE. Only accessible via stalactite from big maze or by random
+# exit from Bedquilt.
 bedquilt
 n
 n
@@ -412,5 +411,21 @@ n
 w
 s
 s
-d
-# In Maze All Alike.
+n
+n
+n
+jump
+y
+# Reincarnation, cover LOC_SEWER
+out
+take lamp
+in
+downstream
+plugh
+on lamp
+# Retrieve axe
+s
+s
+e
+take axe
+
