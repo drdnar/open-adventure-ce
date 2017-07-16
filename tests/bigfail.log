@@ -220,9 +220,7 @@ se
 throw axe
 take axe
 e
-take pillow
 w
-drop axe
 ne
 e
 n
@@ -327,6 +325,7 @@ feed bear
 attack bear
 # We'll need these when the game times out
 take coins
+take axe
 # Back to fissure to vanish the bridge and then test OVER
 sw
 d
@@ -378,7 +377,23 @@ e
 e
 # PARALLEL1 coverage
 n
-inven
+# If we go to hall of mists we'll meet a killer dwarf with the drop on us
+#e
+#e
+w
+w
+n
 e
+d
 e
-y
+u
+throw axe
+take axe
+d
+n
+d
+# Coverage of LOC_SMALLPIT and LOC_SMALLPITBRINK
+e
+d
+listen
+u
