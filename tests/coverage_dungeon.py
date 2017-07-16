@@ -219,7 +219,8 @@ if __name__ == "__main__":
             category["percent"] = (category["covered"] / float(category["total"])) * 100
 
             # render section header
-            cat_keys = list(category["messages"].items())[0][1].keys()
+            cat_messages = sorted(category["messages"].items())
+            cat_keys = cat_messages[0][1].keys()
             headers_html = ""
             colspan = 10 - len(cat_keys)
             for key in cat_keys:
@@ -227,7 +228,7 @@ if __name__ == "__main__":
             category_html = HTML_CATEGORY_HEADER.format(colspan=colspan, label=category["name"], cells=headers_html)
 
             # render message coverage row
-            for message_id, covered in sorted(category["messages"].items()):
+            for message_id, covered in cat_messages:
                 category_html_row = ""
                 for key, value in covered.items():
                     category_html_row += HTML_CATEGORY_COVERAGE_CELL.format("uncovered" if value != True else "covered")
