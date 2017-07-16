@@ -1103,7 +1103,6 @@ Lclearobj:
         if (!get_command_input(&command))
             return false;
 
-Lclosecheck:
         ++game.turns;
 
         if (closecheck()) {
@@ -1194,8 +1193,6 @@ Lookup:
             return true;
         case GO_TOP:
             continue;	/* back to top of main interpreter loop */
-        case GO_CHECKFOO:
-            goto Lclosecheck;
         case GO_LOOKUP:
             goto Lookup;
         case GO_WORD2:

@@ -246,6 +246,7 @@ drop emerald
 drop ebony
 take keys
 take food
+take coins
 plugh
 on
 s
@@ -322,6 +323,8 @@ up
 over
 feed bear
 attack bear
+# We'll need these when the game times out
+take coins
 # Back to fissure to test OVER
 sw
 d
@@ -338,3 +341,23 @@ w
 take rod
 wave rod
 across
+# Next, buy batteries but don't take them.
+wave rod
+across
+w
+w
+w
+s
+s
+sw
+se
+s
+s
+drop coins
+look
+n
+z
+z
+z
+z
+# Battery warning happens here.

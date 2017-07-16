@@ -1450,6 +1450,10 @@ OK
 
 OK
 
+> take coins
+
+OK
+
 > plugh
 
 >>Foof!<<
@@ -1728,7 +1732,7 @@ There are rare spices here!
 
 > take spices
 
-OK
+You can't carry anything more.  You'll have to drop something first.
 
 > drop keys
 
@@ -1826,8 +1830,6 @@ A precious jade necklace has been dropped here!
 
 There is precious jewelry here!
 
-There are many coins here!
-
 > inven
 
 You're not carrying anything.
@@ -1876,8 +1878,6 @@ A precious jade necklace has been dropped here!
 
 There is precious jewelry here!
 
-There are many coins here!
-
 > plugh
 
 >>Foof!<<
@@ -1910,9 +1910,9 @@ You're on sw side of chasm.
 
 There is an empty bottle here.
 
-Off to one side lies a glistening pearl!
+There are many coins here!
 
-There are rare spices here!
+Off to one side lies a glistening pearl!
 
 There is a golden chain lying in a heap on the floor!
 
@@ -1929,9 +1929,9 @@ You're on sw side of chasm.
 
 There is an empty bottle here.
 
-Off to one side lies a glistening pearl!
+There are many coins here!
 
-There are rare spices here!
+Off to one side lies a glistening pearl!
 
 There is a golden chain lying in a heap on the floor!
 
@@ -1947,6 +1947,10 @@ Don't be ridiculous!
 > attack bear
 
 For crying out loud, the poor thing is already dead!
+
+> take coins
+
+OK
 
 > sw
 
@@ -2020,9 +2024,96 @@ There is no way across the fissure.
 
 You're on east bank of fissure.
 
+> wave rod
 
-You scored 243 out of a possible 430, using 330 turns.
+A crystal bridge now spans the fissure.
+
+> across
+
+You're on west bank of fissure.
+
+A crystal bridge spans the fissure.
+
+> w
+
+You're at west end of Hall of Mists.
+
+> w
+
+You're at east end of long hall.
+
+> w
+
+You're at west end of long hall.
+
+> s
+
+You are in a maze of twisty little passages, all different.
+
+> s
+
+You are in a maze of twisting little passages, all different.
+
+> sw
+
+You are in a twisting little maze of passages, all different.
+
+> se
+
+You are in a twisting maze of little passages, all different.
+
+> s
+
+You are in a little maze of twisting passages, all different.
+
+> s
+
+Dead end
+
+There is a massive vending machine here, swung back to reveal a
+southward passage.
+
+> drop coins
+
+There are fresh batteries here.
+
+> look
+
+Sorry, but I am not allowed to give more detail.  I will repeat the
+long description of your location.
+
+Dead end
+
+There are fresh batteries here.
+
+There is a massive vending machine here, swung back to reveal a
+southward passage.
+
+> n
+
+You are in a little maze of twisting passages, all different.
+
+> z
+
+OK
+
+> z
+
+OK
+
+> z
+
+OK
+
+> z
+
+Your lamp is getting dim.  You'd best go back for those batteries.
+
+OK
+
+
+You scored 233 out of a possible 430, using 350 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 
-To achieve the next higher rating, you need 8 more points.
+To achieve the next higher rating, you need 18 more points.
