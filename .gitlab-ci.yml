@@ -19,7 +19,6 @@ binary:debug:
       - "*.o"
       - dungeon.c
       - dungeon.h
-      - "*.gcno"
 
 binary:release:
   stage: build
@@ -72,16 +71,12 @@ test:debug:
   before_script:
     - zypper install -y make gcc libedit-devel libasan3 libubsan0 python python2-PyYAML lcov
   script:
-    - make debug
-    - make check
-    - lcov -t "advent" -o advent.info -c -d .
-    - genhtml -o coverage advent.info
-    - cd tests
-    - ./coverage_dungeon.py
-    - cd ..
+    - make coverage
   artifacts:
     paths:
       - coverage
+  dependencies:
+    - binary:debug
 
 test:release:
   stage: test
