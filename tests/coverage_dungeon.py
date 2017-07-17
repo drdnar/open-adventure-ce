@@ -58,7 +58,12 @@ def search(needle, haystack):
     # Search for needle in haystack, first escaping needle for regex, then
     # replacing %s, %d, etc. with regex wildcards, so the variable messages
     # within the dungeon definition will actually match
-    needle = re.escape(needle) \
+        
+    if needle == None or needle == "" or needle == "NO_MESSAGE":
+        # if needle is empty, assume we're going to find an empty string
+        return True
+    
+    needle_san = re.escape(needle) \
              .replace("\\n", "\n") \
              .replace("\\t", "\t") \
              .replace("\%S", ".*") \
@@ -66,7 +71,7 @@ def search(needle, haystack):
              .replace("\%d", ".*") \
              .replace("\%V", ".*")
 
-    return re.search(needle, haystack)
+    return re.search(needle_san, haystack)
 
 def obj_coverage(objects, text, report):
     # objects have multiple descriptions based on state
@@ -78,26 +83,24 @@ def obj_coverage(objects, text, report):
                 if name not in report["messages"]:
                     report["messages"][name] = {"covered" : False}
                     report["total"] += 1
-                if report["messages"][name]["covered"] != True:
-                    if desc == None or desc == '' or search(desc, text):
-                        report["messages"][name]["covered"] = True
-                        report["covered"] += 1
+                if report["messages"][name]["covered"] != True and search(desc, text):
+                    report["messages"][name]["covered"] = True
+                    report["covered"] += 1
 
 def loc_coverage(locations, text, report):
     # locations have a long and a short description, that each have to
     # be checked seperately
     for name, loc in locations:
+        desc = loc["description"]
         if name not in report["messages"]:
             report["messages"][name] = {"long" : False, "short": False}
             report["total"] += 2
-        if report["messages"][name]["long"] != True:
-            if loc["description"]["long"] == None or loc["description"]["long"] == '' or search(loc["description"]["long"], text):
-                report["messages"][name]["long"] = True
-                report["covered"] += 1
-        if report["messages"][name]["short"] != True:
-            if loc["description"]["short"] == None or loc["description"]["short"] == '' or search(loc["description"]["short"], text):
-                report["messages"][name]["short"] = True
-                report["covered"] += 1
+        if report["messages"][name]["long"] != True and search(desc["long"], text):
+            report["messages"][name]["long"] = True
+            report["covered"] += 1
+        if report["messages"][name]["short"] != True and search(desc["short"], text):
+            report["messages"][name]["short"] = True
+            report["covered"] += 1
 
 def hint_coverage(obituaries, text, report):
     # hints have a "question" where the hint is offered, followed
@@ -136,20 +139,18 @@ def threshold_coverage(classes, text, report):
         if name not in report["messages"]:
             report["messages"][name] = {"covered" : "False"}
             report["total"] += 1
-        if report["messages"][name]["covered"] != True:
-            if item["message"] == None or item["message"] == "NO_MESSAGE" or search(item["message"], text):
-                report["messages"][name]["covered"] = True
-                report["covered"] += 1
+        if report["messages"][name]["covered"] != True and search(item["message"], text):
+            report["messages"][name]["covered"] = True
+            report["covered"] += 1
 
 def arb_coverage(arb_msgs, text, report):
     for name, message in arb_msgs:
         if name not in report["messages"]:
             report["messages"][name] = {"covered" : False}
             report["total"] += 1
-        if report["messages"][name]["covered"] != True:
-            if message == None or search(message, text):
-                report["messages"][name]["covered"] = True
-                report["covered"] += 1
+        if report["messages"][name]["covered"] != True and search(message, text):
+            report["messages"][name]["covered"] = True
+            report["covered"] += 1
 
 def specials_actions_coverage(items, text, report):
     # works for actions or specials
@@ -157,10 +158,9 @@ def specials_actions_coverage(items, text, report):
         if name not in report["messages"]:
             report["messages"][name] = {"covered" : False}
             report["total"] += 1
-        if report["messages"][name]["covered"] != True:
-            if item["message"] == None or item["message"] == "NO_MESSAGE" or search(item["message"], text):
-                report["messages"][name]["covered"] = True
-                report["covered"] += 1
+        if report["messages"][name]["covered"] != True and search(item["message"], text):
+            report["messages"][name]["covered"] = True
+            report["covered"] += 1
 
 def coverage_report(db, check_file_contents):
     # Create report for each catagory, including total items,  number of items
