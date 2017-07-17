@@ -2316,13 +2316,21 @@ having done so you would be unable to reach it to climb back up.
 
 You are in a secret n/s canyon above a sizable passage.
 
+> s
+
+You're at top of stalactite.
+
+> n
+
+There are faint rustling noises from the darkness behind you.
+
+You are in a secret n/s canyon above a sizable passage.
+
 > n
 
 You're at junction of three secret canyons.
 
 > n
-
-There are faint rustling noises from the darkness behind you.
 
 You're at window on pit.
 
@@ -2487,7 +2495,7 @@ The wind whistles coldly past your ears.
 
 > score
 
-You have garnered 207 out of a possible 430 points, using 406 turns.
+You have garnered 207 out of a possible 430 points, using 408 turns.
 
 > inven
 
@@ -2496,7 +2504,7 @@ Brass lantern
 Dwarf's axe
 
 > waste 2446
-Game limit is now 31
+Game limit is now 29
 
 You're in Hall of Mists.
 
@@ -2510,7 +2518,7 @@ best start wrapping this up.
 OK
 
 
-You scored 207 out of a possible 430, using 409 turns.
+You scored 207 out of a possible 430, using 411 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 
