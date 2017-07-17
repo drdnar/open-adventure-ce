@@ -908,8 +908,14 @@ static void lampcheck(void)
         if (HERE(BATTERY) && game.prop[BATTERY] == FRESH_BATTERIES && HERE(LAMP)) {
             rspeak(REPLACE_BATTERIES);
             game.prop[BATTERY] = DEAD_BATTERIES;
+#ifdef __unused__
+	    /* This code from the original game seems to have been faulty.
+	     * No tests ever passed the guard, and with the guard removed
+	     * the game hangs when the lamp limit is reached.  
+	     */
             if (TOTING(BATTERY))
                 drop(BATTERY, game.loc);
+#endif
             game.limit += BATTERYLIFE;
             game.lmwarn = false;
         } else if (!game.lmwarn && HERE(LAMP)) {
