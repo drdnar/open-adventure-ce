@@ -401,11 +401,14 @@ w
 # LOC_NECKBROKE. Only accessible via stalactite from big maze or by random
 # exit from Bedquilt.
 bedquilt
+z
+z
+z
 n
 n
 n
 n
-n
+# In secret canyon
 w
 n
 w
@@ -439,6 +442,6 @@ listen
 score
 inven
 # Timewarp forward to test exhaustion of replacement batteries
-waste 2446
+waste 2443
 z
 # MISSING_BATTERIES is uttered

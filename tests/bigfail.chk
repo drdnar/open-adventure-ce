@@ -2249,6 +2249,18 @@ You're in dirty passage.
 
 You're in Bedquilt.
 
+> z
+
+OK
+
+> z
+
+OK
+
+> z
+
+OK
+
 > n
 
 You have crawled around in some little holes and wound up back in the
@@ -2276,6 +2288,12 @@ You are in a secret canyon at a junction of three canyons, bearing
 north, south, and se.  The north one is as tall as the other two
 combined.
 
+> w
+
+There is no way to go that direction.
+
+You're at junction of three secret canyons.
+
 > n
 
 You're at a low window overlooking a huge pit, which extends up out of
@@ -2285,16 +2303,6 @@ Marks in the dust around the window would seem to indicate that
 someone has been here recently.  Directly across the pit from you and
 25 feet away there is a similar window looking into a lighted room.  A
 shadowy figure can be seen there peering back at you.
-
-The shadowy figure seems to be trying to attract your attention.
-
-> w
-
-You're at junction of three secret canyons.
-
-> n
-
-You're at window on pit.
 
 The shadowy figure seems to be trying to attract your attention.
 
@@ -2318,11 +2326,11 @@ You are in a secret n/s canyon above a sizable passage.
 
 > s
 
+There are faint rustling noises from the darkness behind you.
+
 You're at top of stalactite.
 
 > n
-
-There are faint rustling noises from the darkness behind you.
 
 You are in a secret n/s canyon above a sizable passage.
 
@@ -2495,7 +2503,7 @@ The wind whistles coldly past your ears.
 
 > score
 
-You have garnered 207 out of a possible 430 points, using 408 turns.
+You have garnered 207 out of a possible 430 points, using 410 turns.
 
 > inven
 
@@ -2503,8 +2511,8 @@ You are currently holding the following:
 Brass lantern
 Dwarf's axe
 
-> waste 2446
-Game limit is now 29
+> waste 2443
+Game limit is now 30
 
 You're in Hall of Mists.
 
@@ -2518,7 +2526,7 @@ best start wrapping this up.
 OK
 
 
-You scored 207 out of a possible 430, using 411 turns.
+You scored 207 out of a possible 430, using 413 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 
