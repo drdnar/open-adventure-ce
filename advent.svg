@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!--
+Copyright © 2017 Dr. Tobias Quathamer <toddy@debian.org>
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<svg width="128" height="128" version="1.1"
+  xmlns="http://www.w3.org/2000/svg">
+
+  <!-- gradient for the brass body -->
+  <linearGradient id="brass">
+    <stop offset="5%" stop-color="#b5a642" />
+    <stop offset="95%" stop-color="#e7d874" />
+  </linearGradient>
+
+  <!-- body of lamp -->
+  <path d="m40,118 c-6,0 -8,2 -8,8 h64 c0,-6 -2,-8 -8,-8"
+    fill="url(#brass)" stroke="black" stroke-width="1" />
+  <rect x="40" y="98" width="48" height="20"
+    fill="url(#brass)" stroke="black" stroke-width="1" />
+
+  <!-- glass around lamp light -->
+  <rect x="45" y="78" width="38" height="20"
+    fill="#ddd" stroke="black" stroke-width="1" />
+
+  <!-- gradient for the flame -->
+  <linearGradient id="flame" gradientTransform="rotate(90)">
+    <stop offset="20%" stop-color="yellow" />
+    <stop offset="100%" stop-color="#fa0" />
+  </linearGradient>
+
+  <!-- flame -->
+  <path d="m59,98 c-2,-4 -2,-6 1,-10 c2,-2.67 2,-3 4,-7 c2,4 2,4.33 4,7 c3,4 3,6 1,10 z"
+    fill="url(#flame)" stroke="black" stroke-width="1" />
+
+  <!-- brass bars around glass -->
+  <rect x="40" y="78" width="2" height="20"
+    fill="#b5a642" stroke="black" stroke-width="1" />
+  <rect x="50" y="78" width="2" height="20"
+    fill="#bfb04c" stroke="black" stroke-width="1" />
+  <rect x="76" y="78" width="2" height="20"
+    fill="#ddce6a" stroke="black" stroke-width="1" />
+  <rect x="86" y="78" width="2" height="20"
+    fill="#e7d874" stroke="black" stroke-width="1" />
+
+  <!-- top brass plate -->
+  <rect x="40" y="76" width="48" height="2"
+    fill="url(#brass)" stroke="black" stroke-width="1" />
+
+  <!-- gradient for the metal mesh -->
+  <linearGradient id="meshcolor">
+    <stop offset="5%" stop-color="#888" />
+    <stop offset="95%" stop-color="#aaa" />
+  </linearGradient>
+
+  <!-- two lines of little holes -->
+  <pattern id="mesh" x="50" y="0" width="28" height="6" patternUnits="userSpaceOnUse">
+    <!-- rectangle for the metal background -->
+    <rect x="0" y="0" width="28" height="10" fill="url(#meshcolor)" />
+
+    <!-- first line of holes -->
+    <circle cx="2" cy="2" r="1" fill="white" />
+    <circle cx="5" cy="2" r="1" fill="white" />
+    <circle cx="8" cy="2" r="1" fill="white" />
+    <circle cx="11" cy="2" r="1" fill="white" />
+    <circle cx="14" cy="2" r="1" fill="white" />
+    <circle cx="17" cy="2" r="1" fill="white" />
+    <circle cx="20" cy="2" r="1" fill="white" />
+    <circle cx="23" cy="2" r="1" fill="white" />
+    <circle cx="26" cy="2" r="1" fill="white" />
+
+    <!-- second line of holes -->
+    <circle cx="0.5" cy="5" r="1" fill="white" />
+    <circle cx="3.5" cy="5" r="1" fill="white" />
+    <circle cx="6.5" cy="5" r="1" fill="white" />
+    <circle cx="9.5" cy="5" r="1" fill="white" />
+    <circle cx="12.5" cy="5" r="1" fill="white" />
+    <circle cx="15.5" cy="5" r="1" fill="white" />
+    <circle cx="18.5" cy="5" r="1" fill="white" />
+    <circle cx="21.5" cy="5" r="1" fill="white" />
+    <circle cx="24.5" cy="5" r="1" fill="white" />
+    <circle cx="27.5" cy="5" r="1" fill="white" />
+  </pattern>
+
+  <!-- metal mesh -->
+  <rect x="50" y="24" width="28" height="52"
+    fill="url(#mesh)" stroke="black" stroke-width="1" />
+
+  <!-- brass bars around mesh -->
+  <path d="m50,24 l-10,52 h2 l10,-52"
+    fill="#b5a642" stroke="black" stroke-width="1" />
+  <rect x="63" y="24" width="2" height="52"
+    fill="#cebf5b" stroke="black" stroke-width="1" />
+  <path d="m76,24 l10,52 h2 l-10,-52"
+    fill="#e7d874" stroke="black" stroke-width="1" />
+
+  <!-- hook on top, needs to be drawn before the lid -->
+  <path d="m63,19.5 v-5 a5,5 0 1,0 -5,-5 h-2 a7,7 0 1,1 9,6.7 v3.5"
+    fill="#cebf5b" stroke="black" stroke-width="1" />
+
+  <!-- top brass lid -->
+  <path d="m50,24 c12,-6 16,-6 28,0 z"
+    fill="url(#brass)" stroke="black" stroke-width="1" />
+
+</svg>
