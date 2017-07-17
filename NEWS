@@ -1,5 +1,8 @@
 = Open Adventure project news =
 
+Repoosoitory head:
+  Test suite has 100% code coverage.
+
 1.2: 2017-07-11::
   Under oldstyle, new-school single-letter command synonyms are ignored.
   Switched from linenoise to editline for new-style line input.

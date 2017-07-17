@@ -116,8 +116,7 @@ ugly and quite unreadable.
 Jason Ninneman and I have moved it to what is almost, but not quite,
 idiomatic modern C.  We refactored the right way, checking correctness
 against a comprehensive test suite that we built first and verified
-with coverage tools (we have over 98% coverage, with the remaining
-confined to exception cases that are very difficult to reach). This is
+with coverage tools (there is effectively 100% code coverage). This is
 what you are running when you do "make check".
 
 The move to modern C entailed some structural changes.  The most
