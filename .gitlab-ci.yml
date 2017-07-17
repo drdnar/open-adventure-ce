@@ -78,6 +78,13 @@ test:debug:
   dependencies:
     - binary:debug
 
+test:debug_clang:
+  stage: test
+  before_script:
+    - zypper install -y make clang libedit-devel python python2-PyYAML lcov
+  script:
+    - CC=clang make debug check
+
 test:release:
   stage: test
   before_script:
