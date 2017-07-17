@@ -2485,8 +2485,32 @@ OK
 
 The wind whistles coldly past your ears.
 
+> score
 
-You scored 207 out of a possible 430, using 405 turns.
+You have garnered 207 out of a possible 430 points, using 406 turns.
+
+> inven
+
+You are currently holding the following:
+Brass lantern
+Dwarf's axe
+
+> waste 2446
+Game limit is now 31
+
+You're in Hall of Mists.
+
+Rough stone steps lead up the dome.
+
+> z
+
+Your lamp is getting dim, and you're out of spare batteries.  You'd
+best start wrapping this up.
+
+OK
+
+
+You scored 207 out of a possible 430, using 409 turns.
 
 You may now consider yourself a "Seasoned Adventurer".
 

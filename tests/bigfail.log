@@ -432,3 +432,10 @@ s
 e
 take axe
 listen
+# At Hall of Mists
+score
+inven
+# Timewarp forward to test exhaustion of replacement batteries
+waste 2446
+z
+# MISSING_BATTERIES is uttered

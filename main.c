@@ -147,6 +147,11 @@ static bool fallback_handler(struct command_t command)
         --game.turns;
         return true;
     }
+    else if (sscanf(buf, "waste %ld", &sv) == 1) {
+        game.limit -= sv;
+        printf("Game limit is now %ld\n", game.limit);
+        return true;
+    }
     return false;
 }
 
