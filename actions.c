@@ -265,6 +265,7 @@ static int vbreak(verb_t verb, obj_t obj)
             game.fixed[VASE] = IS_FIXED;
             break;
         }
+	/* FALLTHRU */
     default:
         speak(actions[verb].message);
     }
@@ -591,6 +592,7 @@ static int eat(verb_t verb, obj_t obj)
     case INTRANSITIVE:
         if (!HERE(FOOD))
             return GO_UNKNOWN;
+	/* FALLTHRU */
     case FOOD:
         DESTROY(FOOD);
         rspeak(THANKS_DELICIOUS);
