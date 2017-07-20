@@ -384,8 +384,8 @@ def get_objects(obj):
             if labels:
                 global statedefines
                 statedefines += "/* States for %s */\n" % item[0]
-                for (i, label) in enumerate(labels):
-                    statedefines += "#define %s\t%d\n" % (label, i)
+                for (j, label) in enumerate(labels):
+                    statedefines += "#define %s\t%d\n" % (label, j)
                 statedefines += "\n"
         sounds_str = ""
         if attr.get("sounds") == None:
