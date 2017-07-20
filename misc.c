@@ -462,7 +462,7 @@ int get_motion_vocab_id(const char* word)
 {
     for (int i = 0; i < NMOTIONS; ++i) {
         for (int j = 0; j < motions[i].words.n; ++j) {
-            if (strcasecmp(word, motions[i].words.strs[j]) == 0 && (strlen(word) > 1 ||
+            if (strncasecmp(word, motions[i].words.strs[j], TOKLEN) == 0 && (strlen(word) > 1 ||
                     strchr(ignore, word[0]) == NULL ||
                     !settings.oldstyle))
                 return (i);
@@ -477,7 +477,7 @@ int get_object_vocab_id(const char* word)
 {
     for (int i = 0; i < NOBJECTS + 1; ++i) { // FIXME: the + 1 should go when 1-indexing for objects is removed
         for (int j = 0; j < objects[i].words.n; ++j) {
-            if (strcasecmp(word, objects[i].words.strs[j]) == 0)
+            if (strncasecmp(word, objects[i].words.strs[j], TOKLEN) == 0)
                 return (i);
         }
     }
@@ -490,7 +490,7 @@ int get_action_vocab_id(const char* word)
 {
     for (int i = 0; i < NACTIONS; ++i) {
         for (int j = 0; j < actions[i].words.n; ++j) {
-            if (strcasecmp(word, actions[i].words.strs[j]) == 0 && (strlen(word) > 1 ||
+            if (strncasecmp(word, actions[i].words.strs[j], TOKLEN) == 0 && (strlen(word) > 1 ||
                     strchr(ignore, word[0]) == NULL ||
                     !settings.oldstyle))
                 return (i);
@@ -505,7 +505,7 @@ int get_special_vocab_id(const char* word)
 {
     for (int i = 0; i < NSPECIALS; ++i) {
         for (int j = 0; j < specials[i].words.n; ++j) {
-            if (strcasecmp(word, specials[i].words.strs[j]) == 0)
+            if (strncasecmp(word, specials[i].words.strs[j], TOKLEN) == 0)
                 return (i);
         }
     }
