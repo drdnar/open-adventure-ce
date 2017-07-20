@@ -1144,18 +1144,19 @@ static int rub(verb_t verb, obj_t obj)
 static int say(struct command_t *command)
 /* Say.  Echo WD2. Magic words override. */
 {
-    long wd;
-    enum wordtype type;
-    get_vocab_metadata(command->raw2, &wd, &type);
-    if (wd == XYZZY ||
-        wd == PLUGH ||
-        wd == PLOVER ||
-        wd == FEE ||
-        wd == FIE ||
-        wd == FOE ||
-        wd == FOO ||
-        wd == FUM ||
-        wd == PART) {
+    if (command->type2 == MOTION &&
+	(command->id2 == XYZZY ||
+	 command->id2 == PLUGH ||
+	 command->id2 == PLOVER)) {
+	return GO_WORD2;
+    }
+    if (command->type2 == ACTION &&
+        (command->id2 == FEE ||
+	 command->id2 == FIE ||
+	 command->id2 == FOE ||
+	 command->id2 == FOO ||
+	 command->id2 == FUM ||
+	 command->id2 == PART)) {
         return GO_WORD2;
     }
     sspeak(OKEY_DOKEY, command->raw2);
