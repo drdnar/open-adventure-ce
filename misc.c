@@ -378,7 +378,7 @@ bool yes(const char* question, const char* yes_response, const char* no_response
 
 /*  Data structure  routines */
 
-int get_motion_vocab_id(const char* word)
+static int get_motion_vocab_id(const char* word)
 // Return the first motion number that has 'word' as one of its words.
 {
     for (int i = 0; i < NMOTIONS; ++i) {
@@ -393,7 +393,7 @@ int get_motion_vocab_id(const char* word)
     return (WORD_NOT_FOUND);
 }
 
-int get_object_vocab_id(const char* word)
+static int get_object_vocab_id(const char* word)
 // Return the first object number that has 'word' as one of its words.
 {
     for (int i = 0; i < NOBJECTS + 1; ++i) { // FIXME: the + 1 should go when 1-indexing for objects is removed
@@ -406,7 +406,7 @@ int get_object_vocab_id(const char* word)
     return (WORD_NOT_FOUND);
 }
 
-int get_action_vocab_id(const char* word)
+static int get_action_vocab_id(const char* word)
 // Return the first motion number that has 'word' as one of its words.
 {
     for (int i = 0; i < NACTIONS; ++i) {
@@ -421,7 +421,7 @@ int get_action_vocab_id(const char* word)
     return (WORD_NOT_FOUND);
 }
 
-int get_special_vocab_id(const char* word)
+static int get_special_vocab_id(const char* word)
 // Return the first special number that has 'word' as one of its words.
 {
     for (int i = 0; i < NSPECIALS; ++i) {
