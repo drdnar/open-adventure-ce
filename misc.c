@@ -23,73 +23,6 @@ static void* xmalloc(size_t size)
     return (ptr);
 }
 
-void packed_to_token(long packed, char token[TOKLEN + 1])
-{
-    // The advent->ascii mapping.
-    const char advent_to_ascii[] = {
-        ' ', '!', '"', '#', '$', '%', '&', '\'',
-        '(', ')', '*', '+', ',', '-', '.', '/',
-        '0', '1', '2', '3', '4', '5', '6', '7',
-        '8', '9', ':', ';', '<', '=', '>', '?',
-        '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G',
-        'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
-        'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
-        'X', 'Y', 'Z', '\0', '\0', '\0', '\0', '\0',
-    };
-
-    // Unpack and map back to ASCII.
-    for (int i = 0; i < 5; ++i) {
-        char advent = (packed >> i * 6) & 63;
-        token[i] = advent_to_ascii[(int) advent];
-    }
-
-    // Ensure the last character is \0.
-    token[5] = '\0';
-
-    // Replace trailing whitespace with \0.
-    for (int i = 4; i >= 0; --i) {
-        if (token[i] == ' ' ||
-            token[i] == '\t')
-            token[i] = '\0';
-        else
-            break;
-    }
-}
-
-long token_to_packed(const char token[])
-{
-    const char ascii_to_advent[] = {
-        63, 63, 63, 63, 63, 63, 63, 63,
-        63, 63, 63, 63, 63, 63, 63, 63,
-        63, 63, 63, 63, 63, 63, 63, 63,
-        63, 63, 63, 63, 63, 63, 63, 63,
-
-        0, 1, 2, 3, 4, 5, 6, 7,
-        8, 9, 10, 11, 12, 13, 14, 15,
-        16, 17, 18, 19, 20, 21, 22, 23,
-        24, 25, 26, 27, 28, 29, 30, 31,
-        32, 33, 34, 35, 36, 37, 38, 39,
-        40, 41, 42, 43, 44, 45, 46, 47,
-        48, 49, 50, 51, 52, 53, 54, 55,
-        56, 57, 58, 59, 60, 61, 62, 63,
-
-        63, 63, 63, 63, 63, 63, 63, 63,
-        63, 63, 63, 63, 63, 63, 63, 63,
-        63, 63, 63, 63, 63, 63, 63, 63,
-        63, 63, 63, 63, 63, 63, 63, 63,
-    };
-
-    size_t t_len = strlen(token);
-    if (t_len > TOKLEN)
-        t_len = TOKLEN;
-    long packed = 0;
-    for (size_t i = 0; i < t_len; ++i) {
-        char mapped = ascii_to_advent[(int) toupper(token[i])];
-        packed |= (mapped << (6 * i));
-    }
-    return (packed);
-}
-
 void tokenize(char* raw, struct command_t *cmd)
 {
     memset(cmd, '\0', sizeof(struct command_t));
@@ -122,13 +55,6 @@ void tokenize(char* raw, struct command_t *cmd)
     }
 }
 
-/* Hide the fact that wods are corrently packed longs */
-
-void wordclear(token_t *v)
-{
-    *v = 0;
-}
-
 /*  I/O routines (speak, pspeak, rspeak, sspeak, get_input, yes) */
 
 static void vspeak(const char* msg, bool blank, va_list ap)
@@ -151,10 +77,10 @@ static void vspeak(const char* msg, bool blank, va_list ap)
     char* rendered = xmalloc(size);
     char* renderp = rendered;
 
-    // Handle format specifiers (including the custom %C, %L, %S) by
+    // Handle format specifiers (including the custom %S) by
     // adjusting the parameter accordingly, and replacing the
     // specifier with %s.
-    long previous_arg = 0;
+    bool pluralize = false;
     for (int i = 0; i < msglen; i++) {
         if (msg[i] != '%') {
             /* Ugh.  Least obtrusive way to deal with artifacts "on the floor"
@@ -169,25 +95,25 @@ static void vspeak(const char* msg, bool blank, va_list ap)
                 size--;
             }
         } else {
-            long arg = va_arg(ap, long);
-            if (arg == -1)
-                arg = 0; // LCOV_EXCL_LINE - don't think we can get here.
             i++;
             // Integer specifier. In order to accommodate the fact
             // that PARMS can have both legitimate integers *and*
             // packed tokens, stringify everything. Future work may
             // eliminate the need for this.
             if (msg[i] == 'd') {
+		long arg = va_arg(ap, long);
                 int ret = snprintf(renderp, size, "%ld", arg);
                 if (ret < size) {
                     renderp += ret;
                     size -= ret;
                 }
+		pluralize = (arg != 1);
             }
 
             // Unmodified string specifier.
             if (msg[i] == 's') {
-                packed_to_token(arg, renderp); /* unpack directly to destination */
+		char *arg = va_arg(ap, char *);
+                strncat(renderp, arg, size);
                 size_t len = strlen(renderp);
                 renderp += len;
                 size -= len;
@@ -195,7 +121,8 @@ static void vspeak(const char* msg, bool blank, va_list ap)
 
             // Singular/plural specifier.
             if (msg[i] == 'S') {
-                if (previous_arg > 1) { // look at the *previous* parameter (which by necessity must be numeric)
+		// look at the *previous* numeric parameter
+                if (pluralize) {
                     *renderp++ = 's';
                     size--;
                 }
@@ -208,8 +135,6 @@ static void vspeak(const char* msg, bool blank, va_list ap)
                 renderp += len;
                 size -= len;
             }
-
-            previous_arg = arg;
         }
     }
     *renderp = 0;

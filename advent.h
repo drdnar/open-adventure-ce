@@ -191,10 +191,8 @@ struct command_t {
     enum speechpart part;
     verb_t verb;
     obj_t   obj;
-    token_t wd1;
-    token_t wd2;
-    long id1;
-    long id2;
+    token_t id1;
+    token_t id2;
     char raw1[LINESIZE], raw2[LINESIZE];
     enum wordtype type1;
     enum wordtype type2;
@@ -203,8 +201,6 @@ struct command_t {
 extern struct game_t game;
 extern struct settings_t settings;
 
-extern void packed_to_token(long, char token[]);
-extern long token_to_packed(const char token[]);
 extern void tokenize(char*, struct command_t *);
 extern void wordclear(token_t *);
 extern void speak(const char*, ...);

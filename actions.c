@@ -930,8 +930,7 @@ static int listen(void)
          * depending on whether player has drunk dragon's blood. */
         if (i == BIRD)
             mi += 3 * game.blooded;
-        long packed_zzword = token_to_packed(game.zzword);
-        pspeak(i, hear, mi, true, packed_zzword);
+        pspeak(i, hear, mi, true, game.zzword);
         rspeak(NO_MESSAGE);
         if (i == BIRD && mi == BIRD_ENDSTATE)
             DESTROY(BIRD);
