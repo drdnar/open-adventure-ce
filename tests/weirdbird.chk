@@ -191,8 +191,34 @@ The bird flies agitatedly about the cage.
 
 The little bird is now dead.  Its body disappears.
 
+> grate
 
-You scored 30 out of a possible 430, using 32 turns.
+You're below the grate.
+
+The grate is open.
+
+> up
+
+You're outside grate.
+
+The grate is open.
+
+> n
+
+You're at slit in streambed.
+
+> n
+
+You're in valley.
+
+> grate
+
+You're outside grate.
+
+The grate is open.
+
+
+You scored 30 out of a possible 430, using 37 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 

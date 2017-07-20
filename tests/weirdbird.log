@@ -36,3 +36,9 @@ take bird
 get rod
 wave rod
 attack bird
+# Also, test grare as a motion verb.
+grate
+up
+n
+n
+grate
