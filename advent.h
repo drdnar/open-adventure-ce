@@ -137,25 +137,25 @@ struct game_t {
      *	3+	Dwarves are mad (increases their accuracy) */
     long dflag;
 
-    long dkill;
-    long dtotal;
-    long foobar;                 // current progress in saying "FEE FIE FOE FOO".
+    long dkill;                  // dwarves killed
+    long dtotal;                 // total dwarves (including pirate)
+    long foobar;                 // progress in saying "FEE FIE FOE FOO".
     long holdng;                 // number of objects being carried
     long igo;                    // # uses of "go" instead of a direction
     long iwest;                  // # times he's said "west" instead of "w"
-    long knfloc;                 // 0 if no knife here, loc if knife , -1 after caveat
+    long knfloc;                 // knife location; 0 if none, -1 after caveat
     long limit;                  // lifetime of lamp (not set here)
     bool lmwarn;                 // has player been warned about lamp going dim?
-    long loc;
-    long newloc;
+    loc_t loc;                   // where player is now
+    loc_t newloc;                // where player is going
     bool novice;                 // asked for instructions at start-up?
     long numdie;                 // number of times killed so far
-    long oldloc;
-    long oldlc2;
-    long oldobj;
+    loc_t oldloc;                // where player was
+    loc_t oldlc2;                // where player was two moves ago 
+    obj_t oldobj;                // last object player handled
     bool panic;                  // has player found out he's trapped?
     long saved;                  // point penalty for saves
-    long tally;
+    long tally;                  // count of treasures gained
     long thresh;
     long trndex;
     long trnluz;                 // # points lost so far due to turns used
