@@ -109,7 +109,7 @@ enum phase_codes {
     GO_DWARFWAKE,
 };
 
-typedef long token_t;  // word token - someday this will be char[TOKLEN+1] */
+typedef long token_t;  // token index */
 typedef long vocab_t;  // index into a vocabulary array */
 typedef long verb_t;   // index into an actions array */
 typedef long obj_t;    // index into the object array */
@@ -122,7 +122,7 @@ struct game_t {
     long chloc;
     long chloc2;
     long clock1;                 // # turns from finding last treasure till closing
-    long clock2;                 // # turns from first warning till blinding flash
+    long clock2;                 // # turns from warning till blinding flash
     bool clshnt;                 // has player read the clue in the endgame?
     bool closed;                 // whether we're all the way closed
     bool closng;                 // whether it's closing time yet
@@ -141,8 +141,8 @@ struct game_t {
     long dtotal;
     long foobar;                 // current progress in saying "FEE FIE FOE FOO".
     long holdng;                 // number of objects being carried
-    long igo;                    // How many times he's said "go" instead of the direction
-    long iwest;                  // How many times he's said "west" instead of "w"
+    long igo;                    // # uses of "go" instead of a direction
+    long iwest;                  // # times he's said "west" instead of "w"
     long knfloc;                 // 0 if no knife here, loc if knife , -1 after caveat
     long limit;                  // lifetime of lamp (not set here)
     bool lmwarn;                 // has player been warned about lamp going dim?
