@@ -10,9 +10,9 @@
 #include "advent.h"
 #include "dungeon.h"
 
-static void* xmalloc(size_t size)
+static void* xcalloc(size_t size)
 {
-    void* ptr = malloc(size);
+    void* ptr = calloc(size, 1);
     if (ptr == NULL) {
         // LCOV_EXCL_START
         // exclude from coverage analysis because we can't simulate an out of memory error in testing
@@ -74,7 +74,7 @@ static void vspeak(const char* msg, bool blank, va_list ap)
 
     // Rendered string
     ssize_t size = 2000; /* msglen > 50 ? msglen*2 : 100; */
-    char* rendered = xmalloc(size);
+    char* rendered = xcalloc(size);
     char* renderp = rendered;
 
     // Handle format specifiers (including the custom %S) by
@@ -113,7 +113,7 @@ static void vspeak(const char* msg, bool blank, va_list ap)
             // Unmodified string specifier.
             if (msg[i] == 's') {
 		char *arg = va_arg(ap, char *);
-                strncat(renderp, arg, size-1);
+                strncat(renderp, arg, size - 1);
                 size_t len = strlen(renderp);
                 renderp += len;
                 size -= len;
@@ -204,7 +204,7 @@ void rspeak(vocab_t i, ...)
 void echo_input(FILE* destination, const char* input_prompt, const char* input)
 {
     size_t len = strlen(input_prompt) + strlen(input) + 1;
-    char* prompt_and_input = (char*) xmalloc(len);
+    char* prompt_and_input = (char*) xcalloc(len);
     strcpy(prompt_and_input, input_prompt);
     strcat(prompt_and_input, input);
     fprintf(destination, "%s\n", prompt_and_input);
@@ -289,7 +289,7 @@ bool silent_yes()
             continue;
         }
 
-        char* firstword = (char*) xmalloc(strlen(reply) + 1);
+        char* firstword = (char*) xcalloc(strlen(reply) + 1);
         sscanf(reply, "%s", firstword);
 
         free(reply);
@@ -343,7 +343,7 @@ bool yes(const char* question, const char* yes_response, const char* no_response
             continue;
         }
 
-        char* firstword = (char*) xmalloc(strlen(reply) + 1);
+        char* firstword = (char*) xcalloc(strlen(reply) + 1);
         sscanf(reply, "%s", firstword);
 
         free(reply);
