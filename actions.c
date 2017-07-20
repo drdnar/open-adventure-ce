@@ -1143,13 +1143,11 @@ static int rub(verb_t verb, obj_t obj)
 }
 
 static int say(struct command_t *command)
-/* Say.  Echo WD2 (or WD1 if no WD2 (SAY WHAT?, etc.).)  Magic words override. */
+/* Say.  Echo WD2. Magic words override. */
 {
-    char word2[TOKLEN + 1];
-    packed_to_token(command->wd2, word2);
     long wd;
     enum wordtype type;
-    get_vocab_metadata(word2, &wd, &type);
+    get_vocab_metadata(command->raw2, &wd, &type);
     if (wd == XYZZY ||
         wd == PLUGH ||
         wd == PLOVER ||
