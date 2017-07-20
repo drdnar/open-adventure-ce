@@ -1120,8 +1120,8 @@ Lclearobj:
         } else
             lampcheck();
 
-        if (command.id1 == ENTER && (command.id2 == STREAM ||
-                                     command.id2 == WATER)) {
+        if (command.type1 == MOTION && command.id1 == ENTER
+	    && (command.id2 == STREAM || command.id2 == WATER)) {
             if (LIQLOC(game.loc) == WATER)
                 rspeak(FEET_WET);
             else
@@ -1131,7 +1131,8 @@ Lclearobj:
         }
 
 	/* Ugly translationms to get around word polyvalence. */
-	if (command.type1 == ACTION && command.id1 == ENTER && command.id2 != WORD_NOT_FOUND && command.id2 != WORD_EMPTY) {
+	if (command.type1 == ACTION && command.id1 == SAY
+		&& command.id2 != WORD_NOT_FOUND && command.id2 != WORD_EMPTY) {
             command.id1 = command.id2;
             command.type1 = command.type2;
             strncpy(command.raw1, command.raw2, LINESIZE - 1);
