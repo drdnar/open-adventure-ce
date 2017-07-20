@@ -1355,7 +1355,10 @@ int action(struct command_t *command)
         if (command->raw2[0] != '\0' && command->verb != SAY)
             return GO_WORD2;
         if (command->verb == SAY)
-            command->obj = command->wd2;
+	    /* KEYS is not special, anything not NO_OBJECT or INTRANSITIVE
+	     * will do here. We're preventing interpretation as an intransitive
+	     * verb when the word is unknown. */
+            command->obj = command->raw2[0] != '\0' ? KEYS : NO_OBJECT;
         if (command->obj == NO_OBJECT ||
             command->obj == INTRANSITIVE) {
             /*  Analyse an intransitive verb (ie, no object given yet). */
