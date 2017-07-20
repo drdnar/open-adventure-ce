@@ -1305,20 +1305,7 @@ int action(struct command_t *command)
          *  location. */
         if (HERE(command->obj))
             /* FALL THROUGH */;
-        else if (command->obj == GRATE) {
-            if (game.loc == LOC_START ||
-                game.loc == LOC_VALLEY ||
-                game.loc == LOC_SLIT) {
-                command->obj = DEPRESSION;
-            }
-            if (game.loc == LOC_COBBLE ||
-                game.loc == LOC_DEBRIS ||
-                game.loc == LOC_AWKWARD ||
-                game.loc == LOC_BIRD ||
-                game.loc == LOC_PITTOP) {
-                command->obj = ENTRANCE;
-            }
-        } else if (command->obj == DWARF && atdwrf(game.loc) > 0)
+        else if (command->obj == DWARF && atdwrf(game.loc) > 0)
             /* FALL THROUGH */;
         else if ((LIQUID() == command->obj && HERE(BOTTLE)) ||
                  command->obj == LIQLOC(game.loc))

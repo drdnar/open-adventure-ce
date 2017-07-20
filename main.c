@@ -1126,7 +1126,22 @@ Lclearobj:
         }
 
         if (command.type1 == OBJECT) {
-            if (!((command.id1 != WATER && command.id1 != OIL) || (command.id2 != PLANT && command.id2 != DOOR))) {
+	    if (command.id1 == GRATE) {
+		command.type1 = MOTION;
+		if (game.loc == LOC_START ||
+		    game.loc == LOC_VALLEY ||
+		    game.loc == LOC_SLIT) {
+		    command.id1 = DEPRESSION;
+		}
+		if (game.loc == LOC_COBBLE ||
+		    game.loc == LOC_DEBRIS ||
+		    game.loc == LOC_AWKWARD ||
+		    game.loc == LOC_BIRD ||
+		    game.loc == LOC_PITTOP) {
+		    command.id1 = ENTRANCE;
+		}
+	    }
+	    if (!((command.id1 != WATER && command.id1 != OIL) || (command.id2 != PLANT && command.id2 != DOOR))) {
                 if (AT(command.id2)) {
                     command.id2 = POUR;
                     command.type2 = ACTION;

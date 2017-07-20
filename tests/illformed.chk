@@ -116,7 +116,7 @@ You're in front of building.
 
 > eat grate
 
-Don't be ridiculous!
+I see no grate here.
 
 > eat building
 
@@ -513,11 +513,11 @@ Sorry, I don't know the word "frob".
 
 > read grate
 
-I'm afraid I don't understand.
+I see no grate here.
 
 > grate
 
-What do you want to do with the grate?
+I see no grate here.
 
 > pour bottle
 
