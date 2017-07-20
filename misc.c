@@ -23,38 +23,6 @@ static void* xcalloc(size_t size)
     return (ptr);
 }
 
-void tokenize(char* raw, struct command_t *cmd)
-{
-    memset(cmd, '\0', sizeof(struct command_t));
-
-    /* Bound prefix on the %s would be needed to prevent buffer
-     * overflow.  but we shortstop this more simply by making each
-     * raw-input buffer as long as the enrire inout buffer. */
-    sscanf(raw, "%s%s", cmd->raw1, cmd->raw2);
-
-    /* (ESR) In oldstyle mode, simulate the uppercasing and truncating
-     * effect on raw tokens of packing them into sixbit characters, 5
-     * to a 32-bit word.  This is something the FORTRAN version did
-     * becuse archaic FORTRAN had no string types.  Don Wood's
-     * mechanical translation of 2.5 to C retained the packing and
-     * thus this misfeature.
-     *
-     * It's philosophically questionable whether this is the right
-     * thing to do even in oldstyle mode.  On one hand, the text
-     * mangling was not authorial intent, but a result of limitations
-     * in their tools. On the other, not simulating this misbehavior
-     * goes against the goal of making oldstyle as accurate as
-     * possible an emulation of the original UI.
-     */
-    if (settings.oldstyle) {
-        cmd->raw1[TOKLEN + TOKLEN] = cmd->raw2[TOKLEN + TOKLEN] = '\0';
-        for (size_t i = 0; i < strlen(cmd->raw1); i++)
-            cmd->raw1[i] = toupper(cmd->raw1[i]);
-        for (size_t i = 0; i < strlen(cmd->raw2); i++)
-            cmd->raw2[i] = toupper(cmd->raw2[i]);
-    }
-}
-
 /*  I/O routines (speak, pspeak, rspeak, sspeak, get_input, yes) */
 
 static void vspeak(const char* msg, bool blank, va_list ap)
@@ -101,18 +69,18 @@ static void vspeak(const char* msg, bool blank, va_list ap)
             // packed tokens, stringify everything. Future work may
             // eliminate the need for this.
             if (msg[i] == 'd') {
-		long arg = va_arg(ap, long);
+                long arg = va_arg(ap, long);
                 int ret = snprintf(renderp, size, "%ld", arg);
                 if (ret < size) {
                     renderp += ret;
                     size -= ret;
                 }
-		pluralize = (arg != 1);
+                pluralize = (arg != 1);
             }
 
             // Unmodified string specifier.
             if (msg[i] == 's') {
-		char *arg = va_arg(ap, char *);
+                char *arg = va_arg(ap, char *);
                 strncat(renderp, arg, size - 1);
                 size_t len = strlen(renderp);
                 renderp += len;
@@ -121,7 +89,7 @@ static void vspeak(const char* msg, bool blank, va_list ap)
 
             // Singular/plural specifier.
             if (msg[i] == 'S') {
-		// look at the *previous* numeric parameter
+                // look at the *previous* numeric parameter
                 if (pluralize) {
                     *renderp++ = 's';
                     size--;
@@ -211,7 +179,7 @@ void echo_input(FILE* destination, const char* input_prompt, const char* input)
     free(prompt_and_input);
 }
 
-int word_count(char* str)
+static int word_count(char* str)
 {
     char delims[] = " \t";
     int count = 0;
@@ -232,7 +200,7 @@ int word_count(char* str)
     return (count);
 }
 
-char* get_input()
+static char* get_input()
 {
     // Set up the prompt
     char input_prompt[] = "> ";
@@ -434,7 +402,7 @@ static int get_special_vocab_id(const char* word)
     return (WORD_NOT_FOUND);
 }
 
-void get_vocab_metadata(const char* word, long* id, enum wordtype* type)
+static void get_vocab_metadata(const char* word, long* id, enum wordtype* type)
 {
     /* Check for an empty string */
     if (strncmp(word, "", sizeof("")) == 0) {
@@ -483,6 +451,70 @@ void get_vocab_metadata(const char* word, long* id, enum wordtype* type)
     *id = WORD_NOT_FOUND;
     *type = NO_WORD_TYPE;
     return;
+}
+
+static void tokenize(char* raw, struct command_t *cmd)
+{
+    memset(cmd, '\0', sizeof(struct command_t));
+
+    /* Bound prefix on the %s would be needed to prevent buffer
+     * overflow.  but we shortstop this more simply by making each
+     * raw-input buffer as long as the enrire inout buffer. */
+    sscanf(raw, "%s%s", cmd->raw1, cmd->raw2);
+
+    /* (ESR) In oldstyle mode, simulate the uppercasing and truncating
+     * effect on raw tokens of packing them into sixbit characters, 5
+     * to a 32-bit word.  This is something the FORTRAN version did
+     * becuse archaic FORTRAN had no string types.  Don Wood's
+     * mechanical translation of 2.5 to C retained the packing and
+     * thus this misfeature.
+     *
+     * It's philosophically questionable whether this is the right
+     * thing to do even in oldstyle mode.  On one hand, the text
+     * mangling was not authorial intent, but a result of limitations
+     * in their tools. On the other, not simulating this misbehavior
+     * goes against the goal of making oldstyle as accurate as
+     * possible an emulation of the original UI.
+     */
+    if (settings.oldstyle) {
+        cmd->raw1[TOKLEN + TOKLEN] = cmd->raw2[TOKLEN + TOKLEN] = '\0';
+        for (size_t i = 0; i < strlen(cmd->raw1); i++)
+            cmd->raw1[i] = toupper(cmd->raw1[i]);
+        for (size_t i = 0; i < strlen(cmd->raw2); i++)
+            cmd->raw2[i] = toupper(cmd->raw2[i]);
+    }
+
+    /* populate command with parsed vocab metadata */
+    get_vocab_metadata(cmd->raw1, &(cmd->id1), &(cmd->type1));
+    get_vocab_metadata(cmd->raw2, &(cmd->id2), &(cmd->type2));
+}
+
+bool get_command_input(struct command_t *command)
+/* Get user input on stdin, parse and map to command */
+{
+    char inputbuf[LINESIZE];
+    char* input;
+
+    for (;;) {
+        input = get_input();
+        if (input == NULL)
+            return false;
+        if (word_count(input) > 2) {
+            rspeak(TWO_WORDS);
+            free(input);
+            continue;
+        }
+        if (strcmp(input, "") != 0)
+            break;
+        free(input);
+    }
+
+    strncpy(inputbuf, input, LINESIZE - 1);
+    free(input);
+
+    tokenize(inputbuf, command);
+
+    return true;
 }
 
 void juggle(obj_t object)

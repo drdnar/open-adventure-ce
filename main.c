@@ -986,36 +986,6 @@ static void listobjects(void)
     }
 }
 
-static bool get_command_input(struct command_t *command)
-{
-    char inputbuf[LINESIZE];
-    char* input;
-
-    for (;;) {
-        input = get_input();
-        if (input == NULL)
-            return false;
-        if (word_count(input) > 2) {
-            rspeak(TWO_WORDS);
-            free(input);
-            continue;
-        }
-        if (strcmp(input, "") != 0)
-            break;
-        free(input);
-    }
-
-    strncpy(inputbuf, input, LINESIZE - 1);
-    free(input);
-
-    tokenize(inputbuf, command);
-
-    get_vocab_metadata(command->raw1, &(command->id1), &(command->type1));
-    get_vocab_metadata(command->raw2, &(command->id2), &(command->type2));
-
-    return true;
-}
-
 static bool do_command()
 /* Get and execute a command */
 {
@@ -1116,7 +1086,7 @@ Lclearobj:
             lampcheck();
 
         if (command.type1 == MOTION && command.id1 == ENTER
-	    && (command.id2 == STREAM || command.id2 == WATER)) {
+            && (command.id2 == STREAM || command.id2 == WATER)) {
             if (LIQLOC(game.loc) == WATER)
                 rspeak(FEET_WET);
             else
@@ -1126,22 +1096,22 @@ Lclearobj:
         }
 
         if (command.type1 == OBJECT) {
-	    if (command.id1 == GRATE) {
-		command.type1 = MOTION;
-		if (game.loc == LOC_START ||
-		    game.loc == LOC_VALLEY ||
-		    game.loc == LOC_SLIT) {
-		    command.id1 = DEPRESSION;
-		}
-		if (game.loc == LOC_COBBLE ||
-		    game.loc == LOC_DEBRIS ||
-		    game.loc == LOC_AWKWARD ||
-		    game.loc == LOC_BIRD ||
-		    game.loc == LOC_PITTOP) {
-		    command.id1 = ENTRANCE;
-		}
-	    }
-	    if (!((command.id1 != WATER && command.id1 != OIL) || (command.id2 != PLANT && command.id2 != DOOR))) {
+            if (command.id1 == GRATE) {
+                command.type1 = MOTION;
+                if (game.loc == LOC_START ||
+                    game.loc == LOC_VALLEY ||
+                    game.loc == LOC_SLIT) {
+                    command.id1 = DEPRESSION;
+                }
+                if (game.loc == LOC_COBBLE ||
+                    game.loc == LOC_DEBRIS ||
+                    game.loc == LOC_AWKWARD ||
+                    game.loc == LOC_BIRD ||
+                    game.loc == LOC_PITTOP) {
+                    command.id1 = ENTRANCE;
+                }
+            }
+            if (!((command.id1 != WATER && command.id1 != OIL) || (command.id2 != PLANT && command.id2 != DOOR))) {
                 if (AT(command.id2)) {
                     command.id2 = POUR;
                     command.type2 = ACTION;

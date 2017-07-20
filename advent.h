@@ -200,18 +200,15 @@ struct command_t {
 extern struct game_t game;
 extern struct settings_t settings;
 
-extern void tokenize(char*, struct command_t *);
+extern bool get_command_input(struct command_t *);
 extern void wordclear(token_t *);
 extern void speak(const char*, ...);
 extern void sspeak(long msg, ...);
 extern void pspeak(vocab_t, enum speaktype, int, bool, ...);
 extern void rspeak(vocab_t, ...);
 extern void echo_input(FILE*, const char*, const char*);
-extern int word_count(char*);
-extern char* get_input(void);
 extern bool silent_yes(void);
 extern bool yes(const char*, const char*, const char*);
-extern void get_vocab_metadata(const char*, long*, enum wordtype*);
 extern void juggle(obj_t);
 extern void move(obj_t, loc_t);
 extern long put(obj_t, long, long);
