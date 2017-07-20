@@ -1130,16 +1130,7 @@ Lclearobj:
             goto Lclearobj;
         }
 
-	/* Ugly translationms to get around word polyvalence. */
-	if (command.type1 == ACTION && command.id1 == SAY
-		&& command.id2 != WORD_NOT_FOUND && command.id2 != WORD_EMPTY) {
-            command.id1 = command.id2;
-            command.type1 = command.type2;
-            strncpy(command.raw1, command.raw2, LINESIZE - 1);
-            command.id2 = WORD_EMPTY;
-            command.type2 = NO_WORD_TYPE;
-            strncpy(command.raw2, "", LINESIZE - 1);
-        } else if (command.type1 == OBJECT) {
+        if (command.type1 == OBJECT) {
             if (!((command.id1 != WATER && command.id1 != OIL) || (command.id2 != PLANT && command.id2 != DOOR))) {
                 if (AT(command.id2)) {
                     command.id2 = POUR;
@@ -1204,8 +1195,6 @@ Lookup:
             return true;
         case GO_TOP:
             continue;	/* back to top of main interpreter loop */
-        case GO_LOOKUP:
-            goto Lookup;
         case GO_WORD2:
             /* Get second word for analysis. */
             command.id1 = command.id2;
