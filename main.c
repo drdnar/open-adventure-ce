@@ -1024,7 +1024,6 @@ static bool do_command()
 /* Get and execute a command */
 {
     static struct command_t command;
-    char word1[TOKLEN + 1];
 
     command.verb = 0;
 
@@ -1156,10 +1155,6 @@ Lookup:
             if (++game.igo == 10)
                 rspeak(GO_UNNEEDED);
         }
-        packed_to_token(command.wd1, word1);
-        long defn;
-        enum wordtype type;
-        get_vocab_metadata(word1, &defn, &type);
         if (command.id1 == WORD_NOT_FOUND) {
             if (fallback_handler(command))
                 continue;
@@ -1167,7 +1162,7 @@ Lookup:
             sspeak(DONT_KNOW, command.raw1);
             goto Lclearobj;
         }
-        switch (type) {
+        switch (command.type1) {
         case NO_WORD_TYPE: // FIXME: treating NO_WORD_TYPE as a motion word is confusing
         case MOTION:
             playermove(command.id1);
@@ -1178,7 +1173,7 @@ Lookup:
             break;
         case ACTION:
             command.part = intransitive;
-            command.verb = defn;
+            command.verb = command.id1;
             break;
         case SPECIAL:
             speak(specials[command.id1].message);
