@@ -4,9 +4,13 @@ foo
 y
 seed 1635997320
 back
-version
-help
-info
+# Caused crashes and hangs before
+take grate
+no rub
+# Next three lines were buggy
+say axe
+say rub
+say grate
 _
 back
 eat grate
