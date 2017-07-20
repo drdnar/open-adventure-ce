@@ -989,8 +989,6 @@ static void listobjects(void)
 static bool get_command_input(struct command_t *command)
 {
     char inputbuf[LINESIZE];
-    char word1[TOKLEN + 1];
-    char word2[TOKLEN + 1];
     char* input;
 
     for (;;) {
