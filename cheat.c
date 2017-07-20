@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 {
     int ch;
     char *savefilename = NULL;
-    long version = 0;
+    int version = 0;
     FILE *fp = NULL;
 
     // Initialize game variables
@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
             printf("cheat: game.numdie = %ld\n", game.numdie);
             break;
         case 'l':
-            game.limit = (long)atoi(optarg);
+            game.limit = (turn_t)atoi(optarg);
             printf("cheat: game.limit = %ld\n", game.limit);
             break;
         case 's':
@@ -50,12 +50,12 @@ int main(int argc, char *argv[])
             printf("cheat: game.saved = %ld\n", game.saved);
             break;
         case 't':
-            game.turns = (long)atoi(optarg);
+            game.turns = (turn_t)atoi(optarg);
             printf("cheat: game.turns = %ld\n", game.turns);
             break;
         case 'v':
-            version = (long)atoi(optarg);
-            printf("cheat: version = %ld\n", version);
+            version = atoi(optarg);
+            printf("cheat: version = %d\n", version);
             break;
         case 'o':
             savefilename = optarg;

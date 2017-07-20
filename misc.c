@@ -121,7 +121,7 @@ void speak(const char* msg, ...)
     va_end(ap);
 }
 
-void sspeak(const long msg, ...)
+void sspeak(const int msg, ...)
 {
     va_list ap;
     va_start(ap, msg);
@@ -402,7 +402,7 @@ static int get_special_vocab_id(const char* word)
     return (WORD_NOT_FOUND);
 }
 
-static void get_vocab_metadata(const char* word, long* id, enum wordtype* type)
+static void get_vocab_metadata(const char* word, vocab_t* id, enum wordtype* type)
 {
     /* Check for an empty string */
     if (strncmp(word, "", sizeof("")) == 0) {
@@ -411,7 +411,7 @@ static void get_vocab_metadata(const char* word, long* id, enum wordtype* type)
         return;
     }
 
-    long ref_num;
+    vocab_t ref_num;
 
     ref_num = get_motion_vocab_id(word);
     if (ref_num != WORD_NOT_FOUND) {
@@ -535,7 +535,7 @@ void move(obj_t object, loc_t where)
  *  pick up objects which are not at any loc, since carry wants to
  *  remove objects from game.atloc chains. */
 {
-    long from;
+    loc_t from;
 
     if (object > NOBJECTS)
         from = game.fixed[object - NOBJECTS];
@@ -547,7 +547,7 @@ void move(obj_t object, loc_t where)
     drop(object, where);
 }
 
-long put(obj_t object, loc_t where, long pval)
+loc_t put(obj_t object, loc_t where, long pval)
 /*  put() is the same as move(), except it returns a value used to set up the
  *  negated game.prop values for the repository objects. */
 {

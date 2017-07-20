@@ -176,7 +176,7 @@ static int attack(struct command_t *command)
     return GO_CLEAROBJ;
 }
 
-static int bigwords(long id)
+static int bigwords(vocab_t id)
 /*  FEE FIE FOE FOO (AND FUM).  Advance to next state if given in proper order.
  *  Look up foo in special section of vocab to determine which word we've got.
  *  Last word zips the eggs back to the giant room (unless already there). */
@@ -910,7 +910,7 @@ static int light(verb_t verb, obj_t obj)
 static int listen(void)
 /*  Listen.  Intransitive only.  Print stuff based on object sound proprties. */
 {
-    long sound = locations[game.loc].sound;
+    vocab_t sound = locations[game.loc].sound;
     if (sound != SILENT) {
         rspeak(sound);
         if (!locations[game.loc].loud)
@@ -1163,7 +1163,7 @@ static int say(struct command_t *command)
     return GO_CLEAROBJ;
 }
 
-static int throw_support(long spk)
+static int throw_support(vocab_t spk)
 {
     rspeak(spk);
     drop(AXE, game.loc);
@@ -1221,7 +1221,7 @@ static int throw (struct command_t *command)
         if (randrange(NDWARVES + 1) < game.dflag) {
             return throw_support(DWARF_DODGES);
         } else {
-            long i = atdwrf(game.loc);
+            int i = atdwrf(game.loc);
             game.dseen[i] = false;
             game.dloc[i] = LOC_NOWHERE;
             return throw_support((++game.dkill == 1) ?

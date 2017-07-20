@@ -6,13 +6,13 @@
  * scoring and wrap-up
  */
 
-static long mxscor;	/* ugh..the price for having score() not exit. */
+static int mxscor;	/* ugh..the price for having score() not exit. */
 
 long score(enum termination mode)
 /* mode is 'scoregame' if scoring, 'quitgame' if quitting, 'endgame' if died
  * or won */
 {
-    long score = 0;
+    int score = 0;
 
     /*  The present scoring algorithm is as follows:
      *     Objective:          Points:        Present total possible:
@@ -40,7 +40,7 @@ long score(enum termination mode)
         if (!objects[i].is_treasure)
             continue;
         if (objects[i].inventory != 0) {
-            long k = 12;
+            int k = 12;
             if (i == CHEST)
                 k = 14;
             if (i > CHEST)
@@ -92,7 +92,7 @@ long score(enum termination mode)
     mxscor += 2;
 
     /* Deduct for hints/turns/saves. Hints < 4 are special; see database desc. */
-    for (long i = 0; i < NHINTS; i++) {
+    for (int i = 0; i < NHINTS; i++) {
         if (game.hinted[i])
             score = score - hints[i].penalty;
     }

@@ -114,6 +114,7 @@ typedef long vocab_t;  // index into a vocabulary array */
 typedef long verb_t;   // index into an actions array */
 typedef long obj_t;    // index into the object array */
 typedef long loc_t;    // index into the locations array */
+typedef long turn_t;   // turn counter or threshold */
 
 struct game_t {
     unsigned long lcg_a, lcg_c, lcg_m, lcg_x;
@@ -157,9 +158,9 @@ struct game_t {
     long saved;                  // point penalty for saves
     long tally;                  // count of treasures gained
     long thresh;                 // current threshold for endgame scoring tier
-    long trndex;                 // FIXME: not used, remove on next format bump
-    long trnluz;                 // # points lost so far due to turns used
-    long turns;                  // counts commands given (ignores yes/no)
+    turn_t trndex;               // FIXME: not used, remove on next format bump
+    turn_t trnluz;               // # points lost so far due to turns used
+    turn_t turns;                // counts commands given (ignores yes/no)
     bool wzdark;                 // whether the loc he's leaving was dark
     char zzword[TOKLEN + 1];     // randomly generated magic word from bird
     bool blooded;                // has player drunk of dragon's blood?
@@ -203,7 +204,7 @@ extern struct settings_t settings;
 extern bool get_command_input(struct command_t *);
 extern void wordclear(token_t *);
 extern void speak(const char*, ...);
-extern void sspeak(long msg, ...);
+extern void sspeak(int msg, ...);
 extern void pspeak(vocab_t, enum speaktype, int, bool, ...);
 extern void rspeak(vocab_t, ...);
 extern void echo_input(FILE*, const char*, const char*);
@@ -211,7 +212,7 @@ extern bool silent_yes(void);
 extern bool yes(const char*, const char*, const char*);
 extern void juggle(obj_t);
 extern void move(obj_t, loc_t);
-extern long put(obj_t, long, long);
+extern loc_t put(obj_t, long, long);
 extern void carry(obj_t, loc_t);
 extern void drop(obj_t, loc_t);
 extern long atdwrf(loc_t);

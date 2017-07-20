@@ -318,7 +318,7 @@ static bool dwarfmove(void)
 /* Dwarves move.  Return true if player survives, false if he dies. */
 {
     int kk, stick, attack;
-    long tk[21];
+    loc_t tk[21];
 
     /*  Dwarf stuff.  See earlier comments for description of
      *  variables.  Remember sixth dwarf is pirate and is thus
@@ -508,7 +508,7 @@ static void croak(void)
     }
 }
 
-static bool traveleq(long a, long b)
+static bool traveleq(int a, int b)
 /* Are two travel entries equal for purposes of skip after failed condition? */
 {
     return (travel[a].condtype == travel[b].condtype)
@@ -947,7 +947,7 @@ static void listobjects(void)
     if (!DARK(game.loc)) {
         ++game.abbrev[game.loc];
         for (int i = game.atloc[game.loc]; i != 0; i = game.link[i]) {
-            long obj = i;
+            obj_t obj = i;
             if (obj > NOBJECTS)
                 obj = obj - NOBJECTS;
             if (obj == STEPS && TOTING(NUGGET))
