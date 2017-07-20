@@ -113,7 +113,7 @@ static void vspeak(const char* msg, bool blank, va_list ap)
             // Unmodified string specifier.
             if (msg[i] == 's') {
 		char *arg = va_arg(ap, char *);
-                strncat(renderp, arg, size);
+                strncat(renderp, arg, size-1);
                 size_t len = strlen(renderp);
                 renderp += len;
                 size -= len;
