@@ -119,15 +119,15 @@ struct game_t {
     unsigned long lcg_a, lcg_c, lcg_m, lcg_x;
     long abbnum;                 // How often to print long descriptions
     score_t bonus;               // What kind of finishing bonus we are getting
-    long chloc;
-    long chloc2;
-    long clock1;                 // # turns from finding last treasure till closing
+    long chloc;                  // pirate chest location
+    long chloc2;                 // pirate chest alternate location
+    long clock1;                 // # turns from finding last treasure to close
     long clock2;                 // # turns from warning till blinding flash
     bool clshnt;                 // has player read the clue in the endgame?
     bool closed;                 // whether we're all the way closed
     bool closng;                 // whether it's closing time yet
     long conds;                  // min value for cond[loc] if loc has any hints
-    long detail;
+    long detail;                 // level of detail in descriptions
 
     /*  dflag controls the level of activation of dwarves:
      *	0	No dwarf stuff yet (wait until reaches Hall Of Mists)
@@ -156,25 +156,24 @@ struct game_t {
     bool panic;                  // has player found out he's trapped?
     long saved;                  // point penalty for saves
     long tally;                  // count of treasures gained
-    long thresh;
-    long trndex;
+    long thresh;                 // current threshold for endgame scoring tier
+    long trndex;                 // FIXME: not used, remove on next format bump
     long trnluz;                 // # points lost so far due to turns used
     long turns;                  // counts commands given (ignores yes/no)
     bool wzdark;                 // whether the loc he's leaving was dark
     char zzword[TOKLEN + 1];     // randomly generated magic word from bird
     bool blooded;                // has player drunk of dragon's blood?
-    long abbrev[NLOCATIONS + 1];
-    long atloc[NLOCATIONS + 1];
+    long abbrev[NLOCATIONS + 1]; // has location been seen?
+    long atloc[NLOCATIONS + 1];  // head of object linked list per location
     long dseen[NDWARVES + 1];    // true if dwarf has seen him
     loc_t dloc[NDWARVES + 1];    // location of dwarves, initially hard-wired in
     loc_t odloc[NDWARVES + 1];   // prior loc of each dwarf, initially garbage
-    loc_t fixed[NOBJECTS + 1];
-    long link[NOBJECTS * 2 + 1];
-    loc_t place[NOBJECTS + 1];
+    loc_t fixed[NOBJECTS + 1];   // fixed location of object (if  not IS_FREE)
+    long link[NOBJECTS * 2 + 1]; // object-list links
+    loc_t place[NOBJECTS + 1];   // location of object
     long hinted[NHINTS];         // hinted[i] = true iff hint i has been used.
     long hintlc[NHINTS];         // hintlc[i] = how long at LOC with cond bit i
-
-    long prop[NOBJECTS + 1];
+    long prop[NOBJECTS + 1];     // object state array */
 };
 
 /*
