@@ -106,9 +106,7 @@ full description of a place unless you explicitly ask me to.
 
 > _
 
-I don't know how to apply that word here.
-
-You're in front of building.
+Sorry, I don't know the word "_".
 
 > back
 
@@ -259,9 +257,7 @@ There is a bottle of water here.
 
 > out
 
-You are standing at the end of a road before a small brick building.
-Around you is a forest.  A small stream flows out of the building and
-down a gully.
+You're in front of building.
 
 > stream
 
@@ -282,7 +278,9 @@ Blasting requires dynamite.
 
 > building
 
-You're in front of building.
+You are standing at the end of a road before a small brick building.
+Around you is a forest.  A small stream flows out of the building and
+down a gully.
 
 > cave
 

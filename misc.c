@@ -99,10 +99,6 @@ void tokenize(char* raw, struct command_t *cmd)
      * raw-input buffer as long as the enrire inout buffer. */
     sscanf(raw, "%s%s", cmd->raw1, cmd->raw2);
 
-    // pack the substrings
-    cmd->wd1  = token_to_packed(cmd->raw1);
-    cmd->wd2  = token_to_packed(cmd->raw2);
-
     /* (ESR) In oldstyle mode, simulate the uppercasing and truncating
      * effect on raw tokens of packing them into sixbit characters, 5
      * to a 32-bit word.  This is something the FORTRAN version did

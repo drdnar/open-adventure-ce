@@ -1012,10 +1012,8 @@ static bool get_command_input(struct command_t *command)
 
     tokenize(inputbuf, command);
 
-    packed_to_token(command->wd1, word1);
-    packed_to_token(command->wd2, word2);
-    get_vocab_metadata(word1, &(command->id1), &(command->type1));
-    get_vocab_metadata(word2, &(command->id2), &(command->type2));
+    get_vocab_metadata(command->raw1, &(command->id1), &(command->type1));
+    get_vocab_metadata(command->raw2, &(command->id2), &(command->type2));
 
     return true;
 }
@@ -1135,14 +1133,12 @@ Lclearobj:
                     command.id2 = POUR;
                     command.type2 = ACTION;
                     strncpy(command.raw2, "POUR", LINESIZE - 1);
-                    command.wd2 = token_to_packed("POUR");
                 }
             }
             if (command.id1 == CAGE && command.id2 == BIRD && HERE(CAGE) && HERE(BIRD)) {
                 command.id1 = CARRY;
                 command.type1 = ACTION;
                 strncpy(command.raw2, "CATCH", LINESIZE - 1);
-                command.wd1 = token_to_packed("CATCH");
             }
         }
 
@@ -1195,7 +1191,6 @@ Lookup:
             command.id1 = command.id2;
             command.type1 = command.type2;
             strncpy(command.raw1, command.raw2, LINESIZE - 1);
-            command.wd1 = command.wd2;
             command.id2 = WORD_EMPTY;
             command.type2 = NO_WORD_TYPE;
             command.raw2[0] = '\0';
