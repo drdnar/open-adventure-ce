@@ -1145,7 +1145,7 @@ static int rub(verb_t verb, obj_t obj)
 static int say(struct command_t *command)
 /* Say.  Echo WD2 (or WD1 if no WD2 (SAY WHAT?, etc.).)  Magic words override. */
 {
-    if (command->wd2 > 0) {
+    if (command->raw2 != '\0') {
         command->wd1 = command->wd2;
         strncpy(command->raw1, command->raw2, LINESIZE - 1);
     }
@@ -1360,7 +1360,7 @@ int action(struct command_t *command)
 
     switch (command->part) {
     case intransitive:
-        if (command->wd2 > 0 && command->verb != SAY)
+        if (command->raw2[0] != '\0' && command->verb != SAY)
             return GO_WORD2;
         if (command->verb == SAY)
             command->obj = command->wd2;

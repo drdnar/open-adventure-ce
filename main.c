@@ -1214,7 +1214,6 @@ Lookup:
             command.id2 = WORD_EMPTY;
             command.type2 = NO_WORD_TYPE;
             command.raw2[0] = '\0';
-            wordclear(&command.wd2);
             goto Lookup;
         case GO_UNKNOWN:
             /*  Random intransitive verbs come here.  Clear obj just in case
