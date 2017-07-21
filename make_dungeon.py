@@ -108,12 +108,6 @@ typedef struct {{
   const bool noaction;
 }} action_t;
 
-typedef struct {{
-  const string_group_t words;
-  const char* message;
-  const bool noaction;
-}} special_t;
-
 enum condtype_t {{cond_goto, cond_pct, cond_carry, cond_with, cond_not}};
 enum desttype_t {{dest_goto, dest_special, dest_speak}};
 
@@ -145,7 +139,6 @@ extern const hint_t hints[];
 extern long conditions[];
 extern const motion_t motions[];
 extern const action_t actions[];
-extern const special_t specials[];
 extern const travelop_t travel[];
 extern const long tkey[];
 extern const char *ignore;
@@ -156,9 +149,8 @@ extern const char *ignore;
 #define NCLASSES	{}
 #define NDEATHS		{}
 #define NTHRESHOLDS	{}
-#define NMOTIONS        {}
+#define NMOTIONS    {}
 #define NACTIONS  	{}
-#define NSPECIALS       {}
 #define NTRAVEL		{}
 #define NKEYS		{}
 
@@ -181,10 +173,6 @@ enum motion_refs {{
 }};
 
 enum action_refs {{
-{}
-}};
-
-enum special_refs {{
 {}
 }};
 
@@ -235,10 +223,6 @@ const motion_t motions[] = {{
 }};
 
 const action_t actions[] = {{
-{}
-}};
-
-const special_t specials[] = {{
 {}
 }};
 
@@ -499,16 +483,16 @@ def get_motions(motions):
                     ignore += word.upper()
     return mot_str
 
-def get_specials(specials):
+def get_actions(actions):
     template = """    {{
         .words = {},
         .message = {},
         .noaction = {},
     }},
 """
-    spc_str = ""
-    for special in specials:
-        contents = special[1]
+    act_str = ""
+    for action in actions:
+        contents = action[1]
 
         if contents["words"] == None:
             words_str = get_string_group([])
@@ -525,14 +509,14 @@ def get_specials(specials):
         else:
             noaction = "true"
 
-        spc_str += template.format(words_str, message, noaction)
+        act_str += template.format(words_str, message, noaction)
         global ignore
         if contents.get("oldstyle", True) == False:
             for word in contents["words"]:
                 if len(word) == 1:
                     ignore += word.upper()
-    spc_str = spc_str[:-1] # trim trailing newline
-    return spc_str
+    act_str = act_str[:-1] # trim trailing newline
+    return act_str
 
 def bigdump(arr):
     out = ""
@@ -776,8 +760,7 @@ if __name__ == "__main__":
         get_hints(db["hints"], db["arbitrary_messages"]),
         get_condbits(db["locations"]),
         get_motions(db["motions"]),
-        get_specials(db["actions"]),
-        get_specials(db["specials"]),
+        get_actions(db["actions"]),
         bigdump(tkey),
         get_travel(travel), 
         ignore,
@@ -796,7 +779,6 @@ if __name__ == "__main__":
         len(db["turn_thresholds"]),
         len(db["motions"]),
         len(db["actions"]),
-        len(db["specials"]),
         len(travel),
         len(tkey),
         deathbird,
@@ -805,7 +787,6 @@ if __name__ == "__main__":
         get_refs(db["objects"]),
         get_refs(db["motions"]),
         get_refs(db["actions"]),
-        get_refs(db["specials"]),
         statedefines,
     )
 

@@ -152,8 +152,8 @@ def arb_coverage(arb_msgs, text, report):
             report["messages"][name]["covered"] = True
             report["covered"] += 1
 
-def specials_actions_coverage(items, text, report):
-    # works for actions or specials
+def actions_coverage(items, text, report):
+    # works for actions
     for name, item in items:
         if name not in report["messages"]:
             report["messages"][name] = {"covered" : False}
@@ -182,8 +182,7 @@ def coverage_report(db, check_file_contents):
         loc_coverage(db["locations"], chk, report["locations"])
         obit_coverage(db["obituaries"], chk, report["obituaries"])
         obj_coverage(db["objects"], chk, report["objects"])
-        specials_actions_coverage(db["actions"], chk, report["actions"])
-        specials_actions_coverage(db["specials"], chk, report["specials"])
+        actions_coverage(db["actions"], chk, report["actions"])
         threshold_coverage(db["classes"], chk, report["classes"])
         threshold_coverage(db["turn_thresholds"], chk, report["turn_thresholds"])
 

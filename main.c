@@ -1134,9 +1134,6 @@ Lookup:
                 command.part = intransitive;
             command.verb = command.id1;
             break;
-        case SPECIAL:
-            speak(specials[command.id1].message);
-            goto Lclearobj;
         case NUMERIC:
         default: // LCOV_EXCL_LINE
             BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3); // LCOV_EXCL_LINE

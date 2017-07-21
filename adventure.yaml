@@ -13,11 +13,6 @@
 # actions: Action words, grouped into synonyms, and their corresponding
 #    default messages. The 'oldstyle' attribute is as for motions.
 #
-# specials: Special action words, grouped into synonyms, and their
-#    messages. These differ from the regular action words above in that
-#    they only display their corresponding message; no other logic is
-#    invoked. In the future, these will be merged into the regular actions.
-#
 # hints: Each item contains a hint number, a hint label (used to
 #    generate the value macro for the hint) the number of turns he
 #    must be at the right loc(s) before triggering the hint, the
@@ -4026,11 +4021,5 @@ actions: !!omap
       \tOpen Adventure %V - http://www.catb.org/esr/open-adventure/
     words: ['versi']
     noaction: true
-
-# Specials no longer used, but this is still needed for now
-specials: !!omap
-- SPC_DELETEME:
-    message: 'Please delete this item'
-    words: ['null']
 
 # end

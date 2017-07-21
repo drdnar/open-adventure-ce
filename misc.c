@@ -386,19 +386,6 @@ static int get_action_vocab_id(const char* word)
     return (WORD_NOT_FOUND);
 }
 
-static int get_special_vocab_id(const char* word)
-// Return the first special number that has 'word' as one of its words.
-{
-    for (int i = 0; i < NSPECIALS; ++i) {
-        for (int j = 0; j < specials[i].words.n; ++j) {
-            if (strncasecmp(word, specials[i].words.strs[j], TOKLEN) == 0)
-                return (i);
-        }
-    }
-    // If execution reaches here, we didn't find the word.
-    return (WORD_NOT_FOUND);
-}
-
 static bool is_valid_int(const char *str) 
 /* Returns true if the string passed in is represents a valid integer, 
  * that could then be parsed by atoi() */
@@ -452,13 +439,6 @@ static void get_vocab_metadata(const char* word, vocab_t* id, enum wordtype* typ
     if (ref_num != WORD_NOT_FOUND) {
         *id = ref_num;
         *type = ACTION;
-        return;
-    }
-
-    ref_num = get_special_vocab_id(word);
-    if (ref_num != WORD_NOT_FOUND) {
-        *id = ref_num;
-        *type = SPECIAL;
         return;
     }
 
