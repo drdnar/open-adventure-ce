@@ -1139,7 +1139,7 @@ Lookup:
             BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3); // LCOV_EXCL_LINE
         }
 
-        switch (action(&command)) {
+        switch (action(command)) {
         case GO_TERMINATE:
             return true;
         case GO_MOVE:

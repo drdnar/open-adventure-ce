@@ -225,7 +225,7 @@ extern int suspend(void);
 extern int resume(void);
 extern int restore(FILE *);
 extern long initialise(void);
-extern int action(struct command_t *command);
+extern int action(struct command_t command);
 extern void state_change(obj_t, int);
 
 

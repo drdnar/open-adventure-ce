@@ -6,14 +6,14 @@
 
 static int fill(verb_t, obj_t);
 
-static int attack(struct command_t *command)
+static int attack(struct command_t command)
 /*  Attack.  Assume target if unambiguous.  "Throw" also links here.
  *  Attackable objects fall into two categories: enemies (snake,
  *  dwarf, etc.)  and others (bird, clam, machine).  Ambiguous if 2
  *  enemies, or no enemies but 2 others. */
 {
-    verb_t verb = command->verb;
-    obj_t obj = command->obj;
+    verb_t verb = command.verb;
+    obj_t obj = command.obj;
 
     if (obj == INTRANSITIVE) {
         int changes = 0;
@@ -1141,25 +1141,28 @@ static int rub(verb_t verb, obj_t obj)
     return GO_CLEAROBJ;
 }
 
-static int say(struct command_t *command)
+static int say(struct command_t command)
 /* Say.  Echo WD2. Magic words override. */
 {
-    if (command->type2 == MOTION &&
-	(command->id2 == XYZZY ||
-	 command->id2 == PLUGH ||
-	 command->id2 == PLOVER)) {
-	return GO_WORD2;
+    if (command.type2 == MOTION &&
+       (command.id2 == XYZZY ||
+        command.id2 == PLUGH ||
+    	command.id2 == PLOVER)) {
+	    return GO_WORD2;
     }
-    if (command->type2 == ACTION &&
-        (command->id2 == FEE ||
-	 command->id2 == FIE ||
-	 command->id2 == FOE ||
-	 command->id2 == FOO ||
-	 command->id2 == FUM ||
-	 command->id2 == PART)) {
-        return GO_WORD2;
+    if (command.type2 == ACTION && command.id2 == PART)
+        return reservoir();
+    
+    if (command.type2 == ACTION &&
+        (command.id2 == FEE ||
+	 command.id2 == FIE ||
+	 command.id2 == FOE ||
+	 command.id2 == FOO ||
+	 command.id2 == FUM ||
+	 command.id2 == PART)) {
+        return bigwords(command.id2);
     }
-    sspeak(OKEY_DOKEY, command->raw2);
+    sspeak(OKEY_DOKEY, command.raw2);
     return GO_CLEAROBJ;
 }
 
@@ -1170,19 +1173,19 @@ static int throw_support(vocab_t spk)
     return GO_MOVE;
 }
 
-static int throw (struct command_t *command)
+static int throw (struct command_t command)
 /*  Throw.  Same as discard unless axe.  Then same as attack except
  *  ignore bird, and if dwarf is present then one might be killed.
  *  (Only way to do so!)  Axe also special for dragon, bear, and
  *  troll.  Treasures special for troll. */
 {
-    if (!TOTING(command->obj)) {
-        speak(actions[command->verb].message);
+    if (!TOTING(command.obj)) {
+        speak(actions[command.verb].message);
         return GO_CLEAROBJ;
     }
-    if (objects[command->obj].is_treasure && AT(TROLL)) {
+    if (objects[command.obj].is_treasure && AT(TROLL)) {
         /*  Snarf a treasure for the troll. */
-        drop(command->obj, LOC_NOWHERE);
+        drop(command.obj, LOC_NOWHERE);
         move(TROLL, LOC_NOWHERE);
         move(TROLL + NOBJECTS, IS_FREE);
         drop(TROLL2, objects[TROLL].plac);
@@ -1191,13 +1194,13 @@ static int throw (struct command_t *command)
         rspeak(TROLL_SATISFIED);
         return GO_CLEAROBJ;
     }
-    if (command->obj == FOOD && HERE(BEAR)) {
+    if (command.obj == FOOD && HERE(BEAR)) {
         /* But throwing food is another story. */
-        command->obj = BEAR;
-        return (feed(command->verb, command->obj));
+        command.obj = BEAR;
+        return (feed(command.verb, command.obj));
     }
-    if (command->obj != AXE)
-        return (discard(command->verb, command->obj));
+    if (command.obj != AXE)
+        return (discard(command.verb, command.obj));
     else {
         if (atdwrf(game.loc) <= 0) {
             if (AT(DRAGON) && game.prop[DRAGON] == DRAGON_BARS)
@@ -1214,7 +1217,7 @@ static int throw (struct command_t *command)
                 state_change(AXE, AXE_LOST);
                 return GO_CLEAROBJ;
             }
-            command->obj = INTRANSITIVE;
+            command.obj = INTRANSITIVE;
             return (attack(command));
         }
 
@@ -1308,7 +1311,7 @@ static int wave(verb_t verb, obj_t obj)
     }
 }
 
-int action(struct command_t *command)
+int action(struct command_t command)
 /*  Analyse a verb.  Remember what it was, go back for object if second word
  *  unless verb is "say", which snarfs arbitrary second word.
  */
@@ -1316,12 +1319,12 @@ int action(struct command_t *command)
     /* Previously, actions that result in a message, but don't do anything 
      * further were called "specials". Now they're handled here as normal 
      * actions. If noaction is true, then we spit out the message and return */
-    if (actions[command->verb].noaction) {
-        speak(actions[command->verb].message);
+    if (actions[command.verb].noaction) {
+        speak(actions[command.verb].message);
         return GO_CLEAROBJ;
     }
     
-    if (command->part == unknown) {
+    if (command.part == unknown) {
         /*  Analyse an object word.  See if the thing is here, whether
          *  we've got a verb yet, and so on.  Object must be here
          *  unless verb is "find" or "invent(ory)" (and no new verb
@@ -1329,88 +1332,88 @@ int action(struct command_t *command)
          *  they are never actually dropped at any location, but might
          *  be here inside the bottle or urn or as a feature of the
          *  location. */
-        if (HERE(command->obj))
+        if (HERE(command.obj))
             /* FALL THROUGH */;
-        else if (command->obj == DWARF && atdwrf(game.loc) > 0)
+        else if (command.obj == DWARF && atdwrf(game.loc) > 0)
             /* FALL THROUGH */;
-        else if ((LIQUID() == command->obj && HERE(BOTTLE)) ||
-                 command->obj == LIQLOC(game.loc))
+        else if ((LIQUID() == command.obj && HERE(BOTTLE)) ||
+                 command.obj == LIQLOC(game.loc))
             /* FALL THROUGH */;
-        else if (command->obj == OIL && HERE(URN) && game.prop[URN] != URN_EMPTY) {
-            command->obj = URN;
+        else if (command.obj == OIL && HERE(URN) && game.prop[URN] != URN_EMPTY) {
+            command.obj = URN;
             /* FALL THROUGH */;
-        } else if (command->obj == PLANT && AT(PLANT2) && game.prop[PLANT2] != PLANT_THIRSTY) {
-            command->obj = PLANT2;
+        } else if (command.obj == PLANT && AT(PLANT2) && game.prop[PLANT2] != PLANT_THIRSTY) {
+            command.obj = PLANT2;
             /* FALL THROUGH */;
-        } else if (command->obj == KNIFE && game.knfloc == game.loc) {
+        } else if (command.obj == KNIFE && game.knfloc == game.loc) {
             game.knfloc = -1;
             rspeak(KNIVES_VANISH);
             return GO_CLEAROBJ;
-        } else if (command->obj == ROD && HERE(ROD2)) {
-            command->obj = ROD2;
+        } else if (command.obj == ROD && HERE(ROD2)) {
+            command.obj = ROD2;
             /* FALL THROUGH */;
-        } else if ((command->verb == FIND ||
-                    command->verb == INVENTORY) && (command->id2 == WORD_EMPTY || command->id2 == WORD_NOT_FOUND))
+        } else if ((command.verb == FIND ||
+                    command.verb == INVENTORY) && (command.id2 == WORD_EMPTY || command.id2 == WORD_NOT_FOUND))
             /* FALL THROUGH */;
         else {
-            sspeak(NO_SEE, command->raw1);
+            sspeak(NO_SEE, command.raw1);
             return GO_CLEAROBJ;
         }
 
-        if (command->id2 != WORD_EMPTY && command->id2 != WORD_NOT_FOUND)
+        if (command.id2 != WORD_EMPTY && command.id2 != WORD_NOT_FOUND)
             return GO_WORD2;
-        if (command->verb != 0)
-            command->part = transitive;
+        if (command.verb != 0)
+            command.part = transitive;
     }
 
-    switch (command->part) {
+    switch (command.part) {
     case intransitive:
-        if (command->raw2[0] != '\0' && command->verb != SAY)
+        if (command.raw2[0] != '\0' && command.verb != SAY)
             return GO_WORD2;
-        if (command->verb == SAY)
+        if (command.verb == SAY)
 	    /* KEYS is not special, anything not NO_OBJECT or INTRANSITIVE
 	     * will do here. We're preventing interpretation as an intransitive
 	     * verb when the word is unknown. */
-            command->obj = command->raw2[0] != '\0' ? KEYS : NO_OBJECT;
-        if (command->obj == NO_OBJECT ||
-            command->obj == INTRANSITIVE) {
+            command.obj = command.raw2[0] != '\0' ? KEYS : NO_OBJECT;
+        if (command.obj == NO_OBJECT ||
+            command.obj == INTRANSITIVE) {
             /*  Analyse an intransitive verb (ie, no object given yet). */
-            switch (command->verb) {
+            switch (command.verb) {
             case CARRY:
-                return vcarry(command->verb, INTRANSITIVE);
+                return vcarry(command.verb, INTRANSITIVE);
             case  DROP:
                 return GO_UNKNOWN;
             case  SAY:
                 return GO_UNKNOWN;
             case  UNLOCK:
-                return lock(command->verb, INTRANSITIVE);
+                return lock(command.verb, INTRANSITIVE);
             case  NOTHING: {
                 rspeak(OK_MAN);
                 return (GO_CLEAROBJ);
             }
             case  LOCK:
-                return lock(command->verb, INTRANSITIVE);
+                return lock(command.verb, INTRANSITIVE);
             case  LIGHT:
-                return light(command->verb, INTRANSITIVE);
+                return light(command.verb, INTRANSITIVE);
             case  EXTINGUISH:
-                return extinguish(command->verb, INTRANSITIVE);
+                return extinguish(command.verb, INTRANSITIVE);
             case  WAVE:
                 return GO_UNKNOWN;
             case  TAME:
                 return GO_UNKNOWN;
             case GO: {
-                speak(actions[command->verb].message);
+                speak(actions[command.verb].message);
                 return GO_CLEAROBJ;
             }
             case ATTACK:
-                command->obj = INTRANSITIVE;
+                command.obj = INTRANSITIVE;
                 return attack(command);
             case POUR:
-                return pour(command->verb, INTRANSITIVE);
+                return pour(command.verb, INTRANSITIVE);
             case EAT:
-                return eat(command->verb, INTRANSITIVE);
+                return eat(command.verb, INTRANSITIVE);
             case DRINK:
-                return drink(command->verb, INTRANSITIVE);
+                return drink(command.verb, INTRANSITIVE);
             case RUB:
                 return GO_UNKNOWN;
             case THROW:
@@ -1424,7 +1427,7 @@ int action(struct command_t *command)
             case FEED:
                 return GO_UNKNOWN;
             case FILL:
-                return fill(command->verb, INTRANSITIVE);
+                return fill(command.verb, INTRANSITIVE);
             case BLAST:
                 blast();
                 return GO_CLEAROBJ;
@@ -1436,12 +1439,12 @@ int action(struct command_t *command)
             case FOE:
             case FOO:
             case FUM:
-                return bigwords(command->id1);
+                return bigwords(command.id1);
             case BRIEF:
                 return brief();
             case READ:
-                command->obj = INTRANSITIVE;
-                return read(*command);
+                command.obj = INTRANSITIVE;
+                return read(command);
             case BREAK:
                 return GO_UNKNOWN;
             case WAKE:
@@ -1451,7 +1454,7 @@ int action(struct command_t *command)
             case RESUME:
                 return resume();
             case FLY:
-                return fly(command->verb, INTRANSITIVE);
+                return fly(command.verb, INTRANSITIVE);
             case LISTEN:
                 return listen();
             case PART:
@@ -1467,64 +1470,64 @@ int action(struct command_t *command)
     /* FALLTHRU */
     case transitive:
         /*  Analyse a transitive verb. */
-        switch (command->verb) {
+        switch (command.verb) {
         case  CARRY:
-            return vcarry(command->verb, command->obj);
+            return vcarry(command.verb, command.obj);
         case  DROP:
-            return discard(command->verb, command->obj);
+            return discard(command.verb, command.obj);
         case  SAY:
             return say(command);
         case  UNLOCK:
-            return lock(command->verb, command->obj);
+            return lock(command.verb, command.obj);
         case  NOTHING: {
             rspeak(OK_MAN);
             return (GO_CLEAROBJ);
         }
         case  LOCK:
-            return lock(command->verb, command->obj);
+            return lock(command.verb, command.obj);
         case LIGHT:
-            return light(command->verb, command->obj);
+            return light(command.verb, command.obj);
         case EXTINGUISH:
-            return extinguish(command->verb, command->obj);
+            return extinguish(command.verb, command.obj);
         case WAVE:
-            return wave(command->verb, command->obj);
+            return wave(command.verb, command.obj);
         case TAME: {
-            speak(actions[command->verb].message);
+            speak(actions[command.verb].message);
             return GO_CLEAROBJ;
         }
         case GO: {
-            speak(actions[command->verb].message);
+            speak(actions[command.verb].message);
             return GO_CLEAROBJ;
         }
         case ATTACK:
             return attack(command);
         case POUR:
-            return pour(command->verb, command->obj);
+            return pour(command.verb, command.obj);
         case EAT:
-            return eat(command->verb, command->obj);
+            return eat(command.verb, command.obj);
         case DRINK:
-            return drink(command->verb, command->obj);
+            return drink(command.verb, command.obj);
         case RUB:
-            return rub(command->verb, command->obj);
+            return rub(command.verb, command.obj);
         case THROW:
-            return throw (command);
+            return throw(command);
         case QUIT: {
-            speak(actions[command->verb].message);
+            speak(actions[command.verb].message);
             return GO_CLEAROBJ;
         }
         case FIND:
-            return find(command->verb, command->obj);
+            return find(command.verb, command.obj);
         case INVENTORY:
-            return find(command->verb, command->obj);
+            return find(command.verb, command.obj);
         case FEED:
-            return feed(command->verb, command->obj);
+            return feed(command.verb, command.obj);
         case FILL:
-            return fill(command->verb, command->obj);
+            return fill(command.verb, command.obj);
         case BLAST:
             blast();
             return GO_CLEAROBJ;
         case SCORE: {
-            speak(actions[command->verb].message);
+            speak(actions[command.verb].message);
             return GO_CLEAROBJ;
         }
         case FEE:
@@ -1532,45 +1535,45 @@ int action(struct command_t *command)
         case FOE:
         case FOO:
         case FUM: {
-            speak(actions[command->verb].message);
+            speak(actions[command.verb].message);
             return GO_CLEAROBJ;
         }
         case BRIEF: {
-            speak(actions[command->verb].message);
+            speak(actions[command.verb].message);
             return GO_CLEAROBJ;
         }
         case READ:
-            return read(*command);
+            return read(command);
         case BREAK:
-            return vbreak(command->verb, command->obj);
+            return vbreak(command.verb, command.obj);
         case WAKE:
-            return wake(command->verb, command->obj);
+            return wake(command.verb, command.obj);
         case SAVE: {
-            speak(actions[command->verb].message);
+            speak(actions[command.verb].message);
             return GO_CLEAROBJ;
         }
         case RESUME: {
-            speak(actions[command->verb].message);
+            speak(actions[command.verb].message);
             return GO_CLEAROBJ;
         }
         case FLY:
-            return fly(command->verb, command->obj);
+            return fly(command.verb, command.obj);
         case LISTEN: {
-            speak(actions[command->verb].message);
+            speak(actions[command.verb].message);
             return GO_CLEAROBJ;
         }
         case PART:
             return reservoir();
         case SEED:
-            return seed(command->verb, command->raw2);
+            return seed(command.verb, command.raw2);
         case WASTE:
-            return waste(command->verb, (turn_t)atol(command->raw2));
+            return waste(command.verb, (turn_t)atol(command.raw2));
         default: // LCOV_EXCL_LINE
             BUG(TRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST); // LCOV_EXCL_LINE
         }
     case unknown:
         /* Unknown verb, couldn't deduce object - might need hint */
-        sspeak(WHAT_DO, command->raw1);
+        sspeak(WHAT_DO, command.raw1);
         return GO_CHECKHINT;
     default: // LCOV_EXCL_LINE
         BUG(SPEECHPART_NOT_TRANSITIVE_OR_INTRANSITIVE_OR_UNKNOWN); // LCOV_EXCL_LINE
