@@ -109,7 +109,6 @@ enum phase_codes {
     GO_DWARFWAKE,
 };
 
-typedef long token_t;  // token index */
 typedef long vocab_t;  // index into a vocabulary array */
 typedef long verb_t;   // index into an actions array */
 typedef long obj_t;    // index into the object array */
@@ -120,10 +119,10 @@ struct game_t {
     unsigned long lcg_a, lcg_c, lcg_m, lcg_x;
     long abbnum;                 // How often to print long descriptions
     score_t bonus;               // What kind of finishing bonus we are getting
-    long chloc;                  // pirate chest location
-    long chloc2;                 // pirate chest alternate location
-    long clock1;                 // # turns from finding last treasure to close
-    long clock2;                 // # turns from warning till blinding flash
+    loc_t chloc;                 // pirate chest location
+    loc_t chloc2;                // pirate chest alternate location
+    turn_t clock1;               // # turns from finding last treasure to close
+    turn_t clock2;               // # turns from warning till blinding flash
     bool clshnt;                 // has player read the clue in the endgame?
     bool closed;                 // whether we're all the way closed
     bool closng;                 // whether it's closing time yet
@@ -145,12 +144,12 @@ struct game_t {
     long igo;                    // # uses of "go" instead of a direction
     long iwest;                  // # times he's said "west" instead of "w"
     long knfloc;                 // knife location; 0 if none, -1 after caveat
-    long limit;                  // lifetime of lamp (not set here)
+    turn_t limit;                // lifetime of lamp
     bool lmwarn;                 // has player been warned about lamp going dim?
     loc_t loc;                   // where player is now
     loc_t newloc;                // where player is going
     bool novice;                 // asked for instructions at start-up?
-    long numdie;                 // number of times killed so far
+    turn_t numdie;               // number of times killed so far
     loc_t oldloc;                // where player was
     loc_t oldlc2;                // where player was two moves ago 
     obj_t oldobj;                // last object player handled
@@ -188,14 +187,14 @@ struct settings_t {
 };
 
 struct command_t {
-    enum speechpart part;
-    verb_t verb;
-    obj_t   obj;
-    token_t id1;
-    token_t id2;
     char raw1[LINESIZE], raw2[LINESIZE];
+    enum speechpart part;
+    vocab_t id1;
+    vocab_t id2;
     enum wordtype type1;
     enum wordtype type2;
+    verb_t verb;
+    obj_t   obj;
 };
 
 extern struct game_t game;

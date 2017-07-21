@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     while ((ch = getopt(argc, argv, opts)) != EOF) {
         switch (ch) {
         case 'd':
-            game.numdie = (long)atoi(optarg);
+            game.numdie = (turn_t)atoi(optarg);
             printf("cheat: game.numdie = %ld\n", game.numdie);
             break;
         case 'l':
