@@ -133,5 +133,7 @@ s
 down
 s
 in
+seed -123
+no
 quit
 yes

@@ -659,16 +659,29 @@ You're outside grate.
 
 The grate is locked.
 
-> quit
+> seed -123
 
-Do you really want to quit now?
+Seed set to 4294967173
 
-> yes
+You're outside grate.
+
+The grate is locked.
+
+> no
 
 OK
 
-You scored 27 out of a possible 430, using 125 turns.
+Are you trying to get into the cave?
 
-You are obviously a rank amateur.  Better luck next time.
+> quit
 
-To achieve the next higher rating, you need 19 more points.
+Please answer the question.
+
+Are you trying to get into the cave?
+
+> yes
+
+I am prepared to give you a hint, but it will cost you 2 points.
+
+Do you want the hint?
+

@@ -394,9 +394,10 @@ static bool is_valid_int(const char *str)
     if (*str == '-')
         ++str;
 
-    // Handle empty string or just "-"
+    // Handle empty string or just "-". Should never reach this 
+    // point, because this is only used with transitive verbs.
     if (!*str)
-        return false;
+        return false; // LCOV_EXCL_LINE
 
     // Check for non-digit chars in the rest of the stirng.
     while (*str)
