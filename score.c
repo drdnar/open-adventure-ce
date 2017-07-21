@@ -120,7 +120,7 @@ void terminate(enum termination mode)
     if (points + game.saved + 1 >= mxscor && game.saved != 0)
         rspeak(WITHOUT_SUSPENDS);
     rspeak(TOTAL_SCORE, points, mxscor, game.turns, game.turns);
-    for (long i = 1; i <= (long)NCLASSES; i++) {
+    for (int i = 1; i <= (long)NCLASSES; i++) {
         if (classes[i].threshold >= points) {
             speak(classes[i].message);
             i = classes[i].threshold + 1 - points;

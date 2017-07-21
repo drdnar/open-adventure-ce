@@ -64,10 +64,7 @@ static void vspeak(const char* msg, bool blank, va_list ap)
             }
         } else {
             i++;
-            // Integer specifier. In order to accommodate the fact
-            // that PARMS can have both legitimate integers *and*
-            // packed tokens, stringify everything. Future work may
-            // eliminate the need for this.
+            // Integer specifier.
             if (msg[i] == 'd') {
                 long arg = va_arg(ap, long);
                 int ret = snprintf(renderp, size, "%ld", arg);
@@ -134,7 +131,7 @@ void sspeak(const int msg, ...)
 void pspeak(vocab_t msg, enum speaktype mode, int skip, bool blank, ...)
 /* Find the skip+1st message from msg and print it.  Modes are:
  * feel = for inventory, what you can touch
- * look = the long description for the state the object is in
+ * look = the full description for the state the object is in
  * listen = the sound for the state the object is in
  * study = text on the object. */
 {
@@ -459,7 +456,7 @@ static void tokenize(char* raw, struct command_t *cmd)
 
     /* Bound prefix on the %s would be needed to prevent buffer
      * overflow.  but we shortstop this more simply by making each
-     * raw-input buffer as long as the enrire inout buffer. */
+     * raw-input buffer as long as the entire input buffer. */
     sscanf(raw, "%s%s", cmd->raw1, cmd->raw2);
 
     /* (ESR) In oldstyle mode, simulate the uppercasing and truncating
@@ -484,7 +481,7 @@ static void tokenize(char* raw, struct command_t *cmd)
             cmd->raw2[i] = toupper(cmd->raw2[i]);
     }
 
-    /* populate command with parsed vocab metadata */
+    /* populate command with parsed vocabulary metadata */
     get_vocab_metadata(cmd->raw1, &(cmd->id1), &(cmd->type1));
     get_vocab_metadata(cmd->raw2, &(cmd->id2), &(cmd->type2));
 }
@@ -597,16 +594,16 @@ void drop(obj_t object, loc_t where)
     game.atloc[where] = object;
 }
 
-long atdwrf(loc_t where)
+int atdwrf(loc_t where)
 /*  Return the index of first dwarf at the given location, zero if no dwarf is
  *  there (or if dwarves not active yet), -1 if all dwarves are dead.  Ignore
  *  the pirate (6th dwarf). */
 {
-    long at;
+    int at;
 
     at = 0;
     if (game.dflag < 2)
-        return (at);
+        return at;
     at = -1;
     for (long i = 1; i <= NDWARVES - 1; i++) {
         if (game.dloc[i] == where)
@@ -614,13 +611,13 @@ long atdwrf(loc_t where)
         if (game.dloc[i] != 0)
             at = 0;
     }
-    return (at);
+    return at;
 }
 
 /*  Utility routines (setbit, tstbit, set_seed, get_next_lcg_value,
  *  randrange) */
 
-long setbit(long bit)
+long setbit(int bit)
 /*  Returns 2**bit for use in constructing bit-masks. */
 {
     return (1L << bit);
@@ -638,7 +635,11 @@ void set_seed(long seedval)
     game.lcg_x = (unsigned long) seedval % game.lcg_m;
 
     // once seed is set, we need to generate the Z`ZZZ word
-    make_zzword(game.zzword);
+    for (int i = 0; i < 5; ++i) {
+        game.zzword[i] = 'A' + randrange(26);
+    }
+    game.zzword[1] = '\''; // force second char to apostrophe
+    game.zzword[5] = '\0';
 }
 
 unsigned long get_next_lcg_value(void)
@@ -655,15 +656,6 @@ long randrange(long range)
     return range * get_next_lcg_value() / game.lcg_m;
 }
 
-void make_zzword(char zzword[TOKLEN + 1])
-{
-    for (int i = 0; i < 5; ++i) {
-        zzword[i] = 'A' + randrange(26);
-    }
-    zzword[1] = '\''; // force second char to apostrophe
-    zzword[5] = '\0';
-}
-
 // LCOV_EXCL_START
 void bug(enum bugtype num, const char *error_string)
 {
@@ -674,7 +666,7 @@ void bug(enum bugtype num, const char *error_string)
 
 /* end */
 
-void state_change(obj_t obj, long state)
+void state_change(obj_t obj, int state)
 /* Object must have a change-message list for this to be useful; only some do */
 {
     game.prop[obj] = state;

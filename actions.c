@@ -273,7 +273,7 @@ static int vbreak(verb_t verb, obj_t obj)
 }
 
 static int brief(void)
-/*  Brief.  Intransitive only.  Suppress long descriptions after first time. */
+/*  Brief.  Intransitive only.  Suppress full descriptions after first time. */
 {
     game.abbnum = 10000;
     game.detail = 3;
@@ -418,8 +418,8 @@ static int chain(verb_t verb)
         switch (game.prop[BEAR]) {
         // LCOV_EXCL_START
         case BEAR_DEAD:
-            /* Can't be reached as long as the only way for the bear to die
-             * is from a bridge collapse. Leave in in case this changes, but
+            /* Can't be reached until the bear can die in some way other
+             * than a bridge collapse. Leave in in case this changes, but
              * exclude from coverage testing. */
             game.fixed[BEAR] = IS_FIXED;
             break;

@@ -202,7 +202,6 @@ extern struct game_t game;
 extern struct settings_t settings;
 
 extern bool get_command_input(struct command_t *);
-extern void wordclear(token_t *);
 extern void speak(const char*, ...);
 extern void sspeak(int msg, ...);
 extern void pspeak(vocab_t, enum speaktype, int, bool, ...);
@@ -215,12 +214,10 @@ extern void move(obj_t, loc_t);
 extern loc_t put(obj_t, long, long);
 extern void carry(obj_t, loc_t);
 extern void drop(obj_t, loc_t);
-extern long atdwrf(loc_t);
-extern long setbit(long);
+extern int atdwrf(loc_t);
+extern long setbit(int);
 extern bool tstbit(long, int);
-extern void make_zzword(char*);
 extern void set_seed(long);
-extern unsigned long get_next_lcg_value(void);
 extern long randrange(long);
 extern long score(enum termination);
 extern void terminate(enum termination) __attribute__((noreturn));
@@ -230,7 +227,7 @@ extern int resume(void);
 extern int restore(FILE *);
 extern long initialise(void);
 extern int action(struct command_t *command);
-extern void state_change(obj_t, long);
+extern void state_change(obj_t, int);
 
 
 void bug(enum bugtype, const char *) __attribute__((__noreturn__));
