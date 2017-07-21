@@ -3881,10 +3881,10 @@ actions: !!omap
     message: *nothing_happens
     words: ['z''zzz']
 - SEED:
-    message: 'Seed set to %s'
+    message: 'Seed set to %d'
     words: ['seed']
 - WASTE:
-    message: 'Game limit is now %s'
+    message: 'Game limit is now %d'
     words: ['waste']
 - ACT_UNKNOWN:
     message: *huh_man

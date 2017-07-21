@@ -1247,8 +1247,8 @@ static int wake(verb_t verb, obj_t obj)
 static int seed(verb_t verb, const char *arg)
 /* Set seed */
 {
-    long seed = atol(arg);
-    speak(actions[verb].message, arg);
+    int seed = atoi(arg);
+    speak(actions[verb].message, seed);
     set_seed(seed);
     --game.turns;
     return GO_TOP;
@@ -1258,9 +1258,7 @@ static int waste(verb_t verb, turn_t turns)
 /* Burn turns */
 {
     game.limit -= turns;
-    char newlim[1024];
-    sprintf(newlim, "%ld", (long)game.limit);
-    speak(actions[verb].message, newlim);
+    speak(actions[verb].message, (int)game.limit);
     return GO_TOP;
 }
 
