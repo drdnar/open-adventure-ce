@@ -200,7 +200,7 @@ static int word_count(char* str)
     return (count);
 }
 
-static char* get_input()
+static char* get_input(void)
 {
     // Set up the prompt
     char input_prompt[] = "> ";
