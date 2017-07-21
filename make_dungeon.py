@@ -105,11 +105,13 @@ typedef struct {{
 typedef struct {{
   const string_group_t words;
   const char* message;
+  const bool noaction;
 }} action_t;
 
 typedef struct {{
   const string_group_t words;
   const char* message;
+  const bool noaction;
 }} special_t;
 
 enum condtype_t {{cond_goto, cond_pct, cond_carry, cond_with, cond_not}};
@@ -497,39 +499,11 @@ def get_motions(motions):
                     ignore += word.upper()
     return mot_str
 
-def get_actions(actions):
-    template = """    {{
-        .words = {},
-        .message = {},
-    }},
-"""
-    act_str = ""
-    for action in actions:
-        contents = action[1]
-        
-        if contents["words"] == None:
-            words_str = get_string_group([])
-        else:
-            words_str = get_string_group(contents["words"])
-
-        if contents["message"] == None:
-            message = "NO_MESSAGE"
-        else:
-            message = contents["message"]
-            
-        act_str += template.format(words_str, message)
-        global ignore
-        if contents.get("oldstyle", True) == False:
-            for word in contents["words"]:
-                if len(word) == 1:
-                    ignore += word.upper()
-    act_str = act_str[:-1] # trim trailing newline
-    return act_str
-
 def get_specials(specials):
     template = """    {{
         .words = {},
         .message = {},
+        .noaction = {},
     }},
 """
     spc_str = ""
@@ -546,7 +520,12 @@ def get_specials(specials):
         else:
             message = make_c_string(contents["message"])
 
-        spc_str += template.format(words_str, message)
+        if contents.get("noaction") == None:
+            noaction = "false"
+        else:
+            noaction = "true"
+
+        spc_str += template.format(words_str, message, noaction)
         global ignore
         if contents.get("oldstyle", True) == False:
             for word in contents["words"]:

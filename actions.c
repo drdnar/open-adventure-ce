@@ -1313,6 +1313,14 @@ int action(struct command_t *command)
  *  unless verb is "say", which snarfs arbitrary second word.
  */
 {
+    /* Previously, actions that result in a message, but don't do anything 
+     * further were called "specials". Now they're handled here as normal 
+     * actions. If noaction is true, then we spit out the message and return */
+    if (actions[command->verb].noaction) {
+        speak(actions[command->verb].message);
+        return GO_CLEAROBJ;
+    }
+    
     if (command->part == unknown) {
         /*  Analyse an object word.  See if the thing is here, whether
          *  we've got a verb yet, and so on.  Object must be here
