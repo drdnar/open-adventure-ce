@@ -32,6 +32,7 @@ Around you is a forest.  A small stream flows out of the building and
 down a gully.
 
 > seed 1635997320
+
 Seed set to 1635997320
 
 You're in front of building.
@@ -71,6 +72,20 @@ Sorry, I don't know the word "_".
 Sorry, but I no longer seem to remember how it was you got here.
 
 You're in front of building.
+
+> seed
+
+This command requires a numeric argument.
+
+You're in front of building.
+
+> waste
+
+This command requires a numeric argument.
+
+You are standing at the end of a road before a small brick building.
+Around you is a forest.  A small stream flows out of the building and
+down a gully.
 
 > eat grate
 
@@ -236,9 +251,7 @@ Blasting requires dynamite.
 
 > building
 
-You are standing at the end of a road before a small brick building.
-Around you is a forest.  A small stream flows out of the building and
-down a gully.
+You're in front of building.
 
 > cave
 
@@ -597,7 +610,7 @@ Okay, "boo".
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 113 turns.
+You have garnered 27 out of a possible 430 points, using 115 turns.
 
 > z
 
@@ -605,7 +618,7 @@ OK
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 115 turns.
+You have garnered 27 out of a possible 430 points, using 117 turns.
 
 > quit keys
 
@@ -654,7 +667,7 @@ Do you really want to quit now?
 
 OK
 
-You scored 27 out of a possible 430, using 123 turns.
+You scored 27 out of a possible 430, using 125 turns.
 
 You are obviously a rank amateur.  Better luck next time.
 

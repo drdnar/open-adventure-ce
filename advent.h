@@ -87,7 +87,7 @@ enum termination {endgame, quitgame, scoregame};
 
 enum speechpart {unknown, intransitive, transitive};
 
-enum wordtype {NO_WORD_TYPE, MOTION, OBJECT, ACTION, SPECIAL};
+enum wordtype {NO_WORD_TYPE, MOTION, OBJECT, ACTION, SPECIAL, NUMERIC};
 
 typedef enum scorebonus {none, splatter, defeat, victory} score_t;
 

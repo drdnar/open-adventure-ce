@@ -1244,6 +1244,26 @@ static int wake(verb_t verb, obj_t obj)
     }
 }
 
+static int seed(verb_t verb, const char *arg)
+/* Set seed */
+{
+    long seed = atol(arg);
+    speak(actions[verb].message, arg);
+    set_seed(seed);
+    --game.turns;
+    return GO_TOP;
+}
+
+static int waste(verb_t verb, turn_t turns)
+/* Burn turns */
+{
+    game.limit -= turns;
+    char newlim[1024];
+    sprintf(newlim, "%ld", (long)game.limit);
+    speak(actions[verb].message, newlim);
+    return GO_TOP;
+}
+
 static int wave(verb_t verb, obj_t obj)
 /* Wave.  No effect unless waving rod at fissure or at bird. */
 {
@@ -1430,6 +1450,10 @@ int action(struct command_t *command)
                 return listen();
             case PART:
                 return reservoir();
+            case SEED:
+            case WASTE:
+                rspeak(NUMERIC_REQUIRED);
+                return GO_TOP;
             default: // LCOV_EXCL_LINE
                 BUG(INTRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST); // LCOV_EXCL_LINE
             }
@@ -1531,6 +1555,10 @@ int action(struct command_t *command)
         }
         case PART:
             return reservoir();
+        case SEED:
+            return seed(command->verb, command->raw2);
+        case WASTE:
+            return waste(command->verb, (turn_t)atol(command->raw2));
         default: // LCOV_EXCL_LINE
             BUG(TRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST); // LCOV_EXCL_LINE
         }

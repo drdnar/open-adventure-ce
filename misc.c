@@ -399,6 +399,30 @@ static int get_special_vocab_id(const char* word)
     return (WORD_NOT_FOUND);
 }
 
+static bool is_valid_int(const char *str) 
+/* Returns true if the string passed in is represents a valid integer, 
+ * that could then be parsed by atoi() */
+{
+    // Handle negative number
+    if (*str == '-')
+        ++str;
+
+    // Handle empty string or just "-"
+    if (!*str)
+        return false;
+
+    // Check for non-digit chars in the rest of the stirng.
+    while (*str)
+    {
+        if (!isdigit(*str))
+            return false;
+        else
+            ++str;
+    }
+
+    return true;
+}
+
 static void get_vocab_metadata(const char* word, vocab_t* id, enum wordtype* type)
 {
     /* Check for an empty string */
@@ -442,6 +466,13 @@ static void get_vocab_metadata(const char* word, vocab_t* id, enum wordtype* typ
     if (strcasecmp(word, game.zzword) == 0) {
         *id = PART;
         *type = ACTION;
+        return;
+    }
+
+    // Check words that are actually numbers.
+    if (is_valid_int(word)) {
+        *id = WORD_EMPTY;
+        *type = NUMERIC;
         return;
     }
 
