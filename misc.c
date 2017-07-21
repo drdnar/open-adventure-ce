@@ -238,7 +238,7 @@ static char* get_input(void)
     return (input);
 }
 
-bool silent_yes()
+bool silent_yes(void)
 {
     bool outcome = false;
 
