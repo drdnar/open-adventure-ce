@@ -654,7 +654,7 @@ void set_seed(long seedval)
     game.zzword[5] = '\0';
 }
 
-unsigned long get_next_lcg_value(void)
+static unsigned long get_next_lcg_value(void)
 /* Return the LCG's current value, and then iterate it. */
 {
     unsigned long old_x = game.lcg_x;
