@@ -14,7 +14,7 @@ import re
 
 TEST_DIR = "."
 YAML_PATH = "../adventure.yaml"
-HTML_TEMPLATE_PATH = "coverage_dungeon.html.tpl"
+HTML_TEMPLATE_PATH = "../templates/coverage_dungeon.html.tpl"
 DEFAULT_HTML_OUTPUT_PATH = "../coverage/adventure.yaml.html"
 
 STDOUT_REPORT_CATEGORY = "  {name:.<19}: {percent:5.1f}% covered ({covered} of {total})\n"

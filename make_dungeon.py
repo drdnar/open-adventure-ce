@@ -9,233 +9,15 @@
 
 import sys, yaml
 
-yaml_name = "adventure.yaml"
-h_name = "dungeon.h"
-c_name = "dungeon.c"
+YAML_NAME = "adventure.yaml"
+H_NAME = "dungeon.h"
+C_NAME = "dungeon.c"
+H_TEMPLATE_PATH = "templates/dungeon.h.tpl"
+C_TEMPLATE_PATH = "templates/dungeon.c.tpl"
+
+DONOTEDIT_COMMENT = "/* Generated from adventure.yaml - do not hand-hack! */\n\n"
 
 statedefines = ""
-
-h_template = """/* Generated from adventure.yaml - do not hand-hack! */
-#ifndef DUNGEON_H
-#define DUNGEON_H
-
-#include <stdio.h>
-#include <stdbool.h>
-
-#define SILENT	-1	/* no sound */
-
-/* Symbols for cond bits */
-#define COND_LIT	0	/* Light */
-#define COND_OILY	1	/* If bit 2 is on: on for oil, off for water */
-#define COND_FLUID	2	/* Liquid asset, see bit 1 */
-#define COND_NOARRR	3	/* Pirate doesn't go here unless following */
-#define COND_NOBACK	4	/* Cannot use "back" to move away */
-#define COND_ABOVE	5
-#define COND_DEEP	6	/* Deep - e.g where dwarves are active */
-#define COND_FOREST	7	/* In the forest */
-#define COND_FORCED	8	/* Only one way in or out of here */
-/* Bits past 10 indicate areas of interest to "hint" routines */
-#define COND_HBASE	10	/* Base for location hint bits */
-#define COND_HCAVE	11	/* Trying to get into cave */
-#define COND_HBIRD	12	/* Trying to catch bird */
-#define COND_HSNAKE	13	/* Trying to deal with snake */
-#define COND_HMAZE	14	/* Lost in maze */
-#define COND_HDARK	15	/* Pondering dark room */
-#define COND_HWITT	16	/* At Witt's End */
-#define COND_HCLIFF	17	/* Cliff with urn */
-#define COND_HWOODS	18	/* Lost in forest */
-#define COND_HOGRE	19	/* Trying to deal with ogre */
-#define COND_HJADE	20	/* Found all treasures except jade */
-
-typedef struct {{
-  const char** strs;
-  const int n;
-}} string_group_t;
-
-typedef struct {{
-  const string_group_t words;
-  const char* inventory;
-  int plac, fixd;
-  bool is_treasure;
-  const char** descriptions;
-  const char** sounds;
-  const char** texts;
-  const char** changes;
-}} object_t;
-
-typedef struct {{
-  const char* small;
-  const char* big;
-}} descriptions_t;
-
-typedef struct {{
-  descriptions_t description;
-  const long sound;
-  const bool loud;
-}} location_t;
-
-typedef struct {{
-  const char* query;
-  const char* yes_response;
-}} obituary_t;
-
-typedef struct {{
-  const int threshold;
-  const int point_loss;
-  const char* message;
-}} turn_threshold_t;
-
-typedef struct {{
-  const int threshold;
-  const char* message;
-}} class_t;
-
-typedef struct {{
-  const int number;
-  const int turns;
-  const int penalty;
-  const char* question;
-  const char* hint;
-}} hint_t;
-
-typedef struct {{
-  const string_group_t words;
-}} motion_t;
-
-typedef struct {{
-  const string_group_t words;
-  const char* message;
-  const bool noaction;
-}} action_t;
-
-enum condtype_t {{cond_goto, cond_pct, cond_carry, cond_with, cond_not}};
-enum desttype_t {{dest_goto, dest_special, dest_speak}};
-
-typedef struct {{
-  const long motion;
-  const long condtype;
-  const long condarg1;
-  const long condarg2;
-  const enum desttype_t desttype;
-  const long destval;
-  const bool nodwarves;
-  const bool stop;
-}} travelop_t;
-
-/* Abstract out the encoding of words in the travel array.  Gives us
- * some hope of getting to a less cryptic representation than we
- * inherited from FORTRAN, someday. To understand these, read the
- * encoding description for travel.
- */
-#define T_TERMINATE(entry)	((entry).motion == 1)
-
-extern const location_t locations[];
-extern const object_t objects[];
-extern const char* arbitrary_messages[];
-extern const class_t classes[];
-extern const turn_threshold_t turn_thresholds[];
-extern const obituary_t obituaries[];
-extern const hint_t hints[];
-extern long conditions[];
-extern const motion_t motions[];
-extern const action_t actions[];
-extern const travelop_t travel[];
-extern const long tkey[];
-extern const char *ignore;
-
-#define NLOCATIONS	{}
-#define NOBJECTS	{}
-#define NHINTS		{}
-#define NCLASSES	{}
-#define NDEATHS		{}
-#define NTHRESHOLDS	{}
-#define NMOTIONS    {}
-#define NACTIONS  	{}
-#define NTRAVEL		{}
-#define NKEYS		{}
-
-#define BIRD_ENDSTATE	{}
-
-enum arbitrary_messages_refs {{
-{}
-}};
-
-enum locations_refs {{
-{}
-}};
-
-enum object_refs {{
-{}
-}};
-
-enum motion_refs {{
-{}
-}};
-
-enum action_refs {{
-{}
-}};
-
-/* State definitions */
-
-{}
-#endif /* end DUNGEON_H */
-"""
-
-c_template = """/* Generated from adventure.yaml - do not hand-hack! */
-
-#include "{}"
-
-const char* arbitrary_messages[] = {{
-{}
-}};
-
-const class_t classes[] = {{
-{}
-}};
-
-const turn_threshold_t turn_thresholds[] = {{
-{}
-}};
-
-const location_t locations[] = {{
-{}
-}};
-
-const object_t objects[] = {{
-{}
-}};
-
-const obituary_t obituaries[] = {{
-{}
-}};
-
-const hint_t hints[] = {{
-{}
-}};
-
-long conditions[] = {{
-{}
-}};
-
-const motion_t motions[] = {{
-{}
-}};
-
-const action_t actions[] = {{
-{}
-}};
-
-const long tkey[] = {{{}}};
-
-const travelop_t travel[] = {{
-{}
-}};
-
-const char *ignore = \"{}\";
-
-/* end */
-"""
 
 def make_c_string(string):
     """Render a Python string into C string literal format."""
@@ -738,7 +520,7 @@ def get_travel(travel):
     return out
 
 if __name__ == "__main__":
-    with open(yaml_name, "r") as f:
+    with open(YAML_NAME, "r") as f:
         db = yaml.load(f)
 
     locnames = [x[0] for x in db["locations"]]
@@ -749,21 +531,32 @@ if __name__ == "__main__":
     (travel, tkey) = buildtravel(db["locations"],
                                  db["objects"])
     ignore = ""
+    try:
+        with open(H_TEMPLATE_PATH, "r") as htf:
+            # read in dungeon.h template
+            h_template = DONOTEDIT_COMMENT + htf.read()
+        with open(C_TEMPLATE_PATH, "r") as ctf:
+            # read in dungeon.c template
+            c_template = DONOTEDIT_COMMENT + ctf.read()
+    except IOError as e:
+        print('ERROR: reading template failed ({})'.format(e.strerror))
+        exit(-1)
+
     c = c_template.format(
-        h_name,
-        get_arbitrary_messages(db["arbitrary_messages"]),
-        get_class_messages(db["classes"]),
-        get_turn_thresholds(db["turn_thresholds"]),
-        get_locations(db["locations"]),
-        get_objects(db["objects"]),
-        get_obituaries(db["obituaries"]),
-        get_hints(db["hints"], db["arbitrary_messages"]),
-        get_condbits(db["locations"]),
-        get_motions(db["motions"]),
-        get_actions(db["actions"]),
-        bigdump(tkey),
-        get_travel(travel), 
-        ignore,
+        h_file             = H_NAME,
+        arbitrary_messages = get_arbitrary_messages(db["arbitrary_messages"]),
+        classes            = get_class_messages(db["classes"]),
+        turn_thresholds    = get_turn_thresholds(db["turn_thresholds"]),
+        locations          = get_locations(db["locations"]),
+        objects            = get_objects(db["objects"]),
+        obituaries         = get_obituaries(db["obituaries"]),
+        hints              = get_hints(db["hints"], db["arbitrary_messages"]),
+        conditions         = get_condbits(db["locations"]),
+        motions            = get_motions(db["motions"]),
+        actions            = get_actions(db["actions"]),
+        tkeys              = bigdump(tkey),
+        travel             = get_travel(travel), 
+        ignore             = ignore
     )
 
     # 0-origin index of birds's last song.  Bird should
@@ -771,29 +564,29 @@ if __name__ == "__main__":
     deathbird = len(dict(db["objects"])["BIRD"]["sounds"]) - 1
 
     h = h_template.format(
-        len(db["locations"])-1,
-        len(db["objects"])-1,
-        len(db["hints"]),
-        len(db["classes"])-1,
-        len(db["obituaries"]),
-        len(db["turn_thresholds"]),
-        len(db["motions"]),
-        len(db["actions"]),
-        len(travel),
-        len(tkey),
-        deathbird,
-        get_refs(db["arbitrary_messages"]),
-        get_refs(db["locations"]),
-        get_refs(db["objects"]),
-        get_refs(db["motions"]),
-        get_refs(db["actions"]),
-        statedefines,
+        num_locations      = len(db["locations"])-1,
+        num_objects        = len(db["objects"])-1,
+        num_hints          = len(db["hints"]),
+        num_classes        = len(db["classes"])-1,
+        num_deaths         = len(db["obituaries"]),
+        num_thresholds     = len(db["turn_thresholds"]),
+        num_motions        = len(db["motions"]),
+        num_actions        = len(db["actions"]),
+        num_travel         = len(travel),
+        num_keys           = len(tkey),
+        bird_endstate      = deathbird,
+        arbitrary_messages = get_refs(db["arbitrary_messages"]),
+        locations          = get_refs(db["locations"]),
+        objects            = get_refs(db["objects"]),
+        motions            = get_refs(db["motions"]),
+        actions            = get_refs(db["actions"]),
+        state_definitions  = statedefines
     )
 
-    with open(h_name, "w") as hf:
+    with open(H_NAME, "w") as hf:
         hf.write(h)
 
-    with open(c_name, "w") as cf:
+    with open(C_NAME, "w") as cf:
         cf.write(c)
 
 # end
