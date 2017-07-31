@@ -970,8 +970,6 @@ static bool do_command()
 {
     static struct command_t command;
 
-    command.verb = 0;
-
     /*  Can't leave cave once it's closing (except by main office). */
     if (OUTSID(game.newloc) && game.newloc != 0 && game.closng) {
         rspeak(EXIT_CLOSED);
