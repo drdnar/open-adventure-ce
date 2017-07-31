@@ -1562,8 +1562,11 @@ int action(struct command_t command)
             speak(actions[command.verb].message);
             return GO_CLEAROBJ;
         }
+	// LCOV_EXCL_START
+	// This case should never happen - here only as placeholder
         case PART:
             return reservoir();
+	// LCOV_EXCL_STOP
         case SEED:
             return seed(command.verb, command.raw2);
         case WASTE:
