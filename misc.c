@@ -93,6 +93,7 @@ static void vspeak(const char* msg, bool blank, va_list ap)
                 }
             }
 
+            // LCOV_EXCL_START - doesn't occur in test suite.
             /* Version specifier */
             if (msg[i] == 'V') {
                 strcpy(renderp, VERSION);
@@ -100,6 +101,7 @@ static void vspeak(const char* msg, bool blank, va_list ap)
                 renderp += len;
                 size -= len;
             }
+            // LCOV_EXCL_STOP
         }
     }
     *renderp = 0;
