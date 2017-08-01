@@ -457,6 +457,14 @@ There is a shiny brass lamp nearby.
 
 There is food here.
 
+> get
+
+Get what?
+
+> food
+
+OK
+
 > eat food
 
 Thank you, it was delicious!
@@ -610,7 +618,7 @@ Okay, "boo".
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 115 turns.
+You have garnered 27 out of a possible 430 points, using 117 turns.
 
 > z
 
@@ -618,7 +626,7 @@ OK
 
 > score
 
-You have garnered 27 out of a possible 430 points, using 117 turns.
+You have garnered 27 out of a possible 430 points, using 119 turns.
 
 > quit keys
 

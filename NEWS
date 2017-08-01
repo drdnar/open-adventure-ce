@@ -1,6 +1,7 @@
 = Open Adventure project news =
 
 Repository head:
+  Split commands with objectless transitive verbs are handled correctly.
   Test suite has 100% code coverage.
 
 1.2: 2017-07-11::
