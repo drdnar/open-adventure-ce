@@ -26,6 +26,7 @@ say fie
 say foe
 say fum
 in
+keys
 throw food
 nothing food
 calm food
@@ -62,7 +63,6 @@ inven keys
 nothing
 in
 listen
-keys
 find keys
 unlock keys
 find foo

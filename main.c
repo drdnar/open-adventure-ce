@@ -1050,11 +1050,26 @@ Lclearobj:
         if (game.knfloc > 0 && game.knfloc != game.loc)
             game.knfloc = 0;
 
-        // Get command input from user
+	/* Preserve state from last command for reuse when required */
+	struct command_t preserve;
+	memcpy(&preserve, &command, sizeof(struct command_t));
+
+	// Get command input from user
         if (!get_command_input(&command))
             return false;
 
-        ++game.turns;
+#ifdef GDEBUG
+	printf("Preserve: type1 = %u, id1 = %ld, id2 = %ld\n",
+	       preserve.type1, preserve.id1, preserve.id2);
+	printf("Command: type2 = %u, id1 = %ld, id2 = %ld\n",
+	       preserve.type2, command.id1, command.id2);
+#endif
+
+	/* Handle of objectless action followed by actionless object */
+	if (preserve.type1 == ACTION && preserve.type2 == NO_WORD_TYPE && command.id2 == 0)
+	    command.verb = preserve.verb;
+
+	++game.turns;
 
         if (closecheck()) {
             if (game.closed)

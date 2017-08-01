@@ -153,6 +153,10 @@ There is food here.
 
 There is a bottle of water here.
 
+> keys
+
+What do you want to do with the keys?
+
 > throw food
 
 You aren't carrying it!
@@ -324,10 +328,6 @@ There is a bottle of water here.
 > listen
 
 The stream is gurgling placidly.
-
-> keys
-
-What do you want to do with the keys?
 
 > find keys
 
