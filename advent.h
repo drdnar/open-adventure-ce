@@ -101,11 +101,8 @@ enum phase_codes {
     GO_TOP,
     GO_CLEAROBJ,
     GO_CHECKHINT,
-    GO_DIRECTION,
     GO_WORD2,
-    GO_SPECIALS,
     GO_UNKNOWN,
-    GO_ACTION,
     GO_DWARFWAKE,
 };
 
