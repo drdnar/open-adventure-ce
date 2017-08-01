@@ -15,4 +15,5 @@ swim
 wizard
 yes
 news
-version
+# Too much of a PITA to edit the check file after every release bump.
+#version
