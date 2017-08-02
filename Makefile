@@ -14,7 +14,7 @@ INC+=$(shell pkg-config --cflags libedit)
 
 OBJS=main.o init.o actions.o score.o misc.o saveresume.o
 CHEAT_OBJS=cheat.o init.o actions.o score.o misc.o saveresume.o
-SOURCES=$(OBJS:.o=.c) advent.h adventure.yaml Makefile control make_dungeon.py
+SOURCES=$(OBJS:.o=.c) advent.h adventure.yaml Makefile control make_dungeon.py templates/*.tpl
 
 .c.o:
 	$(CC) $(CCFLAGS) $(INC) $(DBX) -c $<
@@ -39,7 +39,7 @@ saveresume.o:	advent.h dungeon.h
 dungeon.o:	dungeon.c dungeon.h
 	$(CC) $(CCFLAGS) $(DBX) -c dungeon.c
 
-dungeon.c dungeon.h: make_dungeon.py adventure.yaml
+dungeon.c dungeon.h: make_dungeon.py adventure.yaml templates/*.tpl
 	./make_dungeon.py
 
 clean:
@@ -74,7 +74,7 @@ coverage: debug
 html: advent.html history.html hints.html
 
 # README.adoc exists because that filename is magic on GitLab.
-DOCS=COPYING NEWS README.adoc TODO advent.adoc history.adoc notes.adoc hints.adoc advent.6
+DOCS=COPYING NEWS README.adoc TODO advent.adoc history.adoc notes.adoc hints.adoc advent.6 INSTALL.adoc
 TESTFILES=tests/*.log tests/*.chk tests/README tests/decheck tests/Makefile
 
 # Can't use GNU tar's --transform, needs to build under Alpine Linux.
