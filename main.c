@@ -1121,17 +1121,16 @@ Lclearobj:
                     command.word[0].id = ENTRANCE;
                 }
             }
-            if (!((command.word[0].id != WATER && command.word[0].id != OIL) || (command.word[1].id != PLANT && command.word[1].id != DOOR))) {
+            if ((command.word[0].id == WATER || command.word[0].id == OIL) && (command.word[1].id == PLANT || command.word[1].id == DOOR)) {
                 if (AT(command.word[1].id)) {
                     command.word[1].id = POUR;
                     command.word[1].type = ACTION;
-                    strncpy(command.word[1].raw, "POUR", LINESIZE - 1);
+                    strncpy(command.word[1].raw, "pour", LINESIZE - 1);
                 }
             }
             if (command.word[0].id == CAGE && command.word[1].id == BIRD && HERE(CAGE) && HERE(BIRD)) {
                 command.word[0].id = CARRY;
                 command.word[0].type = ACTION;
-                strncpy(command.word[1].raw, "CATCH", LINESIZE - 1);
             }
         }
 
