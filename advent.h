@@ -183,6 +183,11 @@ struct settings_t {
     bool prompt;
 };
 
+typedef struct {
+  vocab_t id;
+  word_type_t type;
+} command_word_t;
+
 struct command_t {
     char raw1[LINESIZE], raw2[LINESIZE];
     enum speechpart part;
