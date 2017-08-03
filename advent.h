@@ -230,4 +230,11 @@ extern void state_change(obj_t, int);
 
 void bug(enum bugtype, const char *) __attribute__((__noreturn__));
 
+/* represent an empty command word */
+static const command_word_t empty_command_word = {
+  .raw = "",
+  .id = WORD_EMPTY,
+  .type = NO_WORD_TYPE,
+};
+
 /* end */

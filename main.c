@@ -1168,12 +1168,8 @@ Lookup:
             continue;	/* back to top of main interpreter loop */
         case GO_WORD2:
             /* Get second word for analysis. */
-            command.word[0].id = command.word[1].id;
-            command.word[0].type = command.word[1].type;
-            strncpy(command.word[0].raw, command.word[1].raw, LINESIZE - 1);
-            command.word[1].id = WORD_EMPTY;
-            command.word[1].type = NO_WORD_TYPE;
-            command.word[1].raw[0] = '\0';
+  	    command.word[0] = command.word[1];
+	    command.word[1] = empty_command_word;
             goto Lookup;
         case GO_UNKNOWN:
             /*  Random intransitive verbs come here.  Clear obj just in case
