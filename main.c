@@ -1199,7 +1199,6 @@ Lookup:
             sspeak(DO_WHAT, command.word[0].raw);
             command.obj = 0;
         // Fallthrough
-        case GO_CHECKHINT: // Fallthrough
         case GO_CLEAROBJ:
             goto Lclearobj;
         case GO_DWARFWAKE:
