@@ -413,54 +413,54 @@ static bool is_valid_int(const char *str)
     return true;
 }
 
-static void get_vocab_metadata(const char* word, vocab_t* id, word_type_t* type)
+static void get_vocab_metadata(command_word_t* word)
 {
     /* Check for an empty string */
-    if (strncmp(word, "", sizeof("")) == 0) {
-        *id = WORD_EMPTY;
-        *type = NO_WORD_TYPE;
+    if (strncmp(word->raw, "", sizeof("")) == 0) {
+        word->id = WORD_EMPTY;
+        word->type = NO_WORD_TYPE;
         return;
     }
 
     vocab_t ref_num;
 
-    ref_num = get_motion_vocab_id(word);
+    ref_num = get_motion_vocab_id(word->raw);
     if (ref_num != WORD_NOT_FOUND) {
-        *id = ref_num;
-        *type = MOTION;
+        word->id = ref_num;
+        word->type = MOTION;
         return;
     }
 
-    ref_num = get_object_vocab_id(word);
+    ref_num = get_object_vocab_id(word->raw);
     if (ref_num != WORD_NOT_FOUND) {
-        *id = ref_num;
-        *type = OBJECT;
+        word->id = ref_num;
+        word->type = OBJECT;
         return;
     }
 
-    ref_num = get_action_vocab_id(word);
+    ref_num = get_action_vocab_id(word->raw);
     if (ref_num != WORD_NOT_FOUND) {
-        *id = ref_num;
-        *type = ACTION;
+        word->id = ref_num;
+        word->type = ACTION;
         return;
     }
 
     // Check for the reservoir magic word.
-    if (strcasecmp(word, game.zzword) == 0) {
-        *id = PART;
-        *type = ACTION;
+    if (strcasecmp(word->raw, game.zzword) == 0) {
+        word->id = PART;
+        word->type = ACTION;
         return;
     }
 
     // Check words that are actually numbers.
-    if (is_valid_int(word)) {
-        *id = WORD_EMPTY;
-        *type = NUMERIC;
+    if (is_valid_int(word->raw)) {
+        word->id = WORD_EMPTY;
+        word->type = NUMERIC;
         return;
     }
 
-    *id = WORD_NOT_FOUND;
-    *type = NO_WORD_TYPE;
+    word->id = WORD_NOT_FOUND;
+    word->type = NO_WORD_TYPE;
     return;
 }
 
@@ -496,8 +496,8 @@ static void tokenize(char* raw, struct command_t *cmd)
     }
 
     /* populate command with parsed vocabulary metadata */
-    get_vocab_metadata(cmd->word[0].raw, &(cmd->word[0].id), &(cmd->word[0].type));
-    get_vocab_metadata(cmd->word[1].raw, &(cmd->word[1].id), &(cmd->word[1].type));
+    get_vocab_metadata(&(cmd->word[0]));
+    get_vocab_metadata(&(cmd->word[1]));
 }
 
 bool get_command_input(struct command_t *command)
