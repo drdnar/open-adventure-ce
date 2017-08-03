@@ -1059,10 +1059,18 @@ Lclearobj:
             return false;
 
 #ifdef GDEBUG
-	printf("Preserve: type1 = %u, id1 = %ld, type2 = %u, id2 = %ld\n",
-	       preserve.word[0].type, preserve.word[0].id, preserve.word[1].type, preserve.word[1].id);
-	printf("Command: type1 = %u, id1 = %ld, type2 = %u, id2 = %ld\n",
-	       command.word[0].type, command.word[0].id, command.word[1].type, command.word[1].id);
+	/* Needs to stay synced with enum word_type_t */
+	const char *types[] = {"NO_WORD_TYPE", "MOTION", "OBJECT", "ACTION", "NUMERIC"}; 
+	printf("Preserve: type1 = %s, id1 = %ld, type2 = %s, id2 = %ld\n",
+	       types[preserve.word[0].type],
+	       preserve.word[0].id,
+	       types[preserve.word[1].type],
+	       preserve.word[1].id);
+	printf("Command: type1 = %s, id1 = %ld, type2 = %s, id2 = %ld\n",
+	       types[command.word[0].type],
+	       command.word[0].id,
+	       types[command.word[1].type],
+	       command.word[1].id);
 #endif
 
 	/* Handle of objectless action followed by actionless object */
