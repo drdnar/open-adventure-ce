@@ -184,17 +184,14 @@ struct settings_t {
 };
 
 typedef struct {
+  char raw[LINESIZE];
   vocab_t id;
   word_type_t type;
 } command_word_t;
 
 struct command_t {
-    char raw1[LINESIZE], raw2[LINESIZE];
     enum speechpart part;
-    vocab_t id1;
-    vocab_t id2;
-    word_type_t type1;
-    word_type_t type2;
+    command_word_t word[2];
     verb_t verb;
     obj_t   obj;
 };

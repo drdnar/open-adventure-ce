@@ -1092,7 +1092,7 @@ static int read(struct command_t command)
     }
 
     if (DARK(game.loc)) {
-        sspeak(NO_SEE, command.raw1);
+        sspeak(NO_SEE, command.word[0].raw);
     } else if (command.obj == OYSTER && !game.clshnt && game.closed) {
         game.clshnt = yes(arbitrary_messages[CLUE_QUERY], arbitrary_messages[WAYOUT_CLUE], arbitrary_messages[OK_MAN]);
     } else if (objects[command.obj].texts[0] == NULL ||
@@ -1144,25 +1144,25 @@ static int rub(verb_t verb, obj_t obj)
 static int say(struct command_t command)
 /* Say.  Echo WD2. Magic words override. */
 {
-    if (command.type2 == MOTION &&
-       (command.id2 == XYZZY ||
-        command.id2 == PLUGH ||
-    	command.id2 == PLOVER)) {
+    if (command.word[1].type == MOTION &&
+       (command.word[1].id == XYZZY ||
+        command.word[1].id == PLUGH ||
+    	command.word[1].id == PLOVER)) {
 	    return GO_WORD2;
     }
-    if (command.type2 == ACTION && command.id2 == PART)
+    if (command.word[1].type == ACTION && command.word[1].id == PART)
         return reservoir();
     
-    if (command.type2 == ACTION &&
-        (command.id2 == FEE ||
-	 command.id2 == FIE ||
-	 command.id2 == FOE ||
-	 command.id2 == FOO ||
-	 command.id2 == FUM ||
-	 command.id2 == PART)) {
-        return bigwords(command.id2);
+    if (command.word[1].type == ACTION &&
+        (command.word[1].id == FEE ||
+	 command.word[1].id == FIE ||
+	 command.word[1].id == FOE ||
+	 command.word[1].id == FOO ||
+	 command.word[1].id == FUM ||
+	 command.word[1].id == PART)) {
+        return bigwords(command.word[1].id);
     }
-    sspeak(OKEY_DOKEY, command.raw2);
+    sspeak(OKEY_DOKEY, command.word[1].raw);
     return GO_CLEAROBJ;
 }
 
@@ -1353,14 +1353,14 @@ int action(struct command_t command)
             command.obj = ROD2;
             /* FALL THROUGH */;
         } else if ((command.verb == FIND ||
-                    command.verb == INVENTORY) && (command.id2 == WORD_EMPTY || command.id2 == WORD_NOT_FOUND))
+                    command.verb == INVENTORY) && (command.word[1].id == WORD_EMPTY || command.word[1].id == WORD_NOT_FOUND))
             /* FALL THROUGH */;
         else {
-            sspeak(NO_SEE, command.raw1);
+            sspeak(NO_SEE, command.word[0].raw);
             return GO_CLEAROBJ;
         }
 
-        if (command.id2 != WORD_EMPTY && command.id2 != WORD_NOT_FOUND)
+        if (command.word[1].id != WORD_EMPTY && command.word[1].id != WORD_NOT_FOUND)
             return GO_WORD2;
         if (command.verb != 0)
             command.part = transitive;
@@ -1368,13 +1368,13 @@ int action(struct command_t command)
 
     switch (command.part) {
     case intransitive:
-        if (command.raw2[0] != '\0' && command.verb != SAY)
+        if (command.word[1].raw[0] != '\0' && command.verb != SAY)
             return GO_WORD2;
         if (command.verb == SAY)
 	    /* KEYS is not special, anything not NO_OBJECT or INTRANSITIVE
 	     * will do here. We're preventing interpretation as an intransitive
 	     * verb when the word is unknown. */
-            command.obj = command.raw2[0] != '\0' ? KEYS : NO_OBJECT;
+            command.obj = command.word[1].raw[0] != '\0' ? KEYS : NO_OBJECT;
         if (command.obj == NO_OBJECT ||
             command.obj == INTRANSITIVE) {
             /*  Analyse an intransitive verb (ie, no object given yet). */
@@ -1439,7 +1439,7 @@ int action(struct command_t command)
             case FOE:
             case FOO:
             case FUM:
-                return bigwords(command.id1);
+                return bigwords(command.word[0].id);
             case BRIEF:
                 return brief();
             case READ:
@@ -1568,15 +1568,15 @@ int action(struct command_t command)
             return reservoir();
 	// LCOV_EXCL_STOP
         case SEED:
-            return seed(command.verb, command.raw2);
+            return seed(command.verb, command.word[1].raw);
         case WASTE:
-            return waste(command.verb, (turn_t)atol(command.raw2));
+            return waste(command.verb, (turn_t)atol(command.word[1].raw));
         default: // LCOV_EXCL_LINE
             BUG(TRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST); // LCOV_EXCL_LINE
         }
     case unknown:
         /* Unknown verb, couldn't deduce object - might need hint */
-        sspeak(WHAT_DO, command.raw1);
+        sspeak(WHAT_DO, command.word[0].raw);
         return GO_CHECKHINT;
     default: // LCOV_EXCL_LINE
         BUG(SPEECHPART_NOT_TRANSITIVE_OR_INTRANSITIVE_OR_UNKNOWN); // LCOV_EXCL_LINE

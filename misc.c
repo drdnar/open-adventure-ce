@@ -471,7 +471,7 @@ static void tokenize(char* raw, struct command_t *cmd)
     /* Bound prefix on the %s would be needed to prevent buffer
      * overflow.  but we shortstop this more simply by making each
      * raw-input buffer as long as the entire input buffer. */
-    sscanf(raw, "%s%s", cmd->raw1, cmd->raw2);
+    sscanf(raw, "%s%s", cmd->word[0].raw, cmd->word[1].raw);
 
     /* (ESR) In oldstyle mode, simulate the uppercasing and truncating
      * effect on raw tokens of packing them into sixbit characters, 5
@@ -488,16 +488,16 @@ static void tokenize(char* raw, struct command_t *cmd)
      * possible an emulation of the original UI.
      */
     if (settings.oldstyle) {
-        cmd->raw1[TOKLEN + TOKLEN] = cmd->raw2[TOKLEN + TOKLEN] = '\0';
-        for (size_t i = 0; i < strlen(cmd->raw1); i++)
-            cmd->raw1[i] = toupper(cmd->raw1[i]);
-        for (size_t i = 0; i < strlen(cmd->raw2); i++)
-            cmd->raw2[i] = toupper(cmd->raw2[i]);
+        cmd->word[0].raw[TOKLEN + TOKLEN] = cmd->word[1].raw[TOKLEN + TOKLEN] = '\0';
+        for (size_t i = 0; i < strlen(cmd->word[0].raw); i++)
+            cmd->word[0].raw[i] = toupper(cmd->word[0].raw[i]);
+        for (size_t i = 0; i < strlen(cmd->word[1].raw); i++)
+            cmd->word[1].raw[i] = toupper(cmd->word[1].raw[i]);
     }
 
     /* populate command with parsed vocabulary metadata */
-    get_vocab_metadata(cmd->raw1, &(cmd->id1), &(cmd->type1));
-    get_vocab_metadata(cmd->raw2, &(cmd->id2), &(cmd->type2));
+    get_vocab_metadata(cmd->word[0].raw, &(cmd->word[0].id), &(cmd->word[0].type));
+    get_vocab_metadata(cmd->word[1].raw, &(cmd->word[1].id), &(cmd->word[1].type));
 }
 
 bool get_command_input(struct command_t *command)

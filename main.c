@@ -1059,14 +1059,14 @@ Lclearobj:
             return false;
 
 #ifdef GDEBUG
-	printf("Preserve: type1 = %u, id1 = %ld, type2 = %u id2 = %ld\n",
-	       preserve.type1, preserve.id1, preserve.type2, preserve.id2);
-	printf("Command: type1 = %u, id1 = %ld, type2 = %u id2 = %ld\n",
-	       command.type1, command.id1, command.type2, command.id2);
+	printf("Preserve: type1 = %u, id1 = %ld, type2 = %u, id2 = %ld\n",
+	       preserve.word[0].type, preserve.word[0].id, preserve.word[1].type, preserve.word[1].id);
+	printf("Command: type1 = %u, id1 = %ld, type2 = %u, id2 = %ld\n",
+	       command.word[0].type, command.word[0].id, command.word[1].type, command.word[1].id);
 #endif
 
-	/* Handling of objectless action followed by actionless object */
-	if (preserve.type1 == ACTION && preserve.type2 == NO_WORD_TYPE && command.id2 == 0)
+	/* Handle of objectless action followed by actionless object */
+	if (preserve.word[0].type == ACTION && preserve.word[1].type == NO_WORD_TYPE && command.word[1].id == 0)
 	    command.verb = preserve.verb;
 
 #ifdef BROKEN
@@ -1083,8 +1083,8 @@ Lclearobj:
         } else
             lampcheck();
 
-        if (command.type1 == MOTION && command.id1 == ENTER
-            && (command.id2 == STREAM || command.id2 == WATER)) {
+        if (command.word[0].type == MOTION && command.word[0].id == ENTER
+            && (command.word[1].id == STREAM || command.word[1].id == WATER)) {
             if (LIQLOC(game.loc) == WATER)
                 rspeak(FEET_WET);
             else
@@ -1093,65 +1093,65 @@ Lclearobj:
             goto Lclearobj;
         }
 
-        if (command.type1 == OBJECT) {
-            if (command.id1 == GRATE) {
-                command.type1 = MOTION;
+        if (command.word[0].type == OBJECT) {
+            if (command.word[0].id == GRATE) {
+                command.word[0].type = MOTION;
                 if (game.loc == LOC_START ||
                     game.loc == LOC_VALLEY ||
                     game.loc == LOC_SLIT) {
-                    command.id1 = DEPRESSION;
+                    command.word[0].id = DEPRESSION;
                 }
                 if (game.loc == LOC_COBBLE ||
                     game.loc == LOC_DEBRIS ||
                     game.loc == LOC_AWKWARD ||
                     game.loc == LOC_BIRD ||
                     game.loc == LOC_PITTOP) {
-                    command.id1 = ENTRANCE;
+                    command.word[0].id = ENTRANCE;
                 }
             }
-            if (!((command.id1 != WATER && command.id1 != OIL) || (command.id2 != PLANT && command.id2 != DOOR))) {
-                if (AT(command.id2)) {
-                    command.id2 = POUR;
-                    command.type2 = ACTION;
-                    strncpy(command.raw2, "POUR", LINESIZE - 1);
+            if (!((command.word[0].id != WATER && command.word[0].id != OIL) || (command.word[1].id != PLANT && command.word[1].id != DOOR))) {
+                if (AT(command.word[1].id)) {
+                    command.word[1].id = POUR;
+                    command.word[1].type = ACTION;
+                    strncpy(command.word[1].raw, "POUR", LINESIZE - 1);
                 }
             }
-            if (command.id1 == CAGE && command.id2 == BIRD && HERE(CAGE) && HERE(BIRD)) {
-                command.id1 = CARRY;
-                command.type1 = ACTION;
-                strncpy(command.raw2, "CATCH", LINESIZE - 1);
+            if (command.word[0].id == CAGE && command.word[1].id == BIRD && HERE(CAGE) && HERE(BIRD)) {
+                command.word[0].id = CARRY;
+                command.word[0].type = ACTION;
+                strncpy(command.word[1].raw, "CATCH", LINESIZE - 1);
             }
         }
 
 Lookup:
-        if (strncasecmp(command.raw1, "west", sizeof("west")) == 0) {
+        if (strncasecmp(command.word[0].raw, "west", sizeof("west")) == 0) {
             if (++game.iwest == 10)
                 rspeak(W_IS_WEST);
         }
-        if (strncasecmp(command.raw1, "go", sizeof("go")) == 0 && command.id2 != WORD_EMPTY) {
+        if (strncasecmp(command.word[0].raw, "go", sizeof("go")) == 0 && command.word[1].id != WORD_EMPTY) {
             if (++game.igo == 10)
                 rspeak(GO_UNNEEDED);
         }
-        if (command.id1 == WORD_NOT_FOUND) {
+        if (command.word[0].id == WORD_NOT_FOUND) {
             /* Gee, I don't understand. */
-            sspeak(DONT_KNOW, command.raw1);
+            sspeak(DONT_KNOW, command.word[0].raw);
             goto Lclearobj;
         }
-        switch (command.type1) {
+        switch (command.word[0].type) {
         case NO_WORD_TYPE: // FIXME: treating NO_WORD_TYPE as a motion word is confusing
         case MOTION:
-            playermove(command.id1);
+            playermove(command.word[0].id);
             return true;
         case OBJECT:
             command.part = unknown;
-            command.obj = command.id1;
+            command.obj = command.word[0].id;
             break;
         case ACTION:
-            if(command.type2 == NUMERIC) 
+            if(command.word[1].type == NUMERIC) 
                 command.part = transitive;
             else
                 command.part = intransitive;
-            command.verb = command.id1;
+            command.verb = command.word[0].id;
             break;
         case NUMERIC: // LCOV_EXCL_LINE
         default: // LCOV_EXCL_LINE
@@ -1168,18 +1168,18 @@ Lookup:
             continue;	/* back to top of main interpreter loop */
         case GO_WORD2:
             /* Get second word for analysis. */
-            command.id1 = command.id2;
-            command.type1 = command.type2;
-            strncpy(command.raw1, command.raw2, LINESIZE - 1);
-            command.id2 = WORD_EMPTY;
-            command.type2 = NO_WORD_TYPE;
-            command.raw2[0] = '\0';
+            command.word[0].id = command.word[1].id;
+            command.word[0].type = command.word[1].type;
+            strncpy(command.word[0].raw, command.word[1].raw, LINESIZE - 1);
+            command.word[1].id = WORD_EMPTY;
+            command.word[1].type = NO_WORD_TYPE;
+            command.word[1].raw[0] = '\0';
             goto Lookup;
         case GO_UNKNOWN:
             /*  Random intransitive verbs come here.  Clear obj just in case
              *  (see attack()). */
-            command.raw1[0] = toupper(command.raw1[0]);
-            sspeak(DO_WHAT, command.raw1);
+            command.word[0].raw[0] = toupper(command.word[0].raw[0]);
+            sspeak(DO_WHAT, command.word[0].raw);
             command.obj = 0;
         // Fallthrough
         case GO_CHECKHINT: // Fallthrough
