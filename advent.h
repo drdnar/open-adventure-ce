@@ -87,7 +87,7 @@ enum termination {endgame, quitgame, scoregame};
 
 enum speechpart {unknown, intransitive, transitive};
 
-enum wordtype {NO_WORD_TYPE, MOTION, OBJECT, ACTION, NUMERIC};
+typedef enum {NO_WORD_TYPE, MOTION, OBJECT, ACTION, NUMERIC} word_type_t;
 
 typedef enum scorebonus {none, splatter, defeat, victory} score_t;
 
@@ -188,8 +188,8 @@ struct command_t {
     enum speechpart part;
     vocab_t id1;
     vocab_t id2;
-    enum wordtype type1;
-    enum wordtype type2;
+    word_type_t type1;
+    word_type_t type2;
     verb_t verb;
     obj_t   obj;
 };

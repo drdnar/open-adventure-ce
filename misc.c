@@ -413,7 +413,7 @@ static bool is_valid_int(const char *str)
     return true;
 }
 
-static void get_vocab_metadata(const char* word, vocab_t* id, enum wordtype* type)
+static void get_vocab_metadata(const char* word, vocab_t* id, word_type_t* type)
 {
     /* Check for an empty string */
     if (strncmp(word, "", sizeof("")) == 0) {
