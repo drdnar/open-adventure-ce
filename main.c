@@ -1059,15 +1059,21 @@ Lclearobj:
             return false;
 
 #ifdef GDEBUG
-	printf("Preserve: type1 = %u, id1 = %ld, id2 = %ld\n",
-	       preserve.type1, preserve.id1, preserve.id2);
-	printf("Command: type2 = %u, id1 = %ld, id2 = %ld\n",
-	       preserve.type2, command.id1, command.id2);
+	printf("Preserve: type1 = %u, id1 = %ld, type2 = %u id2 = %ld\n",
+	       preserve.type1, preserve.id1, preserve.type2, preserve.id2);
+	printf("Command: type1 = %u, id1 = %ld, type2 = %u id2 = %ld\n",
+	       command.type1, command.id1, command.type2, command.id2);
 #endif
 
-	/* Handle of objectless action followed by actionless object */
+	/* Handling of objectless action followed by actionless object */
 	if (preserve.type1 == ACTION && preserve.type2 == NO_WORD_TYPE && command.id2 == 0)
 	    command.verb = preserve.verb;
+
+#ifdef BROKEN
+	/* Handling of actionless object followed by objectless action */
+	if (preserve.type1 == OBJECT && preserve.type2 == NO_WORD_TYPE && command.id2 == 0)
+	    command.obj = preserve.obj;
+#endif
 
 	++game.turns;
 
