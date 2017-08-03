@@ -317,7 +317,7 @@ def buildtravel(locs, objs):
     # THIS CODE IS WAAAY MORE COMPLEX THAN IT NEEDS TO BE.  It's the
     # result of a massive refactoring exercise that concentrated all
     # the old nastiness in one spot. It hasn't been finally simplified
-    # because there's no need to do it until one of the asserions
+    # because there's no need to do it until one of the assertions
     # fails. Hint: if you try cleaning this up, the acceptance test is
     # simple - the output dungeon.c must not change.
     #

@@ -3997,7 +3997,7 @@ actions: !!omap
     message: 'Wizards are not to be disturbed by such as you.'
     words: ['wizar']
     noaction: true
-- YES:
+- "YES":
     message: 'Guess again.'
     words: ['yes']
     noaction: true
