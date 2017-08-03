@@ -1051,8 +1051,7 @@ Lclearobj:
             game.knfloc = 0;
 
 	/* Preserve state from last command for reuse when required */
-	command_t preserve;
-	memcpy(&preserve, &command, sizeof(command_t));
+	command_t preserve = command;
 
 	// Get command input from user
         if (!get_command_input(&command))
@@ -1123,8 +1122,7 @@ Lclearobj:
             }
             if ((command.word[0].id == WATER || command.word[0].id == OIL) && (command.word[1].id == PLANT || command.word[1].id == DOOR)) {
                 if (AT(command.word[1].id)) {
-		    memcpy(&command.word[1], &command.word[0],
-			   sizeof(command_word_t));
+		    command.word[1] = command.word[0];
 		    command.word[0].id = POUR;
                     command.word[0].type = ACTION;
                     strncpy(command.word[0].raw, "pour", LINESIZE - 1);
@@ -1137,13 +1135,9 @@ Lclearobj:
 
 	    /* From OV to VO form */
 	    if (command.word[0].type==OBJECT && command.word[1].type==ACTION) {
-		command_word_t stage;
-		memcpy(&stage, &command.word[0],
-			   sizeof(command_word_t));
-		memcpy(&command.word[0], &command.word[1],
-			   sizeof(command_word_t));
-		memcpy(&command.word[1], &stage,
-			   sizeof(command_word_t));
+		command_word_t stage = command.word[0];
+		command.word[0] = command.word[1];
+		command.word[1] = stage;
 	    }
         }
 
