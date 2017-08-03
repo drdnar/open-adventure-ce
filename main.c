@@ -1123,9 +1123,11 @@ Lclearobj:
             }
             if ((command.word[0].id == WATER || command.word[0].id == OIL) && (command.word[1].id == PLANT || command.word[1].id == DOOR)) {
                 if (AT(command.word[1].id)) {
-                    command.word[1].id = POUR;
-                    command.word[1].type = ACTION;
-                    strncpy(command.word[1].raw, "pour", LINESIZE - 1);
+		    memcpy(&command.word[1], &command.word[0],
+			   sizeof(command_word_t));
+		    command.word[0].id = POUR;
+                    command.word[0].type = ACTION;
+                    strncpy(command.word[0].raw, "pour", LINESIZE - 1);
                 }
             }
             if (command.word[0].id == CAGE && command.word[1].id == BIRD && HERE(CAGE) && HERE(BIRD)) {
