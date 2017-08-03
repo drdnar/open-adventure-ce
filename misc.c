@@ -464,9 +464,9 @@ static void get_vocab_metadata(command_word_t* word)
     return;
 }
 
-static void tokenize(char* raw, struct command_t *cmd)
+static void tokenize(char* raw, command_t *cmd)
 {
-    memset(cmd, '\0', sizeof(struct command_t));
+    memset(cmd, '\0', sizeof(command_t));
 
     /* Bound prefix on the %s would be needed to prevent buffer
      * overflow.  but we shortstop this more simply by making each
@@ -500,7 +500,7 @@ static void tokenize(char* raw, struct command_t *cmd)
     get_vocab_metadata(&(cmd->word[1]));
 }
 
-bool get_command_input(struct command_t *command)
+bool get_command_input(command_t *command)
 /* Get user input on stdin, parse and map to command */
 {
     char inputbuf[LINESIZE];

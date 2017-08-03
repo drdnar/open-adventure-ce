@@ -6,7 +6,7 @@
 
 static int fill(verb_t, obj_t);
 
-static int attack(struct command_t command)
+static int attack(command_t command)
 /*  Attack.  Assume target if unambiguous.  "Throw" also links here.
  *  Attackable objects fall into two categories: enemies (snake,
  *  dwarf, etc.)  and others (bird, clam, machine).  Ambiguous if 2
@@ -1076,7 +1076,7 @@ static int quit(void)
     return GO_CLEAROBJ;
 }
 
-static int read(struct command_t command)
+static int read(command_t command)
 /*  Read.  Print stuff based on objtxt.  Oyster (?) is special case. */
 {
     if (command.obj == INTRANSITIVE) {
@@ -1141,7 +1141,7 @@ static int rub(verb_t verb, obj_t obj)
     return GO_CLEAROBJ;
 }
 
-static int say(struct command_t command)
+static int say(command_t command)
 /* Say.  Echo WD2. Magic words override. */
 {
     if (command.word[1].type == MOTION &&
@@ -1173,7 +1173,7 @@ static int throw_support(vocab_t spk)
     return GO_MOVE;
 }
 
-static int throw (struct command_t command)
+static int throw (command_t command)
 /*  Throw.  Same as discard unless axe.  Then same as attack except
  *  ignore bird, and if dwarf is present then one might be killed.
  *  (Only way to do so!)  Axe also special for dragon, bear, and
@@ -1311,7 +1311,7 @@ static int wave(verb_t verb, obj_t obj)
     }
 }
 
-int action(struct command_t command)
+int action(command_t command)
 /*  Analyse a verb.  Remember what it was, go back for object if second word
  *  unless verb is "say", which snarfs arbitrary second word.
  */

@@ -189,17 +189,17 @@ typedef struct {
   word_type_t type;
 } command_word_t;
 
-struct command_t {
+typedef struct {
     enum speechpart part;
     command_word_t word[2];
     verb_t verb;
     obj_t   obj;
-};
+} command_t;
 
 extern struct game_t game;
 extern struct settings_t settings;
 
-extern bool get_command_input(struct command_t *);
+extern bool get_command_input(command_t *);
 extern void speak(const char*, ...);
 extern void sspeak(int msg, ...);
 extern void pspeak(vocab_t, enum speaktype, int, bool, ...);
@@ -224,7 +224,7 @@ extern int suspend(void);
 extern int resume(void);
 extern int restore(FILE *);
 extern long initialise(void);
-extern int action(struct command_t command);
+extern int action(command_t command);
 extern void state_change(obj_t, int);
 
 

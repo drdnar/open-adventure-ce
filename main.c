@@ -968,7 +968,7 @@ static void listobjects(void)
 static bool do_command()
 /* Get and execute a command */
 {
-    static struct command_t command;
+    static command_t command;
 
     /*  Can't leave cave once it's closing (except by main office). */
     if (OUTSID(game.newloc) && game.newloc != 0 && game.closng) {
@@ -1051,8 +1051,8 @@ Lclearobj:
             game.knfloc = 0;
 
 	/* Preserve state from last command for reuse when required */
-	struct command_t preserve;
-	memcpy(&preserve, &command, sizeof(struct command_t));
+	command_t preserve;
+	memcpy(&preserve, &command, sizeof(command_t));
 
 	// Get command input from user
         if (!get_command_input(&command))
