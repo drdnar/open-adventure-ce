@@ -1060,13 +1060,17 @@ Lclearobj:
 
 #ifdef GDEBUG
 	/* Needs to stay synced with enum word_type_t */
-	const char *types[] = {"NO_WORD_TYPE", "MOTION", "OBJECT", "ACTION", "NUMERIC"}; 
-	printf("Preserve: type1 = %s, id1 = %ld, type2 = %s, id2 = %ld\n",
+	const char *types[] = {"NO_WORD_TYPE", "MOTION", "OBJECT", "ACTION", "NUMERIC"};
+	/* needs to stay synced with enum speechpart */
+	const char *roles[] = {"unknown", "intransitive", "transitive"};
+	printf("Preserve: role = %s type1 = %s, id1 = %ld, type2 = %s, id2 = %ld\n",
+	       roles[preserve.part],
 	       types[preserve.word[0].type],
 	       preserve.word[0].id,
 	       types[preserve.word[1].type],
 	       preserve.word[1].id);
-	printf("Command: type1 = %s, id1 = %ld, type2 = %s, id2 = %ld\n",
+	printf("Command: role = %s type1 = %s, id1 = %ld, type2 = %s, id2 = %ld\n",
+	       roles[command.part],
 	       types[command.word[0].type],
 	       command.word[0].id,
 	       types[command.word[1].type],
@@ -1175,6 +1179,9 @@ Lookup:
         case GO_TOP:
             continue;	/* back to top of main interpreter loop */
         case GO_WORD2:
+#ifdef GDEBUG
+	    printf("Word shift\n");
+#endif /* GDEBUG */
             /* Get second word for analysis. */
   	    command.word[0] = command.word[1];
 	    command.word[1] = empty_command_word;
