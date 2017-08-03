@@ -1360,8 +1360,6 @@ int action(command_t command)
             return GO_CLEAROBJ;
         }
 
-        if (command.word[1].id != WORD_EMPTY && command.word[1].id != WORD_NOT_FOUND)
-            return GO_WORD2;
         if (command.verb != 0)
             command.part = transitive;
     }

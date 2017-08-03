@@ -1134,6 +1134,17 @@ Lclearobj:
                 command.word[0].id = CARRY;
                 command.word[0].type = ACTION;
             }
+
+	    /* From OV to VO form */
+	    if (command.word[0].type==OBJECT && command.word[1].type==ACTION) {
+		command_word_t stage;
+		memcpy(&stage, &command.word[0],
+			   sizeof(command_word_t));
+		memcpy(&command.word[0], &command.word[1],
+			   sizeof(command_word_t));
+		memcpy(&command.word[1], &stage,
+			   sizeof(command_word_t));
+	    }
         }
 
 Lookup:
