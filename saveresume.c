@@ -162,7 +162,7 @@ bool is_valid(struct game_t valgame)
 
     /*  Bounds check for dwarves */
     if (valgame.dtotal < 0 || valgame.dtotal > NDWARVES ||
-        valgame.dkill < 0 || valgame.dkill > NDWARVVES) {
+        valgame.dkill < 0 || valgame.dkill > NDWARVES) {
         return false;
     }
 
