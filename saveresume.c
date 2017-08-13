@@ -159,6 +159,31 @@ bool is_valid(struct game_t valgame)
             return false;
         }
     }
+
+    /*  Bounds check for dwarves */
+    if (valgame.dtotal < 0 || valgame.dtotal > NDWARVES ||
+        valgame.dkill < 0 || valgame.dkill > NDWARVVES) {
+        return false;
+    }
+
+    /*  Validate that we didn't die too many times in save */
+    if (valgame.numdie >= NDEATHS) {
+        return false;
+    }
+
+    /* Recalculate tally, throw the towel if in disagreement */
+    long temp_tally = 0;
+    for (int treasure = 1; treasure <= NOBJECTS; treasure++) {
+        if (objects[treasure].is_treasure) {
+            if (valgame.prop[treasure] == STATE_NOTFOUND) {
+                ++temp_tally;
+            }
+        }
+    }
+    if (temp_tally != valgame.tally) {
+        return false;
+    }
+
     return true;
 }
 
