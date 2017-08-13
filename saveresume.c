@@ -105,6 +105,8 @@ int resume(void)
     return restore(fp);
 }
 
+bool is_valid(struct game_t);
+
 int restore(FILE* fp)
 {
     /*  Read and restore game state from file, assuming
@@ -118,10 +120,32 @@ int restore(FILE* fp)
     fclose(fp);
     if (save.version != VRSION) {
         rspeak(VERSION_SKEW, save.version / 10, MOD(save.version, 10), VRSION / 10, MOD(VRSION, 10));
-    } else {
-	game = save.game;
+    } else if (is_valid(save.game)) {
+        game = save.game;
     }
     return GO_TOP;
+}
+
+bool is_valid(struct game_t valgame)
+{
+    /*  Save files can be roughly grouped into three groups:
+     *  With valid, reaceable state, with valid, but unreachable
+     *  state and with invaild state. We check that state is
+     *  valid: no states are outside minimal or maximal value
+     */
+
+    /*  Bounds check for locations
+     */
+    if ( valgame.chloc < -1  || valgame.chloc > NLOCATIONS  ||
+         valgame.chloc < -1  || valgame.chloc > NLOCATIONS  ||
+         valgame.loc < -1    || valgame.loc > NLOCATIONS    ||
+         valgame.newloc < -1 || valgame.newloc > NLOCATIONS ||
+         valgame.oldloc < -1 || valgame.oldloc > NLOCATIONS ||
+         valgame.oldloc < -1 || valgame.oldloc > NLOCATIONS) {
+        return false;
+    }
+
+    return true;
 }
 
 /* end */
