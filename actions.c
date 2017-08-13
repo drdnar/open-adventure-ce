@@ -265,7 +265,7 @@ static int vbreak(verb_t verb, obj_t obj)
             game.fixed[VASE] = IS_FIXED;
             break;
         }
-	/* FALLTHRU */
+    /* FALLTHRU */
     default:
         speak(actions[verb].message);
     }
@@ -592,7 +592,7 @@ static int eat(verb_t verb, obj_t obj)
     case INTRANSITIVE:
         if (!HERE(FOOD))
             return GO_UNKNOWN;
-	/* FALLTHRU */
+    /* FALLTHRU */
     case FOOD:
         DESTROY(FOOD);
         rspeak(THANKS_DELICIOUS);
@@ -1145,21 +1145,21 @@ static int say(command_t command)
 /* Say.  Echo WD2. Magic words override. */
 {
     if (command.word[1].type == MOTION &&
-       (command.word[1].id == XYZZY ||
-        command.word[1].id == PLUGH ||
-    	command.word[1].id == PLOVER)) {
-	    return GO_WORD2;
+        (command.word[1].id == XYZZY ||
+         command.word[1].id == PLUGH ||
+         command.word[1].id == PLOVER)) {
+        return GO_WORD2;
     }
     if (command.word[1].type == ACTION && command.word[1].id == PART)
         return reservoir();
-    
+
     if (command.word[1].type == ACTION &&
         (command.word[1].id == FEE ||
-	 command.word[1].id == FIE ||
-	 command.word[1].id == FOE ||
-	 command.word[1].id == FOO ||
-	 command.word[1].id == FUM ||
-	 command.word[1].id == PART)) {
+         command.word[1].id == FIE ||
+         command.word[1].id == FOE ||
+         command.word[1].id == FOO ||
+         command.word[1].id == FUM ||
+         command.word[1].id == PART)) {
         return bigwords(command.word[1].id);
     }
     sspeak(OKEY_DOKEY, command.word[1].raw);
@@ -1316,14 +1316,14 @@ int action(command_t command)
  *  unless verb is "say", which snarfs arbitrary second word.
  */
 {
-    /* Previously, actions that result in a message, but don't do anything 
-     * further were called "specials". Now they're handled here as normal 
+    /* Previously, actions that result in a message, but don't do anything
+     * further were called "specials". Now they're handled here as normal
      * actions. If noaction is true, then we spit out the message and return */
     if (actions[command.verb].noaction) {
         speak(actions[command.verb].message);
         return GO_CLEAROBJ;
     }
-    
+
     if (command.part == unknown) {
         /*  Analyse an object word.  See if the thing is here, whether
          *  we've got a verb yet, and so on.  Object must be here
@@ -1369,9 +1369,9 @@ int action(command_t command)
         if (command.word[1].raw[0] != '\0' && command.verb != SAY)
             return GO_WORD2;
         if (command.verb == SAY)
-	    /* KEYS is not special, anything not NO_OBJECT or INTRANSITIVE
-	     * will do here. We're preventing interpretation as an intransitive
-	     * verb when the word is unknown. */
+            /* KEYS is not special, anything not NO_OBJECT or INTRANSITIVE
+             * will do here. We're preventing interpretation as an intransitive
+             * verb when the word is unknown. */
             command.obj = command.word[1].raw[0] != '\0' ? KEYS : NO_OBJECT;
         if (command.obj == NO_OBJECT ||
             command.obj == INTRANSITIVE) {
@@ -1508,7 +1508,7 @@ int action(command_t command)
         case RUB:
             return rub(command.verb, command.obj);
         case THROW:
-            return throw(command);
+            return throw (command);
         case QUIT: {
             speak(actions[command.verb].message);
             return GO_CLEAROBJ;
@@ -1560,11 +1560,11 @@ int action(command_t command)
             speak(actions[command.verb].message);
             return GO_CLEAROBJ;
         }
-	// LCOV_EXCL_START
-	// This case should never happen - here only as placeholder
+        // LCOV_EXCL_START
+        // This case should never happen - here only as placeholder
         case PART:
             return reservoir();
-	// LCOV_EXCL_STOP
+        // LCOV_EXCL_STOP
         case SEED:
             return seed(command.verb, command.word[1].raw);
         case WASTE:

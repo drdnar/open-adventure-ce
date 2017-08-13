@@ -134,7 +134,7 @@ struct game_t {
     long dflag;
 
     long dkill;                  // dwarves killed
-    long dtotal;                 // total dwarves (including pirate)
+    long dtotal;                 // total dwarves (including pirate) in loc
     long foobar;                 // progress in saying "FEE FIE FOE FOO".
     long holdng;                 // number of objects being carried
     long igo;                    // # uses of "go" instead of a direction
@@ -147,7 +147,7 @@ struct game_t {
     bool novice;                 // asked for instructions at start-up?
     turn_t numdie;               // number of times killed so far
     loc_t oldloc;                // where player was
-    loc_t oldlc2;                // where player was two moves ago 
+    loc_t oldlc2;                // where player was two moves ago
     obj_t oldobj;                // last object player handled
     bool panic;                  // has player found out he's trapped?
     long saved;                  // point penalty for saves
@@ -183,9 +183,9 @@ struct settings_t {
 };
 
 typedef struct {
-  char raw[LINESIZE];
-  vocab_t id;
-  word_type_t type;
+    char raw[LINESIZE];
+    vocab_t id;
+    word_type_t type;
 } command_word_t;
 
 typedef struct {
@@ -231,9 +231,9 @@ void bug(enum bugtype, const char *) __attribute__((__noreturn__));
 
 /* represent an empty command word */
 static const command_word_t empty_command_word = {
-  .raw = "",
-  .id = WORD_EMPTY,
-  .type = NO_WORD_TYPE,
+    .raw = "",
+    .id = WORD_EMPTY,
+    .type = NO_WORD_TYPE,
 };
 
 /* end */

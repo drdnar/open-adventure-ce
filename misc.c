@@ -388,22 +388,21 @@ static int get_action_vocab_id(const char* word)
     return (WORD_NOT_FOUND);
 }
 
-static bool is_valid_int(const char *str) 
-/* Returns true if the string passed in is represents a valid integer, 
+static bool is_valid_int(const char *str)
+/* Returns true if the string passed in is represents a valid integer,
  * that could then be parsed by atoi() */
 {
     // Handle negative number
     if (*str == '-')
         ++str;
 
-    // Handle empty string or just "-". Should never reach this 
+    // Handle empty string or just "-". Should never reach this
     // point, because this is only used with transitive verbs.
     if (!*str)
         return false; // LCOV_EXCL_LINE
 
     // Check for non-digit chars in the rest of the stirng.
-    while (*str)
-    {
+    while (*str) {
         if (!isdigit(*str))
             return false;
         else
