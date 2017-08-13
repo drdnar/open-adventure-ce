@@ -25,7 +25,6 @@ check: savecheck regress
 	@-advent -l /dev/null <pitfall.log >/dev/null
 
 coverage: check
-	ls -lR $(PARDIR)
 	lcov -t "advent" -o $(PARDIR)/advent.info -c -d $(PARDIR) --gcov-tool=$(GCOV)
 	genhtml -o $(PARDIR)/coverage/ $(PARDIR)/advent.info
 	./coverage_dungeon.py
