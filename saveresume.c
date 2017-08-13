@@ -144,7 +144,21 @@ bool is_valid(struct game_t valgame)
          valgame.oldloc < -1 || valgame.oldloc > NLOCATIONS) {
         return false;
     }
+    /*  Bounds check for location arrays
+     */
+    for (int i = 0; i <= NDWARVES; i++) {
+        if (valgame.dloc[i]  < -1 || valgame.dloc[i]  > NLOCATIONS  ||
+            valgame.odloc[i] < -1 || valgame.odloc[i] > NLOCATIONS) {
+            return false;
+        }
+    }
 
+    for (int i = 0; i <= NOBJECTS; i++) {
+        if (valgame.place[i] < -1 || valgame.place[i] > NLOCATIONS  ||
+            valgame.fixed[i] < -1 || valgame.fixed[i] > NLOCATIONS) {
+            return false;
+        }
+    }
     return true;
 }
 
