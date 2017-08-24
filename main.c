@@ -1175,9 +1175,6 @@ Lookup:
         default: // LCOV_EXCL_LINE
             BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3); // LCOV_EXCL_LINE
         }
-        if (!is_valid(game)) {
-            exit(1);
-        }
         switch (action(command)) {
         case GO_TERMINATE:
             return true;

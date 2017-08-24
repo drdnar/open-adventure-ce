@@ -139,6 +139,12 @@ bool is_valid(struct game_t valgame)
         return false;
     }
 
+    /* Prevent RNG substitution. Why we are saving PRNG parameters? */
+
+    if (valgame.lcg_a != game.lcg_a || valgame.lcg_c != game.lcg_c || valgame.lcg_m != game.lcg_m) {
+        return false;
+    }
+
     /*  Bounds check for locations */
     if ( valgame.chloc < -1  || valgame.chloc > NLOCATIONS  ||
          valgame.chloc2 < -1  || valgame.chloc2 > NLOCATIONS  ||
