@@ -165,7 +165,7 @@ struct game_t {
     loc_t dloc[NDWARVES + 1];    // location of dwarves, initially hard-wired in
     loc_t odloc[NDWARVES + 1];   // prior loc of each dwarf, initially garbage
     loc_t fixed[NOBJECTS + 1];   // fixed location of object (if  not IS_FREE)
-    long link[NOBJECTS * 2 + 1]; // object-list links
+    obj_t link[NOBJECTS * 2 + 1]; // object-list links
     loc_t place[NOBJECTS + 1];   // location of object
     long hinted[NHINTS];         // hinted[i] = true iff hint i has been used.
     long hintlc[NHINTS];         // hintlc[i] = how long at LOC with cond bit i

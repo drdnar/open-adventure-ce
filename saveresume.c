@@ -185,7 +185,7 @@ bool is_valid(struct game_t valgame)
     }
 
     /* Check that properties of objects aren't beyond expected */
-    for (int obj = 0; obj <= NOBJECTS; obj++) {
+    for (obj_t obj = 0; obj <= NOBJECTS; obj++) {
         if (valgame.prop[obj] < STATE_NOTFOUND || valgame.prop[obj] > 1) {
             switch (obj) {
             case RUG:
@@ -210,9 +210,14 @@ bool is_valid(struct game_t valgame)
         }
     }
 
-    /* Check that we have objects at locations */
+    /* Check that values in linked lists for objects in locations are inside bounds */
     for (loc_t loc = LOC_NOWHERE; loc <= NLOCATIONS; loc++) {
-        if (valgame.atloc[loc] < NO_OBJECT || valgame.atloc[loc] > NOBJECTS * 2 + 1) {
+        if (valgame.atloc[loc] < NO_OBJECT || valgame.atloc[loc] > NOBJECTS * 2) {
+            return false;
+        }
+    }
+    for (obj_t obj = 0; obj <= NOBJECTS * 2; obj++ ) {
+        if (valgame.link[obj] < NO_OBJECT || valgame.link[obj] > NOBJECTS * 2) {
             return false;
         }
     }
