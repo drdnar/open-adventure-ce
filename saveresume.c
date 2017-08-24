@@ -186,7 +186,7 @@ bool is_valid(struct game_t valgame)
 
     /* Check that properties of objects aren't beyond expected */
     for (int obj = 0; obj <= NOBJECTS; obj++) {
-        if (game.prop[obj] < STATE_NOTFOUND || game.prop[obj] > 1) {
+        if (valgame.prop[obj] < STATE_NOTFOUND || valgame.prop[obj] > 1) {
             switch (obj) {
             case RUG:
             case DRAGON:
@@ -199,15 +199,21 @@ bool is_valid(struct game_t valgame)
             case EGGS:
             case VASE:
             case CHAIN:
-                if (game.prop[obj] == 2) // There are multiple different states, but it's convenient to clump them together
+                if (valgame.prop[obj] == 2) // There are multiple different states, but it's convenient to clump them together
                     continue;
             case BEAR:
-                if (game.prop[BEAR] == CONTENTED_BEAR || game.prop[BEAR] == BEAR_DEAD)
+                if (valgame.prop[BEAR] == CONTENTED_BEAR || game.prop[BEAR] == BEAR_DEAD)
                     continue;
             default:
-                printf("%i", obj);
                 return false;
             }
+        }
+    }
+
+    /* Check that we have objects at locations */
+    for (loc_t loc = LOC_NOWHERE; loc <= NLOCATIONS; loc++) {
+        if (valgame.atloc[loc] < NO_OBJECT || valgame.atloc[loc] > NLOCATIONS) {
+            return false;
         }
     }
 
