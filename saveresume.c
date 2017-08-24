@@ -134,8 +134,12 @@ bool is_valid(struct game_t valgame)
      *  valid: no states are outside minimal or maximal value
      */
 
-    /*  Bounds check for locations
-     */
+    /* Prevent division by zero */
+    if (valgame.abbnum == 0) {
+        return false;
+    }
+
+    /*  Bounds check for locations */
     if ( valgame.chloc < -1  || valgame.chloc > NLOCATIONS  ||
          valgame.chloc < -1  || valgame.chloc > NLOCATIONS  ||
          valgame.loc < -1    || valgame.loc > NLOCATIONS    ||
@@ -144,8 +148,7 @@ bool is_valid(struct game_t valgame)
          valgame.oldloc < -1 || valgame.oldloc > NLOCATIONS) {
         return false;
     }
-    /*  Bounds check for location arrays
-     */
+    /*  Bounds check for location arrays */
     for (int i = 0; i <= NDWARVES; i++) {
         if (valgame.dloc[i]  < -1 || valgame.dloc[i]  > NLOCATIONS  ||
             valgame.odloc[i] < -1 || valgame.odloc[i] > NLOCATIONS) {
