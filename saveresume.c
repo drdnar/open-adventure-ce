@@ -212,7 +212,7 @@ bool is_valid(struct game_t valgame)
 
     /* Check that we have objects at locations */
     for (loc_t loc = LOC_NOWHERE; loc <= NLOCATIONS; loc++) {
-        if (valgame.atloc[loc] < NO_OBJECT || valgame.atloc[loc] > NLOCATIONS) {
+        if (valgame.atloc[loc] < NO_OBJECT || valgame.atloc[loc] > NOBJECTS * 2 + 1) {
             return false;
         }
     }
