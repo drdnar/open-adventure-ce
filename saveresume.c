@@ -146,9 +146,9 @@ bool is_valid(struct game_t valgame)
     }
 
     /*  Bounds check for locations */
-    if ( valgame.chloc < -1  || valgame.chloc > NLOCATIONS  ||
-         valgame.chloc2 < -1  || valgame.chloc2 > NLOCATIONS  ||
-         valgame.loc < -1    || valgame.loc > NLOCATIONS    ||
+    if ( valgame.chloc  < -1 || valgame.chloc  > NLOCATIONS ||
+         valgame.chloc2 < -1 || valgame.chloc2 > NLOCATIONS ||
+         valgame.loc    < -1 || valgame.loc    > NLOCATIONS ||
          valgame.newloc < -1 || valgame.newloc > NLOCATIONS ||
          valgame.oldloc < -1 || valgame.oldloc > NLOCATIONS ||
          valgame.oldlc2 < -1 || valgame.oldlc2 > NLOCATIONS) {
@@ -171,7 +171,7 @@ bool is_valid(struct game_t valgame)
 
     /*  Bounds check for dwarves */
     if (valgame.dtotal < 0 || valgame.dtotal > NDWARVES ||
-        valgame.dkill < 0 || valgame.dkill > NDWARVES) {
+        valgame.dkill < 0  || valgame.dkill  > NDWARVES) {
         return false;
     }
 

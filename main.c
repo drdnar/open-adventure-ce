@@ -85,7 +85,6 @@ int main(int argc, char *argv[])
                 fprintf(stderr,
                         "advent: can't open save file %s for read\n",
                         optarg);
-            signal(SIGINT, sig_handler);
             break;
 #endif
         default:
@@ -461,6 +460,8 @@ static bool dwarfmove(void)
 static void croak(void)
 /*  Okay, he's dead.  Let's get on with it. */
 {
+    if (game.numdie < 0)
+        game.numdie = 0;
     const char* query = obituaries[game.numdie].query;
     const char* yes_response = obituaries[game.numdie].yes_response;
     ++game.numdie;
