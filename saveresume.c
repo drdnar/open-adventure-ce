@@ -105,7 +105,7 @@ int resume(void)
     return restore(fp);
 }
 
-bool is_valid(struct game_t);
+bool is_valid(struct game_t*);
 
 int restore(FILE* fp)
 {
@@ -120,13 +120,13 @@ int restore(FILE* fp)
     fclose(fp);
     if (save.version != VRSION) {
         rspeak(VERSION_SKEW, save.version / 10, MOD(save.version, 10), VRSION / 10, MOD(VRSION, 10));
-    } else if (is_valid(save.game)) {
+    } else if (is_valid(&save.game)) {
         game = save.game;
     }
     return GO_TOP;
 }
 
-bool is_valid(struct game_t valgame)
+bool is_valid(struct game_t* valgame)
 {
     /*  Save files can be roughly grouped into three groups:
      *  With valid, reaceable state, with valid, but unreachable
@@ -135,48 +135,53 @@ bool is_valid(struct game_t valgame)
      */
 
     /* Prevent division by zero */
-    if (valgame.abbnum == 0) {
+    if (valgame->abbnum == 0) {
         return false;
     }
 
     /* Prevent RNG substitution. Why we are saving PRNG parameters? */
 
-    if (valgame.lcg_a != game.lcg_a || valgame.lcg_c != game.lcg_c || valgame.lcg_m != game.lcg_m) {
+    if (valgame->lcg_a != game.lcg_a || valgame->lcg_c != game.lcg_c || valgame->lcg_m != game.lcg_m) {
         return false;
     }
 
+    /* Check for RNG overflow. Truncate */
+    if (valgame->lcg_x >= game.lcg_m) {
+        valgame->lcg_x %= game.lcg_m;
+    }
+
     /*  Bounds check for locations */
-    if ( valgame.chloc  < -1 || valgame.chloc  > NLOCATIONS ||
-         valgame.chloc2 < -1 || valgame.chloc2 > NLOCATIONS ||
-         valgame.loc    < -1 || valgame.loc    > NLOCATIONS ||
-         valgame.newloc < -1 || valgame.newloc > NLOCATIONS ||
-         valgame.oldloc < -1 || valgame.oldloc > NLOCATIONS ||
-         valgame.oldlc2 < -1 || valgame.oldlc2 > NLOCATIONS) {
+    if ( valgame->chloc  < -1 || valgame->chloc  > NLOCATIONS ||
+         valgame->chloc2 < -1 || valgame->chloc2 > NLOCATIONS ||
+         valgame->loc    < -1 || valgame->loc    > NLOCATIONS ||
+         valgame->newloc < -1 || valgame->newloc > NLOCATIONS ||
+         valgame->oldloc < -1 || valgame->oldloc > NLOCATIONS ||
+         valgame->oldlc2 < -1 || valgame->oldlc2 > NLOCATIONS) {
         return false;
     }
     /*  Bounds check for location arrays */
     for (int i = 0; i <= NDWARVES; i++) {
-        if (valgame.dloc[i]  < -1 || valgame.dloc[i]  > NLOCATIONS  ||
-            valgame.odloc[i] < -1 || valgame.odloc[i] > NLOCATIONS) {
+        if (valgame->dloc[i]  < -1 || valgame->dloc[i]  > NLOCATIONS  ||
+            valgame->odloc[i] < -1 || valgame->odloc[i] > NLOCATIONS) {
             return false;
         }
     }
 
     for (int i = 0; i <= NOBJECTS; i++) {
-        if (valgame.place[i] < -1 || valgame.place[i] > NLOCATIONS  ||
-            valgame.fixed[i] < -1 || valgame.fixed[i] > NLOCATIONS) {
+        if (valgame->place[i] < -1 || valgame->place[i] > NLOCATIONS  ||
+            valgame->fixed[i] < -1 || valgame->fixed[i] > NLOCATIONS) {
             return false;
         }
     }
 
     /*  Bounds check for dwarves */
-    if (valgame.dtotal < 0 || valgame.dtotal > NDWARVES ||
-        valgame.dkill < 0  || valgame.dkill  > NDWARVES) {
+    if (valgame->dtotal < 0 || valgame->dtotal > NDWARVES ||
+        valgame->dkill < 0  || valgame->dkill  > NDWARVES) {
         return false;
     }
 
     /*  Validate that we didn't die too many times in save */
-    if (valgame.numdie >= NDEATHS) {
+    if (valgame->numdie >= NDEATHS) {
         return false;
     }
 
@@ -184,18 +189,18 @@ bool is_valid(struct game_t valgame)
     long temp_tally = 0;
     for (int treasure = 1; treasure <= NOBJECTS; treasure++) {
         if (objects[treasure].is_treasure) {
-            if (valgame.prop[treasure] == STATE_NOTFOUND) {
+            if (valgame->prop[treasure] == STATE_NOTFOUND) {
                 ++temp_tally;
             }
         }
     }
-    if (temp_tally != valgame.tally) {
+    if (temp_tally != valgame->tally) {
         return false;
     }
 
     /* Check that properties of objects aren't beyond expected */
     for (obj_t obj = 0; obj <= NOBJECTS; obj++) {
-        if (valgame.prop[obj] < STATE_NOTFOUND || valgame.prop[obj] > 1) {
+        if (valgame->prop[obj] < STATE_NOTFOUND || valgame->prop[obj] > 1) {
             switch (obj) {
             case RUG:
             case DRAGON:
@@ -208,10 +213,10 @@ bool is_valid(struct game_t valgame)
             case EGGS:
             case VASE:
             case CHAIN:
-                if (valgame.prop[obj] == 2) // There are multiple different states, but it's convenient to clump them together
+                if (valgame->prop[obj] == 2) // There are multiple different states, but it's convenient to clump them together
                     continue;
             case BEAR:
-                if (valgame.prop[BEAR] == CONTENTED_BEAR || game.prop[BEAR] == BEAR_DEAD)
+                if (valgame->prop[BEAR] == CONTENTED_BEAR || valgame->prop[BEAR] == BEAR_DEAD)
                     continue;
             default:
                 return false;
@@ -221,12 +226,12 @@ bool is_valid(struct game_t valgame)
 
     /* Check that values in linked lists for objects in locations are inside bounds */
     for (loc_t loc = LOC_NOWHERE; loc <= NLOCATIONS; loc++) {
-        if (valgame.atloc[loc] < NO_OBJECT || valgame.atloc[loc] > NOBJECTS * 2) {
+        if (valgame->atloc[loc] < NO_OBJECT || valgame->atloc[loc] > NOBJECTS * 2) {
             return false;
         }
     }
     for (obj_t obj = 0; obj <= NOBJECTS * 2; obj++ ) {
-        if (valgame.link[obj] < NO_OBJECT || valgame.link[obj] > NOBJECTS * 2) {
+        if (valgame->link[obj] < NO_OBJECT || valgame->link[obj] > NOBJECTS * 2) {
             return false;
         }
     }
