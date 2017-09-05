@@ -215,9 +215,11 @@ bool is_valid(struct game_t* valgame)
             case CHAIN:
                 if (valgame->prop[obj] == 2) // There are multiple different states, but it's convenient to clump them together
                     continue;
+            /* FALLTHRU */
             case BEAR:
                 if (valgame->prop[BEAR] == CONTENTED_BEAR || valgame->prop[BEAR] == BEAR_DEAD)
                     continue;
+            /* FALLTHRU */
             default:
                 return false;
             }
