@@ -2,8 +2,15 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdarg.h>
+#include <inttypes.h>
 
 #include "dungeon.h"
+
+/* LCG PRNG parameters tested against
+ * Knuth vol. 2. by the original authors */
+#define LCG_A 1093
+#define LCG_C 221587
+#define LCG_M 1048576
 
 #define LINESIZE       1024
 #define TOKLEN         5          // № sigificant characters in a token */
@@ -112,7 +119,7 @@ typedef long loc_t;    // index into the locations array */
 typedef long turn_t;   // turn counter or threshold */
 
 struct game_t {
-    unsigned long lcg_a, lcg_c, lcg_m, lcg_x;
+    int64_t lcg_x;
     long abbnum;                 // How often to print long descriptions
     score_t bonus;               // What kind of finishing bonus we are getting
     loc_t chloc;                 // pirate chest location
@@ -122,6 +129,11 @@ struct game_t {
     bool clshnt;                 // has player read the clue in the endgame?
     bool closed;                 // whether we're all the way closed
     bool closng;                 // whether it's closing time yet
+    bool lmwarn;                 // has player been warned about lamp going dim?
+    bool novice;                 // asked for instructions at start-up?
+    bool panic;                  // has player found out he's trapped?
+    bool wzdark;                 // whether the loc he's leaving was dark
+    bool blooded;                // has player drunk of dragon's blood?
     long conds;                  // min value for cond[loc] if loc has any hints
     long detail;                 // level of detail in descriptions
 
@@ -141,24 +153,19 @@ struct game_t {
     long iwest;                  // # times he's said "west" instead of "w"
     long knfloc;                 // knife location; 0 if none, -1 after caveat
     turn_t limit;                // lifetime of lamp
-    bool lmwarn;                 // has player been warned about lamp going dim?
     loc_t loc;                   // where player is now
     loc_t newloc;                // where player is going
-    bool novice;                 // asked for instructions at start-up?
     turn_t numdie;               // number of times killed so far
     loc_t oldloc;                // where player was
     loc_t oldlc2;                // where player was two moves ago
     obj_t oldobj;                // last object player handled
-    bool panic;                  // has player found out he's trapped?
     long saved;                  // point penalty for saves
     long tally;                  // count of treasures gained
     long thresh;                 // current threshold for endgame scoring tier
     turn_t trndex;               // FIXME: not used, remove on next format bump
     turn_t trnluz;               // # points lost so far due to turns used
     turn_t turns;                // counts commands given (ignores yes/no)
-    bool wzdark;                 // whether the loc he's leaving was dark
     char zzword[TOKLEN + 1];     // randomly generated magic word from bird
-    bool blooded;                // has player drunk of dragon's blood?
     long abbrev[NLOCATIONS + 1]; // has location been seen?
     long atloc[NLOCATIONS + 1];  // head of object linked list per location
     long dseen[NDWARVES + 1];    // true if dwarf has seen him
@@ -214,11 +221,11 @@ extern void drop(obj_t, loc_t);
 extern int atdwrf(loc_t);
 extern long setbit(int);
 extern bool tstbit(long, int);
-extern void set_seed(long);
-extern long randrange(long);
+extern void set_seed(int32_t);
+extern int32_t randrange(int32_t);
 extern long score(enum termination);
 extern void terminate(enum termination) __attribute__((noreturn));
-extern int savefile(FILE *, long);
+extern int savefile(FILE *, int32_t);
 extern int suspend(void);
 extern int resume(void);
 extern int restore(FILE *);

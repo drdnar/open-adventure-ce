@@ -2,6 +2,7 @@
 #include <string.h>
 #include <editline/readline.h>
 #include <time.h>
+#include <inttypes.h>
 
 #include "advent.h"
 #include "dungeon.h"
@@ -11,7 +12,7 @@
  * see the history.adoc file in the source distribution for discussion.
  */
 
-#define VRSION	27	/* bump on save format change */
+#define VRSION	28	/* bump on save format change */
 
 /*
  * If you change the first three members, the resume function may not properly
@@ -20,16 +21,16 @@
  * when you do that.
  */
 struct save_t {
-    long savetime;
-    long mode;		/* not used, must be present for version detection */
-    long version;
+    int64_t savetime;
+    int32_t mode;		/* not used, must be present for version detection */
+    int32_t version;
     struct game_t game;
 };
 struct save_t save;
 
 #define IGNORE(r) do{if (r){}}while(0)
 
-int savefile(FILE *fp, long version)
+int savefile(FILE *fp, int32_t version)
 /* Save game to file. No input or output from user. */
 {
     save.savetime = time(NULL);
@@ -139,15 +140,9 @@ bool is_valid(struct game_t* valgame)
         return false;
     }
 
-    /* Prevent RNG substitution. Why we are saving PRNG parameters? */
-
-    if (valgame->lcg_a != game.lcg_a || valgame->lcg_c != game.lcg_c || valgame->lcg_m != game.lcg_m) {
-        return false;
-    }
-
     /* Check for RNG overflow. Truncate */
-    if (valgame->lcg_x >= game.lcg_m) {
-        valgame->lcg_x %= game.lcg_m;
+    if (valgame->lcg_x >= LCG_M) {
+        valgame->lcg_x %= LCG_M;
     }
 
     /*  Bounds check for locations */

@@ -1250,7 +1250,7 @@ static int wake(verb_t verb, obj_t obj)
 static int seed(verb_t verb, const char *arg)
 /* Set seed */
 {
-    int seed = atoi(arg);
+    int32_t seed = strtol(arg, NULL, 10);
     speak(actions[verb].message, seed);
     set_seed(seed);
     --game.turns;

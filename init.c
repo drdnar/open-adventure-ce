@@ -37,12 +37,6 @@ struct game_t game = {
     .loc     = LOC_START,
     .limit   = GAMELIMIT,
     .foobar  = WORD_EMPTY,
-
-    /* Initialize our LCG PRNG with parameters tested against
-     * Knuth vol. 2. by the original authors */
-    .lcg_a = 1093,
-    .lcg_c = 221587,
-    .lcg_m = 1048576,
 };
 
 long initialise(void)

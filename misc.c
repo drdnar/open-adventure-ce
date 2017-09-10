@@ -6,6 +6,7 @@
 #include <sys/time.h>
 #include <ctype.h>
 #include <editline/readline.h>
+#include <inttypes.h>
 
 #include "advent.h"
 #include "dungeon.h"
@@ -66,8 +67,8 @@ static void vspeak(const char* msg, bool blank, va_list ap)
             i++;
             // Integer specifier.
             if (msg[i] == 'd') {
-                long arg = va_arg(ap, long);
-                int ret = snprintf(renderp, size, "%ld", arg);
+                int32_t arg = va_arg(ap, int32_t);
+                int ret = snprintf(renderp, size, "%" PRId32, arg);
                 if (ret < size) {
                     renderp += ret;
                     size -= ret;
@@ -642,10 +643,10 @@ bool tstbit(long mask, int bit)
     return (mask & (1 << bit)) != 0;
 }
 
-void set_seed(long seedval)
+void set_seed(int32_t seedval)
 /* Set the LCG seed */
 {
-    game.lcg_x = (unsigned long) seedval % game.lcg_m;
+    game.lcg_x = (uint32_t) seedval % LCG_M;
 
     // once seed is set, we need to generate the Z`ZZZ word
     for (int i = 0; i < 5; ++i) {
@@ -655,18 +656,18 @@ void set_seed(long seedval)
     game.zzword[5] = '\0';
 }
 
-static unsigned long get_next_lcg_value(void)
+static int32_t get_next_lcg_value(void)
 /* Return the LCG's current value, and then iterate it. */
 {
-    unsigned long old_x = game.lcg_x;
-    game.lcg_x = (game.lcg_a * game.lcg_x + game.lcg_c) % game.lcg_m;
+    int32_t old_x = game.lcg_x;
+    game.lcg_x = (LCG_A * game.lcg_x + LCG_C) % LCG_M;
     return old_x;
 }
 
-long randrange(long range)
+int32_t randrange(int32_t range)
 /* Return a random integer from [0, range). */
 {
-    return range * get_next_lcg_value() / game.lcg_m;
+    return range * get_next_lcg_value() / LCG_M;
 }
 
 // LCOV_EXCL_START
