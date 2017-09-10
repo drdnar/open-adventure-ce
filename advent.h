@@ -119,7 +119,7 @@ typedef long loc_t;    // index into the locations array */
 typedef long turn_t;   // turn counter or threshold */
 
 struct game_t {
-    int64_t lcg_x;
+    int32_t lcg_x;
     long abbnum;                 // How often to print long descriptions
     score_t bonus;               // What kind of finishing bonus we are getting
     loc_t chloc;                 // pirate chest location

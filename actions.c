@@ -3,6 +3,7 @@
 #include <string.h>
 #include "advent.h"
 #include "dungeon.h"
+#include <inttypes.h>
 
 static int fill(verb_t, obj_t);
 
