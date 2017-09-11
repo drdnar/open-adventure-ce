@@ -646,8 +646,10 @@ bool tstbit(long mask, int bit)
 void set_seed(int32_t seedval)
 /* Set the LCG seed */
 {
-    game.lcg_x = (uint32_t) seedval % LCG_M;
-
+    game.lcg_x = seedval % LCG_M;
+    if (game.lcg_x < 0) {
+        game.lcg_x = LCG_M + game.lcg_x;
+    }
     // once seed is set, we need to generate the Z`ZZZ word
     for (int i = 0; i < 5; ++i) {
         game.zzword[i] = 'A' + randrange(26);

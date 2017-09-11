@@ -145,6 +145,11 @@ bool is_valid(struct game_t* valgame)
         valgame->lcg_x %= LCG_M;
     }
 
+    /* Check for RNG underflow. Transpose */
+    if (valgame->lcg_x < LCG_M) {
+        valgame->lcg_x = LCG_M + (valgame->lcg_x % LCG_M);
+    }
+
     /*  Bounds check for locations */
     if ( valgame->chloc  < -1 || valgame->chloc  > NLOCATIONS ||
          valgame->chloc2 < -1 || valgame->chloc2 > NLOCATIONS ||
