@@ -8,9 +8,9 @@
 
 /* LCG PRNG parameters tested against
  * Knuth vol. 2. by the original authors */
-#define LCG_A 1093
-#define LCG_C 221587
-#define LCG_M 1048576
+#define LCG_A 1093L
+#define LCG_C 221587L
+#define LCG_M 1048576L
 
 #define LINESIZE       1024
 #define TOKLEN         5          // № sigificant characters in a token */
