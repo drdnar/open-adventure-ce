@@ -153,10 +153,10 @@ bool is_valid(struct game_t* valgame)
     /*  Bounds check for locations */
     if ( valgame->chloc  < -1 || valgame->chloc  > NLOCATIONS ||
          valgame->chloc2 < -1 || valgame->chloc2 > NLOCATIONS ||
-         valgame->loc    < -1 || valgame->loc    > NLOCATIONS ||
-         valgame->newloc < -1 || valgame->newloc > NLOCATIONS ||
-         valgame->oldloc < -1 || valgame->oldloc > NLOCATIONS ||
-         valgame->oldlc2 < -1 || valgame->oldlc2 > NLOCATIONS) {
+         valgame->loc    <  0 || valgame->loc    > NLOCATIONS ||
+         valgame->newloc <  0 || valgame->newloc > NLOCATIONS ||
+         valgame->oldloc <  0 || valgame->oldloc > NLOCATIONS ||
+         valgame->oldlc2 <  0 || valgame->oldlc2 > NLOCATIONS) {
         return false;
     }
     /*  Bounds check for location arrays */
