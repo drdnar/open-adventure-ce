@@ -9,7 +9,7 @@ stages:
 binary:debug:
   stage: build
   before_script:
-    - zypper install -y make gcc libedit-devel libasan3 libubsan0 python python2-PyYAML lcov 
+    - zypper install -y make gcc libedit-devel libasan5 libubsan1 python python2-PyYAML lcov
   script:
     - make debug
   artifacts:
@@ -69,7 +69,7 @@ dist:
 test:debug:
   stage: test
   before_script:
-    - zypper install -y make gcc libedit-devel libasan3 libubsan0 python python2-PyYAML lcov
+    - zypper install -y make gcc libedit-devel libasan5 libubsan1 python python2-PyYAML lcov
   script:
     - make coverage
   artifacts:
