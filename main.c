@@ -694,14 +694,16 @@ static void playermove( int motion)
                      * to get it out.  Having dropped it, go back and
                      * pretend he wasn't carrying it after all. */
                     drop(EMERALD, game.loc);
-                    int te_tmp = travel_entry;
-                    do {
-                        if (travel[te_tmp].stop)
-                            BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION); // LCOV_EXCL_LINE
-                        ++te_tmp;
-                    } while
-                    (traveleq(travel_entry, te_tmp));
-                    travel_entry = te_tmp;
+                    {
+                        int te_tmp = travel_entry;
+                        do {
+                            if (travel[te_tmp].stop)
+                                BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION); // LCOV_EXCL_LINE
+                            ++te_tmp;
+                        } while
+                        (traveleq(travel_entry, te_tmp));
+                        travel_entry = te_tmp;
+                    }
                     continue; /* goto L12 */
                 case 3:
                     /* Special travel 3.  Troll bridge.  Must be done
