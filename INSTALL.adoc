@@ -20,3 +20,10 @@ You can also use pip to install PyYAML: 'pip3 install PyYAML'.
 3. Optionally run a regression test on the code with 'make check'.
 
 4. Run the resulting 'advent' binary to play.
+
+If make returns the following message:
+
+./make_dungeon.py Traceback (most recent call last): File "./make_dungeon.py", line 10, in import sys, yaml ImportError: No module named yaml
+
+try editing make_dungeon.py to change #!/usr/bin/env python to read
+#!/usr/bin/env python3
