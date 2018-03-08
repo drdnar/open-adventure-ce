@@ -5,6 +5,8 @@ Adventure is the fons et origo of all later dungeon-crawling computer
 games, the grandaddy of interactive fiction, and one of the hallowed
 artifacts of hacker folklore.
 
+== Origin and history ==
+
 The very first version was released by Crowther in 1976, in FORTRAN on
 the PDP-10 at Bolt, Beranek, and Newman. (Crowther was at the time
 writing what we could now call firmware for the earliest ARPANET
@@ -47,6 +49,8 @@ are collected at The Interactive Fiction Archive <<IFA>>; note however
 that IFA's historical claims are thinly sourced and its dates for the
 earliest releases don't match either comments in the code or the
 careful reconstruction in <<SN>>.
+
+== Open Adventure ==
 
 An attempt to untangle and document a lot of the non-mainline history
 has been made by Arthur O'Dwyer at <<QUUX>>.  For our purposes, it
@@ -109,6 +113,14 @@ and 2.5:
 > together not only the goals and the map and use of inventory space, but
 > also details like just what _can_ you do in the dark...?
 ............................................................................
+
+Great care has been taken to preserve 2.5's exact gameplay as intended
+by Don.  However, under the hood Open Adventure is rather different from
+2.5.  Where 2.5 was written in FORTRAN mechanically translated into extremely
+ugly C, Open Adventure has been translated into much more modern and
+idiomatic C.  The extremely cryptic and opaque format of the original
+database of rooms, objects, and strings has been moved to YAML;
+this makes the brilliant design of it much easier to comprehend.
 
 == Earlier non-influences ==
 
