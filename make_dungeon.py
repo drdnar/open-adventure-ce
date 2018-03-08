@@ -203,7 +203,7 @@ def get_obituaries(obit):
     obit_str = obit_str[:-1] # trim trailing newline
     return obit_str
 
-def get_hints(hnt, arb):
+def get_hints(hnt):
     template = """    {{
         .number = {},
         .penalty = {},
@@ -213,7 +213,6 @@ def get_hints(hnt, arb):
     }},
 """
     hnt_str = ""
-    md = dict(arb)
     for member in hnt:
         item = member["hint"]
         number = item["number"]
@@ -550,7 +549,7 @@ if __name__ == "__main__":
         locations          = get_locations(db["locations"]),
         objects            = get_objects(db["objects"]),
         obituaries         = get_obituaries(db["obituaries"]),
-        hints              = get_hints(db["hints"], db["arbitrary_messages"]),
+        hints              = get_hints(db["hints"]),
         conditions         = get_condbits(db["locations"]),
         motions            = get_motions(db["motions"]),
         actions            = get_actions(db["actions"]),
