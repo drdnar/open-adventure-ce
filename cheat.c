@@ -3,6 +3,10 @@
  * not happen. It leverages chunks of advent, mostly initialize() and
  * savefile(), so we know we're always outputing save files that advent
  * can import.
+ *
+ * Copyright (c) 1977, 2005 by Will Crowther and Don Woods
+ * Copyright (c) 2017 by Eric S. Raymond
+ * SPDX-License-Identifier: BSD-2-clause
  */
 #include <getopt.h>
 #include <stdlib.h>

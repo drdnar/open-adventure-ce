@@ -112,6 +112,9 @@
 #       %s = an ASCII string
 #	%S = The letter 's' or nothing (if a previous %d value is exactly 1)
 #	%V = substitute program version string
+#
+# Copyright (c) 2017 by Eric S. Raymond
+# SPDX-License-Identifier: BSD-2-clause
 
 motions: !!omap
 - MOT_0:

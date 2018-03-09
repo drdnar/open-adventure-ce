@@ -1,3 +1,11 @@
+/*
+ * Initialisation
+ *
+ * Copyright (c) 1977, 2005 by Will Crowther and Don Woods
+ * Copyright (c) 2017 by Eric S. Raymond
+ * SPDX-License-Identifier: BSD-2-clause
+ */
+
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -5,10 +13,6 @@
 #include <time.h>
 
 #include "advent.h"
-
-/*
- * Initialisation
- */
 
 struct settings_t settings = {
     .logfp = NULL,

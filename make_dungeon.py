@@ -6,6 +6,9 @@
 # The nontrivial part of this is the compilation of the YAML for
 # movement rules to the travel array that's actually used by
 # playermove().
+#
+# Copyright (c) 2017 by Eric S. Raymond
+# SPDX-License-Identifier: BSD-2-clause
 
 import sys, yaml
 

@@ -1,3 +1,14 @@
+/*
+ * Saving and resuming.
+ *
+ * (ESR) This replaces  a bunch of particularly nasty FORTRAN-derived code;
+ * see the history.adoc file in the source distribution for discussion.
+ *
+ * Copyright (c) 1977, 2005 by Will Crowther and Don Woods
+ * Copyright (c) 2017 by Eric S. Raymond
+ * SPDX-License-Identifier: BSD-2-clause
+ */
+
 #include <stdlib.h>
 #include <string.h>
 #include <editline/readline.h>
@@ -6,11 +17,6 @@
 
 #include "advent.h"
 #include "dungeon.h"
-
-/*
- * (ESR) This replaces  a bunch of particularly nasty FORTRAN-derived code;
- * see the history.adoc file in the source distribution for discussion.
- */
 
 #define VRSION	28	/* bump on save format change */
 

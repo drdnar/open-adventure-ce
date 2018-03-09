@@ -11,6 +11,10 @@
  * ESR apologizes for the remaing gotos (now confined to one function
  * in this file - there used to be over 350 of them, *everywhere*).
  * Applying the Structured Program Theorem can be hard.
+ *
+ * Copyright (c) 1977, 2005 by Will Crowther and Don Woods
+ * Copyright (c) 2017 by Eric S. Raymond
+ * SPDX-License-Identifier: BSD-2-clause
  */
 
 #include <stdlib.h>

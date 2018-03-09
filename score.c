@@ -1,10 +1,13 @@
+/*
+ * Scoring and wrap-up.
+ *
+ * Copyright (c) 1977, 2005 by Will Crowther and Don Woods
+ * Copyright (c) 2017 by Eric S. Raymond
+ * SPDX-License-Identifier: BSD-2-clause
+ */
 #include <stdlib.h>
 #include "advent.h"
 #include "dungeon.h"
-
-/*
- * scoring and wrap-up
- */
 
 static int mxscor;	/* ugh..the price for having score() not exit. */
 
