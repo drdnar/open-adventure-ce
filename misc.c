@@ -585,7 +585,9 @@ void carry(obj_t object, loc_t where)
         if (game.place[object] == CARRIED)
             return;
         game.place[object] = CARRIED;
-        ++game.holdng;
+	
+	if (object!= BIRD)
+	    ++game.holdng;
     }
     if (game.atloc[where] == object) {
         game.atloc[where] = game.link[object];
@@ -606,7 +608,14 @@ void drop(obj_t object, loc_t where)
         game.fixed[object - NOBJECTS] = where;
     else {
         if (game.place[object] == CARRIED)
-            --game.holdng;
+	    if (object != BIRD)
+		/* The bird has to be weightless.  This ugly hack (and the
+		 * corresponding code in the drop function) brought to you
+		 * by the fact that when the bird is caged, we need to be able
+		 * to either 'take bird' or 'take cage' and have the right thing
+		 * happen.
+		 */
+		--game.holdng;
         game.place[object] = where;
     }
     if (where == LOC_NOWHERE ||
