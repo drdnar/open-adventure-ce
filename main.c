@@ -1089,10 +1089,10 @@ Lclearobj:
 
 #ifdef BROKEN
         /* Handling of actionless object followed by objectless action */
-        if (preserve.type1 == OBJECT && preserve.type2 == NO_WORD_TYPE && command.id2 == 0)
+        if (preserve.word[0].type == OBJECT && preserve.word[1].type == NO_WORD_TYPE && command.word[1].id == 0 && command.word[0].id == CARRY)
             command.obj = preserve.obj;
-#endif
-
+#endif /* BROKEN */
+	
         ++game.turns;
 
         if (closecheck()) {
