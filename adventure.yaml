@@ -605,7 +605,7 @@ locations: !!omap
     description:
       long: |-
           The crack is far too small for you to follow.  At its widest it is
-          barely wide enough to admit your foot.'
+          barely wide enough to admit your foot.
       short: !!null
     conditions: {DEEP: true}
     travel: [
