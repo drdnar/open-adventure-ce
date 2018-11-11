@@ -1,6 +1,6 @@
 = Open Adventure project news =
 
-1.5: 2016-11-11::
+1.5: 2017-11-11::
   Fix for a minor bug in inventory handling.
   Handle a bare numeric token on the command line a bit more gracefully.
 
