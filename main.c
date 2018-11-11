@@ -1179,6 +1179,10 @@ Lookup:
             command.verb = command.word[0].id;
             break;
         case NUMERIC: // LCOV_EXCL_LINE
+	    if (!settings.oldstyle) {
+		sspeak(DONT_KNOW, command.word[0].raw);
+		goto Lclearobj;
+	    }
         default: // LCOV_EXCL_LINE
             BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3); // LCOV_EXCL_LINE
         }
