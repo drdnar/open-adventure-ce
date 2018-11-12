@@ -76,7 +76,7 @@ Unrecognized words are no longer truncated to 5 characters and
 uppercased when they are echoed. The "-o" (oldstyle) option restores
 this behavior.
 
-Typing a numeric liteteral to the command prompt no longer triggers a
+Typing a numeric literal to the command prompt no longer triggers a
 fatal error. This change is reverted by the oldstyle option. 
 
 A "seed" command has been added.  This is not intended for human use
