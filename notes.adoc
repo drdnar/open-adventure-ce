@@ -177,6 +177,6 @@ We have made exactly one minor architectural change.  In addition to the
 old code's per-object state-description messages, we now have a per-object
 message series for state *changes*.  This makes it possible to pull a fair
 amount of text out of the arbitrary-messages list and associate those
-mesages with the objects that conceptually own them.
+messages with the objects that conceptually own them.
 
 // end
