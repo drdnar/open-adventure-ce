@@ -112,8 +112,6 @@ int resume(void)
     return restore(fp);
 }
 
-bool is_valid(struct game_t*);
-
 int restore(FILE* fp)
 {
     /*  Read and restore game state from file, assuming
