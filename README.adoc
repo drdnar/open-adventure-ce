@@ -6,7 +6,7 @@ you can go there for tarball downloads and other resources.
 This code is a forward-port of the Crowther/Woods Adventure 2.5 from
 1995, last version in the main line of Colossal Cave Adventure
 development written by the original authors.  The authors have given
-permission and encouragement for this releasel it obsolesces all
+permission and encouragement for this release; it obsolesces all
 the 350-point versions and previous 2.x (430-point) ports.
 
 The file history.adoc contains a more detailed history of this game

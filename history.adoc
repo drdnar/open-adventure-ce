@@ -2,7 +2,7 @@
 by Eric S. Raymond
 
 Adventure is the fons et origo of all later dungeon-crawling computer
-games, the grandaddy of interactive fiction, and one of the hallowed
+games, the granddaddy of interactive fiction, and one of the hallowed
 artifacts of hacker folklore.
 
 == Origin and history ==

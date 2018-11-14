@@ -62,7 +62,7 @@
 #
 # arbitrary_messages: These are arguments to rspeak(). Some spans of
 #    these messages need to be kept adjacent and ordered (for now),
-#    though there are no depenencies on actual numbers left.  To see
+#    though there are no dependencies on actual numbers left.  To see
 #    which, grep for rspeak() calls containing expressions with
 #    arithmetic.  Eventually, these will be pulled out into more
 #    appropriate data structures. Then ordering can be dropped.
