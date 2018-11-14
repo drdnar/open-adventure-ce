@@ -232,7 +232,7 @@ extern int restore(FILE *);
 extern long initialise(void);
 extern int action(command_t command);
 extern void state_change(obj_t, int);
-extern bool is_valid(struct game_t *valgame);
+extern bool is_valid(struct game_t);
 
 void bug(enum bugtype, const char *) __attribute__((__noreturn__));
 
