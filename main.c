@@ -1037,8 +1037,11 @@ static bool do_command()
         listobjects();
 
 Lclearobj:
+	command.verb = 0;
         game.oldobj = command.obj;
+	command.obj = 0;
 
+L2600:
         checkhints();
 
         /*  If closing time, check for any objects being toted with
@@ -1064,6 +1067,7 @@ Lclearobj:
         if (!get_command_input(&command))
             return false;
 
+Lclosecheck:
 #ifdef GDEBUG
         /* Needs to stay synced with enum word_type_t */
         const char *types[] = {"NO_WORD_TYPE", "MOTION", "OBJECT", "ACTION", "NUMERIC"};
@@ -1120,6 +1124,7 @@ Lclearobj:
                     command.word[0].id = DEPRESSION;
                 }
                 if (game.loc == LOC_COBBLE ||
+
                     game.loc == LOC_DEBRIS ||
                     game.loc == LOC_AWKWARD ||
                     game.loc == LOC_BIRD ||
@@ -1186,6 +1191,9 @@ Lookup:
         default: // LCOV_EXCL_LINE
             BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3); // LCOV_EXCL_LINE
         }
+        if (!is_valid(game)) {
+            exit(1);
+        }
         switch (action(command)) {
         case GO_TERMINATE:
             return true;
@@ -1194,6 +1202,14 @@ Lookup:
             return true;
         case GO_TOP:
             continue;	/* back to top of main interpreter loop */
+        case GO_CLEAROBJ:
+            goto Lclearobj;
+        case GO_CHECKHINT:
+            goto L2600;
+        case GO_CHECKFOO:
+            goto Lclosecheck;
+        case GO_LOOKUP:
+            goto Lookup;
         case GO_WORD2:
 #ifdef GDEBUG
             printf("Word shift\n");
@@ -1208,9 +1224,7 @@ Lookup:
             command.word[0].raw[0] = toupper(command.word[0].raw[0]);
             sspeak(DO_WHAT, command.word[0].raw);
             command.obj = 0;
-        // Fallthrough
-        case GO_CLEAROBJ:
-            goto Lclearobj;
+            goto L2600;
         case GO_DWARFWAKE:
             /*  Oh dear, he's disturbed the dwarves. */
             rspeak(DWARVES_AWAKEN);

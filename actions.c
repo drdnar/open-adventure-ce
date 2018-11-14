@@ -1584,7 +1584,7 @@ int action(command_t command)
     case unknown:
         /* Unknown verb, couldn't deduce object - might need hint */
         sspeak(WHAT_DO, command.word[0].raw);
-        return GO_CLEAROBJ;
+        return GO_CHECKHINT;
     default: // LCOV_EXCL_LINE
         BUG(SPEECHPART_NOT_TRANSITIVE_OR_INTRANSITIVE_OR_UNKNOWN); // LCOV_EXCL_LINE
     }

@@ -421,60 +421,65 @@ static bool is_valid_int(const char *str)
     return true;
 }
 
-static void get_vocab_metadata(command_word_t* word)
+static void get_vocab_metadata(const char* word, vocab_t* id, word_type_t* type)
 {
     /* Check for an empty string */
-    if (strncmp(word->raw, "", sizeof("")) == 0) {
-        word->id = WORD_EMPTY;
-        word->type = NO_WORD_TYPE;
+    if (strncmp(word, "", sizeof("")) == 0) {
+        *id = WORD_EMPTY;
+        *type = NO_WORD_TYPE;
         return;
     }
 
     vocab_t ref_num;
 
-    ref_num = get_motion_vocab_id(word->raw);
+    ref_num = get_motion_vocab_id(word);
     if (ref_num != WORD_NOT_FOUND) {
-        word->id = ref_num;
-        word->type = MOTION;
+        *id = ref_num;
+        *type = MOTION;
         return;
     }
 
-    ref_num = get_object_vocab_id(word->raw);
+    ref_num = get_object_vocab_id(word);
     if (ref_num != WORD_NOT_FOUND) {
-        word->id = ref_num;
-        word->type = OBJECT;
+        *id = ref_num;
+        *type = OBJECT;
         return;
     }
 
-    ref_num = get_action_vocab_id(word->raw);
+    ref_num = get_action_vocab_id(word);
     if (ref_num != WORD_NOT_FOUND) {
-        word->id = ref_num;
-        word->type = ACTION;
+        *id = ref_num;
+        *type = ACTION;
         return;
     }
 
     // Check for the reservoir magic word.
-    if (strcasecmp(word->raw, game.zzword) == 0) {
-        word->id = PART;
-        word->type = ACTION;
+    if (strcasecmp(word, game.zzword) == 0) {
+        *id = PART;
+        *type = ACTION;
         return;
     }
 
     // Check words that are actually numbers.
-    if (is_valid_int(word->raw)) {
-        word->id = WORD_EMPTY;
-        word->type = NUMERIC;
+    if (is_valid_int(word)) {
+        *id = WORD_EMPTY;
+        *type = NUMERIC;
         return;
     }
 
-    word->id = WORD_NOT_FOUND;
-    word->type = NO_WORD_TYPE;
+    *id = WORD_NOT_FOUND;
+    *type = NO_WORD_TYPE;
     return;
 }
 
 static void tokenize(char* raw, command_t *cmd)
 {
-    memset(cmd, '\0', sizeof(command_t));
+    /*
+     * Be caereful about modifing this. We do not want to nuke the
+     * the speech part or ID from the previous turn. 
+     */
+    memset(&cmd->word[0].raw, '\0', sizeof(cmd->word[0],raw));
+    memset(&cmd->word[1].raw, '\0', sizeof(cmd->word[1].raw));
 
     /* Bound prefix on the %s would be needed to prevent buffer
      * overflow.  but we shortstop this more simply by making each
@@ -504,8 +509,8 @@ static void tokenize(char* raw, command_t *cmd)
     }
 
     /* populate command with parsed vocabulary metadata */
-    get_vocab_metadata(&(cmd->word[0]));
-    get_vocab_metadata(&(cmd->word[1]));
+    get_vocab_metadata(cmd->word[0].raw, &(cmd->word[0].id), &(cmd->word[0].type));
+    get_vocab_metadata(cmd->word[1].raw, &(cmd->word[1].id), &(cmd->word[1].type));
 }
 
 bool get_command_input(command_t *command)
