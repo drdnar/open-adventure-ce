@@ -141,7 +141,7 @@ bool is_valid(struct game_t valgame)
 
     /* Prevent division by zero */
     if (valgame.abbnum == 0) {
-        return false;
+        return false;	// LCOV_EXCL_LINE
     }
 
     /* Check for RNG overflow. Truncate */
@@ -161,27 +161,27 @@ bool is_valid(struct game_t valgame)
          valgame.newloc <  0 || valgame.newloc > NLOCATIONS ||
          valgame.oldloc <  0 || valgame.oldloc > NLOCATIONS ||
          valgame.oldlc2 <  0 || valgame.oldlc2 > NLOCATIONS) {
-        return false;
+        return false;	// LCOV_EXCL_LINE
     }
     /*  Bounds check for location arrays */
     for (int i = 0; i <= NDWARVES; i++) {
         if (valgame.dloc[i]  < -1 || valgame.dloc[i]  > NLOCATIONS  ||
             valgame.odloc[i] < -1 || valgame.odloc[i] > NLOCATIONS) {
-            return false;
+            return false;	// LCOV_EXCL_LINE
         }
     }
 
     for (int i = 0; i <= NOBJECTS; i++) {
         if (valgame.place[i] < -1 || valgame.place[i] > NLOCATIONS  ||
             valgame.fixed[i] < -1 || valgame.fixed[i] > NLOCATIONS) {
-            return false;
+            return false;	// LCOV_EXCL_LINE
         }
     }
 
     /*  Bounds check for dwarves */
     if (valgame.dtotal < 0 || valgame.dtotal > NDWARVES ||
         valgame.dkill < 0  || valgame.dkill  > NDWARVES) {
-        return false;
+        return false;	// LCOV_EXCL_LINE
     }
 
     /*  Validate that we didn't die too many times in save */
@@ -199,7 +199,7 @@ bool is_valid(struct game_t valgame)
         }
     }
     if (temp_tally != valgame.tally) {
-        return false;
+        return false;	// LCOV_EXCL_LINE
     }
 
     /* Check that properties of objects aren't beyond expected */
@@ -225,7 +225,7 @@ bool is_valid(struct game_t valgame)
                     continue;
             /* FALLTHRU */
             default:
-                return false;
+                return false;	// LCOV_EXCL_LINE
             }
         }
     }
@@ -233,12 +233,12 @@ bool is_valid(struct game_t valgame)
     /* Check that values in linked lists for objects in locations are inside bounds */
     for (loc_t loc = LOC_NOWHERE; loc <= NLOCATIONS; loc++) {
         if (valgame.atloc[loc] < NO_OBJECT || valgame.atloc[loc] > NOBJECTS * 2) {
-            return false;
+            return false;	// LCOV_EXCL_LINE
         }
     }
     for (obj_t obj = 0; obj <= NOBJECTS * 2; obj++ ) {
         if (valgame.link[obj] < NO_OBJECT || valgame.link[obj] > NOBJECTS * 2) {
-            return false;
+            return false;	// LCOV_EXCL_LINE
         }
     }
 
