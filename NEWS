@@ -1,9 +1,9 @@
 = Open Adventure project news =
 
-Repository head:
+1.6: 2017-11-15::
   Split commands with verbless objects now pick up a preceding verb correctly.
 
-1.5: 2017-11-11::
+1.5: 2018-11-11::
   Fix for a minor bug in inventory handling.
   Handle a bare numeric token on the command line a bit more gracefully.
 
