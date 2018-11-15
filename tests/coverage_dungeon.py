@@ -6,6 +6,10 @@
 #
 # The default HTML output is appropriate for use with Gitlab CI.
 # You can override it with a command-line argument.
+#
+# The DANGLING list is for actions that should be considered always found
+# even if the checkfile search doesn't find them. Typically this will because
+# they emit a templated message that can't be regression-tested by equality.
 
 import os
 import sys
@@ -16,6 +20,7 @@ TEST_DIR = "."
 YAML_PATH = "../adventure.yaml"
 HTML_TEMPLATE_PATH = "../templates/coverage_dungeon.html.tpl"
 DEFAULT_HTML_OUTPUT_PATH = "../coverage/adventure.yaml.html"
+DANGLING = ["ACT_VERSION"]
 
 STDOUT_REPORT_CATEGORY = "  {name:.<19}: {percent:5.1f}% covered ({covered} of {total})\n"
 
@@ -158,7 +163,7 @@ def actions_coverage(items, text, report):
         if name not in report["messages"]:
             report["messages"][name] = {"covered" : False}
             report["total"] += 1
-        if report["messages"][name]["covered"] != True and search(item["message"], text):
+        if report["messages"][name]["covered"] != True and (search(item["message"], text) or name in DANGLING):
             report["messages"][name]["covered"] = True
             report["covered"] += 1
 
@@ -175,7 +180,7 @@ def coverage_report(db, check_file_contents):
             "messages" : {}
         }
 
-    # search for each message in ever test check file
+    # search for each message in every test check file
     for chk in check_file_contents:
         arb_coverage(db["arbitrary_messages"], chk, report["arbitrary_messages"])
         hint_coverage(db["hints"], chk, report["hints"])
