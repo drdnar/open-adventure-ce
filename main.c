@@ -1091,12 +1091,6 @@ Lclosecheck:
         if (preserve.word[0].type == ACTION && preserve.word[1].type == NO_WORD_TYPE && command.word[1].id == 0)
             command.verb = preserve.verb;
 
-#ifdef BROKEN
-        /* Handling of actionless object followed by objectless action */
-        if (preserve.word[0].type == OBJECT && preserve.word[1].type == NO_WORD_TYPE && command.word[1].id == 0 && command.word[0].id == CARRY)
-            command.obj = preserve.obj;
-#endif /* BROKEN */
-	
         ++game.turns;
 
         if (closecheck()) {
