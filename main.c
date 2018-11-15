@@ -1041,7 +1041,7 @@ Lclearobj:
         game.oldobj = command.obj;
 	command.obj = 0;
 
-L2600:
+Lcheckhint:
         checkhints();
 
         /*  If closing time, check for any objects being toted with
@@ -1196,7 +1196,7 @@ Lookup:
         case GO_CLEAROBJ:
             goto Lclearobj;
         case GO_CHECKHINT:
-            goto L2600;
+            goto Lcheckhint;
         case GO_WORD2:
 #ifdef GDEBUG
             printf("Word shift\n");
@@ -1211,7 +1211,7 @@ Lookup:
             command.word[0].raw[0] = toupper(command.word[0].raw[0]);
             sspeak(DO_WHAT, command.word[0].raw);
             command.obj = 0;
-            goto L2600;
+            goto Lcheckhint;
         case GO_DWARFWAKE:
             /*  Oh dear, he's disturbed the dwarves. */
             rspeak(DWARVES_AWAKEN);
