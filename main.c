@@ -1197,10 +1197,6 @@ Lookup:
             goto Lclearobj;
         case GO_CHECKHINT:
             goto L2600;
-        case GO_CHECKFOO:
-            goto Lclosecheck;
-        case GO_LOOKUP:
-            goto Lookup;
         case GO_WORD2:
 #ifdef GDEBUG
             printf("Word shift\n");
