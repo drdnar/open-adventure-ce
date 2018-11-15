@@ -26,11 +26,8 @@ To remake the check files, "make buildregress".
 The simplest way to make a test is to simply play a game with the -l
 option giving a log path.  Commands will be captured to that log.
 
-To re-use a command sequence from an existing log, run advent -s and
-paste it to the advent command log from the clipboard.  If you don't
-use -s to disable advanced ediiting, the code used for that will consume
-the first line of the paste and discare the rest.  This is almost
-certainly not what you want.
+To re-use a command sequence from an existing log, run advent and
+paste it to the advent command log from the clipboard.
 
 To see where we can use more tests, have a look at our test coverage
 report:

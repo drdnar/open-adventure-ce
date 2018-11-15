@@ -186,7 +186,7 @@ bool is_valid(struct game_t valgame)
 
     /*  Validate that we didn't die too many times in save */
     if (valgame.numdie >= NDEATHS) {
-        return false;
+        return false;	// LCOV_EXCL_LINE
     }
 
     /* Recalculate tally, throw the towel if in disagreement */
