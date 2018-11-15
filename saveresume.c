@@ -146,7 +146,7 @@ bool is_valid(struct game_t valgame)
 
     /* Check for RNG overflow. Truncate */
     if (valgame.lcg_x >= LCG_M) {
-        valgame.lcg_x %= LCG_M;
+        valgame.lcg_x %= LCG_M; // LCOV_EXCL_LINE
     }
 
     /* Check for RNG underflow. Transpose */
