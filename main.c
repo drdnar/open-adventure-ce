@@ -1037,9 +1037,9 @@ static bool do_command()
         listobjects();
 
 Lclearobj:
-	command.verb = 0;
+	command.verb = ACT_NULL;
         game.oldobj = command.obj;
-	command.obj = 0;
+	command.obj = NO_OBJECT;
 
 Lcheckhint:
         checkhints();
