@@ -1177,7 +1177,7 @@ Lookup:
                 command.part = intransitive;
             command.verb = command.word[0].id;
             break;
-        case NUMERIC: // LCOV_EXCL_LINE
+        case NUMERIC:
 	    if (!settings.oldstyle) {
 		sspeak(DONT_KNOW, command.word[0].raw);
 		goto Lclearobj;
