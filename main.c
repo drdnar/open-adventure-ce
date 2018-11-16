@@ -1060,9 +1060,6 @@ Lcheckhint:
         if (game.knfloc > 0 && game.knfloc != game.loc)
             game.knfloc = 0;
 
-        /* Preserve state from last command for reuse when required */
-        command_t preserve = command;
-
         // Get command input from user
         if (!get_command_input(&command))
             return false;
@@ -1073,12 +1070,6 @@ Lclosecheck:
         const char *types[] = {"NO_WORD_TYPE", "MOTION", "OBJECT", "ACTION", "NUMERIC"};
         /* needs to stay synced with enum speechpart */
         const char *roles[] = {"unknown", "intransitive", "transitive"};
-        printf("Preserve: role = %s type1 = %s, id1 = %ld, type2 = %s, id2 = %ld\n",
-               roles[preserve.part],
-               types[preserve.word[0].type],
-               preserve.word[0].id,
-               types[preserve.word[1].type],
-               preserve.word[1].id);
         printf("Command: role = %s type1 = %s, id1 = %ld, type2 = %s, id2 = %ld\n",
                roles[command.part],
                types[command.word[0].type],
@@ -1086,10 +1077,6 @@ Lclosecheck:
                types[command.word[1].type],
                command.word[1].id);
 #endif
-
-        /* Handle of objectless action followed by actionless object */
-        if (preserve.word[0].type == ACTION && preserve.word[1].type == NO_WORD_TYPE && command.word[1].id == 0)
-            command.verb = preserve.verb;
 
         ++game.turns;
 
