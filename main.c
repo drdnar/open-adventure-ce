@@ -1035,12 +1035,8 @@ static bool do_command()
             rspeak(SAYS_PLUGH);
 
         listobjects();
-
-Lclearobj:
-	command.verb = ACT_NULL;
-        game.oldobj = command.obj;
-	command.obj = NO_OBJECT;
-
+	clear_command(&command);
+	
 Lcheckhint:
         checkhints();
 
@@ -1093,7 +1089,8 @@ Lclosecheck:
             else
                 rspeak(WHERE_QUERY);
 
-            goto Lclearobj;
+	    clear_command(&command);
+            goto Lcheckhint;
         }
 
         if (command.word[0].type == OBJECT) {
@@ -1146,7 +1143,8 @@ Lookup:
         if (command.word[0].id == WORD_NOT_FOUND) {
             /* Gee, I don't understand. */
             sspeak(DONT_KNOW, command.word[0].raw);
-            goto Lclearobj;
+	    clear_command(&command);
+            goto Lcheckhint;
         }
         switch (command.word[0].type) {
         case NO_WORD_TYPE: // FIXME: treating NO_WORD_TYPE as a motion word is confusing
@@ -1167,7 +1165,8 @@ Lookup:
         case NUMERIC:
 	    if (!settings.oldstyle) {
 		sspeak(DONT_KNOW, command.word[0].raw);
-		goto Lclearobj;
+		clear_command(&command);
+		goto Lcheckhint;
 	    }
         default: // LCOV_EXCL_LINE
             BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3); // LCOV_EXCL_LINE
@@ -1181,7 +1180,8 @@ Lookup:
         case GO_TOP:
             continue;	/* back to top of main interpreter loop */
         case GO_CLEAROBJ:
-            goto Lclearobj;
+	    clear_command(&command);
+            /* FALL THROUGH */
         case GO_CHECKHINT:
             goto Lcheckhint;
         case GO_WORD2:
