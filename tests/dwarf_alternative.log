@@ -1,4 +1,4 @@
-# Check that dwarf spawns in alternative location (fuzzed)
+## Check that dwarf spawns in alternative location (fuzzed)
 n
 seed 383847
 in

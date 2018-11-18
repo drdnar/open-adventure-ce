@@ -440,7 +440,7 @@ def buildtravel(locs, objs):
 
     # At this point the ltravel data is in the Section 3
     # representation from the FORTRAN version.  Next we perform the
-    # same mapping into wgat used to be the runtime format.
+    # same mapping into what used to be the runtime format.
 
     travel = [[0, "LOC_NOWHERE", 0, 0, 0, 0, 0, 0, "false", "false"]]
     tkey = [0]
