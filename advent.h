@@ -231,7 +231,7 @@ extern int suspend(void);
 extern int resume(void);
 extern int restore(FILE *);
 extern long initialise(void);
-extern int action(command_t command);
+extern int action(command_t);
 extern void state_change(obj_t, int);
 extern bool is_valid(struct game_t);
 

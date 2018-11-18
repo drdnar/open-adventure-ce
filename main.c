@@ -972,6 +972,13 @@ static void listobjects(void)
     }
 }
 
+void clear_command(command_t *cmd)
+{
+    cmd->verb = ACT_NULL;
+    game.oldobj = cmd->obj;
+    cmd->obj = NO_OBJECT;
+}
+
 static bool do_command()
 /* Get and execute a command */
 {
