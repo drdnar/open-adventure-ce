@@ -224,6 +224,8 @@ static void checkhints(void)
             }
         }
     }
+
+
 }
 
 static bool spotted_by_pirate(int i)
@@ -979,11 +981,125 @@ void clear_command(command_t *cmd)
     cmd->obj = NO_OBJECT;
 }
 
+/* 
+ * This function probably does too many disparate things. It checks for hints,
+ * sees if the gamed is closed, checks for darkness, gets user input, increments 
+ * the turns in the game state, checks to see if we should be closing, gets the 
+ * command input, and preprocesses some implied verbs in the case that the user 
+ * put in a single word motion or object command.
+ * 
+ * This was the lesser evil -- it got rid of a really nasty goto in the main 
+ * input parser/state transition engine. This should be refactored further.
+ */
+bool get_preprocessed_command_input(command_t *command)
+{
+    bool preprocessed = false;
+
+    do {
+        preprocessed = true;
+        checkhints();
+
+        /*  If closing time, check for any objects being toted with
+         *  game.prop < 0 and stash them.  This way objects won't be
+         *  described until they've been picked up and put down
+         *  separate from their respective piles. */
+        if (game.closed) {
+            if (game.prop[OYSTER] < 0 && TOTING(OYSTER))
+                pspeak(OYSTER, look, 1, true);
+            for (size_t i = 1; i <= NOBJECTS; i++) {
+                if (TOTING(i) && game.prop[i] < 0)
+                    game.prop[i] = STASHED(i);
+            }
+        }
+        game.wzdark = DARK(game.loc);
+        if (game.knfloc > 0 && game.knfloc != game.loc)
+            game.knfloc = 0;
+
+        // Get command input from user
+        if (!get_command_input(command))
+            return false;
+
+#ifdef GDEBUG
+        /* Needs to stay synced with enum word_type_t */
+        const char *types[] = {"NO_WORD_TYPE", "MOTION", "OBJECT", "ACTION", "NUMERIC"};
+        /* needs to stay synced with enum speechpart */
+        const char *roles[] = {"unknown", "intransitive", "transitive"};
+        printf("Command: role = %s type1 = %s, id1 = %ld, type2 = %s, id2 = %ld\n",
+               roles[command->part],
+               types[command->word[0].type],
+               command->word[0].id,
+               types[command->word[1].type],
+               command->word[1].id);
+#endif
+
+        ++game.turns;
+
+        if (closecheck()) {
+            if (game.closed)
+                return false;
+        } else
+            lampcheck();
+
+        if (command->word[0].type == MOTION && command->word[0].id == ENTER
+            && (command->word[1].id == STREAM || command->word[1].id == WATER)) {
+            if (LIQLOC(game.loc) == WATER)
+                rspeak(FEET_WET);
+            else
+                rspeak(WHERE_QUERY);
+
+            clear_command(command);
+            preprocessed = false;
+        }
+
+        if (command->word[0].type == OBJECT) {
+            if (command->word[0].id == GRATE) {
+                command->word[0].type = MOTION;
+                if (game.loc == LOC_START ||
+                    game.loc == LOC_VALLEY ||
+                    game.loc == LOC_SLIT) {
+                    command->word[0].id = DEPRESSION;
+                }
+                if (game.loc == LOC_COBBLE ||
+
+                    game.loc == LOC_DEBRIS ||
+                    game.loc == LOC_AWKWARD ||
+                    game.loc == LOC_BIRD ||
+                    game.loc == LOC_PITTOP) {
+                    command->word[0].id = ENTRANCE;
+                }
+            }
+            if ((command->word[0].id == WATER || command->word[0].id == OIL) && (command->word[1].id == PLANT || command->word[1].id == DOOR)) {
+                if (AT(command->word[1].id)) {
+                    command->word[1] = command->word[0];
+                    command->word[0].id = POUR;
+                    command->word[0].type = ACTION;
+                    strncpy(command->word[0].raw, "pour", LINESIZE - 1);
+                }
+            }
+            if (command->word[0].id == CAGE && command->word[1].id == BIRD && HERE(CAGE) && HERE(BIRD)) {
+                command->word[0].id = CARRY;
+                command->word[0].type = ACTION;
+            }
+
+            /* From OV to VO form */
+            if (command->word[0].type == OBJECT && command->word[1].type == ACTION) {
+                command_word_t stage = command->word[0];
+                command->word[0] = command->word[1];
+                command->word[1] = stage;
+            }
+        }
+    } while (preprocessed == false);
+
+    return true;
+}
+
+
 static bool do_command()
 /* Get and execute a command */
 {
     static command_t command;
-    bool words_processed = false;
+    bool command_given = false;
+    bool command_executed = false;
 
     /*  Can't leave cave once it's closing (except by main office). */
     if (OUTSID(game.newloc) && game.newloc != 0 && game.closng) {
@@ -1015,6 +1131,9 @@ static bool do_command()
     /*  Describe the current location and (maybe) get next command. */
 
     for (;;) {
+        command_given = false;
+        command_executed = false;
+
         if (game.loc == 0)
             croak();
         const char* msg = locations[game.loc].description.small;
@@ -1045,183 +1164,102 @@ static bool do_command()
         listobjects();
         clear_command(&command);
     
-Lcheckhint:
-        checkhints();
-
-        /*  If closing time, check for any objects being toted with
-         *  game.prop < 0 and stash them.  This way objects won't be
-         *  described until they've been picked up and put down
-         *  separate from their respective piles. */
-        if (game.closed) {
-            if (game.prop[OYSTER] < 0 && TOTING(OYSTER))
-                pspeak(OYSTER, look, 1, true);
-            for (size_t i = 1; i <= NOBJECTS; i++) {
-                if (TOTING(i) && game.prop[i] < 0)
-                    game.prop[i] = STASHED(i);
-            }
-        }
-        game.wzdark = DARK(game.loc);
-        if (game.knfloc > 0 && game.knfloc != game.loc)
-            game.knfloc = 0;
-
-        // Get command input from user
-        if (!get_command_input(&command))
-            return false;
-
-Lclosecheck:
-#ifdef GDEBUG
-        /* Needs to stay synced with enum word_type_t */
-        const char *types[] = {"NO_WORD_TYPE", "MOTION", "OBJECT", "ACTION", "NUMERIC"};
-        /* needs to stay synced with enum speechpart */
-        const char *roles[] = {"unknown", "intransitive", "transitive"};
-        printf("Command: role = %s type1 = %s, id1 = %ld, type2 = %s, id2 = %ld\n",
-               roles[command.part],
-               types[command.word[0].type],
-               command.word[0].id,
-               types[command.word[1].type],
-               command.word[1].id);
-#endif
-
-        ++game.turns;
-
-        if (closecheck()) {
-            if (game.closed)
-                return true;
-        } else
-            lampcheck();
-
-        if (command.word[0].type == MOTION && command.word[0].id == ENTER
-            && (command.word[1].id == STREAM || command.word[1].id == WATER)) {
-            if (LIQLOC(game.loc) == WATER)
-                rspeak(FEET_WET);
-            else
-                rspeak(WHERE_QUERY);
-
-            clear_command(&command);
-            goto Lcheckhint;
-        }
-
-        if (command.word[0].type == OBJECT) {
-            if (command.word[0].id == GRATE) {
-                command.word[0].type = MOTION;
-                if (game.loc == LOC_START ||
-                    game.loc == LOC_VALLEY ||
-                    game.loc == LOC_SLIT) {
-                    command.word[0].id = DEPRESSION;
-                }
-                if (game.loc == LOC_COBBLE ||
-
-                    game.loc == LOC_DEBRIS ||
-                    game.loc == LOC_AWKWARD ||
-                    game.loc == LOC_BIRD ||
-                    game.loc == LOC_PITTOP) {
-                    command.word[0].id = ENTRANCE;
-                }
-            }
-            if ((command.word[0].id == WATER || command.word[0].id == OIL) && (command.word[1].id == PLANT || command.word[1].id == DOOR)) {
-                if (AT(command.word[1].id)) {
-                    command.word[1] = command.word[0];
-                    command.word[0].id = POUR;
-                    command.word[0].type = ACTION;
-                    strncpy(command.word[0].raw, "pour", LINESIZE - 1);
-                }
-            }
-            if (command.word[0].id == CAGE && command.word[1].id == BIRD && HERE(CAGE) && HERE(BIRD)) {
-                command.word[0].id = CARRY;
-                command.word[0].type = ACTION;
-            }
-
-            /* From OV to VO form */
-            if (command.word[0].type == OBJECT && command.word[1].type == ACTION) {
-                command_word_t stage = command.word[0];
-                command.word[0] = command.word[1];
-                command.word[1] = stage;
-            }
-        }
-
-        // loop until all words in command are procesed
         do {
-            // assume all words in command are processed, until proven otherwise
-            words_processed = true;
+            // Get pre-processed command input from user
+            command_given = get_preprocessed_command_input(&command);
+            if (!command_given)
+                return game.closed;
 
-            if (strncasecmp(command.word[0].raw, "west", sizeof("west")) == 0) {
-                if (++game.iwest == 10)
-                    rspeak(W_IS_WEST);
-            }
-            if (strncasecmp(command.word[0].raw, "go", sizeof("go")) == 0 && command.word[1].id != WORD_EMPTY) {
-                if (++game.igo == 10)
-                    rspeak(GO_UNNEEDED);
-            }
-            if (command.word[0].id == WORD_NOT_FOUND) {
-                /* Gee, I don't understand. */
-                sspeak(DONT_KNOW, command.word[0].raw);
-            clear_command(&command);
-                goto Lcheckhint;
-            }
+            // loop until all words in command are procesed
+            do {
+                // assume all words in command are processed, until proven otherwise
+                command_executed = true;
 
-            switch (command.word[0].type) {
-            case NO_WORD_TYPE: // FIXME: treating NO_WORD_TYPE as a motion word is confusing
-            case MOTION:
-                playermove(command.word[0].id);
-                return true;
-            case OBJECT:
-                command.part = unknown;
-                command.obj = command.word[0].id;
-                break;
-            case ACTION:
-                if (command.word[1].type == NUMERIC)
-                    command.part = transitive;
-                else
-                    command.part = intransitive;
-                command.verb = command.word[0].id;
-                break;
-            case NUMERIC:
-                if (!settings.oldstyle) {
+                if (strncasecmp(command.word[0].raw, "west", sizeof("west")) == 0) {
+                    if (++game.iwest == 10)
+                        rspeak(W_IS_WEST);
+                }
+                if (strncasecmp(command.word[0].raw, "go", sizeof("go")) == 0 && command.word[1].id != WORD_EMPTY) {
+                    if (++game.igo == 10)
+                        rspeak(GO_UNNEEDED);
+                }
+                if (command.word[0].id == WORD_NOT_FOUND) {
+                    /* Gee, I don't understand. */
                     sspeak(DONT_KNOW, command.word[0].raw);
                     clear_command(&command);
-                    goto Lcheckhint;
+                    command_given = false;
+                    break;
                 }
-            default: // LCOV_EXCL_LINE
-                BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3); // LCOV_EXCL_LINE
-            }
 
-            switch (action(command)) {
-            case GO_TERMINATE:
-                return true;
-            case GO_MOVE:
-                playermove(NUL);
-                return true;
-            case GO_TOP:
-                continue;    /* back to top of main interpreter loop */
-            case GO_CLEAROBJ:
-            clear_command(&command);
-                /* FALL THROUGH */
-            case GO_CHECKHINT:
-                goto Lcheckhint;
-            case GO_WORD2:
+                switch (command.word[0].type) {
+                case NO_WORD_TYPE: // FIXME: treating NO_WORD_TYPE as a motion word is confusing
+                case MOTION:
+                    playermove(command.word[0].id);
+                    return true;
+                case OBJECT:
+                    command.part = unknown;
+                    command.obj = command.word[0].id;
+                    break;
+                case ACTION:
+                    if (command.word[1].type == NUMERIC)
+                        command.part = transitive;
+                    else
+                        command.part = intransitive;
+                    command.verb = command.word[0].id;
+                    break;
+                case NUMERIC:
+                    if (!settings.oldstyle) {
+                        sspeak(DONT_KNOW, command.word[0].raw);
+                        clear_command(&command);
+                        command_given = false;
+                    }
+                    break;
+                default: // LCOV_EXCL_LINE
+                    BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3); // LCOV_EXCL_LINE
+                }
+
+                if(command_given) {
+                    switch (action(command)) {
+                    case GO_TERMINATE:
+                        return true;
+                    case GO_MOVE:
+                        playermove(NUL);
+                        return true;
+                    case GO_TOP:
+                        continue;    /* back to top of main interpreter loop */
+                    case GO_CLEAROBJ:
+                        clear_command(&command);
+                        /* FALL THROUGH */
+                    case GO_CHECKHINT:
+                        command_given = false;
+                        break;
+                    case GO_WORD2:
 #ifdef GDEBUG
-                printf("Word shift\n");
+                        printf("Word shift\n");
 #endif /* GDEBUG */
-                /* Get second word for analysis. */
-                command.word[0] = command.word[1];
-                command.word[1] = empty_command_word;
-                words_processed = false;
-                break;
-            case GO_UNKNOWN:
-                /*  Random intransitive verbs come here.  Clear obj just in case
-                 *  (see attack()). */
-                command.word[0].raw[0] = toupper(command.word[0].raw[0]);
-                sspeak(DO_WHAT, command.word[0].raw);
-                command.obj = 0;
-                goto Lcheckhint;
-            case GO_DWARFWAKE:
-                /*  Oh dear, he's disturbed the dwarves. */
-                rspeak(DWARVES_AWAKEN);
-                terminate(endgame);
-            default: // LCOV_EXCL_LINE
-                BUG(ACTION_RETURNED_PHASE_CODE_BEYOND_END_OF_SWITCH); // LCOV_EXCL_LINE
-            }
-        } while (!words_processed);
+                        /* Get second word for analysis. */
+                        command.word[0] = command.word[1];
+                        command.word[1] = empty_command_word;
+                        command_executed = false;
+                        break;
+                    case GO_UNKNOWN:
+                        /*  Random intransitive verbs come here.  Clear obj just in case
+                         *  (see attack()). */
+                        command.word[0].raw[0] = toupper(command.word[0].raw[0]);
+                        sspeak(DO_WHAT, command.word[0].raw);
+                        command.obj = 0;
+                        command_given = false;
+                        break;
+                    case GO_DWARFWAKE:
+                        /*  Oh dear, he's disturbed the dwarves. */
+                        rspeak(DWARVES_AWAKEN);
+                        terminate(endgame);
+                    default: // LCOV_EXCL_LINE
+                        BUG(ACTION_RETURNED_PHASE_CODE_BEYOND_END_OF_SWITCH); // LCOV_EXCL_LINE
+                    }
+                }
+            } while (!command_executed);
+        } while (!command_given);
     } 
 }
 
