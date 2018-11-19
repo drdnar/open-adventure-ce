@@ -983,6 +983,7 @@ static bool do_command()
 /* Get and execute a command */
 {
     static command_t command;
+    bool words_processed = false;
 
     /*  Can't leave cave once it's closing (except by main office). */
     if (OUTSID(game.newloc) && game.newloc != 0 && game.closng) {
@@ -1042,8 +1043,8 @@ static bool do_command()
             rspeak(SAYS_PLUGH);
 
         listobjects();
-	clear_command(&command);
-	
+        clear_command(&command);
+    
 Lcheckhint:
         checkhints();
 
@@ -1096,7 +1097,7 @@ Lclosecheck:
             else
                 rspeak(WHERE_QUERY);
 
-	    clear_command(&command);
+            clear_command(&command);
             goto Lcheckhint;
         }
 
@@ -1138,82 +1139,90 @@ Lclosecheck:
             }
         }
 
-Lookup:
-        if (strncasecmp(command.word[0].raw, "west", sizeof("west")) == 0) {
-            if (++game.iwest == 10)
-                rspeak(W_IS_WEST);
-        }
-        if (strncasecmp(command.word[0].raw, "go", sizeof("go")) == 0 && command.word[1].id != WORD_EMPTY) {
-            if (++game.igo == 10)
-                rspeak(GO_UNNEEDED);
-        }
-        if (command.word[0].id == WORD_NOT_FOUND) {
-            /* Gee, I don't understand. */
-            sspeak(DONT_KNOW, command.word[0].raw);
-	    clear_command(&command);
-            goto Lcheckhint;
-        }
-        switch (command.word[0].type) {
-        case NO_WORD_TYPE: // FIXME: treating NO_WORD_TYPE as a motion word is confusing
-        case MOTION:
-            playermove(command.word[0].id);
-            return true;
-        case OBJECT:
-            command.part = unknown;
-            command.obj = command.word[0].id;
-            break;
-        case ACTION:
-            if (command.word[1].type == NUMERIC)
-                command.part = transitive;
-            else
-                command.part = intransitive;
-            command.verb = command.word[0].id;
-            break;
-        case NUMERIC:
-	    if (!settings.oldstyle) {
-		sspeak(DONT_KNOW, command.word[0].raw);
-		clear_command(&command);
-		goto Lcheckhint;
-	    }
-        default: // LCOV_EXCL_LINE
-            BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3); // LCOV_EXCL_LINE
-        }
-        switch (action(command)) {
-        case GO_TERMINATE:
-            return true;
-        case GO_MOVE:
-            playermove(NUL);
-            return true;
-        case GO_TOP:
-            continue;	/* back to top of main interpreter loop */
-        case GO_CLEAROBJ:
-	    clear_command(&command);
-            /* FALL THROUGH */
-        case GO_CHECKHINT:
-            goto Lcheckhint;
-        case GO_WORD2:
+        // loop until all words in command are procesed
+        do {
+            // assume all words in command are processed, until proven otherwise
+            words_processed = true;
+
+            if (strncasecmp(command.word[0].raw, "west", sizeof("west")) == 0) {
+                if (++game.iwest == 10)
+                    rspeak(W_IS_WEST);
+            }
+            if (strncasecmp(command.word[0].raw, "go", sizeof("go")) == 0 && command.word[1].id != WORD_EMPTY) {
+                if (++game.igo == 10)
+                    rspeak(GO_UNNEEDED);
+            }
+            if (command.word[0].id == WORD_NOT_FOUND) {
+                /* Gee, I don't understand. */
+                sspeak(DONT_KNOW, command.word[0].raw);
+            clear_command(&command);
+                goto Lcheckhint;
+            }
+
+            switch (command.word[0].type) {
+            case NO_WORD_TYPE: // FIXME: treating NO_WORD_TYPE as a motion word is confusing
+            case MOTION:
+                playermove(command.word[0].id);
+                return true;
+            case OBJECT:
+                command.part = unknown;
+                command.obj = command.word[0].id;
+                break;
+            case ACTION:
+                if (command.word[1].type == NUMERIC)
+                    command.part = transitive;
+                else
+                    command.part = intransitive;
+                command.verb = command.word[0].id;
+                break;
+            case NUMERIC:
+                if (!settings.oldstyle) {
+                    sspeak(DONT_KNOW, command.word[0].raw);
+                    clear_command(&command);
+                    goto Lcheckhint;
+                }
+            default: // LCOV_EXCL_LINE
+                BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3); // LCOV_EXCL_LINE
+            }
+
+            switch (action(command)) {
+            case GO_TERMINATE:
+                return true;
+            case GO_MOVE:
+                playermove(NUL);
+                return true;
+            case GO_TOP:
+                continue;    /* back to top of main interpreter loop */
+            case GO_CLEAROBJ:
+            clear_command(&command);
+                /* FALL THROUGH */
+            case GO_CHECKHINT:
+                goto Lcheckhint;
+            case GO_WORD2:
 #ifdef GDEBUG
-            printf("Word shift\n");
+                printf("Word shift\n");
 #endif /* GDEBUG */
-            /* Get second word for analysis. */
-            command.word[0] = command.word[1];
-            command.word[1] = empty_command_word;
-            goto Lookup;
-        case GO_UNKNOWN:
-            /*  Random intransitive verbs come here.  Clear obj just in case
-             *  (see attack()). */
-            command.word[0].raw[0] = toupper(command.word[0].raw[0]);
-            sspeak(DO_WHAT, command.word[0].raw);
-            command.obj = 0;
-            goto Lcheckhint;
-        case GO_DWARFWAKE:
-            /*  Oh dear, he's disturbed the dwarves. */
-            rspeak(DWARVES_AWAKEN);
-            terminate(endgame);
-        default: // LCOV_EXCL_LINE
-            BUG(ACTION_RETURNED_PHASE_CODE_BEYOND_END_OF_SWITCH); // LCOV_EXCL_LINE
-        }
-    }
+                /* Get second word for analysis. */
+                command.word[0] = command.word[1];
+                command.word[1] = empty_command_word;
+                words_processed = false;
+                break;
+            case GO_UNKNOWN:
+                /*  Random intransitive verbs come here.  Clear obj just in case
+                 *  (see attack()). */
+                command.word[0].raw[0] = toupper(command.word[0].raw[0]);
+                sspeak(DO_WHAT, command.word[0].raw);
+                command.obj = 0;
+                goto Lcheckhint;
+            case GO_DWARFWAKE:
+                /*  Oh dear, he's disturbed the dwarves. */
+                rspeak(DWARVES_AWAKEN);
+                terminate(endgame);
+            default: // LCOV_EXCL_LINE
+                BUG(ACTION_RETURNED_PHASE_CODE_BEYOND_END_OF_SWITCH); // LCOV_EXCL_LINE
+            }
+        } while (!words_processed);
+    } 
 }
 
 /* end */
