@@ -538,6 +538,19 @@ bool get_command_input(command_t *command)
 
     tokenize(inputbuf, command);
 
+#ifdef GDEBUG
+    /* Needs to stay synced with enum word_type_t */
+    const char *types[] = {"NO_WORD_TYPE", "MOTION", "OBJECT", "ACTION", "NUMERIC"};
+    /* needs to stay synced with enum speechpart */
+    const char *roles[] = {"unknown", "intransitive", "transitive"};
+    printf("Command: role = %s type1 = %s, id1 = %ld, type2 = %s, id2 = %ld\n",
+           roles[command->part],
+           types[command->word[0].type],
+           command->word[0].id,
+           types[command->word[1].type],
+           command->word[1].id);
+#endif
+
     return true;
 }
 

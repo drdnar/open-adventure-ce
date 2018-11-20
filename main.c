@@ -449,7 +449,6 @@ static bool dwarfmove(void)
  *  building (and heaven help him if he tries to xyzzy back into the
  *  cave without the lamp!).  game.oldloc is zapped so he can't just
  *  "retreat". */
-
 static void croak(void)
 /*  Okay, he's dead.  Let's get on with it. */
 {
@@ -498,7 +497,6 @@ static bool traveleq(int a, int b)
  *  does, game.newloc will be limbo, and game.oldloc will be what killed
  *  him, so we need game.oldlc2, which is the last place he was
  *  safe.) */
-
 static void playermove( int motion)
 {
     int scratchloc, travel_entry = tkey[game.loc];
@@ -744,6 +742,50 @@ static void playermove( int motion)
     (false);
 }
 
+static void lampcheck(void)
+/* Check game limit and lamp timers */
+{
+    if (game.prop[LAMP] == LAMP_BRIGHT)
+        --game.limit;
+
+    /*  Another way we can force an end to things is by having the
+     *  lamp give out.  When it gets close, we come here to warn him.
+     *  First following arm checks if the lamp and fresh batteries are
+     *  here, in which case we replace the batteries and continue.
+     *  Second is for other cases of lamp dying.  Even after it goes
+     *  out, he can explore outside for a while if desired. */
+    if (game.limit <= WARNTIME) {
+        if (HERE(BATTERY) && game.prop[BATTERY] == FRESH_BATTERIES && HERE(LAMP)) {
+            rspeak(REPLACE_BATTERIES);
+            game.prop[BATTERY] = DEAD_BATTERIES;
+#ifdef __unused__
+            /* This code from the original game seems to have been faulty.
+             * No tests ever passed the guard, and with the guard removed
+             * the game hangs when the lamp limit is reached.
+             */
+            if (TOTING(BATTERY))
+                drop(BATTERY, game.loc);
+#endif
+            game.limit += BATTERYLIFE;
+            game.lmwarn = false;
+        } else if (!game.lmwarn && HERE(LAMP)) {
+            game.lmwarn = true;
+            if (game.prop[BATTERY] == DEAD_BATTERIES)
+                rspeak(MISSING_BATTERIES);
+            else if (game.place[BATTERY] == LOC_NOWHERE)
+                rspeak(LAMP_DIM);
+            else
+                rspeak(GET_BATTERIES);
+        }
+    }
+    if (game.limit == 0) {
+        game.limit = -1;
+        game.prop[LAMP] = LAMP_DARK;
+        if (HERE(LAMP))
+            rspeak(LAMP_OUT);
+    }
+}
+
 static bool closecheck(void)
 /*  Handle the closing of the cave.  The cave closes "clock1" turns
  *  after the last treasure has been located (including the pirate's
@@ -811,7 +853,7 @@ static bool closecheck(void)
         rspeak(CAVE_CLOSING);
         game.clock1 = -1;
         game.closng = true;
-        return true;
+        return game.closed;
     } else if (game.clock1 < 0)
         --game.clock2;
     if (game.clock2 == 0) {
@@ -860,54 +902,11 @@ static bool closecheck(void)
 
         rspeak(CAVE_CLOSED);
         game.closed = true;
-        return true;
+        return game.closed;
     }
 
+    lampcheck();
     return false;
-}
-
-static void lampcheck(void)
-/* Check game limit and lamp timers */
-{
-    if (game.prop[LAMP] == LAMP_BRIGHT)
-        --game.limit;
-
-    /*  Another way we can force an end to things is by having the
-     *  lamp give out.  When it gets close, we come here to warn him.
-     *  First following arm checks if the lamp and fresh batteries are
-     *  here, in which case we replace the batteries and continue.
-     *  Second is for other cases of lamp dying.  Even after it goes
-     *  out, he can explore outside for a while if desired. */
-    if (game.limit <= WARNTIME) {
-        if (HERE(BATTERY) && game.prop[BATTERY] == FRESH_BATTERIES && HERE(LAMP)) {
-            rspeak(REPLACE_BATTERIES);
-            game.prop[BATTERY] = DEAD_BATTERIES;
-#ifdef __unused__
-            /* This code from the original game seems to have been faulty.
-             * No tests ever passed the guard, and with the guard removed
-             * the game hangs when the lamp limit is reached.
-             */
-            if (TOTING(BATTERY))
-                drop(BATTERY, game.loc);
-#endif
-            game.limit += BATTERYLIFE;
-            game.lmwarn = false;
-        } else if (!game.lmwarn && HERE(LAMP)) {
-            game.lmwarn = true;
-            if (game.prop[BATTERY] == DEAD_BATTERIES)
-                rspeak(MISSING_BATTERIES);
-            else if (game.place[BATTERY] == LOC_NOWHERE)
-                rspeak(LAMP_DIM);
-            else
-                rspeak(GET_BATTERIES);
-        }
-    }
-    if (game.limit == 0) {
-        game.limit = -1;
-        game.prop[LAMP] = LAMP_DARK;
-        if (HERE(LAMP))
-            rspeak(LAMP_OUT);
-    }
 }
 
 static void listobjects(void)
@@ -968,77 +967,55 @@ void clear_command(command_t *cmd)
     cmd->obj = NO_OBJECT;
 }
 
-/*
- * This function probably does too many disparate things. It checks for hints,
- * sees if the gamed is closed, checks for darkness, gets user input, increments
- * the turns in the game state, checks to see if we should be closing, gets the
- * command input, and preprocesses some implied verbs in the case that the user
- * put in a single word motion or object command.
- *
- * This was the lesser evil -- it got rid of a really nasty goto in the main
- * input parser/state transition engine. This should be refactored further.
- */
-bool get_preprocessed_command_input(command_t *command)
+void close_cleanup_before_command(void) 
+/*  If closing time, check for any objects being toted with
+ *  game.prop < 0 and stash them.  This way objects won't be
+ *  described until they've been picked up and put down
+ *  separate from their respective piles. */
 {
-    bool preprocessed = false;
-
-    do {
-        preprocessed = true;
-        checkhints();
-
-        /*  If closing time, check for any objects being toted with
-         *  game.prop < 0 and stash them.  This way objects won't be
-         *  described until they've been picked up and put down
-         *  separate from their respective piles. */
-        if (game.closed) {
-            if (game.prop[OYSTER] < 0 && TOTING(OYSTER))
-                pspeak(OYSTER, look, true, 1);
-            for (size_t i = 1; i <= NOBJECTS; i++) {
-                if (TOTING(i) && game.prop[i] < 0)
-                    game.prop[i] = STASHED(i);
-            }
+    if (game.closed) {
+        if (game.prop[OYSTER] < 0 && TOTING(OYSTER))
+            pspeak(OYSTER, look, true, 1);
+        for (size_t i = 1; i <= NOBJECTS; i++) {
+            if (TOTING(i) && game.prop[i] < 0)
+                game.prop[i] = STASHED(i);
         }
-        game.wzdark = DARK(game.loc);
-        if (game.knfloc > 0 && game.knfloc != game.loc)
-            game.knfloc = 0;
+    }
+}
 
-        // Get command input from user
-        if (!get_command_input(command))
-            return false;
-
-#ifdef GDEBUG
-        /* Needs to stay synced with enum word_type_t */
-        const char *types[] = {"NO_WORD_TYPE", "MOTION", "OBJECT", "ACTION", "NUMERIC"};
-        /* needs to stay synced with enum speechpart */
-        const char *roles[] = {"unknown", "intransitive", "transitive"};
-        printf("Command: role = %s type1 = %s, id1 = %ld, type2 = %s, id2 = %ld\n",
-               roles[command->part],
-               types[command->word[0].type],
-               command->word[0].id,
-               types[command->word[1].type],
-               command->word[1].id);
-#endif
-
-        ++game.turns;
-
-        if (closecheck()) {
-            if (game.closed)
-                return false;
-        } else
-            lampcheck();
-
-        if (command->word[0].type == MOTION && command->word[0].id == ENTER
-            && (command->word[1].id == STREAM || command->word[1].id == WATER)) {
-            if (LIQLOC(game.loc) == WATER)
-                rspeak(FEET_WET);
-            else
-                rspeak(WHERE_QUERY);
-
-            clear_command(command);
-            preprocessed = false;
-        }
-
+bool preprocess_command(command_t *command) 
+/* Pre-processes a command input to see if we need to tease out a few specific cases:
+ * - "enter water" or "enter stream": 
+ *   wierd specific case that gets the user wet, and then kicks us back to get another command
+ * - <object> <verb>:
+ *   Irregular form of input, but should be allowed. We switch back to <verb> <object> form for 
+ *   furtherprocessing.
+ * - "grate":
+ *   If in location with grate, we move to that grate. If we're in a number of other places, 
+ *   we move to the entrance.
+ * - "water plant", "oil plant", "water door", "oil door":
+ *   Change to "pour water" or "pour oil" based on context
+ * - "cage bird":
+ *   If bird is present, we change to "carry bird"
+ *
+ * Returns true if pre-processing is complete, and we're ready to move to the primary command 
+ * processing, false otherwise. */
+{
+    if (command->word[0].type == MOTION && command->word[0].id == ENTER
+        && (command->word[1].id == STREAM || command->word[1].id == WATER)) {
+        if (LIQLOC(game.loc) == WATER)
+            rspeak(FEET_WET);
+        else
+            rspeak(WHERE_QUERY);
+    } else {
         if (command->word[0].type == OBJECT) {
+            /* From OV to VO form */
+            if (command->word[1].type == ACTION) {
+                command_word_t stage = command->word[0];
+                command->word[0] = command->word[1];
+                command->word[1] = stage;
+            }
+
             if (command->word[0].id == GRATE) {
                 command->word[0].type = MOTION;
                 if (game.loc == LOC_START ||
@@ -1047,7 +1024,6 @@ bool get_preprocessed_command_input(command_t *command)
                     command->word[0].id = DEPRESSION;
                 }
                 if (game.loc == LOC_COBBLE ||
-
                     game.loc == LOC_DEBRIS ||
                     game.loc == LOC_AWKWARD ||
                     game.loc == LOC_BIRD ||
@@ -1055,7 +1031,8 @@ bool get_preprocessed_command_input(command_t *command)
                     command->word[0].id = ENTRANCE;
                 }
             }
-            if ((command->word[0].id == WATER || command->word[0].id == OIL) && (command->word[1].id == PLANT || command->word[1].id == DOOR)) {
+            if ((command->word[0].id == WATER || command->word[0].id == OIL) && 
+                (command->word[1].id == PLANT || command->word[1].id == DOOR)) {
                 if (AT(command->word[1].id)) {
                     command->word[1] = command->word[0];
                     command->word[0].id = POUR;
@@ -1067,19 +1044,12 @@ bool get_preprocessed_command_input(command_t *command)
                 command->word[0].id = CARRY;
                 command->word[0].type = ACTION;
             }
-
-            /* From OV to VO form */
-            if (command->word[0].type == OBJECT && command->word[1].type == ACTION) {
-                command_word_t stage = command->word[0];
-                command->word[0] = command->word[1];
-                command->word[1] = stage;
-            }
         }
-    } while (preprocessed == false);
 
-    return true;
+        return true;
+    }
+    return false;
 }
-
 
 static bool do_command()
 /* Get and execute a command */
@@ -1116,11 +1086,7 @@ static bool do_command()
         croak();
 
     /*  Describe the current location and (maybe) get next command. */
-
     for (;;) {
-        command_given = false;
-        command_executed = false;
-
         if (game.loc == 0)
             croak();
         const char* msg = locations[game.loc].description.small;
@@ -1151,17 +1117,44 @@ static bool do_command()
         listobjects();
         clear_command(&command);
 
+        // Keep getting commands from user until valid command is both given and executed.
         do {
-            // Get pre-processed command input from user
-            command_given = get_preprocessed_command_input(&command);
-            if (!command_given)
-                return game.closed;
+            // Check some quick-time game state items, get input from user, increment turn, 
+            // and pre-process commands. Keep going until pre-processing is done.
+            do {
+                checkhints();
+                close_cleanup_before_command();
 
-            // loop until all words in command are procesed
+                game.wzdark = DARK(game.loc);
+                if (game.knfloc > 0 && game.knfloc != game.loc)
+                    game.knfloc = 0;
+
+                // Get command input from user
+                if (!get_command_input(&command))
+                    return false;
+
+                ++game.turns;
+            } while ( !preprocess_command(&command));
+            command_given = true;
+
+            // check if game is closed
+            if (closecheck() ) 
+                return true;
+
+           // loop until all words in command are procesed
             do {
                 // assume all words in command are processed, until proven otherwise
                 command_executed = true;
 
+                if (command.word[0].id == WORD_NOT_FOUND) {
+                    /* Gee, I don't understand. */
+                    sspeak(DONT_KNOW, command.word[0].raw);
+                    clear_command(&command);
+                    command_given = false;
+                    continue;
+                }
+
+                // Give user hints of shortcuts
                 if (strncasecmp(command.word[0].raw, "west", sizeof("west")) == 0) {
                     if (++game.iwest == 10)
                         rspeak(W_IS_WEST);
@@ -1169,13 +1162,6 @@ static bool do_command()
                 if (strncasecmp(command.word[0].raw, "go", sizeof("go")) == 0 && command.word[1].id != WORD_EMPTY) {
                     if (++game.igo == 10)
                         rspeak(GO_UNNEEDED);
-                }
-                if (command.word[0].id == WORD_NOT_FOUND) {
-                    /* Gee, I don't understand. */
-                    sspeak(DONT_KNOW, command.word[0].raw);
-                    clear_command(&command);
-                    command_given = false;
-                    break;
                 }
 
                 switch (command.word[0].type) {
@@ -1199,51 +1185,50 @@ static bool do_command()
                         sspeak(DONT_KNOW, command.word[0].raw);
                         clear_command(&command);
                         command_given = false;
+                        continue;
                     }
                     break;
                 default: // LCOV_EXCL_LINE
                     BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3); // LCOV_EXCL_LINE
                 }
 
-                if (command_given) {
-                    switch (action(command)) {
-                    case GO_TERMINATE:
-                        return true;
-                    case GO_MOVE:
-                        playermove(NUL);
-                        return true;
-                    case GO_TOP:
-                        continue;    /* back to top of main interpreter loop */
-                    case GO_CLEAROBJ:
-                        clear_command(&command);
-                    /* FALL THROUGH */
-                    case GO_CHECKHINT:
-                        command_given = false;
-                        break;
-                    case GO_WORD2:
+                switch (action(command)) {
+                case GO_TERMINATE:
+                    return true;
+                case GO_MOVE:
+                    playermove(NUL);
+                    return true;
+                case GO_TOP:
+                    continue;    /* back to top of main interpreter loop */
+                case GO_CLEAROBJ:
+                    clear_command(&command);
+                /* FALL THROUGH */
+                case GO_CHECKHINT:
+                    command_given = false;
+                    break;
+                case GO_WORD2:
 #ifdef GDEBUG
-                        printf("Word shift\n");
+                    printf("Word shift\n");
 #endif /* GDEBUG */
-                        /* Get second word for analysis. */
-                        command.word[0] = command.word[1];
-                        command.word[1] = empty_command_word;
-                        command_executed = false;
-                        break;
-                    case GO_UNKNOWN:
-                        /*  Random intransitive verbs come here.  Clear obj just in case
-                         *  (see attack()). */
-                        command.word[0].raw[0] = toupper(command.word[0].raw[0]);
-                        sspeak(DO_WHAT, command.word[0].raw);
-                        command.obj = 0;
-                        command_given = false;
-                        break;
-                    case GO_DWARFWAKE:
-                        /*  Oh dear, he's disturbed the dwarves. */
-                        rspeak(DWARVES_AWAKEN);
-                        terminate(endgame);
-                    default: // LCOV_EXCL_LINE
-                        BUG(ACTION_RETURNED_PHASE_CODE_BEYOND_END_OF_SWITCH); // LCOV_EXCL_LINE
-                    }
+                    /* Get second word for analysis. */
+                    command.word[0] = command.word[1];
+                    command.word[1] = empty_command_word;
+                    command_executed = false;
+                    break;
+                case GO_UNKNOWN:
+                    /*  Random intransitive verbs come here.  Clear obj just in case
+                     *  (see attack()). */
+                    command.word[0].raw[0] = toupper(command.word[0].raw[0]);
+                    sspeak(DO_WHAT, command.word[0].raw);
+                    command.obj = 0;
+                    command_given = false;
+                    break;
+                case GO_DWARFWAKE:
+                    /*  Oh dear, he's disturbed the dwarves. */
+                    rspeak(DWARVES_AWAKEN);
+                    terminate(endgame);
+                default: // LCOV_EXCL_LINE
+                    BUG(ACTION_RETURNED_PHASE_CODE_BEYOND_END_OF_SWITCH); // LCOV_EXCL_LINE
                 }
             } while (!command_executed);
         } while (!command_given);
