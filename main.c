@@ -1,17 +1,4 @@
 /*
- * There used to be a note that said this:
- *
- * The author - Don Woods - apologises for the style of the code; it
- * is a result of running the original Fortran IV source through a
- * home-brew Fortran-to-C converter.
- *
- * Now that the code has been restructured into something much closer
- * to idiomatic C, the following is more appropriate:
- *
- * ESR apologizes for the remaing gotos (now confined to one function
- * in this file - there used to be over 350 of them, *everywhere*).
- * Applying the Structured Program Theorem can be hard.
- *
  * Copyright (c) 1977, 2005 by Will Crowther and Don Woods
  * Copyright (c) 2017 by Eric S. Raymond
  * SPDX-License-Identifier: BSD-2-clause

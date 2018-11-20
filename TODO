@@ -3,8 +3,6 @@
 The FORTRANish mess that once was is now mostly idiomatic C. Some issues
 remain to be cleaned up:
 
-* Remaining unstructured gotos in do_command().
-
 * The program is still pretty much typeless. Some attempt has been
   made to introduce semantic types, but the job is barely started.
 

@@ -13,7 +13,7 @@ the game; Jason signed on early in the process to help. The assistance
 of Peje Nilsson in restructuring some particularly grotty gotos is
 gratefully acknowledged. Petr Voropaev contributed fuzz testing and
 code cleanups. Aaron Traas did a lot of painstaking work to improve
-test coverage.
+test coverage, and factored out the last handful of gotos.
 
 == Nomenclature ==
 
@@ -154,10 +154,6 @@ ways:
   We don't need whatever minor performance gains this might collect,
   and the choice to refrain will make forward translation into future
   languages easier.
-
-* There are a few gotos left that resist restructuring; all are in the
-  principal command interpreter function implementing its state
-  machine.
 
 * Linked lists (for objects at a location) are implemented using an array
   of link indices. This is a surviving FORTRANism that is quite unlike
