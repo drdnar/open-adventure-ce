@@ -5,7 +5,7 @@
  * Copyright (c) 2017 by Eric S. Raymond
  * SPDX-License-Identifier: BSD-2-clause
  */
-     
+
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -476,9 +476,9 @@ static void tokenize(char* raw, command_t *cmd)
 {
     /*
      * Be caereful about modifing this. We do not want to nuke the
-     * the speech part or ID from the previous turn. 
+     * the speech part or ID from the previous turn.
      */
-    memset(&cmd->word[0].raw, '\0', sizeof(cmd->word[0],raw));
+    memset(&cmd->word[0].raw, '\0', sizeof(cmd->word[0].raw));
     memset(&cmd->word[1].raw, '\0', sizeof(cmd->word[1].raw));
 
     /* Bound prefix on the %s would be needed to prevent buffer
@@ -590,9 +590,9 @@ void carry(obj_t object, loc_t where)
         if (game.place[object] == CARRIED)
             return;
         game.place[object] = CARRIED;
-	
-	if (object!= BIRD)
-	    ++game.holdng;
+
+        if (object != BIRD)
+            ++game.holdng;
     }
     if (game.atloc[where] == object) {
         game.atloc[where] = game.link[object];
@@ -613,14 +613,14 @@ void drop(obj_t object, loc_t where)
         game.fixed[object - NOBJECTS] = where;
     else {
         if (game.place[object] == CARRIED)
-	    if (object != BIRD)
-		/* The bird has to be weightless.  This ugly hack (and the
-		 * corresponding code in the drop function) brought to you
-		 * by the fact that when the bird is caged, we need to be able
-		 * to either 'take bird' or 'take cage' and have the right thing
-		 * happen.
-		 */
-		--game.holdng;
+            if (object != BIRD)
+                /* The bird has to be weightless.  This ugly hack (and the
+                 * corresponding code in the drop function) brought to you
+                 * by the fact that when the bird is caged, we need to be able
+                 * to either 'take bird' or 'take cage' and have the right thing
+                 * happen.
+                 */
+                --game.holdng;
         game.place[object] = where;
     }
     if (where == LOC_NOWHERE ||

@@ -968,14 +968,14 @@ void clear_command(command_t *cmd)
     cmd->obj = NO_OBJECT;
 }
 
-/* 
+/*
  * This function probably does too many disparate things. It checks for hints,
- * sees if the gamed is closed, checks for darkness, gets user input, increments 
- * the turns in the game state, checks to see if we should be closing, gets the 
- * command input, and preprocesses some implied verbs in the case that the user 
+ * sees if the gamed is closed, checks for darkness, gets user input, increments
+ * the turns in the game state, checks to see if we should be closing, gets the
+ * command input, and preprocesses some implied verbs in the case that the user
  * put in a single word motion or object command.
- * 
- * This was the lesser evil -- it got rid of a really nasty goto in the main 
+ *
+ * This was the lesser evil -- it got rid of a really nasty goto in the main
  * input parser/state transition engine. This should be refactored further.
  */
 bool get_preprocessed_command_input(command_t *command)
@@ -1150,7 +1150,7 @@ static bool do_command()
 
         listobjects();
         clear_command(&command);
-    
+
         do {
             // Get pre-processed command input from user
             command_given = get_preprocessed_command_input(&command);
@@ -1205,7 +1205,7 @@ static bool do_command()
                     BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3); // LCOV_EXCL_LINE
                 }
 
-                if(command_given) {
+                if (command_given) {
                     switch (action(command)) {
                     case GO_TERMINATE:
                         return true;
@@ -1216,7 +1216,7 @@ static bool do_command()
                         continue;    /* back to top of main interpreter loop */
                     case GO_CLEAROBJ:
                         clear_command(&command);
-                        /* FALL THROUGH */
+                    /* FALL THROUGH */
                     case GO_CHECKHINT:
                         command_given = false;
                         break;
@@ -1247,7 +1247,7 @@ static bool do_command()
                 }
             } while (!command_executed);
         } while (!command_given);
-    } 
+    }
 }
 
 /* end */
