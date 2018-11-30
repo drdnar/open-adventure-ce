@@ -24,7 +24,7 @@ Please see INSTALL.adoc for build info.
 
 Extreme care has been taken to not silently change gameplay. By
 policy, all user-visible changes from 2.5 are revertible with the
--o (oldstyle) option.
+-o (oldstyle) command-line option.
 
 If you encounter a bug (not likely; this code is old and well tested)
 please try to make a test log that reproduces it, using the -l option,
