@@ -710,7 +710,7 @@ static void playermove( int motion)
                      * game.prop[TROLL]=TROLL_UNPAID.)  Special stuff
                      * for bear. */
                     if (game.prop[TROLL] == TROLL_PAIDONCE) {
-                        pspeak(TROLL, look, TROLL_PAIDONCE, true);
+                        pspeak(TROLL, look, true, TROLL_PAIDONCE);
                         game.prop[TROLL] = TROLL_UNPAID;
                         move(TROLL2, LOC_NOWHERE);
                         move(TROLL2 + NOBJECTS, IS_FREE);
@@ -956,7 +956,7 @@ static void listobjects(void)
                 kk = (game.loc == game.fixed[STEPS])
                      ? STEPS_UP
                      : STEPS_DOWN;
-            pspeak(obj, look, kk, true);
+            pspeak(obj, look, true, kk);
         }
     }
 }
@@ -992,7 +992,7 @@ bool get_preprocessed_command_input(command_t *command)
          *  separate from their respective piles. */
         if (game.closed) {
             if (game.prop[OYSTER] < 0 && TOTING(OYSTER))
-                pspeak(OYSTER, look, 1, true);
+                pspeak(OYSTER, look, true, 1);
             for (size_t i = 1; i <= NOBJECTS; i++) {
                 if (TOTING(i) && game.prop[i] < 0)
                     game.prop[i] = STASHED(i);

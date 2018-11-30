@@ -209,7 +209,7 @@ extern struct settings_t settings;
 extern bool get_command_input(command_t *);
 extern void speak(const char*, ...);
 extern void sspeak(int msg, ...);
-extern void pspeak(vocab_t, enum speaktype, int, bool, ...);
+extern void pspeak(vocab_t, enum speaktype, bool, int, ...);
 extern void rspeak(vocab_t, ...);
 extern void echo_input(FILE*, const char*, const char*);
 extern bool silent_yes(void);

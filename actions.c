@@ -211,11 +211,11 @@ static int bigwords(vocab_t id)
             if (game.place[EGGS] == LOC_NOWHERE && game.place[TROLL] == LOC_NOWHERE && game.prop[TROLL] == TROLL_UNPAID)
                 game.prop[TROLL] = TROLL_PAIDONCE;
             if (HERE(EGGS))
-                pspeak(EGGS, look, EGGS_VANISHED, true);
+                pspeak(EGGS, look, true, EGGS_VANISHED);
             else if (game.loc == objects[EGGS].plac)
-                pspeak(EGGS, look, EGGS_HERE, true);
+                pspeak(EGGS, look, true, EGGS_HERE);
             else
-                pspeak(EGGS, look, EGGS_DONE, true);
+                pspeak(EGGS, look, true, EGGS_DONE);
             move(EGGS, objects[EGGS].plac);
 
             return GO_CLEAROBJ;
@@ -500,7 +500,7 @@ static int discard(verb_t verb, obj_t obj)
     if (obj == COINS && HERE(VEND)) {
         DESTROY(COINS);
         drop(BATTERY, game.loc);
-        pspeak(BATTERY, look, FRESH_BATTERIES, true);
+        pspeak(BATTERY, look, true, FRESH_BATTERIES);
         return GO_CLEAROBJ;
     }
 
@@ -640,7 +640,7 @@ static int extinguish(verb_t verb, obj_t obj)
         if (game.prop[URN] != URN_EMPTY) {
             state_change(URN, URN_DARK);
         } else {
-            pspeak(URN, change, URN_DARK, true);
+            pspeak(URN, change, true, URN_DARK);
         }
         break;
     case LAMP:
@@ -869,7 +869,7 @@ static int inven(void)
             rspeak(NOW_HOLDING);
             empty = false;
         }
-        pspeak(i, touch, -1, false);
+        pspeak(i, touch, false, -1);
     }
     if (TOTING(BEAR))
         rspeak(TAME_BEAR);
@@ -939,7 +939,7 @@ static int listen(void)
          * depending on whether player has drunk dragon's blood. */
         if (i == BIRD)
             mi += 3 * game.blooded;
-        pspeak(i, hear, mi, true, game.zzword);
+        pspeak(i, hear, true, mi, game.zzword);
         rspeak(NO_MESSAGE);
         if (i == BIRD && mi == BIRD_ENDSTATE)
             DESTROY(BIRD);
@@ -1108,7 +1108,7 @@ static int read(command_t command)
                game.prop[command.obj] == STATE_NOTFOUND) {
         speak(actions[command.verb].message);
     } else
-        pspeak(command.obj, study, game.prop[command.obj], true);
+        pspeak(command.obj, study, true, game.prop[command.obj]);
     return GO_CLEAROBJ;
 }
 

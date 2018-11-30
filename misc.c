@@ -139,7 +139,7 @@ void sspeak(const int msg, ...)
     va_end(ap);
 }
 
-void pspeak(vocab_t msg, enum speaktype mode, int skip, bool blank, ...)
+void pspeak(vocab_t msg, enum speaktype mode, bool blank, int skip, ...)
 /* Find the skip+1st message from msg and print it.  Modes are:
  * feel = for inventory, what you can touch
  * look = the full description for the state the object is in
@@ -147,7 +147,7 @@ void pspeak(vocab_t msg, enum speaktype mode, int skip, bool blank, ...)
  * study = text on the object. */
 {
     va_list ap;
-    va_start(ap, blank);
+    va_start(ap, skip);
     switch (mode) {
     case touch:
         vspeak(objects[msg].inventory, blank, ap);
@@ -708,7 +708,7 @@ void state_change(obj_t obj, int state)
 /* Object must have a change-message list for this to be useful; only some do */
 {
     game.prop[obj] = state;
-    pspeak(obj, change, state, true);
+    pspeak(obj, change, true, state);
 }
 
 /* end */
