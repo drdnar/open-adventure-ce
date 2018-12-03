@@ -12,6 +12,12 @@ CCFLAGS+=-std=c99 -D_DEFAULT_SOURCE -DVERSION=\"$(VERS)\" -O2 -D_FORTIFY_SOURCE=
 LIBS=$(shell pkg-config --libs libedit)
 INC+=$(shell pkg-config --cflags libedit)
 
+# LLVM/Clang on macOS seems to need -ledit flag for linking
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+    CCFLAGS += -ledit
+endif
+
 OBJS=main.o init.o actions.o score.o misc.o saveresume.o
 CHEAT_OBJS=cheat.o init.o actions.o score.o misc.o saveresume.o
 SOURCES=$(OBJS:.o=.c) advent.h adventure.yaml Makefile control make_dungeon.py templates/*.tpl
