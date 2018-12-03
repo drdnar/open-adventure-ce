@@ -223,7 +223,7 @@ if __name__ == "__main__":
             category["percent"] = (category["covered"] / float(category["total"])) * 100
 
             # render section header
-            cat_messages = sorted(category["messages"].items())
+            cat_messages = list(category["messages"].items())
             cat_keys = cat_messages[0][1].keys()
             headers_html = ""
             colspan = 10 - len(cat_keys)
