@@ -1,5 +1,8 @@
 = Open Adventure project news =
 
+Repository head::
+  Python 3 and OS X port fixes.
+
 1.6: 2018-11-15::
   Split commands with verbless objects now pick up a preceding verb correctly.
 
