@@ -511,6 +511,7 @@ static void tokenize(char* raw, command_t *cmd)
     /* populate command with parsed vocabulary metadata */
     get_vocab_metadata(cmd->word[0].raw, &(cmd->word[0].id), &(cmd->word[0].type));
     get_vocab_metadata(cmd->word[1].raw, &(cmd->word[1].id), &(cmd->word[1].type));
+    cmd->state = TOKENIZED;
 }
 
 bool get_command_input(command_t *command)
@@ -551,6 +552,7 @@ bool get_command_input(command_t *command)
            command->word[1].id);
 #endif
 
+    command->state = GIVEN;
     return true;
 }
 

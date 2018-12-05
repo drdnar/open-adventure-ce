@@ -196,11 +196,14 @@ typedef struct {
     word_type_t type;
 } command_word_t;
 
+typedef enum {EMPTY, RAW, TOKENIZED, GIVEN, PREPROCESSED, PROCESSING, EXECUTED} command_state_t;
+
 typedef struct {
     enum speechpart part;
     command_word_t word[2];
     verb_t verb;
-    obj_t   obj;
+    obj_t obj;
+    command_state_t state;
 } command_t;
 
 extern struct game_t game;
