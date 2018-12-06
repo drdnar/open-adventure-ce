@@ -15,7 +15,7 @@ INC+=$(shell pkg-config --cflags libedit)
 # LLVM/Clang on macOS seems to need -ledit flag for linking
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
-    CCFLAGS += -ledit
+    LIBS += -ledit
 endif
 
 OBJS=main.o init.o actions.o score.o misc.o saveresume.o
