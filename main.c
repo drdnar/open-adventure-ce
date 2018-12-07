@@ -40,6 +40,7 @@ static void sig_handler(int signo)
  */
 
 static bool do_command(void);
+static bool do_move(void);
 
 int main(int argc, char *argv[])
 {
@@ -116,6 +117,11 @@ int main(int argc, char *argv[])
 
     /* interpret commands until EOF or interrupt */
     for (;;) {
+        // if we're supposed to move, move
+        if (!do_move())
+            continue;
+
+        // get command
         if (!do_command())
             break;
     }
@@ -980,15 +986,6 @@ static void listobjects(void)
     }
 }
 
-void clear_command(command_t *cmd)
-{
-    cmd->verb = ACT_NULL;
-    cmd->part = unknown;
-    game.oldobj = cmd->obj;
-    cmd->obj = NO_OBJECT;
-    cmd->state = EMPTY;
-}
-
 bool preprocess_command(command_t *command) 
 /* Pre-processes a command input to see if we need to tease out a few specific cases:
  * - "enter water" or "enter stream": 
@@ -1051,18 +1048,20 @@ bool preprocess_command(command_t *command)
                 command->word[0].type = ACTION;
             }
         }
+
+        /* If no word type is given for the first word, we assume it's a motion. */
+        if(command->word[0].type == NO_WORD_TYPE) 
+            command->word[0].type = MOTION;
+        
         command->state = PREPROCESSED;
         return true;
     }
     return false;
 }
 
-static bool do_command()
-/* Get and execute a command */
+static bool do_move(void) 
+/* Actually execute the move to the new location and dwarf movement */
 {
-    static command_t command;
-    command.state = EMPTY;
-
     /*  Can't leave cave once it's closing (except by main office). */
     if (OUTSID(game.newloc) && game.newloc != 0 && game.closng) {
         rspeak(EXIT_CLOSED);
@@ -1090,9 +1089,8 @@ static bool do_command()
     if (!dwarfmove())
         croak();
 
-    if (game.loc == LOC_NOWHERE) {
+    if (game.loc == LOC_NOWHERE)
         croak();
-    }
 
     /* The easiest way to get killed is to fall into a pit in
      * pitch darkness. */
@@ -1100,8 +1098,17 @@ static bool do_command()
         rspeak(PIT_FALL);
         game.oldlc2 = game.loc;
         croak();
-        return true;
+        return false;
     }
+
+    return true;
+}
+
+static bool do_command()
+/* Get and execute a command */
+{
+    static command_t command;
+    clear_command(&command);
 
     /* Describe the current location and (maybe) get next command. */
     while (command.state != EXECUTED) {
@@ -1178,7 +1185,6 @@ static bool do_command()
                 }
 
                 switch (command.word[0].type) {
-                case NO_WORD_TYPE: // FIXME: treating NO_WORD_TYPE as a motion word is confusing
                 case MOTION:
                     playermove(command.word[0].id);
                     command.state = EXECUTED;
@@ -1232,6 +1238,9 @@ static bool do_command()
                     /* object cleared; we need to go back to the preprocessing step */
                     command.state = GIVEN;
                     break;
+                case GO_CHECKHINT: // FIXME: re-name to be more contextual; this was previously a label
+                    command.state = GIVEN;
+                    break;
                 case GO_DWARFWAKE:
                     /*  Oh dear, he's disturbed the dwarves. */
                     rspeak(DWARVES_AWAKEN);
@@ -1240,9 +1249,6 @@ static bool do_command()
                     clear_command(&command);
                     break;
                 case GO_TOP: // FIXME: re-name to be more contextual; this was previously a label
-                    break;
-                case GO_CHECKHINT: // FIXME: re-name to be more contextual; this was previously a label
-                    command.state = GIVEN;
                     break;
                 default: // LCOV_EXCL_LINE
                     BUG(ACTION_RETURNED_PHASE_CODE_BEYOND_END_OF_SWITCH); // LCOV_EXCL_LINE

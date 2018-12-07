@@ -210,6 +210,7 @@ extern struct game_t game;
 extern struct settings_t settings;
 
 extern bool get_command_input(command_t *);
+extern void clear_command(command_t *);
 extern void speak(const char*, ...);
 extern void sspeak(int msg, ...);
 extern void pspeak(vocab_t, enum speaktype, bool, int, ...);

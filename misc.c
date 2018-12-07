@@ -556,6 +556,17 @@ bool get_command_input(command_t *command)
     return true;
 }
 
+void clear_command(command_t *cmd)
+/* Resets the state of the command to empty */
+{
+    cmd->verb = ACT_NULL;
+    cmd->part = unknown;
+    game.oldobj = cmd->obj;
+    cmd->obj = NO_OBJECT;
+    cmd->state = EMPTY;
+}
+
+
 void juggle(obj_t object)
 /*  Juggle an object by picking it up and putting it down again, the purpose
  *  being to get the object to the front of the chain of things at its loc. */
