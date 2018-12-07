@@ -102,7 +102,7 @@ typedef enum scorebonus {none, splatter, defeat, victory} score_t;
  * These were at one time FORTRAN line numbers.
  * The values don't matter, but perturb their order at your peril.
  */
-enum phase_codes {
+typedef enum {
     GO_TERMINATE,
     GO_MOVE,
     GO_TOP,
@@ -111,7 +111,7 @@ enum phase_codes {
     GO_WORD2,
     GO_UNKNOWN,
     GO_DWARFWAKE,
-};
+} phase_codes_t;
 
 typedef long vocab_t;  // index into a vocabulary array */
 typedef long verb_t;   // index into an actions array */
@@ -235,7 +235,7 @@ extern int suspend(void);
 extern int resume(void);
 extern int restore(FILE *);
 extern long initialise(void);
-extern int action(command_t);
+extern phase_codes_t action(command_t);
 extern void state_change(obj_t, int);
 extern bool is_valid(struct game_t);
 

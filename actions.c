@@ -13,9 +13,9 @@
 #include "dungeon.h"
 #include <inttypes.h>
 
-static int fill(verb_t, obj_t);
+static phase_codes_t fill(verb_t, obj_t);
 
-static int attack(command_t command)
+static phase_codes_t attack(command_t command)
 /*  Attack.  Assume target if unambiguous.  "Throw" also links here.
  *  Attackable objects fall into two categories: enemies (snake,
  *  dwarf, etc.)  and others (bird, clam, machine).  Ambiguous if 2
@@ -84,6 +84,7 @@ static int attack(command_t command)
     if (obj == VEND) {
         state_change(VEND,
                      game.prop[VEND] == VEND_BLOCKS ? VEND_UNBLOCKS : VEND_BLOCKS);
+
         return GO_CLEAROBJ;
     }
 
@@ -185,7 +186,7 @@ static int attack(command_t command)
     return GO_CLEAROBJ;
 }
 
-static int bigwords(vocab_t id)
+static phase_codes_t bigwords(vocab_t id)
 /*  FEE FIE FOE FOO (AND FUM).  Advance to next state if given in proper order.
  *  Look up foo in special section of vocab to determine which word we've got.
  *  Last word zips the eggs back to the giant room (unless already there). */
@@ -254,7 +255,7 @@ static void blast(void)
     }
 }
 
-static int vbreak(verb_t verb, obj_t obj)
+static phase_codes_t vbreak(verb_t verb, obj_t obj)
 /*  Break.  Only works for mirror in repository and, of course, the vase. */
 {
     switch (obj) {
@@ -281,7 +282,7 @@ static int vbreak(verb_t verb, obj_t obj)
     return (GO_CLEAROBJ);
 }
 
-static int brief(void)
+static phase_codes_t brief(void)
 /*  Brief.  Intransitive only.  Suppress full descriptions after first time. */
 {
     game.abbnum = 10000;
@@ -290,7 +291,7 @@ static int brief(void)
     return GO_CLEAROBJ;
 }
 
-static int vcarry(verb_t verb, obj_t obj)
+static phase_codes_t vcarry(verb_t verb, obj_t obj)
 /*  Carry an object.  Special cases for bird and cage (if bird in cage, can't
  *  take one without the other).  Liquids also special, since they depend on
  *  status of bottle.  Also various side effects, etc. */
@@ -459,7 +460,7 @@ static int chain(verb_t verb)
     return GO_CLEAROBJ;
 }
 
-static int discard(verb_t verb, obj_t obj)
+static phase_codes_t discard(verb_t verb, obj_t obj)
 /*  Discard object.  "Throw" also comes here for most objects.  Special cases for
  *  bird (might attack snake or dragon) and cage (might contain bird) and vase.
  *  Drop coins at vending machine for extra batteries. */
@@ -563,7 +564,7 @@ static int discard(verb_t verb, obj_t obj)
     return GO_CLEAROBJ;
 }
 
-static int drink(verb_t verb, obj_t obj)
+static phase_codes_t drink(verb_t verb, obj_t obj)
 /*  Drink.  If no object, assume water and look for it here.  If water is in
  *  the bottle, drink that, else must be at a water loc, so drink stream. */
 {
@@ -593,7 +594,7 @@ static int drink(verb_t verb, obj_t obj)
     return GO_CLEAROBJ;
 }
 
-static int eat(verb_t verb, obj_t obj)
+static phase_codes_t eat(verb_t verb, obj_t obj)
 /*  Eat.  Intransitive: assume food if present, else ask what.  Transitive: food
  *  ok, some things lose appetite, rest are ridiculous. */
 {
@@ -623,7 +624,7 @@ static int eat(verb_t verb, obj_t obj)
     return GO_CLEAROBJ;
 }
 
-static int extinguish(verb_t verb, obj_t obj)
+static phase_codes_t extinguish(verb_t verb, obj_t obj)
 /* Extinguish.  Lamp, urn, dragon/volcano (nice try). */
 {
     if (obj == INTRANSITIVE) {
@@ -659,7 +660,7 @@ static int extinguish(verb_t verb, obj_t obj)
     return GO_CLEAROBJ;
 }
 
-static int feed(verb_t verb, obj_t obj)
+static phase_codes_t feed(verb_t verb, obj_t obj)
 /*  Feed.  If bird, no seed.  Snake, dragon, troll: quip.  If dwarf, make him
  *  mad.  Bear, special. */
 {
@@ -719,7 +720,7 @@ static int feed(verb_t verb, obj_t obj)
     return GO_CLEAROBJ;
 }
 
-int fill(verb_t verb, obj_t obj)
+phase_codes_t fill(verb_t verb, obj_t obj)
 /*  Fill.  Bottle or urn must be empty, and liquid available.  (Vase
  *  is nasty.) */
 {
@@ -795,7 +796,7 @@ int fill(verb_t verb, obj_t obj)
     return GO_CLEAROBJ;
 }
 
-static int find(verb_t verb, obj_t obj)
+static phase_codes_t find(verb_t verb, obj_t obj)
 /* Find.  Might be carrying it, or it might be here.  Else give caveat. */
 {
     if (TOTING(obj)) {
@@ -821,7 +822,7 @@ static int find(verb_t verb, obj_t obj)
     return GO_CLEAROBJ;
 }
 
-static int fly(verb_t verb, obj_t obj)
+static phase_codes_t fly(verb_t verb, obj_t obj)
 /* Fly.  Snide remarks unless hovering rug is here. */
 {
     if (obj == INTRANSITIVE) {
@@ -857,7 +858,7 @@ static int fly(verb_t verb, obj_t obj)
     return GO_TERMINATE;
 }
 
-static int inven(void)
+static phase_codes_t inven(void)
 /* Inventory. If object, treat same as find.  Else report on current burden. */
 {
     bool empty = true;
@@ -878,7 +879,7 @@ static int inven(void)
     return GO_CLEAROBJ;
 }
 
-static int light(verb_t verb, obj_t obj)
+static phase_codes_t light(verb_t verb, obj_t obj)
 /*  Light.  Applicable only to lamp and urn. */
 {
     if (obj == INTRANSITIVE) {
@@ -916,7 +917,7 @@ static int light(verb_t verb, obj_t obj)
     return GO_CLEAROBJ;
 }
 
-static int listen(void)
+static phase_codes_t listen(void)
 /*  Listen.  Intransitive only.  Print stuff based on object sound proprties. */
 {
     vocab_t sound = locations[game.loc].sound;
@@ -949,7 +950,7 @@ static int listen(void)
     return GO_CLEAROBJ;
 }
 
-static int lock(verb_t verb, obj_t obj)
+static phase_codes_t lock(verb_t verb, obj_t obj)
 /* Lock, unlock, no object given.  Assume various things if present. */
 {
     if (obj == INTRANSITIVE) {
@@ -1032,7 +1033,7 @@ static int lock(verb_t verb, obj_t obj)
     return GO_CLEAROBJ;
 }
 
-static int pour(verb_t verb, obj_t obj)
+static phase_codes_t pour(verb_t verb, obj_t obj)
 /*  Pour.  If no object, or object is bottle, assume contents of bottle.
  *  special tests for pouring water or oil on plant or rusty door. */
 {
@@ -1077,7 +1078,7 @@ static int pour(verb_t verb, obj_t obj)
     }
 }
 
-static int quit(void)
+static phase_codes_t quit(void)
 /*  Quit.  Intransitive only.  Verify intent and exit if that's what he wants. */
 {
     if (yes(arbitrary_messages[REALLY_QUIT], arbitrary_messages[OK_MAN], arbitrary_messages[OK_MAN]))
@@ -1085,7 +1086,7 @@ static int quit(void)
     return GO_CLEAROBJ;
 }
 
-static int read(command_t command)
+static phase_codes_t read(command_t command)
 /*  Read.  Print stuff based on objtxt.  Oyster (?) is special case. */
 {
     if (command.obj == INTRANSITIVE) {
@@ -1112,7 +1113,7 @@ static int read(command_t command)
     return GO_CLEAROBJ;
 }
 
-static int reservoir(void)
+static phase_codes_t reservoir(void)
 /*  Z'ZZZ (word gets recomputed at startup; different each game). */
 {
     if (!AT(RESER) && game.loc != LOC_RESBOTTOM) {
@@ -1132,7 +1133,7 @@ static int reservoir(void)
     }
 }
 
-static int rub(verb_t verb, obj_t obj)
+static phase_codes_t rub(verb_t verb, obj_t obj)
 /* Rub.  Yields various snide remarks except for lit urn. */
 {
     if (obj == URN && game.prop[URN] == URN_LIT) {
@@ -1150,7 +1151,7 @@ static int rub(verb_t verb, obj_t obj)
     return GO_CLEAROBJ;
 }
 
-static int say(command_t command)
+static phase_codes_t say(command_t command)
 /* Say.  Echo WD2. Magic words override. */
 {
     if (command.word[1].type == MOTION &&
@@ -1175,14 +1176,14 @@ static int say(command_t command)
     return GO_CLEAROBJ;
 }
 
-static int throw_support(vocab_t spk)
+static phase_codes_t throw_support(vocab_t spk)
 {
     rspeak(spk);
     drop(AXE, game.loc);
     return GO_MOVE;
 }
 
-static int throw (command_t command)
+static phase_codes_t throw (command_t command)
 /*  Throw.  Same as discard unless axe.  Then same as attack except
  *  ignore bird, and if dwarf is present then one might be killed.
  *  (Only way to do so!)  Axe also special for dragon, bear, and
@@ -1243,7 +1244,7 @@ static int throw (command_t command)
     }
 }
 
-static int wake(verb_t verb, obj_t obj)
+static phase_codes_t wake(verb_t verb, obj_t obj)
 /* Wake.  Only use is to disturb the dwarves. */
 {
     if (obj != DWARF ||
@@ -1256,7 +1257,7 @@ static int wake(verb_t verb, obj_t obj)
     }
 }
 
-static int seed(verb_t verb, const char *arg)
+static phase_codes_t seed(verb_t verb, const char *arg)
 /* Set seed */
 {
     int32_t seed = strtol(arg, NULL, 10);
@@ -1266,7 +1267,7 @@ static int seed(verb_t verb, const char *arg)
     return GO_TOP;
 }
 
-static int waste(verb_t verb, turn_t turns)
+static phase_codes_t waste(verb_t verb, turn_t turns)
 /* Burn turns */
 {
     game.limit -= turns;
@@ -1274,7 +1275,7 @@ static int waste(verb_t verb, turn_t turns)
     return GO_TOP;
 }
 
-static int wave(verb_t verb, obj_t obj)
+static phase_codes_t wave(verb_t verb, obj_t obj)
 /* Wave.  No effect unless waving rod at fissure or at bird. */
 {
     if (obj != ROD ||
@@ -1320,7 +1321,7 @@ static int wave(verb_t verb, obj_t obj)
     }
 }
 
-int action(command_t command)
+phase_codes_t action(command_t command)
 /*  Analyse a verb.  Remember what it was, go back for object if second word
  *  unless verb is "say", which snarfs arbitrary second word.
  */
