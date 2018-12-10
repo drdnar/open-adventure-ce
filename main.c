@@ -217,8 +217,6 @@ static void checkhints(void)
             }
         }
     }
-
-
 }
 
 static bool spotted_by_pirate(int i)
@@ -458,20 +456,25 @@ static bool dwarfmove(void)
 static void croak(void)
 /*  Okay, he's dead.  Let's get on with it. */
 {
-    if (game.numdie < 0)
-        game.numdie = 0;  // LCOV_EXCL_LINE
     const char* query = obituaries[game.numdie].query;
     const char* yes_response = obituaries[game.numdie].yes_response;
+
     ++game.numdie;
+
     if (game.closng) {
         /*  He died during closing time.  No resurrection.  Tally up a
          *  death and exit. */
         rspeak(DEATH_CLOSING);
         terminate(endgame);
-    } else if ( !yes(query, yes_response, arbitrary_messages[OK_MAN])
-                || game.numdie == NDEATHS)
+    } else if (!yes(query, yes_response, arbitrary_messages[OK_MAN])
+               || game.numdie == NDEATHS) {
+        /* Player is asked if he wants to try again. If not, or if 
+         * he's already used all of his lives, we end the game */
         terminate(endgame);
-    else {
+    } else {
+        /* If player wishes to continue, we empty the liquids in the 
+         * user's inventory, turn off the lamp, and drop all items 
+         * where he died. */
         game.place[WATER] = game.place[OIL] = LOC_NOWHERE;
         if (TOTING(LAMP))
             game.prop[LAMP] = LAMP_DARK;
@@ -486,8 +489,11 @@ static void croak(void)
     }
 }
 
-static void describe_location(void) {
+static void describe_location(void) 
+/* Describe the location to the user */
+{
     const char* msg = locations[game.loc].description.small;
+    
     if (MOD(game.abbrev[game.loc], game.abbnum) == 0 ||
         msg == NO_MESSAGE)
         msg = locations[game.loc].description.big;
@@ -501,7 +507,7 @@ static void describe_location(void) {
 
     speak(msg);
     
-    if (game.loc == LOC_Y2 && PCT(25) && !game.closng) // FIXME: magic number
+    if (game.loc == LOC_Y2 && PCT(25) && !game.closng)
         rspeak(SAYS_PLUGH);
 }
 
@@ -736,7 +742,7 @@ static void playermove(int motion)
                     if (game.prop[TROLL] == TROLL_PAIDONCE) {
                         pspeak(TROLL, look, true, TROLL_PAIDONCE);
                         game.prop[TROLL] = TROLL_UNPAID;
-                        move(TROLL2, LOC_NOWHERE);
+                        DESTROY(TROLL2);
                         move(TROLL2 + NOBJECTS, IS_FREE);
                         move(TROLL, objects[TROLL].plac);
                         move(TROLL + NOBJECTS, objects[TROLL].fixd);
@@ -865,7 +871,7 @@ static bool closecheck(void)
             game.dseen[i] = false;
             game.dloc[i] = LOC_NOWHERE;
         }
-        move(TROLL, LOC_NOWHERE);
+        DESTROY(TROLL);
         move(TROLL + NOBJECTS, IS_FREE);
         move(TROLL2, objects[TROLL].plac);
         move(TROLL2 + NOBJECTS, objects[TROLL].fixd);
