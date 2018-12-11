@@ -17,7 +17,7 @@
 #define NDWARVES       6          // number of dwarves
 #define PIRATE         NDWARVES   // must be NDWARVES-1 when zero-origin
 #define DALTLC         LOC_NUGGET // alternate dwarf location
-#define INVLIMIT       7          // inverntory limit (№ of objects)
+#define INVLIMIT       7          // inventory limit (№ of objects)
 #define INTRANSITIVE   -1         // illegal object number
 #define GAMELIMIT      330        // base limit of turns
 #define NOVICELIMIT    1000       // limit of turns for novice
