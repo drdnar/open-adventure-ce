@@ -1190,7 +1190,7 @@ locations: !!omap
 - LOC_SWISSCHEESE:
     description:
       long: |-
-          You are in a room whose walls resemble swiss cheese.  Obvious passages
+          You are in a room whose walls resemble Swiss cheese.  Obvious passages
           go west, east, ne, and nw.  Part of the room is occupied by a large
           bedrock block.
       short: 'You''re in Swiss Cheese Room.'
@@ -1603,7 +1603,7 @@ locations: !!omap
     description:
       long: |-
           You're in a large room carved out of sedimentary rock.  The floor and
-          walls are littered with bits of shells imbedded in the stone.  A
+          walls are littered with bits of shells embedded in the stone.  A
           shallow passage proceeds downward, and a somewhat steeper one leads
           up.  A low hands and knees passage enters from the south.
       short: 'You''re in Shell Room.'
@@ -2927,19 +2927,19 @@ arbitrary_messages:  !!omap
     to form a rare amber gemstone, resting in the cavity in the rock.
 - DOUGHNUT_HOLES: 'I suppose you collect doughnut holes, too?'
 - GEM_FITS: 'The gem fits easily into the cavity.'
-- RUG_RISES: 'The persian rug stiffens and rises a foot or so off the ground.'
+- RUG_RISES: 'The Persian rug stiffens and rises a foot or so off the ground.'
 - RUG_WIGGLES: |-
-    The persian rug draped over your shoulder seems to wriggle for a
+    The Persian rug draped over your shoulder seems to wriggle for a
     moment, but then subsides.
-- RUG_SETTLES: 'The persian rug settles gently to the ground.'
+- RUG_SETTLES: 'The Persian rug settles gently to the ground.'
 - RUG_HOVERS: 'The rug hovers stubbornly where it is.'
 - RUG_NOTHING1: 'The rug does not appear inclined to cooperate.'
 - RUG_NOTHING2: |-
-    If you mean to use the persian rug, it does not appear inclined to
+    If you mean to use the Persian rug, it does not appear inclined to
     cooperate.
 - FLAP_ARMS: 'Though you flap your arms furiously, it is to no avail.'
 - RUG_GOES: |-
-    You board the persian rug, which promptly whisks you across the chasm.
+    You board the Persian rug, which promptly whisks you across the chasm.
     You have time for a fleeting glimpse of a two thousand foot drop to a
     mighty river; then you find yourself on the other side.
 - RUG_RETURNS: 'The rug ferries you back across the chasm.'
@@ -2993,7 +2993,7 @@ arbitrary_messages:  !!omap
 #    %d of %d vocabulary words    %d of %d locations
 #    %d of %d objects             %d of %d action verbs
 #    %d of %d "random" messages   %d of %d "class" messages
-#    %d of %d hints               %d of %d turn threshholds'
+#    %d of %d hints               %d of %d turn thresholds'
 - RESUME_ABANDON: 'To resume an earlier Adventure, you must abandon the current one.'
 - VERSION_SKEW: |-
     I'm sorry, but that Adventure was begun using Version %d.%d of the
@@ -3042,7 +3042,7 @@ classes:
     'Adventuredom stands in awe -- you have now joined the ranks of the
            W O R L D   C H A M P I O N   A D V E N T U R E R S !
     It may interest you to know that the Dungeon-Master himself has, to
-    my knowledge, never achieved this threshhold in fewer than 330 turns.'
+    my knowledge, never achieved this threshold in fewer than 330 turns.'
 
 turn_thresholds:
 - threshold: 350
@@ -3197,7 +3197,7 @@ objects: !!omap
     immovable: true
     descriptions:
     - |-
-      A massive stone tablet imbedded in the wall reads:
+      A massive stone tablet embedded in the wall reads:
       "Congratulations on bringing light into the dark-room!"
     texts:
     - '"Congratulations on bringing light into the dark-room!"'
@@ -3417,7 +3417,7 @@ objects: !!omap
     immovable: true
     states: [UNTAMED_BEAR, SITTING_BEAR, CONTENTED_BEAR, BEAR_DEAD]
     descriptions:
-    - 'There is a ferocious cave bear eying you from the far end of the room!'
+    - 'There is a ferocious cave bear eyeing you from the far end of the room!'
     - 'There is a gentle cave bear sitting placidly in one corner.'
     - 'There is a contented-looking bear wandering about nearby.'
     - ''
@@ -3669,9 +3669,9 @@ objects: !!omap
     treasure: true
     states: [RUG_FLOOR, RUG_DRAGON, RUG_HOVER]
     descriptions:
-    - 'There is a persian rug spread out on the floor!'
-    - 'The dragon is sprawled out on a persian rug!!'
-    - 'There is a persian rug here, hovering in mid-air!'
+    - 'There is a Persian rug spread out on the floor!'
+    - 'The dragon is sprawled out on a Persian rug!!'
+    - 'There is a Persian rug here, hovering in mid-air!'
 - OBJ_63:
     words: ['spice']
     inventory: 'Rare spices'
