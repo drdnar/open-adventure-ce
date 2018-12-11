@@ -59,9 +59,9 @@
  *  PCT(N)      = true N% of the time (N integer from 0 to 100)
  *  GSTONE(OBJ) = true if OBJ is a gemstone
  *  FOREST(LOC) = true if LOC is part of the forest
- *  OUTSID(LOC) = true if locaiton not in the cave
- *  INSIDE(LOC) = true if locaiton is in the cave or the building at the beginning of the game
- *  INDEEP(LOC) = true if locaiton is in the Hall of Mists or deeper
+ *  OUTSID(LOC) = true if location not in the cave
+ *  INSIDE(LOC) = true if location is in the cave or the building at the beginning of the game
+ *  INDEEP(LOC) = true if location is in the Hall of Mists or deeper
  *  BUG(X)      = report bug and exit
  */
 #define DESTROY(N)   move(N, LOC_NOWHERE)
