@@ -1212,7 +1212,7 @@ static bool do_command()
                         clear_command(&command);
                         continue;
                     }
-                    break;
+                    break;// LCOV_EXCL_LINE
                 default: // LCOV_EXCL_LINE
                     BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3); // LCOV_EXCL_LINE
                 }
