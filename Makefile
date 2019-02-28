@@ -45,7 +45,7 @@ saveresume.o:	advent.h dungeon.h
 dungeon.o:	dungeon.c dungeon.h
 	$(CC) $(CCFLAGS) $(DBX) -c dungeon.c
 
-dungeon.c dungeon.h: make_dungeon.py adventure.yaml templates/*.tpl
+dungeon.c dungeon.h: make_dungeon.py adventure.yaml advent.h templates/*.tpl
 	./make_dungeon.py
 
 clean:
