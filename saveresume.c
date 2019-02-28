@@ -23,7 +23,7 @@
 /*
  * If you change the first three members, the resume function may not properly
  * reject saves from older versions.  Yes, this glues us to a hardware-
- * dependent length of long.  Later members can change, but bump the version
+ * dependent length of int.  Later members can change, but bump the version
  * when you do that.
  */
 struct save_t {
@@ -190,7 +190,7 @@ bool is_valid(struct game_t valgame)
     }
 
     /* Recalculate tally, throw the towel if in disagreement */
-    long temp_tally = 0;
+    int temp_tally = 0;
     for (int treasure = 1; treasure <= NOBJECTS; treasure++) {
         if (objects[treasure].is_treasure) {
             if (valgame.prop[treasure] == STATE_NOTFOUND) {

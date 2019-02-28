@@ -483,7 +483,7 @@ static void tokenize(char* raw, command_t *cmd)
 
     /* Bound prefix on the %s would be needed to prevent buffer
      * overflow.  but we shortstop this more simply by making each
-     * raw-input buffer as long as the entire input buffer. */
+     * raw-input buffer as int as the entire input buffer. */
     sscanf(raw, "%s%s", cmd->word[0].raw, cmd->word[1].raw);
 
     /* (ESR) In oldstyle mode, simulate the uppercasing and truncating
@@ -544,7 +544,7 @@ bool get_command_input(command_t *command)
     const char *types[] = {"NO_WORD_TYPE", "MOTION", "OBJECT", "ACTION", "NUMERIC"};
     /* needs to stay synced with enum speechpart */
     const char *roles[] = {"unknown", "intransitive", "transitive"};
-    printf("Command: role = %s type1 = %s, id1 = %ld, type2 = %s, id2 = %ld\n",
+    printf("Command: role = %s type1 = %s, id1 = %d, type2 = %s, id2 = %d\n",
            roles[command->part],
            types[command->word[0].type],
            command->word[0].id,
@@ -597,7 +597,7 @@ void move(obj_t object, loc_t where)
     drop(object, where);
 }
 
-loc_t put(obj_t object, loc_t where, long pval)
+loc_t put(obj_t object, loc_t where, int pval)
 /*  put() is the same as move(), except it returns a value used to set up the
  *  negated game.prop values for the repository objects. */
 {
@@ -610,7 +610,7 @@ void carry(obj_t object, loc_t where)
  *  location.  Incr holdng unless it was already being toted.  If object>NOBJECTS
  *  (moving "fixed" second loc), don't change game.place or game.holdng. */
 {
-    long temp;
+    int temp;
 
     if (object <= NOBJECTS) {
         if (game.place[object] == CARRIED)
@@ -667,7 +667,7 @@ int atdwrf(loc_t where)
     if (game.dflag < 2)
         return at;
     at = -1;
-    for (long i = 1; i <= NDWARVES - 1; i++) {
+    for (int i = 1; i <= NDWARVES - 1; i++) {
         if (game.dloc[i] == where)
             return i;
         if (game.dloc[i] != 0)
@@ -679,13 +679,13 @@ int atdwrf(loc_t where)
 /*  Utility routines (setbit, tstbit, set_seed, get_next_lcg_value,
  *  randrange) */
 
-long setbit(int bit)
+int setbit(int bit)
 /*  Returns 2**bit for use in constructing bit-masks. */
 {
     return (1L << bit);
 }
 
-bool tstbit(long mask, int bit)
+bool tstbit(int mask, int bit)
 /*  Returns true if the specified bit is set in the mask. */
 {
     return (mask & (1 << bit)) != 0;

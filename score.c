@@ -11,7 +11,7 @@
 
 static int mxscor;	/* ugh..the price for having score() not exit. */
 
-long score(enum termination mode)
+int score(enum termination mode)
 /* mode is 'scoregame' if scoring, 'quitgame' if quitting, 'endgame' if died
  * or won */
 {
@@ -116,14 +116,14 @@ long score(enum termination mode)
 void terminate(enum termination mode)
 /* End of game.  Let's tell him all about it. */
 {
-    long points = score(mode);
+    int points = score(mode);
 
     if (points + game.trnluz + 1 >= mxscor && game.trnluz != 0)
         rspeak(TOOK_LONG);
     if (points + game.saved + 1 >= mxscor && game.saved != 0)
         rspeak(WITHOUT_SUSPENDS);
     rspeak(TOTAL_SCORE, points, mxscor, game.turns, game.turns);
-    for (int i = 1; i <= (long)NCLASSES; i++) {
+    for (int i = 1; i <= (int)NCLASSES; i++) {
         if (classes[i].threshold >= points) {
             speak(classes[i].message);
             i = classes[i].threshold + 1 - points;

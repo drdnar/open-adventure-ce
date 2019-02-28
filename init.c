@@ -43,13 +43,13 @@ struct game_t game = {
     .foobar  = WORD_EMPTY,
 };
 
-long initialise(void)
+int initialise(void)
 {
     if (settings.oldstyle)
         printf("Initialising...\n");
 
     srand(time(NULL));
-    long seedval = (long)rand();
+    int seedval = (int)rand();
     set_seed(seedval);
 
     for (int i = 1; i <= NOBJECTS; i++) {

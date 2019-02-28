@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
     }
 
     /*  Initialize game variables */
-    long seedval = initialise();
+    int seedval = initialise();
 
 #ifndef ADVENT_NOSAVE
     if (!rfp) {
@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
 #endif
 
     if (settings.logfp)
-        fprintf(settings.logfp, "seed %ld\n", seedval);
+        fprintf(settings.logfp, "seed %d\n", seedval);
 
     /* interpret commands until EOF or interrupt */
     for (;;) {
@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
     terminate(quitgame);
 }
 
-/*  Check if this loc is eligible for any hints.  If been here long
+/*  Check if this loc is eligible for any hints.  If been here int
  *  enough, display.  Ignore "HINTS" < 4 (special stuff, see database
  *  notes). */
 static void checkhints(void)
@@ -141,7 +141,7 @@ static void checkhints(void)
             if (!CNDBIT(game.loc, hint + 1 + COND_HBASE))
                 game.hintlc[hint] = -1;
             ++game.hintlc[hint];
-            /*  Come here if he's been long enough at required loc(s) for some
+            /*  Come here if he's been int enough at required loc(s) for some
              *  unused hint. */
             if (game.hintlc[hint] >= hints[hint].turns) {
                 int i;
@@ -653,8 +653,8 @@ static void playermove(int motion)
         for (;;) { /* L12 loop */
             for (;;) {
                 enum condtype_t condtype = travel[travel_entry].condtype;
-                long condarg1 = travel[travel_entry].condarg1;
-                long condarg2 = travel[travel_entry].condarg2;
+                int condarg1 = travel[travel_entry].condarg1;
+                int condarg2 = travel[travel_entry].condarg2;
                 if (condtype < cond_not) {
                     /* YAML N and [pct N] conditionals */
                     if (condtype == cond_goto || condtype == cond_pct) {

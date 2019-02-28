@@ -119,15 +119,15 @@ typedef enum {
     GO_DWARFWAKE,
 } phase_codes_t;
 
-typedef long vocab_t;  // index into a vocabulary array */
-typedef long verb_t;   // index into an actions array */
-typedef long obj_t;    // index into the object array */
-typedef long loc_t;    // index into the locations array */
-typedef long turn_t;   // turn counter or threshold */
+typedef int vocab_t;  // index into a vocabulary array */
+typedef int verb_t;   // index into an actions array */
+typedef int obj_t;    // index into the object array */
+typedef int loc_t;    // index into the locations array */
+typedef int turn_t;   // turn counter or threshold */
 
 struct game_t {
     int32_t lcg_x;
-    long abbnum;                 // How often to print long descriptions
+    int abbnum;                  // How often to print int descriptions
     score_t bonus;               // What kind of finishing bonus we are getting
     loc_t chloc;                 // pirate chest location
     loc_t chloc2;                // pirate chest alternate location
@@ -141,8 +141,8 @@ struct game_t {
     bool panic;                  // has player found out he's trapped?
     bool wzdark;                 // whether the loc he's leaving was dark
     bool blooded;                // has player drunk of dragon's blood?
-    long conds;                  // min value for cond[loc] if loc has any hints
-    long detail;                 // level of detail in descriptions
+    int conds;                   // min value for cond[loc] if loc has any hints
+    int detail;                  // level of detail in descriptions
 
     /*  dflag controls the level of activation of dwarves:
      *	0	No dwarf stuff yet (wait until reaches Hall Of Mists)
@@ -150,15 +150,15 @@ struct game_t {
      *	2	Met first dwarf, others start moving, no knives thrown yet
      *	3	A knife has been thrown (first set always misses)
      *	3+	Dwarves are mad (increases their accuracy) */
-    long dflag;
+    int dflag;
 
-    long dkill;                  // dwarves killed
-    long dtotal;                 // total dwarves (including pirate) in loc
-    long foobar;                 // progress in saying "FEE FIE FOE FOO".
-    long holdng;                 // number of objects being carried
-    long igo;                    // # uses of "go" instead of a direction
-    long iwest;                  // # times he's said "west" instead of "w"
-    long knfloc;                 // knife location; 0 if none, -1 after caveat
+    int dkill;                   // dwarves killed
+    int dtotal;                  // total dwarves (including pirate) in loc
+    int foobar;                  // progress in saying "FEE FIE FOE FOO".
+    int holdng;                  // number of objects being carried
+    int igo;                     // # uses of "go" instead of a direction
+    int iwest;                   // # times he's said "west" instead of "w"
+    int knfloc;                  // knife location; 0 if none, -1 after caveat
     turn_t limit;                // lifetime of lamp
     loc_t loc;                   // where player is now
     loc_t newloc;                // where player is going
@@ -166,24 +166,24 @@ struct game_t {
     loc_t oldloc;                // where player was
     loc_t oldlc2;                // where player was two moves ago
     obj_t oldobj;                // last object player handled
-    long saved;                  // point penalty for saves
-    long tally;                  // count of treasures gained
-    long thresh;                 // current threshold for endgame scoring tier
+    int saved;                   // point penalty for saves
+    int tally;                   // count of treasures gained
+    int thresh;                  // current threshold for endgame scoring tier
     turn_t trndex;               // FIXME: not used, remove on next format bump
     turn_t trnluz;               // # points lost so far due to turns used
     turn_t turns;                // counts commands given (ignores yes/no)
     char zzword[TOKLEN + 1];     // randomly generated magic word from bird
-    long abbrev[NLOCATIONS + 1]; // has location been seen?
-    long atloc[NLOCATIONS + 1];  // head of object linked list per location
-    long dseen[NDWARVES + 1];    // true if dwarf has seen him
+    int abbrev[NLOCATIONS + 1];  // has location been seen?
+    int atloc[NLOCATIONS + 1];   // head of object linked list per location
+    int dseen[NDWARVES + 1];     // true if dwarf has seen him
     loc_t dloc[NDWARVES + 1];    // location of dwarves, initially hard-wired in
     loc_t odloc[NDWARVES + 1];   // prior loc of each dwarf, initially garbage
     loc_t fixed[NOBJECTS + 1];   // fixed location of object (if  not IS_FREE)
-    obj_t link[NOBJECTS * 2 + 1]; // object-list links
+    obj_t link[NOBJECTS * 2 + 1];// object-list links
     loc_t place[NOBJECTS + 1];   // location of object
-    long hinted[NHINTS];         // hinted[i] = true iff hint i has been used.
-    long hintlc[NHINTS];         // hintlc[i] = how long at LOC with cond bit i
-    long prop[NOBJECTS + 1];     // object state array */
+    int hinted[NHINTS];          // hinted[i] = true iff hint i has been used.
+    int hintlc[NHINTS];          // hintlc[i] = how int at LOC with cond bit i
+    int prop[NOBJECTS + 1];      // object state array */
 };
 
 /*
@@ -226,21 +226,21 @@ extern bool silent_yes(void);
 extern bool yes(const char*, const char*, const char*);
 extern void juggle(obj_t);
 extern void move(obj_t, loc_t);
-extern loc_t put(obj_t, long, long);
+extern loc_t put(obj_t, int, int);
 extern void carry(obj_t, loc_t);
 extern void drop(obj_t, loc_t);
 extern int atdwrf(loc_t);
-extern long setbit(int);
-extern bool tstbit(long, int);
+extern int setbit(int);
+extern bool tstbit(int, int);
 extern void set_seed(int32_t);
 extern int32_t randrange(int32_t);
-extern long score(enum termination);
+extern int score(enum termination);
 extern void terminate(enum termination) __attribute__((noreturn));
 extern int savefile(FILE *, int32_t);
 extern int suspend(void);
 extern int resume(void);
 extern int restore(FILE *);
-extern long initialise(void);
+extern int initialise(void);
 extern phase_codes_t action(command_t);
 extern void state_change(obj_t, int);
 extern bool is_valid(struct game_t);

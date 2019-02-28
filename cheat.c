@@ -43,19 +43,19 @@ int main(int argc, char *argv[])
         switch (ch) {
         case 'd':
             game.numdie = (turn_t)atoi(optarg);
-            printf("cheat: game.numdie = %ld\n", game.numdie);
+            printf("cheat: game.numdie = %d\n", game.numdie);
             break;
         case 'l':
             game.limit = (turn_t)atoi(optarg);
-            printf("cheat: game.limit = %ld\n", game.limit);
+            printf("cheat: game.limit = %d\n", game.limit);
             break;
         case 's':
-            game.saved = (long)atoi(optarg);
-            printf("cheat: game.saved = %ld\n", game.saved);
+            game.saved = (int)atoi(optarg);
+            printf("cheat: game.saved = %d\n", game.saved);
             break;
         case 't':
             game.turns = (turn_t)atoi(optarg);
-            printf("cheat: game.turns = %ld\n", game.turns);
+            printf("cheat: game.turns = %d\n", game.turns);
             break;
         case 'v':
             version = atoi(optarg);
