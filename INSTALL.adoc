@@ -1,14 +1,18 @@
 = Installing Open Adventure =
 
-The instructions below assume your system uses Python 3 by default, but the actual Python code in Open Adventure is 2/3-agnostic. Adjust the example commands below accordingly.
+The instructions below assume your system uses Python 3 by default,
+but the actual Python code in Open Adventure is 2/3-agnostic. Adjust
+the example commands below accordingly.
 
-1. Install PyYAML for Python 3 (which requires Python 3) and libedit from http://thrysoee.dk/editline/ (aka: editline) on your system.
+1. Install PyYAML for Python 3 (which requires Python 3) and libedit
+from http://thrysoee.dk/editline/ (aka: editline) on your system.
 +
 On Debian and Ubuntu: `apt-get install python3-yaml libedit-dev`.
 +
 On Fedora: `dnf install python3-PyYAML libedit-devel`.
 +
-If you are using MacPorts on OS X: `port install py3{5,6}-yaml`, as appropriate for your Python 3 version.
+If you are using MacPorts on OS X: `port install py3{5,6}-yaml`, as
+appropriate for your Python 3 version.
 +
 You can also use pip to install PyYAML: `pip3 install PyYAML`.
 
@@ -25,7 +29,8 @@ Traceback (most recent call last):
 ImportError: No module named yaml
 ------------------------------------------------
 +
-try editing make_dungeon.py to change `+#!/usr/bin/env python+` to read `+#!/usr/bin/env python3+` 
+try editing make_dungeon.py to change `#!/usr/bin/env python` to
+read `#!/usr/bin/env python3`
 
 4. Optionally run a regression test on the code with `make check`.
 
