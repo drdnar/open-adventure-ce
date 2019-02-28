@@ -85,6 +85,9 @@ but as a way for game logs to set the PRNG (pseudorandom-number generator) so
 that random events (dwarf & pirate appearances, the bird's magic word)
 will be reproducible.
 
+A "version" command has beem added. This has no effect on gameplay.
+The text displayed by the "news" command has been updated.
+
 A -l command-line option has been added. When this is given (with a
 file path argument) each command entered will be logged to the
 specified file.  Additionally, a generated "seed" command will be put
@@ -166,7 +169,7 @@ ways:
   arrays are a cell larger than they strictly need to be and cell 0 is
   unused.
 
-* The code is still mostly typeless, slinging around machine longs
+* The code is still mostly typeless, slinging around machine ints
   like a FORTRAN or BCPL program.  Some (incomplete) effort has been made
   to introduce semantic types.
 
