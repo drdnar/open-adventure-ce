@@ -127,7 +127,7 @@ this makes the brilliant design of it much easier to comprehend.
 There is record of one earlier dungeon-crawling game called "dnd",
 written in 1974-75 on the PLATO system at University of Illinois
 <<DND>>.  This was in some ways similar to later roguelike games but
-not to Adventure.  The designers of later roguelikes frequently site
+not to Adventure.  The designers of later roguelikes frequently cite
 Adventure as an influence, but not dnd; like PLATO itself, dnd seems
 not to have become known outside of its own user community until
 rediscovered by computer historians many years after Adventure
@@ -145,7 +145,7 @@ of Hunt The Wumpus then from its early Unix port, but it didn't
 influence us either, nor in any apparent way the designers of other
 early roguelikes. After my time the wumpus was included as a monster
 in Nethack, but this was done in a spirit of conscious museumization
-after historians rediscovered Yob's game.)
+well after historians rediscovered Yob's game.)
 
 Neither of these games used an attempt at a natural-language parser
 even as primitive as Adventure's.
