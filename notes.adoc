@@ -58,6 +58,10 @@ Bug fixes:
   incorrect most places it appeared and has been replaced by "A crystal 
   bridge spans the fissure." (timeless present).
 
+* A few minor typos have been corrected: absence of capitalization on
+  "Swiss" and "Persian", inconsistent selling of "imbedded" vs. "embedded",
+  "eying" for "eyeing". "thresholds" for "threshholds".
+
 * Under odd circumstances (dropping rug or vase outdoors) the game could
   say "floor" when it should say "ground" (or "dirt", or something).
 
@@ -128,7 +132,7 @@ The original code was greatly complicated by a kind of bit-packing
 that was performed because the FORTRAN it was written in had no string
 type.  Text from the adventure.text file was compiled into sequences
 of sixbit code points in a restricted character set, packed 5 to a
-32-bit word (it seems clear from the code that words were originally
+32-bit word (and it seems clear from the code that words were originally
 *6* chars each packed into a PDP-10 36-bit word).  A command noun or
 verb was one of these words, and what would be string operations in a
 more recent language were all done on sequences of these words.
