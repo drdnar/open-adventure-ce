@@ -115,12 +115,14 @@ and 2.5:
 ............................................................................
 
 Great care has been taken to preserve 2.5's exact gameplay as intended
-by Don.  However, under the hood Open Adventure is rather different from
-2.5.  Where 2.5 was written in FORTRAN mechanically translated into extremely
-ugly C, Open Adventure has been translated into much more modern and
-idiomatic C.  The extremely cryptic and opaque format of the original
-database of rooms, objects, and strings has been moved to YAML;
-this makes the brilliant design of it much easier to comprehend.
+by Don.  We have added a "version" command.
+
+However, under the hood Open Adventure is rather different from 2.5.
+Where 2.5 was written in FORTRAN mechanically translated into
+extremely ugly C, Open Adventure has been translated into much more
+modern and idiomatic C.  The extremely cryptic and opaque format of
+the original database of rooms, objects, and strings has been moved to
+YAML; this makes the brilliant design of it much easier to comprehend.
 
 == Earlier non-influences ==
 
