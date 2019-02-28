@@ -2,6 +2,7 @@
 
 Repository head::
   Minor typo and capitalization glitches in user-visible text fixed and documented.
+  Save format has changed.
 
 1.7: 2018-12-03::
   Python 3 and OS X port fixes.
