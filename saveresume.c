@@ -18,7 +18,7 @@
 #include "advent.h"
 #include "dungeon.h"
 
-#define VRSION	28	/* bump on save format change */
+#define VRSION	29	/* bump on save format change */
 
 /*
  * If you change the first three members, the resume function may not properly
