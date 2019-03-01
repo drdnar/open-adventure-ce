@@ -57,7 +57,7 @@ html:
 dist:
   stage: build
   before_script:
-    - zypper install -y make asciidoc tar
+    - zypper install -y make asciidoc tar gzip
   script:
     - export VERS=${CI_COMMIT_REF_NAME}
     - make dist -e
