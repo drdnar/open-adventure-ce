@@ -18,7 +18,14 @@
 #include "advent.h"
 #include "dungeon.h"
 
-#define VRSION	29	/* bump on save format change */
+/*
+ * Bump on save format change.
+ *
+ * Note: Verify that the tests run clean before bumping this, then rebuild the check
+ * files afterwards.  Otherwise you will get a spurious failure due to the old version
+ * having been generated into a check file.
+ */
+#define VRSION	29
 
 /*
  * If you change the first three members, the resume function may not properly
