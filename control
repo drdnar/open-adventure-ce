@@ -4,7 +4,7 @@
 Package: open-adventure
 
 Description: Colossal Cave Adventure, the 1995 430-point version.
- This is the last descendent of the original 1976 Colossal Cave Adventure
+ This is the last descendant of the original 1976 Colossal Cave Adventure
  worked on by the original authors - Crowther & Woods.  It has sometimes
  been known as Adventure 2.5.  The original PDP-10 name 'advent' is used
  for the built program to avoid collision with the BSD Games version.
