@@ -9,13 +9,15 @@ Description: Colossal Cave Adventure, the 1995 430-point version.
  been known as Adventure 2.5.  The original PDP-10 name 'advent' is used
  for the built program to avoid collision with the BSD Games version.
 
-#XBS-Destinations: freshcode
+XBS-Destinations: mailto:ubuntu-devel-discuss@lists.ubuntu.com
 
 Homepage: http://www.catb.org/~esr/open-adventure
 
 XBS-HTML-Target: index.html
 
 XBS-Repository-URL: https://gitlab.com/esr/open-adventure
+
+XBS-Debian-Packages: open-adventure
 
 XBS-IRC-Channel: irc://chat.freenode.net/#open-adventure
 
