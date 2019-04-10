@@ -154,16 +154,19 @@ even as primitive as Adventure's.
 
 == Sources ==
 
+// asciidoc and asciidoctor both foo up on bare links ending in ')'.
 [bibliography]
 
-- [[[IFA]]] http://rickadams.org/adventure/
+- [[[IFA]]] http://rickadams.org/adventure/[Colossal Cave Adventure Page]
 
-- [[[DA]]] http://www.filfre.net/sitemap/
+- [[[DA]]] http://www.filfre.net/sitemap/[The Digital Antiquarian]
 
-- [[[SN]]] http://www.digitalhumanities.org/dhq/vol/1/2/000009/000009.html
+- [[[SN]]]
+  http://www.digitalhumanities.org/dhq/vol/1/2/000009/000009.html[Digital
+  Humanties Quarterly]
 
-- [[[DND]]] https://en.wikipedia.org/wiki/Dnd_(video_game)
+- [[[DND]]] https://en.wikipedia.org/wiki/Dnd_(video_game)[dnd (ivdeo game)]
 
-- [[[WUMPUS]]] https://en.wikipedia.org/wiki/Hunt_the_Wumpus
+- [[[WUMPUS]]] https://en.wikipedia.org/wiki/Hunt_the_Wumpus[Hunt The Wumpus]
 
-- [[[QUUX]]] https://github.com/Quuxplusone/Advent
+- [[[QUUX]]] https://github.com/Quuxplusone/Advent[Quuxplusone/Advent]
