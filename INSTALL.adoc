@@ -31,15 +31,15 @@ ImportError: No module named yaml
 +
 try editing make_dungeon.py to change `#!/usr/bin/env python` to
 read `#!/usr/bin/env python3`
-
++
 If you still get the error, use the following command to install yaml with pip:
-
-`pip install pyyaml`
-
-Make sure you have `pip` installed on your system.  If not, you should install it first:
-
-https://pip.pypa.io/en/stable/installing/
-
++
+------------------------------------------------
+pip install pyyaml
+------------------------------------------------
++
+Make sure you have `pip` installed on your system.  If not, you should
+install it first. See https://pip.pypa.io/en/stable/installing/
 
 4. Optionally run a regression test on the code with `make check`.
 
