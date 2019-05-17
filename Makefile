@@ -8,7 +8,7 @@ VERS=$(shell sed -n <NEWS '/^[0-9]/s/:.*//p' | head -1)
 .PHONY: check coverage
 
 CC?=gcc
-CCFLAGS+=-std=c99 -D_DEFAULT_SOURCE -DVERSION=\"$(VERS)\" -O2 -D_FORTIFY_SOURCE=2 -fstack-protector-all
+CCFLAGS+=-std=c99 -D_DEFAULT_SOURCE -DVERSION=\"$(VERS)\" -O2 -D_FORTIFY_SOURCE=2 -fstack-protector-all -Wdeclaration-after-statement 
 LIBS=$(shell pkg-config --libs libedit)
 INC+=$(shell pkg-config --cflags libedit)
 
@@ -18,9 +18,9 @@ ifeq ($(UNAME_S),Darwin)
     LIBS += -ledit
 endif
 
-OBJS=main.o init.o actions.o score.o misc.o saveresume.o
-CHEAT_OBJS=cheat.o init.o actions.o score.o misc.o saveresume.o
-SOURCES=$(OBJS:.o=.c) advent.h adventure.yaml Makefile control make_dungeon.py templates/*.tpl
+OBJS=main.o init.o actions.o score.o misc.o saveresume.o calc.o
+CHEAT_OBJS=cheat.o init.o actions.o score.o misc.o saveresume.o calc.o
+SOURCES=$(OBJS:.o=.c) advent.h adventure.yaml Makefile control make_dungeon_calc.py templates/*.tpl
 
 .c.o:
 	$(CC) $(CCFLAGS) $(INC) $(DBX) -c $<
@@ -43,10 +43,10 @@ cheat.o:	advent.h dungeon.h
 saveresume.o:	advent.h dungeon.h
 
 dungeon.o:	dungeon.c dungeon.h
-	$(CC) $(CCFLAGS) $(DBX) -c dungeon.c
+	$(CC) $(CCFLAGS) -Warray-bounds=0 $(DBX) -c dungeon.c
 
-dungeon.c dungeon.h: make_dungeon.py adventure.yaml advent.h templates/*.tpl
-	./make_dungeon.py
+dungeon.c dungeon.h: make_dungeon_calc.py adventure.yaml advent.h templates/*.tpl
+	./make_dungeon_calc.py
 
 clean:
 	rm -f *.o advent cheat *.html *.gcno *.gcda

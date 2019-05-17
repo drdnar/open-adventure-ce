@@ -17,6 +17,7 @@
 
 #include "advent.h"
 #include "dungeon.h"
+#include "calc.h"
 
 /*
  * Bump on save format change.
@@ -62,6 +63,7 @@ int suspend(void)
      *  some points (so can't win by using saved games to retry
      *  battles or to start over after learning zzword).
      *  If ADVENT_NOSAVE is defined, do nothing instead. */
+    char* name;
 
 #ifdef ADVENT_NOSAVE
     return GO_UNKNOWN;
@@ -69,12 +71,12 @@ int suspend(void)
     FILE *fp = NULL;
 
     rspeak(SUSPEND_WARNING);
-    if (!yes(arbitrary_messages[THIS_ACCEPTABLE], arbitrary_messages[OK_MAN], arbitrary_messages[OK_MAN]))
+    if (!yes(get_arbitrary_message(THIS_ACCEPTABLE), get_arbitrary_message(OK_MAN), get_arbitrary_message(OK_MAN)))
         return GO_CLEAROBJ;
     game.saved = game.saved + 5;
 
     while (fp == NULL) {
-        char* name = readline("\nFile name: ");
+        name = readline("\nFile name: ");
         if (name == NULL)
             return GO_TOP;
         fp = fopen(name, WRITE_MODE);
@@ -93,6 +95,7 @@ int resume(void)
 {
     /*  Resume.  Read a suspended game back from a file.
      *  If ADVENT_NOSAVE is defined, do nothing instead. */
+    char* name;
 
 #ifdef ADVENT_NOSAVE
     return GO_UNKNOWN;
@@ -102,12 +105,12 @@ int resume(void)
     if (game.loc != 1 ||
         game.abbrev[1] != 1) {
         rspeak(RESUME_ABANDON);
-        if (!yes(arbitrary_messages[THIS_ACCEPTABLE], arbitrary_messages[OK_MAN], arbitrary_messages[OK_MAN]))
+        if (!yes(get_arbitrary_message(THIS_ACCEPTABLE), get_arbitrary_message(OK_MAN), get_arbitrary_message(OK_MAN)))
             return GO_CLEAROBJ;
     }
 
     while (fp == NULL) {
-        char* name = readline("\nFile name: ");
+        name = readline("\nFile name: ");
         if (name == NULL)
             return GO_TOP;
         fp = fopen(name, READ_MODE);
@@ -145,6 +148,9 @@ bool is_valid(struct game_t valgame)
      *  state and with invaild state. We check that state is
      *  valid: no states are outside minimal or maximal value
      */
+    int i, temp_tally, treasure;
+    obj_t obj;
+    loc_t loc;
 
     /* Prevent division by zero */
     if (valgame.abbnum == 0) {
@@ -171,14 +177,14 @@ bool is_valid(struct game_t valgame)
         return false;	// LCOV_EXCL_LINE
     }
     /*  Bounds check for location arrays */
-    for (int i = 0; i <= NDWARVES; i++) {
+    for (i = 0; i <= NDWARVES; i++) {
         if (valgame.dloc[i]  < -1 || valgame.dloc[i]  > NLOCATIONS  ||
             valgame.odloc[i] < -1 || valgame.odloc[i] > NLOCATIONS) {
             return false;	// LCOV_EXCL_LINE
         }
     }
 
-    for (int i = 0; i <= NOBJECTS; i++) {
+    for (i = 0; i <= NOBJECTS; i++) {
         if (valgame.place[i] < -1 || valgame.place[i] > NLOCATIONS  ||
             valgame.fixed[i] < -1 || valgame.fixed[i] > NLOCATIONS) {
             return false;	// LCOV_EXCL_LINE
@@ -197,9 +203,9 @@ bool is_valid(struct game_t valgame)
     }
 
     /* Recalculate tally, throw the towel if in disagreement */
-    int temp_tally = 0;
-    for (int treasure = 1; treasure <= NOBJECTS; treasure++) {
-        if (objects[treasure].is_treasure) {
+    temp_tally = 0;
+    for (treasure = 1; treasure <= NOBJECTS; treasure++) {
+        if (get_object(treasure)->is_treasure) {
             if (valgame.prop[treasure] == STATE_NOTFOUND) {
                 ++temp_tally;
             }
@@ -210,7 +216,7 @@ bool is_valid(struct game_t valgame)
     }
 
     /* Check that properties of objects aren't beyond expected */
-    for (obj_t obj = 0; obj <= NOBJECTS; obj++) {
+    for (obj = 0; obj <= NOBJECTS; obj++) {
         if (valgame.prop[obj] < STATE_NOTFOUND || valgame.prop[obj] > 1) {
             switch (obj) {
             case RUG:
@@ -238,12 +244,12 @@ bool is_valid(struct game_t valgame)
     }
 
     /* Check that values in linked lists for objects in locations are inside bounds */
-    for (loc_t loc = LOC_NOWHERE; loc <= NLOCATIONS; loc++) {
+    for (loc = LOC_NOWHERE; loc <= NLOCATIONS; loc++) {
         if (valgame.atloc[loc] < NO_OBJECT || valgame.atloc[loc] > NOBJECTS * 2) {
             return false;	// LCOV_EXCL_LINE
         }
     }
-    for (obj_t obj = 0; obj <= NOBJECTS * 2; obj++ ) {
+    for (obj = 0; obj <= NOBJECTS * 2; obj++ ) {
         if (valgame.link[obj] < NO_OBJECT || valgame.link[obj] > NOBJECTS * 2) {
             return false;	// LCOV_EXCL_LINE
         }

@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "advent.h"
+#include "calc.h"
 
 int main(int argc, char *argv[])
 {
@@ -20,15 +21,6 @@ int main(int argc, char *argv[])
     char *savefilename = NULL;
     int version = 0;
     FILE *fp = NULL;
-
-    // Initialize game variables
-    initialise();
-
-    /* we're generating a saved game, so saved once by default,
-     * unless overridden with command-line options below.
-     */
-    game.saved = 1;
-
     /*  Options. */
     const char* opts = "d:l:s:t:v:o:";
     const char* usage = "Usage: %s [-d numdie] [-s numsaves] [-v version] -o savefilename \n"
@@ -39,6 +31,14 @@ int main(int argc, char *argv[])
                         "        -v version number of save format.\n"
                         "        -o required. File name of save game to write.\n";
 
+    // Initialize game variables
+    initialise();
+
+    /* we're generating a saved game, so saved once by default,
+     * unless overridden with command-line options below.
+     */
+    game.saved = 1;
+    
     while ((ch = getopt(argc, argv, opts)) != EOF) {
         switch (ch) {
         case 'd':

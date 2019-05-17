@@ -18,6 +18,7 @@
 
 #include "advent.h"
 #include "dungeon.h"
+#include "calc.h"
 
 static void* xcalloc(size_t size)
 {
@@ -36,6 +37,10 @@ static void* xcalloc(size_t size)
 
 static void vspeak(const char* msg, bool blank, va_list ap)
 {
+    int msglen, i, ret;
+    char* rendered, * renderp, * arg;
+    ssize_t size, len;
+
     // Do nothing if we got a null pointer.
     if (msg == NULL)
         return;
@@ -47,18 +52,18 @@ static void vspeak(const char* msg, bool blank, va_list ap)
     if (blank == true)
         printf("\n");
 
-    int msglen = strlen(msg);
+    msglen = strlen(msg);
 
     // Rendered string
-    ssize_t size = 2000; /* msglen > 50 ? msglen*2 : 100; */
-    char* rendered = xcalloc(size);
-    char* renderp = rendered;
+    size = 2000; /* msglen > 50 ? msglen*2 : 100; */
+    rendered = xcalloc(size);
+    renderp = rendered;
 
     // Handle format specifiers (including the custom %S) by
     // adjusting the parameter accordingly, and replacing the
     // specifier with %s.
     bool pluralize = false;
-    for (int i = 0; i < msglen; i++) {
+    for (i = 0; i < msglen; i++) {
         if (msg[i] != '%') {
             /* Ugh.  Least obtrusive way to deal with artifacts "on the floor"
              * being dropped outside of both cave and building. */
@@ -76,7 +81,9 @@ static void vspeak(const char* msg, bool blank, va_list ap)
             // Integer specifier.
             if (msg[i] == 'd') {
                 int32_t arg = va_arg(ap, int32_t);
-                int ret = snprintf(renderp, size, "%" PRId32, arg);
+                /* Removed because we don't have snprintf
+                int ret = snprintf(renderp, size, "%" PRId32, arg);*/
+                ret = sprintf(renderp, "%" PRId32, arg);
                 if (ret < size) {
                     renderp += ret;
                     size -= ret;
@@ -86,9 +93,9 @@ static void vspeak(const char* msg, bool blank, va_list ap)
 
             // Unmodified string specifier.
             if (msg[i] == 's') {
-                char *arg = va_arg(ap, char *);
+                arg = va_arg(ap, char *);
                 strncat(renderp, arg, size - 1);
-                size_t len = strlen(renderp);
+                len = strlen(renderp);
                 renderp += len;
                 size -= len;
             }
@@ -106,7 +113,7 @@ static void vspeak(const char* msg, bool blank, va_list ap)
             /* Version specifier */
             if (msg[i] == 'V') {
                 strcpy(renderp, VERSION);
-                size_t len = strlen(VERSION);
+                len = strlen(VERSION);
                 renderp += len;
                 size -= len;
             }
@@ -134,7 +141,7 @@ void sspeak(const int msg, ...)
     va_list ap;
     va_start(ap, msg);
     fputc('\n', stdout);
-    vprintf(arbitrary_messages[msg], ap);
+    vprintf(get_arbitrary_message(msg), ap);
     fputc('\n', stdout);
     va_end(ap);
 }
@@ -150,19 +157,19 @@ void pspeak(vocab_t msg, enum speaktype mode, bool blank, int skip, ...)
     va_start(ap, skip);
     switch (mode) {
     case touch:
-        vspeak(objects[msg].inventory, blank, ap);
+        vspeak(get_object(msg)->inventory, blank, ap);
         break;
     case look:
-        vspeak(objects[msg].descriptions[skip], blank, ap);
+        vspeak(get_object(msg)->descriptions[skip], blank, ap);
         break;
     case hear:
-        vspeak(objects[msg].sounds[skip], blank, ap);
+        vspeak(get_object(msg)->sounds[skip], blank, ap);
         break;
     case study:
-        vspeak(objects[msg].texts[skip], blank, ap);
+        vspeak(get_object(msg)->texts[skip], blank, ap);
         break;
     case change:
-        vspeak(objects[msg].changes[skip], blank, ap);
+        vspeak(get_object(msg)->changes[skip], blank, ap);
         break;
     }
     va_end(ap);
@@ -173,10 +180,11 @@ void rspeak(vocab_t i, ...)
 {
     va_list ap;
     va_start(ap, i);
-    vspeak(arbitrary_messages[i], true, ap);
+    vspeak(get_arbitrary_message(i), true, ap);
     va_end(ap);
 }
 
+#ifndef CALCULATOR
 void echo_input(FILE* destination, const char* input_prompt, const char* input)
 {
     size_t len = strlen(input_prompt) + strlen(input) + 1;
@@ -186,14 +194,16 @@ void echo_input(FILE* destination, const char* input_prompt, const char* input)
     fprintf(destination, "%s\n", prompt_and_input);
     free(prompt_and_input);
 }
+#endif
 
 static int word_count(char* str)
 {
     char delims[] = " \t";
     int count = 0;
     int inblanks = true;
+    char *s;
 
-    for (char *s = str; *s; s++)
+    for (s = str; *s; s++)
         if (inblanks) {
             if (strchr(delims, *s) == 0) {
                 ++count;
@@ -212,13 +222,13 @@ static char* get_input(void)
 {
     // Set up the prompt
     char input_prompt[] = "> ";
+    char* input;
     if (!settings.prompt)
         input_prompt[0] = '\0';
 
     // Print a blank line
     printf("\n");
 
-    char* input;
     while (true) {
         input = readline(input_prompt);
 
@@ -237,11 +247,13 @@ static char* get_input(void)
 
     add_history(input);
 
+#ifndef CALCULATOR
     if (!isatty(0))
         echo_input(stdout, input_prompt, input);
 
     if (settings.logfp)
         echo_input(settings.logfp, "", input);
+#endif
 
     return (input);
 }
@@ -249,9 +261,11 @@ static char* get_input(void)
 bool silent_yes(void)
 {
     bool outcome = false;
+    char* reply, * firstword;
+    int i, yes, y, no, n;
 
     for (;;) {
-        char* reply = get_input();
+        reply = get_input();
         if (reply == NULL) {
             // LCOV_EXCL_START
             // Should be unreachable. Reply should never be NULL
@@ -265,18 +279,18 @@ bool silent_yes(void)
             continue;
         }
 
-        char* firstword = (char*) xcalloc(strlen(reply) + 1);
+        firstword = (char*) xcalloc(strlen(reply) + 1);
         sscanf(reply, "%s", firstword);
 
         free(reply);
 
-        for (int i = 0; i < (int)strlen(firstword); ++i)
+        for (i = 0; i < (int)strlen(firstword); ++i)
             firstword[i] = tolower(firstword[i]);
 
-        int yes = strncmp("yes", firstword, sizeof("yes") - 1);
-        int y = strncmp("y", firstword, sizeof("y") - 1);
-        int no = strncmp("no", firstword, sizeof("no") - 1);
-        int n = strncmp("n", firstword, sizeof("n") - 1);
+        yes = strncmp("yes", firstword, sizeof("yes") - 1);
+        y = strncmp("y", firstword, sizeof("y") - 1);
+        no = strncmp("no", firstword, sizeof("no") - 1);
+        n = strncmp("n", firstword, sizeof("n") - 1);
 
         free(firstword);
 
@@ -300,11 +314,13 @@ bool yes(const char* question, const char* yes_response, const char* no_response
  *  if no, print Z and return false. */
 {
     bool outcome = false;
+    char* reply, * firstword;
+    int i, yes, y, no, n;
 
     for (;;) {
         speak(question);
 
-        char* reply = get_input();
+        reply = get_input();
         if (reply == NULL) {
             // LCOV_EXCL_START
             // Should be unreachable. Reply should never be NULL
@@ -319,18 +335,18 @@ bool yes(const char* question, const char* yes_response, const char* no_response
             continue;
         }
 
-        char* firstword = (char*) xcalloc(strlen(reply) + 1);
+        firstword = (char*) xcalloc(strlen(reply) + 1);
         sscanf(reply, "%s", firstword);
 
         free(reply);
 
-        for (int i = 0; i < (int)strlen(firstword); ++i)
+        for (i = 0; i < (int)strlen(firstword); ++i)
             firstword[i] = tolower(firstword[i]);
 
-        int yes = strncmp("yes", firstword, sizeof("yes") - 1);
-        int y = strncmp("y", firstword, sizeof("y") - 1);
-        int no = strncmp("no", firstword, sizeof("no") - 1);
-        int n = strncmp("n", firstword, sizeof("n") - 1);
+        yes = strncmp("yes", firstword, sizeof("yes") - 1);
+        y = strncmp("y", firstword, sizeof("y") - 1);
+        no = strncmp("no", firstword, sizeof("no") - 1);
+        n = strncmp("n", firstword, sizeof("n") - 1);
 
         free(firstword);
 
@@ -357,9 +373,12 @@ bool yes(const char* question, const char* yes_response, const char* no_response
 static int get_motion_vocab_id(const char* word)
 // Return the first motion number that has 'word' as one of its words.
 {
-    for (int i = 0; i < NMOTIONS; ++i) {
-        for (int j = 0; j < motions[i].words.n; ++j) {
-            if (strncasecmp(word, motions[i].words.strs[j], TOKLEN) == 0 && (strlen(word) > 1 ||
+    int i, j;
+    const motion_t* motion;
+    for (i = 0; i < NMOTIONS; ++i) {
+        motion = get_motion(i);
+        for (j = 0; j < motion->words.n; ++j) {
+            if (strncasecmp(word, get_uncompressed_string(motion->words.strs[j]), TOKLEN) == 0 && (strlen(word) > 1 ||
                     strchr(ignore, word[0]) == NULL ||
                     !settings.oldstyle))
                 return (i);
@@ -372,9 +391,12 @@ static int get_motion_vocab_id(const char* word)
 static int get_object_vocab_id(const char* word)
 // Return the first object number that has 'word' as one of its words.
 {
-    for (int i = 0; i < NOBJECTS + 1; ++i) { // FIXME: the + 1 should go when 1-indexing for objects is removed
-        for (int j = 0; j < objects[i].words.n; ++j) {
-            if (strncasecmp(word, objects[i].words.strs[j], TOKLEN) == 0)
+    int i, j;
+    const object_t* object;
+    for (i = 0; i < NOBJECTS + 1; ++i) { // FIXME: the + 1 should go when 1-indexing for objects is removed
+        object = get_object(i);
+        for (j = 0; j < object->words.n; ++j) {
+            if (strncasecmp(word, get_uncompressed_string(object->words.strs[j]), TOKLEN) == 0)
                 return (i);
         }
     }
@@ -385,9 +407,12 @@ static int get_object_vocab_id(const char* word)
 static int get_action_vocab_id(const char* word)
 // Return the first motion number that has 'word' as one of its words.
 {
-    for (int i = 0; i < NACTIONS; ++i) {
-        for (int j = 0; j < actions[i].words.n; ++j) {
-            if (strncasecmp(word, actions[i].words.strs[j], TOKLEN) == 0 && (strlen(word) > 1 ||
+    int i, j;
+    const action_t* action;
+    for (i = 0; i < NACTIONS; ++i) {
+        action = get_action(i);
+        for (j = 0; j < action->words.n; ++j) {
+            if (strncasecmp(word, get_uncompressed_string(action->words.strs[j]), TOKLEN) == 0 && (strlen(word) > 1 ||
                     strchr(ignore, word[0]) == NULL ||
                     !settings.oldstyle))
                 return (i);
@@ -423,14 +448,13 @@ static bool is_valid_int(const char *str)
 
 static void get_vocab_metadata(const char* word, vocab_t* id, word_type_t* type)
 {
+    vocab_t ref_num;
     /* Check for an empty string */
     if (strncmp(word, "", sizeof("")) == 0) {
         *id = WORD_EMPTY;
         *type = NO_WORD_TYPE;
         return;
     }
-
-    vocab_t ref_num;
 
     ref_num = get_motion_vocab_id(word);
     if (ref_num != WORD_NOT_FOUND) {
@@ -474,6 +498,7 @@ static void get_vocab_metadata(const char* word, vocab_t* id, word_type_t* type)
 
 static void tokenize(char* raw, command_t *cmd)
 {
+    size_t i;
     /*
      * Be caereful about modifing this. We do not want to nuke the
      * the speech part or ID from the previous turn.
@@ -502,9 +527,9 @@ static void tokenize(char* raw, command_t *cmd)
      */
     if (settings.oldstyle) {
         cmd->word[0].raw[TOKLEN + TOKLEN] = cmd->word[1].raw[TOKLEN + TOKLEN] = '\0';
-        for (size_t i = 0; i < strlen(cmd->word[0].raw); i++)
+        for (i = 0; i < strlen(cmd->word[0].raw); i++)
             cmd->word[0].raw[i] = toupper(cmd->word[0].raw[i]);
-        for (size_t i = 0; i < strlen(cmd->word[1].raw); i++)
+        for (i = 0; i < strlen(cmd->word[1].raw); i++)
             cmd->word[1].raw[i] = toupper(cmd->word[1].raw[i]);
     }
 
@@ -661,13 +686,14 @@ int atdwrf(loc_t where)
  *  there (or if dwarves not active yet), -1 if all dwarves are dead.  Ignore
  *  the pirate (6th dwarf). */
 {
+    int i;
     int at;
 
     at = 0;
     if (game.dflag < 2)
         return at;
     at = -1;
-    for (int i = 1; i <= NDWARVES - 1; i++) {
+    for (i = 1; i <= NDWARVES - 1; i++) {
         if (game.dloc[i] == where)
             return i;
         if (game.dloc[i] != 0)

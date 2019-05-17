@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include "advent.h"
 #include "dungeon.h"
+#include "calc.h"
 
 static int mxscor;	/* ugh..the price for having score() not exit. */
 
@@ -15,6 +16,7 @@ int score(enum termination mode)
 /* mode is 'scoregame' if scoring, 'quitgame' if quitting, 'endgame' if died
  * or won */
 {
+    int i, k;
     int score = 0;
 
     /*  The present scoring algorithm is as follows:
@@ -39,11 +41,11 @@ int score(enum termination mode)
     /*  First tally up the treasures.  Must be in building and not broken.
      *  Give the poor guy 2 points just for finding each treasure. */
     mxscor = 0;
-    for (int i = 1; i <= NOBJECTS; i++) {
-        if (!objects[i].is_treasure)
+    for (i = 1; i <= NOBJECTS; i++) {
+        if (!get_object(i)->is_treasure)
             continue;
-        if (objects[i].inventory != 0) {
-            int k = 12;
+        if (get_object(i)->inventory != 0) {
+            k = 12;
             if (i == CHEST)
                 k = 14;
             if (i > CHEST)
@@ -95,9 +97,9 @@ int score(enum termination mode)
     mxscor += 2;
 
     /* Deduct for hints/turns/saves. Hints < 4 are special; see database desc. */
-    for (int i = 0; i < NHINTS; i++) {
+    for (i = 0; i < NHINTS; i++) {
         if (game.hinted[i])
-            score = score - hints[i].penalty;
+            score = score - get_hint(i)->penalty;
     }
     if (game.novice)
         score -= 5;
@@ -116,6 +118,8 @@ int score(enum termination mode)
 void terminate(enum termination mode)
 /* End of game.  Let's tell him all about it. */
 {
+    int i;
+    const class_t* class;
     int points = score(mode);
 
     if (points + game.trnluz + 1 >= mxscor && game.trnluz != 0)
@@ -123,10 +127,11 @@ void terminate(enum termination mode)
     if (points + game.saved + 1 >= mxscor && game.saved != 0)
         rspeak(WITHOUT_SUSPENDS);
     rspeak(TOTAL_SCORE, points, mxscor, game.turns, game.turns);
-    for (int i = 1; i <= (int)NCLASSES; i++) {
-        if (classes[i].threshold >= points) {
-            speak(classes[i].message);
-            i = classes[i].threshold + 1 - points;
+    for (i = 1; i <= (int)NCLASSES; i++) {
+        class = get_class(i);
+        if (class->threshold >= points) {
+            speak(get_compressed_string(class->message));
+            i = class->threshold + 1 - points;
             rspeak(NEXT_HIGHER, i, i);
             exit(EXIT_SUCCESS);
         }

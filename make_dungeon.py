@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # This is the open-adventure dungeon generator. It consumes a YAML description of
 # the dungeon and outputs a dungeon.h and dungeon.c pair of C code files.

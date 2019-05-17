@@ -13,6 +13,7 @@
 #include <ctype.h>
 #include "advent.h"
 #include "dungeon.h"
+#include "calc.h"
 
 #define DIM(a) (sizeof(a)/sizeof(a[0]))
 
@@ -44,6 +45,7 @@ static bool do_move(void);
 
 int main(int argc, char *argv[])
 {
+    int seedval;
     int ch;
 
     /*  Options. */
@@ -96,18 +98,18 @@ int main(int argc, char *argv[])
     }
 
     /*  Initialize game variables */
-    int seedval = initialise();
+    seedval = initialise();
 
 #ifndef ADVENT_NOSAVE
     if (!rfp) {
-        game.novice = yes(arbitrary_messages[WELCOME_YOU], arbitrary_messages[CAVE_NEARBY], arbitrary_messages[NO_MESSAGE]);
+        game.novice = yes(get_arbitrary_message(WELCOME_YOU), get_arbitrary_message(CAVE_NEARBY), get_arbitrary_message(NO_MESSAGE));
         if (game.novice)
             game.limit = NOVICELIMIT;
     } else {
         restore(rfp);
     }
 #else
-    game.novice = yes(arbitrary_messages[WELCOME_YOU], arbitrary_messages[CAVE_NEARBY], arbitrary_messages[NO_MESSAGE]);
+    game.novice = yes(get_arbitrary_message(WELCOME_YOU), get_arbitrary_message(CAVE_NEARBY), get_arbitrary_message(NO_MESSAGE));
     if (game.novice)
         game.limit = NOVICELIMIT;
 #endif
@@ -134,8 +136,10 @@ int main(int argc, char *argv[])
  *  notes). */
 static void checkhints(void)
 {
+    int hint, i;
+    const hint_t* cur_hint;
     if (conditions[game.loc] >= game.conds) {
-        for (int hint = 0; hint < NHINTS; hint++) {
+        for (hint = 0; hint < NHINTS; hint++) {
             if (game.hinted[hint])
                 continue;
             if (!CNDBIT(game.loc, hint + 1 + COND_HBASE))
@@ -143,8 +147,8 @@ static void checkhints(void)
             ++game.hintlc[hint];
             /*  Come here if he's been int enough at required loc(s) for some
              *  unused hint. */
-            if (game.hintlc[hint] >= hints[hint].turns) {
-                int i;
+            cur_hint = get_hint(hint);
+            if (game.hintlc[hint] >= cur_hint->turns) {
 
                 switch (hint) {
                 case 0:
@@ -208,12 +212,12 @@ static void checkhints(void)
 
                 /* Fall through to hint display */
                 game.hintlc[hint] = 0;
-                if (!yes(hints[hint].question, arbitrary_messages[NO_MESSAGE], arbitrary_messages[OK_MAN]))
+                if (!yes(get_compressed_string(cur_hint->question), get_arbitrary_message(NO_MESSAGE), get_arbitrary_message(OK_MAN)))
                     return;
-                rspeak(HINT_COST, hints[hint].penalty, hints[hint].penalty);
-                game.hinted[hint] = yes(arbitrary_messages[WANT_HINT], hints[hint].hint, arbitrary_messages[OK_MAN]);
+                rspeak(HINT_COST, cur_hint->penalty, cur_hint->penalty);
+                game.hinted[hint] = yes(get_arbitrary_message(WANT_HINT), get_compressed_string(cur_hint->hint), get_arbitrary_message(OK_MAN));
                 if (game.hinted[hint] && game.limit > WARNTIME)
-                    game.limit += WARNTIME * hints[hint].penalty;
+                    game.limit += WARNTIME * cur_hint->penalty;
             }
         }
     }
@@ -221,6 +225,7 @@ static void checkhints(void)
 
 static bool spotted_by_pirate(int i)
 {
+    int treasure, snarfed;
     if (i != PIRATE)
         return false;
 
@@ -233,15 +238,15 @@ static bool spotted_by_pirate(int i)
     if (game.loc == game.chloc ||
         game.prop[CHEST] != STATE_NOTFOUND)
         return true;
-    int snarfed = 0;
+    snarfed = 0;
     bool movechest = false, robplayer = false;
-    for (int treasure = 1; treasure <= NOBJECTS; treasure++) {
-        if (!objects[treasure].is_treasure)
+    for (treasure = 1; treasure <= NOBJECTS; treasure++) {
+        if (!get_object(treasure)->is_treasure)
             continue;
         /*  Pirate won't take pyramid from plover room or dark
          *  room (too easy!). */
-        if (treasure == PYRAMID && (game.loc == objects[PYRAMID].plac ||
-                                    game.loc == objects[EMERALD].plac)) {
+        if (treasure == PYRAMID && (game.loc == get_object(PYRAMID)->plac ||
+                                    game.loc == get_object(EMERALD)->plac)) {
             continue;
         }
         if (TOTING(treasure) ||
@@ -273,11 +278,11 @@ static bool spotted_by_pirate(int i)
     }
     if (robplayer) {
         rspeak(PIRATE_POUNCES);
-        for (int treasure = 1; treasure <= NOBJECTS; treasure++) {
-            if (!objects[treasure].is_treasure)
+        for (treasure = 1; treasure <= NOBJECTS; treasure++) {
+            if (!get_object(treasure)->is_treasure)
                 continue;
-            if (!(treasure == PYRAMID && (game.loc == objects[PYRAMID].plac ||
-                                          game.loc == objects[EMERALD].plac))) {
+            if (!(treasure == PYRAMID && (game.loc == get_object(PYRAMID)->plac ||
+                                          game.loc == get_object(EMERALD)->plac))) {
                 if (AT(treasure) && game.fixed[treasure] == IS_FREE)
                     carry(treasure, game.loc);
                 if (TOTING(treasure))
@@ -293,6 +298,7 @@ static bool dwarfmove(void)
 /* Dwarves move.  Return true if player survives, false if he dies. */
 {
     int kk, stick, attack;
+    int i, j;
     loc_t tk[21];
 
     /*  Dwarf stuff.  See earlier comments for description of
@@ -328,15 +334,15 @@ static bool dwarfmove(void)
                          PCT(85))))
             return true;
         game.dflag = 2;
-        for (int i = 1; i <= 2; i++) {
-            int j = 1 + randrange(NDWARVES - 1);
+        for (i = 1; i <= 2; i++) {
+            j = 1 + randrange(NDWARVES - 1);
             if (PCT(50))
                 game.dloc[j] = 0;
         }
 
         /* Alternate initial loc for dwarf, in case one of them
         *  starts out on top of the adventurer. */
-        for (int i = 1; i <= NDWARVES - 1; i++) {
+        for (i = 1; i <= NDWARVES - 1; i++) {
             if (game.dloc[i] == game.loc)
                 game.dloc[i] = DALTLC; //
             game.odloc[i] = game.dloc[i];
@@ -355,16 +361,16 @@ static bool dwarfmove(void)
     game.dtotal = 0;
     attack = 0;
     stick = 0;
-    for (int i = 1; i <= NDWARVES; i++) {
+    for (i = 1; i <= NDWARVES; i++) {
         if (game.dloc[i] == 0)
             continue;
         /*  Fill tk array with all the places this dwarf might go. */
-        unsigned int j = 1;
-        kk = tkey[game.dloc[i]];
+        /*unsigned int */j = 1;
+        kk = get_tkey(game.dloc[i]);
         if (kk != 0)
             do {
-                enum desttype_t desttype = travel[kk].desttype;
-                game.newloc = travel[kk].destval;
+                enum desttype_t desttype = get_travelop(kk)->desttype;
+                game.newloc = get_travelop(kk)->destval;
                 /* Have we avoided a dwarf encounter? */
                 if (desttype != dest_goto)
                     continue;
@@ -383,11 +389,11 @@ static bool dwarfmove(void)
                     continue;
                 else if (i == PIRATE && CNDBIT(game.newloc, COND_NOARRR))
                     continue;
-                else if (travel[kk].nodwarves)
+                else if (get_travelop(kk)->nodwarves)
                     continue;
                 tk[j++] = game.newloc;
             } while
-            (!travel[kk++].stop);
+            (!get_travelop(kk++)->stop);
         tk[j] = game.odloc[i];
         if (j >= 2)
             --j;
@@ -456,8 +462,9 @@ static bool dwarfmove(void)
 static void croak(void)
 /*  Okay, he's dead.  Let's get on with it. */
 {
-    const char* query = obituaries[game.numdie].query;
-    const char* yes_response = obituaries[game.numdie].yes_response;
+    int i, j;
+    const char* query = get_compressed_string(get_obituary(game.numdie)->query);
+    const char* yes_response = get_compressed_string(get_obituary(game.numdie)->yes_response);
 
     ++game.numdie;
 
@@ -466,7 +473,7 @@ static void croak(void)
          *  death and exit. */
         rspeak(DEATH_CLOSING);
         terminate(endgame);
-    } else if (!yes(query, yes_response, arbitrary_messages[OK_MAN])
+    } else if (!yes(query, yes_response, get_arbitrary_message(OK_MAN))
                || game.numdie == NDEATHS) {
         /* Player is asked if he wants to try again. If not, or if 
          * he's already used all of his lives, we end the game */
@@ -478,8 +485,8 @@ static void croak(void)
         game.place[WATER] = game.place[OIL] = LOC_NOWHERE;
         if (TOTING(LAMP))
             game.prop[LAMP] = LAMP_DARK;
-        for (int j = 1; j <= NOBJECTS; j++) {
-            int i = NOBJECTS + 1 - j;
+        for (j = 1; j <= NOBJECTS; j++) {
+            i = NOBJECTS + 1 - j;
             if (TOTING(i)) {
                 /* Always leave lamp where it's accessible aboveground */
                 drop(i, (i == LAMP) ? LOC_START : game.oldlc2);
@@ -492,14 +499,14 @@ static void croak(void)
 static void describe_location(void) 
 /* Describe the location to the user */
 {
-    const char* msg = locations[game.loc].description.small;
+    const char* msg = get_compressed_string(get_location(game.loc)->description.small);
     
     if (MOD(game.abbrev[game.loc], game.abbnum) == 0 ||
         msg == NO_MESSAGE)
-        msg = locations[game.loc].description.big;
+        msg = get_compressed_string(get_location(game.loc)->description.big);
 
     if (!FORCED(game.loc) && DARK(game.loc)) {
-        msg = arbitrary_messages[PITCH_DARK];
+        msg = get_arbitrary_message(PITCH_DARK);
     }
 
     if (TOTING(BEAR))
@@ -515,11 +522,11 @@ static void describe_location(void)
 static bool traveleq(int a, int b)
 /* Are two travel entries equal for purposes of skip after failed condition? */
 {
-    return (travel[a].condtype == travel[b].condtype)
-           && (travel[a].condarg1 == travel[b].condarg1)
-           && (travel[a].condarg2 == travel[b].condarg2)
-           && (travel[a].desttype == travel[b].desttype)
-           && (travel[a].destval == travel[b].destval);
+    return (get_travelop(a)->condtype == get_travelop(b)->condtype)
+           && (get_travelop(a)->condarg1 == get_travelop(b)->condarg1)
+           && (get_travelop(a)->condarg2 == get_travelop(b)->condarg2)
+           && (get_travelop(a)->desttype == get_travelop(b)->desttype)
+           && (get_travelop(a)->destval == get_travelop(b)->destval);
 }
 
 /*  Given the current location in "game.loc", and a motion verb number in
@@ -531,7 +538,10 @@ static bool traveleq(int a, int b)
  *  safe.) */
 static void playermove(int motion)
 {
-    int scratchloc, travel_entry = tkey[game.loc];
+    int condarg1, condarg2, te_tmp;
+    enum condtype_t condtype;
+    enum desttype_t desttype;
+    int scratchloc, travel_entry = get_tkey(game.loc);
     game.newloc = game.loc;
     if (travel_entry == 0)
         BUG(LOCATION_HAS_NO_TRAVEL_ENTRIES); // LCOV_EXCL_LINE
@@ -555,16 +565,16 @@ static void playermove(int motion)
             return;
         }
 
-        int te_tmp = 0;
+        te_tmp = 0;
         for (;;) {
-            enum desttype_t desttype = travel[travel_entry].desttype;
-            scratchloc = travel[travel_entry].destval;
+            enum desttype_t desttype = get_travelop(travel_entry)->desttype;
+            scratchloc = get_travelop(travel_entry)->destval;
             if (desttype != dest_goto || scratchloc != motion) {
                 if (desttype == dest_goto) {
-                    if (FORCED(scratchloc) && travel[tkey[scratchloc]].destval == motion)
+                    if (FORCED(scratchloc) && get_travelop(get_tkey(scratchloc))->destval == motion)
                         te_tmp = travel_entry;
                 }
-                if (!travel[travel_entry].stop) {
+                if (!get_travelop(travel_entry)->stop) {
                     ++travel_entry;	/* go to next travel entry for this location */
                     continue;
                 }
@@ -576,8 +586,8 @@ static void playermove(int motion)
                 }
             }
 
-            motion = travel[travel_entry].motion;
-            travel_entry = tkey[game.loc];
+            motion = get_travelop(travel_entry)->motion;
+            travel_entry = get_tkey(game.loc);
             break; /* fall through to ordinary travel */
         }
     } else if (motion == LOOK) {
@@ -603,10 +613,10 @@ static void playermove(int motion)
     /* Look for a way to fulfil the motion verb passed in - travel_entry indexes
      * the beginning of the motion entries for here (game.loc). */
     for (;;) {
-        if (T_TERMINATE(travel[travel_entry]) ||
-            travel[travel_entry].motion == motion)
+        if (T_TERMINATE(get_travelop(travel_entry)) ||
+            get_travelop(travel_entry)->motion == motion)
             break;
-        if (travel[travel_entry].stop) {
+        if (get_travelop(travel_entry)->stop) {
             /*  Couldn't find an entry matching the motion word passed
              *  in.  Various messages depending on word given. */
             switch (motion) {
@@ -652,9 +662,9 @@ static void playermove(int motion)
     do {
         for (;;) { /* L12 loop */
             for (;;) {
-                enum condtype_t condtype = travel[travel_entry].condtype;
-                int condarg1 = travel[travel_entry].condarg1;
-                int condarg2 = travel[travel_entry].condarg2;
+                condtype = get_travelop(travel_entry)->condtype;
+                condarg1 = get_travelop(travel_entry)->condarg1;
+                condarg2 = get_travelop(travel_entry)->condarg2;
                 if (condtype < cond_not) {
                     /* YAML N and [pct N] conditionals */
                     if (condtype == cond_goto || condtype == cond_pct) {
@@ -673,9 +683,9 @@ static void playermove(int motion)
 
                 /* We arrive here on conditional failure.
                  * Skip to next non-matching destination */
-                int te_tmp = travel_entry;
+                te_tmp = travel_entry;
                 do {
-                    if (travel[te_tmp].stop)
+                    if (get_travelop(te_tmp)->stop)
                         BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION); // LCOV_EXCL_LINE
                     ++te_tmp;
                 } while
@@ -684,8 +694,8 @@ static void playermove(int motion)
             }
 
             /* Found an eligible rule, now execute it */
-            enum desttype_t desttype = travel[travel_entry].desttype;
-            game.newloc = travel[travel_entry].destval;
+            desttype = get_travelop(travel_entry)->desttype;
+            game.newloc = get_travelop(travel_entry)->destval;
             if (desttype == dest_goto)
                 return;
 
@@ -718,9 +728,9 @@ static void playermove(int motion)
                      * pretend he wasn't carrying it after all. */
                     drop(EMERALD, game.loc);
                     {
-                        int te_tmp = travel_entry;
+                        te_tmp = travel_entry;
                         do {
-                            if (travel[te_tmp].stop)
+                            if (get_travelop(te_tmp)->stop)
                                 BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION); // LCOV_EXCL_LINE
                             ++te_tmp;
                         } while
@@ -744,13 +754,13 @@ static void playermove(int motion)
                         game.prop[TROLL] = TROLL_UNPAID;
                         DESTROY(TROLL2);
                         move(TROLL2 + NOBJECTS, IS_FREE);
-                        move(TROLL, objects[TROLL].plac);
-                        move(TROLL + NOBJECTS, objects[TROLL].fixd);
+                        move(TROLL, get_object(TROLL)->plac);
+                        move(TROLL + NOBJECTS, get_object(TROLL)->fixd);
                         juggle(CHASM);
                         game.newloc = game.loc;
                         return;
                     } else {
-                        game.newloc = objects[TROLL].plac + objects[TROLL].fixd - game.loc;
+                        game.newloc = get_object(TROLL)->plac + get_object(TROLL)->fixd - game.loc;
                         if (game.prop[TROLL] == TROLL_UNPAID)
                             game.prop[TROLL] = TROLL_PAIDONCE;
                         if (!TOTING(BEAR))
@@ -829,7 +839,7 @@ static bool closecheck(void)
  *  to get out.  If he doesn't within clock2 turns, we close the cave;
  *  if he does try, we assume he panics, and give him a few additional
  *  turns to get frantic before we close.  When clock2 hits zero, we
- *  transport him into the final puzzle.  Note that the puzzle depends
+ *  transport him into the final puzzle.  Note that the puzzle `
  *  upon all sorts of random things.  For instance, there must be no
  *  water or oil, since there are beanstalks which we don't want to be
  *  able to water, since the code can't handle it.  Also, we can have
@@ -838,12 +848,15 @@ static bool closecheck(void)
  *  problems arise from the use of negative prop numbers to suppress
  *  the object descriptions until he's actually moved the objects. */
 {
+    int i;
+    const turn_threshold_t* threshold;
     /* If a turn threshold has been met, apply penalties and tell
      * the player about it. */
-    for (int i = 0; i < NTHRESHOLDS; ++i) {
-        if (game.turns == turn_thresholds[i].threshold + 1) {
-            game.trnluz += turn_thresholds[i].point_loss;
-            speak(turn_thresholds[i].message);
+    for (i = 0; i < NTHRESHOLDS; ++i) {
+        threshold = get_turn_threshold(i);
+        if (game.turns == threshold->threshold + 1) {
+            game.trnluz += threshold->point_loss;
+            speak(get_compressed_string(threshold->message));
         }
     }
 
@@ -867,14 +880,14 @@ static bool closecheck(void)
     if (game.clock1 == 0) {
         game.prop[GRATE] = GRATE_CLOSED;
         game.prop[FISSURE] = UNBRIDGED;
-        for (int i = 1; i <= NDWARVES; i++) {
+        for (i = 1; i <= NDWARVES; i++) {
             game.dseen[i] = false;
             game.dloc[i] = LOC_NOWHERE;
         }
         DESTROY(TROLL);
         move(TROLL + NOBJECTS, IS_FREE);
-        move(TROLL2, objects[TROLL].plac);
-        move(TROLL2 + NOBJECTS, objects[TROLL].fixd);
+        move(TROLL2, get_object(TROLL)->plac);
+        move(TROLL2 + NOBJECTS, get_object(TROLL)->fixd);
         juggle(CHASM);
         if (game.prop[BEAR] != BEAR_DEAD)
             DESTROY(BEAR);
@@ -950,9 +963,10 @@ static void listobjects(void)
  *  bear).  These hacks are because game.prop=0 is needed to
  *  get full score. */
 {
+    int i, kk;
     if (!DARK(game.loc)) {
         ++game.abbrev[game.loc];
-        for (int i = game.atloc[game.loc]; i != 0; i = game.link[i]) {
+        for (i = game.atloc[game.loc]; i != 0; i = game.link[i]) {
             obj_t obj = i;
             if (obj > NOBJECTS)
                 obj = obj - NOBJECTS;
@@ -982,7 +996,7 @@ static void listobjects(void)
                  *  gross blunder isn't likely to find everything else anyway
                  *  (so goes the rationalisation). */
             }
-            int kk = game.prop[obj];
+            kk = game.prop[obj];
             if (obj == STEPS)
                 kk = (game.loc == game.fixed[STEPS])
                      ? STEPS_UP
@@ -1068,6 +1082,7 @@ bool preprocess_command(command_t *command)
 static bool do_move(void) 
 /* Actually execute the move to the new location and dwarf movement */
 {
+    size_t i;
     /*  Can't leave cave once it's closing (except by main office). */
     if (OUTSID(game.newloc) && game.newloc != 0 && game.closng) {
         rspeak(EXIT_CLOSED);
@@ -1082,7 +1097,7 @@ static bool do_move(void)
      *  coming from place forbidden to pirate (dwarves rooted in
      *  place) let him get out (and attacked). */
     if (game.newloc != game.loc && !FORCED(game.loc) && !CNDBIT(game.loc, COND_NOARRR)) {
-        for (size_t i = 1; i <= NDWARVES - 1; i++) {
+        for (i = 1; i <= NDWARVES - 1; i++) {
             if (game.odloc[i] == game.newloc && game.dseen[i]) {
                 game.newloc = game.loc;
                 rspeak(DWARF_BLOCK);
