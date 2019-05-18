@@ -157,7 +157,7 @@ void pspeak(vocab_t msg, enum speaktype mode, bool blank, int skip, ...)
     va_start(ap, skip);
     switch (mode) {
     case touch:
-        vspeak(get_object(msg)->inventory, blank, ap);
+        vspeak(get_compressed_string(get_object(msg)->inventory), blank, ap);
         break;
     case look:
         vspeak(get_object(msg)->descriptions[skip], blank, ap);

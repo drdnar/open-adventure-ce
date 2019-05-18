@@ -39,19 +39,19 @@ typedef struct {{
 }} string_group_t;
 
 typedef struct {{
-  const char* inventory;
+  const compressed_string_index_t inventory;
   int16_t plac, fixd;
   bool is_treasure;
+  uint8_t descriptions_start;
   uint8_t sounds_start;
   uint8_t texts_start;
   uint8_t changes_start;
-  uint8_t words_start;
   const char** descriptions;
   const char** sounds;
   const char** texts;
   const char** changes;
   const string_group_t words;
-  const compressed_string_index_t strings[10];
+  const compressed_string_index_t strings[11];
 }} object_t;
 
 typedef struct {{
