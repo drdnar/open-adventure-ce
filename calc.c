@@ -13,6 +13,30 @@ const char* get_uncompressed_string(int n)
     return uncompressed_strings[n];
 }
 
+const char* get_object_description(object_t* obj, int n)
+{
+    return get_compressed_string(obj->strings[n]);
+}
+
+const char* get_object_sound(object_t* obj, int n)
+{
+    return get_compressed_string(obj->strings[obj->sounds_start + n]);
+}
+
+const char* get_object_text(object_t* obj, int n)
+{
+    return get_compressed_string(obj->strings[obj->texts_start + n]);
+}
+
+const char* get_object_change(object_t* obj, int n)
+{
+    return get_compressed_string(obj->strings[obj->changes_start + n]);
+}
+
+const char* get_object_word(object_t* obj, int n)
+{
+    return get_uncompressed_string(obj->words.strs[n]);
+}
 
 const char* get_arbitrary_message(int n)
 {
