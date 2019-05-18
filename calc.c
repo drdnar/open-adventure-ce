@@ -4,38 +4,57 @@
 
 const char* get_compressed_string(int n)
 {
+    if (n == 0)
+	return NULL;
     return compressed_strings[n];
 }
 
 
 const char* get_uncompressed_string(int n)
 {
+    if (n == 0)
+	return NULL;
     return uncompressed_strings[n];
 }
 
-const char* get_object_description(object_t* obj, int n)
+const char* get_object_description(int o, int n)
 {
-    return get_compressed_string(obj->strings[n]);
+    const object_t* obj = get_object(o);
+    if (obj->descriptions_start == obj->sounds_start)
+	return NULL;
+    return get_compressed_string(obj->strings[obj->descriptions_start + n]);
 }
 
-const char* get_object_sound(object_t* obj, int n)
+const char* get_object_sound(int o, int n)
 {
+    const object_t* obj = get_object(o);
+    if (obj->sounds_start == obj->texts_start)
+	return NULL;
     return get_compressed_string(obj->strings[obj->sounds_start + n]);
 }
 
-const char* get_object_text(object_t* obj, int n)
+const char* get_object_text(int o, int n)
 {
+    const object_t* obj = get_object(o);
+    if (obj->texts_start == obj->changes_start)
+	return NULL;
     return get_compressed_string(obj->strings[obj->texts_start + n]);
 }
 
-const char* get_object_change(object_t* obj, int n)
+const char* get_object_change(int o, int n)
 {
+    const object_t* obj = get_object(o);
+    /* No need for explicit check, because this last one will have a reference
+     * to string zero, i.e. NULL, if there are no change strings. */
     return get_compressed_string(obj->strings[obj->changes_start + n]);
 }
 
-const char* get_object_word(object_t* obj, int n)
+const char* get_object_word(int o, int n)
 {
-    return get_uncompressed_string(obj->words.strs[n]);
+    const object_t* obj = get_object(o);
+    if (obj->descriptions_start == 0)
+	return NULL;
+    return get_uncompressed_string(obj->strings[n]);
 }
 
 const char* get_arbitrary_message(int n)

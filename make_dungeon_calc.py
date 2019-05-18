@@ -206,7 +206,6 @@ def get_locations(loc):
 
 def get_objects(obj):
     template = """    {{ // {index}: {name}
-        .words = {words},
         .inventory = {inventory},
         .plac = {plac},
         .fixd = {fixd},
@@ -215,18 +214,6 @@ def get_objects(obj):
         .sounds_start = {sounds_start},
         .texts_start = {texts_start},
         .changes_start = {changes_start},
-        .descriptions = (const char* []) {{
-{descriptions}
-        }},
-        .sounds = (const char* []) {{
-{sounds}
-        }},
-        .texts = (const char* []) {{
-{texts}
-        }},
-        .changes = (const char* []) {{
-{changes}
-        }},
         .strings = {{
            {strings}
         }},
@@ -237,64 +224,44 @@ def get_objects(obj):
         attr = item[1]
         strings = ""
         try:
-            words_str = get_string_group(attr["words"])
             descriptions_start = len(attr["words"])
             for word in attr["words"]:
                 strings += " " + str(add_uncompressed_string(word)) + ","
         except KeyError:
-            words_str = get_string_group([])
             descriptions_start = 0
         i_msg = add_compressed_string(attr["inventory"])
-        descriptions_str = ""
         if attr["descriptions"] == None:
-            descriptions_str = " " * 12 + "NULL,"
             sounds_start = descriptions_start
         else:
             labels = []
             for l_msg in attr["descriptions"]:
-                descriptions_str += " " * 12 + make_c_string(l_msg) + ",\n"
                 strings += " " + str(add_compressed_string(l_msg)) + ","
             sounds_start = descriptions_start + len(attr["descriptions"])
             for label in attr.get("states", []):
                 labels.append(label)
-            descriptions_str = descriptions_str[:-1] # trim trailing newline
             if labels:
                 global statedefines
                 statedefines += "/* States for %s */\n" % item[0]
                 for (n, label) in enumerate(labels):
                     statedefines += "#define %s\t%d\n" % (label, n)
                 statedefines += "\n"
-        sounds_str = ""
-        sounds_str_numbers = [ ]
         if attr.get("sounds") == None:
-            sounds_str = " " * 12 + "NULL,"
             texts_start = sounds_start
         else:
              for l_msg in attr["sounds"]:
-                 sounds_str += " " * 12 + make_c_string(l_msg) + ",\n"
                  strings += " " + str(add_compressed_string(l_msg)) + ","
              texts_start = sounds_start + len(attr["sounds"])
-             sounds_str = sounds_str[:-1] # trim trailing newline
-        texts_str = ""
-        texts_str_numbers = [ ]
         if attr.get("texts") == None:
-            texts_str = " " * 12 + "NULL,"
             changes_start = texts_start
         else:
              for l_msg in attr["texts"]:
-                 texts_str += " " * 12 + make_c_string(l_msg) + ",\n"
                  strings += " " + str(add_compressed_string(l_msg)) + ","
              changes_start = texts_start + len(attr["texts"])
-             texts_str = texts_str[:-1] # trim trailing newline
-        changes_str = ""
-        changes_str_numbers = [ ]
         if attr.get("changes") == None:
-            changes_str = " " * 12 + "NULL,"
+            strings += " 0," # null string
         else:
              for l_msg in attr["changes"]:
-                 changes_str += " " * 12 + make_c_string(l_msg) + ",\n"
                  strings += " " + str(add_compressed_string(l_msg)) + ","
-             changes_str = changes_str[:-1] # trim trailing newline
         locs = attr.get("locations", ["LOC_NOWHERE", "LOC_NOWHERE"])
         immovable = attr.get("immovable", False)
         try:
@@ -304,7 +271,7 @@ def get_objects(obj):
             sys.stderr.write("dungeon: unknown object location in %s\n" % locs)
             sys.exit(1)
         treasure = "true" if attr.get("treasure") else "false"
-        obj_str += template.format(index = i, name = item[0], words = words_str, inventory = i_msg, plac = locs[0], fixd = locs[1], is_treasure = treasure, descriptions = descriptions_str, sounds = sounds_str, texts = texts_str, changes = changes_str, descriptions_start = descriptions_start, sounds_start = sounds_start, texts_start = texts_start, changes_start = changes_start, strings = strings)
+        obj_str += template.format(index = i, name = item[0], inventory = i_msg, plac = locs[0], fixd = locs[1], is_treasure = treasure, descriptions_start = descriptions_start, sounds_start = sounds_start, texts_start = texts_start, changes_start = changes_start, strings = strings)
     obj_str = obj_str[:-1] # trim trailing newline
     return obj_str
 

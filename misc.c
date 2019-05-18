@@ -160,16 +160,16 @@ void pspeak(vocab_t msg, enum speaktype mode, bool blank, int skip, ...)
         vspeak(get_compressed_string(get_object(msg)->inventory), blank, ap);
         break;
     case look:
-        vspeak(get_object(msg)->descriptions[skip], blank, ap);
+        vspeak(get_object_description(msg, skip), blank, ap);
         break;
     case hear:
-        vspeak(get_object(msg)->sounds[skip], blank, ap);
+        vspeak(get_object_sound(msg, skip), blank, ap);
         break;
     case study:
-        vspeak(get_object(msg)->texts[skip], blank, ap);
+        vspeak(get_object_text(msg, skip), blank, ap);
         break;
     case change:
-        vspeak(get_object(msg)->changes[skip], blank, ap);
+        vspeak(get_object_change(msg, skip), blank, ap);
         break;
     }
     va_end(ap);
@@ -395,8 +395,8 @@ static int get_object_vocab_id(const char* word)
     const object_t* object;
     for (i = 0; i < NOBJECTS + 1; ++i) { // FIXME: the + 1 should go when 1-indexing for objects is removed
         object = get_object(i);
-        for (j = 0; j < object->words.n; ++j) {
-            if (strncasecmp(word, get_uncompressed_string(object->words.strs[j]), TOKLEN) == 0)
+        for (j = 0; j < object->descriptions_start; ++j) {
+            if (strncasecmp(word, get_uncompressed_string(object->strings[j]), TOKLEN) == 0)
                 return (i);
         }
     }

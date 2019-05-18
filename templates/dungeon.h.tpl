@@ -38,6 +38,9 @@ typedef struct {{
   const uncompressed_string_index_t strs[10];
 }} string_group_t;
 
+/* There is some code that depends on these fields being in the right order.
+ * In particular, the former words field is an implied part of strings.
+ * If descriptions_start is 0, then there are no words present. */
 typedef struct {{
   const compressed_string_index_t inventory;
   int16_t plac, fixd;
@@ -46,11 +49,7 @@ typedef struct {{
   uint8_t sounds_start;
   uint8_t texts_start;
   uint8_t changes_start;
-  const char** descriptions;
-  const char** sounds;
-  const char** texts;
-  const char** changes;
-  const string_group_t words;
+  /* This actually contains both compressed and uncompressed string indices. */
   const compressed_string_index_t strings[11];
 }} object_t;
 

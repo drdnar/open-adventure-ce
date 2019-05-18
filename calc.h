@@ -5,15 +5,15 @@ const char* get_compressed_string(int n);
 
 const char* get_uncompressed_string(int n);
 
-const char* get_object_description(object_t* obj, int n);
+const char* get_object_description(int o, int n);
 
-const char* get_object_sound(object_t* obj, int n);
+const char* get_object_sound(int o, int n);
 
-const char* get_object_text(object_t* obj, int n);
+const char* get_object_text(int o, int n);
 
-const char* get_object_change(object_t* obj, int n);
+const char* get_object_change(int o, int n);
 
-const char* get_object_word(object_t* obj, int n);
+const char* get_object_word(int o, int n);
 
 const char* get_arbitrary_message(int n);
 

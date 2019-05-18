@@ -938,7 +938,7 @@ static phase_codes_t listen(void)
     }
     for (i = 1; i <= NOBJECTS; i++) {
         if (!HERE(i) ||
-            get_object(i)->sounds[0] == NULL ||
+            get_object_sound(i, 0) == NULL ||
             game.prop[i] < 0)
             continue;
         mi =  game.prop[i];
@@ -1102,7 +1102,7 @@ static phase_codes_t read(command_t command)
     if (command.obj == INTRANSITIVE) {
         command.obj = NO_OBJECT;
         for (i = 1; i <= NOBJECTS; i++) {
-            if (HERE(i) && get_object(i)->texts[0] != NULL && game.prop[i] >= 0)
+            if (HERE(i) && get_object_text(i, 0) != NULL && game.prop[i] >= 0)
                 command.obj = command.obj * NOBJECTS + i;
         }
         if (command.obj > NOBJECTS ||
@@ -1115,7 +1115,7 @@ static phase_codes_t read(command_t command)
         sspeak(NO_SEE, command.word[0].raw);
     } else if (command.obj == OYSTER && !game.clshnt && game.closed) {
         game.clshnt = yes(get_arbitrary_message(CLUE_QUERY), get_arbitrary_message(WAYOUT_CLUE), get_arbitrary_message(OK_MAN));
-    } else if (get_object(command.obj)->texts[0] == NULL ||
+    } else if (get_object_text(command.obj, 0) == NULL ||
                game.prop[command.obj] == STATE_NOTFOUND) {
         speak(get_compressed_string(get_action(command.verb)->message));
     } else
