@@ -26,6 +26,12 @@ DONOTEDIT_COMMENT = "/* Generated from adventure.yaml - do not hand-hack! */\n\n
 statedefines = ""
 
 
+huffman_nodes = [ ]
+huffman_codes = { }
+#first_or_default = next((x for x in lst if ...), None)
+def first_or_default(lst):
+    return next((x for x in lst if ...), None)
+
 symbol_frequencies = defaultdict(int)
 def build_huffman_code_table(symbfreq):
     """Huffman encode the given dict mapping symbols to weights"""
@@ -47,6 +53,7 @@ def build_huffman_code_table(symbfreq):
 def update_huffman_freq_table(string):
     """Updates the symbol frequency table with the given string."""
     global symbol_frequencies
+    global huffman_nodes
     for ch in string:
         symbol_frequencies[ch] += 1
     # Every string should also have an end.
@@ -62,6 +69,64 @@ total_compressed_strings_chars = 0
 duplicate_uncompressed_strings = 0
 duplicate_uncompressed_strings_chars = 0
 total_uncompressed_strings_chars = 0
+
+class huffman_node:
+    """Class used for forming the Huffman tree."""
+    frequency = 0
+    symbol = '\255'
+    children = 1
+    leaves = 0
+    left = None
+    right = None
+    
+    def __init__(self, freq):
+        self.frequency = freq
+
+    def __init__(self, code, freq):
+        self.symbol = code
+        self.frequency = freq
+        self.leaves = 1
+
+    def is_leaf():
+        if left == None and right == None:
+            return True
+        else:
+            return False
+    
+    def compare_to(node):
+        if self.frequency < node.frequency:
+            return -1
+        if self.frequency > node.frequency:
+            return 1
+        return 0
+
+class huffman_code:
+    """Used for the code that translates bytes into Huffman symbols."""
+    code = 0
+    length = 1
+
+def build_huffman_tree():
+    global huffman_nodes
+    global huffman_codes
+    # Build list of nodes
+    for k, v in symbol_frequencies.items():
+        huffman_nodes.append(huffman_node(k, v))
+    # Build tree
+    while len(huffman_nodes) > 1:
+        huffman_nodes.sort(key = lambda n: n.frequency, reverse = True)
+        n = huffman_nodes.pop(0)
+        m = huffman_nodes.pop(0)
+        o = huffman_nodes(n.frequency + m.frequency)
+        o.left = n
+        o.right = m
+        o.children = n.children + m.children
+        o.leaves = n.leaves + m.leaves
+        huffman_nodes.append(o)
+
+
+
+
+
 
 def add_compressed_string(string):
     """Adds a string to the compressed string list and returns the string number."""

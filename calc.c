@@ -2,6 +2,24 @@
 #include "dungeon.h"
 #include "calc.h"
 
+#define HUFFMAN_BUFFERS 8
+#define HUFFMAN_BUFFER_SIZE 2048
+char* buffers[HUFFMAN_BUFFERS][HUFFMAN_BUFFER_SIZE];
+uint8_t next_buffer = 0;
+
+char* dehuffman(void* data)
+{
+    char* buffer_start = &buffers[next_buffer++][0];
+    char* ptr = buffer_start;
+    /* Modulus is not fast on the eZ80 */
+    if (next_buffer >= HUFFMAN_BUFFERS)
+        next_buffer = 0;
+    /* TODO: do stuff here */
+    return ptr;
+}
+
+
+
 const char* get_compressed_string(int n)
 {
     if (n == 0)
@@ -17,6 +35,7 @@ const char* get_uncompressed_string(int n)
     return uncompressed_strings[n];
 }
 
+
 const char* get_object_description(int o, int n)
 {
     const object_t* obj = get_object(o);
@@ -24,6 +43,7 @@ const char* get_object_description(int o, int n)
 	return NULL;
     return get_compressed_string(obj->strings[obj->descriptions_start + n]);
 }
+
 
 const char* get_object_sound(int o, int n)
 {
@@ -33,6 +53,7 @@ const char* get_object_sound(int o, int n)
     return get_compressed_string(obj->strings[obj->sounds_start + n]);
 }
 
+
 const char* get_object_text(int o, int n)
 {
     const object_t* obj = get_object(o);
@@ -40,6 +61,7 @@ const char* get_object_text(int o, int n)
 	return NULL;
     return get_compressed_string(obj->strings[obj->texts_start + n]);
 }
+
 
 const char* get_object_change(int o, int n)
 {
@@ -49,6 +71,7 @@ const char* get_object_change(int o, int n)
     return get_compressed_string(obj->strings[obj->changes_start + n]);
 }
 
+
 const char* get_object_word(int o, int n)
 {
     const object_t* obj = get_object(o);
@@ -56,6 +79,7 @@ const char* get_object_word(int o, int n)
 	return NULL;
     return get_uncompressed_string(obj->strings[n]);
 }
+
 
 const char* get_arbitrary_message(int n)
 {
