@@ -2,28 +2,64 @@
 #include "dungeon.h"
 #include "calc.h"
 
+#ifndef CALCULATOR
+/* For the eZ80, there is an optimized decompression routine written in
+ * assembly.  For other platforms, run the same algorithm written in C. */
+void* huffman_tree;
+
+char* decompress_string(void* input, char* output)
+{
+    uint8_t* next_input_byte = input;
+    uint8_t current_byte = 0;
+    uint8_t current_bit = 1;
+    uint8_t* node;
+    uint8_t symbol;
+    do
+    {
+        node = huffman_tree;
+        while (!(*node & 0x80))
+        {
+            if (--current_bit == 0)
+            {
+                current_bit = 8;
+                current_byte = *next_input_byte++;
+            }
+            if (current_byte & 1)
+                node++;
+            current_byte >>= 1;
+            node += *node;
+        }
+        symbol = *node & 0x80;
+        *output++ = (char)symbol;
+    } while (symbol);
+    return output;
+}
+#else
+/* For the eZ80, just reference the routines, which will be provided in
+ * assembly. */
+#include "dehuffman.h"
+#endif
+
 #define HUFFMAN_BUFFERS 8
 #define HUFFMAN_BUFFER_SIZE 2048
-char* buffers[HUFFMAN_BUFFERS][HUFFMAN_BUFFER_SIZE];
+char buffers[HUFFMAN_BUFFERS][HUFFMAN_BUFFER_SIZE];
 uint8_t next_buffer = 0;
 
 char* dehuffman(void* data)
 {
     char* buffer_start = &buffers[next_buffer++][0];
-    char* ptr = buffer_start;
     /* Modulus is not fast on the eZ80 */
     if (next_buffer >= HUFFMAN_BUFFERS)
         next_buffer = 0;
-    /* TODO: do stuff here */
-    return ptr;
+    decompress_string(data, buffer_start);
+    return buffer_start;
 }
-
 
 
 const char* get_compressed_string(int n)
 {
     if (n == 0)
-	return NULL;
+        return NULL;
     return compressed_strings[n];
 }
 
@@ -31,7 +67,7 @@ const char* get_compressed_string(int n)
 const char* get_uncompressed_string(int n)
 {
     if (n == 0)
-	return NULL;
+        return NULL;
     return uncompressed_strings[n];
 }
 
@@ -40,7 +76,7 @@ const char* get_object_description(int o, int n)
 {
     const object_t* obj = get_object(o);
     if (obj->descriptions_start == obj->sounds_start)
-	return NULL;
+        return NULL;
     return get_compressed_string(obj->strings[obj->descriptions_start + n]);
 }
 
@@ -49,7 +85,7 @@ const char* get_object_sound(int o, int n)
 {
     const object_t* obj = get_object(o);
     if (obj->sounds_start == obj->texts_start)
-	return NULL;
+        return NULL;
     return get_compressed_string(obj->strings[obj->sounds_start + n]);
 }
 
@@ -58,7 +94,7 @@ const char* get_object_text(int o, int n)
 {
     const object_t* obj = get_object(o);
     if (obj->texts_start == obj->changes_start)
-	return NULL;
+        return NULL;
     return get_compressed_string(obj->strings[obj->texts_start + n]);
 }
 
@@ -76,7 +112,7 @@ const char* get_object_word(int o, int n)
 {
     const object_t* obj = get_object(o);
     if (obj->descriptions_start == 0)
-	return NULL;
+        return NULL;
     return get_uncompressed_string(obj->strings[n]);
 }
 
