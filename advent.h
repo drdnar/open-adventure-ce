@@ -8,9 +8,11 @@
 
 /* LCG PRNG parameters tested against
  * Knuth vol. 2. by the original authors */
-#define LCG_A 1093L
-#define LCG_C 221587L
-#define LCG_M 1048576L
+#define LCG_A 1093UL
+#define LCG_C 221587UL
+#define LCG_M 1048576UL
+#define LCG_MASK 0xFFFFF
+#define LCG_SHIFT 20
 
 #define LINESIZE       1024
 #define TOKLEN         5          // # sigificant characters in a token */
@@ -126,7 +128,7 @@ typedef int16_t loc_t;    // index into the locations array */
 typedef int16_t turn_t;   // turn counter or threshold */
 
 struct game_t {
-    int32_t lcg_x;
+    unsigned int lcg_x;
     int16_t abbnum;                  // How often to print int descriptions
     score_t bonus;               // What kind of finishing bonus we are getting
     loc_t chloc;                 // pirate chest location
@@ -233,7 +235,7 @@ extern int atdwrf(loc_t);
 extern int setbit(int);
 extern bool tstbit(int, int);
 extern void set_seed(int32_t);
-extern int32_t randrange(int32_t);
+extern unsigned int randrange(unsigned int);
 extern int score(enum termination);
 extern void terminate(enum termination) __attribute__((noreturn));
 extern int savefile(FILE *, int32_t);
