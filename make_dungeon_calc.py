@@ -28,6 +28,7 @@ statedefines = ""
 
 huffman_nodes = [ ]
 huffman_codes = { }
+huffman_root = None
 #first_or_default = next((x for x in lst if ...), None)
 def first_or_default(lst):
     return next((x for x in lst if ...), None)
@@ -79,54 +80,81 @@ class huffman_node:
     left = None
     right = None
     
-    def __init__(self, freq):
-        self.frequency = freq
-
-    def __init__(self, code, freq):
+    def __init__(self, freq, code = '\255'):
         self.symbol = code
         self.frequency = freq
         self.leaves = 1
 
-    def is_leaf():
-        if left == None and right == None:
+    def is_leaf(self):
+        if self.left == None and self.right == None:
             return True
         else:
             return False
-    
-    def compare_to(node):
-        if self.frequency < node.frequency:
-            return -1
-        if self.frequency > node.frequency:
-            return 1
-        return 0
 
 class huffman_code:
     """Used for the code that translates bytes into Huffman symbols."""
     code = 0
     length = 1
+    def __init__(self, ccode, llength):
+        self.code = ccode
+        self.length = llength
 
 def build_huffman_tree():
     global huffman_nodes
     global huffman_codes
+    global huffman_root
     # Build list of nodes
     for k, v in symbol_frequencies.items():
-        huffman_nodes.append(huffman_node(k, v))
+        huffman_nodes.append(huffman_node(v, k))
     # Build tree
     while len(huffman_nodes) > 1:
-        huffman_nodes.sort(key = lambda n: n.frequency, reverse = True)
+        huffman_nodes.sort(key = lambda n: n.frequency, reverse = False)
         n = huffman_nodes.pop(0)
         m = huffman_nodes.pop(0)
-        o = huffman_nodes(n.frequency + m.frequency)
+        o = huffman_node(n.frequency + m.frequency)
         o.left = n
         o.right = m
         o.children = n.children + m.children
         o.leaves = n.leaves + m.leaves
         huffman_nodes.append(o)
+    huffman_root = huffman_nodes.pop(0)
 
+def serialize_tree(tree, data, code, depth):
+    if tree.is_leaf():
+        if ord(tree.symbol) > 0x7F:
+            print('Invalid input symbol {}'.format(ord(tree.symbol)))
+        data.append(0x80 | ord(tree.symbol))
+        huffman_codes[tree.symbol] = huffman_code(code, depth)
+        return
+    data.append(2)
+    data.append(1 + tree.left.leaves + (tree.left.children - tree.left.leaves) * 2)
+    if data[-1] > 127:
+        print('ERROR: Right tree too large!')
+    serialize_tree(tree.left, data, code, depth + 1)
+    serialize_tree(tree.right, data, code | (1 << depth), depth + 1)
 
+def write_bits(data, bit, bits, length):
+    bits = bits << bit
+    data[-1] = (data[-1] | bits) & 0xFF
+    if bit + length > 7:
+        data.append(0)
+        return write_bits(data, 0, bits >> 8, length - (8 - bit))
+    else:
+        bit = length + bit
+        if bit == 0:
+            data.append(0)
+        return bit
 
-
-
+def compress_string(string, data):
+    bit = 0
+    if string != None:
+        for ch in string:
+            code = huffman_codes[ch]
+            bit = write_bits(data, bit, code.code, code.length)
+    code = huffman_codes['\0']
+    # Pad out the rest of the byte if needed.
+    if write_bits(data, bit, code.code, code.length) > 0:
+        data.append(0)
 
 def add_compressed_string(string):
     """Adds a string to the compressed string list and returns the string number."""
@@ -747,6 +775,30 @@ if __name__ == "__main__":
     print('Total compressed strings chars: {}'.format(total_compressed_strings_chars))
     print('Duplicate compressed strings omitted: {}'.format(duplicate_compressed_strings))
     print('Duplicate compressed strings chars omitted: {}'.format(duplicate_compressed_strings_chars))
+
+    print('Building Huffman tree. . . .')
+    build_huffman_tree()
+    print('Serializing tree. . . .')
+    tree_data = [ ]
+    serialize_tree(huffman_root, tree_data, 0, 0)
+#    for k, v in huffman_codes.items():
+#        code_str = ("{0:0" + str(v.length) + "b}").format(v.code)
+#        if k == ' ':
+#            print('space   , length {:2d}, code {}'.format(v.length, code_str))
+#        elif k == '\n':
+#            print('newline , length {:2d}, code {}'.format(v.length, code_str))
+#        elif k == '\0':
+#            print('null    , length {:2d}, code {}'.format(v.length, code_str))
+#        else:
+#            print('Symbol {}, length {:2d}, code {}'.format(k, v.length, code_str))
+    strings_data = [ 0 ]
+    strings_locations = [ ]
+    for i, str in enumerate(compressed_string_list):
+        strings_locations.append(len(strings_data))
+        compress_string(str, strings_data)
+    print('Compressed strings size: {}'.format(len(strings_data)))
+    
+    print('-------')
     print('Huffman table codes: {}'.format(len(symbol_frequencies)))
     huffman_table = build_huffman_code_table(symbol_frequencies)
 #    print('Symbol\tWeight\tHuffman Code')
