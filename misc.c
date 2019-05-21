@@ -720,10 +720,14 @@ bool tstbit(int mask, int bit)
 void set_seed(int32_t seedval)
 /* Set the LCG seed */
 {
-    game.lcg_x = seedval % LCG_M;
+#ifndef CALCULATOR
+    game.lcg_x = seedval & LCG_MASK;
     if (game.lcg_x < 0) {
         game.lcg_x = LCG_M + game.lcg_x;
     }
+#else
+    game.lcg_x = (unsigned int)seedval & LCG_MASK;
+#endif
     // once seed is set, we need to generate the Z`ZZZ word
     for (int i = 0; i < 5; ++i) {
         game.zzword[i] = 'A' + randrange(26);
@@ -732,18 +736,18 @@ void set_seed(int32_t seedval)
     game.zzword[5] = '\0';
 }
 
-static int32_t get_next_lcg_value(void)
+static unsigned int get_next_lcg_value(void)
 /* Return the LCG's current value, and then iterate it. */
 {
-    int32_t old_x = game.lcg_x;
-    game.lcg_x = (LCG_A * game.lcg_x + LCG_C) % LCG_M;
+    unsigned int old_x = game.lcg_x;
+    game.lcg_x = (LCG_A * game.lcg_x + LCG_C) & LCG_MASK;
     return old_x;
 }
 
-int32_t randrange(int32_t range)
+unsigned int randrange(unsigned int range)
 /* Return a random integer from [0, range). */
 {
-    return range * get_next_lcg_value() / LCG_M;
+    return range * get_next_lcg_value() >> LCG_SHIFT;
 }
 
 // LCOV_EXCL_START
