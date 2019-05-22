@@ -114,7 +114,7 @@ def build_huffman_tree():
         o = huffman_node(n.frequency + m.frequency)
         o.left = n
         o.right = m
-        o.children = n.children + m.children
+        o.children += n.children + m.children
         o.leaves = n.leaves + m.leaves
         huffman_nodes.append(o)
     huffman_root = huffman_nodes.pop(0)
@@ -133,27 +133,34 @@ def serialize_tree(tree, data, code, depth):
     serialize_tree(tree.left, data, code, depth + 1)
     serialize_tree(tree.right, data, code | (1 << depth), depth + 1)
 
-def write_bits(data, bit, bits, length):
+def write_bits(data, bit, bits, length, character):
     bits = bits << bit
     data[-1] = (data[-1] | bits) & 0xFF
     if bit + length > 7:
         data.append(0)
-        return write_bits(data, 0, bits >> 8, length - (8 - bit))
+        if bit + length > 8:
+            return write_bits(data, 0, bits >> 8, length - (8 - bit), character)
+        else:
+            return 0
     else:
         bit = length + bit
         if bit == 0:
             data.append(0)
+            print('?!?!?! {} {} {}'.format(bit, length, character))
         return bit
 
 def compress_string(string, data):
+#    print(string)
     bit = 0
     if string != None:
         for ch in string:
             code = huffman_codes[ch]
-            bit = write_bits(data, bit, code.code, code.length)
+#            print('Character {} has code {:b} length {}'.format(ch, code.code, code.length))
+            bit = write_bits(data, bit, code.code, code.length, ch)
+#            input("> ")
     code = huffman_codes['\0']
     # Pad out the rest of the byte if needed.
-    if write_bits(data, bit, code.code, code.length) > 0:
+    if write_bits(data, bit, code.code, code.length, "NULL") > 0:
         data.append(0)
 
 def add_compressed_string(string):
@@ -163,6 +170,8 @@ def add_compressed_string(string):
     global total_compressed_strings_chars
     if string == None:
         return 0
+    string = string.replace("\\n", "\n")
+    string = string.replace("\\t", "\t")
     if compressed_string_list.count(string) > 0:
         duplicate_compressed_strings += 1
         duplicate_compressed_strings_chars += len(string)
@@ -229,12 +238,45 @@ def get_arbitrary_messages(arb):
     arb_str = arb_str[:-1] # trim trailing newline
     return arb_str
 
+tree_data_string = ""
 def get_compressed_strings(strs):
-    template = """    {},
+    global tree_data_string
+    # Build Huffman tree
+    print('Building Huffman tree. . . .')
+    build_huffman_tree()
+    print('Serializing tree. . . .')
+    tree_data = [ ]
+    serialize_tree(huffman_root, tree_data, 0, 0)
+#    for k, v in huffman_codes.items():
+#        code_str = ("{0:0" + str(v.length) + "b}").format(v.code)
+#        if k == ' ':
+#            print('space   , length {:2d}, code {}'.format(v.length, code_str))
+#        elif k == '\n':
+#            print('newline , length {:2d}, code {}'.format(v.length, code_str))
+#        elif k == '\0':
+#            print('null    , length {:2d}, code {}'.format(v.length, code_str))
+#        else:
+#            print('Symbol {}, length {:2d}, code {}'.format(k, v.length, code_str))
+    for byte in tree_data:
+        tree_data_string = '{}0x{:02X}, '.format(tree_data_string, byte)
+    strings_data = [ 0 ]
+    strings_locations = [ ]
+    for i, string in enumerate(compressed_string_list):
+        strings_locations.append(len(strings_data))
+        compress_string(string, strings_data)
+    print('Compressed strings size: {}'.format(len(strings_data)))
+    
+    template = """    /*{}*/
+    (uint8_t[]){{{}}},
 """
     comp_str = ""
     for item in strs:
-        comp_str += template.format(make_c_string(item))
+        string_data = [ 0 ]
+        compress_string(item, string_data)
+        string = ""
+        for byte in string_data:
+            string = '{}0x{:02X}, '.format(string, byte)
+        comp_str += template.format(item, string)
     comp_str = comp_str[:-1] # trim trailing newline
     return comp_str
 
@@ -736,7 +778,8 @@ if __name__ == "__main__":
         travel             = get_travel(travel), 
         ignore             = ignore,
         compressed_strings = get_compressed_strings(compressed_string_list),
-        uncompressed_strings=get_uncompressed_strings(uncompressed_string_list)
+        uncompressed_strings=get_uncompressed_strings(uncompressed_string_list),
+        huffman_tree       = tree_data_string
     )
 
     # 0-origin index of birds's last song.  Bird should
@@ -775,30 +818,6 @@ if __name__ == "__main__":
     print('Total compressed strings chars: {}'.format(total_compressed_strings_chars))
     print('Duplicate compressed strings omitted: {}'.format(duplicate_compressed_strings))
     print('Duplicate compressed strings chars omitted: {}'.format(duplicate_compressed_strings_chars))
-
-    print('Building Huffman tree. . . .')
-    build_huffman_tree()
-    print('Serializing tree. . . .')
-    tree_data = [ ]
-    serialize_tree(huffman_root, tree_data, 0, 0)
-#    for k, v in huffman_codes.items():
-#        code_str = ("{0:0" + str(v.length) + "b}").format(v.code)
-#        if k == ' ':
-#            print('space   , length {:2d}, code {}'.format(v.length, code_str))
-#        elif k == '\n':
-#            print('newline , length {:2d}, code {}'.format(v.length, code_str))
-#        elif k == '\0':
-#            print('null    , length {:2d}, code {}'.format(v.length, code_str))
-#        else:
-#            print('Symbol {}, length {:2d}, code {}'.format(k, v.length, code_str))
-    strings_data = [ 0 ]
-    strings_locations = [ ]
-    for i, str in enumerate(compressed_string_list):
-        strings_locations.append(len(strings_data))
-        compress_string(str, strings_data)
-    print('Compressed strings size: {}'.format(len(strings_data)))
-    
-    print('-------')
     print('Huffman table codes: {}'.format(len(symbol_frequencies)))
     huffman_table = build_huffman_code_table(symbol_frequencies)
 #    print('Symbol\tWeight\tHuffman Code')

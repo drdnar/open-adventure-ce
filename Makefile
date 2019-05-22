@@ -8,7 +8,7 @@ VERS=$(shell sed -n <NEWS '/^[0-9]/s/:.*//p' | head -1)
 .PHONY: check coverage
 
 CC?=gcc
-CCFLAGS+=-std=c99 -D_DEFAULT_SOURCE -DVERSION=\"$(VERS)\" -O2 -D_FORTIFY_SOURCE=2 -fstack-protector-all -Wdeclaration-after-statement 
+CCFLAGS+=-std=c99 -D_DEFAULT_SOURCE -DVERSION=\"$(VERS)\" -O2 -D_FORTIFY_SOURCE=2 -fstack-protector-all -Wdeclaration-after-statement
 LIBS=$(shell pkg-config --libs libedit)
 INC+=$(shell pkg-config --cflags libedit)
 

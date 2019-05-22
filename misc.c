@@ -750,6 +750,7 @@ unsigned int randrange(unsigned int range)
     return range * get_next_lcg_value() >> LCG_SHIFT;
 }
 
+#ifndef CALCULATOR
 // LCOV_EXCL_START
 void bug(enum bugtype num, const char *error_string)
 {
@@ -757,6 +758,7 @@ void bug(enum bugtype num, const char *error_string)
     exit(EXIT_FAILURE);
 }
 // LCOV_EXCL_STOP
+#endif
 
 /* end */
 

@@ -1,11 +1,83 @@
-
 #include "dungeon.h"
 #include "calc.h"
+#include "advent.h"
+
+extern uint8_t huffman_tree[];
+
+#ifndef CALCULATOR
+/* For non-calculator platforms, the data will not be moved after loading and
+ * aligning.  Do not attempt to reload the data. */
+bool have_data_file = 0;
+
+/* These routiness allow parsing the data file without assuming anything about
+ * alignment. */
+char* data_file_parse_ptr = NULL;
+char data_file_get_char()
+{
+    return *data_file_parse_ptr++;
+}
+
+uint8_t data_file_get_byte()
+{
+    return (uint8_t)(*data_file_parse_ptr++);
+}
+
+uint16_t data_file_get_uint16()
+{
+    return (uint16_t)(data_file_get_byte() | (data_file_get_byte() << 8));
+}
+
+uint32_t data_file_get_uint24()
+{
+    return (uint32_t)(data_file_get_byte()
+        | (data_file_get_byte() << 8)
+        | (data_file_get_byte() << 16)
+    );
+}
+
+int32_t data_file_get_int32()
+{
+    return (int32_t)(data_file_get_byte()
+        | (data_file_get_byte() << 8)
+        | (data_file_get_byte() << 16)
+        | (data_file_get_byte() << 24)
+    );
+}
+
+#endif
+
+
+/* Loads (or reloads) the data file.
+ * Returns zero on success, non-zero on failure.
+ */
+uint8_t load_data_file()
+{
+#ifdef CALCULATOR
+    /* For the eZ80, the data file will be mapped directly into the address
+     * space.  The eZ80 fully supports unaligned accesses, so the getter
+     * routines can just return a pointer to the raw data.  We'll look up the
+     * data file address and then cache real pointers to our data sets. */
+    return 1;
+#else
+    if (have_data_file)
+        return 0;
+    /* For other platforms, we will assume nothing about alignment requirements.
+     * Therefore, we will have to "unwind" the dungeon file data structures into
+     * fully-aligned dynamically allocated memory. */
+     return 1;
+#endif
+}
+
+
+#define HUFFMAN_BUFFERS 8
+#define HUFFMAN_BUFFER_SIZE 2048
+char buffers[HUFFMAN_BUFFERS][HUFFMAN_BUFFER_SIZE];
+uint8_t next_buffer = 0;
 
 #ifndef CALCULATOR
 /* For the eZ80, there is an optimized decompression routine written in
  * assembly.  For other platforms, run the same algorithm written in C. */
-void* huffman_tree;
+/*void* huffman_tree;*/
 
 char* decompress_string(void* input, char* output)
 {
@@ -16,7 +88,7 @@ char* decompress_string(void* input, char* output)
     uint8_t symbol;
     do
     {
-        node = huffman_tree;
+        node = &huffman_tree[0];
         while (!(*node & 0x80))
         {
             if (--current_bit == 0)
@@ -29,7 +101,7 @@ char* decompress_string(void* input, char* output)
             current_byte >>= 1;
             node += *node;
         }
-        symbol = *node & 0x80;
+        symbol = *node & 0x7F;
         *output++ = (char)symbol;
     } while (symbol);
     return output;
@@ -40,12 +112,8 @@ char* decompress_string(void* input, char* output)
 #include "dehuffman.h"
 #endif
 
-#define HUFFMAN_BUFFERS 8
-#define HUFFMAN_BUFFER_SIZE 2048
-char buffers[HUFFMAN_BUFFERS][HUFFMAN_BUFFER_SIZE];
-uint8_t next_buffer = 0;
 
-char* dehuffman(void* data)
+const char* dehuffman(void* data)
 {
     char* buffer_start = &buffers[next_buffer++][0];
     /* Modulus is not fast on the eZ80 */
@@ -60,7 +128,7 @@ const char* get_compressed_string(int n)
 {
     if (n == 0)
         return NULL;
-    return compressed_strings[n];
+    return dehuffman((void*)compressed_strings[n]);
 }
 
 
@@ -117,9 +185,24 @@ const char* get_object_word(int o, int n)
 }
 
 
+bool have_PLEASE_ANSWER = 0;
+#define PLEASE_ANSWER_LEN 32
+char please_answer[PLEASE_ANSWER_LEN];
 const char* get_arbitrary_message(int n)
 {
-    return get_compressed_string(arbitrary_messages_[n]);
+    if (n == PLEASE_ANSWER)
+    {
+        if (!have_PLEASE_ANSWER)
+#ifndef CALCULATOR
+            if (decompress_string((void*)compressed_strings[n], &please_answer[0]) - please_answer > PLEASE_ANSWER_LEN)
+                BUG(PLEASE_ANSWER_TOO_LONG);
+#else
+            decompress_string((void*)compressed_strings[n], &please_answer[0]);
+#endif
+        return please_answer;
+    }
+    else
+        return get_compressed_string(arbitrary_messages_[n]);
 }
 
 

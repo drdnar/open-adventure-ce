@@ -206,8 +206,10 @@ static void checkhints(void)
                         break;
                     game.hintlc[hint] = 0;
                     return;
+#ifndef CALCULATOR
                 default: // LCOV_EXCL_LINE
                     BUG(HINT_NUMBER_EXCEEDS_GOTO_LIST); // LCOV_EXCL_LINE
+#endif
                 }
 
                 /* Fall through to hint display */
@@ -543,8 +545,10 @@ static void playermove(int motion)
     enum desttype_t desttype;
     int scratchloc, travel_entry = get_tkey(game.loc);
     game.newloc = game.loc;
+#ifndef CALCULATOR
     if (travel_entry == 0)
         BUG(LOCATION_HAS_NO_TRAVEL_ENTRIES); // LCOV_EXCL_LINE
+#endif
     if (motion == NUL)
         return;
     else if (motion == BACK) {
@@ -685,8 +689,10 @@ static void playermove(int motion)
                  * Skip to next non-matching destination */
                 te_tmp = travel_entry;
                 do {
+#ifndef CALCULATOR
                     if (get_travelop(te_tmp)->stop)
                         BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION); // LCOV_EXCL_LINE
+#endif
                     ++te_tmp;
                 } while
                 (traveleq(travel_entry, te_tmp));
@@ -730,8 +736,10 @@ static void playermove(int motion)
                     {
                         te_tmp = travel_entry;
                         do {
+#ifndef CALCULATOR
                             if (get_travelop(te_tmp)->stop)
                                 BUG(CONDITIONAL_TRAVEL_ENTRY_WITH_NO_ALTERATION); // LCOV_EXCL_LINE
+#endif
                             ++te_tmp;
                         } while
                         (traveleq(travel_entry, te_tmp));
@@ -774,8 +782,10 @@ static void playermove(int motion)
                         croak();
                         return;
                     }
+#ifndef CALCULATOR
                 default: // LCOV_EXCL_LINE
                     BUG(SPECIAL_TRAVEL_500_GT_L_GT_300_EXCEEDS_GOTO_LIST); // LCOV_EXCL_LINE
+#endif
                 }
             }
             break; /* Leave L12 loop */
@@ -1228,8 +1238,10 @@ static bool do_command()
                         continue;
                     }
                     break;// LCOV_EXCL_LINE
+#ifndef CALCULATOR
                 default: // LCOV_EXCL_LINE
                     BUG(VOCABULARY_TYPE_N_OVER_1000_NOT_BETWEEN_0_AND_3); // LCOV_EXCL_LINE
+#endif
                 }
 
                 switch (action(command)) {
@@ -1271,8 +1283,10 @@ static bool do_command()
                     break;
                 case GO_TOP: // FIXME: re-name to be more contextual; this was previously a label
                     break;
+#ifndef CALCULATOR
                 default: // LCOV_EXCL_LINE
                     BUG(ACTION_RETURNED_PHASE_CODE_BEYOND_END_OF_SWITCH); // LCOV_EXCL_LINE
+#endif
                 }
             } /* while command has nob been fully processed */
         } /* while command is not yet given */

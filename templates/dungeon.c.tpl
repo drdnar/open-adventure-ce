@@ -1,6 +1,10 @@
 #include "{h_file}"
 
-const char* compressed_strings[] = {{
+const uint8_t huffman_tree[] = {{
+{huffman_tree}
+}};
+
+const uint8_t* compressed_strings[] = {{
 {compressed_strings}
 }};
 

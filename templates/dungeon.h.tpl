@@ -30,6 +30,9 @@
 #define COND_HOGRE	19	/* Trying to deal with ogre */
 #define COND_HJADE	20	/* Found all treasures except jade */
 
+/* Memory is limited and signed operations are slower and larger on the eZ80,
+ * so it helps to use the smallest unsigned data type possible. */
+
 typedef uint16_t compressed_string_index_t;
 typedef uint16_t uncompressed_string_index_t;
 
@@ -106,7 +109,11 @@ typedef struct {{
   const uint8_t condtype;
   const uint8_t condarg1;
   const uint8_t condarg2;
+#ifndef CALCULATOR
   const enum desttype_t desttype;
+#else
+  const uint8_t desttype;
+#endif
   const uint8_t destval;
   const bool nodwarves;
   const bool stop;
@@ -119,7 +126,7 @@ typedef struct {{
  */
 #define T_TERMINATE(entry)	((entry)->motion == 1)
 
-extern const char* compressed_strings[];
+extern const uint8_t* compressed_strings[];
 extern const char* uncompressed_strings[];
 extern const location_t locations_[];
 extern const object_t objects_[];

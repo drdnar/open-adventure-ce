@@ -7,7 +7,6 @@ _decompress_string:
 ; Inputs:
 ;  - arg0: Pointer to input Huffman bit stream
 ;  - arg1: Pointer to target buffer
-;;  - arg2: Pointer to serialized Huffman tree
 ; Output:
 ;  - HL: Pointer to byte after last written byte, can be used to check output
 ;        string length
@@ -20,17 +19,16 @@ _decompress_string:
 ;  - BC: Current bit/byte of input Huffman stream
 ;  - DE: Temporary
 ;  - HL: Pointer to Huffman table entry
+	xor	a
 	ld	de, 0
+	ld	b, 1
 .loop:	
-;	ld	hl, 9
-;	add	hl, sp
-;	ld	hl, (hl)
 	ld	hl, 0
-_huffman_tree := $ - 2
+_huffman_tree := $ - 3
 .innerLoop:
 	; Is this node a leaf?
-	ld	a, (hl)
-	bit	7, a
+	ld	e, (hl)
+	bit	7, e
 	jr	nz, .deHuffmanDone
 	; Is it time to fetch another byte of input?
 	djnz	.getNextBit
@@ -41,20 +39,15 @@ _huffman_tree := $ - 2
 .getNextBit:
 	; Get next bit of input
 	rrc	c
-	; Branch right or left?
-	jr	z, .branchLeft
-	inc	hl
-.branchLeft:
-	; Move to next node
-	ld	e, (hl)
-	add	hl, de
+	; Carry controls left or right branch, move to next node
+	adc	hl, de
 	jr	.innerLoop
 .deHuffmanDone:
 	; Write decompressed code to output buffer
-	and	7Fh
-	ld	(ix), a
+	res	7, e
+	ld	(ix), e
 	inc	ix
-	or	a
+	cp	e
 	jr	nz, .loop
 	lea	hl, ix + 0
 	pop	ix
