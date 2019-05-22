@@ -12,12 +12,12 @@
 
 import sys, yaml
 
-from heapq import heappush, heappop, heapify
 from collections import defaultdict
  
 YAML_NAME = "adventure.yaml"
 H_NAME = "dungeon.h"
 C_NAME = "dungeon.c"
+BIN_NAME = "dungeon.bin"
 H_TEMPLATE_PATH = "templates/dungeon.h.tpl"
 C_TEMPLATE_PATH = "templates/dungeon.c.tpl"
 
@@ -29,27 +29,8 @@ statedefines = ""
 huffman_nodes = [ ]
 huffman_codes = { }
 huffman_root = None
-#first_or_default = next((x for x in lst if ...), None)
-def first_or_default(lst):
-    return next((x for x in lst if ...), None)
 
 symbol_frequencies = defaultdict(int)
-def build_huffman_code_table(symbfreq):
-    """Huffman encode the given dict mapping symbols to weights"""
-    # Taken from https://rosettacode.org/wiki/Huffman_coding#Python
-    # I wrote my own C# code to do this a while ago, but this is, like, clever-looking
-    # and it was easier to use Google than to dig up my old code and convert it
-    heap = [[wt, [sym, ""]] for sym, wt in symbfreq.items()]
-    heapify(heap)
-    while len(heap) > 1:
-        lo = heappop(heap)
-        hi = heappop(heap)
-        for pair in lo[1:]:
-            pair[1] = '0' + pair[1]
-        for pair in hi[1:]:
-            pair[1] = '1' + pair[1]
-        heappush(heap, [lo[0] + hi[0]] + lo[1:] + hi[1:])
-    return sorted(heappop(heap)[1:], key=lambda p: (len(p[-1]), p))
 
 def update_huffman_freq_table(string):
     """Updates the symbol frequency table with the given string."""
@@ -122,14 +103,14 @@ def build_huffman_tree():
 def serialize_tree(tree, data, code, depth):
     if tree.is_leaf():
         if ord(tree.symbol) > 0x7F:
-            print('Invalid input symbol {}'.format(ord(tree.symbol)))
+            raise Exception('Invalid input symbol {}'.format(ord(tree.symbol)))
         data.append(0x80 | ord(tree.symbol))
         huffman_codes[tree.symbol] = huffman_code(code, depth)
         return
     data.append(2)
     data.append(1 + tree.left.leaves + (tree.left.children - tree.left.leaves) * 2)
     if data[-1] > 127:
-        print('ERROR: Right tree too large!')
+        raise Exception('Right tree too large!')
     serialize_tree(tree.left, data, code, depth + 1)
     serialize_tree(tree.right, data, code | (1 << depth), depth + 1)
 
@@ -144,9 +125,6 @@ def write_bits(data, bit, bits, length, character):
             return 0
     else:
         bit = length + bit
-        if bit == 0:
-            data.append(0)
-            print('?!?!?! {} {} {}'.format(bit, length, character))
         return bit
 
 def compress_string(string, data):
@@ -155,9 +133,7 @@ def compress_string(string, data):
     if string != None:
         for ch in string:
             code = huffman_codes[ch]
-#            print('Character {} has code {:b} length {}'.format(ch, code.code, code.length))
             bit = write_bits(data, bit, code.code, code.length, ch)
-#            input("> ")
     code = huffman_codes['\0']
     # Pad out the rest of the byte if needed.
     if write_bits(data, bit, code.code, code.length, "NULL") > 0:
@@ -229,23 +205,29 @@ def get_string_group(strings):
     sg_str = template.format(n, strs)
     return sg_str
 
+arbitrary_messages_index = [ ]
 def get_arbitrary_messages(arb):
+    global arbitrary_messages_index
     template = """    {},
 """
     arb_str = ""
     for item in arb:
-        arb_str += template.format(add_compressed_string(item[1]))
+        arbitrary_messages_index.append(add_compressed_string(item[1]))
+        arb_str += template.format(arbitrary_messages_index[-1])
     arb_str = arb_str[:-1] # trim trailing newline
     return arb_str
 
 tree_data_string = ""
+tree_data = [ ]
+strings_data = [ 0 ]
+strings_locations = [ ]
 def get_compressed_strings(strs):
     global tree_data_string
+    global tree_data
+    global strings_data
+    global strings_locations
     # Build Huffman tree
-    print('Building Huffman tree. . . .')
     build_huffman_tree()
-    print('Serializing tree. . . .')
-    tree_data = [ ]
     serialize_tree(huffman_root, tree_data, 0, 0)
 #    for k, v in huffman_codes.items():
 #        code_str = ("{0:0" + str(v.length) + "b}").format(v.code)
@@ -259,8 +241,6 @@ def get_compressed_strings(strs):
 #            print('Symbol {}, length {:2d}, code {}'.format(k, v.length, code_str))
     for byte in tree_data:
         tree_data_string = '{}0x{:02X}, '.format(tree_data_string, byte)
-    strings_data = [ 0 ]
-    strings_locations = [ ]
     for i, string in enumerate(compressed_string_list):
         strings_locations.append(len(strings_data))
         compress_string(string, strings_data)
@@ -781,7 +761,164 @@ if __name__ == "__main__":
         uncompressed_strings=get_uncompressed_strings(uncompressed_string_list),
         huffman_tree       = tree_data_string
     )
-
+    
+    
+    # Generate dungeon binary blob
+    def write_offset(data_arr, location, offset):
+        data_arr[location] = offset & 0xFF
+        data_arr[location + 1] = offset >> 8
+    
+    def append_offset(data_arr, offset):
+        data_arr.append(offset & 0xFF)
+        data_arr.append(offset >> 8)
+    
+    # Generate header
+    data_file = [ ]
+    for ch in "Colossal Cave Adventure dungeon":
+        data_file.append(ord(ch))
+    data_file.append(0)
+    huffman_table_location_location = len(data_file)
+    data_file.append(0)
+    data_file.append(0)
+    compressed_strings_location_location = len(data_file)
+    data_file.append(0)
+    data_file.append(0)
+    uncompressed_strings_location_location = len(data_file)
+    data_file.append(0)
+    data_file.append(0)
+    arbitrary_messages_location_location = len(data_file)
+    data_file.append(0)
+    data_file.append(0)
+    classes_location_location = len(data_file)
+    data_file.append(0)
+    data_file.append(0)
+    turn_thresholds_location_location = len(data_file)
+    data_file.append(0)
+    data_file.append(0)
+    locations_location_location = len(data_file)
+    data_file.append(0)
+    data_file.append(0)
+    objects_location_location = len(data_file)
+    data_file.append(0)
+    data_file.append(0)
+    obituaries_location_location = len(data_file)
+    data_file.append(0)
+    data_file.append(0)
+    hints_location_location = len(data_file)
+    data_file.append(0)
+    data_file.append(0)
+    unused_location_location = len(data_file)
+    data_file.append(0)
+    data_file.append(0)
+    motions_location_location = len(data_file)
+    data_file.append(0)
+    data_file.append(0)
+    actions_location_location = len(data_file)
+    data_file.append(0)
+    data_file.append(0)
+    tkey_location_location = len(data_file)
+    data_file.append(0)
+    data_file.append(0)
+    travel_location_location = len(data_file)
+    data_file.append(0)
+    data_file.append(0)
+    
+    # Add serialized Huffman tree
+    huffman_table_location = len(data_file)
+    data_file.extend(tree_data)
+    # Generate compressed strings index
+    compressed_strings_location = len(data_file)
+    write_offset(data_file, compressed_strings_location_location, compressed_strings_location)
+    for l in strings_locations:
+        append_offset(data_file, compressed_strings_location + 2 * len(strings_locations) + l)
+    # And now add compressed strings data
+    data_file.extend(strings_data)
+    
+    # Now do uncompressed strings
+    uncompressed_strings_location = len(data_file)
+    write_offset(data_file, uncompressed_strings_location_location, uncompressed_strings_location)
+    # Generate compressed strings index
+    data_file.extend([0] * (2 * len(uncompressed_string_list)))
+    # Write uncompressed strings
+    for s in uncompressed_string_list:
+        write_offset(data_file, uncompressed_strings_location, len(data_file))
+        if s != None:
+            uncompressed_strings_location += len(s) + 1
+            for ch in s:
+                data_file.append(ord(ch))
+        else:
+            uncompressed_strings_location += 1
+        data_file.append(0)
+    
+    # Arbitrary messages reference list
+    # TODO: This is obviously redundant
+    arbitrary_messages_location = len(data_file)
+    write_offset(data_file, arbitrary_messages_location_location, arbitrary_messages_location)
+    for i in arbitrary_messages_index:
+        append_offset(data_file, i)
+    
+    # Classes
+    classes_location = len(data_file)
+    write_offset(data_file, classes_location_location, classes_location)
+    for item in db["classes"]:
+        append_offset(data_file, item["threshold"])
+        # This is safe to do again thanks to string deduplication
+        append_offset(data_file, add_compressed_string(item["message"]))
+    
+    # Turn thresholds
+    turn_thresholds_location = len(data_file)
+    write_offset(data_file, turn_thresholds_location_location, turn_thresholds_location)
+    for item in db["turn_thresholds"]:
+        append_offset(data_file, item["threshold"])
+        data_file.append(item["point_loss"])
+        append_offset(data_file, add_compressed_string(item["message"]))
+    
+    # Locations
+    locations_location = len(data_file)
+    write_offset(data_file, locations_location_location, locations_location)
+    for item in db["locations"]:
+        append_offset(data_file, add_compressed_string(item[1]["description"]["short"]))
+        append_offset(data_file, add_compressed_string(item[1]["description"]["long"]))
+        sounds = [x for x in db["arbitrary_messages"] if x[0] == item[1].get("sound", "SILENT")]
+        if len(sounds) > 0:
+            data_file.append(db["arbitrary_messages"].index(sounds[0]))
+        else:
+            data_file.append(255)
+        data_file.append(1 if item[1].get("loud") else 0)
+    
+    # Objects
+    objects_location = len(data_file)
+    write_offset(data_file, objects_location_location, objects_location)
+    # Generate index
+    data_file.extend([0] * (2 * len(db["objects"])))
+    # Now generate objects
+    def get_location_index(str):
+        # If -1 is passed, return -1
+        if str == -1:
+            return 0xFFFF
+        if str == 0:
+            return 0
+        locs = [x for x in db["locations"] if x[0] == str]
+        if len(locs) < 1:
+            print('Unknown location {}'.format(str))
+            sys.exit(1)
+        return db["locations"].index(locs[0])
+    for (i, item) in enumerate(db["objects"]):
+        print(i)
+        write_offset(data_file, objects_location, len(data_file))
+        objects_location += 11
+        attr = item[1]
+        append_offset(data_file, add_compressed_string(attr["inventory"]))
+        locs = attr.get("locations", ["LOC_NOWHERE", "LOC_NOWHERE"])
+        if type(locs) == str:
+            locs = [locs, -1 if attr.get("immovable", False) else 0]
+        append_offset(data_file, get_location_index(locs[0]))
+        append_offset(data_file, get_location_index(locs[1]))
+        data_file.append(1 if attr.get("treasure") else 0)
+    
+    
+    print('Data file size: {}'.format(len(data_file)))
+    
     # 0-origin index of birds's last song.  Bird should
     # die after player hears this.
     deathbird = len(dict(db["objects"])["BIRD"]["sounds"]) - 1
@@ -819,17 +956,6 @@ if __name__ == "__main__":
     print('Duplicate compressed strings omitted: {}'.format(duplicate_compressed_strings))
     print('Duplicate compressed strings chars omitted: {}'.format(duplicate_compressed_strings_chars))
     print('Huffman table codes: {}'.format(len(symbol_frequencies)))
-    huffman_table = build_huffman_code_table(symbol_frequencies)
-#    print('Symbol\tWeight\tHuffman Code')
-#    for p in huffman_table:
-#        if p[0] == '\0':
-#            print('null\t{}\t{}'.format(symbol_frequencies[p[0]], p[1]))
-#        elif p[0] == ' ':
-#            print('space\t{}\t{}'.format(symbol_frequencies[p[0]], p[1]))
-#        elif p[0] == '\n':
-#            print('newline\t{}\t{}'.format(symbol_frequencies[p[0]], p[1]))
-#        else:
-#            print('{}\t{}\t{}'.format(p[0], symbol_frequencies[p[0]], p[1]))
     print('Total uncompressed strings: {}'.format(len(uncompressed_string_list)))
     print('Total uncompressed strings chars: {}'.format(total_uncompressed_strings_chars))
     print('Duplicate uncompressed strings omitted: {}'.format(duplicate_uncompressed_strings))

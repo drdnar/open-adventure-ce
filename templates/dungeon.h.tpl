@@ -47,7 +47,7 @@ typedef struct {{
 typedef struct {{
   const compressed_string_index_t inventory;
   int16_t plac, fixd;
-  bool is_treasure;
+  uint8_t is_treasure;
   uint8_t descriptions_start;
   uint8_t sounds_start;
   uint8_t texts_start;
@@ -79,7 +79,7 @@ typedef struct {{
 }} turn_threshold_t;
 
 typedef struct {{
-  const int threshold;
+  const uint16_t threshold;
   const compressed_string_index_t message;
 }} class_t;
 

@@ -190,6 +190,8 @@ bool have_PLEASE_ANSWER = 0;
 char please_answer[PLEASE_ANSWER_LEN];
 const char* get_arbitrary_message(int n)
 {
+    /* PLEASE_ANSWER gets used in a loop.  It would be better to delay
+     * decompressing until speak/rspeak, but . . . I'm lazy. */
     if (n == PLEASE_ANSWER)
     {
         if (!have_PLEASE_ANSWER)
