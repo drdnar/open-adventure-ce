@@ -6,7 +6,7 @@
 
 typedef struct {
     /* "Colossal Cave Adventure dungeon" */
-    char header[41];
+    char header[32];
     uint16_t huffman_table;
     uint16_t compressed_strings;
     uint16_t uncompressed_strings;

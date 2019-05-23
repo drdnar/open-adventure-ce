@@ -826,6 +826,7 @@ if __name__ == "__main__":
     
     # Add serialized Huffman tree
     huffman_table_location = len(data_file)
+    write_offset(data_file, huffman_table_location_location, huffman_table_location)
     data_file.extend(tree_data)
     # Generate compressed strings index
     compressed_strings_location = len(data_file)
@@ -838,17 +839,15 @@ if __name__ == "__main__":
     # Now do uncompressed strings
     uncompressed_strings_location = len(data_file)
     write_offset(data_file, uncompressed_strings_location_location, uncompressed_strings_location)
-    # Generate compressed strings index
+    # Generate uncompressed strings index
     data_file.extend([0] * (2 * len(uncompressed_string_list)))
     # Write uncompressed strings
     for s in uncompressed_string_list:
         write_offset(data_file, uncompressed_strings_location, len(data_file))
+        uncompressed_strings_location += 2
         if s != None:
-            uncompressed_strings_location += len(s) + 1
             for ch in s:
                 data_file.append(ord(ch))
-        else:
-            uncompressed_strings_location += 1
         data_file.append(0)
     
     # Arbitrary messages reference list
