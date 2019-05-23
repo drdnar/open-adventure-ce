@@ -101,8 +101,8 @@ typedef struct {{
   const string_group_t words;
 }} action_t;
 
-enum condtype_t {{cond_goto, cond_pct, cond_carry, cond_with, cond_not}};
-enum desttype_t {{dest_goto, dest_special, dest_speak}};
+enum condtype_t {{cond_goto = 0, cond_pct = 1, cond_carry = 2, cond_with = 3, cond_not = 4}};
+enum desttype_t {{dest_goto = 0, dest_special = 1, dest_speak = 2}};
 
 typedef struct {{
   const uint8_t motion;
@@ -139,7 +139,7 @@ extern int32_t conditions[];
 extern const motion_t motions_[];
 extern const action_t actions_[];
 extern const travelop_t travel_[];
-extern const int32_t tkey_[];
+extern const uint16_t tkey_[];
 extern const char *ignore;
 
 #define NLOCATIONS	{num_locations}

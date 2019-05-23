@@ -25,6 +25,8 @@ DONOTEDIT_COMMENT = "/* Generated from adventure.yaml - do not hand-hack! */\n\n
 
 statedefines = ""
 
+condtype_t = {0: 0, "cond_goto": 0, "cond_pct": 1, "cond_carry": 2, "cond_with": 3, "cond_not": 4 }
+desttype_t = {0: 0, "dest_goto": 0, "dest_special": 1, "dest_speak": 2 }
 
 huffman_nodes = [ ]
 huffman_codes = { }
@@ -1007,23 +1009,38 @@ if __name__ == "__main__":
         append_offset(data_file, tkey[i])
     
     # Travel
+    message_refs = [x[0] for x in db["arbitrary_messages"]]
+    location_refs = [x[0] for x in db["locations"]]
+    object_refs = [x[0] for x in db["objects"]]
+    motion_refs = [x[0] for x in db["motions"]]
+    #action_refs = [x[0] for x in db["actions"]]
     travel_location = len(data_file)
     write_offset(data_file, travel_location_location, travel_location)
+    def deref_enum(enum, alt, value, q):
+        if type(value) == int:
+            data_file.append(value)
+        else:
+            try:
+                data_file.append(enum.index(value))
+            except ValueError:
+                data_file.append(alt.index(value))
     for item in travel:
         # motion, may be a number, or a string to deref to a motion number
-        data_file.append(0)
+        deref_enum(motion_refs, None, item[2], "motion")
         # condtype, may be zero, or a string to deref to a condition enum value
-        data_file.append(0)
+        data_file.append(condtype_t[item[3]])
         # condarg1, may be a number, or a string to deref to an object enum value
-        data_file.append(0)
-        # condarg2, always some kind of number?
-        data_file.append(0)
+        deref_enum(object_refs, None, item[4], "condarg1")
+        # condarg2, always a number, but for some reason sometimes comes out as a float?
+        data_file.append(int(item[5]))
         # desttype, may be zero, or a string to deref to a desttype enum value
-        data_file.append(0)
+        data_file.append(desttype_t[item[6]])
+        # destval, may be a number, or a string to deref to a location enum
+        deref_enum(location_refs, message_refs, item[7], "destval")
         # nodwarves
-        data_file.append(1 if item[6] else 0)
+        data_file.append(1 if item[8] else 0)
         # stop
-        data_file.append(1 if item[7] else 0)
+        data_file.append(1 if item[9] else 0)
     
     print('Data file size: {}'.format(len(data_file)))
     
@@ -1058,6 +1075,10 @@ if __name__ == "__main__":
 
     with open(C_NAME, "w") as cf:
         cf.write(c)
+
+    with open(BIN_NAME, "wb") as bf:
+        bf.write(bytearray(data_file))
+        
     
     print('Total compressed strings: {}'.format(len(compressed_string_list)))
     print('Total compressed strings chars: {}'.format(total_compressed_strings_chars))

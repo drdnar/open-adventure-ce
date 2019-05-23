@@ -52,7 +52,7 @@ const action_t actions_[] = {{
 {actions}
 }};
 
-const int32_t tkey_[] = {{{tkeys}}};
+const uint16_t tkey_[] = {{{tkeys}}};
 
 const travelop_t travel_[] = {{
 {travel}
