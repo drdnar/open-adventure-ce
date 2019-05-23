@@ -196,7 +196,6 @@ def get_string_group(strings):
             .n = {},
             .strs = {}
         }}"""
-    message_numbers = [ ]
     if strings == []:
         strs = "{ 0 }"
     else:
@@ -904,7 +903,6 @@ if __name__ == "__main__":
             sys.exit(1)
         return db["locations"].index(locs[0])
     for (i, item) in enumerate(db["objects"]):
-        print(i)
         write_offset(data_file, objects_location, len(data_file))
         objects_location += 11
         attr = item[1]
@@ -915,7 +913,117 @@ if __name__ == "__main__":
         append_offset(data_file, get_location_index(locs[0]))
         append_offset(data_file, get_location_index(locs[1]))
         data_file.append(1 if attr.get("treasure") else 0)
+        strings = [ ]
+        if attr.get("words") != None:
+            for word in attr["words"]:
+                strings.append(add_uncompressed_string(word))
+        descriptions_start = len(strings)
+        if attr.get("descriptions") != None:
+            for msg in attr["descriptions"]:
+                strings.append(add_compressed_string(msg))
+        sounds_start = len(strings)
+        if attr.get("sounds") != None:
+            for msg in attr["sounds"]:
+                strings.append(add_compressed_string(msg))
+        texts_start = len(strings)
+        if attr.get("texts") != None:
+            for msg in attr["texts"]:
+                strings.append(add_compressed_string(msg))
+        changes_start = len(strings)
+        if attr.get("changes") == None:
+            strings.append(0)
+        else:
+            for msg in attr["changes"]:
+                strings.append(add_compressed_string(msg))
+        data_file.append(descriptions_start)
+        data_file.append(sounds_start)
+        data_file.append(texts_start)
+        data_file.append(changes_start)
+        for i in strings:
+            append_offset(data_file, i)
+        objects_location += len(strings)
     
+    # Obituaries
+    obituaries_location = len(data_file)
+    write_offset(data_file, obituaries_location_location, obituaries_location)
+    for item in db["obituaries"]:
+        append_offset(data_file, add_compressed_string(item["query"]))
+        append_offset(data_file, add_compressed_string(item["yes_response"]))
+    
+    # Hints
+    hints_location = len(data_file)
+    write_offset(data_file, hints_location_location, hints_location)
+    for i in db["hints"]:
+        item = i["hint"]
+        data_file.append(item["number"])
+        data_file.append(item["penalty"])
+        data_file.append(item["turns"])
+        append_offset(data_file, add_compressed_string(item["question"]))
+        append_offset(data_file, add_compressed_string(item["hint"]))
+    
+    # Possible future location of conditions array
+    
+    # Motions
+    motions_location = len(data_file)
+    write_offset(data_file, motions_location_location, motions_location)
+    # Generate index
+    data_file.extend([0] * (2 * len(db["motions"])))
+    # Generate motions
+    for i in db["motions"]:
+        write_offset(data_file, motions_location, len(data_file))
+        motions_location += 2
+        item = i[1]
+        if item["words"] == None:
+            data_file.append(0)
+        else:
+            for string in item["words"]:
+                append_offset(data_file, add_uncompressed_string(string))
+    
+    # Actions
+    actions_location = len(data_file)
+    write_offset(data_file, actions_location_location, actions_location)
+    # Generate index
+    data_file.extend([0] * (2 * len(db["actions"])))
+    # Generate motions
+    for i in db["actions"]:
+        write_offset(data_file, actions_location, len(data_file))
+        actions_location += 2
+        item = i[1]
+        append_offset(data_file, add_compressed_string(item["message"]))
+        if item.get("noaction") == None:
+            data_file.append(0)
+        else:
+            data_file.append(1)
+        if item["words"] == None:
+            data_file.append(0)
+        else:
+            for string in item["words"]:
+                append_offset(data_file, add_uncompressed_string(string))
+    
+    # tkey, whatever that means
+    tkey_location = len(data_file)
+    write_offset(data_file, tkey_location_location, tkey_location)
+    for (i, entry) in enumerate(tkey):
+        append_offset(data_file, tkey[i])
+    
+    # Travel
+    travel_location = len(data_file)
+    write_offset(data_file, travel_location_location, travel_location)
+    for item in travel:
+        # motion, may be a number, or a string to deref to a motion number
+        data_file.append(0)
+        # condtype, may be zero, or a string to deref to a condition enum value
+        data_file.append(0)
+        # condarg1, may be a number, or a string to deref to an object enum value
+        data_file.append(0)
+        # condarg2, always some kind of number?
+        data_file.append(0)
+        # desttype, may be zero, or a string to deref to a desttype enum value
+        data_file.append(0)
+        # nodwarves
+        data_file.append(1 if item[6] else 0)
+        # stop
+        data_file.append(1 if item[7] else 0)
     
     print('Data file size: {}'.format(len(data_file)))
     
