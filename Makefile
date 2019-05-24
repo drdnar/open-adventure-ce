@@ -45,7 +45,7 @@ saveresume.o:	advent.h dungeon.h
 dungeon.o:	dungeon.c dungeon.h
 	$(CC) $(CCFLAGS) -Warray-bounds=0 $(DBX) -c dungeon.c
 
-dungeon.c dungeon.h: make_dungeon_calc.py adventure.yaml advent.h templates/*.tpl
+dungeon.c dungeon.h dungeon.bin: make_dungeon_calc.py adventure.yaml advent.h templates/*.tpl
 	./make_dungeon_calc.py
 
 clean:

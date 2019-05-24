@@ -43,9 +43,14 @@ static void sig_handler(int signo)
 static bool do_command(void);
 static bool do_move(void);
 
+#ifndef CALCULATOR
 int main(int argc, char *argv[])
+#else
+void main()
+#endif
 {
     int seedval;
+#ifndef CALCULATOR
     int ch;
 
     /*  Options. */
@@ -96,6 +101,7 @@ int main(int argc, char *argv[])
             break;
         }
     }
+#endif
 
     /*  Initialize game variables */
     seedval = initialise();
@@ -114,8 +120,10 @@ int main(int argc, char *argv[])
         game.limit = NOVICELIMIT;
 #endif
 
+#ifndef CALCULATOR
     if (settings.logfp)
         fprintf(settings.logfp, "seed %d\n", seedval);
+#endif
 
     /* interpret commands until EOF or interrupt */
     for (;;) {

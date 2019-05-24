@@ -1058,6 +1058,7 @@ if __name__ == "__main__":
         num_actions        = len(db["actions"]),
         num_travel         = len(travel),
         num_keys           = len(tkey),
+        num_arb_msgs       = len(arbitrary_messages_index),
         num_comp_strs      = len(compressed_string_list),
         num_uncomp_strs    = len(uncompressed_string_list),
         bird_endstate      = deathbird,

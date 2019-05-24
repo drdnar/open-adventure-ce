@@ -152,6 +152,7 @@ extern const char *ignore;
 #define NACTIONS  	{num_actions}
 #define NTRAVEL		{num_travel}
 #define NKEYS		{num_keys}
+#define NARBMSGS	{num_arb_msgs}
 #define NCOMPSTRS	{num_comp_strs}
 #define NUNCOMPSTR	{num_uncomp_strs}
 
