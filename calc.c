@@ -78,9 +78,10 @@ uint8_t next_buffer = 0;
 /* For the eZ80, there is an optimized decompression routine written in
  * assembly.  For other platforms, run the same algorithm written in C. */
 /*void* huffman_tree;*/
-
 char* decompress_string(void* input, char* output)
 {
+    /* A neat property of this routine is that the serialized Huffman tree fits
+     * in just a handful of cache lines. Too bad it doesn't really matter. */
     uint8_t* next_input_byte = input;
     uint8_t current_byte = 0;
     uint8_t current_bit = 1;
