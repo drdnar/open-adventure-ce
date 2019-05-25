@@ -127,7 +127,7 @@ typedef struct {{
 #define T_TERMINATE(entry)	((entry)->motion == 1)
 
 extern const uint8_t* compressed_strings[];
-extern const char* uncompressed_strings[];
+extern char** uncompressed_strings;
 extern const location_t locations_[];
 extern const object_t objects_[];
 extern const compressed_string_index_t arbitrary_messages_[];
@@ -154,7 +154,7 @@ extern const char *ignore;
 #define NKEYS		{num_keys}
 #define NARBMSGS	{num_arb_msgs}
 #define NCOMPSTRS	{num_comp_strs}
-#define NUNCOMPSTR	{num_uncomp_strs}
+#define NUNCOMPSTRS	{num_uncomp_strs}
 
 #define BIRD_ENDSTATE {bird_endstate}
 

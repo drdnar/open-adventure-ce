@@ -11,10 +11,12 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <time.h>
+#include <string.h>
 
 #include "advent.h"
 #include "calc.h"
 
+char** uncompressed_strings = NULL;
 
 #ifndef CALCULATOR
 void load_failure(char* message)
@@ -23,7 +25,7 @@ void load_failure(char* message)
     exit(EXIT_FAILURE);    
 }
 
-FILE dungeon_file;
+FILE* dungeon_file;
 
 uint8_t get_byte()
 {
@@ -54,8 +56,9 @@ int load_dungeon(void)
     if (!dungeon_file)
         load_failure("Failed to open dungeon.bin");
     fseek(dungeon_file, 0, SEEK_SET);
-    fread(&id_str[0], 1, sizeof(id_str), dungeon_file);
-    if (!id_str[31] && !strcmp(id_str, DATA_FILE_ID_STRING))
+    if (sizeof(id_str) != fread(&id_str[0], 1, sizeof(id_str), dungeon_file))
+	load_failure("dungeon.bin got truncated?");
+    if (id_str[31] || strcmp(id_str, DATA_FILE_ID_STRING))
         load_failure("dungeon.bin does not look like a dungeon file");
     /* Get the location of various items */
     huffman_table_location = get_word();
@@ -80,7 +83,7 @@ int load_dungeon(void)
     if (size != fread(huffman_table, 1, size, dungeon_file))
         load_failure("Error loading Huffman table");
     /* Compressed strings * /
-    compressed_strings = malloc(size_t * NCOMPSTRS);
+    compressed_strings = malloc(sizeof(intptr_t) * NCOMPSTRS);
     for (i = 0; i < NCOMPSTRS; i++)
     {
         fseek(dungeon_file, compressed_strings_location, SEEK_SET);
@@ -97,20 +100,20 @@ int load_dungeon(void)
             load_failure("Error loading compressed strings");
     }
     /* Uncompressed strings */
-    uncompressed_strings = malloc(size_t * NCOMPSTRS);
-    for (i = 0; i < NCOMPSTRS; i++)
+    uncompressed_strings = malloc(sizeof(intptr_t) * NUNCOMPSTRS);
+    for (i = 0; i < NUNCOMPSTRS; i++)
     {
         fseek(dungeon_file, uncompressed_strings_location, SEEK_SET);
         uncompressed_strings_location += 2;
         current_item = get_word();
-        if (i < NCOMPSTRS - 1)
+        if (i < NUNCOMPSTRS - 1)
             next_item = get_word();
         else
             next_item = arbitrary_messages_location;
         size = next_item - current_item;
         uncompressed_strings[i] = malloc(size);
         fseek(dungeon_file, current_item, SEEK_SET);
-        if (size != fread(&uncompressed_string[i], 1, size, dungeon_file))
+        if (size != fread(uncompressed_strings[i], 1, size, dungeon_file))
             load_failure("Error loading uncompressed strings");
     }
     /* Arbitrary messages cross reference table * /
@@ -146,7 +149,7 @@ int load_dungeon(void)
         locations[i].loud = get_byte();
     }
     /* Objects * /
-    objects = malloc(size_t * (NOBJECTS + 1));
+    objects = malloc(sizeof(intrptr_t) * (NOBJECTS + 1));
     for (i = 0; i < NOBJECTS + 1; i++)
     {
         fseek(dungeon_file, objects_location, SEEK_SET);
@@ -182,7 +185,7 @@ int load_dungeon(void)
         hints[i]->hint = get_word();
     }
     /* Motions * /
-    motions = malloc(size_t * (NMOTIONS + 1));
+    motions = malloc(sizeof(intptr_t) * (NMOTIONS + 1));
     for (i = 0; i < NMOTIONS + 1; i++)
     {
         fseek(dungeon_file, motions_location, SEEK_SET);
@@ -200,7 +203,7 @@ int load_dungeon(void)
             motions[i]->words.strs[j] = read_word();
     }
     /* Actions * /
-    actions = malloc(size_t * (NACTIONS + 1));
+    actions = malloc(sizeof(intptr_t) * (NACTIONS + 1));
     for (i = 0; i < NACTIONS + 1; i++)
     {
         fseek(dungeon_file, actions_location, SEEK_SET);
@@ -238,7 +241,7 @@ int load_dungeon(void)
         travel[i]->nodwarves = get_byte();
         travel[i]->stop = get_byte();
     }
-    
+   */ 
 }
 #endif
 

@@ -8,7 +8,8 @@ VERS=$(shell sed -n <NEWS '/^[0-9]/s/:.*//p' | head -1)
 .PHONY: check coverage
 
 CC?=gcc
-CCFLAGS+=-std=c99 -D_DEFAULT_SOURCE -DVERSION=\"$(VERS)\" -O2 -D_FORTIFY_SOURCE=2 -fstack-protector-all -Wdeclaration-after-statement
+#CCFLAGS+=-std=c99 -D_DEFAULT_SOURCE -DVERSION=\"$(VERS)\" -O2 -D_FORTIFY_SOURCE=2 -fstack-protector-all -Wdeclaration-after-statement
+CCFLAGS+=-std=c99 -D_DEFAULT_SOURCE -DVERSION=\"$(VERS)\" -O0 -D_FORTIFY_SOURCE=2 -fstack-protector-all -Wdeclaration-after-statement -ggdb
 LIBS=$(shell pkg-config --libs libedit)
 INC+=$(shell pkg-config --cflags libedit)
 
@@ -47,6 +48,8 @@ dungeon.o:	dungeon.c dungeon.h
 
 dungeon.c dungeon.h dungeon.bin: make_dungeon_calc.py adventure.yaml advent.h templates/*.tpl
 	./make_dungeon_calc.py
+	rm -f tests/dungeon.bin
+	cp dungeon.bin tests/dungeon.bin
 
 clean:
 	rm -f *.o advent cheat *.html *.gcno *.gcda

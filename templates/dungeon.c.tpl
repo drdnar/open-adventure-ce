@@ -8,7 +8,7 @@ const uint8_t* compressed_strings[] = {{
 {compressed_strings}
 }};
 
-const char* uncompressed_strings[] = {{
+const char* uncompressed_strings_[] = {{
 {uncompressed_strings}
 }};
 
