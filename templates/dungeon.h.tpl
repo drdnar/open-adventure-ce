@@ -45,7 +45,7 @@ typedef struct {{
  * In particular, the former words field is an implied part of strings.
  * If descriptions_start is 0, then there are no words present. */
 typedef struct {{
-  const compressed_string_index_t inventory;
+  compressed_string_index_t inventory;
   int16_t plac, fixd;
   uint8_t is_treasure;
   uint8_t descriptions_start;
@@ -57,14 +57,14 @@ typedef struct {{
 }} object_t;
 
 typedef struct {{
-  const compressed_string_index_t small;
-  const compressed_string_index_t big;
+  compressed_string_index_t small;
+  compressed_string_index_t big;
 }} descriptions_t;
 
 typedef struct {{
   descriptions_t description;
-  const uint8_t sound;
-  const bool loud;
+  uint8_t sound;
+  bool loud;
 }} location_t;
 
 typedef struct {{
@@ -73,14 +73,14 @@ typedef struct {{
 }} obituary_t;
 
 typedef struct {{
-  const uint16_t threshold;
-  const uint8_t point_loss;
-  const compressed_string_index_t message;
+  uint16_t threshold;
+  uint8_t point_loss;
+  compressed_string_index_t message;
 }} turn_threshold_t;
 
 typedef struct {{
-  const uint16_t threshold;
-  const compressed_string_index_t message;
+  uint16_t threshold;
+  compressed_string_index_t message;
 }} class_t;
 
 typedef struct {{
@@ -126,13 +126,14 @@ typedef struct {{
  */
 #define T_TERMINATE(entry)	((entry)->motion == 1)
 
-extern const uint8_t* compressed_strings[];
+extern uint8_t* huffman_tree;
+extern uint8_t** compressed_strings;
 extern char** uncompressed_strings;
-extern const location_t locations_[];
+extern location_t* locations;
 extern const object_t objects_[];
-extern const compressed_string_index_t arbitrary_messages_[];
-extern const class_t classes_[];
-extern const turn_threshold_t turn_thresholds_[];
+extern compressed_string_index_t* arbitrary_messages;
+extern class_t* classes;
+extern turn_threshold_t* turn_thresholds;
 extern const obituary_t obituaries_[];
 extern const hint_t hints_[];
 extern int32_t conditions[];

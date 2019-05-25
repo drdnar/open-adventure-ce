@@ -243,7 +243,7 @@ def get_compressed_strings(strs):
     for byte in tree_data:
         tree_data_string = '{}0x{:02X}, '.format(tree_data_string, byte)
     for i, string in enumerate(compressed_string_list):
-        strings_locations.append(len(strings_data))
+        strings_locations.append(len(strings_data) - 1)
         compress_string(string, strings_data)
     print('Compressed strings size: {}'.format(len(strings_data)))
     

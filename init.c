@@ -16,8 +16,6 @@
 #include "advent.h"
 #include "calc.h"
 
-char** uncompressed_strings = NULL;
-
 #ifndef CALCULATOR
 void load_failure(char* message)
 {
@@ -45,7 +43,7 @@ uint16_t get_word()
 int load_dungeon(void)
 {
     char id_str[32];
-    long huffman_table_location, compressed_strings_location, uncompressed_strings_location,
+    long huffman_tree_location, compressed_strings_location, uncompressed_strings_location,
         arbitrary_messages_location, classes_location, turn_thresholds_location,
         locations_location, objects_location, obituaries_location, hints_location,
         motions_location, actions_locations, tkey_location, travel_location;
@@ -61,7 +59,7 @@ int load_dungeon(void)
     if (id_str[31] || strcmp(id_str, DATA_FILE_ID_STRING))
         load_failure("dungeon.bin does not look like a dungeon file");
     /* Get the location of various items */
-    huffman_table_location = get_word();
+    huffman_tree_location = get_word();
     compressed_strings_location = get_word();
     uncompressed_strings_location = get_word();
     arbitrary_messages_location = get_word();
@@ -76,13 +74,13 @@ int load_dungeon(void)
     actions_locations = get_word();
     tkey_location = get_word();
     travel_location = get_word();
-    /* Huffman table * /
-    size = compressed_strings_location - huffman_table_location;
-    huffman_table = malloc(size);
-    fseek(dungeon_file, huffman_table_location, SEEK_SET);
-    if (size != fread(huffman_table, 1, size, dungeon_file))
+    /* Huffman table */
+    size = compressed_strings_location - huffman_tree_location;
+    huffman_tree = malloc(size);
+    fseek(dungeon_file, huffman_tree_location, SEEK_SET);
+    if (size != fread(huffman_tree, 1, size, dungeon_file))
         load_failure("Error loading Huffman table");
-    /* Compressed strings * /
+    /* Compressed strings */
     compressed_strings = malloc(sizeof(intptr_t) * NCOMPSTRS);
     for (i = 0; i < NCOMPSTRS; i++)
     {
@@ -96,7 +94,7 @@ int load_dungeon(void)
         size = next_item - current_item;
         compressed_strings[i] = malloc(size);
         fseek(dungeon_file, current_item, SEEK_SET);
-        if (size != fread(&compressed_string[i], 1, size, dungeon_file))
+        if (size != fread(compressed_strings[i], 1, size, dungeon_file))
             load_failure("Error loading compressed strings");
     }
     /* Uncompressed strings */
@@ -116,12 +114,12 @@ int load_dungeon(void)
         if (size != fread(uncompressed_strings[i], 1, size, dungeon_file))
             load_failure("Error loading uncompressed strings");
     }
-    /* Arbitrary messages cross reference table * /
+    /* Arbitrary messages cross reference table */
     arbitrary_messages = malloc(sizeof(compressed_string_index_t) * NARBMSGS);
     fseek(dungeon_file, arbitrary_messages_location, SEEK_SET);
     for (i = 0; i < NARBMSGS; i++)
         arbitrary_messages[i] = get_word();
-    /* Classes * /
+    /* Classes */
     classes = malloc(sizeof(class_t) * (NCLASSES + 1));
     fseek(dungeon_file, classes_location, SEEK_SET);
     for (i = 0; i < NCLASSES + 1; i++)
@@ -129,7 +127,7 @@ int load_dungeon(void)
         classes[i].threshold = get_word();
         classes[i].message = get_word();
     }
-    /* Turn thresholds * /
+    /* Turn thresholds */
     turn_thresholds = malloc(sizeof(turn_threshold_t) * (NTHRESHOLDS + 1));
     fseek(dungeon_file, turn_thresholds_location, SEEK_SET);
     for (i = 0; i < NTHRESHOLDS + 1; i++)
@@ -138,7 +136,7 @@ int load_dungeon(void)
         turn_thresholds[i].point_loss = get_byte();
         turn_thresholds[i].message = get_word();
     }
-    /* Locations * /
+    /* Locations */
     locations = malloc(sizeof(location_t) * (NLOCATIONS + 1));
     fseek(dungeon_file, locations_location, SEEK_SET);
     for (i = 0; i < NLOCATIONS + 1; i++)

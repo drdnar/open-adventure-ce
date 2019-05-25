@@ -2,8 +2,6 @@
 #include "calc.h"
 #include "advent.h"
 
-extern uint8_t huffman_tree[];
-
 #ifndef CALCULATOR
 /* For non-calculator platforms, the data will not be moved after loading and
  * aligning.  Do not attempt to reload the data. */
@@ -205,25 +203,25 @@ const char* get_arbitrary_message(int n)
         return please_answer;
     }
     else
-        return get_compressed_string(arbitrary_messages_[n]);
+        return get_compressed_string(arbitrary_messages[n]);
 }
 
 
 const class_t* get_class(int n)
 {
-    return &classes_[n];
+    return &classes[n];
 }
 
 
 const turn_threshold_t* get_turn_threshold(int n)
 {
-    return &turn_thresholds_[n];
+    return &turn_thresholds[n];
 }
 
 
 const location_t* get_location(int n)
 {
-    return &locations_[n];
+    return &locations[n];
 }
 
 
