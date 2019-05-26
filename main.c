@@ -5,10 +5,14 @@
  */
 
 #include <stdlib.h>
+#ifndef CALCULATOR
 #include <stdio.h>
+#endif
 #include <stdbool.h>
+#ifndef CALCULATOR
 #include <getopt.h>
 #include <signal.h>
+#endif
 #include <string.h>
 #include <ctype.h>
 #include "advent.h"
@@ -17,6 +21,7 @@
 
 #define DIM(a) (sizeof(a)/sizeof(a[0]))
 
+#ifndef CALCULATOR
 // LCOV_EXCL_START
 // exclude from coverage analysis because it requires interactivity to test
 static void sig_handler(int signo)
@@ -28,6 +33,7 @@ static void sig_handler(int signo)
     exit(EXIT_FAILURE);
 }
 // LCOV_EXCL_STOP
+#endif
 
 /*
  * MAIN PROGRAM

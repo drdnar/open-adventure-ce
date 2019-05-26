@@ -6,11 +6,15 @@
  * SPDX-License-Identifier: BSD-2-clause
  */
 
+#ifndef CALCULATOR
 #include <unistd.h>
+#endif
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#ifndef CALCULATOR
 #include <time.h>
+#endif
 #include <string.h>
 
 #include "advent.h"

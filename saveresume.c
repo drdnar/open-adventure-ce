@@ -11,9 +11,11 @@
 
 #include <stdlib.h>
 #include <string.h>
+#ifndef CALCULATOR
 #include <editline/readline.h>
+#endif
 #include <time.h>
-#include <inttypes.h>
+#include <stdint.h>
 
 #include "advent.h"
 #include "dungeon.h"

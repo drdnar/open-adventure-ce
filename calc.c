@@ -67,7 +67,7 @@ uint8_t load_data_file()
 }
 
 
-#define HUFFMAN_BUFFERS 8
+#define HUFFMAN_BUFFERS 4
 #define HUFFMAN_BUFFER_SIZE 2048
 char buffers[HUFFMAN_BUFFERS][HUFFMAN_BUFFER_SIZE];
 uint8_t next_buffer = 0;

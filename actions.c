@@ -12,7 +12,7 @@
 #include "advent.h"
 #include "dungeon.h"
 #include "calc.h"
-#include <inttypes.h>
+#include <stdint.h>
 
 static phase_codes_t fill(verb_t, obj_t);
 
