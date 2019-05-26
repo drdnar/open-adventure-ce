@@ -146,11 +146,12 @@ int load_dungeon(void)
         locations[i].sound = get_byte();
         locations[i].loud = get_byte();
     }
-    /* Objects * /
-    objects = malloc(sizeof(intrptr_t) * (NOBJECTS + 1));
+    /* Objects */
+    objects = malloc(sizeof(intptr_t) * (NOBJECTS + 1));
     for (i = 0; i < NOBJECTS + 1; i++)
     {
-        fseek(dungeon_file, objects_location, SEEK_SET);
+        /*printf("#%i 0x%04X -> ", i, objects_location);*/
+	fseek(dungeon_file, objects_location, SEEK_SET);
         objects_location += 2;
         current_item = get_word();
         if (i < NOBJECTS)
@@ -158,18 +159,19 @@ int load_dungeon(void)
         else
             next_item = obituaries_location;
         size = next_item - current_item;
-        objects[i] = malloc(object_t);
+        objects[i] = malloc(sizeof(object_t));
         fseek(dungeon_file, current_item, SEEK_SET);
-        objects[i]->inventory = read_word();
-        objects[i]->plac = read_word();
-        objects[i]->fixd = read_word();
-        objects[i]->is_treasure = read_byte();
-        objects[i]->descriptions_start = read_byte();
-        objects[i]->sounds_start = read_byte();
-        objects[i]->texts_start = read_byte();
-        objects[i]->changes_start = read_byte();
+        /*printf("0x%04X\n", current_item);*/
+        objects[i]->inventory = get_word();
+        objects[i]->plac = get_word();
+        objects[i]->fixd = get_word();
+        objects[i]->is_treasure = get_byte();
+        objects[i]->descriptions_start = get_byte();
+        objects[i]->sounds_start = get_byte();
+        objects[i]->texts_start = get_byte();
+        objects[i]->changes_start = get_byte();
         for (j = 0; j < 11; j++)
-            objects[i]->strings[j] = read_word();
+            objects[i]->strings[j] = get_word();
     }
     /* Hints * /
     hints = malloc(sizeof(hint_t) * (NHINTS + 1));
@@ -196,9 +198,9 @@ int load_dungeon(void)
         size = next_item - current_item;
         motions[i] = malloc(motion_t);
         fseek(dungeon_file, current_item, SEEK_SET);
-        motions[i]->words.n = read_byte();
+        motions[i]->words.n = get_byte();
         for (j = 0; j < 10; j++)
-            motions[i]->words.strs[j] = read_word();
+            motions[i]->words.strs[j] = get_word();
     }
     /* Actions * /
     actions = malloc(sizeof(intptr_t) * (NACTIONS + 1));
@@ -214,11 +216,11 @@ int load_dungeon(void)
         size = next_item - current_item;
         actions[i] = malloc(action_t);
         fseek(dungeon_file, current_item, SEEK_SET);
-        actions[i]->message = read_word();
-        actions[i]->noaction = read_byte();
-        actions[i]->words.n = read_byte();
+        actions[i]->message = get_word();
+        actions[i]->noaction = get_byte();
+        actions[i]->words.n = get_byte();
         for (j = 0; j < 10; j++)
-            actions[i]->words.strs[j] = read_word();
+            actions[i]->words.strs[j] = get_word();
     }
     /* Keys, whatever those are * /
     tkey = malloc(sizeof(uint16_t) * (NKEYS + 1));

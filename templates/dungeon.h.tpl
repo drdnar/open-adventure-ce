@@ -53,7 +53,7 @@ typedef struct {{
   uint8_t texts_start;
   uint8_t changes_start;
   /* This actually contains both compressed and uncompressed string indices. */
-  const compressed_string_index_t strings[11];
+  compressed_string_index_t strings[11];
 }} object_t;
 
 typedef struct {{
@@ -130,7 +130,7 @@ extern uint8_t* huffman_tree;
 extern uint8_t** compressed_strings;
 extern char** uncompressed_strings;
 extern location_t* locations;
-extern const object_t objects_[];
+extern object_t** objects;
 extern compressed_string_index_t* arbitrary_messages;
 extern class_t* classes;
 extern turn_threshold_t* turn_thresholds;

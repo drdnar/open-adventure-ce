@@ -227,7 +227,7 @@ const location_t* get_location(int n)
 
 const object_t* get_object(int n)
 {
-    return &objects_[n];
+    return objects[n];
 }
 
 

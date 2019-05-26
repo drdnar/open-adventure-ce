@@ -905,7 +905,7 @@ if __name__ == "__main__":
         return db["locations"].index(locs[0])
     for (i, item) in enumerate(db["objects"]):
         write_offset(data_file, objects_location, len(data_file))
-        objects_location += 11
+        objects_location += 2
         attr = item[1]
         append_offset(data_file, add_compressed_string(attr["inventory"]))
         locs = attr.get("locations", ["LOC_NOWHERE", "LOC_NOWHERE"])
@@ -942,7 +942,6 @@ if __name__ == "__main__":
         data_file.append(changes_start)
         for i in strings:
             append_offset(data_file, i)
-        objects_location += len(strings)
     
     # Obituaries
     obituaries_location = len(data_file)

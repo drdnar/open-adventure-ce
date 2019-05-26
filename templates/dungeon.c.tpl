@@ -35,6 +35,7 @@ const location_t locations_[] = {{
 {locations}
 }};
 
+object_t** objects;
 const object_t objects_[] = {{
 {objects}
 }};
