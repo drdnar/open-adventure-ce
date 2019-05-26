@@ -37,8 +37,8 @@ typedef uint16_t compressed_string_index_t;
 typedef uint16_t uncompressed_string_index_t;
 
 typedef struct {{
-  const uint8_t n;
-  const uncompressed_string_index_t strs[10];
+  uint8_t n;
+  uncompressed_string_index_t strs[10];
 }} string_group_t;
 
 /* There is some code that depends on these fields being in the right order.
@@ -68,8 +68,8 @@ typedef struct {{
 }} location_t;
 
 typedef struct {{
-  const compressed_string_index_t query;
-  const compressed_string_index_t yes_response;
+  compressed_string_index_t query;
+  compressed_string_index_t yes_response;
 }} obituary_t;
 
 typedef struct {{
@@ -84,39 +84,39 @@ typedef struct {{
 }} class_t;
 
 typedef struct {{
-  const uint8_t number;
-  const uint8_t turns;
-  const uint8_t penalty;
-  const compressed_string_index_t question;
-  const compressed_string_index_t hint;
+  uint8_t number;
+  uint8_t turns;
+  uint8_t penalty;
+  compressed_string_index_t question;
+  compressed_string_index_t hint;
 }} hint_t;
 
 typedef struct {{
-  const string_group_t words;
+  string_group_t words;
 }} motion_t;
 
 typedef struct {{
-  const compressed_string_index_t message;
-  const bool noaction;
-  const string_group_t words;
+  compressed_string_index_t message;
+  bool noaction;
+  string_group_t words;
 }} action_t;
 
 enum condtype_t {{cond_goto = 0, cond_pct = 1, cond_carry = 2, cond_with = 3, cond_not = 4}};
 enum desttype_t {{dest_goto = 0, dest_special = 1, dest_speak = 2}};
 
 typedef struct {{
-  const uint8_t motion;
-  const uint8_t condtype;
-  const uint8_t condarg1;
-  const uint8_t condarg2;
+  uint8_t motion;
+  uint8_t condtype;
+  uint8_t condarg1;
+  uint8_t condarg2;
 #ifndef CALCULATOR
-  const enum desttype_t desttype;
+  enum desttype_t desttype;
 #else
-  const uint8_t desttype;
+  uint8_t desttype;
 #endif
-  const uint8_t destval;
-  const bool nodwarves;
-  const bool stop;
+  uint8_t destval;
+  bool nodwarves;
+  bool stop;
 }} travelop_t;
 
 /* Abstract out the encoding of words in the travel array.  Gives us
@@ -134,13 +134,13 @@ extern object_t** objects;
 extern compressed_string_index_t* arbitrary_messages;
 extern class_t* classes;
 extern turn_threshold_t* turn_thresholds;
-extern const obituary_t obituaries_[];
-extern const hint_t hints_[];
+extern obituary_t* obituaries;
+extern hint_t* hints;
 extern int32_t conditions[];
-extern const motion_t motions_[];
-extern const action_t actions_[];
-extern const travelop_t travel_[];
-extern const uint16_t tkey_[];
+extern motion_t** motions;
+extern action_t** actions;
+extern travelop_t* travel;
+extern uint16_t* tkey;
 extern const char *ignore;
 
 #define NLOCATIONS	{num_locations}

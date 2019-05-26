@@ -233,13 +233,13 @@ const object_t* get_object(int n)
 
 const obituary_t* get_obituary(int n)
 {
-    return &obituaries_[n];
+    return &obituaries[n];
 }
 
 
 const hint_t* get_hint(int n)
 {
-    return &hints_[n];
+    return &hints[n];
 }
 
 
@@ -251,23 +251,23 @@ const hint_t* get_hint(int n)
 
 const motion_t* get_motion(int n)
 {
-    return &motions_[n];
+    return motions[n];
 }
 
 
 const action_t* get_action(int n)
 {
-    return &actions_[n];
+    return actions[n];
 }
 
 
 const long get_tkey(int n)
 {
-    return tkey_[n];
+    return tkey[n];
 }
 
 
 const travelop_t* get_travelop(int n)
 {
-    return &travel_[n];
+    return &travel[n];
 }

@@ -46,7 +46,7 @@ int load_dungeon(void)
     long huffman_tree_location, compressed_strings_location, uncompressed_strings_location,
         arbitrary_messages_location, classes_location, turn_thresholds_location,
         locations_location, objects_location, obituaries_location, hints_location,
-        motions_location, actions_locations, tkey_location, travel_location;
+        motions_location, actions_location, tkey_location, travel_location;
     long size, current_item, next_item;
     int i, j;
     
@@ -71,7 +71,7 @@ int load_dungeon(void)
     hints_location = get_word();
     get_word();
     motions_location = get_word();
-    actions_locations = get_word();
+    actions_location = get_word();
     tkey_location = get_word();
     travel_location = get_word();
     /* Huffman table */
@@ -128,9 +128,9 @@ int load_dungeon(void)
         classes[i].message = get_word();
     }
     /* Turn thresholds */
-    turn_thresholds = malloc(sizeof(turn_threshold_t) * (NTHRESHOLDS + 1));
+    turn_thresholds = malloc(sizeof(turn_threshold_t) * (NTHRESHOLDS));
     fseek(dungeon_file, turn_thresholds_location, SEEK_SET);
-    for (i = 0; i < NTHRESHOLDS + 1; i++)
+    for (i = 0; i < NTHRESHOLDS; i++)
     {
         turn_thresholds[i].threshold = get_word();
         turn_thresholds[i].point_loss = get_byte();
@@ -173,20 +173,28 @@ int load_dungeon(void)
         for (j = 0; j < 11; j++)
             objects[i]->strings[j] = get_word();
     }
-    /* Hints * /
-    hints = malloc(sizeof(hint_t) * (NHINTS + 1));
-    fseek(dungeon_file, hints_location, SEEK_SET);
-    for (i = 0; i < NHINTS + 1; i++)
+    /* Obituaries */
+    obituaries = malloc(sizeof(obituary_t) * NDEATHS);
+    fseek(dungeon_file, obituaries_location, SEEK_SET);
+    for (i = 0; i < NDEATHS; i++)
     {
-        hints[i]->number = get_byte();
-        hints[i]->turns = get_byte();
-        hints[i]->penalty = get_byte();
-        hints[i]->question = get_word();
-        hints[i]->hint = get_word();
+        obituaries[i].query = get_word();
+        obituaries[i].yes_response = get_word();
     }
-    /* Motions * /
-    motions = malloc(sizeof(intptr_t) * (NMOTIONS + 1));
-    for (i = 0; i < NMOTIONS + 1; i++)
+    /* Hints */
+    hints = malloc(sizeof(hint_t) * NHINTS);
+    fseek(dungeon_file, hints_location, SEEK_SET);
+    for (i = 0; i < NHINTS; i++)
+    {
+        hints[i].number = get_byte();
+        hints[i].turns = get_byte();
+        hints[i].penalty = get_byte();
+        hints[i].question = get_word();
+        hints[i].hint = get_word();
+    }
+    /* Motions */
+    motions = malloc(sizeof(intptr_t) * NMOTIONS);
+    for (i = 0; i < NMOTIONS; i++)
     {
         fseek(dungeon_file, motions_location, SEEK_SET);
         motions_location += 2;
@@ -196,15 +204,15 @@ int load_dungeon(void)
         else
             next_item = actions_location;
         size = next_item - current_item;
-        motions[i] = malloc(motion_t);
+        motions[i] = malloc(sizeof(motion_t));
         fseek(dungeon_file, current_item, SEEK_SET);
         motions[i]->words.n = get_byte();
         for (j = 0; j < 10; j++)
             motions[i]->words.strs[j] = get_word();
     }
-    /* Actions * /
-    actions = malloc(sizeof(intptr_t) * (NACTIONS + 1));
-    for (i = 0; i < NACTIONS + 1; i++)
+    /* Actions */
+    actions = malloc(sizeof(intptr_t) * NACTIONS);
+    for (i = 0; i < NACTIONS; i++)
     {
         fseek(dungeon_file, actions_location, SEEK_SET);
         actions_location += 2;
@@ -214,7 +222,7 @@ int load_dungeon(void)
         else
             next_item = tkey_location;
         size = next_item - current_item;
-        actions[i] = malloc(action_t);
+        actions[i] = malloc(sizeof(action_t));
         fseek(dungeon_file, current_item, SEEK_SET);
         actions[i]->message = get_word();
         actions[i]->noaction = get_byte();
@@ -222,26 +230,25 @@ int load_dungeon(void)
         for (j = 0; j < 10; j++)
             actions[i]->words.strs[j] = get_word();
     }
-    /* Keys, whatever those are * /
-    tkey = malloc(sizeof(uint16_t) * (NKEYS + 1));
+    /* Keys, whatever those are */
+    tkey = malloc(sizeof(uint16_t) * NKEYS);
     fseek(dungeon_file, tkey_location, SEEK_SET);
-    for (i = 0; i < NHINTS + 1; i++)
+    for (i = 0; i < NKEYS; i++)
         tkey[i] = get_word();
-    /* Giant travel thingy * /
-    travel = malloc(sizeof(travelop_t) * (NTRAVEL + 1));
+    /* Giant travel thingy */
+    travel = malloc(sizeof(travelop_t) * NTRAVEL);
     fseek(dungeon_file, travel_location, SEEK_SET);
-    for (i = 0; i < NTRAVEL + 1; i++)
+    for (i = 0; i < NTRAVEL; i++)
     {
-        travel[i]->motion = get_byte();
-        travel[i]->condtype = get_byte();
-        travel[i]->condarg1 = get_byte();
-        travel[i]->condarg2 = get_byte();
-        travel[i]->desttype = get_byte();
-        travel[i]->destval = get_byte();
-        travel[i]->nodwarves = get_byte();
-        travel[i]->stop = get_byte();
+        travel[i].motion = get_byte();
+        travel[i].condtype = get_byte();
+        travel[i].condarg1 = get_byte();
+        travel[i].condarg2 = get_byte();
+        travel[i].desttype = get_byte();
+        travel[i].destval = get_byte();
+        travel[i].nodwarves = get_byte();
+        travel[i].stop = get_byte();
     }
-   */ 
 }
 #endif
 

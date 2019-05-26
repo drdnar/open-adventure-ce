@@ -956,8 +956,8 @@ if __name__ == "__main__":
     for i in db["hints"]:
         item = i["hint"]
         data_file.append(item["number"])
-        data_file.append(item["penalty"])
         data_file.append(item["turns"])
+        data_file.append(item["penalty"])
         append_offset(data_file, add_compressed_string(item["question"]))
         append_offset(data_file, add_compressed_string(item["hint"]))
     
@@ -976,6 +976,7 @@ if __name__ == "__main__":
         if item["words"] == None:
             data_file.append(0)
         else:
+            data_file.append(len(item["words"]))
             for string in item["words"]:
                 append_offset(data_file, add_uncompressed_string(string))
     
@@ -997,6 +998,7 @@ if __name__ == "__main__":
         if item["words"] == None:
             data_file.append(0)
         else:
+            data_file.append(len(item["words"]))
             for string in item["words"]:
                 append_offset(data_file, add_uncompressed_string(string))
     
@@ -1036,9 +1038,9 @@ if __name__ == "__main__":
         # destval, may be a number, or a string to deref to a location enum
         deref_enum(location_refs, message_refs, item[7], "destval")
         # nodwarves
-        data_file.append(1 if item[8] else 0)
+        data_file.append(1 if item[8] == "true" else 0)
         # stop
-        data_file.append(1 if item[9] else 0)
+        data_file.append(1 if item[9] == "true" else 0)
     
     print('Data file size: {}'.format(len(data_file)))
     
