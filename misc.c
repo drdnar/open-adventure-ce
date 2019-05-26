@@ -309,7 +309,7 @@ bool silent_yes(void)
 }
 
 
-bool yes(const char* question, const char* yes_response, const char* no_response)
+bool yes(const compressed_string_index_t question, const compressed_string_index_t yes_response, const compressed_string_index_t no_response)
 /*  Print message X, wait for yes/no answer.  If yes, print Y and return true;
  *  if no, print Z and return false. */
 {
@@ -318,7 +318,7 @@ bool yes(const char* question, const char* yes_response, const char* no_response
     int i, yes, y, no, n;
 
     for (;;) {
-        speak(question);
+        speak(get_compressed_string(question));
 
         reply = get_input();
         if (reply == NULL) {
@@ -352,12 +352,12 @@ bool yes(const char* question, const char* yes_response, const char* no_response
 
         if (yes == 0 ||
             y == 0) {
-            speak(yes_response);
+            speak(get_compressed_string(yes_response));
             outcome = true;
             break;
         } else if (no == 0 ||
                    n == 0) {
-            speak(no_response);
+            speak(get_compressed_string(no_response));
             outcome = false;
             break;
         } else

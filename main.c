@@ -108,14 +108,14 @@ void main()
 
 #ifndef ADVENT_NOSAVE
     if (!rfp) {
-        game.novice = yes(get_arbitrary_message(WELCOME_YOU), get_arbitrary_message(CAVE_NEARBY), get_arbitrary_message(NO_MESSAGE));
+        game.novice = yes(get_arbitrary_message_index(WELCOME_YOU), get_arbitrary_message_index(CAVE_NEARBY), get_arbitrary_message_index(NO_MESSAGE));
         if (game.novice)
             game.limit = NOVICELIMIT;
     } else {
         restore(rfp);
     }
 #else
-    game.novice = yes(get_arbitrary_message(WELCOME_YOU), get_arbitrary_message(CAVE_NEARBY), get_arbitrary_message(NO_MESSAGE));
+    game.novice = yes(get_arbitrary_message_index(WELCOME_YOU), get_arbitrary_message_index(CAVE_NEARBY), get_arbitrary_message_index(NO_MESSAGE));
     if (game.novice)
         game.limit = NOVICELIMIT;
 #endif
@@ -222,10 +222,10 @@ static void checkhints(void)
 
                 /* Fall through to hint display */
                 game.hintlc[hint] = 0;
-                if (!yes(get_compressed_string(cur_hint->question), get_arbitrary_message(NO_MESSAGE), get_arbitrary_message(OK_MAN)))
+                if (!yes(cur_hint->question, get_arbitrary_message_index(NO_MESSAGE), get_arbitrary_message_index(OK_MAN)))
                     return;
                 rspeak(HINT_COST, cur_hint->penalty, cur_hint->penalty);
-                game.hinted[hint] = yes(get_arbitrary_message(WANT_HINT), get_compressed_string(cur_hint->hint), get_arbitrary_message(OK_MAN));
+                game.hinted[hint] = yes(get_arbitrary_message_index(WANT_HINT), cur_hint->hint, get_arbitrary_message_index(OK_MAN));
                 if (game.hinted[hint] && game.limit > WARNTIME)
                     game.limit += WARNTIME * cur_hint->penalty;
             }
@@ -473,8 +473,8 @@ static void croak(void)
 /*  Okay, he's dead.  Let's get on with it. */
 {
     int i, j;
-    const char* query = get_compressed_string(get_obituary(game.numdie)->query);
-    const char* yes_response = get_compressed_string(get_obituary(game.numdie)->yes_response);
+    const compressed_string_index_t query = get_obituary(game.numdie)->query;
+    const compressed_string_index_t yes_response = get_obituary(game.numdie)->yes_response;
 
     ++game.numdie;
 
@@ -483,7 +483,7 @@ static void croak(void)
          *  death and exit. */
         rspeak(DEATH_CLOSING);
         terminate(endgame);
-    } else if (!yes(query, yes_response, get_arbitrary_message(OK_MAN))
+    } else if (!yes(query, yes_response, get_arbitrary_message_index(OK_MAN))
                || game.numdie == NDEATHS) {
         /* Player is asked if he wants to try again. If not, or if 
          * he's already used all of his lives, we end the game */

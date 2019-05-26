@@ -41,6 +41,8 @@ const char* get_object_change(int o, int n);
 
 const char* get_object_word(int o, int n);
 
+const compressed_string_index_t get_arbitrary_message_index(int n);
+
 const char* get_arbitrary_message(int n);
 
 const class_t* get_class(int n);

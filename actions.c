@@ -1090,7 +1090,7 @@ static phase_codes_t pour(verb_t verb, obj_t obj)
 static phase_codes_t quit(void)
 /*  Quit.  Intransitive only.  Verify intent and exit if that's what he wants. */
 {
-    if (yes(get_arbitrary_message(REALLY_QUIT), get_arbitrary_message(OK_MAN), get_arbitrary_message(OK_MAN)))
+    if (yes(get_arbitrary_message_index(REALLY_QUIT), get_arbitrary_message_index(OK_MAN), get_arbitrary_message_index(OK_MAN)))
         terminate(quitgame);
     return GO_CLEAROBJ;
 }
@@ -1114,7 +1114,7 @@ static phase_codes_t read(command_t command)
     if (DARK(game.loc)) {
         sspeak(NO_SEE, command.word[0].raw);
     } else if (command.obj == OYSTER && !game.clshnt && game.closed) {
-        game.clshnt = yes(get_arbitrary_message(CLUE_QUERY), get_arbitrary_message(WAYOUT_CLUE), get_arbitrary_message(OK_MAN));
+        game.clshnt = yes(get_arbitrary_message_index(CLUE_QUERY), get_arbitrary_message_index(WAYOUT_CLUE), get_arbitrary_message_index(OK_MAN));
     } else if (get_object_text(command.obj, 0) == NULL ||
                game.prop[command.obj] == STATE_NOTFOUND) {
         speak(get_compressed_string(get_action(command.verb)->message));

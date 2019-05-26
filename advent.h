@@ -226,7 +226,7 @@ extern void pspeak(vocab_t, enum speaktype, bool, int, ...);
 extern void rspeak(vocab_t, ...);
 extern void echo_input(FILE*, const char*, const char*);
 extern bool silent_yes(void);
-extern bool yes(const char*, const char*, const char*);
+extern bool yes(const compressed_string_index_t, const compressed_string_index_t, const compressed_string_index_t);
 extern void juggle(obj_t);
 extern void move(obj_t, loc_t);
 extern loc_t put(obj_t, loc_t, int);

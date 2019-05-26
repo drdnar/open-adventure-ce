@@ -184,26 +184,15 @@ const char* get_object_word(int o, int n)
 }
 
 
-bool have_PLEASE_ANSWER = 0;
-#define PLEASE_ANSWER_LEN 32
-char please_answer[PLEASE_ANSWER_LEN];
 const char* get_arbitrary_message(int n)
 {
-    /* PLEASE_ANSWER gets used in a loop.  It would be better to delay
-     * decompressing until speak/rspeak, but . . . I'm lazy. */
-    if (n == PLEASE_ANSWER)
-    {
-        if (!have_PLEASE_ANSWER)
-#ifndef CALCULATOR
-            if (decompress_string((void*)compressed_strings[n], &please_answer[0]) - please_answer > PLEASE_ANSWER_LEN)
-                BUG(PLEASE_ANSWER_TOO_LONG);
-#else
-            decompress_string((void*)compressed_strings[n], &please_answer[0]);
-#endif
-        return please_answer;
-    }
-    else
-        return get_compressed_string(arbitrary_messages[n]);
+    return get_compressed_string(arbitrary_messages[n]);
+}
+
+
+const compressed_string_index_t get_arbitrary_message_index(int n)
+{
+    return arbitrary_messages[n];
 }
 
 
