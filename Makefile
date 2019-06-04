@@ -1,141 +1,222 @@
-# Makefile for the open-source release of adventure 2.5
+NAME ?= CCAVEADV
+COMPRESSED ?= NO
+ICON ?= none.png
+DESCRIPTION ?= "Colossal Cave Adventure 1.8"
+#----------------------------
+# Core C Makefile
+#----------------------------
+CLEANUP             ?= YES
+BSSHEAP_LOW         ?= D031F6
+BSSHEAP_HIGH        ?= D13FD6
+STACK_HIGH          ?= D1A87E
+INIT_LOC            ?= D1A87F
+USE_FLASH_FUNCTIONS ?= YES
+OUTPUT_MAP          ?= YES
+ARCHIVED            ?= NO
+OPT_MODE            ?= -optsize
+#----------------------------
+SRCDIR              ?=
+OBJDIR              ?= obj
+BINDIR              ?= bin
+GFXDIR              ?= gfx
+#----------------------------
 
-# To build with save/resume disabled, pass CCFLAGS="-D ADVENT_NOSAVE"
+VERSION := 8.5
+VERS := 1.8
 
-VERS=$(shell sed -n <NEWS '/^[0-9]/s/:.*//p' | head -1)
+#----------------------------
+# try not to edit anything below these lines unless you know what you are doing
+# I don't really know what I'm doing, but here goes. . . .
+#----------------------------
 
-.PHONY: debug indent release refresh dist linty html clean
-.PHONY: check coverage
+#----------------------------
 
-CC?=gcc
-#CCFLAGS+=-std=c99 -D_DEFAULT_SOURCE -DVERSION=\"$(VERS)\" -O2 -D_FORTIFY_SOURCE=2 -fstack-protector-all -Wdeclaration-after-statement
-CCFLAGS+=-std=c99 -D_DEFAULT_SOURCE -DVERSION=\"$(VERS)\" -O0 -D_FORTIFY_SOURCE=2 -fstack-protector-all -Wdeclaration-after-statement -ggdb
-LIBS=$(shell pkg-config --libs libedit)
-INC+=$(shell pkg-config --cflags libedit)
+# define some common makefile things
+empty :=
+space := $(empty) $(empty)
+comma := ,
 
-# LLVM/Clang on macOS seems to need -ledit flag for linking
-UNAME_S := $(shell uname -s)
-ifeq ($(UNAME_S),Darwin)
-    LIBS += -ledit
+TARGET ?= $(NAME)
+ICONPNG ?= $(ICON)
+DEBUGMODE = NDEBUG
+CCDEBUGFLAG = -nodebug
+
+# verbosity
+V ?= 0
+ifeq ($(V),0)
+Q = @
+else
+Q =
 endif
 
-OBJS=main.o init.o actions.o score.o misc.o saveresume.o calc.o
-CHEAT_OBJS=cheat.o init.o actions.o score.o misc.o saveresume.o calc.o
-SOURCES=$(OBJS:.o=.c) advent.h adventure.yaml Makefile control make_dungeon_calc.py templates/*.tpl
+# get the os specific items
+ifeq ($(OS),Windows_NT)
+SHELL     := cmd.exe
+MAKEDIR   := $(CURDIR)
+NATIVEPATH = $(subst /,\,$1)
+WINPATH    = $(NATIVEPATH)
+WINRELPATH = $(subst /,\,$1)
+RM         = del /q /f 2>nul
+CEDEV     ?= $(call NATIVEPATH,$(realpath ..\..))
+BIN       ?= $(call NATIVEPATH,$(CEDEV)/bin)
+LD         = $(call NATIVEPATH,$(BIN)/fasmg.exe)
+CC         = $(call NATIVEPATH,$(BIN)/ez80cc.exe)
+CV         = $(call NATIVEPATH,$(BIN)/convhex.exe)
+PG         = $(call NATIVEPATH,$(BIN)/convpng.exe)
+CD         = cd
+CP         = copy /y
+MV         = move /y >nul
+NULL       = >nul 2>&1
+RMDIR      = call && (if exist $1 rmdir /s /q $1)
+MKDIR      = call && (if not exist $1 mkdir $1)
+QUOTE_ARG  = "$(subst ",',$1)"#'
+TO_LOWER   = $1
+else
+MAKEDIR   := $(CURDIR)
+NATIVEPATH = $(subst \,/,$1)
+WINPATH    = $(shell winepath -w $1)
+WINRELPATH = $(subst /,\,$1)
+RM         = rm -f
+CEDEV     ?= $(call NATIVEPATH,$(realpath ..\..))
+BIN       ?= $(call NATIVEPATH,$(CEDEV)/bin)
+CC         = $(call NATIVEPATH,wine "$(BIN)/ez80cc.exe")
+LD         = $(call NATIVEPATH,$(BIN)/fasmg)
+CV         = $(call NATIVEPATH,$(BIN)/convhex)
+PG         = $(call NATIVEPATH,$(BIN)/convpng)
+CD         = cd
+CP         = cp
+MV         = mv
+RMDIR      = rm -rf $1
+MKDIR      = mkdir -p $1
+QUOTE_ARG  = '$(subst ','\'',$1)'#'
+TO_LOWER   = $(shell printf %s $(call QUOTE_ARG,$1) | tr [:upper:] [:lower:])
+endif
+FASMG_FILES = $(subst $(space),$(comma) ,$(patsubst %,"%",$(subst ",\",$(subst \,\\,$(call NATIVEPATH,$1)))))#"
 
-.c.o:
-	$(CC) $(CCFLAGS) $(INC) $(DBX) -c $<
+# ensure native paths
+#SRCDIR := $(call NATIVEPATH,$(SRCDIR))
+OBJDIR := $(call NATIVEPATH,$(OBJDIR))
+BINDIR := $(call NATIVEPATH,$(BINDIR))
+GFXDIR := $(call NATIVEPATH,$(GFXDIR))
 
-advent:	$(OBJS) dungeon.o
-	$(CC) $(CCFLAGS) $(DBX) -o advent $(OBJS) dungeon.o $(LDFLAGS) $(LIBS)
+# generate default names
+TARGETBIN     := $(TARGET).bin
+TARGETMAP     := $(TARGET).map
+TARGET8XP     := $(TARGET).8xp
+ICON_ASM      := iconc.src
 
-main.o:	 	advent.h dungeon.h
+# init conditionals
+F_STARTUP     := $(call NATIVEPATH,$(CEDEV)/lib/cstartup.src)
+F_LAUNCHER    := $(call NATIVEPATH,$(CEDEV)/lib/libheader.src)
+F_CLEANUP     := $(call NATIVEPATH,$(CEDEV)/lib/ccleanup.src)
 
-init.o:	 	advent.h dungeon.h
+# source: http://blog.jgc.org/2011/07/gnu-make-recursive-wildcard-function.html
+rwildcard = $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2)$(filter $(subst *,%,$2),$d))
 
-actions.o:	advent.h dungeon.h
+# find all of the available C, H and ASM files (Remember, you can create C <-> assembly routines easily this way)
+# TODO: Rework some of this, since we're using a different file organization
+CSOURCES      := calc.c editor.c
+#actions.c calc.c dungeon.c editor.c init.c main.c misc.c saveresume.c score.c
+#CPPSOURCES    := $(call rwildcard,$(SRCDIR),*.cpp)
+USERHEADERS   := editor.h
+#advent.h calc.h dehuffman.h dungeon.h editor.h
+ASMSOURCES    := ez80dehuffman.asm
 
-score.o:	advent.h dungeon.h
+# create links for later
+LINK_CSOURCES := $(CSOURCES:%.c=$(OBJDIR)/%.src)
+#LINK_CPPSOURCES := $(CPPSOURCES:%=$(OBJDIR)/%.src)
+LINK_ASMSOURCES := $(ASMSOURCES)
 
-misc.o:		advent.h dungeon.h
+# files created to be used for linking
+LINK_FILES   := $(LINK_CSOURCES) $(LINK_CPPSOURCES) $(LINK_ASMSOURCES)
+LINK_LIBS    := $(wildcard $(CEDEV)/lib/libload/*.lib)
+LINK_LIBLOAD := $(CEDEV)/lib/libload.lib
 
-cheat.o:	advent.h dungeon.h
+# check if there is an icon present that we can convert; if so, generate a recipe to build it properly
+ifneq ("$(wildcard $(ICONPNG))","")
+F_ICON     := $(OBJDIR)/$(ICON_ASM)
+ICON_CONV  := $(PG) -c $(ICONPNG)$(comma)$(call NATIVEPATH,$(F_ICON))$(comma)$(DESCRIPTION)
+LINK_ICON   = , $(call FASMG_FILES,$(F_ICON)) used
+endif
 
-saveresume.o:	advent.h dungeon.h
+# determine if output should be archived or compressed
+ifeq ($(ARCHIVED),YES)
+CVFLAGS += -a
+endif
+ifeq ($(COMPRESSED),YES)
+CVFLAGS += -x
+endif
+ifeq ($(CLEANUP),YES)
+LINK_CLEANUP = , $(call FASMG_FILES,$(F_CLEANUP)) used
+endif
+ifeq ($(OUTPUT_MAP),YES)
+LDMAPFLAG = -i map
+endif
 
-dungeon.o:	dungeon.c dungeon.h
-	$(CC) $(CCFLAGS) -Warray-bounds=0 $(DBX) -c dungeon.c
+# choose static or linked flash functions
+ifeq ($(USE_FLASH_FUNCTIONS),YES)
+STATIC := 0
+else
+STATIC := 1
+endif
 
-dungeon.c dungeon.h dungeon.bin: make_dungeon_calc.py adventure.yaml advent.h templates/*.tpl
-	./make_dungeon_calc.py
-	rm -f tests/dungeon.bin
-	cp dungeon.bin tests/dungeon.bin
+# define the C flags used by the Zilog compiler
+CFLAGS ?= \
+    -noasm $(CCDEBUGFLAG) -nogenprint -keepasm -quiet $(OPT_MODE) -cpu:EZ80F91 -noreduceopt -nolistinc -nomodsect -define:_EZ80F91 -define:_EZ80 -define:$(DEBUGMODE) -define:VERSION=\"$(VERS)\" -define:CALCULATOR
+
+# these are the linker flags, basically organized to properly set up the environment
+LDFLAGS ?= \
+	$(call QUOTE_ARG,$(call NATIVEPATH,$(CEDEV)/include/fasmg-ez80/ld.fasmg)) \
+	-i $(call QUOTE_ARG,include $(call FASMG_FILES,$(CEDEV)/include/.linker_script)) \
+	$(LDDEBUGFLAG) \
+	$(LDMAPFLAG) \
+	-i $(call QUOTE_ARG,range bss $$$(BSSHEAP_LOW) : $$$(BSSHEAP_HIGH)) \
+	-i $(call QUOTE_ARG,symbol __stack = $$$(STACK_HIGH)) \
+	-i $(call QUOTE_ARG,locate header at $$$(INIT_LOC)) \
+	-i $(call QUOTE_ARG,STATIC := $(STATIC)) \
+	-i $(call QUOTE_ARG,srcs $(call FASMG_FILES,$(F_LAUNCHER)) used if libs.length$(LINK_ICON)$(LINK_CLEANUP)$(comma) $(call FASMG_FILES,$(F_STARTUP)) used$(comma) $(call FASMG_FILES,$(LINK_FILES))) \
+	-i $(call QUOTE_ARG,libs $(call FASMG_FILES,$(LINK_LIBLOAD)) used if libs.length$(comma) $(call FASMG_FILES,$(LINK_LIBS)))
+
+# this rule is trigged to build everything
+all: dirs $(BINDIR)/$(TARGET8XP) ;
+
+# this rule is trigged to build debug everything
+debug: LDDEBUGFLAG = -i dbg
+debug: DEBUGMODE = DEBUG
+debug: CCDEBUGFLAG = -debug
+debug: dirs $(BINDIR)/$(TARGET8XP) ;
+
+dirs:
+	@echo C CE SDK Version $(VERSION) && \
+	$(call MKDIR,$(BINDIR)) && \
+	$(call MKDIR,$(OBJDIR))
+
+$(BINDIR)/$(TARGET8XP): $(BINDIR)/$(TARGETBIN)
+	$(Q)$(CD) $(BINDIR) && \
+	$(CV) $(CVFLAGS) $(notdir $<) $(notdir $@)
+
+$(BINDIR)/$(TARGETBIN): $(LINK_FILES) $(F_ICON)
+	$(Q)$(LD) $(LDFLAGS) $@
+
+# this rule handles conversion of the icon, if it is ever updated
+$(OBJDIR)/$(ICON_ASM): $(ICONPNG)
+	$(Q)$(ICON_CONV)
+
+# these rules compile the source files into object files
+$(OBJDIR)/%.src: %.c $(USERHEADERS)
+	$(Q)$(call MKDIR,$(call NATIVEPATH,$(@D))) && \
+	$(CC) $(CFLAGS) $(call QUOTE_ARG,$(call WINPATH,$(addprefix $(MAKEDIR)/,$<))) && \
+	$(MV) $(call QUOTE_ARG,$(call TO_LOWER,$(@F))) $(call QUOTE_ARG,$@)
 
 clean:
-	rm -f *.o advent cheat *.html *.gcno *.gcda
-	rm -f dungeon.c dungeon.h
-	rm -f README advent.6 MANIFEST *.tar.gz
-	rm -f *~
-	rm -f .*~
-	rm -rf coverage advent.info
-	cd tests; $(MAKE) --quiet clean
+	$(Q)$(call RMDIR,$(OBJDIR))
+	$(Q)$(call RMDIR,$(BINDIR))
+	@echo Cleaned build files.
 
+gfx:
+	$(Q)$(CD) $(GFXDIR) && convpng
 
-cheat: $(CHEAT_OBJS) dungeon.o
-	$(CC) $(CCFLAGS) $(DBX) -o cheat $(CHEAT_OBJS) dungeon.o $(LDFLAGS) $(LIBS)
+version:
+	@echo C SDK Version $(VERSION)
 
-check: advent cheat
-	cd tests; $(MAKE) --quiet
-
-coverage: debug
-	cd tests; $(MAKE) coverage --quiet
-
-.SUFFIXES: .adoc .html .6
-
-# Requires asciidoc and xsltproc/docbook stylesheets.
-.adoc.6:
-	a2x --doctype manpage --format manpage $<
-.adoc.html:
-	asciidoc $<
-.adoc:
-	asciidoc $<
-
-html: advent.html history.html hints.html
-
-# README.adoc exists because that filename is magic on GitLab.
-DOCS=COPYING NEWS README.adoc TODO advent.adoc history.adoc notes.adoc hints.adoc advent.6 INSTALL.adoc
-TESTFILES=tests/*.log tests/*.chk tests/README tests/decheck tests/Makefile
-
-# Can't use GNU tar's --transform, needs to build under Alpine Linux.
-# This is a requirement for testing dist in GitLab's CI pipeline
-advent-$(VERS).tar.gz: $(SOURCES) $(DOCS)
-	@find $(SOURCES) $(DOCS) $(TESTFILES) -print | sed s:^:advent-$(VERS)/: >MANIFEST
-	@(ln -s . advent-$(VERS))
-	(tar -T MANIFEST -czvf advent-$(VERS).tar.gz)
-	@(rm advent-$(VERS))
-
-indent:
-	astyle -n -A3 --pad-header --min-conditional-indent=1 --pad-oper *.c
-
-release: advent-$(VERS).tar.gz advent.html history.html hints.html notes.html
-	shipper version=$(VERS) | sh -e -x
-
-refresh: advent.html notes.html history.html
-	shipper -N -w version=$(VERS) | sh -e -x
-
-dist: advent-$(VERS).tar.gz
-
-linty: CCFLAGS += -W
-linty: CCFLAGS += -Wall
-linty: CCFLAGS += -Wextra
-linty: CCGLAGS += -Wpedantic
-linty: CCFLAGS += -Wundef
-linty: CCFLAGS += -Wstrict-prototypes
-linty: CCFLAGS += -Wmissing-prototypes
-linty: CCFLAGS += -Wmissing-declarations
-linty: CCFLAGS += -Wshadow
-linty: CCFLAGS += -Wnull-dereference
-linty: CCFLAGS += -Wjump-misses-init
-linty: CCFLAGS += -Wfloat-equal
-linty: CCFLAGS += -Wcast-align
-linty: CCFLAGS += -Wwrite-strings
-linty: CCFLAGS += -Waggregate-return
-linty: CCFLAGS += -Wcast-qual
-linty: CCFLAGS += -Wswitch-enum
-linty: CCFLAGS += -Wwrite-strings
-linty: CCFLAGS += -Wunreachable-code
-linty: CCFLAGS += -Winit-self
-linty: CCFLAGS += -Wpointer-arith
-linty: advent cheat
-
-debug: CCFLAGS += -O0
-debug: CCFLAGS += --coverage
-debug: CCFLAGS += -ggdb
-debug: CCFLAGS += -U_FORTIFY_SOURCE
-debug: CCFLAGS += -fsanitize=address
-debug: CCFLAGS += -fsanitize=undefined
-debug: linty
-
-CSUPPRESSIONS = --suppress=missingIncludeSystem --suppress=invalidscanf
-cppcheck:
-	cppcheck -I. --template gcc --enable=all $(CSUPPRESSIONS) *.[ch]
+.PHONY: all clean version gfx dirs debug

@@ -14,3 +14,6 @@ cheat
 advent.info
 coverage/*
 remake.sh
+bin/*
+obj/*
+*.bin
