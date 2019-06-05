@@ -74,12 +74,20 @@ TO_LOWER   = $1
 else
 MAKEDIR   := $(CURDIR)
 NATIVEPATH = $(subst \,/,$1)
+ifneq ($(shell uname -r | grep Microsoft),)
+WINPATH    = $(subst /,\,$1)
+else
 WINPATH    = $(shell winepath -w $1)
+endif
 WINRELPATH = $(subst /,\,$1)
 RM         = rm -f
 CEDEV     ?= $(call NATIVEPATH,$(realpath ..\..))
 BIN       ?= $(call NATIVEPATH,$(CEDEV)/bin)
+ifneq ($(shell uname -r | grep Microsoft),)
+CC         = $(call NATIVEPATH,$(BIN)/ez80cc.exe)
+else
 CC         = $(call NATIVEPATH,wine "$(BIN)/ez80cc.exe")
+endif
 LD         = $(call NATIVEPATH,$(BIN)/fasmg)
 CV         = $(call NATIVEPATH,$(BIN)/convhex)
 PG         = $(call NATIVEPATH,$(BIN)/convpng)
@@ -216,8 +224,9 @@ check:
 pc:
 	make -f makefile.pc
 
-dungeon:
+dungeon: dungeon.bin
 	make -f makefile.pc dungeon.bin
+	convhex -a -v -n CCaveDun dungeon.bin CCave_dungeon.8xv
 
 clean:
 	$(Q)$(call RM,*.src)
@@ -232,4 +241,4 @@ gfx:
 version:
 	@echo C SDK Version $(VERSION)
 
-.PHONY: all clean version gfx dirs debug check pc dungeon
+.PHONY: all clean version gfx dirs debug check pc
