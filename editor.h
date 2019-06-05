@@ -6,6 +6,7 @@
 void init_history(void);
 void free_history(void);
 void add_history(char* string);
+char* get_history_item(unsigned char n);
 
 typedef struct
 {
@@ -48,7 +49,8 @@ void editor_right(editor_context_t* context);
 void editor_left(editor_context_t* context);
 void editor_cursor_set(editor_context_t* context, unsigned char index);
 void editor_insert(editor_context_t* context, char character);
-void editor_insert_str(editor_context_t* context, char* str);
+/*void editor_insert_str(editor_context_t* context, char* str);*/
+void editor_set_str(editor_context_t* context, char* str);
 void editor_delete(editor_context_t* context, unsigned char n);
 void editor_flush(editor_context_t* context);
 char editor_translate_key(char key, unsigned char shift);

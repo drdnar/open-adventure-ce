@@ -127,6 +127,7 @@ void main(void) {
     uint8_t key, old_fgc, line_height = 0, cursor_width = 0;
     bool redraw_main_menu = true;
     gfx_Begin();
+    init_history();
     do
     {
         if (redraw_main_menu)
@@ -184,8 +185,7 @@ void main(void) {
             case sk_Del:
             case sk_Clear:
             case sk_Mode:
-                gfx_End();
-                exit(0);
+                exit_clean(0);
             case sk_Up:
                 if (selection > 0)
                     selection--;
@@ -213,7 +213,7 @@ void main(void) {
                         fontlib_SetCursorPosition(1, 30);
                         fontlib_DrawString(blah);
                         fontlib_ClearEOL();
-                        free(blah);
+                        add_history(blah);
                         break;
                     case 2:
                         exit_clean(0);

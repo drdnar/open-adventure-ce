@@ -21,7 +21,7 @@
 #define MAX_HISTORY 32
 #define MAX_HISTORY_MASK 31
 char** history = NULL;
-uint8_t history_next = 0;
+unsigned char history_next = 0;
 bool history_init = false;
 
 void init_history(void)
@@ -58,6 +58,11 @@ void add_history(char* string)
     history[history_next] = string;
     history_next = (history_next + 1) & MAX_HISTORY_MASK;
     
+}
+
+char* get_history_item(unsigned char n)
+{
+    return history[(history_next + MAX_HISTORY - n) & MAX_HISTORY_MASK];
 }
 
 
@@ -119,7 +124,7 @@ editor_context_t* editor_start(uint24_t x_loc, uint8_t y_loc, uint24_t box_width
     context->font_height = fontlib_GetCurrentFontHeight();
     context->fg_color = gfx_black;
     context->bg_color = gfx_white;
-    context->cursor_glyph = '\1';
+    context->cursor_glyph = '\2';
     context->cursor_shown = false;
     context->max_length = text_max_length;
     context->cursor_index = 0;
@@ -176,6 +181,16 @@ void editor_left(editor_context_t* context)
     context->cursor_x -= fontlib_GetGlyphWidth(context->str[--context->cursor_index]);
 }
 
+void editor_home(editor_context_t* context)
+{
+    editor_cursor_set(context, 0);
+}
+
+void editor_end(editor_context_t* context)
+{
+    editor_cursor_set(context, context->current_length);
+}
+
 /**
  * Sets the cursor position.
  */
@@ -185,7 +200,7 @@ void editor_cursor_set(editor_context_t* context, uint8_t index)
     if (index == 0)
         context->cursor_x = context->base_x;
     else
-        context->cursor_x = context->base_x + fontlib_GetStringWidthL(context->str, index - 1);
+        context->cursor_x = context->base_x + fontlib_GetStringWidthL(context->str, index);
 }
 
 /**
@@ -206,23 +221,38 @@ void editor_insert(editor_context_t* context, char character)
 /**
  * Inserts an entire string into the edit buffer at the current cursor position.
  * If the string is too big, inserts as much as possible.
- */
+ * 
+ * Also this method is broken.
+ *
 void editor_insert_str(editor_context_t* context, char* str)
 {
     uint8_t i = context->cursor_index;
     int str_len = strlen(str);
     int new_len = context->current_length + str_len;
-    char* s = &context->str[i];
+    char* s = context->str + i;
+    if (context->current_length == context->max_length)
+        return;
     if (new_len >= context->max_length)
-    {
         str_len -= new_len - context->max_length;
-        if (str_len <= 0)
-            return;
-    }
-    memmove(s+ str_len, s, context->current_length - i + 1);
+    memmove(s + str_len, s, context->current_length - i + 1);
     memcpy(str, s, str_len);
     context->current_length += str_len;
     editor_redraw_from_cursor(context);
+}*/
+
+
+/**
+ * Completely replaces the contents of the edit buffer with str.
+ */
+void editor_set_str(editor_context_t* context, char* str)
+{
+    size_t len = strlen(str);
+    if (len > context->max_length)
+        len = context->max_length;
+    memcpy(context->str, str, len);
+    context->str[len + 1] = '\0';
+    context->current_length = (unsigned char)len;
+    editor_end(context);
 }
 
 /**
@@ -231,7 +261,7 @@ void editor_insert_str(editor_context_t* context, char* str)
 void editor_delete(editor_context_t* context, uint8_t n)
 {
     uint8_t i = context->cursor_index;
-    char* s = &context->str[i];
+    char* s = context->str + i;
     if (n >= context->current_length - context->cursor_index)
     {
         *s = '\0';
@@ -284,8 +314,8 @@ void editor_hide_cursor(editor_context_t* context)
     /* We're going to hide the cursor by redrawing everything until the drawing
      * cursor is past the right edge of the cursor glyph. */
     x_end = context->cursor_x + fontlib_GetGlyphWidth(context->cursor_glyph);
-    sptr = &context->str[context->cursor_index];
-    end = &context->str[0] + context->current_length;
+    sptr = context->str + context->cursor_index;
+    end = context->str + context->current_length;
     do
         fontlib_DrawGlyph(*(sptr++));
     while (fontlib_GetCursorX() <= x_end && sptr < end);
@@ -535,6 +565,46 @@ char* get_string(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text
                 if (shift > 2)
                     shift = 0;
                 context->cursor_glyph = cursors[shift];
+                break;
+            case sk_Up:
+                seconds = 1;
+                if (get_history_item(seconds) == NULL)
+                    break;
+                do
+                {
+                    fontlib_SetColors(context->bg_color, context->fg_color);
+                    fontlib_SetCursorPosition(context->base_x, context->base_y);
+                    fontlib_DrawString(get_history_item(seconds));
+                    fontlib_SetBackgroundColor(context->bg_color);
+                    fontlib_ClearEOL();
+                    do
+                        key = os_GetCSC();
+                    while (!key);
+                    switch (key)
+                    {
+                        case sk_Up:
+                            if (get_history_item(++seconds) == NULL)
+                                seconds--;
+                            break;
+                        case sk_Down:
+                            if (get_history_item(--seconds) == NULL)
+                                seconds++;
+                            break;
+                        case sk_Enter:
+                            editor_flush(context);
+                            editor_set_str(context, get_history_item(seconds));
+                            editor_end(context);
+                            not_done = false;
+                            break;
+                        case sk_Clear:
+                        case sk_Del:
+                        case sk_Mode:
+                            not_done = false;
+                            break;
+                    }
+                } while (not_done);
+                editor_redraw(context);
+                not_done = true;
                 break;
             default:
                 key = editor_translate_key(key, shift);
