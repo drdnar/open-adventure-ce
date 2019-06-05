@@ -208,9 +208,22 @@ $(OBJDIR)/%.src: %.c $(USERHEADERS)
 	$(CC) $(CFLAGS) $(call QUOTE_ARG,$(call WINPATH,$(addprefix $(MAKEDIR)/,$<))) && \
 	$(MV) $(call QUOTE_ARG,$(call TO_LOWER,$(@F))) $(call QUOTE_ARG,$@)
 
+# Check that the game still works properly using ESR's rather nice test suite
+check:
+	make -f makefile.pc check
+
+# Just build the regular version of the game
+pc:
+	make -f makefile.pc
+
+dungeon:
+	make -f makefile.pc dungeon.bin
+
 clean:
+	$(Q)$(call RM,*.src)
 	$(Q)$(call RMDIR,$(OBJDIR))
 	$(Q)$(call RMDIR,$(BINDIR))
+	make -f makefile.pc clean
 	@echo Cleaned build files.
 
 gfx:
@@ -219,4 +232,4 @@ gfx:
 version:
 	@echo C SDK Version $(VERSION)
 
-.PHONY: all clean version gfx dirs debug
+.PHONY: all clean version gfx dirs debug check pc dungeon

@@ -52,7 +52,7 @@ static bool do_move(void);
 #ifndef CALCULATOR
 int main(int argc, char *argv[])
 #else
-void main()
+void play()
 #endif
 {
     int seedval;
