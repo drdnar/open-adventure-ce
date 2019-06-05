@@ -13,12 +13,54 @@
 
 /*#include "dungeon.h"*/
 #include "calc.h"
+#include "editor.h"
 /*#include "advent.h"*/
 
 
+/*******************************************************************************
+ * Error & Clean-up Code
+ ******************************************************************************/
+
+/**
+ * Exit and handle proper clean-up
+ */
+void exit_clean(int n)
+{
+    gfx_End();
+    exit(n);
+}
+
+/**
+ * Exits, but first displays an error message
+ */
+void exit_fail(char* message)
+{
+    gfx_SetTextFGColor(gfx_red);
+    gfx_SetTextBGColor(gfx_black);
+    gfx_PrintStringXY("ERROR:", 1, 1);
+    gfx_PrintStringXY(message, 1, 10);
+        while (!os_GetCSC());
+    exit_clean(1);
+}
+
+/**
+ * malloc(), but checks for NULL.
+ * If NULL, exits with an error message instead of crashing.
+ */
+void* malloc_safe(int size)
+{
+    char* memory = malloc(size);
+    if (!memory)
+        exit_fail("malloc() failed; out of heap?");
+    return memory;
+}
+
+/*******************************************************************************
+ * Font Stuff
+ ******************************************************************************/
+
 char* times_pack_name = "Times";
 char* drsans_pack_name = "DrSans";
-
 
 void font_missing(char* name)
 {
@@ -29,8 +71,7 @@ void font_missing(char* name)
     gfx_PrintString(name);
     gfx_PrintString("\" missing or corrupted");
         while (!os_GetCSC());
-    gfx_End();
-    exit(1);
+    exit_clean(1);
 }
 
 void set_times(uint8_t size, fontlib_load_options_t options)
@@ -67,6 +108,11 @@ void reverse_colors(void)
 }
 
 
+
+/*******************************************************************************
+ * MAIN
+ ******************************************************************************/
+
 #define MAIN_MENU_X 70
 #define MAIN_MENU_Y 146
 #define MAIN_MENU_FONT_SIZE 16
@@ -76,6 +122,7 @@ void reverse_colors(void)
 /* Main Function */
 void main(void) {
     fontlib_font_t* times_font;
+    char* blah;
     uint8_t selection = 0;
     uint8_t key, old_fgc, line_height = 0, cursor_width = 0;
     bool redraw_main_menu = true;
@@ -158,8 +205,19 @@ void main(void) {
                 break;
             case sk_Enter:
             case sk_2nd:
-                if (selection == 2)
-                    
+                switch (selection)
+                {
+                    case 0:
+                        blah = get_string(3, 3, 250, 16, fontlib_GetFontByStyle(drsans_pack_name, 14, 14, FONTLIB_BOLD, FONTLIB_BOLD, 0, 0));
+                        fontlib_SetWindowFullScreen();
+                        fontlib_SetCursorPosition(1, 30);
+                        fontlib_DrawString(blah);
+                        fontlib_ClearEOL();
+                        free(blah);
+                        break;
+                    case 2:
+                        exit_clean(0);
+                }
                 break;
         }
     }

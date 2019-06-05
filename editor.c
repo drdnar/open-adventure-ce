@@ -11,25 +11,8 @@
 #include <fontlibc.h>
 
 #include "editor.h"
+#include "calc.h"
 
-void fail_fast(char* message)
-{
-    gfx_SetTextFGColor(gfx_red);
-    gfx_SetTextBGColor(gfx_black);
-    gfx_PrintStringXY("ERROR:", 1, 1);
-    gfx_PrintStringXY(message, 1, 10);
-        while (!os_GetCSC());
-    gfx_End();
-    exit(1);
-}
-
-void* malloc_failable(int size)
-{
-    char* memory = malloc(size);
-    if (!memory)
-        fail_fast("malloc() failed; out of heap?");
-    return memory;
-}
 
 /*******************************************************************************
  * History circular buffer
@@ -46,7 +29,7 @@ void init_history(void)
     int i;
     if (history)
         return;
-    history = malloc_failable(sizeof(intptr_t) * MAX_HISTORY);
+    history = malloc_safe(sizeof(intptr_t) * MAX_HISTORY);
     if (!history)
         exit(0);
     for (i = 0; i < MAX_HISTORY; i++)
@@ -127,8 +110,7 @@ void editor_redraw(editor_context_t* context)
  */
 editor_context_t* editor_start(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text_max_length, fontlib_font_t* editor_font)
 {
-    int i;
-    editor_context_t* context = malloc_failable(sizeof(context));
+    editor_context_t* context = malloc_safe(sizeof(editor_context_t));
     context->base_x = x_loc;
     context->base_y = y_loc;
     context->width = box_width;
@@ -141,10 +123,10 @@ editor_context_t* editor_start(uint24_t x_loc, uint8_t y_loc, uint24_t box_width
     context->cursor_shown = false;
     context->max_length = text_max_length;
     context->cursor_index = 0;
+    context->cursor_x = x_loc;
     context->current_length = 0;
-    context->str = malloc_failable(1 + text_max_length);
-    for (i = 0; i <= text_max_length; i++)
-        context->str[i] = '\0';
+    context->str = malloc_safe(1 + text_max_length);
+    memset(context->str, '\0', 1 + text_max_length);
     editor_redraw(context);
     return context;
 }
@@ -155,6 +137,7 @@ editor_context_t* editor_start(uint24_t x_loc, uint8_t y_loc, uint24_t box_width
  */
 void editor_close(editor_context_t* context)
 {
+    gfx_SetColor(context->bg_color);
     gfx_FillRectangle_NoClip(context->base_x, context->base_y, context->width, context->font_height);
     free(context->str);
     free(context);
@@ -167,6 +150,7 @@ void editor_close(editor_context_t* context)
 char* editor_get_string_close(editor_context_t* context)
 {
     char* s = context->str;
+    gfx_SetColor(context->bg_color);
     gfx_FillRectangle_NoClip(context->base_x, context->base_y, context->width, context->font_height);
     free(context);
     return s;
@@ -189,7 +173,7 @@ void editor_left(editor_context_t* context)
 {
     if (context->cursor_index <= 0)
         return;
-    context->cursor_x -= fontlib_GetGlyphWidth(context->str[context->cursor_index--]);
+    context->cursor_x -= fontlib_GetGlyphWidth(context->str[--context->cursor_index]);
 }
 
 /**
@@ -213,7 +197,7 @@ void editor_insert(editor_context_t* context, char character)
     char* s = &context->str[i];
     if (context->current_length >= context->max_length)
         return;
-    memmove(s, s + 1, context->current_length - i + 1);
+    memmove(s + 1, s, context->current_length - i + 1);
     context->str[i] = character;
     context->current_length++;
     editor_redraw_from_cursor(context);
@@ -235,7 +219,7 @@ void editor_insert_str(editor_context_t* context, char* str)
         if (str_len <= 0)
             return;
     }
-    memmove(s, s + str_len, context->current_length - i + 1);
+    memmove(s+ str_len, s, context->current_length - i + 1);
     memcpy(str, s, str_len);
     context->current_length += str_len;
     editor_redraw_from_cursor(context);
@@ -254,7 +238,7 @@ void editor_delete(editor_context_t* context, uint8_t n)
         context->current_length = context->cursor_index;
         return;
     }
-    memmove(s + n, s, context->current_length - i - n + 1);
+    memmove(s, s + n, context->current_length - i - n + 1);
     context->current_length -= n;
     editor_redraw_from_cursor(context);
 }
@@ -280,7 +264,7 @@ void editor_show_cursor(editor_context_t* context)
         return;
     context->cursor_shown = true;
     editor_fontlib_config(context);
-    fontlib_SetCursorPosition(context->base_x, context->base_y);
+    fontlib_SetCursorPosition(context->cursor_x, context->base_y);
     fontlib_DrawGlyph(context->cursor_glyph);
 }
 
@@ -296,16 +280,17 @@ void editor_hide_cursor(editor_context_t* context)
         return;
     context->cursor_shown = false;
     editor_fontlib_config(context);
-    fontlib_SetCursorPosition(context->base_x, context->base_y);
+    fontlib_SetCursorPosition(context->cursor_x, context->base_y);
     /* We're going to hide the cursor by redrawing everything until the drawing
      * cursor is past the right edge of the cursor glyph. */
     x_end = context->cursor_x + fontlib_GetGlyphWidth(context->cursor_glyph);
     sptr = &context->str[context->cursor_index];
     end = &context->str[0] + context->current_length;
     do
-        fontlib_DrawGlyph(*sptr++);
+        fontlib_DrawGlyph(*(sptr++));
     while (fontlib_GetCursorX() <= x_end && sptr < end);
-    fontlib_ClearEOL();
+    if (sptr >= end)
+        fontlib_ClearEOL();
 }
 
 /**
@@ -385,44 +370,44 @@ char key_translation_table[3][0x39] =
     '\0', /* sk_Up               0x04 */
     '\0', '\0', '\0', '\0', /* 5, 6, 7, 8 */
     '\0', /* sk_Enter            0x09 */
-    '+', /* sk_Add              0x0A */
-    '-', /* sk_Sub              0x0B */
-    '*', /* sk_Mul              0x0C */
-    '/', /* sk_Div              0x0D */
-    '^', /* sk_Power            0x0E */
+    '\"', /* sk_Add              0x0A */
+    'W', /* sk_Sub              0x0B */
+    'R', /* sk_Mul              0x0C */
+    'M', /* sk_Div              0x0D */
+    'H', /* sk_Power            0x0E */
     '\0', /* sk_Clear            0x0F */
     '\0', /* 10 */
-    '\\', /* sk_Chs              0x11 */
-    '3', /* sk_3                0x12 */
-    '6', /* sk_6                0x13 */
-    '9', /* sk_9                0x14 */
-    ')', /* sk_RParen           0x15 */
-    '\0', /* sk_Tan              0x16 */
+    '?', /* sk_Chs              0x11 */
+    '\264', /* sk_3                0x12 */
+    'V', /* sk_6                0x13 */
+    'Q', /* sk_9                0x14 */
+    'L', /* sk_RParen           0x15 */
+    'G', /* sk_Tan              0x16 */
     '\0', /* sk_Vars             0x17 */
     '\0', /* 18 */
-    '.', /* sk_DecPnt           0x19 */
-    '2', /* sk_2                0x1A */
-    '5', /* sk_5                0x1B */
-    '8', /* sk_8                0x1C */
-    '(', /* sk_LParen           0x1D */
-    '\0', /* sk_Cos              0x1E */
-    '\0', /* sk_Prgm             0x1F */
+    ':', /* sk_DecPnt           0x19 */
+    'Z', /* sk_2                0x1A */
+    'U', /* sk_5                0x1B */
+    'P', /* sk_8                0x1C */
+    'K', /* sk_LParen           0x1D */
+    'F', /* sk_Cos              0x1E */
+    'C', /* sk_Prgm             0x1F */
     '\0', /* sk_Stat             0x20 */
-    '0', /* sk_0                0x21 */
-    '1', /* sk_1                0x22 */
-    '4', /* sk_4                0x23 */
-    '7', /* sk_7                0x24 */
-    ',', /* sk_Comma            0x25 */
-    '\0', /* sk_Sin              0x26 */
-    '\0', /* sk_Apps             0x27 */
+    ' ', /* sk_0                0x21 */
+    'Y', /* sk_1                0x22 */
+    'T', /* sk_4                0x23 */
+    'O', /* sk_7                0x24 */
+    'J', /* sk_Comma            0x25 */
+    'E', /* sk_Sin              0x26 */
+    'B', /* sk_Apps             0x27 */
     '\0', /* sk_GraphVar         0x28 */
     '\0', /* 29 */
-    '\0', /* sk_Store            0x2A */
-    '\0', /* sk_Ln               0x2B */
-    '\0', /* sk_Log              0x2C */
-    '\0', /* sk_Square           0x2D */
-    '\0', /* sk_Recip            0x2E */
-    '\0', /* sk_Math             0x2F */
+    'X', /* sk_Store            0x2A */
+    'S', /* sk_Ln               0x2B */
+    'N', /* sk_Log              0x2C */
+    'I', /* sk_Square           0x2D */
+    'D', /* sk_Recip            0x2E */
+    'A', /* sk_Math             0x2F */
     '\0', /* sk_Alpha            0x30 */
     '\0', /* sk_Graph            0x31 */
     '\0', /* sk_Trace            0x32 */
@@ -441,44 +426,44 @@ char key_translation_table[3][0x39] =
     '\0', /* sk_Up               0x04 */
     '\0', '\0', '\0', '\0', /* 5, 6, 7, 8 */
     '\0', /* sk_Enter            0x09 */
-    '+', /* sk_Add              0x0A */
-    '-', /* sk_Sub              0x0B */
-    '*', /* sk_Mul              0x0C */
-    '/', /* sk_Div              0x0D */
-    '^', /* sk_Power            0x0E */
+    '\'', /* sk_Add              0x0A */
+    'w', /* sk_Sub              0x0B */
+    'r', /* sk_Mul              0x0C */
+    'm', /* sk_Div              0x0D */
+    'h', /* sk_Power            0x0E */
     '\0', /* sk_Clear            0x0F */
     '\0', /* 10 */
-    '\\', /* sk_Chs              0x11 */
-    '3', /* sk_3                0x12 */
-    '6', /* sk_6                0x13 */
-    '9', /* sk_9                0x14 */
-    ')', /* sk_RParen           0x15 */
-    '\0', /* sk_Tan              0x16 */
+    '_', /* sk_Chs              0x11 */
+    '\264', /* sk_3                0x12 */
+    'v', /* sk_6                0x13 */
+    'q', /* sk_9                0x14 */
+    'l', /* sk_RParen           0x15 */
+    'g', /* sk_Tan              0x16 */
     '\0', /* sk_Vars             0x17 */
     '\0', /* 18 */
-    '.', /* sk_DecPnt           0x19 */
-    '2', /* sk_2                0x1A */
-    '5', /* sk_5                0x1B */
-    '8', /* sk_8                0x1C */
-    '(', /* sk_LParen           0x1D */
-    '\0', /* sk_Cos              0x1E */
-    '\0', /* sk_Prgm             0x1F */
+    ';', /* sk_DecPnt           0x19 */
+    'z', /* sk_2                0x1A */
+    'u', /* sk_5                0x1B */
+    'p', /* sk_8                0x1C */
+    'k', /* sk_LParen           0x1D */
+    'f', /* sk_Cos              0x1E */
+    'c', /* sk_Prgm             0x1F */
     '\0', /* sk_Stat             0x20 */
-    '0', /* sk_0                0x21 */
-    '1', /* sk_1                0x22 */
-    '4', /* sk_4                0x23 */
-    '7', /* sk_7                0x24 */
-    ',', /* sk_Comma            0x25 */
-    '\0', /* sk_Sin              0x26 */
-    '\0', /* sk_Apps             0x27 */
+    ' ', /* sk_0                0x21 */
+    'y', /* sk_1                0x22 */
+    't', /* sk_4                0x23 */
+    'o', /* sk_7                0x24 */
+    'j', /* sk_Comma            0x25 */
+    'e', /* sk_Sin              0x26 */
+    'b', /* sk_Apps             0x27 */
     '\0', /* sk_GraphVar         0x28 */
     '\0', /* 29 */
-    '\0', /* sk_Store            0x2A */
-    '\0', /* sk_Ln               0x2B */
-    '\0', /* sk_Log              0x2C */
-    '\0', /* sk_Square           0x2D */
-    '\0', /* sk_Recip            0x2E */
-    '\0', /* sk_Math             0x2F */
+    'x', /* sk_Store            0x2A */
+    's', /* sk_Ln               0x2B */
+    'n', /* sk_Log              0x2C */
+    'i', /* sk_Square           0x2D */
+    'd', /* sk_Recip            0x2E */
+    'a', /* sk_Math             0x2F */
     '\0', /* sk_Alpha            0x30 */
     '\0', /* sk_Graph            0x31 */
     '\0', /* sk_Trace            0x32 */
@@ -503,22 +488,65 @@ char editor_translate_key(char key, unsigned char shift)
     return '\0';
 }
 
+char cursors[] = {'\2', '\6', '\7'};
 
-char* get_string_(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text_max_length, fontlib_font_t* editor_font)
+char* get_string(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text_max_length, fontlib_font_t* editor_font)
 {
     editor_context_t* context;
+    bool not_done = true;
     unsigned char seconds;
     unsigned char key;
+    unsigned char shift = 0;
     context = editor_start(x_loc, y_loc, box_width, text_max_length, editor_font);
     
-    seconds = rtc_Seconds;
-    
-    
-    if (rtc_Seconds > seconds)
+    do
     {
+        editor_show_cursor(context);
         seconds = rtc_Seconds;
-        editor_toggle_cursor(context);
-    }
-    return NULL;
+        do
+        {
+            key = os_GetCSC();
+            if (rtc_Seconds > seconds)
+            {
+                seconds = rtc_Seconds;
+                editor_toggle_cursor(context);
+            }
+        } while (!key);
+        editor_hide_cursor(context);
+        switch (key)
+        {
+            case sk_Clear:
+                editor_flush(context);
+                break;
+            case sk_Del:
+                editor_delete(context, 1);
+                break;
+            case sk_Left:
+                editor_left(context);
+                break;
+            case sk_Right:
+                editor_right(context);
+                break;
+            case sk_Enter:
+                not_done = false;
+                break;
+            case sk_Alpha:
+                shift = shift + 1;
+                if (shift > 2)
+                    shift = 0;
+                context->cursor_glyph = cursors[shift];
+                break;
+            default:
+                key = editor_translate_key(key, shift);
+                if (key != '\0')
+                {
+                    editor_insert(context, key);
+                    editor_right(context);
+                }
+        }
+        
+        
+    } while (not_done);
+    return editor_get_string_close(context);
 }
 
