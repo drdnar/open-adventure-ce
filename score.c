@@ -130,7 +130,7 @@ void terminate(enum termination mode)
     for (i = 1; i <= (int)NCLASSES; i++) {
         class = get_class(i);
         if (class->threshold >= points) {
-            speak(get_compressed_string(class->message));
+            speak(class->message);
             i = class->threshold + 1 - points;
             rspeak(NEXT_HIGHER, i, i);
             exit(EXIT_SUCCESS);

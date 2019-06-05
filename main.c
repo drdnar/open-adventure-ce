@@ -5,9 +5,7 @@
  */
 
 #include <stdlib.h>
-#ifndef CALCULATOR
 #include <stdio.h>
-#endif
 #include <stdbool.h>
 #ifndef CALCULATOR
 #include <getopt.h>
@@ -515,14 +513,14 @@ static void croak(void)
 static void describe_location(void) 
 /* Describe the location to the user */
 {
-    const char* msg = get_compressed_string(get_location(game.loc)->description.small);
+    compressed_string_index_t msg = get_location(game.loc)->description.small;
     
     if (MOD(game.abbrev[game.loc], game.abbnum) == 0 ||
         msg == NO_MESSAGE)
-        msg = get_compressed_string(get_location(game.loc)->description.big);
+        msg = get_location(game.loc)->description.big;
 
     if (!FORCED(game.loc) && DARK(game.loc)) {
-        msg = get_arbitrary_message(PITCH_DARK);
+        msg = get_arbitrary_message_index(PITCH_DARK);
     }
 
     if (TOTING(BEAR))
@@ -880,7 +878,7 @@ static bool closecheck(void)
         threshold = get_turn_threshold(i);
         if (game.turns == threshold->threshold + 1) {
             game.trnluz += threshold->point_loss;
-            speak(get_compressed_string(threshold->message));
+            speak(threshold->message);
         }
     }
 

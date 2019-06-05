@@ -134,11 +134,11 @@ static void vspeak(const char* msg, bool blank, va_list ap)
     free(rendered);
 }
 
-void speak(const char* msg, ...)
+void speak(const compressed_string_index_t msg, ...)
 {
     va_list ap;
     va_start(ap, msg);
-    vspeak(msg, true, ap);
+    vspeak(get_compressed_string(msg), true, ap);
     va_end(ap);
 }
 
@@ -324,7 +324,7 @@ bool yes(const compressed_string_index_t question, const compressed_string_index
     int i, yes, y, no, n;
 
     for (;;) {
-        speak(get_compressed_string(question));
+        speak(question);
 
         reply = get_input();
         if (reply == NULL) {
@@ -358,12 +358,12 @@ bool yes(const compressed_string_index_t question, const compressed_string_index
 
         if (yes == 0 ||
             y == 0) {
-            speak(get_compressed_string(yes_response));
+            speak(yes_response);
             outcome = true;
             break;
         } else if (no == 0 ||
                    n == 0) {
-            speak(get_compressed_string(no_response));
+            speak(no_response);
             outcome = false;
             break;
         } else

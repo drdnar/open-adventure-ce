@@ -115,7 +115,7 @@ static phase_codes_t attack(command_t command)
          *  too.  Then do a null motion to get new description. */
         rspeak(BARE_HANDS_QUERY);
         if (!silent_yes()) {
-            speak(get_arbitrary_message(NASTY_DRAGON));
+            speak(get_arbitrary_message_index(NASTY_DRAGON));
             return GO_MOVE;
         }
         state_change(DRAGON, DRAGON_DEAD);
@@ -184,7 +184,7 @@ static phase_codes_t attack(command_t command)
         rspeak(ROCKY_TROLL);
         break;
     default:
-        speak(get_compressed_string(get_action(verb)->message));
+        speak(get_action(verb)->message);
     }
     return GO_CLEAROBJ;
 }
@@ -280,7 +280,7 @@ static phase_codes_t vbreak(verb_t verb, obj_t obj)
         }
     /* FALLTHRU */
     default:
-        speak(get_compressed_string(get_action(verb)->message));
+        speak(get_action(verb)->message);
     }
     return (GO_CLEAROBJ);
 }
@@ -309,7 +309,7 @@ static phase_codes_t vcarry(verb_t verb, obj_t obj)
     }
 
     if (TOTING(obj)) {
-        speak(get_compressed_string(get_action(verb)->message));
+        speak(get_action(verb)->message);
         return GO_CLEAROBJ;
     }
 
@@ -474,7 +474,7 @@ static phase_codes_t discard(verb_t verb, obj_t obj)
     }
 
     if (!TOTING(obj)) {
-        speak(get_compressed_string(get_action(verb)->message));
+        speak(get_action(verb)->message);
         return GO_CLEAROBJ;
     }
 
@@ -594,7 +594,7 @@ static phase_codes_t drink(verb_t verb, obj_t obj)
         return GO_CLEAROBJ;
     }
 
-    speak(get_compressed_string(get_action(verb)->message));
+    speak(get_action(verb)->message);
     return GO_CLEAROBJ;
 }
 
@@ -623,7 +623,7 @@ static phase_codes_t eat(verb_t verb, obj_t obj)
         rspeak(LOST_APPETITE);
         break;
     default:
-        speak(get_compressed_string(get_action(verb)->message));
+        speak(get_action(verb)->message);
     }
     return GO_CLEAROBJ;
 }
@@ -659,7 +659,7 @@ static phase_codes_t extinguish(verb_t verb, obj_t obj)
         rspeak(BEYOND_POWER);
         break;
     default:
-        speak(get_compressed_string(get_action(verb)->message));
+        speak(get_action(verb)->message);
     }
     return GO_CLEAROBJ;
 }
@@ -693,7 +693,7 @@ static phase_codes_t feed(verb_t verb, obj_t obj)
             game.dflag += 2;
             rspeak(REALLY_MAD);
         } else
-            speak(get_compressed_string(get_action(verb)->message));
+            speak(get_action(verb)->message);
         break;
     case BEAR:
         if (game.prop[BEAR] == BEAR_DEAD) {
@@ -710,13 +710,13 @@ static phase_codes_t feed(verb_t verb, obj_t obj)
                 rspeak(NOTHING_EDIBLE);
             break;
         }
-        speak(get_compressed_string(get_action(verb)->message));
+        speak(get_action(verb)->message);
         break;
     case OGRE:
         if (HERE(FOOD))
             rspeak(OGRE_FULL);
         else
-            speak(get_compressed_string(get_action(verb)->message));
+            speak(get_action(verb)->message);
         break;
     default:
         rspeak(AM_GAME);
@@ -774,7 +774,7 @@ phase_codes_t fill(verb_t verb, obj_t obj)
         return GO_CLEAROBJ;
     }
     if (obj != INTRANSITIVE && obj != BOTTLE) {
-        speak(get_compressed_string(get_action(verb)->message));
+        speak(get_action(verb)->message);
         return GO_CLEAROBJ;
     }
     if (obj == INTRANSITIVE && !HERE(BOTTLE))
@@ -823,7 +823,7 @@ static phase_codes_t find(verb_t verb, obj_t obj)
     }
 
 
-    speak(get_compressed_string(get_action(verb)->message));
+    speak(get_action(verb)->message);
     return GO_CLEAROBJ;
 }
 
@@ -843,7 +843,7 @@ static phase_codes_t fly(verb_t verb, obj_t obj)
     }
 
     if (obj != RUG) {
-        speak(get_compressed_string(get_action(verb)->message));
+        speak(get_action(verb)->message);
         return GO_CLEAROBJ;
     }
     if (game.prop[RUG] != RUG_HOVER) {
@@ -919,7 +919,7 @@ static phase_codes_t light(verb_t verb, obj_t obj)
             return GO_TOP;
         break;
     default:
-        speak(get_compressed_string(get_action(verb)->message));
+        speak(get_action(verb)->message);
     }
     return GO_CLEAROBJ;
 }
@@ -1036,7 +1036,7 @@ static phase_codes_t lock(verb_t verb, obj_t obj)
         rspeak(CANNOT_UNLOCK);
         break;
     default:
-        speak(get_compressed_string(get_action(verb)->message));
+        speak(get_action(verb)->message);
     }
 
     return GO_CLEAROBJ;
@@ -1052,7 +1052,7 @@ static phase_codes_t pour(verb_t verb, obj_t obj)
     if (obj == NO_OBJECT)
         return GO_UNKNOWN;
     if (!TOTING(obj)) {
-        speak(get_compressed_string(get_action(verb)->message));
+        speak(get_action(verb)->message);
         return GO_CLEAROBJ;
     }
 
@@ -1117,7 +1117,7 @@ static phase_codes_t read(command_t command)
         game.clshnt = yes(get_arbitrary_message_index(CLUE_QUERY), get_arbitrary_message_index(WAYOUT_CLUE), get_arbitrary_message_index(OK_MAN));
     } else if (get_object_text(command.obj, 0) == NULL ||
                game.prop[command.obj] == STATE_NOTFOUND) {
-        speak(get_compressed_string(get_action(command.verb)->message));
+        speak(get_action(command.verb)->message);
     } else
         pspeak(command.obj, study, true, game.prop[command.obj]);
     return GO_CLEAROBJ;
@@ -1156,7 +1156,7 @@ static phase_codes_t rub(verb_t verb, obj_t obj)
     } else if (obj != LAMP) {
         rspeak(PECULIAR_NOTHING);
     } else {
-        speak(get_compressed_string(get_action(verb)->message));
+        speak(get_action(verb)->message);
     }
     return GO_CLEAROBJ;
 }
@@ -1201,7 +1201,7 @@ static phase_codes_t throw (command_t command)
 {
     int i;
     if (!TOTING(command.obj)) {
-        speak(get_compressed_string(get_action(command.verb)->message));
+        speak(get_action(command.verb)->message);
         return GO_CLEAROBJ;
     }
     if (get_object(command.obj)->is_treasure && AT(TROLL)) {
@@ -1260,7 +1260,7 @@ static phase_codes_t wake(verb_t verb, obj_t obj)
 {
     if (obj != DWARF ||
         !game.closed) {
-        speak(get_compressed_string(get_action(verb)->message));
+        speak(get_action(verb)->message);
         return GO_CLEAROBJ;
     } else {
         rspeak(PROD_DWARF);
@@ -1272,7 +1272,7 @@ static phase_codes_t seed(verb_t verb, const char *arg)
 /* Set seed */
 {
     int32_t seed = strtol(arg, NULL, 10);
-    speak(get_compressed_string(get_action(verb)->message), seed);
+    speak(get_action(verb)->message, seed);
     set_seed(seed);
     --game.turns;
     return GO_TOP;
@@ -1282,7 +1282,7 @@ static phase_codes_t waste(verb_t verb, turn_t turns)
 /* Burn turns */
 {
     game.limit -= turns;
-    speak(get_compressed_string(get_action(verb)->message), (int)game.limit);
+    speak(get_action(verb)->message, (int)game.limit);
     return GO_TOP;
 }
 
@@ -1296,8 +1296,8 @@ static phase_codes_t wave(verb_t verb, obj_t obj)
           !AT(FISSURE)))) {
         speak(((!TOTING(obj)) && (obj != ROD ||
                                   !TOTING(ROD2))) ?
-              get_arbitrary_message(ARENT_CARRYING) :
-              get_compressed_string(get_action(verb)->message));
+              get_arbitrary_message_index(ARENT_CARRYING) :
+              get_action(verb)->message);
         return GO_CLEAROBJ;
     }
 
@@ -1341,7 +1341,7 @@ phase_codes_t action(command_t command)
      * further were called "specials". Now they're handled here as normal
      * actions. If noaction is true, then we spit out the message and return */
     if (get_action(command.verb)->noaction) {
-        speak(get_compressed_string(get_action(command.verb)->message));
+        speak(get_action(command.verb)->message);
         return GO_CLEAROBJ;
     }
 
@@ -1421,7 +1421,7 @@ phase_codes_t action(command_t command)
             case  TAME:
                 return GO_UNKNOWN;
             case GO: {
-                speak(get_compressed_string(get_action(command.verb)->message));
+                speak(get_action(command.verb)->message);
                 return GO_CLEAROBJ;
             }
             case ATTACK:
@@ -1513,11 +1513,11 @@ phase_codes_t action(command_t command)
         case WAVE:
             return wave(command.verb, command.obj);
         case TAME: {
-            speak(get_compressed_string(get_action(command.verb)->message));
+            speak(get_action(command.verb)->message);
             return GO_CLEAROBJ;
         }
         case GO: {
-            speak(get_compressed_string(get_action(command.verb)->message));
+            speak(get_action(command.verb)->message);
             return GO_CLEAROBJ;
         }
         case ATTACK:
@@ -1533,7 +1533,7 @@ phase_codes_t action(command_t command)
         case THROW:
             return throw (command);
         case QUIT: {
-            speak(get_compressed_string(get_action(command.verb)->message));
+            speak(get_action(command.verb)->message);
             return GO_CLEAROBJ;
         }
         case FIND:
@@ -1548,7 +1548,7 @@ phase_codes_t action(command_t command)
             blast();
             return GO_CLEAROBJ;
         case SCORE: {
-            speak(get_compressed_string(get_action(command.verb)->message));
+            speak(get_action(command.verb)->message);
             return GO_CLEAROBJ;
         }
         case FEE:
@@ -1556,11 +1556,11 @@ phase_codes_t action(command_t command)
         case FOE:
         case FOO:
         case FUM: {
-            speak(get_compressed_string(get_action(command.verb)->message));
+            speak(get_action(command.verb)->message);
             return GO_CLEAROBJ;
         }
         case BRIEF: {
-            speak(get_compressed_string(get_action(command.verb)->message));
+            speak(get_action(command.verb)->message);
             return GO_CLEAROBJ;
         }
         case READ:
@@ -1570,17 +1570,17 @@ phase_codes_t action(command_t command)
         case WAKE:
             return wake(command.verb, command.obj);
         case SAVE: {
-            speak(get_compressed_string(get_action(command.verb)->message));
+            speak(get_action(command.verb)->message);
             return GO_CLEAROBJ;
         }
         case RESUME: {
-            speak(get_compressed_string(get_action(command.verb)->message));
+            speak(get_action(command.verb)->message);
             return GO_CLEAROBJ;
         }
         case FLY:
             return fly(command.verb, command.obj);
         case LISTEN: {
-            speak(get_compressed_string(get_action(command.verb)->message));
+            speak(get_action(command.verb)->message);
             return GO_CLEAROBJ;
         }
         // LCOV_EXCL_START
