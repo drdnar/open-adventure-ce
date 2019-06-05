@@ -1,4 +1,26 @@
-= README for Open Adventure =
+= Open Adventure CE =
+
+This is a port of http://www.catb.org/~esr/open-adventure[Open Adventure] to the TI-84 Plus CE.
+The calculator build of this game is not currently in a functional state. Please stay tuned.
+
+=== Technical ===
+I looked at several different implementations of Adventure.
+They generally required a large text database that would be difficult to get onto a calculator,
+and would be needlessly inefficient space-wise.
+Then I found Open Adventure, which completely reworked the text database system into native C arrays.
+Not only that, but the code was written in fairly idiomatic C, not machine-translated from Fortran!
+
+However, given the constraints and conventions of the platform,
+it made sense to split the dungeon data back into a separate data file---but this time, 
+there was a convenient `make_dungeon.py` that could be modified to generate the data file,
+instead of trying to write my own code to parse the input data.
+Helpfully, ESR wrote a comprehensive test suite to compare his new C code against the original.
+This made it easy for me to check that my completely reworked dungeon loader didn't break the game.
+Unfortunately, keeping tests working requires some akward `#ifdef`s scattered around the code,
+but it's worth it to keep the tests working.
+
+
+= README for Open Adventure PC =
 
 If you are reading this anywhere but at http://www.catb.org/~esr/open-adventure
 you can go there for tarball downloads and other resources.
