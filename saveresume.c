@@ -13,9 +13,13 @@
 #include <string.h>
 #ifndef CALCULATOR
 #include <editline/readline.h>
-#endif
 #include <time.h>
+#endif
 #include <stdint.h>
+
+#ifdef CALCULATOR
+#include <fileioc.h>
+#endif
 
 #include "advent.h"
 #include "dungeon.h"
@@ -36,12 +40,22 @@
  * dependent length of int.  Later members can change, but bump the version
  * when you do that.
  */
+#ifndef CALCULATOR
 struct save_t {
     int64_t savetime;
     int32_t mode;		/* not used, must be present for version detection */
     int32_t version;
     struct game_t game;
 };
+#else
+struct save_t {
+    unsigned long savetime;
+    int mode;		/* not used, must be present for version detection */
+    int version;
+    struct game_t game;
+};
+#endif
+
 struct save_t save;
 
 #define IGNORE(r) do{if (r){}}while(0)

@@ -18,6 +18,50 @@
 
 
 /*******************************************************************************
+ * time.h replacement
+ ******************************************************************************/
+
+/**
+ * This does not actually return a Unix time, but it is 32-bits and
+ * monotonically increasing.  Unless you have a RAM reset.
+ */
+unsigned long time(unsigned char* ignored)
+{
+    return atomic_load_increasing_32((volatile uint32_t*)0xF30044);
+}
+/*
+unsigned char seconds_from_time(void* time)
+{
+	unsigned char* s = time;
+    return *s & 0x3F;
+}
+
+unsigned char minutes_from_time(void* time)
+{
+	unsigned short* t = time;
+    return (*t >> 6) & 0x3F;
+}
+
+unsigned char hours_from_time(void* time)
+{
+	unsigned char* t = time;
+    t++;
+    unsigned char h = *t >> 4;
+    t++;
+    return h | (*t & 1) << 4;
+}
+
+unsigned short days_from_time(void* time)
+{
+    unsigned short* t = time;
+    t++;
+    return *t >> 1;
+}*/
+
+
+
+
+ /*******************************************************************************
  * Error & Clean-up Code
  ******************************************************************************/
 
@@ -126,6 +170,8 @@ void main(void) {
     uint8_t selection = 0;
     uint8_t key, old_fgc, line_height = 0, cursor_width = 0;
     bool redraw_main_menu = true;
+    /* Make sure RTC is running */
+    rtc_Control = RTC_ENABLE;
     gfx_Begin();
     init_history();
     do

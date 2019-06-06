@@ -142,8 +142,9 @@ editor_context_t* editor_start(uint24_t x_loc, uint8_t y_loc, uint24_t box_width
  */
 void editor_close(editor_context_t* context)
 {
-    gfx_SetColor(context->bg_color);
-    gfx_FillRectangle_NoClip(context->base_x, context->base_y, context->width, context->font_height);
+    editor_fontlib_config(context);
+    fontlib_SetCursorPosition(context->base_x, context->base_y);
+    fontlib_ClearEOL();
     free(context->str);
     free(context);
 }
@@ -155,8 +156,9 @@ void editor_close(editor_context_t* context)
 char* editor_get_string_close(editor_context_t* context)
 {
     char* s = context->str;
-    gfx_SetColor(context->bg_color);
-    gfx_FillRectangle_NoClip(context->base_x, context->base_y, context->width, context->font_height);
+    editor_fontlib_config(context);
+    fontlib_SetCursorPosition(context->base_x, context->base_y);
+    fontlib_ClearEOL();
     free(context);
     return s;
 }
@@ -282,7 +284,9 @@ void editor_flush(editor_context_t* context)
     context->cursor_x = context->base_x;
     context->cursor_index = 0;
     context->str[0] = '\0';
-    gfx_FillRectangle_NoClip(context->base_x, context->base_y, context->width, context->font_height);
+    editor_fontlib_config(context);
+    fontlib_SetCursorPosition(context->base_x, context->base_y);
+    fontlib_ClearEOL();
 }
 
 /**
@@ -520,6 +524,9 @@ char editor_translate_key(char key, unsigned char shift)
 
 char cursors[] = {'\2', '\6', '\7'};
 
+#define timer_control_a (*(volatile unsigned char*)0xF20030)
+#define timer_control_b (*(volatile unsigned char*)0xF20031)
+#define timer_1_value (*(volatile unsigned char*)0xF20001)
 char* get_string(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text_max_length, fontlib_font_t* editor_font)
 {
     editor_context_t* context;
@@ -529,19 +536,25 @@ char* get_string(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text
     unsigned char shift = 0;
     context = editor_start(x_loc, y_loc, box_width, text_max_length, editor_font);
     
+    timer_control_b = timer_control_b | 2;
+    timer_control_a = timer_control_a & 0xF8 | 2;
     do
     {
+        timer_1_Counter = 0;
+        timer_control_a = timer_control_a | 1;
         editor_show_cursor(context);
-        seconds = rtc_Seconds;
         do
         {
             key = os_GetCSC();
-            if (rtc_Seconds > seconds)
+            if (timer_1_value >= 64)
             {
-                seconds = rtc_Seconds;
+                timer_control_a = timer_control_a & 0xFA;
+                timer_1_Counter = 0;
+                timer_control_a = timer_control_a | 1;
                 editor_toggle_cursor(context);
             }
         } while (!key);
+        timer_control_a = timer_control_a & 0xFA;
         editor_hide_cursor(context);
         switch (key)
         {

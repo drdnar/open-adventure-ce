@@ -82,6 +82,7 @@
 #define OUTSID(LOC)  (CNDBIT(LOC, COND_ABOVE) || FOREST(LOC))
 #define INSIDE(LOC)  (!OUTSID(LOC) || LOC == LOC_BUILDING)
 #define INDEEP(LOC)  ((LOC) >= LOC_MISTHALL && !OUTSID(LOC))
+#ifndef CALCULATOR
 #define BUG(x)       bug(x, #x)
 
 enum bugtype {
@@ -94,8 +95,8 @@ enum bugtype {
     HINT_NUMBER_EXCEEDS_GOTO_LIST,
     SPEECHPART_NOT_TRANSITIVE_OR_INTRANSITIVE_OR_UNKNOWN,
     ACTION_RETURNED_PHASE_CODE_BEYOND_END_OF_SWITCH,
-    PLEASE_ANSWER_TOO_LONG,
 };
+#endif
 
 enum speaktype {touch, look, hear, study, change};
 
@@ -248,7 +249,9 @@ extern phase_codes_t action(command_t);
 extern void state_change(obj_t, int);
 extern bool is_valid(struct game_t);
 
+#ifndef CALCULATOR
 void bug(enum bugtype, const char *) __attribute__((__noreturn__));
+#endif
 
 /* represent an empty command word */
 static const command_word_t empty_command_word = {

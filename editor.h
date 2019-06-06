@@ -44,7 +44,7 @@ void editor_toggle_cursor(editor_context_t* context);
 editor_context_t* editor_start(unsigned int x_loc, unsigned char y_loc, unsigned int box_width, unsigned char text_max_length, fontlib_font_t* editor_font);
 void editor_close(editor_context_t* context);
 char* editor_get_string_close(editor_context_t* context);
-char* get_string(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text_max_length, fontlib_font_t* editor_font);
+char* get_string(unsigned int x_loc, unsigned char y_loc, unsigned int box_width, unsigned char text_max_length, fontlib_font_t* editor_font);
 void editor_right(editor_context_t* context);
 void editor_left(editor_context_t* context);
 void editor_cursor_set(editor_context_t* context, unsigned char index);

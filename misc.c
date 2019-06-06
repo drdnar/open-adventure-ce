@@ -19,6 +19,8 @@
 #include <ctype.h>
 #ifndef CALCULATOR
 #include <editline/readline.h>
+#else
+#include "editor.h"
 #endif
 #include <stdint.h>
 
@@ -32,8 +34,12 @@ static void* xcalloc(size_t size)
     if (ptr == NULL) {
         // LCOV_EXCL_START
         // exclude from coverage analysis because we can't simulate an out of memory error in testing
+#ifndef CALCULATOR
         fprintf(stderr, "Out of memory!\n");
         exit(EXIT_FAILURE);
+#else
+        exit_fail("xcalloc() failed; out of heap?");
+#endif
         // LCOV_EXCL_STOP
     }
     return (ptr);
