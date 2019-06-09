@@ -82,7 +82,7 @@ uint8_t gfx_SetColor(uint8_t index); // returns previous color
  */
 void editor_fontlib_config(editor_context_t* context)
 {
-	fontlib_SetWindow(context->base_x, context->base_y, context->width, context->font_height);
+    fontlib_SetWindow(context->base_x, context->base_y, context->width, context->font_height);
     fontlib_SetColors(context->fg_color, context->bg_color);
     fontlib_SetFont(context->font, 0);
     fontlib_SetTransparency(false);
@@ -524,36 +524,57 @@ char editor_translate_key(char key, unsigned char shift)
 
 char cursors[] = {'\2', '\6', '\7'};
 
+/* These are all 32-bit registers, but we don't need all 32 bits, and 32-bit
+ * code sucks on the eZ80, so as a performance and code-size hack we're going
+ * to treat these as single-byte registers as much as possible.
+ * Look in <tice.h> for*/
 #define timer_control_a (*(volatile unsigned char*)0xF20030)
 #define timer_control_b (*(volatile unsigned char*)0xF20031)
 #define timer_1_value (*(volatile unsigned char*)0xF20001)
+#define timer_1_match_1     (*(unsigned char*)0xF2000A)
+#define timer_1_match_2     (*(unsigned char*)0xF2000E)
 char* get_string(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text_max_length, fontlib_font_t* editor_font)
 {
     editor_context_t* context;
     bool not_done = true;
     unsigned char seconds;
-    unsigned char key;
+    sk_key_t  key;
     unsigned char shift = 0;
     context = editor_start(x_loc, y_loc, box_width, text_max_length, editor_font);
     
+    /* Set timer 1 to count up */
     timer_control_b = timer_control_b | 2;
+    /* 0xF8 = Clear interrupt enable and disable timer 1
+     * 2 = Set timer 1 to use the RTC crystal (32768 Hz) */
     timer_control_a = timer_control_a & 0xF8 | 2;
+    /* Make sure match registers are disable */
+    timer_1_match_1 = 0xFF;
+    timer_1_match_2 = 0xFF;
     do
     {
+        /* Reset timer 1 to 0.
+         * Recall that timer 1 has already been turned off, so the non-
+         * atomic writes won't cause a problem. */
         timer_1_Counter = 0;
+        /* Enable timer 1 */
         timer_control_a = timer_control_a | 1;
         editor_show_cursor(context);
         do
         {
             key = os_GetCSC();
+            /* Check value of timer 1.  We need only check one byte of the whole
+             * 32-bit register. */
             if (timer_1_value >= 64)
             {
+                /* Turn timer off, zero it, and turn it back on */
                 timer_control_a = timer_control_a & 0xFA;
                 timer_1_Counter = 0;
                 timer_control_a = timer_control_a | 1;
+                /* Flash cursor */
                 editor_toggle_cursor(context);
             }
         } while (!key);
+        /* Turn timer off */
         timer_control_a = timer_control_a & 0xFA;
         editor_hide_cursor(context);
         switch (key)
