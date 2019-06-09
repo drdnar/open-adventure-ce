@@ -157,8 +157,12 @@ void reverse_colors(void)
  * @param fake_print Set to true to perform the exact same layout logic, but
  * without actually printing anything, and also return at the first newline.
  * This allows finding word-wrap points.
+ * @note fake_print DOES care what the current cursor X position is---it uses
+ * that to figure out how to deal with words too big to fit into the text
+ * window.  Such words will get force-printed starting on their own line.
  * @return Returns a pointer to the last character processed, which will either
- * be '\0', a control code, or i
+ * be '\0', a control code (such as newline), or the first character of the next
+ * line of text.
  */
 char* print_word_wrap(const char* string, bool fake_print)
 {
@@ -205,10 +209,9 @@ char* print_word_wrap(const char* string, bool fake_print)
                     }
                 else
                 {
-                    if (!fake_print)
-                        fontlib_Newline();
-                    else
+                    if (fake_print)
                         break;
+                    fontlib_Newline();
                     x = left;
                     continue;
                 }
@@ -222,11 +225,10 @@ char* print_word_wrap(const char* string, bool fake_print)
         {
             if (c == old_newline && old_newline != '\0')
             {
-                string++;
-                if (!fake_print)
-                    fontlib_Newline();
-                else
+                if (fake_print)
                     break;
+                string++;
+                fontlib_Newline();
             }
             else
                 break;
@@ -236,14 +238,17 @@ char* print_word_wrap(const char* string, bool fake_print)
             string++;
             if (x + space_width < right)
                 if (!fake_print)
-                    fontlib_DrawGlyph((char)c);
+                    fontlib_DrawGlyph(' ');
                 else
                     x += space_width;
             else
-                if (!fake_print)
-                    fontlib_Newline();
-                else
+                if (fake_print)
                     break;
+                else
+                {
+                    fontlib_Newline();
+                    x = left;
+                }
         }
     } while (true);
     if (!fake_print)
