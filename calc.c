@@ -151,6 +151,109 @@ void reverse_colors(void)
     fontlib_SetColors(fontlib_GetBackgroundColor(), fontlib_GetForegroundColor());
 }
 
+/**
+ * Prints a string, but with word-wrap!
+ * @param string Text to print
+ * @param fake_print Set to true to perform the exact same layout logic, but
+ * without actually printing anything, and also return at the first newline.
+ * This allows finding word-wrap points.
+ * @return Returns a pointer to the last character processed, which will either
+ * be '\0', a control code, or i
+ */
+char* print_word_wrap(const char* string, bool fake_print)
+{
+    char old_stop = fontlib_GetAlternateStopCode();
+    unsigned char old_nlo = fontlib_GetNewlineOptions();
+    char old_newline = fontlib_GetNewlineCode();
+    unsigned int left = fontlib_GetWindowXMin();
+    unsigned int width = fontlib_GetWindowWidth();
+    unsigned int right = left + width;
+    unsigned int str_width;
+    unsigned int x = fontlib_GetCursorX();
+    unsigned char first_printable = (unsigned char)fontlib_GetFirstPrintableCodePoint();
+    unsigned char c;
+    unsigned int space_width = fontlib_GetGlyphWidth(' ');
+    if (first_printable == '\0')
+        first_printable = '\1';
+    fontlib_SetNewlineCode('\0');
+    fontlib_SetAlternateStopCode(' ');
+    fontlib_SetNewlineOptions(FONTLIB_AUTO_CLEAR_TO_EOL | FONTLIB_AUTO_SCROLL);
+    do
+    {
+        /* Check if the next word can fit on the current line */
+        str_width = fontlib_GetStringWidth(string);
+        if (x + str_width < right)
+            if (!fake_print)
+                x = fontlib_DrawString(string);
+            else
+                x += str_width;
+        else
+        {
+            /* If the word is super-long such that it won't fit in the window,
+             * then forcibly print it starting on a new line. */
+            if (str_width != 0)
+                if (str_width > width && x == left)
+                    if (!fake_print)    
+                        x = fontlib_DrawString(string);
+                    else
+                    {
+                        do
+                            x += (str_width = fontlib_GetGlyphWidth(*string++));
+                        while (x < right);
+                        x -= str_width;
+                        break;
+                    }
+                else
+                {
+                    if (!fake_print)
+                        fontlib_Newline();
+                    else
+                        break;
+                    x = left;
+                    continue;
+                }
+            /* If the width returned was zero, that means either another space
+             * is waiting to be printed, which will be handled below; or a
+             * control code is next, which also will be handled below. */
+        }
+        string = fontlib_GetLastCharacterRead();
+        c = (unsigned char)(*string);
+        if (c < first_printable)
+        {
+            if (c == old_newline && old_newline != '\0')
+            {
+                string++;
+                if (!fake_print)
+                    fontlib_Newline();
+                else
+                    break;
+            }
+            else
+                break;
+        }
+        else if (c == ' ')
+        {
+            string++;
+            if (x + space_width < right)
+                if (!fake_print)
+                    fontlib_DrawGlyph((char)c);
+                else
+                    x += space_width;
+            else
+                if (!fake_print)
+                    fontlib_Newline();
+                else
+                    break;
+        }
+    } while (true);
+    if (!fake_print)
+        fontlib_ClearEOL();
+    fontlib_SetNewlineCode(old_newline);
+    fontlib_SetAlternateStopCode(old_stop);
+    fontlib_SetNewlineOptions(old_nlo);
+    return string;
+}
+
 
 
 /*******************************************************************************
@@ -260,6 +363,11 @@ void main(void) {
                         fontlib_DrawString(blah);
                         fontlib_ClearEOL();
                         add_history(blah);
+                        break;
+                    case 1:
+                        fontlib_SetWindow(20, 2, 120, 30);
+                        fontlib_HomeUp();
+                        print_word_wrap("The quick brown fox jumps over the lazy dog. Jack Dawes loves my big sphinx of quartz.", false);
                         break;
                     case 2:
                         exit_clean(0);
