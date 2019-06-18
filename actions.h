@@ -41,7 +41,7 @@ phase_codes_t listen(void);
 phase_codes_t lock(verb_t verb, obj_t obj);
 phase_codes_t pour(verb_t verb, obj_t obj);
 phase_codes_t quit(void);
-phase_codes_t read(command_t command);
+phase_codes_t action_read(command_t command);
 phase_codes_t reservoir(void);
 phase_codes_t rub(verb_t verb, obj_t obj);
 phase_codes_t say(command_t command);

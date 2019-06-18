@@ -53,7 +53,7 @@ phase_codes_t quit(void)
     return GO_CLEAROBJ;
 }
 
-phase_codes_t read(command_t command)
+phase_codes_t action_read(command_t command)
 /*  Read.  Print stuff based on objtxt.  Oyster (?) is special case. */
 {
     int i;

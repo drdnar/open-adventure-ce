@@ -19,8 +19,8 @@ ifeq ($(UNAME_S),Darwin)
     LIBS += -ledit
 endif
 
-OBJS=main.o init.o actions.o score.o misc.o saveresume.o
-CHEAT_OBJS=cheat.o init.o actions.o score.o misc.o saveresume.o
+OBJS=main.o init.o actions1.o actions2.o actions3.o actions4.o actions5.o score.o misc.o saveresume.o
+CHEAT_OBJS=cheat.o init.o actions1.o actions2.o actions3.o actions4.o actions5.o score.o misc.o saveresume.o
 SOURCES=$(OBJS:.o=.c) advent.h adventure.yaml Makefile control make_dungeon_calc.py templates/*.tpl
 
 .c.o:
@@ -33,7 +33,15 @@ main.o:	 	advent.h dungeon.h
 
 init.o:	 	advent.h dungeon.h
 
-actions.o:	advent.h dungeon.h
+actions1.o:	advent.h dungeon.h actions.h
+
+actions2.o:	advent.h dungeon.h actions.h
+
+actions3.o:	advent.h dungeon.h actions.h
+
+actions4.o:	advent.h dungeon.h actions.h
+
+actions5.o:	advent.h dungeon.h actions.h
 
 score.o:	advent.h dungeon.h
 

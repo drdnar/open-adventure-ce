@@ -131,7 +131,7 @@ phase_codes_t action(command_t command)
                 return brief();
             case READ:
                 command.obj = INTRANSITIVE;
-                return read(command);
+                return action_read(command);
             case BREAK:
                 return GO_UNKNOWN;
             case WAKE:
@@ -232,7 +232,7 @@ phase_codes_t action(command_t command)
             return GO_CLEAROBJ;
         }
         case READ:
-            return read(command);
+            return action_read(command);
         case BREAK:
             return vbreak(command.verb, command.obj);
         case WAKE:

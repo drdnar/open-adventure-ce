@@ -94,7 +94,7 @@ enum bugtype {
     LOCATION_HAS_NO_TRAVEL_ENTRIES,
     HINT_NUMBER_EXCEEDS_GOTO_LIST,
     SPEECHPART_NOT_TRANSITIVE_OR_INTRANSITIVE_OR_UNKNOWN,
-    ACTION_RETURNED_PHASE_CODE_BEYOND_END_OF_SWITCH,
+    ACTION_RETURNED_PHASE_CODE_BEYOND_END_OF_SWITCH
 };
 #endif
 
@@ -120,7 +120,7 @@ typedef enum {
     GO_CHECKHINT,
     GO_WORD2,
     GO_UNKNOWN,
-    GO_DWARFWAKE,
+    GO_DWARFWAKE
 } phase_codes_t;
 
 typedef int16_t vocab_t;  // index into a vocabulary array */
