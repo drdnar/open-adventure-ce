@@ -26,7 +26,10 @@
 
 #include "advent.h"
 #include "dungeon.h"
+#ifdef CALCULATOR
 #include "calc.h"
+#include "style.h"
+#endif
 
 static void* xcalloc(size_t size)
 {
@@ -62,7 +65,11 @@ static void vspeak(const char* msg, bool blank, va_list ap)
         return;
 
     if (blank == true)
+#ifndef CALCULATOR
         printf("\n");
+#else
+        print_newline();
+#endif
 
     msglen = strlen(msg);
 
@@ -93,9 +100,11 @@ static void vspeak(const char* msg, bool blank, va_list ap)
             // Integer specifier.
             if (msg[i] == 'd') {
                 int32_t arg = va_arg(ap, int32_t);
-                /* Removed because we don't have snprintf
-                int ret = snprintf(renderp, size, "%" PRId32, arg);*/
-                ret = sprintf(renderp, "%" PRId32, arg);
+#ifndef CALCULATOR
+                int ret = snprintf(renderp, size, "%" PRId32, arg);
+#else
+                ret = sprintf(renderp, "%", arg);
+#endif
                 if (ret < size) {
                     renderp += ret;
                     size -= ret;
@@ -135,7 +144,12 @@ static void vspeak(const char* msg, bool blank, va_list ap)
     *renderp = 0;
 
     // Print the message.
+#ifndef CALCULATOR
     printf("%s\n", rendered);
+#else
+    print(rendered);
+    print_newline();
+#endif
 
     free(rendered);
 }
@@ -152,9 +166,17 @@ void sspeak(const int msg, ...)
 {
     va_list ap;
     va_start(ap, msg);
+#ifndef CALCULATOR
     fputc('\n', stdout);
+#else
+    print_newline();
+#endif
     vprintf(get_arbitrary_message(msg), ap);
+#ifndef CALCULATOR
     fputc('\n', stdout);
+#else
+    print_newline();
+#endif
     va_end(ap);
 }
 
@@ -196,17 +218,21 @@ void rspeak(vocab_t i, ...)
     va_end(ap);
 }
 
-#ifndef CALCULATOR
 void echo_input(FILE* destination, const char* input_prompt, const char* input)
 {
+    char* prompt_and_input;
     size_t len = strlen(input_prompt) + strlen(input) + 1;
-    char* prompt_and_input = (char*) xcalloc(len);
+    prompt_and_input = (char*) xcalloc(len);
     strcpy(prompt_and_input, input_prompt);
     strcat(prompt_and_input, input);
+#ifndef CALCULATOR
     fprintf(destination, "%s\n", prompt_and_input);
+#else
+    print(prompt_and_input);
+    print_newline();
+#endif
     free(prompt_and_input);
 }
-#endif
 
 static int word_count(char* str)
 {
@@ -239,35 +265,58 @@ static char* get_input(void)
         input_prompt[0] = '\0';
 
     // Print a blank line
+#ifndef CALCULATOR
     printf("\n");
+#endif
 
     while (true) {
         input = readline(input_prompt);
 
         if (input == NULL) // Got EOF; return with it.
             return (input);
+#ifndef CALCULATOR
         if (input[0] == '#') { // Ignore comments.
             free(input);
             continue;
         }
+#endif
         // We have a 'normal' line; leave the loop.
         break;
     }
 
+#ifndef CALCULATOR
     // Strip trailing newlines from the input
     input[strcspn(input, "\n")] = 0;
+#endif
 
     add_history(input);
 
 #ifndef CALCULATOR
     if (!isatty(0))
+#endif
         echo_input(stdout, input_prompt, input);
 
+#ifndef CALCULATOR
     if (settings.logfp)
         echo_input(settings.logfp, "", input);
 #endif
 
     return (input);
+}
+
+char* whitespace = " \t\n\r";
+/* sscanf isn't available on the TI-84 Plus CE, and there's no need to import
+ * directly an entire sscanf routine, so we're just going to fake the minimum
+ * functionality we need. */
+static char* sscanf_fake(char* input, char* ignored, char* target)
+{//strchr(delims, *s) == 0
+    if (*input == '\0')
+        return input;
+    for ( ; *input != '\0' && strchr(whitespace, *input); input++)
+        /* Do nothing */;
+    for ( ; *input != '\0' && !strchr(whitespace, *input); input++, target++)
+        *target = *input;
+    return input;
 }
 
 bool silent_yes(void)
@@ -292,7 +341,7 @@ bool silent_yes(void)
         }
 
         firstword = (char*) xcalloc(strlen(reply) + 1);
-        sscanf(reply, "%s", firstword);
+        sscanf_fake(reply, "%s", firstword);
 
         free(reply);
 
@@ -348,8 +397,7 @@ bool yes(const compressed_string_index_t question, const compressed_string_index
         }
 
         firstword = (char*) xcalloc(strlen(reply) + 1);
-        sscanf(reply, "%s", firstword);
-
+        sscanf_fake(reply, "%s", firstword);
         free(reply);
 
         for (i = 0; i < (int)strlen(firstword); ++i)
@@ -520,8 +568,9 @@ static void tokenize(char* raw, command_t *cmd)
 
     /* Bound prefix on the %s would be needed to prevent buffer
      * overflow.  but we shortstop this more simply by making each
-     * raw-input buffer as int as the entire input buffer. */
-    sscanf(raw, "%s%s", cmd->word[0].raw, cmd->word[1].raw);
+     * raw-input buffer as int as the entire input buffer. * /
+    sscanf(raw, "%s%s", cmd->word[0].raw, cmd->word[1].raw);*/
+    sscanf_fake(sscanf_fake(raw, "%s", cmd->word[0].raw), "%s", cmd->word[1].raw);
 
     /* (ESR) In oldstyle mode, simulate the uppercasing and truncating
      * effect on raw tokens of packing them into sixbit characters, 5

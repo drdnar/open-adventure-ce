@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdarg.h>
+#ifndef CALCULATOR
 #include <inttypes.h>
+#endif
 
 #include "dungeon.h"
 
@@ -239,7 +241,11 @@ extern bool tstbit(int, int);
 extern void set_seed(int32_t);
 extern unsigned int randrange(unsigned int);
 extern int score(enum termination);
+#ifndef CALCULATOR
 extern void terminate(enum termination) __attribute__((noreturn));
+#else
+extern void terminate(enum termination);
+#endif
 extern int savefile(FILE *, int32_t);
 extern int suspend(void);
 extern int resume(void);
@@ -253,11 +259,15 @@ extern bool is_valid(struct game_t);
 void bug(enum bugtype, const char *) __attribute__((__noreturn__));
 #endif
 
+#ifndef CALCULATOR
 /* represent an empty command word */
 static const command_word_t empty_command_word = {
     .raw = "",
     .id = WORD_EMPTY,
     .type = NO_WORD_TYPE,
 };
+#else
+extern command_word_t empty_command_word;
+#endif
 
 /* end */

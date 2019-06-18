@@ -111,13 +111,17 @@ void play()
     seedval = initialise();
 
 #ifndef ADVENT_NOSAVE
+#ifndef CALCULATOR
     if (!rfp) {
+#endif
         game.novice = yes(get_arbitrary_message_index(WELCOME_YOU), get_arbitrary_message_index(CAVE_NEARBY), get_arbitrary_message_index(NO_MESSAGE));
         if (game.novice)
             game.limit = NOVICELIMIT;
+#ifndef CALCULATOR
     } else {
         restore(rfp);
     }
+#endif
 #else
     game.novice = yes(get_arbitrary_message_index(WELCOME_YOU), get_arbitrary_message_index(CAVE_NEARBY), get_arbitrary_message_index(NO_MESSAGE));
     if (game.novice)

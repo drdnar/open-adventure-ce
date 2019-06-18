@@ -92,12 +92,20 @@ int suspend(void)
     game.saved = game.saved + 5;
 
     while (fp == NULL) {
+#ifndef CALCULATOR
         name = readline("\nFile name: ");
+#else
+        name = readline_len("File name: ", 8);
+#endif
         if (name == NULL)
             return GO_TOP;
         fp = fopen(name, WRITE_MODE);
         if (fp == NULL)
+#ifndef CALCULATOR
             printf("Can't open file %s, try again.\n", name);
+#else
+            print("Failed to access file.\n");
+#endif
         free(name);
     }
 
@@ -126,12 +134,20 @@ int resume(void)
     }
 
     while (fp == NULL) {
+#ifndef CALCULATOR
         name = readline("\nFile name: ");
+#else
+        name = readline_len("File name: ", 8);
+#endif
         if (name == NULL)
             return GO_TOP;
         fp = fopen(name, READ_MODE);
         if (fp == NULL)
+#ifndef CALCULATOR
             printf("Can't open file %s, try again.\n", name);
+#else
+            print("Failed to open file.\n");
+#endif
         free(name);
     }
 

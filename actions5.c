@@ -1,5 +1,59 @@
 #include "actions.h"
 
+phase_codes_t waste(verb_t verb, turn_t turns)
+/* Burn turns */
+{
+    game.limit -= turns;
+    speak(get_action(verb)->message, (int)game.limit);
+    return GO_TOP;
+}
+
+phase_codes_t wave(verb_t verb, obj_t obj)
+/* Wave.  No effect unless waving rod at fissure or at bird. */
+{
+    if (obj != ROD ||
+        !TOTING(obj) ||
+        (!HERE(BIRD) &&
+         (game.closng ||
+          !AT(FISSURE)))) {
+        speak(((!TOTING(obj)) && (obj != ROD ||
+                                  !TOTING(ROD2))) ?
+              get_arbitrary_message_index(ARENT_CARRYING) :
+              get_action(verb)->message);
+        return GO_CLEAROBJ;
+    }
+
+    if (game.prop[BIRD] == BIRD_UNCAGED && game.loc == game.place[STEPS] && game.prop[JADE] == STATE_NOTFOUND) {
+        drop(JADE, game.loc);
+        game.prop[JADE] = STATE_FOUND;
+        --game.tally;
+        rspeak(NECKLACE_FLY);
+        return GO_CLEAROBJ;
+    } else {
+        if (game.closed) {
+            rspeak((game.prop[BIRD] == BIRD_CAGED) ?
+                   CAGE_FLY :
+                   FREE_FLY);
+            return GO_DWARFWAKE;
+        }
+        if (game.closng ||
+            !AT(FISSURE)) {
+            rspeak((game.prop[BIRD] == BIRD_CAGED) ?
+                   CAGE_FLY :
+                   FREE_FLY);
+            return GO_CLEAROBJ;
+        }
+        if (HERE(BIRD))
+            rspeak((game.prop[BIRD] == BIRD_CAGED) ?
+                   CAGE_FLY :
+                   FREE_FLY);
+
+        state_change(FISSURE,
+                     game.prop[FISSURE] == BRIDGED ? UNBRIDGED : BRIDGED);
+        return GO_CLEAROBJ;
+    }
+}
+
 phase_codes_t action(command_t command)
 /*  Analyse a verb.  Remember what it was, go back for object if second word
  *  unless verb is "say", which snarfs arbitrary second word.

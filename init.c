@@ -257,12 +257,16 @@ int load_dungeon(void)
 #endif
 
 
-
+#ifndef CALCULATOR
+/* This isn't allowed in C89, sadly. */
 struct settings_t settings = {
     .logfp = NULL,
     .oldstyle = false,
     .prompt = true
 };
+#else
+struct settings_t settings;
+#endif
 
 /* Inline initializers moved to function below for ANSI Cness */
 struct game_t game;

@@ -167,7 +167,7 @@ const hint_t* get_hint(int n);
 /*const long get_condition(int n);*/
 const motion_t* get_motion(int n);
 const action_t* get_action(int n);
-const long get_tkey(int n);
+const uint16_t get_tkey(int n);
 const travelop_t* get_travelop(int n);
 
 extern uint8_t* huffman_tree;

@@ -11,10 +11,11 @@
 #include <fileioc.h>
 #include <fontlibc.h>
 
-/*#include "dungeon.h"*/
+#include "dungeon.h"
 #include "calc.h"
 #include "editor.h"
-/*#include "advent.h"*/
+#include "style.h"
+#include "advent.h"
 
 
 /*******************************************************************************
@@ -99,167 +100,6 @@ void* malloc_safe(int size)
     return memory;
 }
 
-/*******************************************************************************
- * Font Stuff
- ******************************************************************************/
-
-char* times_pack_name = "Times";
-char* drsans_pack_name = "DrSans";
-
-void font_missing(char* name)
-{
-    gfx_SetTextFGColor(gfx_red);
-    gfx_SetTextBGColor(gfx_black);
-    gfx_PrintStringXY("ERROR:", 1, 1);
-    gfx_PrintStringXY("Font pack \"", 1, 10);
-    gfx_PrintString(name);
-    gfx_PrintString("\" missing or corrupted");
-        while (!os_GetCSC());
-    exit_clean(1);
-}
-
-void set_times(uint8_t size, fontlib_load_options_t options)
-{
-    fontlib_font_t* font;
-    font = fontlib_GetFontByStyle(times_pack_name, size, size, 0, 0xFF, 0, 0);
-    if (font && fontlib_SetFont(font, options))
-        return;
-    font_missing(times_pack_name);
-}
-
-void set_drsans(uint8_t size, uint8_t weight, fontlib_load_options_t options)
-{
-    fontlib_font_t* font;
-    font = fontlib_GetFontByStyle(drsans_pack_name, size, size, weight, weight, 0, 0);
-    if (font && fontlib_SetFont(font, options))
-        return;
-    font_missing(drsans_pack_name);
-}
-
-void print_centered(const char *string) {
-    fontlib_SetCursorPosition(fontlib_GetWindowWidth() / 2 + fontlib_GetWindowXMin() - (fontlib_GetStringWidth(string) / 2), fontlib_GetCursorY());
-    fontlib_DrawString(string);
-}
-
-void print_right(const char *string) {
-    fontlib_SetCursorPosition(fontlib_GetWindowWidth() + fontlib_GetWindowXMin() - fontlib_GetStringWidth(string), fontlib_GetCursorY());
-    fontlib_DrawString(string);
-}
-
-void reverse_colors(void)
-{
-    fontlib_SetColors(fontlib_GetBackgroundColor(), fontlib_GetForegroundColor());
-}
-
-/**
- * Prints a string, but with word-wrap!
- * @param string Text to print
- * @param fake_print Set to true to perform the exact same layout logic, but
- * without actually printing anything, and also return at the first newline.
- * This allows finding word-wrap points.
- * @note fake_print DOES care what the current cursor X position is---it uses
- * that to figure out how to deal with words too big to fit into the text
- * window.  Such words will get force-printed starting on their own line.
- * @return Returns a pointer to the last character processed, which will either
- * be '\0', a control code (such as newline), or the first character of the next
- * line of text.
- */
-char* print_word_wrap(const char* string, bool fake_print)
-{
-    char old_stop = fontlib_GetAlternateStopCode();
-    unsigned char old_nlo = fontlib_GetNewlineOptions();
-    char old_newline = fontlib_GetNewlineCode();
-    unsigned int left = fontlib_GetWindowXMin();
-    unsigned int width = fontlib_GetWindowWidth();
-    unsigned int right = left + width;
-    unsigned int str_width;
-    unsigned int x = fontlib_GetCursorX();
-    unsigned char first_printable = (unsigned char)fontlib_GetFirstPrintableCodePoint();
-    unsigned char c;
-    unsigned int space_width = fontlib_GetGlyphWidth(' ');
-    if (first_printable == '\0')
-        first_printable = '\1';
-    fontlib_SetNewlineCode('\0');
-    fontlib_SetAlternateStopCode(' ');
-    fontlib_SetNewlineOptions(FONTLIB_AUTO_CLEAR_TO_EOL | FONTLIB_AUTO_SCROLL);
-    do
-    {
-        /* Check if the next word can fit on the current line */
-        str_width = fontlib_GetStringWidth(string);
-        if (x + str_width < right)
-            if (!fake_print)
-                x = fontlib_DrawString(string);
-            else
-                x += str_width;
-        else
-        {
-            /* If the word is super-long such that it won't fit in the window,
-             * then forcibly print it starting on a new line. */
-            if (str_width != 0)
-                if (str_width > width && x == left)
-                    if (!fake_print)    
-                        x = fontlib_DrawString(string);
-                    else
-                    {
-                        do
-                            x += (str_width = fontlib_GetGlyphWidth(*string++));
-                        while (x < right);
-                        x -= str_width;
-                        break;
-                    }
-                else
-                {
-                    if (fake_print)
-                        break;
-                    fontlib_Newline();
-                    x = left;
-                    continue;
-                }
-            /* If the width returned was zero, that means either another space
-             * is waiting to be printed, which will be handled below; or a
-             * control code is next, which also will be handled below. */
-        }
-        string = fontlib_GetLastCharacterRead();
-        c = (unsigned char)(*string);
-        if (c < first_printable)
-        {
-            if (c == old_newline && old_newline != '\0')
-            {
-                if (fake_print)
-                    break;
-                string++;
-                fontlib_Newline();
-            }
-            else
-                break;
-        }
-        else if (c == ' ')
-        {
-            string++;
-            if (x + space_width < right)
-                if (!fake_print)
-                    fontlib_DrawGlyph(' ');
-                else
-                    x += space_width;
-            else
-                if (fake_print)
-                    break;
-                else
-                {
-                    fontlib_Newline();
-                    x = left;
-                }
-        }
-    } while (true);
-    if (!fake_print)
-        fontlib_ClearEOL();
-    fontlib_SetNewlineCode(old_newline);
-    fontlib_SetAlternateStopCode(old_stop);
-    fontlib_SetNewlineOptions(old_nlo);
-    return string;
-}
-
-
 
 /*******************************************************************************
  * MAIN
@@ -278,6 +118,13 @@ void main(void) {
     uint8_t selection = 0;
     uint8_t key, old_fgc, line_height = 0, cursor_width = 0;
     bool redraw_main_menu = true;
+    /* Necessary for some globals */
+    settings.logfp = NULL;
+    settings.oldstyle = false;
+    settings.prompt = true;
+    empty_command_word.raw[0] = '\0';
+    empty_command_word.id = WORD_EMPTY;
+    empty_command_word.type = NO_WORD_TYPE;
     /* Make sure RTC is running */
     rtc_Control = RTC_ENABLE;
     gfx_Begin();

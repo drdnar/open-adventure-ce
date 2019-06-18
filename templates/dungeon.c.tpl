@@ -199,7 +199,7 @@ const action_t* get_action(int n)
     return actions[n];
 }}
 
-const long get_tkey(int n)
+const uint16_t get_tkey(int n)
 {{
     return tkey[n];
 }}
