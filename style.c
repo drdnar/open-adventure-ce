@@ -89,7 +89,7 @@ char* print_word_wrap(const char* string, bool fake_print)
         first_printable = '\1';
     fontlib_SetNewlineCode('\0');
     fontlib_SetAlternateStopCode(' ');
-    fontlib_SetNewlineOptions(FONTLIB_AUTO_CLEAR_TO_EOL | FONTLIB_AUTO_SCROLL);
+    fontlib_SetNewlineOptions(FONTLIB_AUTO_CLEAR_TO_EOL | FONTLIB_AUTO_SCROLL | FONTLIB_ENABLE_AUTO_WRAP);
     do
     {
         /* Check if the next word can fit on the current line */
@@ -235,6 +235,7 @@ static void print_setup_internal(void)
     fontlib_SetWindow(0, 0, LCD_WIDTH, print_window_height);
     set_font(print_font_pack_name, print_size, print_weight, 0, 0, print_options);
     fontlib_SetCursorPosition(print_cursor_x, print_cursor_y);
+    fontlib_SetNewlineOptions(FONTLIB_AUTO_CLEAR_TO_EOL | FONTLIB_AUTO_SCROLL | FONTLIB_ENABLE_AUTO_WRAP);
 }
 
 static void print_cleanup_internal(void)
