@@ -244,6 +244,7 @@ static void checkhints(void)
 static bool spotted_by_pirate(int i)
 {
     int treasure, snarfed;
+    bool movechest = false, robplayer = false;
     if (i != PIRATE)
         return false;
 
@@ -257,7 +258,6 @@ static bool spotted_by_pirate(int i)
         game.prop[CHEST] != STATE_NOTFOUND)
         return true;
     snarfed = 0;
-    bool movechest = false, robplayer = false;
     for (treasure = 1; treasure <= NOBJECTS; treasure++) {
         if (!get_object(treasure)->is_treasure)
             continue;
@@ -966,7 +966,7 @@ static bool closecheck(void)
         game.prop[MIRROR] = put(MIRROR, LOC_NE, STATE_FOUND);
         game.fixed[MIRROR] = LOC_SW;
 
-        for (int i = 1; i <= NOBJECTS; i++) {
+        for (i = 1; i <= NOBJECTS; i++) {
             if (TOTING(i))
                 DESTROY(i);
         }
@@ -1155,6 +1155,7 @@ static bool do_command()
 /* Get and execute a command */
 {
     static command_t command;
+    size_t i;
     clear_command(&command);
 
     /* Describe the current location and (maybe) get next command. */
@@ -1180,7 +1181,7 @@ static bool do_command()
              *  separate from their respective piles. */
                 if (game.prop[OYSTER] < 0 && TOTING(OYSTER))
                     pspeak(OYSTER, look, true, 1);
-                for (size_t i = 1; i <= NOBJECTS; i++) {
+                for (i = 1; i <= NOBJECTS; i++) {
                     if (TOTING(i) && game.prop[i] < 0)
                         game.prop[i] = STASHED(i);
                 }

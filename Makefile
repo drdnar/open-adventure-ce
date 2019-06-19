@@ -23,6 +23,7 @@ GFXDIR              ?= gfx
 
 VERSION := 8.5
 VERS := 1.8
+V:=0
 
 #----------------------------
 # try not to edit anything below these lines unless you know what you are doing
@@ -123,9 +124,9 @@ rwildcard = $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2)$(filter $(subst
 
 # find all of the available C, H and ASM files (Remember, you can create C <-> assembly routines easily this way)
 # TODO: Rework some of this, since we're using a different file organization
-CSOURCES      := calc.c editor.c style.c actions1.c actions2.c actions3.c actions4.c actions5.c calc.c dungeon.c editor.c init.c main.c misc.c saveresume.c score.c
+CSOURCES      := calc.c editor.c style.c actions1.c actions2.c actions3.c actions4.c actions5.c dungeon.c init.c main.c misc.c saveresume.c score.c
 #CPPSOURCES    := $(call rwildcard,$(SRCDIR),*.cpp)
-USERHEADERS   := editor.h advent.h actions.h calc.h dehuffman.h dungeon.h editor.h style.h
+USERHEADERS   := editor.h advent.h actions.h calc.h dehuffman.h dungeon.h style.h
 ASMSOURCES    := ez80.asm
 
 # create links for later
@@ -168,7 +169,7 @@ endif
 
 # define the C flags used by the Zilog compiler
 CFLAGS ?= \
-    -noasm $(CCDEBUGFLAG) -nogenprint -keepasm -quiet $(OPT_MODE) -cpu:EZ80F91 -noreduceopt -nolistinc -nomodsect -define:_EZ80F91 -define:_EZ80 -define:$(DEBUGMODE) -define:VERSION=\"$(VERS)\" -define:CALCULATOR
+    -noasm $(CCDEBUGFLAG) -nogenprint -keepasm -quiet $(OPT_MODE) -cpu:EZ80F91 -noreduceopt -nolistinc -nomodsect -define:_EZ80F91 -define:_EZ80 -define:$(DEBUGMODE) -define:VERSION="$(VERS)" -define:CALCULATOR
 
 # these are the linker flags, basically organized to properly set up the environment
 LDFLAGS ?= \
@@ -221,6 +222,8 @@ check:
 # Just build the regular version of the game
 pc:
 	make -f makefile.pc
+
+dungeon.bin: make_dungeon_calc.py templates/dungeon.c.tpl templates/dungeon.h.tpl
 
 dungeon: dungeon.bin
 	make -f makefile.pc dungeon.bin

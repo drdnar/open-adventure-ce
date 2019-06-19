@@ -23,7 +23,10 @@
 
 #include "advent.h"
 #include "dungeon.h"
+#ifdef CALCULATOR
 #include "calc.h"
+#include "style.h"
+#endif
 
 /*
  * Bump on save format change.
@@ -49,6 +52,7 @@ struct save_t {
 };
 #else
 struct save_t {
+    char id_str[34]; /*"Colossal Cave Adventure save file"*/
     unsigned long savetime;
     int mode;		/* not used, must be present for version detection */
     int version;
@@ -80,11 +84,13 @@ int suspend(void)
      *  battles or to start over after learning zzword).
      *  If ADVENT_NOSAVE is defined, do nothing instead. */
     char* name;
-
+    FILE *fp = NULL;
 #ifdef ADVENT_NOSAVE
     return GO_UNKNOWN;
 #endif
-    FILE *fp = NULL;
+#ifdef CALCULATOR
+    strcpy(save.id_str, save_file_header);
+#endif
 
     rspeak(SUSPEND_WARNING);
     if (!yes(get_arbitrary_message_index(THIS_ACCEPTABLE), get_arbitrary_message_index(OK_MAN), get_arbitrary_message_index(OK_MAN)))
@@ -104,15 +110,24 @@ int suspend(void)
 #ifndef CALCULATOR
             printf("Can't open file %s, try again.\n", name);
 #else
-            print("Failed to access file.\n");
+            print("Failed to open file.\n");
 #endif
         free(name);
     }
 
     savefile(fp, VRSION);
     fclose(fp);
+#ifdef CALCULATOR
+    /* Writing can potentially move the dungeon file, so refresh pointers to be
+     * safe. */
+    load_dungeon();
+#endif
     rspeak(RESUME_HELP);
+#ifndef CALCULATOR
     exit(EXIT_SUCCESS);
+#else
+    exit_main(EXIT_SUCCESS);
+#endif
 }
 
 int resume(void)

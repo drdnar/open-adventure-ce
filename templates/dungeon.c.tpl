@@ -1,10 +1,23 @@
 #include "{h_file}"
 
+uint8_t* dungeon;
+
+/* For the calculator platform, the order of these variable declarations must
+ * not be changed or you will break the optimized dungeon loading code. */
+
 uint8_t* huffman_tree;
 
+#ifndef CALCULATOR
 uint8_t** compressed_strings;
+#else
+uint16_t* compressed_strings;
+#endif
 
+#ifndef CALCULATOR
 char** uncompressed_strings;
+#else
+uint16_t* uncompressed_strings;
+#endif
 
 compressed_string_index_t* arbitrary_messages;
 
@@ -14,19 +27,31 @@ turn_threshold_t* turn_thresholds;
 
 location_t* locations;
 
+#ifndef CALCULATOR
 object_t** objects;
+#else
+uint16_t* objects;
+#endif
 
 obituary_t* obituaries;
 
 hint_t* hints;
 
-int32_t conditions[] = {{
-{conditions}
-}};
+#ifdef CALCULATOR
+uint8_t* unused;
+#endif
 
+#ifndef CALCULATOR
 motion_t** motions;
+#else
+uint16_t* motions;
+#endif
 
+#ifndef CALCULATOR
 action_t** actions;
+#else
+uint16_t* actions;
+#endif
 
 uint16_t* tkey;
 
@@ -34,9 +59,11 @@ travelop_t* travel;
 
 const char *ignore = "{ignore}";
 
+int32_t conditions[] = {{
+{conditions}
+}};
 
-#define HUFFMAN_BUFFERS 4
-#define HUFFMAN_BUFFER_SIZE 2048
+
 char buffers[HUFFMAN_BUFFERS][HUFFMAN_BUFFER_SIZE];
 uint8_t next_buffer = 0;
 
@@ -80,7 +107,7 @@ char* decompress_string(void* input, char* output)
 #endif
 
 
-const char* dehuffman(void* data)
+const char* dehuffman(uint8_t* data)
 {{
     char* buffer_start = &buffers[next_buffer++][0];
     /* Modulus is not fast on the eZ80 */
@@ -94,14 +121,22 @@ const char* get_compressed_string(int n)
 {{
     if (n == 0)
         return NULL;
-    return dehuffman((void*)compressed_strings[n]);
+#ifndef CALCULATOR
+    return dehuffman(compressed_strings[n]);
+#else
+    return dehuffman(dungeon + compressed_strings[n]);
+#endif
 }}
 
 const char* get_uncompressed_string(int n)
 {{
     if (n == 0)
         return NULL;
+#ifndef CALCULATOR
     return uncompressed_strings[n];
+#else
+    return (char*)(dungeon + uncompressed_strings[n]);
+#endif
 }}
 
 const char* get_object_description(int o, int n)
@@ -171,7 +206,11 @@ const location_t* get_location(int n)
 
 const object_t* get_object(int n)
 {{
+#ifndef CALCULATOR
     return objects[n];
+#else
+    return (object_t*)(dungeon + objects[n]);
+#endif
 }}
 
 const obituary_t* get_obituary(int n)
@@ -191,12 +230,20 @@ const hint_t* get_hint(int n)
 
 const motion_t* get_motion(int n)
 {{
+#ifndef CALCULATOR
     return motions[n];
+#else
+    return (motion_t*)(dungeon + motions[n]);
+#endif
 }}
 
 const action_t* get_action(int n)
 {{
+#ifndef CALCULATOR
     return actions[n];
+#else
+    return (action_t*)(dungeon + actions[n]);
+#endif
 }}
 
 const uint16_t get_tkey(int n)

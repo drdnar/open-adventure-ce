@@ -100,6 +100,11 @@ enum bugtype {
 };
 #endif
 
+#ifdef CALCULATOR
+#define SAVE_FILE_HEADER "Colossal Cave Adventure save file"
+extern char* save_file_header;
+#endif
+
 enum speaktype {touch, look, hear, study, change};
 
 enum termination {endgame, quitgame, scoregame};
@@ -221,6 +226,8 @@ typedef struct {
 extern struct game_t game;
 extern struct settings_t settings;
 
+extern void play(void);
+extern void load_dungeon(void);
 extern bool get_command_input(command_t *);
 extern void clear_command(command_t *);
 extern void speak(const compressed_string_index_t, ...);

@@ -30,6 +30,11 @@
 #define COND_HOGRE	19	/* Trying to deal with ogre */
 #define COND_HJADE	20	/* Found all treasures except jade */
 
+/* Huffman decompression buffers, just use a circular buffer system for great
+ * laziness. */
+#define HUFFMAN_BUFFERS 4
+#define HUFFMAN_BUFFER_SIZE 2048
+
 /* Memory is limited and signed operations are slower and larger on the eZ80,
  * so it helps to use the smallest unsigned data type possible. */
 
@@ -170,19 +175,40 @@ const action_t* get_action(int n);
 const uint16_t get_tkey(int n);
 const travelop_t* get_travelop(int n);
 
+extern uint8_t* dungeon;
 extern uint8_t* huffman_tree;
+#ifndef CALCULATOR
 extern uint8_t** compressed_strings;
+#else
+extern uint16_t* compressed_strings;
+#endif
+#ifndef CALCULATOR
 extern char** uncompressed_strings;
+#else
+extern uint16_t* uncompressed_strings;
+#endif
 extern location_t* locations;
+#ifndef CALCULATOR
 extern object_t** objects;
+#else
+extern uint16_t* objects;
+#endif
 extern compressed_string_index_t* arbitrary_messages;
 extern class_t* classes;
 extern turn_threshold_t* turn_thresholds;
 extern obituary_t* obituaries;
 extern hint_t* hints;
 extern int32_t conditions[];
+#ifndef CALCULATOR
 extern motion_t** motions;
+#else
+extern uint16_t* motions;
+#endif
+#ifndef CALCULATOR
 extern action_t** actions;
+#else
+extern uint16_t* actions;
+#endif
 extern travelop_t* travel;
 extern uint16_t* tkey;
 extern const char *ignore;

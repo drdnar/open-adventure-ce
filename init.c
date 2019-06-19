@@ -18,7 +18,11 @@
 #include <string.h>
 
 #include "advent.h"
+#include "dungeon.h"
+#ifdef CALCULATOR
 #include "calc.h"
+#include "style.h"
+#endif
 
 #ifndef CALCULATOR
 void load_failure(char* message)
@@ -29,7 +33,7 @@ void load_failure(char* message)
 
 FILE* dungeon_file;
 
-uint8_t get_byte()
+static uint8_t get_byte()
 {
     uint8_t ret;
     if (fread(&ret, 1, 1, dungeon_file) != 1)
@@ -37,14 +41,14 @@ uint8_t get_byte()
     return ret;
 }
 
-uint16_t get_word()
+static uint16_t get_word()
 {
     uint16_t ret;
     ret = get_byte() | (get_byte() << 8);
     return ret;
 }
 
-int load_dungeon(void)
+void load_dungeon(void)
 {
     char id_str[32];
     long huffman_tree_location, compressed_strings_location, uncompressed_strings_location,
@@ -254,6 +258,61 @@ int load_dungeon(void)
         travel[i].stop = get_byte();
     }
 }
+#else
+void load_dungeon(void)
+{
+    char id_str[32];
+    ti_var_t dungeon_file;
+    dungeon_file = ti_Open("CCaveDun", "r");
+    if (!dungeon_file)
+        exit_fail("Failed to open dungeon appvar CCaveDun");
+    dungeon = ti_GetDataPtr(dungeon_file);
+    if (sizeof(id_str) != ti_Read(&id_str[0], sizeof(id_str), 1, dungeon_file))
+    exit_fail("dungeon.bin got truncated?");
+    if (id_str[31] || strcmp(id_str, DATA_FILE_ID_STRING))
+        exit_fail("Appvar CCaveDun does not look like a dungeon file");
+    /* In order to save some space, instead of the previous platform-independent
+     * idiomatic C, I've written some optimized assembly.  This makes some semi-
+     * unsafe assumptions, but then again, if the dungeon file is corrupted,
+     * then other things are also probably corrupted and you're probably going
+     * to crash sooner or later anyway.
+     * 
+     * This basically does the following:
+     *  void* target = (void*)huffman_tree;
+     *  uint16_t* offsets = (uint16_t*)(dungeon + sizeof(DATA_FILE_ID_STRING));
+     *  unsigned char count;
+     *  for (count = 15; count > 0; offsets++, target++, count--)
+     *      *target = (void*)(dungeon + *offsets);
+     * 
+     * You should note that this code assumes that the dungeon variables are
+     * placed in memory in a particular order.
+     */
+    asm("	.ref _huffman_tree");
+    asm("	; A: Loop counter");
+    asm("	; BC: Cached pointer to dungeon data");
+    asm("	; DE: Offsets array read pointer");
+    asm("	; IY: Target pointer to populate");
+    asm("	ld	bc, (_dungeon)");
+    asm("	ld	hl, 32 ; sizeof(DATA_FILE_ID_STRING)");
+    asm("	add	hl, bc");
+    asm("	ex	de, hl");
+    asm("	ld	iy, _huffman_tree");
+    asm("	ld	a, 15");
+    asm("load_dungeon_loop:");
+    asm("	sbc	hl, hl	; Previous use of ADD should keep C reset");
+    asm("	ex	de, hl");
+    asm("	ld	e, (hl)");
+    asm("	inc	hl");
+    asm("	ld	d, (hl)");
+    asm("	inc	hl");
+    asm("	ex	de, hl");
+    asm("	add	hl, bc");
+    asm("	ld	(iy), hl");
+    asm("	lea	iy, iy + 3");
+    asm("	dec	a");
+    asm("	jr	nz, load_dungeon_loop");
+    ti_Close(dungeon_file);
+}
 #endif
 
 
@@ -275,12 +334,13 @@ int initialise(void)
 {
     int i, k, treasure;
     int seedval;
-#ifndef CALCULATOR
     if (settings.oldstyle)
+#ifndef CALCULATOR
         printf("Initialising...\n");
-    load_dungeon();
+#else
+        print("Initialising...\n");
 #endif
-    
+    load_dungeon();
     
     game.dloc[1] = LOC_KINGHALL;
     game.dloc[2] = LOC_WESTBANK;

@@ -225,8 +225,9 @@ void print_configure(char* name, uint8_t size, uint8_t weight, fontlib_load_opti
     print_options = options;
     set_font(name, size, weight, 0, 0, options);
     fheight = fontlib_GetCurrentFontHeight();
-    print_window_height = LCD_HEIGHT / fheight;
-    print_window_height = fheight * (print_window_height - 1);
+    /* Make the window one line smaller so there's room for the text entry box
+     * at the bottom. */
+    print_window_height = fheight * ((LCD_HEIGHT / fheight) - 1);
 }
 
 void print_setup_internal(void)

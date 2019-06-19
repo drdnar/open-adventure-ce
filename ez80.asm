@@ -1,8 +1,6 @@
-include 'ez80.inc'
 	.assume adl=1
 	.def _decompress_string
-	.def _huffman_tree
-
+	.ref _huffman_tree
 
 .text
 ;-------------------------------------------------------------------------------
@@ -26,8 +24,7 @@ _decompress_string:
 	ld	de, 0
 	ld	b, 1
 .loop:	
-	ld	hl, 0
-_huffman_tree := $ - 3
+	ld	hl, (_huffman_tree)
 .innerLoop:
 	; Is this node a leaf?
 	ld	e, (hl)
@@ -57,26 +54,26 @@ _huffman_tree := $ - 3
 	ret
 
 
-#ifdef NEVER
-_get_compressed_string:
-	pop	de
-	pop	hl
-	push	hl
-	push	de
-	ld	de, (_compressed_strings)
-	jr	indexShortArray
+
+;_get_compressed_string:
+;	pop	de
+;	pop	hl
+;	push	hl
+;	push	de
+;	ld	de, (_compressed_strings)
+;	jr	indexShortArray
 	
-indexShortArray:
-	ld	a, l
-	or	h
-	ret	z
-	add	hl, hl
-	ex	de, hl
-	add	hl, de
-	ld	e, (hl)
-	inc	hl
-	ld	d, (hl)
-	ld	hl, (_dungeon)
-	add	hl, de
-	ret
-#endif
+;indexShortArray:
+;	ld	a, l
+;	or	h
+;	ret	z
+;	add	hl, hl
+;	ex	de, hl
+;	add	hl, de
+;	ld	e, (hl)
+;	inc	hl
+;	ld	d, (hl)
+;	ld	hl, (_dungeon)
+;	add	hl, de
+;	ret
+

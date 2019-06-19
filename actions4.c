@@ -232,12 +232,8 @@ void print(char*);
 phase_codes_t seed(verb_t verb, const char *arg)
 /* Set seed */
 {
-#ifndef CALCULATOR
-    int32_t seed = strtol(arg, NULL, 10);
-#else
-    int32_t seed = 1234567890;
-    print("seed: strtol not available because it frequently makes Zilog's compiler vomit. Using 1234567890 as seed instead. Have fun.\n");
-#endif
+    int32_t seed;
+    seed = strtol(arg, NULL, 10);
     speak(get_action(verb)->message, seed);
     set_seed(seed);
     --game.turns;

@@ -17,6 +17,9 @@
 #include "style.h"
 #include "advent.h"
 
+/* Random place to put globals */
+command_word_t empty_command_word;
+char* save_file_header = SAVE_FILE_HEADER;
 
 /*******************************************************************************
  * time.h replacement
@@ -60,9 +63,31 @@ unsigned short days_from_time(void* time)
 }*/
 
 
+/*******************************************************************************
+ * readline replacement
+ ******************************************************************************/
+
+char* readline_len(char* prompt, unsigned char max_len)
+{
+    fontlib_font_t* font;
+    unsigned int x;
+    unsigned char y;
+    font = set_drsans(14, FONTLIB_BOLD, 0);
+    y = LCD_HEIGHT - fontlib_GetCurrentFontHeight();
+    fontlib_SetWindowFullScreen();
+    fontlib_SetCursorPosition(0, y);
+    fontlib_DrawString(prompt);
+    x = fontlib_GetCursorX();
+    return get_string(x, y, LCD_WIDTH - x, max_len, font);
+}
+
+char* readline(char* prompt)
+{
+    return readline_len(prompt, 24);
+}
 
 
- /*******************************************************************************
+/*******************************************************************************
  * Error & Clean-up Code
  ******************************************************************************/
 
@@ -73,6 +98,11 @@ void exit_clean(int n)
 {
     gfx_End();
     exit(n);
+}
+
+void exit_main(int n)
+{
+    exit_clean(n);
 }
 
 /**
@@ -101,6 +131,15 @@ void* malloc_safe(int size)
 }
 
 
+void do_game(void)
+{
+    print_configure(drsans_pack_name, 14, FONTLIB_BOLD, 0);
+    print_clear();
+    init_history();
+    play();
+    free_history();
+}
+
 /*******************************************************************************
  * MAIN
  ******************************************************************************/
@@ -118,17 +157,17 @@ void main(void) {
     uint8_t selection = 0;
     uint8_t key, old_fgc, line_height = 0, cursor_width = 0;
     bool redraw_main_menu = true;
-    /* Necessary for some globals */
+    /* Make sure RTC is running */
+    rtc_Control = RTC_ENABLE;
+    gfx_Begin();
+    init_history();
+    /* Need to initialize some globals */
     settings.logfp = NULL;
     settings.oldstyle = false;
     settings.prompt = true;
     empty_command_word.raw[0] = '\0';
     empty_command_word.id = WORD_EMPTY;
     empty_command_word.type = NO_WORD_TYPE;
-    /* Make sure RTC is running */
-    rtc_Control = RTC_ENABLE;
-    gfx_Begin();
-    init_history();
     do
     {
         if (redraw_main_menu)
@@ -209,12 +248,13 @@ void main(void) {
                 switch (selection)
                 {
                     case 0:
-                        blah = get_string(3, 3, 250, 16, fontlib_GetFontByStyle(drsans_pack_name, 14, 14, FONTLIB_BOLD, FONTLIB_BOLD, 0, 0));
+                        /*blah = get_string(3, 3, 250, 16, fontlib_GetFontByStyle(drsans_pack_name, 14, 14, FONTLIB_BOLD, FONTLIB_BOLD, 0, 0));
                         fontlib_SetWindowFullScreen();
                         fontlib_SetCursorPosition(1, 30);
                         fontlib_DrawString(blah);
                         fontlib_ClearEOL();
-                        add_history(blah);
+                        add_history(blah);*/
+                        do_game();
                         break;
                     case 1:
                         fontlib_SetWindow(20, 2, 120, 30);

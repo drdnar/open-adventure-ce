@@ -8,7 +8,9 @@
 #include <stdlib.h>
 #include "advent.h"
 #include "dungeon.h"
+#ifdef CALCULATOR
 #include "calc.h"
+#endif
 
 static int mxscor;	/* ugh..the price for having score() not exit. */
 
@@ -133,12 +135,20 @@ void terminate(enum termination mode)
             speak(class->message);
             i = class->threshold + 1 - points;
             rspeak(NEXT_HIGHER, i, i);
+#ifndef CALCULATOR
             exit(EXIT_SUCCESS);
+#else
+            exit_main(EXIT_SUCCESS);
+#endif
         }
     }
     rspeak(OFF_SCALE);
     rspeak(NO_HIGHER);
+#ifndef CALCULATOR
     exit(EXIT_SUCCESS);
+#else
+    exit_main(EXIT_SUCCESS);
+#endif
 }
 
 /* end */

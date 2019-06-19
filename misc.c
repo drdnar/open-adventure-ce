@@ -54,7 +54,12 @@ static void vspeak(const char* msg, bool blank, va_list ap)
 {
     int msglen, i, ret;
     char* rendered, * renderp, * arg;
+#ifndef CALCULATOR
     ssize_t size, len;
+#else
+    size_t size, len;
+#endif
+    bool pluralize = false;
 
     // Do nothing if we got a null pointer.
     if (msg == NULL)
@@ -81,7 +86,6 @@ static void vspeak(const char* msg, bool blank, va_list ap)
     // Handle format specifiers (including the custom %S) by
     // adjusting the parameter accordingly, and replacing the
     // specifier with %s.
-    bool pluralize = false;
     for (i = 0; i < msglen; i++) {
         if (msg[i] != '%') {
             /* Ugh.  Least obtrusive way to deal with artifacts "on the floor"
@@ -101,9 +105,9 @@ static void vspeak(const char* msg, bool blank, va_list ap)
             if (msg[i] == 'd') {
                 int32_t arg = va_arg(ap, int32_t);
 #ifndef CALCULATOR
-                int ret = snprintf(renderp, size, "%" PRId32, arg);
+                ret = snprintf(renderp, size, "%" PRId32, arg);
 #else
-                ret = sprintf(renderp, "%", arg);
+                ret = sprintf(renderp, "%d", arg);
 #endif
                 if (ret < size) {
                     renderp += ret;
@@ -133,8 +137,14 @@ static void vspeak(const char* msg, bool blank, va_list ap)
             // LCOV_EXCL_START - doesn't occur in test suite.
             /* Version specifier */
             if (msg[i] == 'V') {
+#ifndef CALCULATOR
                 strcpy(renderp, VERSION);
                 len = strlen(VERSION);
+#else
+#define ZILOGS_COMPILER_DOESNT_SUPPORT_PASSING_DIRECTLY(A_STRING_DEFINE_ON_COMMAND_LINE_AFAICT) #A_STRING_DEFINE_ON_COMMAND_LINE_AFAICT
+                strcpy(renderp, ZILOGS_COMPILER_DOESNT_SUPPORT_PASSING_DIRECTLY(VERSION));
+                len = strlen(ZILOGS_COMPILER_DOESNT_SUPPORT_PASSING_DIRECTLY(VERSION));
+#endif
                 renderp += len;
                 size -= len;
             }
@@ -164,17 +174,21 @@ void speak(const compressed_string_index_t msg, ...)
 
 void sspeak(const int msg, ...)
 {
+#ifdef CALCULATOR
+    char* buffer;
+#endif
     va_list ap;
     va_start(ap, msg);
 #ifndef CALCULATOR
     fputc('\n', stdout);
-#else
-    print_newline();
-#endif
     vprintf(get_arbitrary_message(msg), ap);
-#ifndef CALCULATOR
     fputc('\n', stdout);
 #else
+    print_newline();
+    buffer = xcalloc(HUFFMAN_BUFFER_SIZE + 1);
+    sprintf(buffer, get_arbitrary_message(msg), ap);
+    print(buffer);
+    free(buffer);
     print_newline();
 #endif
     va_end(ap);
@@ -293,8 +307,10 @@ static char* get_input(void)
 
 #ifndef CALCULATOR
     if (!isatty(0))
-#endif
         echo_input(stdout, input_prompt, input);
+#else
+    echo_input(NULL, input_prompt, input);
+#endif
 
 #ifndef CALCULATOR
     if (settings.logfp)
@@ -331,7 +347,11 @@ bool silent_yes(void)
             // LCOV_EXCL_START
             // Should be unreachable. Reply should never be NULL
             free(reply);
+#ifndef CALCULATOR
             exit(EXIT_SUCCESS);
+#else
+            exit_main(EXIT_SUCCESS);
+#endif
             // LCOV_EXCL_STOP
         }
         if (strlen(reply) == 0) {
@@ -386,7 +406,11 @@ bool yes(const compressed_string_index_t question, const compressed_string_index
             // LCOV_EXCL_START
             // Should be unreachable. Reply should never be NULL
             free(reply);
+#ifndef CALCULATOR
             exit(EXIT_SUCCESS);
+#else
+            exit_main(EXIT_SUCCESS);
+#endif
             // LCOV_EXCL_STOP
         }
 
@@ -781,6 +805,7 @@ bool tstbit(int mask, int bit)
 void set_seed(int32_t seedval)
 /* Set the LCG seed */
 {
+    unsigned char i;
 #ifndef CALCULATOR
     game.lcg_x = seedval & LCG_MASK;
     if (game.lcg_x < 0) {
@@ -790,7 +815,7 @@ void set_seed(int32_t seedval)
     game.lcg_x = (unsigned int)seedval & LCG_MASK;
 #endif
     // once seed is set, we need to generate the Z`ZZZ word
-    for (int i = 0; i < 5; ++i) {
+    for (i = 0; i < 5; ++i) {
         game.zzword[i] = 'A' + randrange(26);
     }
     game.zzword[1] = '\''; // force second char to apostrophe
