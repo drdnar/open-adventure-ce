@@ -214,8 +214,8 @@ char* print_font_pack_name;
 unsigned char print_size, print_weight;
 fontlib_load_options_t print_options;
 unsigned char print_window_height;
-unsigned char print_cursor_x;
-unsigned int print_cursor_y;
+unsigned int print_cursor_x;
+unsigned char print_cursor_y;
 void print_configure(char* name, uint8_t size, uint8_t weight, fontlib_load_options_t options)
 {
     uint8_t fheight;
@@ -230,14 +230,14 @@ void print_configure(char* name, uint8_t size, uint8_t weight, fontlib_load_opti
     print_window_height = fheight * ((LCD_HEIGHT / fheight) - 1);
 }
 
-void print_setup_internal(void)
+static void print_setup_internal(void)
 {
     fontlib_SetWindow(0, 0, LCD_WIDTH, print_window_height);
     set_font(print_font_pack_name, print_size, print_weight, 0, 0, print_options);
     fontlib_SetCursorPosition(print_cursor_x, print_cursor_y);
 }
 
-void print_cleanup_internal(void)
+static void print_cleanup_internal(void)
 {
     print_cursor_x = fontlib_GetCursorX();
     print_cursor_y = fontlib_GetCursorY();
@@ -254,7 +254,6 @@ void print_clear(void)
 void print_newline(void)
 {
     print_setup_internal();
-    fontlib_ClearWindow();
     fontlib_Newline();
     print_cleanup_internal();
 }

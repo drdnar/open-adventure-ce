@@ -722,7 +722,7 @@ def get_travel(travel):
 
 if __name__ == "__main__":
     with open(YAML_NAME, "r") as f:
-        db = yaml.load(f)
+        db = yaml.safe_load(f)
 
     locnames = [x[0] for x in db["locations"]]
     msgnames = [el[0] for el in db["arbitrary_messages"]]

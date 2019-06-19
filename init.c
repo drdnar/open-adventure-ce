@@ -267,8 +267,8 @@ void load_dungeon(void)
     if (!dungeon_file)
         exit_fail("Failed to open dungeon appvar CCaveDun");
     dungeon = ti_GetDataPtr(dungeon_file);
-    if (sizeof(id_str) != ti_Read(&id_str[0], sizeof(id_str), 1, dungeon_file))
-    exit_fail("dungeon.bin got truncated?");
+    if (sizeof(id_str) != ti_Read(&id_str[0], 1, sizeof(id_str), dungeon_file))
+        exit_fail("dungeon.bin got truncated?");
     if (id_str[31] || strcmp(id_str, DATA_FILE_ID_STRING))
         exit_fail("Appvar CCaveDun does not look like a dungeon file");
     /* In order to save some space, instead of the previous platform-independent

@@ -114,7 +114,8 @@ void exit_fail(char* message)
     gfx_SetTextBGColor(gfx_black);
     gfx_PrintStringXY("ERROR:", 1, 1);
     gfx_PrintStringXY(message, 1, 10);
-        while (!os_GetCSC());
+    while (!os_GetCSC())
+        /* Do nothing */;
     exit_clean(1);
 }
 
@@ -159,6 +160,7 @@ void main(void) {
     bool redraw_main_menu = true;
     /* Make sure RTC is running */
     rtc_Control = RTC_ENABLE;
+    ti_CloseAll();
     gfx_Begin();
     init_history();
     /* Need to initialize some globals */

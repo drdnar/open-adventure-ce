@@ -223,7 +223,8 @@ check:
 pc:
 	make -f makefile.pc
 
-dungeon.bin: make_dungeon_calc.py templates/dungeon.c.tpl templates/dungeon.h.tpl
+dungeon.bin dungeon.c dungeon.h: make_dungeon_calc.py templates/dungeon.c.tpl templates/dungeon.h.tpl
+	./make_dungeon_calc.py
 
 dungeon: dungeon.bin
 	make -f makefile.pc dungeon.bin

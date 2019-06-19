@@ -39,8 +39,11 @@ _decompress_string:
 .getNextBit:
 	; Get next bit of input
 	rrc	c
-	; Carry controls left or right branch, move to next node
-	adc	hl, de
+	jr	nc, .resetBit
+	inc	hl
+	ld	e, (hl)
+.resetBit: ; Move to next node
+	add	hl, de
 	jr	.innerLoop
 .deHuffmanDone:
 	; Write decompressed code to output buffer
