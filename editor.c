@@ -12,6 +12,7 @@
 
 #include "editor.h"
 #include "calc.h"
+#include "style.h"
 
 
 /*******************************************************************************
@@ -55,7 +56,9 @@ void add_history(char* string)
     char* item = history[history_next];
     if (item != NULL)
         free(item);
-    history[history_next] = string;
+    item = malloc_safe(strlen(string) + 1);
+    strcpy(item, string);
+    history[history_next] = item;
     history_next = (history_next + 1) & MAX_HISTORY_MASK;
     
 }
@@ -122,8 +125,8 @@ editor_context_t* editor_start(uint24_t x_loc, uint8_t y_loc, uint24_t box_width
     fontlib_SetFont(editor_font, 0);
     context->font = editor_font;
     context->font_height = fontlib_GetCurrentFontHeight();
-    context->fg_color = gfx_black;
-    context->bg_color = gfx_white;
+    context->fg_color = foreground_color;
+    context->bg_color = background_color;
     context->cursor_glyph = '\2';
     context->cursor_shown = false;
     context->max_length = text_max_length;
@@ -522,12 +525,12 @@ char editor_translate_key(char key, unsigned char shift)
     return '\0';
 }
 
-char cursors[] = {'\2', '\6', '\7'};
+char cursors[] = {'\4', '\6', '\7'};
 
 /* These are all 32-bit registers, but we don't need all 32 bits, and 32-bit
  * code sucks on the eZ80, so as a performance and code-size hack we're going
  * to treat these as single-byte registers as much as possible.
- * Look in <tice.h> for*/
+ * Look in <tice.h> for more information. */
 #define timer_control_a (*(volatile unsigned char*)0xF20030)
 #define timer_control_b (*(volatile unsigned char*)0xF20031)
 #define timer_1_value (*(volatile unsigned char*)0xF20001)
@@ -539,8 +542,9 @@ char* get_string(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text
     bool not_done = true;
     unsigned char seconds;
     sk_key_t  key;
-    unsigned char shift = 0;
+    unsigned char shift = 2;
     context = editor_start(x_loc, y_loc, box_width, text_max_length, editor_font);
+    context->cursor_glyph = cursors[shift];
     
     /* Set timer 1 to count up */
     timer_control_b = timer_control_b | 2;
@@ -561,6 +565,8 @@ char* get_string(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text
         editor_show_cursor(context);
         do
         {
+            asm("   ei");
+            asm("   halt");
             key = os_GetCSC();
             /* Check value of timer 1.  We need only check one byte of the whole
              * 32-bit register. */
@@ -583,6 +589,7 @@ char* get_string(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text
                 editor_flush(context);
                 break;
             case sk_Del:
+                editor_left(context);
                 editor_delete(context, 1);
                 break;
             case sk_Left:

@@ -3,6 +3,9 @@
 #include "calc.h"
 #include "style.h"
 
+unsigned char foreground_color = gfx_white;
+unsigned char background_color = gfx_black;
+
 /*******************************************************************************
  * Font Stuff
  ******************************************************************************/
@@ -59,6 +62,8 @@ void fontlib_reverse_colors(void)
     fontlib_SetColors(fontlib_GetBackgroundColor(), fontlib_GetForegroundColor());
 }
 
+unsigned char print_lines_printed;
+
 /**
  * Prints a string, but with word wrap!
  * @param string Text to print
@@ -79,12 +84,14 @@ char* print_word_wrap(const char* string, bool fake_print)
     char old_newline = fontlib_GetNewlineCode();
     unsigned int left = fontlib_GetWindowXMin();
     unsigned int width = fontlib_GetWindowWidth();
+    unsigned char max_lines = (fontlib_GetWindowHeight() / fontlib_GetCurrentFontHeight()) - 2;
     unsigned int right = left + width;
     unsigned int str_width;
     unsigned int x = fontlib_GetCursorX();
     unsigned char first_printable = (unsigned char)fontlib_GetFirstPrintableCodePoint();
     unsigned char c;
     unsigned int space_width = fontlib_GetGlyphWidth(' ');
+    print_lines_printed = 0;
     if (first_printable == '\0')
         first_printable = '\1';
     fontlib_SetNewlineCode('\0');
@@ -92,6 +99,9 @@ char* print_word_wrap(const char* string, bool fake_print)
     fontlib_SetNewlineOptions(FONTLIB_AUTO_CLEAR_TO_EOL | FONTLIB_AUTO_SCROLL | FONTLIB_ENABLE_AUTO_WRAP);
     do
     {
+        /* TODO: Need to be able to control pagination better. */
+        if (!(print_lines_printed & 0x80) && print_lines_printed >= max_lines)
+            break;
         /* Check if the next word can fit on the current line */
         str_width = fontlib_GetStringWidth(string);
         if (x + str_width < right)
@@ -104,6 +114,8 @@ char* print_word_wrap(const char* string, bool fake_print)
             /* If the word is super-long such that it won't fit in the window,
              * then forcibly print it starting on a new line. */
             if (str_width != 0)
+            {
+                print_lines_printed++;
                 if (str_width > width && x == left)
                     if (!fake_print)    
                         x = fontlib_DrawString(string);
@@ -112,7 +124,8 @@ char* print_word_wrap(const char* string, bool fake_print)
                         do
                             x += (str_width = fontlib_GetGlyphWidth(*string++));
                         while (x < right);
-                        x -= str_width;
+                        /*x -= str_width;*/
+                        string--;
                         break;
                     }
                 else
@@ -123,6 +136,7 @@ char* print_word_wrap(const char* string, bool fake_print)
                     x = left;
                     continue;
                 }
+            }
             /* If the width returned was zero, that means either another space
              * is waiting to be printed, which will be handled below; or a
              * control code is next, which also will be handled below.  This can
@@ -138,27 +152,45 @@ char* print_word_wrap(const char* string, bool fake_print)
         {
             if (c == old_newline && old_newline != '\0')
             {
+                /* The dungeon file has lots of linebreaks just for word-wrap.
+                 * Since we're handling word-wrap on-the-fly, ignore them. */
+                if (*(string + 1) != old_newline)
+                {
+                    c = ' ';
+                    goto handlespace;
+                }
+                print_lines_printed++;
                 if (fake_print)
                     break;
                 string++;
                 fontlib_Newline();
+            }
+            else if (c == '\t')
+            {
+                string++;
+                x += 32;
+                x &= 0xFFFFFE;
             }
             else
                 break;
         }
         /* If it's a space, we need to process that manually since DrawString
          * won't handle it because we set space as a stop code. */
-        else if (c == ' ')
+handlespace:
+        if (c == ' ')
         {
             string++;
             /* We do actually need to check if there's space to print the
              * space. */
             if (x + space_width < right)
+            {
                 if (!fake_print)
                     fontlib_DrawGlyph(' ');
-                else
-                    x += space_width;
+                x += space_width;
+            }
             else
+            {
+                print_lines_printed++;
                 /* If there isn't room, we need to eat the space; it would look
                  * weird to print a space at the start of the next line. 
                  * However, we do not eat ALL the spaces if there's more than
@@ -170,6 +202,7 @@ char* print_word_wrap(const char* string, bool fake_print)
                     fontlib_Newline();
                     x = left;
                 }
+            }
         }
     } while (true);
     if (!fake_print)
@@ -248,7 +281,8 @@ void print_clear(void)
 {
     print_setup_internal();
     fontlib_ClearWindow();
-    fontlib_HomeUp();
+    /*fontlib_HomeUp();*/
+    fontlib_SetCursorPosition(0, print_window_height - fontlib_GetCurrentFontHeight());
     print_cleanup_internal();
 }
 
@@ -261,7 +295,19 @@ void print_newline(void)
 
 void print(const char* string)
 {
-    print_setup_internal();
-    print_word_wrap(string, false);
+    bool more;
+    do
+    {
+        more = false;
+        print_setup_internal();
+        string = print_word_wrap(string, false);
+        if (*string != '\0')
+        {
+            more = true;
+            fontlib_SetCursorPosition(0, LCD_HEIGHT - fontlib_GetCurrentFontHeight());
+            fontlib_DrawString("Press any key to see more. . . .");
+            wait_any_key();
+        }
+    } while (more);
     print_cleanup_internal();
 }

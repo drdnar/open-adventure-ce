@@ -231,7 +231,7 @@ extern void load_dungeon(void);
 extern bool get_command_input(command_t *);
 extern void clear_command(command_t *);
 extern void speak(const compressed_string_index_t, ...);
-extern void sspeak(int msg, ...);
+void sspeak(const int msg, ...);
 extern void pspeak(vocab_t, enum speaktype, bool, int, ...);
 extern void rspeak(vocab_t, ...);
 extern void echo_input(FILE*, const char*, const char*);
@@ -258,7 +258,7 @@ extern int suspend(void);
 extern int resume(void);
 extern int restore(FILE *);
 extern int initialise(void);
-extern phase_codes_t action(command_t);
+extern phase_codes_t action(command_t*);
 extern void state_change(obj_t, int);
 extern bool is_valid(struct game_t);
 

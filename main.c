@@ -1261,7 +1261,7 @@ static bool do_command()
 #endif
                 }
 
-                switch (action(command)) {
+                switch (action(&command)) {
                 case GO_TERMINATE:
                     command.state = EXECUTED;
                     break;

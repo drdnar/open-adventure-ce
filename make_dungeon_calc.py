@@ -14,7 +14,7 @@ import sys, yaml
 
 from collections import defaultdict
  
-YAML_NAME = "adventure.yaml"
+YAML_NAME = "adventure_calculator.yaml"
 H_NAME = "dungeon.h"
 C_NAME = "dungeon.c"
 BIN_NAME = "dungeon.bin"

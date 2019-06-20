@@ -53,31 +53,31 @@ phase_codes_t quit(void)
     return GO_CLEAROBJ;
 }
 
-phase_codes_t action_read(command_t command)
+phase_codes_t action_read(command_t* command)
 /*  Read.  Print stuff based on objtxt.  Oyster (?) is special case. */
 {
     int i;
-    if (command.obj == INTRANSITIVE) {
-        command.obj = NO_OBJECT;
+    if (command->obj == INTRANSITIVE) {
+        command->obj = NO_OBJECT;
         for (i = 1; i <= NOBJECTS; i++) {
             if (HERE(i) && get_object_text(i, 0) != NULL && game.prop[i] >= 0)
-                command.obj = command.obj * NOBJECTS + i;
+                command->obj = command->obj * NOBJECTS + i;
         }
-        if (command.obj > NOBJECTS ||
-            command.obj == NO_OBJECT ||
+        if (command->obj > NOBJECTS ||
+            command->obj == NO_OBJECT ||
             DARK(game.loc))
             return GO_UNKNOWN;
     }
 
     if (DARK(game.loc)) {
-        sspeak(NO_SEE, command.word[0].raw);
-    } else if (command.obj == OYSTER && !game.clshnt && game.closed) {
+        sspeak(NO_SEE, command->word[0].raw);
+    } else if (command->obj == OYSTER && !game.clshnt && game.closed) {
         game.clshnt = yes(get_arbitrary_message_index(CLUE_QUERY), get_arbitrary_message_index(WAYOUT_CLUE), get_arbitrary_message_index(OK_MAN));
-    } else if (get_object_text(command.obj, 0) == NULL ||
-               game.prop[command.obj] == STATE_NOTFOUND) {
-        speak(get_action(command.verb)->message);
+    } else if (get_object_text(command->obj, 0) == NULL ||
+               game.prop[command->obj] == STATE_NOTFOUND) {
+        speak(get_action(command->verb)->message);
     } else
-        pspeak(command.obj, study, true, game.prop[command.obj]);
+        pspeak(command->obj, study, true, game.prop[command->obj]);
     return GO_CLEAROBJ;
 }
 
@@ -119,28 +119,28 @@ phase_codes_t rub(verb_t verb, obj_t obj)
     return GO_CLEAROBJ;
 }
 
-phase_codes_t say(command_t command)
+phase_codes_t say(command_t* command)
 /* Say.  Echo WD2. Magic words override. */
 {
-    if (command.word[1].type == MOTION &&
-        (command.word[1].id == XYZZY ||
-         command.word[1].id == PLUGH ||
-         command.word[1].id == PLOVER)) {
+    if (command->word[1].type == MOTION &&
+        (command->word[1].id == XYZZY ||
+         command->word[1].id == PLUGH ||
+         command->word[1].id == PLOVER)) {
         return GO_WORD2;
     }
-    if (command.word[1].type == ACTION && command.word[1].id == PART)
+    if (command->word[1].type == ACTION && command->word[1].id == PART)
         return reservoir();
 
-    if (command.word[1].type == ACTION &&
-        (command.word[1].id == FEE ||
-         command.word[1].id == FIE ||
-         command.word[1].id == FOE ||
-         command.word[1].id == FOO ||
-         command.word[1].id == FUM ||
-         command.word[1].id == PART)) {
-        return bigwords(command.word[1].id);
+    if (command->word[1].type == ACTION &&
+        (command->word[1].id == FEE ||
+         command->word[1].id == FIE ||
+         command->word[1].id == FOE ||
+         command->word[1].id == FOO ||
+         command->word[1].id == FUM ||
+         command->word[1].id == PART)) {
+        return bigwords(command->word[1].id);
     }
-    sspeak(OKEY_DOKEY, command.word[1].raw);
+    sspeak(OKEY_DOKEY, command->word[1].raw);
     return GO_CLEAROBJ;
 }
 
@@ -151,20 +151,20 @@ phase_codes_t throw_support(vocab_t spk)
     return GO_MOVE;
 }
 
-phase_codes_t throw (command_t command)
+phase_codes_t throw (command_t* command)
 /*  Throw.  Same as discard unless axe.  Then same as attack except
  *  ignore bird, and if dwarf is present then one might be killed.
  *  (Only way to do so!)  Axe also special for dragon, bear, and
  *  troll.  Treasures special for troll. */
 {
     int i;
-    if (!TOTING(command.obj)) {
-        speak(get_action(command.verb)->message);
+    if (!TOTING(command->obj)) {
+        speak(get_action(command->verb)->message);
         return GO_CLEAROBJ;
     }
-    if (get_object(command.obj)->is_treasure && AT(TROLL)) {
+    if (get_object(command->obj)->is_treasure && AT(TROLL)) {
         /*  Snarf a treasure for the troll. */
-        drop(command.obj, LOC_NOWHERE);
+        drop(command->obj, LOC_NOWHERE);
         move(TROLL, LOC_NOWHERE);
         move(TROLL + NOBJECTS, IS_FREE);
         drop(TROLL2, get_object(TROLL)->plac);
@@ -173,13 +173,13 @@ phase_codes_t throw (command_t command)
         rspeak(TROLL_SATISFIED);
         return GO_CLEAROBJ;
     }
-    if (command.obj == FOOD && HERE(BEAR)) {
+    if (command->obj == FOOD && HERE(BEAR)) {
         /* But throwing food is another story. */
-        command.obj = BEAR;
-        return (feed(command.verb, command.obj));
+        command->obj = BEAR;
+        return (feed(command->verb, command->obj));
     }
-    if (command.obj != AXE)
-        return (discard(command.verb, command.obj));
+    if (command->obj != AXE)
+        return (discard(command->verb, command->obj));
     else {
         if (atdwrf(game.loc) <= 0) {
             if (AT(DRAGON) && game.prop[DRAGON] == DRAGON_BARS)
@@ -196,7 +196,7 @@ phase_codes_t throw (command_t command)
                 state_change(AXE, AXE_LOST);
                 return GO_CLEAROBJ;
             }
-            command.obj = INTRANSITIVE;
+            command->obj = INTRANSITIVE;
             return (attack(command));
         }
 

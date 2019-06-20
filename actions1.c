@@ -1,6 +1,6 @@
 #include "actions.h"
 
-phase_codes_t attack(command_t command)
+phase_codes_t attack(command_t* command)
 /*  Attack.  Assume target if unambiguous.  "Throw" also links here.
  *  Attackable objects fall into two categories: enemies (snake,
  *  dwarf, etc.)  and others (bird, clam, machine).  Ambiguous if 2
@@ -8,8 +8,8 @@ phase_codes_t attack(command_t command)
 {
     int changes, i, dwarves;
     obj_t i_obj;
-    verb_t verb = command.verb;
-    obj_t obj = command.obj;
+    verb_t verb = command->verb;
+    obj_t obj = command->obj;
 
     if (obj == INTRANSITIVE) {
         changes = 0;

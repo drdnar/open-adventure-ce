@@ -52,7 +52,8 @@ static void* xcalloc(size_t size)
 
 static void vspeak(const char* msg, bool blank, va_list ap)
 {
-    int msglen, i, ret;
+    int argi;
+    unsigned int msglen, i, ret;
     char* rendered, * renderp, * arg;
 #ifndef CALCULATOR
     ssize_t size, len;
@@ -103,17 +104,17 @@ static void vspeak(const char* msg, bool blank, va_list ap)
             i++;
             // Integer specifier.
             if (msg[i] == 'd') {
-                int32_t arg = va_arg(ap, int32_t);
+                argi = va_arg(ap, int);
 #ifndef CALCULATOR
-                ret = snprintf(renderp, size, "%" PRId32, arg);
+                ret = snprintf(renderp, size, "%" PRId32, argi);
 #else
-                ret = sprintf(renderp, "%d", arg);
+                ret = sprintf(renderp, "%d", argi);
 #endif
                 if (ret < size) {
                     renderp += ret;
                     size -= ret;
                 }
-                pluralize = (arg != 1);
+                pluralize = (argi != 1);
             }
 
             // Unmodified string specifier.
@@ -158,7 +159,7 @@ static void vspeak(const char* msg, bool blank, va_list ap)
     printf("%s\n", rendered);
 #else
     print(rendered);
-    print_newline();
+    /*print_newline();*/
 #endif
 
     free(rendered);
@@ -174,23 +175,9 @@ void speak(const compressed_string_index_t msg, ...)
 
 void sspeak(const int msg, ...)
 {
-#ifdef CALCULATOR
-    char* buffer;
-#endif
     va_list ap;
     va_start(ap, msg);
-#ifndef CALCULATOR
-    fputc('\n', stdout);
-    vprintf(get_arbitrary_message(msg), ap);
-    fputc('\n', stdout);
-#else
-    print_newline();
-    buffer = xcalloc(HUFFMAN_BUFFER_SIZE + 1);
-    sprintf(buffer, get_arbitrary_message(msg), ap);
-    print(buffer);
-    free(buffer);
-    print_newline();
-#endif
+    vspeak(get_arbitrary_message(msg), true, ap);
     va_end(ap);
 }
 
@@ -242,8 +229,9 @@ void echo_input(FILE* destination, const char* input_prompt, const char* input)
 #ifndef CALCULATOR
     fprintf(destination, "%s\n", prompt_and_input);
 #else
-    print(prompt_and_input);
     print_newline();
+    print(prompt_and_input);
+/*    print_newline();*/
 #endif
     free(prompt_and_input);
 }

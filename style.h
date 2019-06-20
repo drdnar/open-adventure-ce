@@ -6,7 +6,8 @@
 
 extern char* times_pack_name;
 extern char* drsans_pack_name;
-
+extern unsigned char foreground_color;
+extern unsigned char background_color;
 
 void font_missing(char* name);
 fontlib_font_t* set_font(char* name, uint8_t size, uint8_t weight, uint8_t style_set, uint8_t style_reset, fontlib_load_options_t options);

@@ -21,6 +21,20 @@
 command_word_t empty_command_word;
 char* save_file_header = SAVE_FILE_HEADER;
 
+
+sk_key_t wait_any_key()
+{
+    sk_key_t key;
+    do
+    {
+        asm("   ei");
+        asm("   halt");
+        key = os_GetCSC();
+    }
+    while (!key);
+    return key;
+}
+
 /*******************************************************************************
  * time.h replacement
  ******************************************************************************/
@@ -102,6 +116,7 @@ void exit_clean(int n)
 
 void exit_main(int n)
 {
+    wait_any_key();
     exit_clean(n);
 }
 
@@ -110,12 +125,12 @@ void exit_main(int n)
  */
 void exit_fail(char* message)
 {
+    gfx_FillScreen(gfx_black);
     gfx_SetTextFGColor(gfx_red);
     gfx_SetTextBGColor(gfx_black);
     gfx_PrintStringXY("ERROR:", 1, 1);
     gfx_PrintStringXY(message, 1, 10);
-    while (!os_GetCSC())
-        /* Do nothing */;
+    wait_any_key();
     exit_clean(1);
 }
 
@@ -135,6 +150,7 @@ void* malloc_safe(int size)
 void do_game(void)
 {
     print_configure(drsans_pack_name, 14, FONTLIB_BOLD, 0);
+    gfx_FillScreen(background_color);
     print_clear();
     init_history();
     play();
@@ -175,11 +191,11 @@ void main(void) {
         if (redraw_main_menu)
         {
             redraw_main_menu = false;
-            gfx_FillScreen(gfx_white);
+            gfx_FillScreen(background_color);
             fontlib_SetFirstPrintableCodePoint(12);
             fontlib_SetWindowFullScreen();
             fontlib_SetCursorPosition(0, 60);
-            fontlib_SetColors(gfx_black, gfx_white);
+            fontlib_SetColors(foreground_color, background_color);
             fontlib_SetTransparency(false);
             fontlib_SetNewlineOptions(FONTLIB_ENABLE_AUTO_WRAP);
             
@@ -212,9 +228,7 @@ void main(void) {
         fontlib_SetCursorPosition(MAIN_MENU_X - cursor_width, MAIN_MENU_Y + line_height * selection);
         fontlib_DrawGlyph(CURSOR_GLYPH);
         
-        key = 0;
-        while (!key)
-            key = os_GetCSC();
+        key = wait_any_key();
         
         old_fgc = fontlib_GetForegroundColor();
         fontlib_SetForegroundColor(fontlib_GetBackgroundColor());

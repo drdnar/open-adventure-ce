@@ -20,7 +20,7 @@
 #include <stdint.h>
 
 phase_codes_t fill(verb_t, obj_t);
-phase_codes_t attack(command_t command);
+phase_codes_t attack(command_t* command);
 phase_codes_t bigwords(vocab_t id);
 void blast(void);
 phase_codes_t vbreak(verb_t verb, obj_t obj);
@@ -41,14 +41,14 @@ phase_codes_t listen(void);
 phase_codes_t lock(verb_t verb, obj_t obj);
 phase_codes_t pour(verb_t verb, obj_t obj);
 phase_codes_t quit(void);
-phase_codes_t action_read(command_t command);
+phase_codes_t action_read(command_t* command);
 phase_codes_t reservoir(void);
 phase_codes_t rub(verb_t verb, obj_t obj);
-phase_codes_t say(command_t command);
+phase_codes_t say(command_t* command);
 phase_codes_t throw_support(vocab_t spk);
-phase_codes_t throw (command_t command);
+phase_codes_t throw (command_t* command);
 phase_codes_t wake(verb_t verb, obj_t obj);
 phase_codes_t seed(verb_t verb, const char *arg);
 phase_codes_t waste(verb_t verb, turn_t turns);
 phase_codes_t wave(verb_t verb, obj_t obj);
-phase_codes_t action(command_t command);
+phase_codes_t action(command_t* command);
