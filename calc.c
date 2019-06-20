@@ -151,6 +151,7 @@ void do_game(void)
 {
     print_configure(drsans_pack_name, 14, FONTLIB_BOLD, 0);
     gfx_FillScreen(background_color);
+    print_reset_pagination();
     print_clear();
     init_history();
     play();
@@ -203,8 +204,12 @@ void main(void) {
             print_centered("The\n");
             set_times(23, 0);
             print_centered("Colossal Cave\n");
-            set_times(23, 0);
-            print_centered("Adventure\n");
+            times_font = set_times(23, 0);
+            print_centered("Adventure");
+            key = times_font->space_above + times_font->baseline_height;
+            times_font = set_times(13, 0);
+            fontlib_ShiftCursorPosition(8, key - times_font->space_above - times_font->baseline_height);
+            fontlib_DrawString("beta 6/20");
             
             set_drsans(14, FONTLIB_NORMAL, 0);
             fontlib_SetCursorPosition(0, ABOUT_Y);
@@ -273,9 +278,6 @@ void main(void) {
                         do_game();
                         break;
                     case 1:
-                        fontlib_SetWindow(20, 2, 120, 30);
-                        fontlib_HomeUp();
-                        print_word_wrap("The quick brown fox jumps over the lazy dog. Jack Dawes loves my big sphinx of quartz.", false);
                         break;
                     case 2:
                         exit_clean(0);

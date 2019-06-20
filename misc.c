@@ -305,6 +305,10 @@ static char* get_input(void)
         echo_input(settings.logfp, "", input);
 #endif
 
+#ifdef CALCULATOR
+    print_reset_pagination();
+#endif
+
     return (input);
 }
 
