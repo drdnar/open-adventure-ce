@@ -103,7 +103,7 @@ char* decompress_string(void* input, char* output)
 #else
 /* For the eZ80, just reference the routines, which will be provided in
  * assembly. */
-#include "dehuffman.h"
+#include "ez80.h"
 #endif
 
 
