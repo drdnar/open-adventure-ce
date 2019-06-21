@@ -12,7 +12,7 @@ STACK_HIGH          ?= D1A87E
 INIT_LOC            ?= D1A87F
 USE_FLASH_FUNCTIONS ?= YES
 OUTPUT_MAP          ?= YES
-ARCHIVED            ?= NO
+ARCHIVED            ?= YES
 OPT_MODE            ?= -optsize
 #----------------------------
 SRCDIR              ?=

@@ -103,7 +103,7 @@ int suspend(void)
 #else
         name = readline_len("File name: ", 8);
 #endif
-        if (name == NULL)
+        if (name == NULL || strlen(name) == 0)
             return GO_TOP;
         fp = fopen(name, WRITE_MODE);
         if (fp == NULL)
@@ -154,7 +154,7 @@ int resume(void)
 #else
         name = readline_len("File name: ", 8);
 #endif
-        if (name == NULL)
+        if (name == NULL || strlen(name) == 0)
             return GO_TOP;
         fp = fopen(name, READ_MODE);
         if (fp == NULL)
