@@ -126,7 +126,7 @@ rwildcard = $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2)$(filter $(subst
 # TODO: Rework some of this, since we're using a different file organization
 CSOURCES      := calc.c editor.c style.c actions1.c actions2.c actions3.c actions4.c actions5.c dungeon.c init.c main.c misc.c saveresume.c score.c
 #CPPSOURCES    := $(call rwildcard,$(SRCDIR),*.cpp)
-USERHEADERS   := editor.h advent.h actions.h calc.h dehuffman.h dungeon.h style.h
+USERHEADERS   := editor.h advent.h actions.h calc.h ez80.h dungeon.h style.h
 ASMSOURCES    := ez80.asm
 
 # create links for later
@@ -185,13 +185,13 @@ LDFLAGS ?= \
 	-i $(call QUOTE_ARG,libs $(call FASMG_FILES,$(LINK_LIBLOAD)) used if libs.length$(comma) $(call FASMG_FILES,$(LINK_LIBS)))
 
 # this rule is trigged to build everything
-all: dirs $(BINDIR)/$(TARGET8XP) ;
+all: dirs $(BINDIR)/$(TARGET8XP) $(BINDIR)/dungeon.8xv ;
 
 # this rule is trigged to build debug everything
 debug: LDDEBUGFLAG = -i dbg
 debug: DEBUGMODE = DEBUG
 debug: CCDEBUGFLAG = -debug
-debug: dirs $(BINDIR)/$(TARGET8XP) ;
+debug: dirs $(BINDIR)/$(TARGET8XP) $(BINDIR)/dungeon.8xv ;
 
 dirs:
 	@echo C CE SDK Version $(VERSION) && \
@@ -226,9 +226,10 @@ pc:
 dungeon.bin dungeon.c dungeon.h: make_dungeon_calc.py templates/dungeon.c.tpl templates/dungeon.h.tpl
 	./make_dungeon_calc.py
 
-dungeon: dungeon.bin
-	make -f makefile.pc dungeon.bin
-	convhex -a -v -n CCaveDun dungeon.bin CCave_dungeon.8xv
+dungeon: dungeon.bin $(BINDIR)/dungeon.8xv
+
+$(BINDIR)/dungeon.8xv: dungeon.bin
+	convhex -a -v -n CCaveDun dungeon.bin $(BINDIR)/dungeon.8xv
 
 clean:
 	$(Q)$(call RM,*.src)
@@ -243,4 +244,4 @@ gfx:
 version:
 	@echo C SDK Version $(VERSION)
 
-.PHONY: all clean version gfx dirs debug check pc
+.PHONY: all clean version gfx dirs debug check pc dungeon

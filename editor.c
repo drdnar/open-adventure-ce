@@ -13,6 +13,7 @@
 #include "editor.h"
 #include "calc.h"
 #include "style.h"
+#include "ez80.h"
 
 
 /*******************************************************************************
@@ -534,14 +535,17 @@ char cursors[] = {'\4', '\6', '\7'};
 #define timer_control_a (*(volatile unsigned char*)0xF20030)
 #define timer_control_b (*(volatile unsigned char*)0xF20031)
 #define timer_1_value (*(volatile unsigned char*)0xF20001)
+#define timer_1_value_b (*(volatile unsigned char*)0xF20002)
 #define timer_1_match_1     (*(unsigned char*)0xF2000A)
 #define timer_1_match_2     (*(unsigned char*)0xF2000E)
 char* get_string(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text_max_length, fontlib_font_t* editor_font)
 {
     editor_context_t* context;
     bool not_done = true;
-    unsigned char seconds;
-    sk_key_t  key;
+    unsigned char temp;
+    sk_key_t key;
+    unsigned int apd_timer;
+    bool dimmed = false;
     unsigned char shift = 2;
     context = editor_start(x_loc, y_loc, box_width, text_max_length, editor_font);
     context->cursor_glyph = cursors[shift];
@@ -560,14 +564,24 @@ char* get_string(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text
          * Recall that timer 1 has already been turned off, so the non-
          * atomic writes won't cause a problem. */
         timer_1_Counter = 0;
+        apd_timer = get_rtc_seconds_plus(APD_DIM_TIME);
         /* Enable timer 1 */
         timer_control_a = timer_control_a | 1;
         editor_show_cursor(context);
         do
         {
-            asm("   ei");
-            asm("   halt");
-            key = os_GetCSC();
+            /* Prevent battery killing */
+            if (get_rtc_seconds() == apd_timer)
+            {
+                if (!dimmed)
+                {
+                    dimmed = true;
+                    lcd_dim();
+                    apd_timer = get_rtc_seconds_plus(APD_QUIT_TIME);
+                }
+                else
+                    exit_clean(0);
+            }
             /* Check value of timer 1.  We need only check one byte of the whole
              * 32-bit register. */
             if (timer_1_value >= 64)
@@ -579,7 +593,12 @@ char* get_string(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text
                 /* Flash cursor */
                 editor_toggle_cursor(context);
             }
+            asm("   ei");
+            asm("   halt");
+            key = os_GetCSC();
         } while (!key);
+        dimmed = false;
+        lcd_bright();
         /* Turn timer off */
         timer_control_a = timer_control_a & 0xFA;
         editor_hide_cursor(context);
@@ -608,14 +627,14 @@ char* get_string(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text
                 context->cursor_glyph = cursors[shift];
                 break;
             case sk_Up:
-                seconds = 1;
-                if (get_history_item(seconds) == NULL)
+                temp = 1;
+                if (get_history_item(temp) == NULL)
                     break;
                 do
                 {
                     fontlib_SetColors(context->bg_color, context->fg_color);
                     fontlib_SetCursorPosition(context->base_x, context->base_y);
-                    fontlib_DrawString(get_history_item(seconds));
+                    fontlib_DrawString(get_history_item(temp));
                     fontlib_SetBackgroundColor(context->bg_color);
                     fontlib_ClearEOL();
                     do
@@ -624,16 +643,16 @@ char* get_string(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text
                     switch (key)
                     {
                         case sk_Up:
-                            if (get_history_item(++seconds) == NULL)
-                                seconds--;
+                            if (get_history_item(++temp) == NULL)
+                                temp--;
                             break;
                         case sk_Down:
-                            if (get_history_item(--seconds) == NULL)
-                                seconds++;
+                            if (get_history_item(--temp) == NULL)
+                                temp++;
                             break;
                         case sk_Enter:
                             editor_flush(context);
-                            editor_set_str(context, get_history_item(seconds));
+                            editor_set_str(context, get_history_item(temp));
                             editor_end(context);
                             not_done = false;
                             break;

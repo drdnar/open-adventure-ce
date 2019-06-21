@@ -1,6 +1,18 @@
+;include 'ti84pceg.inc'
+
 	.assume adl=1
 	.def _decompress_string
+	.def _lcd_dim
+	.def _lcd_bright
+	.def _get_rtc_seconds
+	.def _get_rtc_seconds_plus
 	.ref _huffman_tree
+
+_RestoreLCDBrightness      = 0021AB8h
+_DimLCDSlow                = 0021AC0h
+flags			= 0D00080h		; location of OS Flags (+-80h)
+rtc_Seconds = 0F30000h
+rtc_Minutes = 0F30004h
 
 .text
 ;-------------------------------------------------------------------------------
@@ -57,6 +69,40 @@ _decompress_string:
 	ret
 
 
+;-------------------------------------------------------------------------------
+_lcd_dim:
+	ld	iy, flags
+	jp	_DimLCDSlow
+
+
+_lcd_bright:
+	ld	iy, flags
+	jp	_RestoreLCDBrightness
+
+
+;-------------------------------------------------------------------------------
+_get_rtc_seconds:
+	ld	de, (rtc_Minutes)
+	ld	d, 60
+	mlt	de
+	ld	hl, (rtc_Seconds)
+	add	hl, de
+	ret
+
+_get_rtc_seconds_plus:
+	call	_get_rtc_seconds
+	pop	bc
+	pop	de
+	push	de
+	push	bc
+	add	hl, de
+	ld	de, 3600
+	or	a
+	sbc	hl, de
+	ret	nc
+	add	hl, de
+	ret
+	
 
 ;_get_compressed_string:
 ;	pop	de

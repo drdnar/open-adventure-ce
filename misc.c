@@ -31,6 +31,24 @@
 #include "style.h"
 #endif
 
+#ifdef NEVER
+/* Hack needed because Mateo decided that strcasecmp was the same as strncasecmp */
+#include <ctype.h>
+static int strncasecmp(const char *s1, const char *s2, size_t n)
+{
+    if (n && s1 != s2)
+    {
+        do {
+            int d = tolower(*s1) - tolower(*s2);
+            if (d || *s1 == '\0' || *s2 == '\0') return d;
+            s1++;
+            s2++;
+        } while (--n);
+    }
+    return 0;
+}
+#endif
+
 static void* xcalloc(size_t size)
 {
     void* ptr = calloc(size, 1);

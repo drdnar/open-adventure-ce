@@ -16,6 +16,7 @@
 #include "editor.h"
 #include "style.h"
 #include "advent.h"
+#include "ez80.h"
 
 /* Random place to put globals */
 command_word_t empty_command_word;
@@ -25,13 +26,27 @@ char* save_file_header = SAVE_FILE_HEADER;
 sk_key_t wait_any_key()
 {
     sk_key_t key;
+    unsigned int timer = get_rtc_seconds_plus(APD_DIM_TIME);
+    bool dimmed = false;
     do
     {
+        if (get_rtc_seconds() == timer)
+        {
+            if (!dimmed)
+            {
+                dimmed = true;
+                lcd_dim();
+                timer = get_rtc_seconds_plus(APD_QUIT_TIME);
+            }
+            else
+                exit_clean(0);
+        }
         asm("   ei");
         asm("   halt");
         key = os_GetCSC();
     }
     while (!key);
+    lcd_bright();
     return key;
 }
 
@@ -112,6 +127,11 @@ void exit_clean(int n)
 {
     gfx_End();
     exit(n);
+}
+
+void exit_apd()
+{
+    exit_clean(0);
 }
 
 void exit_main(int n)

@@ -13,7 +13,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "advent.h"
-#include "calc.h"
 
 int main(int argc, char *argv[])
 {

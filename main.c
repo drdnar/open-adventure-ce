@@ -15,7 +15,9 @@
 #include <ctype.h>
 #include "advent.h"
 #include "dungeon.h"
+#ifdef CALCULATOR
 #include "calc.h"
+#endif
 
 #define DIM(a) (sizeof(a)/sizeof(a[0]))
 

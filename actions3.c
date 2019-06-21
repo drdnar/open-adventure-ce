@@ -152,7 +152,11 @@ phase_codes_t inven(void)
             rspeak(NOW_HOLDING);
             empty = false;
         }
+#ifndef CALCULATOR
         pspeak(i, touch, false, -1);
+#else
+        pspeak(i, touch, true, -1);
+#endif
     }
     if (TOTING(BEAR))
         rspeak(TAME_BEAR);
