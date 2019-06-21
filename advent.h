@@ -22,21 +22,21 @@
 #define PIRATE         NDWARVES   // must be NDWARVES-1 when zero-origin
 #define DALTLC         LOC_NUGGET // alternate dwarf location
 #define INVLIMIT       7          // inventory limit (# of objects)
-#define INTRANSITIVE   -1         // illegal object number
+#define INTRANSITIVE   (-1)         // illegal object number
 #define GAMELIMIT      330        // base limit of turns
 #define NOVICELIMIT    1000       // limit of turns for novice
 #define WARNTIME       30         // late game starts at game.limit-this
 #define FLASHTIME      50         // turns from first warning till blinding flash
 #define PANICTIME      15         // time left after closing
 #define BATTERYLIFE    2500       // turn limit increment from batteries
-#define WORD_NOT_FOUND -1         // "Word not found" flag value for the vocab hash functions.
+#define WORD_NOT_FOUND (-1)         // "Word not found" flag value for the vocab hash functions.
 #define WORD_EMPTY     0          // "Word empty" flag value for the vocab hash functions
-#define CARRIED        -1         // Player is toting it
+#define CARRIED        ((signed short)-1)         // Player is toting it
 #define READ_MODE      "rb"       // b is not needed for POSIX but harmless
 #define WRITE_MODE     "wb"       // b is not needed for POSIX but harmless
 
 /* Special object-state values - integers > 0 are object-specific */
-#define STATE_NOTFOUND  -1	  // 'Not found" state of treasures */
+#define STATE_NOTFOUND  ((signed short)-1)	  // 'Not found" state of treasures */
 #define STATE_FOUND	0	  // After discovered, before messed with
 #define STATE_IN_CAVITY	1	  // State value common to all gemstones
 
@@ -84,7 +84,6 @@
 #define OUTSID(LOC)  ((CNDBIT(LOC, COND_ABOVE)) || (FOREST(LOC)))
 #define INSIDE(LOC)  ((!OUTSID(LOC)) || ((LOC) == LOC_BUILDING))
 #define INDEEP(LOC)  (((LOC) >= LOC_MISTHALL) && (!OUTSID(LOC)))
-#ifndef CALCULATOR
 #define BUG(x)       bug(x, #x)
 
 enum bugtype {
@@ -98,7 +97,6 @@ enum bugtype {
     SPEECHPART_NOT_TRANSITIVE_OR_INTRANSITIVE_OR_UNKNOWN,
     ACTION_RETURNED_PHASE_CODE_BEYOND_END_OF_SWITCH
 };
-#endif
 
 #ifdef CALCULATOR
 #define SAVE_FILE_HEADER "Colossal Cave Adventure save file"
@@ -243,8 +241,8 @@ extern loc_t put(obj_t, loc_t, int);
 extern void carry(obj_t, loc_t);
 extern void drop(obj_t, loc_t);
 extern int atdwrf(loc_t);
-extern int setbit(int);
-extern bool tstbit(int, int);
+extern unsigned int setbit(unsigned int);
+extern bool tstbit(unsigned int, unsigned int);
 extern void set_seed(int32_t);
 extern unsigned int randrange(unsigned int);
 extern int score(enum termination);
@@ -264,6 +262,8 @@ extern bool is_valid(struct game_t);
 
 #ifndef CALCULATOR
 void bug(enum bugtype, const char *) __attribute__((__noreturn__));
+#else
+void bug(enum bugtype, const char *);
 #endif
 
 #ifndef CALCULATOR

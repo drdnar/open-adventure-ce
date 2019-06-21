@@ -204,10 +204,8 @@ phase_codes_t action(command_t* command)
             case WASTE:
                 rspeak(NUMERIC_REQUIRED);
                 return GO_TOP;
-#ifndef CALCULATOR
             default: // LCOV_EXCL_LINE
                 BUG(INTRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST); // LCOV_EXCL_LINE
-#endif
             }
         }
     /* FALLTHRU */
@@ -314,20 +312,17 @@ phase_codes_t action(command_t* command)
             return seed(command->verb, command->word[1].raw);
         case WASTE:
             return waste(command->verb, (turn_t)atol(command->word[1].raw));
-#ifndef CALCULATOR
         default: // LCOV_EXCL_LINE
             BUG(TRANSITIVE_ACTION_VERB_EXCEEDS_GOTO_LIST); // LCOV_EXCL_LINE
-#endif
         }
     case unknown:
         /* Unknown verb, couldn't deduce object - might need hint */
         sspeak(WHAT_DO, command->word[0].raw);
         return GO_CHECKHINT;
     default: // LCOV_EXCL_LINE
-#ifndef CALCULATOR
         BUG(SPEECHPART_NOT_TRANSITIVE_OR_INTRANSITIVE_OR_UNKNOWN); // LCOV_EXCL_LINE
-#else
-        return 0;
-#endif
     }
+#ifdef CALCULATOR
+    return 0;
+#endif
 }

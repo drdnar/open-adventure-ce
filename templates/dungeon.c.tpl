@@ -59,7 +59,7 @@ travelop_t* travel;
 
 const char *ignore = "{ignore}";
 
-int32_t conditions[] = {{
+unsigned int conditions[] = {{
 {conditions}
 }};
 

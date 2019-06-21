@@ -27,6 +27,7 @@
 #include "advent.h"
 #include "dungeon.h"
 #ifdef CALCULATOR
+#include <graphx.h>
 #include "calc.h"
 #include "style.h"
 #endif
@@ -800,13 +801,13 @@ int atdwrf(loc_t where)
 /*  Utility routines (setbit, tstbit, set_seed, get_next_lcg_value,
  *  randrange) */
 
-int setbit(int bit)
+unsigned int setbit(unsigned int bit)
 /*  Returns 2**bit for use in constructing bit-masks. */
 {
     return (1L << bit);
 }
 
-bool tstbit(int mask, int bit)
+bool tstbit(unsigned int mask, unsigned int bit)
 /*  Returns true if the specified bit is set in the mask. */
 {
     return (mask & (1 << bit)) != 0;
@@ -846,15 +847,26 @@ unsigned int randrange(unsigned int range)
     return range * get_next_lcg_value() >> LCG_SHIFT;
 }
 
-#ifndef CALCULATOR
 // LCOV_EXCL_START
 void bug(enum bugtype num, const char *error_string)
 {
+#ifndef CALCULATOR
     fprintf(stderr, "Fatal error %d, %s.\n", num, error_string);
     exit(EXIT_FAILURE);
+#else
+    gfx_FillScreen(gfx_black);
+    gfx_SetTextFGColor(gfx_red);
+    gfx_SetTextBGColor(gfx_black);
+    gfx_PrintStringXY("BUG CHECK: ", 1, 1);
+    gfx_SetTextXY(1, 10);
+    gfx_PrintInt(num, 1);
+    gfx_PrintString(": ");
+    gfx_PrintString(error_string);
+    wait_any_key();
+    exit_clean(1);
+#endif
 }
 // LCOV_EXCL_STOP
-#endif
 
 /* end */
 

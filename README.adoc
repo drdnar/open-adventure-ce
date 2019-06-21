@@ -1,7 +1,14 @@
 = Open Adventure CE =
 
 This is a port of http://www.catb.org/~esr/open-adventure[Open Adventure] to the TI-84 Plus CE.
-The calculator build of this game is not currently in a functional state. Please stay tuned.
+
+=== Usage ===
+
+You can press UP to access your command history.
+
+After a few minutes of no key presses, Adventure will automatically quit,
+*without saving your current game.*
+This is a feature designed to prevent Adventure from ruining your battery.
 
 === Technical ===
 I looked at several different implementations of Adventure.

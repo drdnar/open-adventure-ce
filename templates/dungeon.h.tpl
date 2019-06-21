@@ -198,7 +198,7 @@ extern class_t* classes;
 extern turn_threshold_t* turn_thresholds;
 extern obituary_t* obituaries;
 extern hint_t* hints;
-extern int32_t conditions[];
+extern unsigned int conditions[];
 #ifndef CALCULATOR
 extern motion_t** motions;
 #else
