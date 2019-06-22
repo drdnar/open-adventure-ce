@@ -822,17 +822,24 @@ bool tstbit(unsigned int mask, unsigned int bit)
 /* Zilog's compiler was acting weird and replacing these macros seems to fix it,
  * and it also reduces code size.  It saved 6 K, and the binary was previously
  * a bit over 50 K. */
+
+/*#define AT(OBJ)      ((game.place[OBJ] == game.loc) || (game.fixed[OBJ] == game.loc))*/
 bool at(obj_t obj)
+/*  AT(OBJ)     = true if on either side of two-placed object */
 {
     return (game.place[obj] == game.loc) || (game.fixed[obj] == game.loc);
 }
 
+/*#define HERE(OBJ)    ((AT(OBJ)) || (TOTING(OBJ)))*/
 bool here(obj_t obj)
+/*  HERE(OBJ)   = true if the OBJ is at "LOC" (or is being carried) */
 {
     return (game.place[obj] == CARRIED) || (game.place[obj] == game.loc) || (game.fixed[obj] == game.loc);
 }
 
+/*#define LIQUID()     ((game.prop[BOTTLE] == WATER_BOTTLE) ? WATER : ((game.prop[BOTTLE] == OIL_BOTTLE) ? OIL : NO_OBJECT )) */
 int16_t liquid(void)
+/*  LIQUID()    = object number of liquid in bottle */
 {
     int16_t p;
     p = game.prop[BOTTLE];
@@ -843,7 +850,9 @@ int16_t liquid(void)
     return NO_OBJECT;
 }
 
+#define LIQLOC(LOC)  ((CNDBIT((LOC),COND_FLUID)) ? ((CNDBIT((LOC),COND_OILY)) ? OIL : WATER) : NO_OBJECT)*/
 obj_t liqloc(loc_t loc)
+/*  LIQLOC(LOC) = object number of liquid (if any) at LOC */
 {
     if (!tstbit(conditions[loc], COND_FLUID))
         return NO_OBJECT;
@@ -852,7 +861,9 @@ obj_t liqloc(loc_t loc)
     return WATER;
 }
 
+/*#define DARK(DUMMY)  (!CNDBIT(game.loc,COND_LIT) && ((game.prop[LAMP] == LAMP_DARK) || (!here(LAMP))))*/
 bool dark(loc_t dummy)
+/*  DARK(LOC)   = true if location "LOC" is dark */
 {
     if (tstbit(conditions[game.loc], COND_LIT))
         return false;
@@ -861,7 +872,9 @@ bool dark(loc_t dummy)
     return !here(LAMP);
 }
 
+/*#define GSTONE(OBJ)  ((OBJ) == EMERALD || (OBJ) == RUBY || (OBJ) == AMBER || (OBJ) == SAPPH)*/
 bool gstone(obj_t obj)
+/*  GSTONE(OBJ) = true if OBJ is a gemstone */
 {
     if (obj == EMERALD)
         return true;
@@ -872,18 +885,24 @@ bool gstone(obj_t obj)
     return obj == SAPPH;
 }
 
+/*#define OUTSID(LOC)  ((CNDBIT(LOC, COND_ABOVE)) || (FOREST(LOC)))*/
 bool outsid(loc_t loc)
+/*  OUTSID(LOC) = true if location not in the cave */
 {
     return tstbit(conditions[loc], COND_ABOVE) || tstbit(conditions[loc], COND_FOREST);
 }
 
+/*#define INSIDE(LOC)  ((!OUTSID(LOC)) || ((LOC) == LOC_BUILDING))*/
 bool inside(loc_t loc)
+/*  INSIDE(LOC) = true if location is in the cave or the building at the beginning of the game */
 {
     return !(tstbit(conditions[loc], COND_ABOVE) || tstbit(conditions[loc], COND_FOREST))
         || (loc == LOC_BUILDING);
 }
 
+#define INDEEP(LOC)  (((LOC) >= LOC_MISTHALL) && (!OUTSID(LOC)))*/
 bool indeep(loc_t loc)
+/*  INDEEP(LOC) = true if location is in the Hall of Mists or deeper */
 {
     return (loc >= LOC_MISTHALL) 
         && !tstbit(conditions[loc], COND_ABOVE) 

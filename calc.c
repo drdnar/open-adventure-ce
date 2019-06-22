@@ -298,12 +298,6 @@ void main(void) {
                 switch (selection)
                 {
                     case 0:
-                        /*blah = get_string(3, 3, 250, 16, fontlib_GetFontByStyle(drsans_pack_name, 14, 14, FONTLIB_BOLD, FONTLIB_BOLD, 0, 0));
-                        fontlib_SetWindowFullScreen();
-                        fontlib_SetCursorPosition(1, 30);
-                        fontlib_DrawString(blah);
-                        fontlib_ClearEOL();
-                        add_history(blah);*/
                         do_game();
                         break;
                     case 1:
