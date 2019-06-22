@@ -95,7 +95,6 @@ int suspend(void)
     rspeak(SUSPEND_WARNING);
     if (!yes(get_arbitrary_message_index(THIS_ACCEPTABLE), get_arbitrary_message_index(OK_MAN), get_arbitrary_message_index(OK_MAN)))
         return GO_CLEAROBJ;
-    game.saved = game.saved + 5;
 
     while (fp == NULL) {
 #ifndef CALCULATOR
@@ -114,6 +113,8 @@ int suspend(void)
 #endif
         free(name);
     }
+
+    game.saved = game.saved + 5;
 
     savefile(fp, VRSION);
     fclose(fp);
