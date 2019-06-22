@@ -114,11 +114,7 @@ typedef struct {{
   uint8_t condtype;
   uint8_t condarg1;
   uint8_t condarg2;
-#ifndef CALCULATOR
-  enum desttype_t desttype;
-#else
   uint8_t desttype;
-#endif
   uint8_t destval;
   bool nodwarves;
   bool stop;

@@ -127,6 +127,8 @@ int suspend(void)
     exit(EXIT_SUCCESS);
 #else
     exit_main(EXIT_SUCCESS);
+    /* make ZDS shut up */
+    return 0;
 #endif
 }
 

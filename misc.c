@@ -110,7 +110,7 @@ static void vspeak(const char* msg, bool blank, va_list ap)
         if (msg[i] != '%') {
             /* Ugh.  Least obtrusive way to deal with artifacts "on the floor"
              * being dropped outside of both cave and building. */
-            if (strncmp(msg + i, "floor", 5) == 0 && strchr(" .", msg[i + 5]) && !INSIDE(game.loc)) {
+            if (strncmp(msg + i, "floor", 5) == 0 && strchr(" .", msg[i + 5]) && !inside(game.loc)) {
                 strcpy(renderp, "ground");
                 renderp += 6;
                 i += 4;
@@ -813,6 +813,77 @@ bool tstbit(unsigned int mask, unsigned int bit)
     return (mask & (1 << bit)) != 0;
 }
 
+/* Zilog's compiler was acting weird and replacing these macros seems to fix it,
+ * and it also reduces code size.  It saved 6 K, and the binary was previously
+ * a bit over 50 K. */
+bool at(obj_t obj)
+{
+    return (game.place[obj] == game.loc) || (game.fixed[obj] == game.loc);
+}
+
+bool here(obj_t obj)
+{
+    return (game.place[obj] == CARRIED) || (game.place[obj] == game.loc) || (game.fixed[obj] == game.loc);
+}
+
+int16_t liquid(void)
+{
+    int16_t p;
+    p = game.prop[BOTTLE];
+    if (p == WATER_BOTTLE)
+        return WATER;
+    if (p == OIL_BOTTLE)
+        return OIL;
+    return NO_OBJECT;
+}
+
+obj_t liqloc(loc_t loc)
+{
+    if (!tstbit(conditions[loc], COND_FLUID))
+        return NO_OBJECT;
+    if (tstbit(conditions[loc], COND_OILY))
+        return OIL;
+    return WATER;
+}
+
+bool dark(loc_t dummy)
+{
+    if (tstbit(conditions[game.loc], COND_LIT))
+        return false;
+    if (game.prop[LAMP] == LAMP_DARK)
+        return true;
+    return !here(LAMP);
+}
+
+bool gstone(obj_t obj)
+{
+    if (obj == EMERALD)
+        return true;
+    if (obj == RUBY)
+        return true;
+    if (obj == AMBER)
+        return true;
+    return obj == SAPPH;
+}
+
+bool outsid(loc_t loc)
+{
+    return tstbit(conditions[loc], COND_ABOVE) || tstbit(conditions[loc], COND_FOREST);
+}
+
+bool inside(loc_t loc)
+{
+    return !(tstbit(conditions[loc], COND_ABOVE) || tstbit(conditions[loc], COND_FOREST))
+        || (loc == LOC_BUILDING);
+}
+
+bool indeep(loc_t loc)
+{
+    return (loc >= LOC_MISTHALL) 
+        && !tstbit(conditions[loc], COND_ABOVE) 
+        && !tstbit(conditions[loc], COND_FOREST);
+}
+
 void set_seed(int32_t seedval)
 /* Set the LCG seed */
 {
@@ -873,7 +944,7 @@ void bug(enum bugtype num, const char *error_string)
 void state_change(obj_t obj, int state)
 /* Object must have a change-message list for this to be useful; only some do */
 {
-    game.prop[obj] = state;
+    game.prop[obj] = (int16_t)state;
     pspeak(obj, change, true, state);
 }
 

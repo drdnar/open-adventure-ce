@@ -16,6 +16,22 @@
 #define LCG_MASK 0xFFFFF
 #define LCG_SHIFT 20
 
+typedef int16_t vocab_t;  // index into a vocabulary array */
+typedef int8_t verb_t;   // index into an actions array */
+typedef int16_t obj_t;    // index into the object array */
+typedef int16_t loc_t;    // index into the locations array */
+typedef int16_t turn_t;   // turn counter or threshold */
+
+extern bool at(obj_t obj);
+extern bool here(obj_t obj);
+extern int16_t liquid(void);
+extern obj_t liqloc(loc_t loc);
+extern bool dark(loc_t dummy);
+extern bool gstone(obj_t obj);
+extern bool outsid(loc_t loc);
+extern bool inside(loc_t loc);
+extern bool indeep(loc_t loc);
+
 #define LINESIZE       1024
 #define TOKLEN         5          // # sigificant characters in a token */
 #define NDWARVES       6          // number of dwarves
@@ -71,19 +87,19 @@
 #define DESTROY(N)   move(N, LOC_NOWHERE)
 #define MOD(N,M)     ((N) % (M))
 #define TOTING(OBJ)  (game.place[OBJ] == CARRIED)
-#define AT(OBJ)      ((game.place[OBJ] == game.loc) || (game.fixed[OBJ] == game.loc))
-#define HERE(OBJ)    ((AT(OBJ)) || (TOTING(OBJ)))
+/*#define AT(OBJ)      ((game.place[OBJ] == game.loc) || (game.fixed[OBJ] == game.loc))*/
+/*#define HERE(OBJ)    ((AT(OBJ)) || (TOTING(OBJ)))*/
 #define CNDBIT(L,N)  (tstbit(conditions[L],N))
-#define LIQUID()     ((game.prop[BOTTLE] == WATER_BOTTLE) ? WATER : ((game.prop[BOTTLE] == OIL_BOTTLE) ? OIL : NO_OBJECT ))
-#define LIQLOC(LOC)  ((CNDBIT((LOC),COND_FLUID)) ? ((CNDBIT((LOC),COND_OILY)) ? OIL : WATER) : NO_OBJECT)
+/*#define LIQUID()     ((game.prop[BOTTLE] == WATER_BOTTLE) ? WATER : ((game.prop[BOTTLE] == OIL_BOTTLE) ? OIL : NO_OBJECT ))
+#define LIQLOC(LOC)  ((CNDBIT((LOC),COND_FLUID)) ? ((CNDBIT((LOC),COND_OILY)) ? OIL : WATER) : NO_OBJECT)*/
 #define FORCED(LOC)  (CNDBIT(LOC, COND_FORCED))
-#define DARK(DUMMY)  (!CNDBIT(game.loc,COND_LIT) && ((game.prop[LAMP] == LAMP_DARK) || (!HERE(LAMP))))
+/*#define DARK(DUMMY)  (!CNDBIT(game.loc,COND_LIT) && ((game.prop[LAMP] == LAMP_DARK) || (!here(LAMP))))*/
 #define PCT(N)       (randrange(100) < (N))
-#define GSTONE(OBJ)  ((OBJ) == EMERALD || (OBJ) == RUBY || (OBJ) == AMBER || (OBJ) == SAPPH)
+/*#define GSTONE(OBJ)  ((OBJ) == EMERALD || (OBJ) == RUBY || (OBJ) == AMBER || (OBJ) == SAPPH)*/
 #define FOREST(LOC)  (CNDBIT(LOC, COND_FOREST))
-#define OUTSID(LOC)  ((CNDBIT(LOC, COND_ABOVE)) || (FOREST(LOC)))
+/*#define OUTSID(LOC)  ((CNDBIT(LOC, COND_ABOVE)) || (FOREST(LOC)))
 #define INSIDE(LOC)  ((!OUTSID(LOC)) || ((LOC) == LOC_BUILDING))
-#define INDEEP(LOC)  (((LOC) >= LOC_MISTHALL) && (!OUTSID(LOC)))
+#define INDEEP(LOC)  (((LOC) >= LOC_MISTHALL) && (!OUTSID(LOC)))*/
 #define BUG(x)       bug(x, #x)
 
 enum bugtype {
@@ -127,12 +143,6 @@ typedef enum {
     GO_UNKNOWN,
     GO_DWARFWAKE
 } phase_codes_t;
-
-typedef int16_t vocab_t;  // index into a vocabulary array */
-typedef int8_t verb_t;   // index into an actions array */
-typedef int16_t obj_t;    // index into the object array */
-typedef int16_t loc_t;    // index into the locations array */
-typedef int16_t turn_t;   // turn counter or threshold */
 
 struct game_t {
     unsigned int lcg_x;

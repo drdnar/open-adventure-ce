@@ -6,7 +6,7 @@ phase_codes_t fill(verb_t verb, obj_t obj)
 {
     int k;
     if (obj == VASE) {
-        if (LIQLOC(game.loc) == NO_OBJECT) {
+        if (liqloc(game.loc) == NO_OBJECT) {
             rspeak(FILL_INVALID);
             return GO_CLEAROBJ;
         }
@@ -26,11 +26,11 @@ phase_codes_t fill(verb_t verb, obj_t obj)
             rspeak(FULL_URN);
             return GO_CLEAROBJ;
         }
-        if (!HERE(BOTTLE)) {
+        if (!here(BOTTLE)) {
             rspeak(FILL_INVALID);
             return GO_CLEAROBJ;
         }
-        k = LIQUID();
+        k = liquid();
         switch (k) {
         case WATER:
             game.prop[BOTTLE] = EMPTY_BOTTLE;
@@ -53,27 +53,27 @@ phase_codes_t fill(verb_t verb, obj_t obj)
         speak(get_action(verb)->message);
         return GO_CLEAROBJ;
     }
-    if (obj == INTRANSITIVE && !HERE(BOTTLE))
+    if (obj == INTRANSITIVE && !here(BOTTLE))
         return GO_UNKNOWN;
 
-    if (HERE(URN) && game.prop[URN] != URN_EMPTY) {
+    if (here(URN) && game.prop[URN] != URN_EMPTY) {
         rspeak(URN_NOPOUR);
         return GO_CLEAROBJ;
     }
-    if (LIQUID() != NO_OBJECT) {
+    if (liquid() != NO_OBJECT) {
         rspeak(BOTTLE_FULL);
         return GO_CLEAROBJ;
     }
-    if (LIQLOC(game.loc) == NO_OBJECT) {
+    if (liqloc(game.loc) == NO_OBJECT) {
         rspeak(NO_LIQUID);
         return GO_CLEAROBJ;
     }
-
-    state_change(BOTTLE, (LIQLOC(game.loc) == OIL)
+    
+    state_change(BOTTLE, (liqloc(game.loc) == OIL)
                  ? OIL_BOTTLE
                  : WATER_BOTTLE);
     if (TOTING(BOTTLE))
-        game.place[LIQUID()] = CARRIED;
+        game.place[liquid()] = CARRIED;
     return GO_CLEAROBJ;
 }
 
@@ -90,9 +90,9 @@ phase_codes_t find(verb_t verb, obj_t obj)
         return GO_CLEAROBJ;
     }
 
-    if (AT(obj) ||
-        (LIQUID() == obj && AT(BOTTLE)) ||
-        obj == LIQLOC(game.loc) ||
+    if (at(obj) ||
+        (liquid() == obj && at(BOTTLE)) ||
+        obj == liqloc(game.loc) ||
         (obj == DWARF && atdwrf(game.loc) > 0)) {
         rspeak(YOU_HAVEIT);
         return GO_CLEAROBJ;
@@ -107,7 +107,7 @@ phase_codes_t fly(verb_t verb, obj_t obj)
 /* Fly.  Snide remarks unless hovering rug is here. */
 {
     if (obj == INTRANSITIVE) {
-        if (!HERE(RUG)) {
+        if (!here(RUG)) {
             rspeak(FLAP_ARMS);
             return GO_CLEAROBJ;
         }
@@ -171,11 +171,11 @@ phase_codes_t light(verb_t verb, obj_t obj)
     int selects;
     if (obj == INTRANSITIVE) {
         selects = 0;
-        if (HERE(LAMP) && game.prop[LAMP] == LAMP_DARK && game.limit >= 0) {
+        if (here(LAMP) && game.prop[LAMP] == LAMP_DARK && game.limit >= 0) {
             obj = LAMP;
             selects++;
         }
-        if (HERE(URN) && game.prop[URN] == URN_DARK) {
+        if (here(URN) && game.prop[URN] == URN_DARK) {
             obj =  URN;
             selects++;
         }
@@ -217,7 +217,7 @@ phase_codes_t listen(void)
         return GO_CLEAROBJ;
     }
     for (i = 1; i <= NOBJECTS; i++) {
-        if (!HERE(i) ||
+        if (!here(i) ||
             get_object_sound(i, 0) == NULL ||
             game.prop[i] < 0)
             continue;
@@ -243,15 +243,15 @@ phase_codes_t lock(verb_t verb, obj_t obj)
 /* Lock, unlock, no object given.  Assume various things if present. */
 {
     if (obj == INTRANSITIVE) {
-        if (HERE(CLAM))
+        if (here(CLAM))
             obj = CLAM;
-        if (HERE(OYSTER))
+        if (here(OYSTER))
             obj = OYSTER;
-        if (AT(DOOR))
+        if (at(DOOR))
             obj = DOOR;
-        if (AT(GRATE))
+        if (at(GRATE))
             obj = GRATE;
-        if (HERE(CHAIN))
+        if (here(CHAIN))
             obj = CHAIN;
         if (obj == INTRANSITIVE) {
             rspeak(NOTHING_LOCKED);
@@ -264,13 +264,13 @@ phase_codes_t lock(verb_t verb, obj_t obj)
 
     switch (obj) {
     case CHAIN:
-        if (HERE(KEYS)) {
+        if (here(KEYS)) {
             return chain(verb);
         } else
             rspeak(NO_KEYS);
         break;
     case GRATE:
-        if (HERE(KEYS)) {
+        if (here(KEYS)) {
             if (game.closng) {
                 rspeak(EXIT_CLOSED);
                 if (!game.panic)

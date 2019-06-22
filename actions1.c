@@ -17,40 +17,40 @@ phase_codes_t attack(command_t* command)
             obj = DWARF;
             ++changes;
         }
-        if (HERE(SNAKE)) {
+        if (here(SNAKE)) {
             obj = SNAKE;
             ++changes;
         }
-        if (AT(DRAGON) && game.prop[DRAGON] == DRAGON_BARS) {
+        if (at(DRAGON) && game.prop[DRAGON] == DRAGON_BARS) {
             obj = DRAGON;
             ++changes;
         }
-        if (AT(TROLL)) {
+        if (at(TROLL)) {
             obj = TROLL;
             ++changes;
         }
-        if (AT(OGRE)) {
+        if (at(OGRE)) {
             obj = OGRE;
             ++changes;
         }
-        if (HERE(BEAR) && game.prop[BEAR] == UNTAMED_BEAR) {
+        if (here(BEAR) && game.prop[BEAR] == UNTAMED_BEAR) {
             obj = BEAR;
             ++changes;
         }
         /* check for low-priority targets */
         if (obj == INTRANSITIVE) {
             /* Can't attack bird or machine by throwing axe. */
-            if (HERE(BIRD) && verb != THROW) {
+            if (here(BIRD) && verb != THROW) {
                 obj = BIRD;
                 ++changes;
             }
-            if (HERE(VEND) && verb != THROW) {
+            if (here(VEND) && verb != THROW) {
                 obj = VEND;
                 ++changes;
             }
             /* Clam and oyster both treated as clam for intransitive case;
              * no harm done. */
-            if (HERE(CLAM) || HERE(OYSTER)) {
+            if (here(CLAM) || here(OYSTER)) {
                 obj = CLAM;
                 ++changes;
             }
@@ -198,7 +198,7 @@ phase_codes_t bigwords(vocab_t id)
              *  crossing. */
             if (game.place[EGGS] == LOC_NOWHERE && game.place[TROLL] == LOC_NOWHERE && game.prop[TROLL] == TROLL_UNPAID)
                 game.prop[TROLL] = TROLL_PAIDONCE;
-            if (HERE(EGGS))
+            if (here(EGGS))
                 pspeak(EGGS, look, true, EGGS_VANISHED);
             else if (game.loc == get_object(EGGS)->plac)
                 pspeak(EGGS, look, true, EGGS_HERE);
@@ -228,7 +228,7 @@ void blast(void)
         !game.closed)
         rspeak(REQUIRES_DYNAMITE);
     else {
-        if (HERE(ROD2)) {
+        if (here(ROD2)) {
             game.bonus = splatter;
             rspeak(SPLATTER_MESSAGE);
         } else if (game.loc == LOC_NE) {
@@ -338,8 +338,8 @@ phase_codes_t vcarry(verb_t verb, obj_t obj)
 
     if (obj == WATER ||
         obj == OIL) {
-        if (!HERE(BOTTLE) ||
-            LIQUID() != obj) {
+        if (!here(BOTTLE) ||
+            liquid() != obj) {
             if (!TOTING(BOTTLE)) {
                 rspeak(NO_CONTAINER);
                 return GO_CLEAROBJ;
@@ -384,10 +384,10 @@ phase_codes_t vcarry(verb_t verb, obj_t obj)
 
     carry(obj, game.loc);
 
-    if (obj == BOTTLE && LIQUID() != NO_OBJECT)
-        game.place[LIQUID()] = CARRIED;
+    if (obj == BOTTLE && liquid() != NO_OBJECT)
+        game.place[liquid()] = CARRIED;
 
-    if (GSTONE(obj) && game.prop[obj] != STATE_FOUND) {
+    if (gstone(obj) && game.prop[obj] != STATE_FOUND) {
         game.prop[obj] = STATE_FOUND;
         game.prop[CAVITY] = CAVITY_EMPTY;
     }

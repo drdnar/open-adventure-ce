@@ -13,9 +13,9 @@ phase_codes_t wave(verb_t verb, obj_t obj)
 {
     if (obj != ROD ||
         !TOTING(obj) ||
-        (!HERE(BIRD) &&
+        (!here(BIRD) &&
          (game.closng ||
-          !AT(FISSURE)))) {
+          !at(FISSURE)))) {
         speak(((!TOTING(obj)) && (obj != ROD ||
                                   !TOTING(ROD2))) ?
               get_arbitrary_message_index(ARENT_CARRYING) :
@@ -37,13 +37,13 @@ phase_codes_t wave(verb_t verb, obj_t obj)
             return GO_DWARFWAKE;
         }
         if (game.closng ||
-            !AT(FISSURE)) {
+            !at(FISSURE)) {
             rspeak((game.prop[BIRD] == BIRD_CAGED) ?
                    CAGE_FLY :
                    FREE_FLY);
             return GO_CLEAROBJ;
         }
-        if (HERE(BIRD))
+        if (here(BIRD))
             rspeak((game.prop[BIRD] == BIRD_CAGED) ?
                    CAGE_FLY :
                    FREE_FLY);
@@ -75,24 +75,24 @@ phase_codes_t action(command_t* command)
          *  they are never actually dropped at any location, but might
          *  be here inside the bottle or urn or as a feature of the
          *  location. */
-        if (HERE(command->obj))
+        if (here(command->obj))
             /* FALL THROUGH */;
         else if (command->obj == DWARF && atdwrf(game.loc) > 0)
             /* FALL THROUGH */;
-        else if ((LIQUID() == command->obj && HERE(BOTTLE)) ||
-                 command->obj == LIQLOC(game.loc))
+        else if ((liquid() == command->obj && here(BOTTLE)) ||
+                 command->obj == liqloc(game.loc))
             /* FALL THROUGH */;
-        else if (command->obj == OIL && HERE(URN) && game.prop[URN] != URN_EMPTY) {
+        else if (command->obj == OIL && here(URN) && game.prop[URN] != URN_EMPTY) {
             command->obj = URN;
             /* FALL THROUGH */;
-        } else if (command->obj == PLANT && AT(PLANT2) && game.prop[PLANT2] != PLANT_THIRSTY) {
+        } else if (command->obj == PLANT && at(PLANT2) && game.prop[PLANT2] != PLANT_THIRSTY) {
             command->obj = PLANT2;
             /* FALL THROUGH */;
         } else if (command->obj == KNIFE && game.knfloc == game.loc) {
             game.knfloc = -1;
             rspeak(KNIVES_VANISH);
             return GO_CLEAROBJ;
-        } else if (command->obj == ROD && HERE(ROD2)) {
+        } else if (command->obj == ROD && here(ROD2)) {
             command->obj = ROD2;
             /* FALL THROUGH */;
         } else if ((command->verb == FIND ||

@@ -171,7 +171,7 @@ static void checkhints(void)
                 switch (hint) {
                 case 0:
                     /* cave */
-                    if (game.prop[GRATE] == GRATE_CLOSED && !HERE(KEYS))
+                    if (game.prop[GRATE] == GRATE_CLOSED && !here(KEYS))
                         break;
                     game.hintlc[hint] = 0;
                     return;
@@ -180,7 +180,7 @@ static void checkhints(void)
                         break;
                     return;
                 case 2:	/* snake */
-                    if (HERE(SNAKE) && !HERE(BIRD))
+                    if (here(SNAKE) && !here(BIRD))
                         break;
                     game.hintlc[hint] = 0;
                     return;
@@ -216,7 +216,7 @@ static void checkhints(void)
                         game.hintlc[hint] = 0;
                         return;
                     }
-                    if (HERE(OGRE) && i == 0)
+                    if (here(OGRE) && i == 0)
                         break;
                     return;
                 case 9:	/* jade */
@@ -268,7 +268,7 @@ static bool spotted_by_pirate(int i)
             continue;
         }
         if (TOTING(treasure) ||
-            HERE(treasure))
+            here(treasure))
             ++snarfed;
         if (TOTING(treasure)) {
             movechest = true;
@@ -276,7 +276,7 @@ static bool spotted_by_pirate(int i)
         }
     }
     /* Force chest placement before player finds last treasure */
-    if (game.tally == 1 && snarfed == 0 && game.place[CHEST] == LOC_NOWHERE && HERE(LAMP) && game.prop[LAMP] == LAMP_BRIGHT) {
+    if (game.tally == 1 && snarfed == 0 && game.place[CHEST] == LOC_NOWHERE && here(LAMP) && game.prop[LAMP] == LAMP_BRIGHT) {
         rspeak(PIRATE_SPOTTED);
         movechest = true;
     }
@@ -301,7 +301,7 @@ static bool spotted_by_pirate(int i)
                 continue;
             if (!(treasure == PYRAMID && (game.loc == get_object(PYRAMID)->plac ||
                                           game.loc == get_object(EMERALD)->plac))) {
-                if (AT(treasure) && game.fixed[treasure] == IS_FREE)
+                if (at(treasure) && game.fixed[treasure] == IS_FREE)
                     carry(treasure, game.loc);
                 if (TOTING(treasure))
                     drop(treasure, game.chloc);
@@ -325,7 +325,7 @@ static bool dwarfmove(void)
 
     /*  First off, don't let the dwarves follow him into a pit or a
      *  wall.  Activate the whole mess the first time he gets as far
-     *  as the Hall of Mists (what INDEEP() tests).  If game.newloc
+     *  as the Hall of Mists (what indeep() tests).  If game.newloc
      *  is forbidden to pirate (in particular, if it's beyond the
      *  troll bridge), bypass dwarf stuff.  That way pirate can't
      *  steal return toll, and dwarves can't meet the bear.  Also
@@ -338,7 +338,7 @@ static bool dwarfmove(void)
 
     /* Dwarf activity level ratchets up */
     if (game.dflag == 0) {
-        if (INDEEP(game.loc))
+        if (indeep(game.loc))
             game.dflag = 1;
         return true;
     }
@@ -347,7 +347,7 @@ static bool dwarfmove(void)
      *  the 5 dwarves.  If any of the survivors is at game.loc,
      *  replace him with the alternate. */
     if (game.dflag == 1) {
-        if (!INDEEP(game.loc) ||
+        if (!indeep(game.loc) ||
             (PCT(95) && (!CNDBIT(game.loc, COND_NOBACK) ||
                          PCT(85))))
             return true;
@@ -392,7 +392,7 @@ static bool dwarfmove(void)
                 /* Have we avoided a dwarf encounter? */
                 if (desttype != dest_goto)
                     continue;
-                else if (!INDEEP(game.newloc))
+                else if (!indeep(game.newloc))
                     continue;
                 else if (game.newloc == game.odloc[i])
                     continue;
@@ -418,7 +418,7 @@ static bool dwarfmove(void)
         j = 1 + randrange(j);
         game.odloc[i] = game.dloc[i];
         game.dloc[i] = tk[j];
-        game.dseen[i] = (game.dseen[i] && INDEEP(game.loc)) ||
+        game.dseen[i] = (game.dseen[i] && indeep(game.loc)) ||
                         (game.dloc[i] == game.loc ||
                          game.odloc[i] == game.loc);
         if (!game.dseen[i])
@@ -523,7 +523,7 @@ static void describe_location(void)
         msg == NO_MESSAGE)
         msg = get_location(game.loc)->description.big;
 
-    if (!FORCED(game.loc) && DARK(game.loc)) {
+    if (!FORCED(game.loc) && dark(game.loc)) {
         msg = get_arbitrary_message_index(PITCH_DARK);
     }
 
@@ -620,7 +620,7 @@ static void playermove(int motion)
         return;
     } else if (motion == CAVE) {
         /*  Cave.  Different messages depending on whether above ground. */
-        rspeak((OUTSID(game.loc) && game.loc != LOC_GRATE) ? FOLLOW_STREAM : NEED_DETAIL);
+        rspeak((outsid(game.loc) && game.loc != LOC_GRATE) ? FOLLOW_STREAM : NEED_DETAIL);
         return;
     } else {
         /* none of the specials */
@@ -693,7 +693,7 @@ static void playermove(int motion)
                     }
                     /* YAML [with OBJ] clause */
                     else if (TOTING(condarg1) ||
-                             (condtype == cond_with && AT(condarg1)))
+                             (condtype == cond_with && at(condarg1)))
                         break;
                     /* else fall through to check [not OBJ STATE] */
                 } else if (game.prop[condarg1] != condarg2)
@@ -815,7 +815,7 @@ static void lampcheck(void)
      *  Second is for other cases of lamp dying.  Even after it goes
      *  out, he can explore outside for a while if desired. */
     if (game.limit <= WARNTIME) {
-        if (HERE(BATTERY) && game.prop[BATTERY] == FRESH_BATTERIES && HERE(LAMP)) {
+        if (here(BATTERY) && game.prop[BATTERY] == FRESH_BATTERIES && here(LAMP)) {
             rspeak(REPLACE_BATTERIES);
             game.prop[BATTERY] = DEAD_BATTERIES;
 #ifdef __unused__
@@ -828,7 +828,7 @@ static void lampcheck(void)
 #endif
             game.limit += BATTERYLIFE;
             game.lmwarn = false;
-        } else if (!game.lmwarn && HERE(LAMP)) {
+        } else if (!game.lmwarn && here(LAMP)) {
             game.lmwarn = true;
             if (game.prop[BATTERY] == DEAD_BATTERIES)
                 rspeak(MISSING_BATTERIES);
@@ -841,7 +841,7 @@ static void lampcheck(void)
     if (game.limit == 0) {
         game.limit = -1;
         game.prop[LAMP] = LAMP_DARK;
-        if (HERE(LAMP))
+        if (here(LAMP))
             rspeak(LAMP_OUT);
     }
 }
@@ -879,7 +879,7 @@ static bool closecheck(void)
     }
 
     /*  Don't tick game.clock1 unless well into cave (and not at Y2). */
-    if (game.tally == 0 && INDEEP(game.loc) && game.loc != LOC_Y2)
+    if (game.tally == 0 && indeep(game.loc) && game.loc != LOC_Y2)
         --game.clock1;
 
     /*  When the first warning comes, we lock the grate, destroy
@@ -982,7 +982,7 @@ static void listobjects(void)
  *  get full score. */
 {
     int i, kk;
-    if (!DARK(game.loc)) {
+    if (!dark(game.loc)) {
         ++game.abbrev[game.loc];
         for (i = game.atloc[game.loc]; i != 0; i = game.link[i]) {
             obj_t obj = i;
@@ -1044,7 +1044,7 @@ bool preprocess_command(command_t *command)
 {
     if (command->word[0].type == MOTION && command->word[0].id == ENTER
         && (command->word[1].id == STREAM || command->word[1].id == WATER)) {
-        if (LIQLOC(game.loc) == WATER)
+        if (liqloc(game.loc) == WATER)
             rspeak(FEET_WET);
         else
             rspeak(WHERE_QUERY);
@@ -1074,14 +1074,14 @@ bool preprocess_command(command_t *command)
             }
             if ((command->word[0].id == WATER || command->word[0].id == OIL) && 
                 (command->word[1].id == PLANT || command->word[1].id == DOOR)) {
-                if (AT(command->word[1].id)) {
+                if (at(command->word[1].id)) {
                     command->word[1] = command->word[0];
                     command->word[0].id = POUR;
                     command->word[0].type = ACTION;
                     strncpy(command->word[0].raw, "pour", LINESIZE - 1);
                 }
             }
-            if (command->word[0].id == CAGE && command->word[1].id == BIRD && HERE(CAGE) && HERE(BIRD)) {
+            if (command->word[0].id == CAGE && command->word[1].id == BIRD && here(CAGE) && here(BIRD)) {
                 command->word[0].id = CARRY;
                 command->word[0].type = ACTION;
             }
@@ -1102,7 +1102,7 @@ static bool do_move(void)
 {
     size_t i;
     /*  Can't leave cave once it's closing (except by main office). */
-    if (OUTSID(game.newloc) && game.newloc != 0 && game.closng) {
+    if (outsid(game.newloc) && game.newloc != 0 && game.closng) {
         rspeak(EXIT_CLOSED);
         game.newloc = game.loc;
         if (!game.panic)
@@ -1133,7 +1133,7 @@ static bool do_move(void)
 
     /* The easiest way to get killed is to fall into a pit in
      * pitch darkness. */
-    if (!FORCED(game.loc) && DARK(game.loc) && game.wzdark && PCT(35)) { // FIXME: magic number
+    if (!FORCED(game.loc) && dark(game.loc) && game.wzdark && PCT(35)) { // FIXME: magic number
         rspeak(PIT_FALL);
         game.oldlc2 = game.loc;
         croak();
@@ -1181,7 +1181,7 @@ static bool do_command()
 
             /* Check to see if the room is dark. If the knife is here, 
              * and it's dark, the knife permanently disappears */
-            game.wzdark = DARK(game.loc);
+            game.wzdark = dark(game.loc);
             if (game.knfloc != LOC_NOWHERE && game.knfloc != game.loc)
                 game.knfloc = LOC_NOWHERE;
 

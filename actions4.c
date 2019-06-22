@@ -6,7 +6,7 @@ phase_codes_t pour(verb_t verb, obj_t obj)
 {
     if (obj == BOTTLE ||
         obj == INTRANSITIVE)
-        obj = LIQUID();
+        obj = liquid();
     if (obj == NO_OBJECT)
         return GO_UNKNOWN;
     if (!TOTING(obj)) {
@@ -18,16 +18,16 @@ phase_codes_t pour(verb_t verb, obj_t obj)
         rspeak(CANT_POUR);
         return GO_CLEAROBJ;
     }
-    if (HERE(URN) && game.prop[URN] == URN_EMPTY)
+    if (here(URN) && game.prop[URN] == URN_EMPTY)
         return fill(verb, URN);
     game.prop[BOTTLE] = EMPTY_BOTTLE;
     game.place[obj] = LOC_NOWHERE;
-    if (!(AT(PLANT) ||
-          AT(DOOR))) {
+    if (!(at(PLANT) ||
+          at(DOOR))) {
         rspeak(GROUND_WET);
         return GO_CLEAROBJ;
     }
-    if (!AT(DOOR)) {
+    if (!at(DOOR)) {
         if (obj == WATER) {
             /* cycle through the three plant states */
             state_change(PLANT, MOD(game.prop[PLANT] + 1, 3));
@@ -60,16 +60,16 @@ phase_codes_t action_read(command_t* command)
     if (command->obj == INTRANSITIVE) {
         command->obj = NO_OBJECT;
         for (i = 1; i <= NOBJECTS; i++) {
-            if (HERE(i) && get_object_text(i, 0) != NULL && game.prop[i] >= 0)
+            if (here(i) && get_object_text(i, 0) != NULL && game.prop[i] >= 0)
                 command->obj = command->obj * NOBJECTS + i;
         }
         if (command->obj > NOBJECTS ||
             command->obj == NO_OBJECT ||
-            DARK(game.loc))
+            dark(game.loc))
             return GO_UNKNOWN;
     }
 
-    if (DARK(game.loc)) {
+    if (dark(game.loc)) {
         sspeak(NO_SEE, command->word[0].raw);
     } else if (command->obj == OYSTER && !game.clshnt && game.closed) {
         game.clshnt = yes(get_arbitrary_message_index(CLUE_QUERY), get_arbitrary_message_index(WAYOUT_CLUE), get_arbitrary_message_index(OK_MAN));
@@ -84,13 +84,13 @@ phase_codes_t action_read(command_t* command)
 phase_codes_t reservoir(void)
 /*  Z'ZZZ (word gets recomputed at startup; different each game). */
 {
-    if (!AT(RESER) && game.loc != LOC_RESBOTTOM) {
+    if (!at(RESER) && game.loc != LOC_RESBOTTOM) {
         rspeak(NOTHING_HAPPENS);
         return GO_CLEAROBJ;
     } else {
         state_change(RESER,
                      game.prop[RESER] == WATERS_PARTED ? WATERS_UNPARTED : WATERS_PARTED);
-        if (AT(RESER))
+        if (at(RESER))
             return GO_CLEAROBJ;
         else {
             game.oldlc2 = game.loc;
@@ -162,7 +162,7 @@ phase_codes_t throw (command_t* command)
         speak(get_action(command->verb)->message);
         return GO_CLEAROBJ;
     }
-    if (get_object(command->obj)->is_treasure && AT(TROLL)) {
+    if (get_object(command->obj)->is_treasure && at(TROLL)) {
         /*  Snarf a treasure for the troll. */
         drop(command->obj, LOC_NOWHERE);
         move(TROLL, LOC_NOWHERE);
@@ -173,7 +173,7 @@ phase_codes_t throw (command_t* command)
         rspeak(TROLL_SATISFIED);
         return GO_CLEAROBJ;
     }
-    if (command->obj == FOOD && HERE(BEAR)) {
+    if (command->obj == FOOD && here(BEAR)) {
         /* But throwing food is another story. */
         command->obj = BEAR;
         return (feed(command->verb, command->obj));
@@ -182,13 +182,13 @@ phase_codes_t throw (command_t* command)
         return (discard(command->verb, command->obj));
     else {
         if (atdwrf(game.loc) <= 0) {
-            if (AT(DRAGON) && game.prop[DRAGON] == DRAGON_BARS)
+            if (at(DRAGON) && game.prop[DRAGON] == DRAGON_BARS)
                 return throw_support(DRAGON_SCALES);
-            if (AT(TROLL))
+            if (at(TROLL))
                 return throw_support(TROLL_RETURNS);
-            if (AT(OGRE))
+            if (at(OGRE))
                 return throw_support(OGRE_DODGE);
-            if (HERE(BEAR) && game.prop[BEAR] == UNTAMED_BEAR) {
+            if (here(BEAR) && game.prop[BEAR] == UNTAMED_BEAR) {
                 /* This'll teach him to throw the axe at the bear! */
                 drop(AXE, game.loc);
                 game.fixed[AXE] = IS_FIXED;
