@@ -9,6 +9,7 @@ void exit_fail(char* message);
 void* malloc_safe(int size);
 
 sk_key_t wait_any_key();
+sk_key_t wait_any_key_msg(char* msg);
 
 unsigned long time(unsigned char* ignored);
 char* readline_len(char* prompt, unsigned char max_len);

@@ -20,24 +20,20 @@
  * History circular buffer
  ******************************************************************************/
 
-#define MAX_HISTORY 32
-#define MAX_HISTORY_MASK 31
+#define MAX_HISTORY 4
+#define MAX_HISTORY_MASK 3
 char** history = NULL;
 unsigned char history_next = 0;
-bool history_init = false;
 
 void init_history(void)
 {
     int i;
     if (history)
         return;
-    history = malloc_safe(sizeof(intptr_t) * MAX_HISTORY);
-    if (!history)
-        exit(0);
+    history = malloc_safe(sizeof(char*) * MAX_HISTORY);
     for (i = 0; i < MAX_HISTORY; i++)
         history[i] = NULL;
     history_next = 0;
-    history_init = true;
 }
 
 void free_history(void)
@@ -46,17 +42,18 @@ void free_history(void)
     if (!history)
         return;
     for (i = 0; i < MAX_HISTORY; i++)
-        if (history[i] != NULL)
+        //if (history[i] != NULL)
             free(history[i]);
     free(history);
-    history_init = false;
+    history = NULL;
 }
 
 void add_history(char* string)
 {
-    char* item = history[history_next];
-    if (item != NULL)
-        free(item);
+    char* item;
+    if (!history)
+        return;
+    free(history[history_next]);
     item = malloc_safe(strlen(string) + 1);
     strcpy(item, string);
     history[history_next] = item;
@@ -66,6 +63,8 @@ void add_history(char* string)
 
 char* get_history_item(unsigned char n)
 {
+    if (!history)
+        return NULL;
     return history[(history_next + MAX_HISTORY - n) & MAX_HISTORY_MASK];
 }
 
@@ -555,11 +554,12 @@ char* get_string(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text
     /* 0xF8 = Clear interrupt enable and disable timer 1
      * 2 = Set timer 1 to use the RTC crystal (32768 Hz) */
     timer_control_a = timer_control_a & 0xF8 | 2;
-    /* Make sure match registers are disable */
+    /* Make sure match registers are disabled */
     timer_1_match_1 = 0xFF;
     timer_1_match_2 = 0xFF;
     do
     {
+        clear_on_key();
         /* Reset timer 1 to 0.
          * Recall that timer 1 has already been turned off, so the non-
          * atomic writes won't cause a problem. */
@@ -593,9 +593,7 @@ char* get_string(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text
                 /* Flash cursor */
                 editor_toggle_cursor(context);
             }
-            asm("   ei");
-            asm("   halt");
-            key = os_GetCSC();
+            key = get_csc();
         } while (!key);
         dimmed = false;
         lcd_bright();
@@ -674,7 +672,6 @@ char* get_string(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text
                     editor_right(context);
                 }
         }
-        
         
     } while (not_done);
     return editor_get_string_close(context);

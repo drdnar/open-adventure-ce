@@ -300,6 +300,12 @@ static char* get_input(void)
             free(input);
             continue;
         }
+#else
+        if (strlen(input) == 0)
+        {
+            free(input);
+            continue;
+        }
 #endif
         // We have a 'normal' line; leave the loop.
         break;

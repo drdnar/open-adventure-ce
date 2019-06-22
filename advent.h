@@ -160,7 +160,7 @@ struct game_t {
     bool panic;                  // has player found out he's trapped?
     bool wzdark;                 // whether the loc he's leaving was dark
     bool blooded;                // has player drunk of dragon's blood?
-    int16_t conds;                   // min value for cond[loc] if loc has any hints
+    uint16_t conds;                   // min value for cond[loc] if loc has any hints
     int8_t detail;                  // level of detail in descriptions
 
     /*  dflag controls the level of activation of dwarves:

@@ -6,8 +6,13 @@
 	.def _lcd_bright
 	.def _get_rtc_seconds
 	.def _get_rtc_seconds_plus
+	.def _get_csc
+	.def _on_key_pressed
+	.def _clear_on_key
 	.ref _huffman_tree
+	.ref _exit_clean
 
+_GetCSC                    = 002014Ch
 _RestoreLCDBrightness      = 0021AB8h
 _DimLCDSlow                = 0021AC0h
 flags			= 0D00080h		; location of OS Flags (+-80h)
@@ -89,6 +94,7 @@ _get_rtc_seconds:
 	add	hl, de
 	ret
 
+
 _get_rtc_seconds_plus:
 	call	_get_rtc_seconds
 	pop	bc
@@ -102,8 +108,41 @@ _get_rtc_seconds_plus:
 	ret	nc
 	add	hl, de
 	ret
-	
 
+
+;-------------------------------------------------------------------------------
+_get_csc:
+; Wraps GetCSC with two differences:
+;  - Assumes you're using this in an input loop, so it does EI \ HALT to save a
+;    tiny bit of power.
+;  - If the ON key has been pressed and the user then presses CLEAR, aborts the
+;    program immediately.
+	ei
+	halt
+	call	_GetCSC
+	cp	15		; skClear
+	ret	nz
+	ld	hl, flags + 9	; onFlags
+	bit	4, (hl)		; onInterrupt
+	ret	z
+	jp	_exit_clean
+
+
+_on_key_pressed:
+	ld	hl, flags + 9
+	and	10h
+	ret	z
+	inc	a
+	ret
+
+
+_clear_on_key:
+	ld	hl, flags + 9	; iy + onFlags
+	res	4, (hl)		; onInterrupt
+	ret
+
+
+;-------------------------------------------------------------------------------
 ;_get_compressed_string:
 ;	pop	de
 ;	pop	hl

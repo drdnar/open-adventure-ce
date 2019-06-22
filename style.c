@@ -304,9 +304,7 @@ void print_clear(void)
 static void print_paginate(void)
 {
     print_reset_pagination();
-    fontlib_SetCursorPosition(0, LCD_HEIGHT - fontlib_GetCurrentFontHeight());
-    fontlib_DrawString("Press any key to see more. . . .");
-    wait_any_key();
+    wait_any_key_msg("Press any key to see more. . . .");
 }
 
 void print_newline(void)

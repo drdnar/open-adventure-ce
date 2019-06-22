@@ -5,10 +5,15 @@ This is a port of http://www.catb.org/~esr/open-adventure[Open Adventure] to the
 === Usage ===
 
 You can press UP to access your command history.
+Press ENTER to paste the selected command.
+Press CLEAR to return to editing.
 
 After a few minutes of no key presses, Adventure will automatically quit,
 *without saving your current game.*
 This is a feature designed to prevent Adventure from ruining your battery.
+
+You can quit the game instantly at any time by pressing ON, then CLEAR.
+Nothing will be saved.
 
 === Technical ===
 I looked at several different implementations of Adventure.

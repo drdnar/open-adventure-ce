@@ -7,4 +7,8 @@ void lcd_dim(void);
 void lcd_bright(void);
 unsigned int get_rtc_seconds(void);
 unsigned int get_rtc_seconds_plus(unsigned int offset);
+unsigned char get_csc(void);
+bool on_key_pressed(void);
+void clear_on_key(void);
+
 #endif

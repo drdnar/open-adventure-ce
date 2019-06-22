@@ -2,10 +2,10 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <tice.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <setjmp.h>
 
 #include <graphx.h>
 #include <fileioc.h>
@@ -21,13 +21,14 @@
 /* Random place to put globals */
 command_word_t empty_command_word;
 char* save_file_header = SAVE_FILE_HEADER;
-
+jmp_buf return_to_main;
 
 sk_key_t wait_any_key()
 {
     sk_key_t key;
     unsigned int timer = get_rtc_seconds_plus(APD_DIM_TIME);
     bool dimmed = false;
+    clear_on_key();
     do
     {
         if (get_rtc_seconds() == timer)
@@ -41,13 +42,18 @@ sk_key_t wait_any_key()
             else
                 exit_clean(0);
         }
-        asm("   ei");
-        asm("   halt");
-        key = os_GetCSC();
+        key = get_csc();
     }
     while (!key);
     lcd_bright();
     return key;
+}
+
+sk_key_t wait_any_key_msg(char* msg)
+{
+    fontlib_SetCursorPosition(0, LCD_HEIGHT - fontlib_GetCurrentFontHeight());
+    fontlib_DrawString(msg);
+    return wait_any_key();
 }
 
 /*******************************************************************************
@@ -136,8 +142,9 @@ void exit_apd()
 
 void exit_main(int n)
 {
-    wait_any_key();
-    exit_clean(n);
+    wait_any_key_msg("Press any key to continue. . . .");
+    free_history();
+    longjmp(return_to_main, n);
 }
 
 /**
@@ -194,12 +201,16 @@ void main(void) {
     char* blah;
     uint8_t selection = 0;
     uint8_t key, old_fgc, line_height = 0, cursor_width = 0;
-    bool redraw_main_menu = true;
+    bool redraw_main_menu;
+    /* Initialize stuff */
+    gfx_Begin();
+    /*if (!setjmp(return_to_main))
+        We currently have nothing that cares why we're returning here. */
+    setjmp(return_to_main);
+    redraw_main_menu = true;
     /* Make sure RTC is running */
     rtc_Control = RTC_ENABLE;
     ti_CloseAll();
-    gfx_Begin();
-    init_history();
     /* Need to initialize some globals */
     settings.logfp = NULL;
     settings.oldstyle = false;
@@ -215,7 +226,7 @@ void main(void) {
             gfx_FillScreen(background_color);
             fontlib_SetFirstPrintableCodePoint(12);
             fontlib_SetWindowFullScreen();
-            fontlib_SetCursorPosition(0, 60);
+            fontlib_SetCursorPosition(0, 54);
             fontlib_SetColors(foreground_color, background_color);
             fontlib_SetTransparency(false);
             fontlib_SetNewlineOptions(FONTLIB_ENABLE_AUTO_WRAP);
@@ -225,11 +236,9 @@ void main(void) {
             set_times(23, 0);
             print_centered("Colossal Cave\n");
             times_font = set_times(23, 0);
-            print_centered("Adventure");
-            key = times_font->space_above + times_font->baseline_height;
+            print_centered("Adventure\n");
             times_font = set_times(13, 0);
-            fontlib_ShiftCursorPosition(8, key - times_font->space_above - times_font->baseline_height);
-            fontlib_DrawString("beta 6/20");
+            print_centered("v1.8 beta 22 June 2019");
             
             set_drsans(14, FONTLIB_NORMAL, 0);
             fontlib_SetCursorPosition(0, ABOUT_Y);

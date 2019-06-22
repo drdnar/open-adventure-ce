@@ -103,7 +103,10 @@ int suspend(void)
         name = readline_len("File name: ", 8);
 #endif
         if (name == NULL || strlen(name) == 0)
+        {
+            free(name);
             return GO_TOP;
+        }
         fp = fopen(name, WRITE_MODE);
         if (fp == NULL)
 #ifndef CALCULATOR
@@ -158,7 +161,10 @@ int resume(void)
         name = readline_len("File name: ", 8);
 #endif
         if (name == NULL || strlen(name) == 0)
+        {
+            free(name);
             return GO_TOP;
+        }
         fp = fopen(name, READ_MODE);
         if (fp == NULL)
 #ifndef CALCULATOR
