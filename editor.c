@@ -20,8 +20,8 @@
  * History circular buffer
  ******************************************************************************/
 
-#define MAX_HISTORY 4
-#define MAX_HISTORY_MASK 3
+#define MAX_HISTORY 32
+#define MAX_HISTORY_MASK 31
 char** history = NULL;
 unsigned char history_next = 0;
 

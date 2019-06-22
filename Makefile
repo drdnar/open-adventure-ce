@@ -1,4 +1,4 @@
-NAME ?= CCAVEADV
+NAME ?= ADVENT
 COMPRESSED ?= NO
 ICON ?= none.png
 DESCRIPTION ?= "Colossal Cave Adventure 1.8"
@@ -191,7 +191,7 @@ all: dirs $(BINDIR)/$(TARGET8XP) $(BINDIR)/dungeon.8xv ;
 debug: LDDEBUGFLAG = -i dbg
 debug: DEBUGMODE = DEBUG
 debug: CCDEBUGFLAG = -debug
-debug: dirs $(BINDIR)/$(TARGET8XP) $(BINDIR)/dungeon.8xv ;
+debug: dirs $(BINDIR)/$(TARGET8XP) $(BINDIR)/ADVENT_data.8xv ;
 
 dirs:
 	@echo C CE SDK Version $(VERSION) && \
@@ -226,10 +226,10 @@ pc:
 dungeon.bin dungeon.c dungeon.h: make_dungeon_calc.py templates/dungeon.c.tpl templates/dungeon.h.tpl
 	./make_dungeon_calc.py
 
-dungeon: dungeon.bin $(BINDIR)/dungeon.8xv
+dungeon: dungeon.bin $(BINDIR)/ADVENT_data.8xv
 
-$(BINDIR)/dungeon.8xv: dungeon.bin
-	convhex -a -v -n CCaveDun dungeon.bin $(BINDIR)/dungeon.8xv
+$(BINDIR)/ADVENT_data.8xv: dungeon.bin
+	convhex -a -v -n AdvenDat dungeon.bin $(BINDIR)/ADVENT_data.8xv
 
 clean:
 	$(Q)$(call RM,*.src)

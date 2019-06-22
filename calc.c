@@ -226,7 +226,7 @@ void main(void) {
             gfx_FillScreen(background_color);
             fontlib_SetFirstPrintableCodePoint(12);
             fontlib_SetWindowFullScreen();
-            fontlib_SetCursorPosition(0, 54);
+            fontlib_SetCursorPosition(0, 50);
             fontlib_SetColors(foreground_color, background_color);
             fontlib_SetTransparency(false);
             fontlib_SetNewlineOptions(FONTLIB_ENABLE_AUTO_WRAP);
@@ -235,9 +235,9 @@ void main(void) {
             print_centered("The\n");
             set_times(23, 0);
             print_centered("Colossal Cave\n");
-            times_font = set_times(23, 0);
             print_centered("Adventure\n");
             times_font = set_times(13, 0);
+            fontlib_ShiftCursorPosition(0, 2);
             print_centered("v1.8 beta 22 June 2019");
             
             set_drsans(14, FONTLIB_NORMAL, 0);
