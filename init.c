@@ -341,7 +341,9 @@ int initialise(void)
         print("Initialising...\n");
 #endif
     load_dungeon();
-    
+
+    memset(&game, 0, sizeof(game));
+
     game.dloc[1] = LOC_KINGHALL;
     game.dloc[2] = LOC_WESTBANK;
     game.dloc[3] = LOC_Y2;
