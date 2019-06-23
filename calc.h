@@ -12,10 +12,13 @@ sk_key_t wait_any_key();
 sk_key_t wait_any_key_msg(char* msg);
 
 unsigned long time(unsigned char* ignored);
+
 char* readline_len(char* prompt, unsigned char max_len);
 char* readline(char* prompt);
 
-#define APD_DIM_TIME 300
-#define APD_QUIT_TIME 120
+bool valid_name(const char* filename);
+
+#define APD_DIM_TIME 120
+#define APD_QUIT_TIME 300
 
 #endif

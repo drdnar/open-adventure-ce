@@ -23,7 +23,39 @@ command_word_t empty_command_word;
 char* save_file_header = SAVE_FILE_HEADER;
 jmp_buf return_to_main;
 
-sk_key_t wait_any_key()
+
+bool valid_name(char* filename)
+{
+    unsigned int i;
+    unsigned char c;
+    size_t len = strlen(filename);
+    if (len == 0 || len > 8)
+        return false;
+    for (i = 0; i < len; i++, filename++)
+    {
+        c = (unsigned char)(*filename);
+        if (c >= 'A' && c <= 'Z')
+            continue;
+        if (c >= 'a' && c <= 'z')
+            continue;
+        /* convert theta */
+        if (c == '\264')
+        {
+            *filename = '[';
+            continue;
+        }
+        if (c >= '0' && c <= '9' && i != 0)
+            continue;
+        return false;
+    }
+    return true;
+}
+
+/*******************************************************************************
+ * Key routines
+ ******************************************************************************/
+
+ sk_key_t wait_any_key()
 {
     sk_key_t key;
     unsigned int timer = get_rtc_seconds_plus(APD_DIM_TIME);

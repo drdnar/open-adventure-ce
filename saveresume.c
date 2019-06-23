@@ -72,7 +72,9 @@ int savefile(FILE *fp, int32_t version)
     save.version = (version == 0) ? VRSION : version;
 
     save.game = game;
+
     IGNORE(fwrite(&save, sizeof(struct save_t), 1, fp));
+
     return (0);
 }
 
@@ -85,6 +87,9 @@ int suspend(void)
      *  If ADVENT_NOSAVE is defined, do nothing instead. */
     char* name;
     FILE *fp = NULL;
+#ifdef CALCULATOR
+    ti_var_t dungeon_file;
+#endif
 #ifdef ADVENT_NOSAVE
     return GO_UNKNOWN;
 #endif
@@ -107,12 +112,29 @@ int suspend(void)
             free(name);
             return GO_TOP;
         }
+#ifdef CALCULATOR
+        if (valid_name(name))
+        {
+        dungeon_file = ti_Open(name, "r");
+        if (dungeon_file && strcmp(ti_GetDataPtr(dungeon_file), save_file_header))
+        {
+            print("\n\nThat file was not created by ADVENT; choose a different name.");
+            free(name);
+            continue;
+        }
+        ti_Close(dungeon_file);
+#endif
         fp = fopen(name, WRITE_MODE);
         if (fp == NULL)
 #ifndef CALCULATOR
             printf("Can't open file %s, try again.\n", name);
 #else
             print("\n\nFailed to open file.");
+#endif
+#ifdef CALCULATOR
+        }
+        else
+            print("\n\nInvalid file name.");
 #endif
         free(name);
     }
@@ -189,6 +211,12 @@ int restore(FILE* fp)
 
     IGNORE(fread(&save, sizeof(struct save_t), 1, fp));
     fclose(fp);
+
+#ifdef CALCULATOR
+    if (strcmp(save.id_str, save_file_header))
+        print("\n\nThat is not a valid save file.");
+    else
+#endif
     if (save.version != VRSION) {
         rspeak(VERSION_SKEW, save.version / 10, MOD(save.version, 10), VRSION / 10, MOD(VRSION, 10));
     } else if (is_valid(save.game)) {
