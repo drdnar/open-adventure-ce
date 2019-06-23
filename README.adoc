@@ -14,23 +14,38 @@ You also need the Times and Dr. Sans fonts, also included.
 
 ==== Usage ====
 
-Current, the Resume command on the main menu doesn't do anything.
-This will eventually be fixed.
+===== Command Shortcuts =====
 
-You can still save and resume games, however.
-To resume a saved game, start a new game, answer "no" (or "yes") to whether you want instructions,
-and then type "resume" to resume a game.
+The following standard command shortcuts are available:
+
+* `i` for `inventory`
+* `g` for `get` or `take`
+* `l` for `look`
+* `u` and `d` for `up` and `down`, respectively
+* `n`, `e`, `w`, and `s` for `north`, `east`, `west`, and `south`, respectively
+* `ne`, `nw`, `se`, `sw` for northeast, northwest, southeast, and southwest. Note that because the text parser only looks at the first five letters of each word, those are, in fact, the *only* way to enter those directions!
+
+===== Command History =====
 
 While playing, you can press UP to access your command history.
 Press ENTER to paste the selected command.
 Press CLEAR to return to editing.
 DEL is backspace.
 
+===== Saving and Resuming =====
+
+Currently, the Resume command on the main menu doesn't do anything.
+This will eventually be fixed.
+
+You can still save and resume games, however.
+To resume a saved game, start a new game, answer `no` (or `yes`) to whether you want instructions,
+and then type `resume` to resume a game.
+
 ==== Battery Saving ====
 
 To prevent ruining your battery, Adventure will automatically quit after several minutes of no key presses.
 If you resumed a previously saved game, Adventure will automatically overwrite that save before quitting.
-If you're playing a new game, you can manually set the save name using the "filename" command.
+If you're playing a new game, you can manually set the save name using the `filename` command.
 However, if you do not set a save name, then the game will be discarded.
 
 You can quit the game instantly at any time by pressing ON, then CLEAR.
