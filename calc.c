@@ -72,7 +72,7 @@ bool valid_name(char* filename)
                 timer = get_rtc_seconds_plus(APD_QUIT_TIME);
             }
             else
-                exit_clean(0);
+                exit_apd();
         }
         key = get_csc();
     }
@@ -134,7 +134,7 @@ unsigned short days_from_time(void* time)
  * readline replacement
  ******************************************************************************/
 
-char* readline_len(char* prompt, unsigned char max_len)
+char* readline_len(char* prompt, unsigned char max_len, char* default_text)
 {
     fontlib_font_t* font;
     unsigned int x;
@@ -145,12 +145,12 @@ char* readline_len(char* prompt, unsigned char max_len)
     fontlib_SetCursorPosition(0, y);
     fontlib_DrawString(prompt);
     x = fontlib_GetCursorX();
-    return get_string(x, y, LCD_WIDTH - x, max_len, font);
+    return get_string(x, y, LCD_WIDTH - x, max_len, font, default_text);
 }
 
 char* readline(char* prompt)
 {
-    return readline_len(prompt, 24);
+    return readline_len(prompt, 24, NULL);
 }
 
 
@@ -169,6 +169,7 @@ void exit_clean(int n)
 
 void exit_apd()
 {
+    save_apd();
     exit_clean(0);
 }
 
@@ -176,6 +177,8 @@ void exit_main(int n)
 {
     wait_any_key_msg("Press any key to continue. . . .");
     free_history();
+    free(save_file_name);
+    save_file_name = NULL;
     longjmp(return_to_main, n);
 }
 
@@ -213,6 +216,8 @@ void do_game(void)
     print_reset_pagination();
     print_clear();
     init_history();
+    free(save_file_name);
+    save_file_name = NULL;
     play();
     free_history();
 }

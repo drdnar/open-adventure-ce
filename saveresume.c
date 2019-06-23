@@ -62,6 +62,13 @@ struct save_t {
 
 struct save_t save;
 
+#ifdef CALCULATOR
+char* save_file_name;
+const char* file_name_prompt = "File name: ";
+const char* invalid_file_name = "\n\nInvalid file name.";
+const char* created_by_other_program = "\n\nThat file was not created by ADVENT; choose a different name.";
+#endif
+
 #define IGNORE(r) do{if (r){}}while(0)
 
 int savefile(FILE *fp, int32_t version)
@@ -77,6 +84,59 @@ int savefile(FILE *fp, int32_t version)
 
     return (0);
 }
+
+#ifdef CALCULATOR
+void save_apd()
+{
+    FILE *fp;
+    if (!save_file_name)
+        return;
+    fp = fopen(save_file_name, WRITE_MODE);
+    if (fp == NULL)
+        return;
+    /* Only deduct one point---they've either already waited a few minutes, or
+     * had to leave to do something else. */
+    game.saved++;
+    savefile(fp, VRSION);
+    fclose(fp);
+}
+
+int set_save_file_name(void)
+{
+    char* name = NULL;
+    char* header;
+    ti_var_t dungeon_file = 0;
+    while (true) {
+        free(name);
+        name = readline_len(file_name_prompt, 8, save_file_name);
+        if (name == NULL || strlen(name) == 0)
+        {
+            free(name);
+            return GO_TOP;
+        }
+        if (!valid_name(name))
+        {
+            print(invalid_file_name);
+            continue;
+        }
+        dungeon_file = ti_Open(name, "r");
+        if (dungeon_file)
+        {
+            header = ti_GetDataPtr(dungeon_file);
+            ti_Close(dungeon_file);
+            if (strcmp(header, save_file_header))
+            {
+                print(created_by_other_program);
+                continue;
+            }
+        }
+        break;
+    }
+    free(save_file_name);
+    save_file_name = name;
+    return GO_TOP;
+}
+#endif
 
 /* Suspend and resume */
 int suspend(void)
@@ -105,7 +165,7 @@ int suspend(void)
 #ifndef CALCULATOR
         name = readline("\nFile name: ");
 #else
-        name = readline_len("File name: ", 8);
+        name = readline_len(file_name_prompt, 8, save_file_name);
 #endif
         if (name == NULL || strlen(name) == 0)
         {
@@ -118,7 +178,7 @@ int suspend(void)
         dungeon_file = ti_Open(name, "r");
         if (dungeon_file && strcmp(ti_GetDataPtr(dungeon_file), save_file_header))
         {
-            print("\n\nThat file was not created by ADVENT; choose a different name.");
+            print(created_by_other_program);
             free(name);
             continue;
         }
@@ -134,7 +194,7 @@ int suspend(void)
 #ifdef CALCULATOR
         }
         else
-            print("\n\nInvalid file name.");
+            print(invalid_file_name);
 #endif
         free(name);
     }
@@ -158,11 +218,12 @@ int suspend(void)
 #endif
 }
 
-int resume(void)
+int resume()
 {
     /*  Resume.  Read a suspended game back from a file.
      *  If ADVENT_NOSAVE is defined, do nothing instead. */
-    char* name;
+    char* name = NULL;
+    bool restore_successful;
 
 #ifdef ADVENT_NOSAVE
     return GO_UNKNOWN;
@@ -180,24 +241,41 @@ int resume(void)
 #ifndef CALCULATOR
         name = readline("\nFile name: ");
 #else
-        name = readline_len("File name: ", 8);
+        name = readline_len(file_name_prompt, 8, save_file_name);
 #endif
         if (name == NULL || strlen(name) == 0)
         {
             free(name);
             return GO_TOP;
         }
+#ifdef CALCULATOR
+        /* This also handles converting the theta character as a side-effect. */
+        IGNORE(valid_name(name));
+#endif
         fp = fopen(name, READ_MODE);
         if (fp == NULL)
 #ifndef CALCULATOR
             printf("Can't open file %s, try again.\n", name);
 #else
-            print("\n\nFailed to open file.");
+            print("\n\nFailed to open file. (Wrong name?)");
 #endif
+        else
+            break;
         free(name);
     }
 
-    return restore(fp);
+#ifndef CALCULATOR
+    free(name);
+#endif
+    restore_successful = restore(fp);
+#ifdef CALCULATOR
+    if (restore_successful)
+    {
+        free(save_file_name);
+        save_file_name = name;
+    }
+#endif
+    return restore_successful;
 }
 
 int restore(FILE* fp)

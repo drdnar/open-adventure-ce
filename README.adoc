@@ -4,16 +4,37 @@ This is a port of http://www.catb.org/~esr/open-adventure[Open Adventure] to the
 
 === Usage ===
 
-You can press UP to access your command history.
+==== Installation ====
+
+The https://github.com/CE-Programming/libraries[standard LoadLib libraries GRAPHX and FILEIOC] are required.
+
+Additionally, FontLibC, a library not currently packaged with LoadLib (though it will be in the next release), is also required.
+A compatible copy of FontLibC is included with current releases.
+You also need the Times and Dr. Sans fonts, also included.
+
+==== Usage ====
+
+Current, the Resume command on the main menu doesn't do anything.
+This will eventually be fixed.
+
+You can still save and resume games, however.
+To resume a saved game, start a new game, answer "no" (or "yes") to whether you want instructions,
+and then type "resume" to resume a game.
+
+While playing, you can press UP to access your command history.
 Press ENTER to paste the selected command.
 Press CLEAR to return to editing.
+DEL is backspace.
 
-After a few minutes of no key presses, Adventure will automatically quit,
-*without saving your current game.*
-This is a feature designed to prevent Adventure from ruining your battery.
+==== Battery Saving ====
+
+To prevent ruining your battery, Adventure will automatically quit after several minutes of no key presses.
+If you resumed a previously saved game, Adventure will automatically overwrite that save before quitting.
+If you're playing a new game, you can manually set the save name using the "filename" command.
+However, if you do not set a save name, then the game will be discarded.
 
 You can quit the game instantly at any time by pressing ON, then CLEAR.
-Nothing will be saved.
+*Nothing will be saved.*
 
 === Technical ===
 I looked at several different implementations of Adventure.

@@ -50,7 +50,7 @@ static uint16_t get_word()
 
 void load_dungeon(void)
 {
-    char id_str[32];
+    char id_str[sizeof(DATA_FILE_ID_STRING)];
     long huffman_tree_location, compressed_strings_location, uncompressed_strings_location,
         arbitrary_messages_location, classes_location, turn_thresholds_location,
         locations_location, objects_location, obituaries_location, hints_location,
@@ -60,11 +60,11 @@ void load_dungeon(void)
     
     dungeon_file = fopen("dungeon.bin", "rb");
     if (!dungeon_file)
-        load_failure("Failed to open dungeon.bin");
+        load_failure("Failed to open dungeon.bin %d");
     fseek(dungeon_file, 0, SEEK_SET);
     if (sizeof(id_str) != fread(&id_str[0], 1, sizeof(id_str), dungeon_file))
-	load_failure("dungeon.bin got truncated?");
-    if (id_str[31] || strcmp(id_str, DATA_FILE_ID_STRING))
+        load_failure("dungeon.bin got truncated?");
+    if (id_str[sizeof(id_str) - 1] || strcmp(id_str, DATA_FILE_ID_STRING))
         load_failure("dungeon.bin does not look like a dungeon file");
     /* Get the location of various items */
     huffman_tree_location = get_word();
@@ -261,15 +261,13 @@ void load_dungeon(void)
 #else
 void load_dungeon(void)
 {
-    char id_str[32];
+    char id_str[sizeof(DATA_FILE_ID_STRING)];
     ti_var_t dungeon_file;
     dungeon_file = ti_Open("AdvenDat", "r");
     if (!dungeon_file)
         exit_fail("Failed to open dungeon appvar AdvenDat");
     dungeon = ti_GetDataPtr(dungeon_file);
-    if (sizeof(id_str) != ti_Read(&id_str[0], 1, sizeof(id_str), dungeon_file))
-        exit_fail("dungeon.bin got truncated?");
-    if (id_str[31] || strcmp(id_str, DATA_FILE_ID_STRING))
+    if (strcmp((char*)dungeon, DATA_FILE_ID_STRING))
         exit_fail("Appvar AdvenDat is not a dungeon file");
     /* In order to save some space, instead of the previous platform-independent
      * idiomatic C, I've written some optimized assembly.  This makes some semi-
@@ -293,7 +291,7 @@ void load_dungeon(void)
     asm("	; DE: Offsets array read pointer");
     asm("	; IY: Target pointer to populate");
     asm("	ld	bc, (_dungeon)");
-    asm("	ld	hl, 32 ; sizeof(DATA_FILE_ID_STRING)");
+    asm("	ld	hl, 35 ; sizeof(DATA_FILE_ID_STRING)");
     asm("	add	hl, bc");
     asm("	ex	de, hl");
     asm("	ld	iy, _huffman_tree");

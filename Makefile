@@ -223,8 +223,9 @@ check:
 pc:
 	make -f makefile.pc
 
-dungeon.bin dungeon.c dungeon.h: make_dungeon_calc.py templates/dungeon.c.tpl templates/dungeon.h.tpl
+dungeon.bin dungeon.c dungeon.h tests/dungeon.bin: make_dungeon_calc.py templates/dungeon.c.tpl templates/dungeon.h.tpl adventure_calculator.yaml
 	./make_dungeon_calc.py
+	$(CP) dungeon.bin tests/dungeon.bin
 
 dungeon: dungeon.bin $(BINDIR)/ADVENT_data.8xv
 

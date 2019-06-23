@@ -215,6 +215,9 @@ typedef struct {
 
 extern struct game_t game;
 extern struct settings_t settings;
+#ifdef CALCULATOR
+extern char* save_file_name;
+#endif
 
 extern void play(void);
 extern void load_dungeon(void);
@@ -242,6 +245,10 @@ extern int score(enum termination);
 extern void terminate(enum termination) __attribute__((noreturn));
 #else
 extern void terminate(enum termination);
+#endif
+#ifdef CALCULATOR
+extern void save_apd(void);
+extern int set_save_file_name(void);
 #endif
 extern int savefile(FILE *, int32_t);
 extern int suspend(void);

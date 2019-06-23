@@ -190,6 +190,12 @@ phase_codes_t action(command_t* command)
                 return GO_UNKNOWN;
             case WAKE:
                 return GO_UNKNOWN;
+            case SET_NAME:
+#ifdef CALCULATOR
+                return set_save_file_name();
+#else
+                /* Just fall through to normal save */
+#endif
             case SAVE:
                 return suspend();
             case RESUME:

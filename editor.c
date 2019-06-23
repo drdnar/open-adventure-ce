@@ -537,7 +537,7 @@ char cursors[] = {'\4', '\6', '\7'};
 #define timer_1_value_b (*(volatile unsigned char*)0xF20002)
 #define timer_1_match_1     (*(unsigned char*)0xF2000A)
 #define timer_1_match_2     (*(unsigned char*)0xF2000E)
-char* get_string(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text_max_length, fontlib_font_t* editor_font)
+char* get_string(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text_max_length, fontlib_font_t* editor_font, char* default_text)
 {
     editor_context_t* context;
     bool not_done = true;
@@ -548,6 +548,12 @@ char* get_string(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text
     unsigned char shift = 2;
     context = editor_start(x_loc, y_loc, box_width, text_max_length, editor_font);
     context->cursor_glyph = cursors[shift];
+    if (default_text)
+    {
+        editor_set_str(context, default_text);
+        editor_redraw(context);
+        default_text = NULL;
+    }
     
     /* Set timer 1 to count up */
     timer_control_b = timer_control_b | 2;
@@ -580,7 +586,7 @@ char* get_string(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text
                     apd_timer = get_rtc_seconds_plus(APD_QUIT_TIME);
                 }
                 else
-                    exit_clean(0);
+                    exit_apd();
             }
             /* Check value of timer 1.  We need only check one byte of the whole
              * 32-bit register. */
@@ -651,7 +657,6 @@ char* get_string(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text
                         case sk_Enter:
                             editor_flush(context);
                             editor_set_str(context, get_history_item(temp));
-                            editor_end(context);
                             not_done = false;
                             break;
                         case sk_Clear:

@@ -127,11 +127,11 @@ typedef struct {{
  */
 #define T_TERMINATE(entry)	((entry)->motion == 1)
 
-#define DATA_FILE_ID_STRING "Colossal Cave Adventure dungeon"
+#define DATA_FILE_ID_STRING "Colossal Cave Adventure dungeon v2"
 
 typedef struct {{
     /* "Colossal Cave Adventure dungeon" */
-    char header[32];
+    char header[sizeof(DATA_FILE_ID_STRING)];
     uint16_t huffman_table;
     uint16_t compressed_strings;
     uint16_t uncompressed_strings;

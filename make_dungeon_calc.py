@@ -775,7 +775,7 @@ if __name__ == "__main__":
     
     # Generate header
     data_file = [ ]
-    for ch in "Colossal Cave Adventure dungeon":
+    for ch in "Colossal Cave Adventure dungeon v2":
         data_file.append(ord(ch))
     data_file.append(0)
     huffman_table_location_location = len(data_file)
