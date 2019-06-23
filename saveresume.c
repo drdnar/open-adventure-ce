@@ -112,7 +112,7 @@ int suspend(void)
 #ifndef CALCULATOR
             printf("Can't open file %s, try again.\n", name);
 #else
-            print("Failed to open file.\n");
+            print("\n\nFailed to open file.");
 #endif
         free(name);
     }
@@ -170,7 +170,7 @@ int resume(void)
 #ifndef CALCULATOR
             printf("Can't open file %s, try again.\n", name);
 #else
-            print("Failed to open file.\n");
+            print("\n\nFailed to open file.");
 #endif
         free(name);
     }
