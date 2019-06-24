@@ -3961,7 +3961,7 @@ actions: !!omap
     noaction: true
 - FBOMB:
     message: 'Watch it!'
-    words: ['fuck']
+    words: ['fuck', 'shit']
     noaction: true
 - STOP:
     message: 'I don''t know the word "stop".  Use "quit" if you want to give up.'
@@ -4004,6 +4004,9 @@ actions: !!omap
     message: 'Guess again.'
     words: ['yes']
     noaction: true
+- SET_NAME:
+    message: *huh_man
+    words: ['file', 'filen', 'saven']
 - NEWS:
     message: |-
       Open Adventure is an author-approved open-source release of
@@ -4024,5 +4027,4 @@ actions: !!omap
       \tOpen Adventure %V - http://www.catb.org/esr/open-adventure/
     words: ['versi']
     noaction: true
-
 # end

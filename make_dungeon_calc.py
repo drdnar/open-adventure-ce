@@ -720,7 +720,37 @@ def get_travel(travel):
     out = out[:-1] # trim trailing newline
     return out
 
-if __name__ == "__main__":
+
+def generate_dungeon():
+    global statedefines
+    global symbol_frequencies
+    global compressed_string_list
+    global uncompressed_string_list
+    global duplicate_compressed_strings
+    global duplicate_compressed_strings_chars
+    global total_compressed_strings_chars
+    global duplicate_uncompressed_strings
+    global duplicate_uncompressed_strings_chars
+    global total_uncompressed_strings_chars
+    global tree_data_string
+    global tree_data
+    global strings_data
+    global strings_locations
+    statedefines = ""
+    symbol_frequencies = defaultdict(int)
+    compressed_string_list = [ None ]
+    uncompressed_string_list = [ None ]
+    duplicate_compressed_strings = 0
+    duplicate_compressed_strings_chars = 0
+    total_compressed_strings_chars = 0
+    duplicate_uncompressed_strings = 0
+    duplicate_uncompressed_strings_chars = 0
+    total_uncompressed_strings_chars = 0
+    tree_data_string = ""
+    tree_data = [ ]
+    strings_data = [ 0 ]
+    strings_locations = [ ]
+    
     with open(YAML_NAME, "r") as f:
         db = yaml.safe_load(f)
 
@@ -1080,15 +1110,43 @@ if __name__ == "__main__":
     with open(BIN_NAME, "wb") as bf:
         bf.write(bytearray(data_file))
         
-    
-    print('Total compressed strings: {}'.format(len(compressed_string_list)))
-    print('Total compressed strings chars: {}'.format(total_compressed_strings_chars))
-    print('Duplicate compressed strings omitted: {}'.format(duplicate_compressed_strings))
-    print('Duplicate compressed strings chars omitted: {}'.format(duplicate_compressed_strings_chars))
+    print('Stats:')
+    print('{com_str_count} compressed strings with {com_str_chars} characters'.format(
+        com_str_count = len(compressed_string_list),
+        com_str_chars = total_compressed_strings_chars))
+    print('{com_dup_omit} duplicates omitted saving {com_dup_chars} characters'.format(
+        com_dup_omit = duplicate_compressed_strings,
+        com_dup_chars = duplicate_compressed_strings_chars))
     print('Huffman table codes: {}'.format(len(symbol_frequencies)))
-    print('Total uncompressed strings: {}'.format(len(uncompressed_string_list)))
-    print('Total uncompressed strings chars: {}'.format(total_uncompressed_strings_chars))
-    print('Duplicate uncompressed strings omitted: {}'.format(duplicate_uncompressed_strings))
-    print('Duplicate uncompressed strings chars omitted: {}'.format(duplicate_uncompressed_strings_chars))
+    print('{uncom_str_count} uncompressed strings with {uncom_str_chars}'.format(
+        uncom_str_count = len(uncompressed_string_list),
+        uncom_str_chars = total_uncompressed_strings_chars))
+    print('{uncom_dup_omit} duplicates omitted saving {uncom_dup_chars} characters'.format(
+        uncom_dup_omit = duplicate_uncompressed_strings,
+        uncom_dup_chars = duplicate_uncompressed_strings_chars))
 
+if __name__ == "__main__":
+    global YAML_NAME
+    global H_NAME
+    global C_NAME
+    global BIN_NAME
+    global H_TEMPLATE_PATH
+    global C_TEMPLATE_PATH
+    print('Processing adventure.yaml. . . .')
+    YAML_NAME = "adventure.yaml"
+    H_NAME = "dungeon.h"
+    C_NAME = "dungeon.c"
+    BIN_NAME = "dungeon.bin"
+    H_TEMPLATE_PATH = "templates/dungeon.h.tpl"
+    C_TEMPLATE_PATH = "templates/dungeon.c.tpl"
+    generate_dungeon()
+    print()
+    print('Processing adventure_calculator.yaml. . . .')
+    YAML_NAME = "adventure_calculator.yaml"
+    H_NAME = "dungeon.h"
+    C_NAME = "dungeon.c"
+    BIN_NAME = "dungeon_calculator.bin"
+    H_TEMPLATE_PATH = "templates/dungeon.h.tpl"
+    C_TEMPLATE_PATH = "templates/dungeon.c.tpl"
+    
 # end
