@@ -724,8 +724,13 @@ def get_travel(travel):
 def generate_dungeon():
     global statedefines
     global symbol_frequencies
+    global huffman_nodes
+    global huffman_codes
+    global huffman_root
+    global symbol_frequencies
     global compressed_string_list
     global uncompressed_string_list
+    global arbitrary_messages_index
     global duplicate_compressed_strings
     global duplicate_compressed_strings_chars
     global total_compressed_strings_chars
@@ -745,8 +750,13 @@ def generate_dungeon():
 
     statedefines = ""
     symbol_frequencies = defaultdict(int)
+    huffman_nodes = [ ]
+    huffman_codes = { }
+    huffman_root = None
+    symbol_frequencies = defaultdict(int)
     compressed_string_list = [ None ]
     uncompressed_string_list = [ None ]
+    arbitrary_messages_index = [ ]
     duplicate_compressed_strings = 0
     duplicate_compressed_strings_chars = 0
     total_compressed_strings_chars = 0
