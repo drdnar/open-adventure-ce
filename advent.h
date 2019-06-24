@@ -10,11 +10,19 @@
 
 /* LCG PRNG parameters tested against
  * Knuth vol. 2. by the original authors */
+#ifndef CALCULATOR
 #define LCG_A 1093UL
 #define LCG_C 221587UL
 #define LCG_M 1048576UL
+#define LCG_MASK 1048575UL
+#define LCG_SHIFT 20
+#else
+#define LCG_A 1093
+#define LCG_C 221587
+#define LCG_M 0x100000
 #define LCG_MASK 0xFFFFF
 #define LCG_SHIFT 20
+#endif
 
 typedef int16_t vocab_t;  // index into a vocabulary array */
 typedef int8_t verb_t;   // index into an actions array */

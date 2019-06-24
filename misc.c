@@ -940,7 +940,13 @@ static unsigned int get_next_lcg_value(void)
 unsigned int randrange(unsigned int range)
 /* Return a random integer from [0, range). */
 {
+#ifndef CALCULATOR
     return range * get_next_lcg_value() >> LCG_SHIFT;
+#else
+    unsigned long x = range;
+    x *= get_next_lcg_value();
+    return x >> LCG_SHIFT;
+#endif
 }
 
 // LCOV_EXCL_START
