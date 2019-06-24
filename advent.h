@@ -40,7 +40,11 @@ extern bool outsid(loc_t loc);
 extern bool inside(loc_t loc);
 extern bool indeep(loc_t loc);
 
+#ifndef CALCULATOR
 #define LINESIZE       1024
+#else
+#define LINESIZE       33
+#endif
 #define TOKLEN         5          // # sigificant characters in a token */
 #define NDWARVES       6          // number of dwarves
 #define PIRATE         NDWARVES   // must be NDWARVES-1 when zero-origin
