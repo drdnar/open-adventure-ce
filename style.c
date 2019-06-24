@@ -174,25 +174,22 @@ char* print_word_wrap(const char* string, bool fake_print)
         {
             if (c == old_newline && old_newline != '\0')
             {
-                /* The dungeon file has lots of linebreaks just for word-wrap.
-                 * Since we're handling word-wrap on-the-fly, ignore them. */
-                if (*(string + 1) != old_newline)
-                    c = ' ';
-                else
-                {
-                    string++;
-                    string++;
-                    if (fake_print)
-                        break;
-                    newline = true;
-                    continue;
-                }
+                string++;
+                if (fake_print)
+                    break;
+                newline = true;
+                continue;
             }
             else if (c == '\t')
             {
                 string++;
                 x += 32;
-                x &= 0xFFFFFE;
+                x &= 0xFFFFE0;
+                if (!fake_print)
+                {
+                    fontlib_ClearEOL();
+                    fontlib_SetCursorPosition(x, fontlib_GetCursorY());
+                }
             }
             else
                 break;

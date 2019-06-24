@@ -185,7 +185,7 @@ LDFLAGS ?= \
 	-i $(call QUOTE_ARG,libs $(call FASMG_FILES,$(LINK_LIBLOAD)) used if libs.length$(comma) $(call FASMG_FILES,$(LINK_LIBS)))
 
 # this rule is trigged to build everything
-all: dirs $(BINDIR)/$(TARGET8XP) $(BINDIR)/dungeon.8xv ;
+all: dirs $(BINDIR)/$(TARGET8XP) $(BINDIR)/ADVENT_data.8xv ;
 
 # this rule is trigged to build debug everything
 debug: LDDEBUGFLAG = -i dbg

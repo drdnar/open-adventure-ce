@@ -65,8 +65,8 @@ struct save_t save;
 #ifdef CALCULATOR
 char* save_file_name;
 const char* file_name_prompt = "File name: ";
-const char* invalid_file_name = "\n\nInvalid file name.";
-const char* created_by_other_program = "\n\nThat file was not created by ADVENT; choose a different name.";
+const char* invalid_file_name = "\nInvalid file name.";
+const char* created_by_other_program = "\nThat file was not created by ADVENT; choose a different name.";
 #endif
 
 #define IGNORE(r) do{if (r){}}while(0)
@@ -189,7 +189,7 @@ int suspend(void)
 #ifndef CALCULATOR
             printf("Can't open file %s, try again.\n", name);
 #else
-            print("\n\nFailed to open file.");
+            print("\nFailed to open file.");
 #endif
 #ifdef CALCULATOR
         }
@@ -257,7 +257,7 @@ int resume()
 #ifndef CALCULATOR
             printf("Can't open file %s, try again.\n", name);
 #else
-            print("\n\nFailed to open file. (Wrong name?)");
+            print("\nFailed to open file. (Wrong name?)");
 #endif
         else
             break;
@@ -292,7 +292,7 @@ int restore(FILE* fp)
 
 #ifdef CALCULATOR
     if (strcmp(save.id_str, save_file_header))
-        print("\n\nThat is not a valid save file.");
+        print("\nThat is not a valid save file.");
     else
 #endif
     if (save.version != VRSION) {
