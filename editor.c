@@ -20,8 +20,8 @@
  * History circular buffer
  ******************************************************************************/
 
-#define MAX_HISTORY 32
-#define MAX_HISTORY_MASK 31
+#define MAX_HISTORY 256
+#define MAX_HISTORY_MASK 255
 char** history = NULL;
 unsigned char history_next = 0;
 
@@ -57,15 +57,19 @@ void add_history(char* string)
     item = malloc_safe(strlen(string) + 1);
     strcpy(item, string);
     history[history_next] = item;
-    history_next = (history_next + 1) & MAX_HISTORY_MASK;
-    
+    /*history_next = (history_next + 1) & MAX_HISTORY_MASK;*/
+    history_next++;
 }
 
 char* get_history_item(unsigned char n)
 {
+    /* This saves six bytes . . . eh, why not? */
+    unsigned char i;
     if (!history)
         return NULL;
-    return history[(history_next + MAX_HISTORY - n) & MAX_HISTORY_MASK];
+    i = history_next - n;
+    /*return history[(history_next + MAX_HISTORY - n) & MAX_HISTORY_MASK];*/
+    return history[i];
 }
 
 
