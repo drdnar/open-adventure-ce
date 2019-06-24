@@ -54,8 +54,8 @@ saveresume.o:	advent.h dungeon.h
 dungeon.o:	dungeon.c dungeon.h
 	$(CC) $(CCFLAGS) -Warray-bounds=0 $(DBX) -c dungeon.c
 
-dungeon.c dungeon.h dungeon.bin: make_dungeon_calc.py adventure.yaml advent.h templates/*.tpl
-	./make_dungeon_calc.py
+dungeon.c dungeon.h dungeon.bin tests/dungeon.bin dungeon_calculator.bin: make_dungeon.py adventure.yaml adventure_calculator.yaml advent.h templates/*.tpl
+	./make_dungeon.py
 	rm -f tests/dungeon.bin
 	cp dungeon.bin tests/dungeon.bin
 

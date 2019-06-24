@@ -223,14 +223,14 @@ check:
 pc:
 	make -f makefile.pc
 
-dungeon.bin dungeon.c dungeon.h tests/dungeon.bin: make_dungeon_calc.py templates/dungeon.c.tpl templates/dungeon.h.tpl adventure_calculator.yaml
-	./make_dungeon_calc.py
+dungeon_calculator.bin dungeon.bin dungeon.c dungeon.h tests/dungeon.bin: make_dungeon.py templates/dungeon.c.tpl templates/dungeon.h.tpl adventure_calculator.yaml adventure.yaml
+	./make_dungeon.py
 	$(CP) dungeon.bin tests/dungeon.bin
 
-dungeon: dungeon.bin $(BINDIR)/ADVENT_data.8xv
+$(BINDIR)/ADVENT_data.8xv: dungeon_calculator.bin
+	convhex -a -v -n AdvenDat dungeon_calculator.bin $(BINDIR)/ADVENT_data.8xv
 
-$(BINDIR)/ADVENT_data.8xv: dungeon.bin
-	convhex -a -v -n AdvenDat dungeon.bin $(BINDIR)/ADVENT_data.8xv
+dungeon: dungeon.bin dungeon_calculator.bin $(BINDIR)/ADVENT_data.8xv
 
 clean:
 	$(Q)$(call RM,*.src)
