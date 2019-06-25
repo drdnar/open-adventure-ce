@@ -28,38 +28,6 @@
 #include "style.h"
 #endif
 
-/*
- * Bump on save format change.
- *
- * Note: Verify that the tests run clean before bumping this, then rebuild the check
- * files afterwards.  Otherwise you will get a spurious failure due to the old version
- * having been generated into a check file.
- */
-#define VRSION	29
-
-/*
- * If you change the first three members, the resume function may not properly
- * reject saves from older versions.  Yes, this glues us to a hardware-
- * dependent length of int.  Later members can change, but bump the version
- * when you do that.
- */
-#ifndef CALCULATOR
-struct save_t {
-    int64_t savetime;
-    int32_t mode;		/* not used, must be present for version detection */
-    int32_t version;
-    struct game_t game;
-};
-#else
-struct save_t {
-    char id_str[34]; /*"Colossal Cave Adventure save file"*/
-    unsigned long savetime;
-    int mode;		/* not used, must be present for version detection */
-    int version;
-    struct game_t game;
-};
-#endif
-
 struct save_t save;
 
 #ifdef CALCULATOR

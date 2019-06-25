@@ -110,7 +110,7 @@ enum bugtype {
 
 #ifdef CALCULATOR
 #define SAVE_FILE_HEADER "Colossal Cave Adventure save file"
-extern char* save_file_header;
+extern const char* save_file_header;
 #endif
 
 enum speaktype {touch, look, hear, study, change};
@@ -231,7 +231,7 @@ extern struct settings_t settings;
 extern char* save_file_name;
 #endif
 
-extern void play(void);
+extern void play(char* save_name);
 extern void load_dungeon(void);
 extern bool get_command_input(command_t *);
 extern void clear_command(command_t *);
@@ -286,6 +286,40 @@ static const command_word_t empty_command_word = {
 };
 #else
 extern command_word_t empty_command_word;
+#endif
+
+/* Moved from saveresume.c so we can have calc.c enumerate saves. */
+
+/*
+ * Bump on save format change.
+ *
+ * Note: Verify that the tests run clean before bumping this, then rebuild the check
+ * files afterwards.  Otherwise you will get a spurious failure due to the old version
+ * having been generated into a check file.
+ */
+#define VRSION	29
+
+/*
+ * If you change the first three members, the resume function may not properly
+ * reject saves from older versions.  Yes, this glues us to a hardware-
+ * dependent length of int.  Later members can change, but bump the version
+ * when you do that.
+ */
+#ifndef CALCULATOR
+struct save_t {
+    int64_t savetime;
+    int32_t mode;		/* not used, must be present for version detection */
+    int32_t version;
+    struct game_t game;
+};
+#else
+typedef struct save_t {
+    char id_str[34]; /*"Colossal Cave Adventure save file"*/
+    unsigned long savetime;
+    int mode;		/* not used, must be present for version detection */
+    int version;
+    struct game_t game;
+} save_t;
 #endif
 
 /* end */

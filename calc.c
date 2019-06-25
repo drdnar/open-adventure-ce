@@ -20,8 +20,9 @@
 
 /* Random place to put globals */
 command_word_t empty_command_word;
-char* save_file_header = SAVE_FILE_HEADER;
+const char* save_file_header = SAVE_FILE_HEADER;
 jmp_buf return_to_main;
+#define CURSOR_GLYPH '\x0F'
 
 
 bool valid_name(char* filename)
@@ -209,20 +210,185 @@ void* malloc_safe(int size)
 }
 
 
-void do_game(void)
+/*******************************************************************************
+ * START & RESUME GAME
+ ******************************************************************************/
+
+static void do_game(char* save_name)
 {
     print_configure(drsans_pack_name, 14, FONTLIB_BOLD, 0);
     gfx_FillScreen(background_color);
     print_reset_pagination();
     print_clear();
     init_history();
-    free(save_file_name);
-    save_file_name = NULL;
-    play();
+    play(save_name);
     free_history();
 }
 
-/*******************************************************************************
+#define MAX_SAVES 255
+#define SAVE_LIST_X 32
+#define SAVE_LIST_Y 15
+
+typedef struct
+{
+    unsigned long time;
+    char name[9];
+} save_file_t;
+
+static int save_compare(save_file_t* a, save_file_t* b)
+{
+    if (a->time == b->time)
+        return 0;
+    if (a->time > b->time)
+        return -1;
+    return 1;
+}
+
+static void resume_game(void)
+{
+    uint8_t key, old_fgc, line_height, cursor_width;
+    unsigned char selection, total_saves, current_index, start_index, stop_index, saves_per_screen;
+    bool redraw;
+    char* var_name;
+    uint8_t* search_pos;
+    ti_var_t file;
+    save_t* save;
+    save_file_t* save_list = calloc(MAX_SAVES, sizeof(save_file_t));
+resume_restart:
+    redraw = true;
+    selection = 0;
+    total_saves = 0;
+    current_index = 0;
+    start_index = 0;
+    stop_index = 0;
+    var_name = NULL;
+    search_pos = NULL;
+    
+    while ((var_name = ti_Detect(&search_pos, save_file_header)) != NULL)
+    {
+        file = ti_Open(var_name, "r");
+        if (!file)
+        {
+            /* Just ignore the error and forget the file. */
+            ti_Close(file);
+            continue;
+        }
+        save = ti_GetDataPtr(file);
+        ti_Close(file);
+        if (save->version != VRSION)
+            continue;
+        strncpy(&save_list[total_saves].name, var_name, 8);
+        save_list[total_saves].time = save->savetime;
+        total_saves++;
+        /* I'm not sure how the heck the user made so many saves, but we're
+         * cutting them off now! */
+        if (total_saves == MAX_SAVES)
+            break;
+    }
+
+    if (total_saves == 0)
+    {
+        gfx_FillScreen(background_color);
+        free(save_list);
+        fontlib_SetCursorPosition(0, LCD_HEIGHT / 3 - 7);
+        print_centered("You have no saved games.");
+        key = wait_any_key_msg("Press any key to return. . . .");
+        return;
+    }
+
+    /* Sort saves by time, so the most recent save appears first */
+    qsort(save_list, total_saves, sizeof(save_file_t), &save_compare);
+    set_drsans(14, FONTLIB_BOLD, 0);
+    cursor_width = fontlib_GetGlyphWidth(CURSOR_GLYPH) + 2;
+    line_height = fontlib_GetCurrentFontHeight();
+    saves_per_screen = (LCD_HEIGHT - SAVE_LIST_Y) / line_height;
+
+    do
+    {
+        if (redraw)
+        {
+            redraw = false;
+            stop_index = start_index + saves_per_screen;
+            fontlib_SetWindow(SAVE_LIST_X, SAVE_LIST_Y, LCD_WIDTH - SAVE_LIST_X, LCD_HEIGHT - SAVE_LIST_Y);
+            gfx_FillScreen(background_color);
+            fontlib_SetCursorPosition(1, 1);
+            fontlib_DrawString("Select a file to resume:");
+            fontlib_HomeUp();
+            if (stop_index >= total_saves)
+                stop_index = total_saves;
+            for (current_index = start_index; current_index < stop_index; current_index++)
+            {
+                fontlib_DrawString(save_list[current_index].name);
+                fontlib_Newline();
+            }
+        }
+
+        fontlib_SetCursorPosition(SAVE_LIST_X - cursor_width, SAVE_LIST_Y + line_height * selection);
+        fontlib_DrawGlyph(CURSOR_GLYPH);
+        key = wait_any_key();
+        old_fgc = fontlib_GetForegroundColor();
+        fontlib_SetForegroundColor(fontlib_GetBackgroundColor());
+        fontlib_SetCursorPosition(SAVE_LIST_X - cursor_width, SAVE_LIST_Y + line_height * selection);
+        fontlib_DrawGlyph(CURSOR_GLYPH);
+        fontlib_SetForegroundColor(old_fgc);
+
+        switch (key)
+        {
+            case sk_Vars:
+                goto resume_restart;
+            case sk_Del:
+                redraw = true;
+                fontlib_SetWindowFullScreen();
+                gfx_FillScreen(background_color);
+                fontlib_SetCursorPosition(0, LCD_HEIGHT / 3 - 16);
+                print_centered("Do you want to delete this file?\n");
+                print_centered(save_list[start_index + selection].name);
+                fontlib_Newline();
+                print_centered("Press ENTER to DELETE this file.\n");
+                print_centered("Press any other key to cancel.");
+                if (wait_any_key() != sk_Enter)
+                    break;
+                ti_Delete(save_list[start_index + selection].name);
+                goto resume_restart;
+            case sk_Mode:
+            case sk_Clear:
+                return;
+            case sk_Enter:
+            case sk_2nd:
+                save_file_name = malloc(8);
+                strncpy(save_file_name, save_list[start_index + selection].name, 8);
+                free(save_list);
+                do_game(save_file_name);
+            case sk_Up:
+                if (selection == 0)
+                {
+                    if (start_index == 0)
+                        break;
+                    redraw = true;
+                    start_index--;
+                    break;
+                }
+                selection--;
+                break;
+            case sk_Down:
+                if (selection == saves_per_screen - 1)
+                {
+                    if (stop_index >= total_saves)
+                        break;
+                    redraw = true;
+                    start_index++;
+                    break;
+                }
+                if (start_index + selection < stop_index - 1)
+                    selection++;
+                break;
+        }
+    }
+    while (key != sk_Clear);
+    free(save_list);
+}
+ 
+ /*******************************************************************************
  * MAIN
  ******************************************************************************/
 
@@ -230,12 +396,9 @@ void do_game(void)
 #define MAIN_MENU_Y 146
 #define MAIN_MENU_FONT_SIZE 16
 #define ABOUT_Y 210
-#define CURSOR_GLYPH '\x0F'
 
 /* Main Function */
 void main(void) {
-    fontlib_font_t* times_font;
-    char* blah;
     uint8_t selection = 0;
     uint8_t key, old_fgc, line_height = 0, cursor_width = 0;
     bool redraw_main_menu;
@@ -273,9 +436,9 @@ void main(void) {
             set_times(23, 0);
             print_centered("Colossal Cave\n");
             print_centered("Adventure\n");
-            times_font = set_times(13, 0);
+            set_times(13, 0);
             fontlib_ShiftCursorPosition(0, 2);
-            print_centered("v1.8 beta 22 June 2019");
+            print_centered("v1.8 beta 24 June 2019");
             
             set_drsans(14, FONTLIB_NORMAL, 0);
             fontlib_SetCursorPosition(0, ABOUT_Y);
@@ -287,7 +450,7 @@ void main(void) {
             
             set_drsans(14, FONTLIB_BOLD, 0);
             line_height = fontlib_GetCurrentFontHeight();
-            cursor_width = fontlib_GetGlyphWidth(CURSOR_GLYPH);
+            cursor_width = fontlib_GetGlyphWidth(CURSOR_GLYPH) + 2;
             fontlib_SetCursorPosition(MAIN_MENU_X, MAIN_MENU_Y);
             fontlib_DrawString("New");
             fontlib_SetCursorPosition(MAIN_MENU_X, MAIN_MENU_Y + line_height);
@@ -335,9 +498,13 @@ void main(void) {
                 switch (selection)
                 {
                     case 0:
-                        do_game();
+                        free(save_file_name);
+                        save_file_name = NULL;
+                        do_game(NULL);
                         break;
                     case 1:
+                        redraw_main_menu = true;
+                        resume_game();
                         break;
                     case 2:
                         exit_clean(0);

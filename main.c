@@ -52,10 +52,11 @@ static bool do_move(void);
 #ifndef CALCULATOR
 int main(int argc, char *argv[])
 #else
-void play()
+void play(char* save_name)
 #endif
 {
     int seedval;
+    FILE *rfp = NULL;
 #ifndef CALCULATOR
     int ch;
 
@@ -64,7 +65,6 @@ void play()
 #ifndef ADVENT_NOSAVE
     const char* opts = "l:or:";
     const char* usage = "Usage: %s [-l logfilename] [-o] [-r restorefilename]\n";
-    FILE *rfp = NULL;
 #else
     const char* opts = "l:o";
     const char* usage = "Usage: %s [-l logfilename] [-o]\n";
@@ -115,15 +115,15 @@ void play()
 #ifndef ADVENT_NOSAVE
 #ifndef CALCULATOR
     if (!rfp) {
+#else
+    if (!save_name || !(rfp = fopen(save_name, "r"))) {
 #endif
         game.novice = yes(get_arbitrary_message_index(WELCOME_YOU), get_arbitrary_message_index(CAVE_NEARBY), get_arbitrary_message_index(NO_MESSAGE));
         if (game.novice)
             game.limit = NOVICELIMIT;
-#ifndef CALCULATOR
     } else {
         restore(rfp);
     }
-#endif
 #else
     game.novice = yes(get_arbitrary_message_index(WELCOME_YOU), get_arbitrary_message_index(CAVE_NEARBY), get_arbitrary_message_index(NO_MESSAGE));
     if (game.novice)
