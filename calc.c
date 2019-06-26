@@ -165,6 +165,9 @@ char* readline(char* prompt)
 void exit_clean(int n)
 {
     gfx_End();
+    /* Clean up scratch RAM (heap/.bss) to prevent graphical ugliness. */
+    os_EnableHomeTextBuffer();
+    asm_ClrTxtShd();
     exit(n);
 }
 
@@ -228,11 +231,13 @@ static void do_game(char* save_name)
 #define MAX_SAVES 255
 #define SAVE_LIST_X 32
 #define SAVE_LIST_Y 15
+#define ARCHIVE_MARKER '\225'
 
 typedef struct
 {
     unsigned long time;
     char name[9];
+    bool archived;
 } save_file_t;
 
 static int save_compare(save_file_t* a, save_file_t* b)
@@ -246,13 +251,14 @@ static int save_compare(save_file_t* a, save_file_t* b)
 
 static void resume_game(void)
 {
-    uint8_t key, old_fgc, line_height, cursor_width;
+    uint8_t key, old_fgc, line_height, cursor_width, asterisk_width;
     unsigned char selection, total_saves, current_index, start_index, stop_index, saves_per_screen;
     bool redraw;
     char* var_name;
     uint8_t* search_pos;
     ti_var_t file;
     save_t* save;
+    save_file_t* current_item;
     save_file_t* save_list = calloc(MAX_SAVES, sizeof(save_file_t));
 resume_restart:
     redraw = true;
@@ -274,11 +280,12 @@ resume_restart:
             continue;
         }
         save = ti_GetDataPtr(file);
+        save_list[total_saves].archived = ti_IsArchived(file);
+        strncpy(&save_list[total_saves].name, var_name, 8);
+        save_list[total_saves].time = save->savetime;
         ti_Close(file);
         if (save->version != VRSION)
             continue;
-        strncpy(&save_list[total_saves].name, var_name, 8);
-        save_list[total_saves].time = save->savetime;
         total_saves++;
         /* I'm not sure how the heck the user made so many saves, but we're
          * cutting them off now! */
@@ -299,7 +306,8 @@ resume_restart:
     /* Sort saves by time, so the most recent save appears first */
     qsort(save_list, total_saves, sizeof(save_file_t), &save_compare);
     set_drsans(14, FONTLIB_BOLD, 0);
-    cursor_width = fontlib_GetGlyphWidth(CURSOR_GLYPH) + 2;
+    cursor_width = fontlib_GetGlyphWidth(CURSOR_GLYPH) + 1;
+    asterisk_width = fontlib_GetGlyphWidth(ARCHIVE_MARKER);
     line_height = fontlib_GetCurrentFontHeight();
     saves_per_screen = (LCD_HEIGHT - SAVE_LIST_Y) / line_height;
 
@@ -318,7 +326,12 @@ resume_restart:
                 stop_index = total_saves;
             for (current_index = start_index; current_index < stop_index; current_index++)
             {
-                fontlib_DrawString(save_list[current_index].name);
+                current_item = &save_list[current_index];
+                if (current_item->archived)
+                    fontlib_DrawGlyph(ARCHIVE_MARKER);
+                else
+                    fontlib_ShiftCursorPosition(asterisk_width, 0);
+                fontlib_DrawString(current_item->name);
                 fontlib_Newline();
             }
         }
@@ -332,23 +345,43 @@ resume_restart:
         fontlib_DrawGlyph(CURSOR_GLYPH);
         fontlib_SetForegroundColor(old_fgc);
 
+        current_item = &save_list[start_index + selection];
         switch (key)
         {
             case sk_Vars:
                 goto resume_restart;
+            case sk_Stat:
+                file = ti_Open(current_item->name, "r");
+                if (!file)
+                    /* Uuuh . . . what? */
+                    break;
+                if (ti_IsArchived(file))
+                    ti_SetArchiveStatus(false, file);
+                else
+                {
+                    gfx_End();
+                    os_ClrHome();
+                    os_PutStrFull("Archiving . . .");
+                    ti_SetArchiveStatus(true, file);
+                    gfx_Begin();
+                }
+                current_item->archived = ti_IsArchived(file);
+                ti_Close(file);
+                redraw = true;
+                break;
             case sk_Del:
                 redraw = true;
                 fontlib_SetWindowFullScreen();
                 gfx_FillScreen(background_color);
                 fontlib_SetCursorPosition(0, LCD_HEIGHT / 3 - 16);
                 print_centered("Do you want to delete this file?\n");
-                print_centered(save_list[start_index + selection].name);
+                print_centered(current_item->name);
                 fontlib_Newline();
                 print_centered("Press ENTER to DELETE this file.\n");
                 print_centered("Press any other key to cancel.");
                 if (wait_any_key() != sk_Enter)
                     break;
-                ti_Delete(save_list[start_index + selection].name);
+                ti_Delete(current_item->name);
                 goto resume_restart;
             case sk_Mode:
             case sk_Clear:
@@ -356,7 +389,7 @@ resume_restart:
             case sk_Enter:
             case sk_2nd:
                 save_file_name = malloc(8);
-                strncpy(save_file_name, save_list[start_index + selection].name, 8);
+                strncpy(save_file_name, current_item->name, 8);
                 free(save_list);
                 do_game(save_file_name);
             case sk_Up:

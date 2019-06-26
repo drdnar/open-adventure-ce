@@ -35,6 +35,7 @@ char* save_file_name;
 const char* file_name_prompt = "File name: ";
 const char* invalid_file_name = "\nInvalid file name.";
 const char* created_by_other_program = "\nThat file was not created by ADVENT; choose a different name.";
+const char* not_enough_mem = "\nNot enough free RAM to save!";
 #endif
 
 #define IGNORE(r) do{if (r){}}while(0)
@@ -54,11 +55,37 @@ int savefile(FILE *fp, int32_t version)
 }
 
 #ifdef CALCULATOR
+static bool enough_mem()
+{
+    char* ignored;
+    size_t free_mem;
+    free_mem = os_MemChk(&ignored);
+    /* _MemChk probably SHOULDN'T move anything around in this case, but we'll
+     * refresh the dungeon pointers just to be safe */
+    load_dungeon();
+    return free_mem >= sizeof(save_t) + 16;
+}
+
+static bool is_archived(char* name)
+{
+    bool archived;
+    ti_var_t file = 0;
+    if (!ti_Open(name, "r"))
+        return false;
+    archived = ti_IsArchived(file);
+    ti_Close(file);
+    return archived;
+}
+
 void save_apd()
 {
     FILE *fp;
+    bool archived;
     if (!save_file_name)
         return;
+    if (!enough_mem())
+        return;
+    archived = is_archived(save_file_name);
     fp = fopen(save_file_name, WRITE_MODE);
     if (fp == NULL)
         return;
@@ -66,14 +93,26 @@ void save_apd()
      * had to leave to do something else. */
     game.saved++;
     savefile(fp, VRSION);
+    if (archived)
+    {
+        gfx_End();
+        ti_SetArchiveStatus(true, fp->slot);
+    }
     fclose(fp);
 }
 
 int set_save_file_name(void)
 {
-    char* name = NULL;
     char* header;
+    char* name = NULL;
     ti_var_t dungeon_file = 0;
+
+    if (!enough_mem())
+    {
+        print(not_enough_mem);
+        return GO_TOP;
+    }
+
     while (true) {
         free(name);
         name = readline_len(file_name_prompt, 8, save_file_name);
@@ -116,12 +155,18 @@ int suspend(void)
     char* name;
     FILE *fp = NULL;
 #ifdef CALCULATOR
-    ti_var_t dungeon_file;
+    ti_var_t save_file;
+    bool was_archived = false;
 #endif
 #ifdef ADVENT_NOSAVE
     return GO_UNKNOWN;
 #endif
 #ifdef CALCULATOR
+    if (!enough_mem())
+    {
+        print(not_enough_mem);
+        return GO_TOP;
+    }
     strcpy(save.id_str, save_file_header);
 #endif
 
@@ -134,6 +179,7 @@ int suspend(void)
         name = readline("\nFile name: ");
 #else
         name = readline_len(file_name_prompt, 8, save_file_name);
+        was_archived = false;
 #endif
         if (name == NULL || strlen(name) == 0)
         {
@@ -143,14 +189,19 @@ int suspend(void)
 #ifdef CALCULATOR
         if (valid_name(name))
         {
-        dungeon_file = ti_Open(name, "r");
-        if (dungeon_file && strcmp(ti_GetDataPtr(dungeon_file), save_file_header))
+        save_file = ti_Open(name, "r");
+        if (save_file)
         {
-            print(created_by_other_program);
-            free(name);
-            continue;
+            if (strcmp(ti_GetDataPtr(save_file), save_file_header))
+            {
+                print(created_by_other_program);
+                free(name);
+                continue;
+            }
+            else
+                was_archived = ti_IsArchived(save_file);
         }
-        ti_Close(dungeon_file);
+        ti_Close(save_file);
 #endif
         fp = fopen(name, WRITE_MODE);
         if (fp == NULL)
@@ -170,6 +221,16 @@ int suspend(void)
     game.saved = game.saved + 5;
 
     savefile(fp, VRSION);
+#ifdef CALCULATOR
+    if (was_archived)
+    {
+        gfx_End();
+        os_ClrHome();
+        os_PutStrFull("Saving . . .");
+        ti_SetArchiveStatus(true, fp->slot);
+        gfx_Begin();
+    }
+#endif
     fclose(fp);
 #ifdef CALCULATOR
     /* Writing can potentially move the dungeon file, so refresh pointers to be

@@ -23,10 +23,11 @@ The following standard command shortcuts are available:
 
 * `i` for `inventory`
 * `g` for `get` or `take`
-* `l` for `look`
+* `l` for `look`; or alternatively, `x` for `examine` (does the same thing)
 * `u` and `d` for `up` and `down`, respectively
 * `n`, `e`, `w`, and `s` for `north`, `east`, `west`, and `south`, respectively
 * `ne`, `nw`, `se`, `sw` for northeast, northwest, southeast, and southwest. Note that because the text parser only looks at the first five letters of each word, those are, in fact, the *only* way to enter those directions!
+* `z` to do nothing for a turn (this may still cause other events to proceed)
 
 ===== Command History =====
 
@@ -37,12 +38,23 @@ DEL is backspace.
 
 ===== Saving and Resuming =====
 
-Currently, the Resume command on the main menu doesn't do anything.
-This will eventually be fixed.
+To save a game currently in progress, type `save`.
+You will be prompted for a file name to give the save.
+If you previously resumed the game, then it will default to using the same name.
+If the save file was archived, it will be rearchived for you.
 
-You can still save and resume games, however.
-To resume a saved game, start a new game, answer `no` (or `yes`) to whether you want instructions,
-and then type `resume` to resume a game.
+You can resume a game using the Resume option on the main menu.
+Simply use the cursor to select a save file, and then press ENTER to resume that game.
+You can delete a file directly from the Resume menu using the DEL key.
+Archived files on the Resume menu have a dot to the left of their name.
+You can archive a save file at the Resume screen using the STAT key.
+
+(Due to a bug in the FileIOC library (as of June 2019), unarchiving does not currently work.
+This will be fixed in the next release of the C libraries.
+Adventure already has the unarchive code.
+It will become functional as soon as FileIOC is updated.
+Saving over an archived file still functions correctly.)
+
 
 ==== Battery Saving ====
 

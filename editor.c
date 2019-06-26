@@ -651,12 +651,12 @@ char* get_string(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text
                     switch (key)
                     {
                         case sk_Up:
-                            if (get_history_item(++temp) == NULL)
-                                temp--;
+                            if (get_history_item(temp + 1) != NULL)
+                                temp++;
                             break;
                         case sk_Down:
-                            if (get_history_item(--temp) == NULL)
-                                temp++;
+                            if (get_history_item(temp - 1) != NULL)
+                                temp--;
                             break;
                         case sk_Enter:
                             editor_flush(context);
