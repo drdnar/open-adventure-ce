@@ -463,7 +463,7 @@ void main(void) {
             fontlib_SetColors(foreground_color, background_color);
             fontlib_SetTransparency(false);
             fontlib_SetNewlineOptions(FONTLIB_ENABLE_AUTO_WRAP);
-            
+
             set_times(16, 0);
             print_centered("The\n");
             set_times(23, 0);
@@ -471,8 +471,8 @@ void main(void) {
             print_centered("Adventure\n");
             set_times(13, 0);
             fontlib_ShiftCursorPosition(0, 2);
-            print_centered("v1.8.0");
-            
+            print_centered("v" VERSION_STRING " beta 27 June 2019");
+
             set_drsans(14, FONTLIB_NORMAL, 0);
             fontlib_SetCursorPosition(0, ABOUT_Y);
             /*fontlib_DrawString("(c) 1977, 2005 Will Crowther & Don Woods");*/
@@ -480,7 +480,7 @@ void main(void) {
             print_right("(c) 2017 Eric S. Raymond \n");
             fontlib_DrawString(" (c) 1977, 2005 Don Woods");
             print_right("(c) 2019 Dr. D'nar ");
-            
+
             set_drsans(14, FONTLIB_BOLD, 0);
             line_height = fontlib_GetCurrentFontHeight();
             cursor_width = fontlib_GetGlyphWidth(CURSOR_GLYPH) + 2;
@@ -491,18 +491,18 @@ void main(void) {
             fontlib_SetCursorPosition(MAIN_MENU_X, MAIN_MENU_Y + line_height + line_height);
             fontlib_DrawString("Exit");
         }
-        
+
         fontlib_SetCursorPosition(MAIN_MENU_X - cursor_width, MAIN_MENU_Y + line_height * selection);
         fontlib_DrawGlyph(CURSOR_GLYPH);
-        
+
         key = wait_any_key();
-        
+
         old_fgc = fontlib_GetForegroundColor();
         fontlib_SetForegroundColor(fontlib_GetBackgroundColor());
         fontlib_SetCursorPosition(MAIN_MENU_X - cursor_width, MAIN_MENU_Y + line_height * selection);
         fontlib_DrawGlyph(CURSOR_GLYPH);
         fontlib_SetForegroundColor(old_fgc);
-        
+
         switch (key)
         {
             case sk_Del:

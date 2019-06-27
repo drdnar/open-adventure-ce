@@ -1650,7 +1650,9 @@ locations: !!omap
 - LOC_NE:
     description:
       long: |-
-          You are at the northeast end of an immense room, even larger than the Giant Room.  It appears to be a repository for the "Adventure" program.  Massive torches far overhead bathe the room with smoky yellow light.  Scattered about you can be seen a pile of bottles (all of them empty), a nursery of young beanstalks murmuring quietly, a bed of oysters, a bundle of black rods with rusty stars on their ends, and a collection of brass lanterns.  Off to one side a great many dwarves are sleeping on the floor, snoring loudly.  A notice nearby reads: "Do not disturb the dwarves!"  An immense mirror is hanging against one wall, and stretches to the other end of the room, where various other sundry objects can be glimpsed dimly in the distance.
+          You are at the northeast end of an immense room, even larger than the Giant Room.  It appears to be a repository for the "Adventure" program.
+          \tMassive torches far overhead bathe the room with smoky yellow light.  Scattered about you can be seen a pile of bottles (all of them empty), a nursery of young beanstalks murmuring quietly, a bed of oysters, a bundle of black rods with rusty stars on their ends, and a collection of brass lanterns.
+          \tOff to one side a great many dwarves are sleeping on the floor, snoring loudly.  A notice nearby reads: "Do not disturb the dwarves!"  An immense mirror is hanging against one wall, and stretches to the other end of the room, where various other sundry objects can be glimpsed dimly in the distance.
       short: 'You''re at ne end.'
     conditions: {DEEP: true, LIT: true}
     sound: MURMURING_SNORING
@@ -1778,10 +1780,16 @@ locations: !!omap
       {verbs: [NORTH, VIEW], action: [goto, LOC_BREATHTAKING]},
       {verbs: [EAST, CRAWL], action: [goto, LOC_BOULDERS2]},
     ]
+# Reformatted
 - LOC_BREATHTAKING:
     description:
       long: |-
-          You are on the edge of a breath-\ztaking view.  Far below you is an active volcano, from which great gouts of molten lava come surging out, cascading back down into the depths.  The glowing rock fills the farthest reaches of the cavern with a blood-\zred glare, giving every-\zthing an eerie, macabre appearance.  The air is filled with flickering sparks of ash and a heavy smell of brimstone.  The walls are hot to the touch, and the thundering of the volcano drowns out all other sounds.  Embedded in the jagged roof far overhead are myriad twisted formations composed of pure white alabaster, which scatter the murky light into sinister apparitions upon the walls.  To one side is a deep gorge, filled with a bizarre chaos of tortured rock which seems to have been crafted by the devil himself.  An immense river of fire crashes out from the depths of the volcano, burns its way through the gorge, and plummets into a bottomless pit far off to your left.  To the right, an immense geyser of blistering steam erupts continuously from a barren island in the center of a sulfurous lake, which bubbles ominously.  The far right wall is aflame with an incandescence of its own, which lends an additional infernal splendor to the already hellish scene.  A dark, foreboding passage exits to the south.
+          You are on the edge of a breath-\ztaking view.
+          \tFar below you is an active volcano, from which great gouts of molten lava come surging out, cascading back down into the depths.  The glowing rock fills the farthest reaches of the cavern with a blood-\zred glare, giving every-\zthing an eerie, macabre appearance.
+          \tThe air is filled with flickering sparks of ash and a heavy smell of brimstone.  The walls are hot to the touch, and the thundering of the volcano drowns out all other sounds.  Embedded in the jagged roof far overhead are myriad twisted formations composed of pure white alabaster, which scatter the murky light into sinister apparitions upon the walls.
+          \tTo one side is a deep gorge, filled with a bizarre chaos of tortured rock which seems to have been crafted by the devil himself.  An immense river of fire crashes out from the depths of the volcano, burns its way through the gorge, and plummets into a bottomless pit far off to your left.
+          \tTo the right, an immense geyser of blistering steam erupts continuously from a barren island in the center of a sulfurous lake, which bubbles ominously.  The far right wall is aflame with an incandescence of its own, which lends an additional infernal splendor to the already hellish scene.
+          \tA dark, foreboding passage exits to the south.
       short: 'You''re at breath-\ztaking view.'
     conditions: {NOARRR: true, LIT: true, DEEP: true}
     hints: [*jade]
@@ -2463,9 +2471,10 @@ locations: !!omap
 
 arbitrary_messages:  !!omap
 - NO_MESSAGE: !!null
-# TODO: Formatting for this message
+# Reformatted
 - CAVE_NEARBY: |-
-      Somewhere nearby is Colossal Cave, where others have found fortunes in treasure and gold, though it is rumored that some who enter are never seen again.  Magic is said to work in the cave.  I will be your eyes and hands.  Direct me with commands of 1 or 2 words.  I should warn you that I look at only the first five letters of each word, so you'll have to enter "northeast" as "ne" to distinguish it from "north".  You can type "help" for some general hints.  For information on how to end your adventure, scoring, etc., type "info".
+      Somewhere nearby is Colossal Cave, where others have found fortunes in treasure and gold, though it is rumored that some who enter are never seen again.  Magic is said to work in the cave.
+      \tI will be your eyes and hands.  Direct me with commands of 1 or 2 words.  I should warn you that I look at only the first five letters of each word, so you'll have to enter "northeast" as "ne" to distinguish it from "north".  You can type "help" for some general hints.  For information on how to end your adventure, scoring, etc., type "info".
       \c- - -
       This program was originally developed by Willie Crowther.  Most of the features of the current program were added by Don Woods.\n
 - DWARF_BLOCK: 'A little dwarf with a big knife blocks your way.'
@@ -2481,7 +2490,6 @@ arbitrary_messages:  !!omap
 - NO_INOUT_HERE: |-
     I don't know in from out here.  Use compass points or name something in the general direction you want to go.
 - CANT_APPLY: 'I don''t know how to apply that word here.'
-# TODO: What's up with this &am_game thingy?
 - AM_GAME: &am_game 'I''m game.  Would you care to explain how?'
 - NO_MORE_DETAIL: |-
       Sorry, but I am not allowed to give more detail.  I will repeat the long description of your location.
@@ -2522,7 +2530,6 @@ arbitrary_messages:  !!omap
 - FOLLOW_STREAM: |-
       I don't know where the cave is, but hereabouts no stream can run on the surface for long.  I would try the stream.
 - NEED_DETAIL: 'I need more detailed instructions to do that.'
-# TODO
 - NEARBY: &nearby |-
       I can only tell you what you see as you move about and manipulate things.  I cannot tell you where remote things are.
 - OGRE_SNARL: 'The ogre snarls and shoves you back.'
@@ -2577,7 +2584,7 @@ arbitrary_messages:  !!omap
     Out from the shadows behind you pounces a bearded pirate!  "Har, har," he chortles, "I'll just take all this booty and hide it away with me chest deep in the maze!"  He snatches your treasure and vanishes into the gloom.
 - CAVE_CLOSING: |-
     A sepulchral voice reverberating through the cave, says, "Cave closing soon.  All adventurers exit immediately through main office."
-# TODO: There seems to be some formatting intended for this message
+# Reformatted
 - EXIT_CLOSED: |-
     A mysterious recorded voice groans into life and announces:
     \c"This exit is closed.  Please leave via main office."
@@ -2600,7 +2607,6 @@ arbitrary_messages:  !!omap
 - WITHOUT_SUSPENDS: 'Now let''s see you do it without suspending in mid-\zAdventure.'
 - FILL_INVALID: 'There is nothing here with which to fill it.'
 - SHATTER_VASE: 'The sudden change in temperature has delicately shattered the vase.'
-# TODO
 - BEYOND_POWER: &beyond_power 'It is beyond your power to do that.'
 - NOT_KNOWHOW: &not_knowhow 'I don''t know how.'
 - TOO_FAR: 'It is too far up for you to reach.'
@@ -2752,13 +2758,13 @@ arbitrary_messages:  !!omap
     Sorry, but the path twisted and turned so much that I can't figure out which way to go to get back.
 - GO_UNNEEDED: |-
     You don't have to say "go" every time; just specify a direction or, if it's nearby, name the place to which you wish to move.
-# TODO
+# TODO Reformatted
 # The serialized form of the Huffman tree is limited in how unbalanced the tree
 # can be, and I don't feel like reworking it, so there's a need for some garbage
 # to adjust code frequencies to balance the tree a bit.  Might as well put it
 # here.
 - NUMERIC_REQUIRED:
-    This command requires a numeric argument.\z\z\z\z\z\z\c\c
+    This command requires a numeric argument.\c\c
 
 classes: 
 - threshold: 0
@@ -2784,7 +2790,7 @@ classes:
 - threshold: 9999
 #    \cW\sO\sR\sL\sD   C\sH\sA\sM\sP\sI\sO\sN   A\sD\sV\sE\sN\sT\sU\sR\sE\sR\sS\s!
 #    \cWORLD  CHAMPION  ADVENTURERS!
-# TODO: Formatting for this message
+# Reformatted
   message: |-
     Adventuredom stands in awe -- you have now joined the ranks of the
     \cW\sO\sR\sL\sD   C\sH\sA\sM\sP\sI\sO\sN   A\sD\sV\sE\sN\sT\sU\sR\sE\sR\sS\s!
@@ -2933,7 +2939,7 @@ objects: !!omap
     locations: LOC_DARKROOM
     immovable: true
     descriptions:
-# TODO: Formatting for this message
+# Not reformatted
     - |-
       A massive stone tablet embedded in the wall reads:
       "Congratulations on bringing light into the dark-\zroom!"
@@ -3163,7 +3169,7 @@ objects: !!omap
     locations: LOC_NOWHERE
     immovable: true
     descriptions:
-# TODO: Formatting
+# Not reformatted
     - |-
         There is a message scrawled in the dust in a flowery script, reading:
         "This is not the maze where the pirate leaves his treasure chest."
@@ -3291,7 +3297,7 @@ objects: !!omap
     - ''
     - ''
     texts:
-# TODO: Formatting
+# Reformatted
     - |-
       \cCave under construction beyond this point.
       \cProceed at own risk.
@@ -3464,7 +3470,7 @@ objects: !!omap
 obituaries:
   - query: |-
         Oh dear, you seem to have gotten yourself killed.  I might be able to help you out, but I've never really done this before.  Do you want me to try to reincarnate you?
-# TODO: Formatting
+# Reformatted
     yes_response: |-
         All right.  But don't blame me if something goes wr......
         \c--- POOF!! ---
@@ -3622,7 +3628,13 @@ actions: !!omap
     noaction: true
 - HELP:
     message: |-
-      I know of places, actions, and things.  Most of my vocabulary describes places and is used to move you there.  To move, try words like forest, building, downstream, enter, east, west, north, south, up, or down.  I know about a few special objects, like a black rod hidden in the cave.  These objects can be manipulated using some of the action words that I know.  Usually you will need to give both the object and action words (in either order), but sometimes I can infer the object from the verb alone.  Some objects also imply verbs; in particular, "inventory" implies "take inventory", which causes me to give you a list of what you're carrying.  Some objects have unexpected effects; the effects are not always desirable!  Usually people having trouble moving just need to try a few more words.  Usually people trying unsuccessfully to manipulate an object are attempting something beyond their (or my!) capabilities and should try a completely different tack.  One point often confusing to beginners is that, when there are several ways to go in a certain direction (e.g., if there are several holes in a wall), choosing that direction in effect chooses one of the ways at random; often, though, by specifying the place you want to reach you can guarantee choosing the right path.  Also, to speed the game you can sometimes move long distances with a single word.  For example, "building" usually gets you to the building from anywhere above ground except when lost in the forest.  Also, note that cave passages and forest paths turn a lot, so leaving one place heading north doesn't guarantee entering the next from the south.  However (another important point), except when you've used a "long distance" word such as "building", there is always a way to go back where you just came from unless I warn you to the contrary, even though the direction that takes you back might not be the reverse of what got you here.  Good luck, and have fun!
+      I know of places, actions, and things.  Most of my vocabulary describes places and is used to move you there.  To move, try words like forest, building, downstream, enter, east, west, north, south, up, or down.
+      \tI know about a few special objects, like a black rod hidden in the cave.  These objects can be manipulated using some of the action words that I know.  Usually you will need to give both the object and action words (in either order), but sometimes I can infer the object from the verb alone.  Some objects also imply verbs; in particular, "inventory" implies "take inventory", which causes me to give you a list of what you're carrying.  Some objects have unexpected effects; the effects are not always desirable!
+      \tUsually people having trouble moving just need to try a few more words.  Usually people trying unsuccessfully to manipulate an object are attempting something beyond their (or my!) capabilities and should try a completely different tack.
+      \tOne point often confusing to beginners is that, when there are several ways to go in a certain direction (e.g., if there are several holes in a wall), choosing that direction in effect chooses one of the ways at random; often, though, by specifying the place you want to reach you can guarantee choosing the right path.
+      \tAlso, to speed the game you can sometimes move long distances with a single word.  For example, "building" usually gets you to the building from anywhere above ground except when lost in the forest.
+      \tAlso, note that cave passages and forest paths turn a lot, so leaving one place heading north doesn't guarantee entering the next from the south.  However (another important point), except when you've used a "long distance" word such as "building", there is always a way to go back where you just came from unless I warn you to the contrary, even though the direction that takes you back might not be the reverse of what got you here.
+      \tGood luck, and have fun!
     words: ['help', '?']
     noaction: true
 - NO:
@@ -3631,7 +3643,7 @@ actions: !!omap
     noaction: true
 - TREE:
     message: |-
-      The trees of the forest are large hardwood oak and maple, with an occasional grove of pine or spruce.  There is quite a bit of under- growth, largely birch and ash saplings plus nondescript bushes of various sorts.  This time of year visibility is quite restricted by all the leaves, but travel is quite easy if you detour around the spruce and berry bushes.
+      The trees of the forest are large hardwood oak and maple, with an occasional grove of pine or spruce.  There is quite a bit of under-\zgrowth, largely birch and ash saplings plus nondescript bushes of various sorts.  This time of year visibility is quite restricted by all the leaves, but travel is quite easy if you detour around the spruce and berry bushes.
     words: ['tree', 'trees']
     noaction: true
 - DIG:
@@ -3658,7 +3670,11 @@ actions: !!omap
     noaction: true
 - INFO:
     message: |-
-      For a summary of the most recent changes to the game, say "news".  If you want to end your adventure early, say "quit".  To suspend your adventure such that you can continue later, say "suspend" (or "pause" or "save").  To see how well you're doing, say "score".  To get full credit for a treasure, you must have left it safely in the building, though you get partial credit just for locating it.  You lose points for getting killed, or for quitting, though the former costs you more.  There are also points based on how much (if any) of the cave you've managed to explore; in particular, there is a large bonus just for getting in (to distinguish the beginners from the rest of the pack), and there are other ways to determine whether you've been through some of the more harrowing sections.  If you think you've found all the treasures, just keep exploring for a while.  If nothing interesting happens, you haven't found them all yet.  If something interesting *DOES* happen (incidentally, there *ARE* ways to hasten things along), it means you're getting a bonus and have an opportunity to garner many more points in the Master's section.  I may occasionally offer hints if you seem to be having trouble.  If I do, I'll warn you in advance how much it will affect your score to accept the hints.  Finally, to save time, you may specify "brief", which tells me never to repeat the full description of a place unless you explicitly ask me to.
+      For a summary of the most recent changes to the game, say "news".  If you want to end your adventure early, say "quit".  To suspend your adventure such that you can continue later, say "suspend" (or "pause" or "save").  To set the autosave file name, say "savename".  To see how well you're doing, say "score".
+      \tTo get full credit for a treasure, you must have left it safely in the building, though you get partial credit just for locating it.  You lose points for getting killed, or for quitting, though the former costs you more.  There are also points based on how much (if any) of the cave you've managed to explore; in particular, there is a large bonus just for getting in (to distinguish the beginners from the rest of the pack), and there are other ways to determine whether you've been through some of the more harrowing sections.
+      \tIf you think you've found all the treasures, just keep exploring for a while.  If nothing interesting happens, you haven't found them all yet.  If something interesting *DOES* happen (incidentally, there *ARE* ways to hasten things along), it means you're getting a bonus and have an opportunity to garner many more points in the Master's section.
+      \tI may occasionally offer hints if you seem to be having trouble.  If I do, I'll warn you in advance how much it will affect your score to accept the hints.
+      \tFinally, to save time, you may specify "brief", which tells me never to repeat the full description of a place unless you explicitly ask me to.
     words: ['info', 'infor']
     noaction: true
 - SWIM:
@@ -3678,20 +3694,17 @@ actions: !!omap
     words: ['file', 'filen', 'saven']
 - NEWS:
     message: |-
-      Open Adventure is an author-\zapproved open-\zsource release of Version 2.5 with, as yet, no gameplay changes.
-      Version 2.5 was essentially the same as Version II; the cave and the hazards therein are unchanged, and top score is still 430 points.
-      There are a few more hints, especially for some of the more obscure puzzles.  There are a few minor bugfixes and cosmetic changes.  You can now save a game and resume it at once (formerly you had to wait a while first), but it now costs you a few points each time you save the game.  Saved games are now stored in much smaller files than before.
+      Open Adventure is an author-\zapproved open-\zsource release of Colossal Cave Adventure Version 2.5 with, as yet, no gameplay changes.
+      \tVersion 2.5 was essentially the same as Version II; the cave and the hazards therein are unchanged, and top score is still 430 points.
+      \tOpen Adventure CE is a faithful port of Open Adventure to the TI-84 Plus CE.  Only changes related to operation on the calculator platform have been made.
     words: ['news']
     noaction: true
-# TODO: Formatting
+# Reformatted
 - ACT_VERSION:
     message: |-
       There is a puff of orange smoke; within it, fiery runes spell out:
-      \cOpen Adventure %V - http://www.catb.org/esr/open-adventure/
-      Adventuredom stands in awe -- you have now joined the ranks of the
-      \cW\sO\sR\sL\sD zzz  C\sH\sA\sM\sP\sI\sO\sN xxx  A\sD\sV\sE\sN\sT\sU\sR\sE\sR\sS\s!
-      It may interest you to know that the Dungeon-\zMaster himself has, to my knowledge, never achieved this threshold in fewer than 330 turns.
-
+      \cOpen Adventure - http://www.catb.org/esr/open-adventure/
+      \cOpen Adventure CE %V - https://github.com/drdnar/open-adventure-ce
     words: ['versi']
     noaction: true
 # end

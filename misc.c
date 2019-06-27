@@ -161,9 +161,8 @@ static void vspeak(const char* msg, bool blank, va_list ap)
                 strcpy(renderp, VERSION);
                 len = strlen(VERSION);
 #else
-#define ZILOGS_COMPILER_DOESNT_SUPPORT_PASSING_DIRECTLY(A_STRING_DEFINE_ON_COMMAND_LINE_AFAICT) #A_STRING_DEFINE_ON_COMMAND_LINE_AFAICT
-                strcpy(renderp, ZILOGS_COMPILER_DOESNT_SUPPORT_PASSING_DIRECTLY(VERSION));
-                len = strlen(ZILOGS_COMPILER_DOESNT_SUPPORT_PASSING_DIRECTLY(VERSION));
+                strcpy(renderp, VERSION_STRING);
+                len = strlen(VERSION_STRING);
 #endif
                 renderp += len;
                 size -= len;
@@ -178,7 +177,6 @@ static void vspeak(const char* msg, bool blank, va_list ap)
     printf("%s\n", rendered);
 #else
     print(rendered);
-    /*print_newline();*/
 #endif
 
     free(rendered);
@@ -250,7 +248,6 @@ void echo_input(FILE* destination, const char* input_prompt, const char* input)
 #else
     print_newline();
     print(prompt_and_input);
-/*    print_newline();*/
 #endif
     free(prompt_and_input);
 }
@@ -322,16 +319,14 @@ static char* get_input(void)
     if (!isatty(0))
         echo_input(stdout, input_prompt, input);
 #else
+    print_reset_pagination();
     echo_input(NULL, input_prompt, input);
+    print_reset_pagination();
 #endif
 
 #ifndef CALCULATOR
     if (settings.logfp)
         echo_input(settings.logfp, "", input);
-#endif
-
-#ifdef CALCULATOR
-    print_reset_pagination();
 #endif
 
     return (input);

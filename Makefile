@@ -22,7 +22,7 @@ GFXDIR              ?= gfx
 #----------------------------
 
 VERSION := 8.5
-VERS := 1.8
+VERS := 1.8.0
 V:=0
 
 #----------------------------
@@ -169,7 +169,7 @@ endif
 
 # define the C flags used by the Zilog compiler
 CFLAGS ?= \
-    -noasm $(CCDEBUGFLAG) -nogenprint -keepasm -quiet $(OPT_MODE) -cpu:EZ80F91 -noreduceopt -nolistinc -nomodsect -define:_EZ80F91 -define:_EZ80 -define:$(DEBUGMODE) -define:VERSION="$(VERS)" -define:CALCULATOR
+    -noasm $(CCDEBUGFLAG) -nogenprint -keepasm -quiet $(OPT_MODE) -cpu:EZ80F91 -noreduceopt -nolistinc -nomodsect -define:_EZ80F91 -define:_EZ80 -define:$(DEBUGMODE) -define:VERSION=$(VERS) -define:CALCULATOR
 
 # these are the linker flags, basically organized to properly set up the environment
 LDFLAGS ?= \
