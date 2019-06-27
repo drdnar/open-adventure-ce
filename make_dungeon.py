@@ -150,6 +150,9 @@ def add_compressed_string(string):
         return 0
     string = string.replace("\\n", "\n")
     string = string.replace("\\t", "\t")
+    string = string.replace("\\z", "\x06")
+    string = string.replace("\\c", "\x01")
+    string = string.replace("\\s", "\x7F")
     if compressed_string_list.count(string) > 0:
         duplicate_compressed_strings += 1
         duplicate_compressed_strings_chars += len(string)

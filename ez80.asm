@@ -37,7 +37,6 @@ _decompress_string:
 ;  - BC: Current bit/byte of input Huffman stream
 ;  - DE: Temporary
 ;  - HL: Pointer to Huffman table entry
-	xor	a
 	ld	de, 0
 	ld	b, 1
 .loop:	
@@ -64,10 +63,16 @@ _decompress_string:
 	jr	.innerLoop
 .deHuffmanDone:
 	; Write decompressed code to output buffer
-	res	7, e
-	ld	(ix), e
+	ld	a, e
+	and	7Fh
+	jr	z, .notNbsp
+	; TODO: This is a terrible hack to covert code 127 into a non-breaking space
+	cp	7Fh
+	jr	nz, .notNbsp
+	add	a, 160 - 7Fh	; needs to become 160 & reset Z
+.notNbsp:
+	ld	(ix), a
 	inc	ix
-	cp	e
 	jr	nz, .loop
 	lea	hl, ix + 0
 	pop	ix

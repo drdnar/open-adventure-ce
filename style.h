@@ -4,6 +4,9 @@
 #include <fileioc.h>
 #include <fontlibc.h>
 
+#define FORMAT_CENTERING '\1'
+#define ZERO_WIDTH_SPACE '\6'
+
 extern char* times_pack_name;
 extern char* drsans_pack_name;
 extern unsigned char foreground_color;

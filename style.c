@@ -172,7 +172,7 @@ char* print_word_wrap(const char* string, bool fake_print)
         /* If it's a control code, we either process a newline or give up. */
         if (c < first_printable)
         {
-            if (c == old_newline && old_newline != '\0')
+            /*if (c == old_newline && old_newline != '\0')
             {
                 string++;
                 if (fake_print)
@@ -180,6 +180,8 @@ char* print_word_wrap(const char* string, bool fake_print)
                 newline = true;
                 continue;
             }
+            else*/ if (c == ZERO_WIDTH_SPACE)
+                string++;
             else if (c == '\t')
             {
                 string++;
@@ -212,11 +214,12 @@ char* print_word_wrap(const char* string, bool fake_print)
                 /* If there isn't room, we need to eat the space; it would look
                  * weird to print a space at the start of the next line. 
                  * However, we do not eat ALL the spaces if there's more than
-                 * one, just the first. */
+                 * one, just the first one or two. */
+                if (*string == ' ') /* Take care of possible second space. */
+                    string++;
                 if (fake_print)
                     break;
-                else
-                    newline = true;
+                newline = true;
             }
         }
     } while (true);
@@ -315,18 +318,35 @@ void print_newline(void)
 
 void print(const char* string)
 {
-    bool more;
+    char next;
+    char* stop;
+    unsigned int len;
+    bool centering = false;
     do
     {
-        more = false;
+        if (centering)
+        {
+            stop = print_word_wrap(string, true);
+            len = stop - string;
+            len = fontlib_GetStringWidthL(string, len);
+            print_cursor_x += (fontlib_GetWindowWidth() - len) / 2;
+        }
         print_setup_internal();
         string = print_word_wrap(string, false);
         print_cleanup_internal();
-        if (*string != '\0')
+        next = *string;
+        if (next == '\0')
+            break;
+        else if (next == FORMAT_CENTERING)
         {
-            more = true;
+            string++;
+            centering = true;
+        }
+        else if (next == '\n')
+        {
+            string++;
+            centering = false;
             print_newline();
         }
-    } while (more);
-    print_cleanup_internal();
+    } while (true);
 }

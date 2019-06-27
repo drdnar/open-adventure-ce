@@ -471,7 +471,7 @@ void main(void) {
             print_centered("Adventure\n");
             set_times(13, 0);
             fontlib_ShiftCursorPosition(0, 2);
-            print_centered("v1.8 beta 24 June 2019");
+            print_centered("v1.8.0");
             
             set_drsans(14, FONTLIB_NORMAL, 0);
             fontlib_SetCursorPosition(0, ABOUT_Y);
