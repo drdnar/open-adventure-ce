@@ -1,4 +1,4 @@
-= Installing Open Adventure =
+= Compiling Open Adventure =
 
 The instructions below assume your system uses Python 3 by default,
 but the actual Python code in Open Adventure is 2/3-agnostic. Adjust
@@ -43,4 +43,5 @@ install it first. See https://pip.pypa.io/en/stable/installing/
 
 4. Optionally run a regression test on the code with `make check`.
 
-5. Run `./advent` to play.
+5. Send `bin/ADVENT.8xp` and `bin/ADVENT_data.8xv` to your calculator.
+To run the PC build, use `make pc` instead and run the result with `./advent`.
