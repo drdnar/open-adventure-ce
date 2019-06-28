@@ -336,7 +336,9 @@ int restore(FILE* fp)
         rspeak(VERSION_SKEW, save.version / 10, MOD(save.version, 10), VRSION / 10, MOD(VRSION, 10));
     } else if (is_valid(save.game)) {
         game = save.game;
+#ifdef CALCULATOR
         save_validated = true;
+#endif
     }
 #ifdef CALCULATOR
     else

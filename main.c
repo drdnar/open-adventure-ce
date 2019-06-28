@@ -58,9 +58,6 @@ void play()
 {
     int seedval;
     FILE *rfp = NULL;
-#ifdef CALCULATOR
-    bool resuming = false;
-#endif
 #ifndef CALCULATOR
     int ch;
 
@@ -130,8 +127,8 @@ void play()
 #ifdef CALCULATOR
         if (!save_validated)
             exit_main(1);
-        resuming = true;
 #endif
+        game.newloc = game.loc;
     }
 #else
     game.novice = yes(get_arbitrary_message_index(WELCOME_YOU), get_arbitrary_message_index(CAVE_NEARBY), get_arbitrary_message_index(NO_MESSAGE));
@@ -147,11 +144,6 @@ void play()
     /* interpret commands until EOF or interrupt */
     for (;;) {
         // if we're supposed to move, move
-#ifdef CALCULATOR
-        if (resuming)
-            resuming = false;
-        else
-#endif
         if (!do_move())
             continue;
 

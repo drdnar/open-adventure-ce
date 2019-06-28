@@ -25,7 +25,7 @@
 #endif
 
 typedef int16_t vocab_t;  // index into a vocabulary array */
-typedef int8_t verb_t;   // index into an actions array */
+typedef uint8_t verb_t;   // index into an actions array */
 typedef int16_t obj_t;    // index into the object array */
 typedef int16_t loc_t;    // index into the locations array */
 typedef int16_t turn_t;   // turn counter or threshold */
