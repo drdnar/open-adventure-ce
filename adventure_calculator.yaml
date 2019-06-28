@@ -2778,8 +2778,7 @@ arbitrary_messages:  !!omap
 - ABOUT_1: ' (c) 1977 Will Crowther'
 - ABOUT_2: '(c) 2017 Eric S. Raymond \n'
 - ABOUT_3: ' (c) 1977, 2005 Don Woods'
-- ABOUT_4: |-
-    (c) 2019 Dr. D'nar 
+- ABOUT_4: '(c) 2019 Dr. D''nar '
 - ITEM_NEW: 'New'
 - ITEM_RESUME: 'Resume'
 - ITEM_EXIT: 'Exit'

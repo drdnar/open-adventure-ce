@@ -24,7 +24,7 @@
 #define LCG_SHIFT 20
 #endif
 
-typedef int16_t vocab_t;  // index into a vocabulary array */
+typedef int vocab_t;  // index into a vocabulary array */
 typedef uint8_t verb_t;   // index into an actions array */
 typedef int16_t obj_t;    // index into the object array */
 typedef int16_t loc_t;    // index into the locations array */
@@ -188,15 +188,15 @@ struct game_t {
     char zzword[TOKLEN + 1];     // randomly generated magic word from bird
     int16_t abbrev[NLOCATIONS + 1];  // has location been seen?
     int16_t atloc[NLOCATIONS + 1];   // head of object linked list per location
-    int16_t dseen[NDWARVES + 1];     // true if dwarf has seen him
+    uint8_t dseen[NDWARVES + 1];     // true if dwarf has seen him
     loc_t dloc[NDWARVES + 1];    // location of dwarves, initially hard-wired in
     loc_t odloc[NDWARVES + 1];   // prior loc of each dwarf, initially garbage
     loc_t fixed[NOBJECTS + 1];   // fixed location of object (if  not IS_FREE)
     obj_t link[NOBJECTS * 2 + 1];// object-list links
     loc_t place[NOBJECTS + 1];   // location of object
-    int16_t hinted[NHINTS];          // hinted[i] = true iff hint i has been used.
-    int16_t  hintlc[NHINTS];          // hintlc[i] = how int at LOC with cond bit i
-    int16_t prop[NOBJECTS + 1];      // object state array */
+    uint8_t hinted[NHINTS];          // hinted[i] = true iff hint i has been used.
+    int8_t  hintlc[NHINTS];          // hintlc[i] = how int at LOC with cond bit i
+    int8_t prop[NOBJECTS + 1];      // object state array */
 };
 
 /*
