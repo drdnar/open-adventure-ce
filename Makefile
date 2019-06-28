@@ -1,7 +1,8 @@
 NAME ?= ADVENT
 COMPRESSED ?= NO
-ICON ?= none.png
-DESCRIPTION ?= "Colossal Cave Adventure 1.8"
+ICON ?= icon.png
+VERS := 1.8.0
+DESCRIPTION ?= "Colossal Cave Adventure $(VERS)"
 #----------------------------
 # Core C Makefile
 #----------------------------
@@ -22,7 +23,6 @@ GFXDIR              ?= gfx
 #----------------------------
 
 VERSION := 8.5
-VERS := 1.8.0
 V:=0
 
 #----------------------------
