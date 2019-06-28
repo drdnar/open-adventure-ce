@@ -43,6 +43,9 @@ int savefile(FILE *fp, int32_t version)
     save.savetime = time(NULL);
     save.mode = -1;
     save.version = (version == 0) ? VRSION : version;
+#ifdef CALCULATOR
+    strcpy(save.id_str, save_file_header);
+#endif
 
     save.game = game;
 
@@ -164,7 +167,6 @@ int suspend(void)
         print_compressed(NOT_ENOUGH_MEM);
         return GO_TOP;
     }
-    strcpy(save.id_str, save_file_header);
 #endif
 
     rspeak(SUSPEND_WARNING);
