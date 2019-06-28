@@ -169,8 +169,8 @@ struct game_t {
     int8_t dtotal;                  // total dwarves (including pirate) in loc
     int8_t foobar;                  // progress in saying "FEE FIE FOE FOO".
     int8_t holdng;                  // number of objects being carried
-    uint16_t igo;                     // # uses of "go" instead of a direction
-    uint16_t iwest;                   // # times he's said "west" instead of "w"
+    uint8_t igo;                     // # uses of "go" instead of a direction
+    uint8_t iwest;                   // # times he's said "west" instead of "w"
     int16_t knfloc;                  // knife location; 0 if none, -1 after caveat
     turn_t limit;                // lifetime of lamp
     loc_t loc;                   // where player is now
