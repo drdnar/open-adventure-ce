@@ -127,7 +127,7 @@ typedef struct {{
  */
 #define T_TERMINATE(entry)	((entry)->motion == 1)
 
-#define DATA_FILE_ID_STRING "Colossal Cave Adventure dungeon v2"
+#define DATA_FILE_ID_STRING "Colossal Cave Adventure dungeon v3"
 
 typedef struct {{
     /* "Colossal Cave Adventure dungeon" */

@@ -2,6 +2,7 @@
 #include <fontlibc.h>
 #include "calc.h"
 #include "style.h"
+#include "dungeon.h"
 
 unsigned char foreground_color = gfx_white;
 unsigned char background_color = gfx_black;
@@ -17,10 +18,9 @@ void font_missing(char* name)
 {
     gfx_SetTextFGColor(gfx_red);
     gfx_SetTextBGColor(gfx_black);
-    gfx_PrintStringXY("ERROR:", 1, 1);
-    gfx_PrintStringXY("Font pack \"", 1, 10);
-    gfx_PrintString(name);
-    gfx_PrintString("\" missing or corrupted");
+    gfx_PrintStringXY(get_arbitrary_message(BAD_ERROR), 1, 1);
+    gfx_PrintStringXY(name, 1, 10);
+    gfx_PrintString(get_arbitrary_message(MISSING_FONT));
         while (!os_GetCSC());
     exit_clean(1);
 }
@@ -45,14 +45,26 @@ fontlib_font_t* set_drsans(uint8_t size, uint8_t weight, fontlib_load_options_t 
     return set_font(drsans_pack_name, size, weight, 0, 0, options);
 }
 
-void print_centered(const char *string)
+void draw_compressed(int message)
+{
+    char* string = get_arbitrary_message(message);
+    fontlib_DrawString(string);
+}
+
+void print_centered(const char* string)
 {
     fontlib_SetCursorPosition(fontlib_GetWindowWidth() / 2 + fontlib_GetWindowXMin() - (fontlib_GetStringWidth(string) / 2), fontlib_GetCursorY());
     fontlib_DrawString(string);
 }
 
-void print_right(const char *string)
+void print_centered_compressed(int message)
 {
+    print_centered(get_arbitrary_message(message));
+}
+
+void print_right(int message)
+{
+    char* string = get_arbitrary_message(message);
     fontlib_SetCursorPosition(fontlib_GetWindowWidth() + fontlib_GetWindowXMin() - fontlib_GetStringWidth(string), fontlib_GetCursorY());
     fontlib_DrawString(string);
 }
@@ -234,7 +246,7 @@ void print_clear(void)
 static void print_paginate(void)
 {
     print_reset_pagination();
-    wait_any_key_msg("Press any key to see more. . . .");
+    wait_any_key_msg(paginate_message);
 }
 
 void print_newline(void)
@@ -244,6 +256,12 @@ void print_newline(void)
     print_setup_internal();
     fontlib_Newline();
     print_cleanup_internal();
+}
+
+void print_compressed(int message)
+{
+    char* string = get_arbitrary_message(message);
+    print(string);
 }
 
 void print(const char* string)

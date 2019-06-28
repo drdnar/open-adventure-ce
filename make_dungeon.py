@@ -825,7 +825,7 @@ def generate_dungeon():
     
     # Generate header
     data_file = [ ]
-    for ch in "Colossal Cave Adventure dungeon v2":
+    for ch in "Colossal Cave Adventure dungeon v3":
         data_file.append(ord(ch))
     data_file.append(0)
     huffman_table_location_location = len(data_file)

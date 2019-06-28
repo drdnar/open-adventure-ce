@@ -2765,6 +2765,37 @@ arbitrary_messages:  !!omap
 # here.
 - NUMERIC_REQUIRED:
     This command requires a numeric argument.\c\c
+- ANY_KEY_TO_RETURN: 'Press any key to return. . . .'
+- NO_SAVED_GAMES: 'You have no saved games.'
+- SELECT_FILE: 'Select a file to resume:'
+- ARCHIVING_FILE: 'Archiving . . .'
+- CONFIRM_DELETE: 'Do you want to delete this file?\n'
+- DELETE_LINE_1: 'Press ENTER to DELETE this file.\n'
+- DELETE_LINE_2: 'Press any other key to cancel.'
+- TITLE_LINE_1: 'The\n'
+- TITLE_LINE_2: 'Colossal Cave\n'
+- TITLE_LINE_3: 'Adventure\n'
+- ABOUT_1: ' (c) 1977 Will Crowther'
+- ABOUT_2: '(c) 2017 Eric S. Raymond \n'
+- ABOUT_3: ' (c) 1977, 2005 Don Woods'
+- ABOUT_4: |-
+    (c) 2019 Dr. D'nar 
+- ITEM_NEW: 'New'
+- ITEM_RESUME: 'Resume'
+- ITEM_EXIT: 'Exit'
+- FILE_NAME_PROMPT: 'File name: '
+- INVALID_FILE_NAME: '\nInvalid file name.'
+- CREATED_BY_OTHER_PROGRAM: '\nThat file was not created by Adventure; choose a different name.'
+- NOT_ENOUGH_MEM: '\nNot enough free RAM to save!'
+- FAILED_TO_OPEN: '\nFailed to open file.'
+- SAVING_FILE: 'Saving . . .'
+- FAILED_TO_OPEN_2: '\nFailed to open file.  (Wrong name?)'
+- CORRUPTED_SAVE: '\nSave file appears corrupted.'
+- FILE_USED_BY_OTHER_PROGRAM: '\nThat is not a valid save file.'
+- BAD_ERROR: 'ERROR:'
+- MISSING_FONT: ': missing or corrupted font pack'
+# This MUST NOT exceed 64 characters or you will cause memory corruption.
+- PAGINATE_MESSAGE: 'Press any key to see more. . . .'
 
 classes: 
 - threshold: 0

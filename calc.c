@@ -22,6 +22,7 @@
 command_word_t empty_command_word;
 const char* save_file_header = SAVE_FILE_HEADER;
 jmp_buf return_to_main;
+char paginate_message[65];
 #define CURSOR_GLYPH '\x0F'
 
 
@@ -298,8 +299,8 @@ resume_restart:
         gfx_FillScreen(background_color);
         free(save_list);
         fontlib_SetCursorPosition(0, LCD_HEIGHT / 3 - 7);
-        print_centered("You have no saved games.");
-        key = wait_any_key_msg("Press any key to return. . . .");
+        print_centered_compressed(NO_SAVED_GAMES);
+        key = wait_any_key_msg(get_arbitrary_message(ANY_KEY_TO_RETURN));
         return;
     }
 
@@ -320,7 +321,7 @@ resume_restart:
             fontlib_SetWindow(SAVE_LIST_X, SAVE_LIST_Y, LCD_WIDTH - SAVE_LIST_X, LCD_HEIGHT - SAVE_LIST_Y);
             gfx_FillScreen(background_color);
             fontlib_SetCursorPosition(1, 1);
-            fontlib_DrawString("Select a file to resume:");
+            draw_compressed(SELECT_FILE);
             fontlib_HomeUp();
             if (stop_index >= total_saves)
                 stop_index = total_saves;
@@ -359,7 +360,7 @@ resume_restart:
                 {
                     gfx_End();
                     os_ClrHome();
-                    os_PutStrFull("Archiving . . .");
+                    os_PutStrFull(get_arbitrary_message(ARCHIVING_FILE));
                     ti_SetArchiveStatus(true, file);
                     gfx_Begin();
                 }
@@ -372,11 +373,11 @@ resume_restart:
                 fontlib_SetWindowFullScreen();
                 gfx_FillScreen(background_color);
                 fontlib_SetCursorPosition(0, LCD_HEIGHT / 3 - 16);
-                print_centered("Do you want to delete this file?\n");
+                print_centered_compressed(CONFIRM_DELETE);
                 print_centered(current_item->name);
                 fontlib_Newline();
-                print_centered("Press ENTER to DELETE this file.\n");
-                print_centered("Press any other key to cancel.");
+                print_centered_compressed(DELETE_LINE_1);
+                print_centered_compressed(DELETE_LINE_2);
                 if (wait_any_key() != sk_Enter)
                     break;
                 ti_Delete(current_item->name);
@@ -433,6 +434,8 @@ void main(void) {
     uint8_t selection = 0;
     uint8_t key, old_fgc, line_height = 0, cursor_width = 0;
     bool redraw_main_menu;
+    load_dungeon();
+    decompress_string(dungeon + compressed_strings[get_arbitrary_message_index(PAGINATE_MESSAGE)], paginate_message);
     /* Initialize stuff */
     gfx_Begin();
     /*if (!setjmp(return_to_main))
@@ -463,31 +466,30 @@ void main(void) {
             fontlib_SetNewlineOptions(FONTLIB_ENABLE_AUTO_WRAP);
 
             set_times(16, 0);
-            print_centered("The\n");
+            print_centered_compressed(TITLE_LINE_1);
             set_times(23, 0);
-            print_centered("Colossal Cave\n");
-            print_centered("Adventure\n");
+            print_centered_compressed(TITLE_LINE_2);
+            print_centered_compressed(TITLE_LINE_3);
             set_times(13, 0);
             fontlib_ShiftCursorPosition(0, 2);
-            print_centered("v" VERSION_STRING " beta 27 June 2019");
+            print_centered("v" VERSION_STRING);
 
             set_drsans(14, FONTLIB_NORMAL, 0);
             fontlib_SetCursorPosition(0, ABOUT_Y);
-            /*fontlib_DrawString("(c) 1977, 2005 Will Crowther & Don Woods");*/
-            fontlib_DrawString(" (c) 1977 Will Crowther");
-            print_right("(c) 2017 Eric S. Raymond \n");
-            fontlib_DrawString(" (c) 1977, 2005 Don Woods");
-            print_right("(c) 2019 Dr. D'nar ");
+            draw_compressed(ABOUT_1);
+            print_right(ABOUT_2);
+            draw_compressed(ABOUT_3);
+            print_right(ABOUT_4);
 
             set_drsans(14, FONTLIB_BOLD, 0);
             line_height = fontlib_GetCurrentFontHeight();
             cursor_width = fontlib_GetGlyphWidth(CURSOR_GLYPH) + 2;
             fontlib_SetCursorPosition(MAIN_MENU_X, MAIN_MENU_Y);
-            fontlib_DrawString("New");
+            draw_compressed(ITEM_NEW);
             fontlib_SetCursorPosition(MAIN_MENU_X, MAIN_MENU_Y + line_height);
-            fontlib_DrawString("Resume");
+            draw_compressed(ITEM_RESUME);
             fontlib_SetCursorPosition(MAIN_MENU_X, MAIN_MENU_Y + line_height + line_height);
-            fontlib_DrawString("Exit");
+            draw_compressed(ITEM_EXIT);
         }
 
         fontlib_SetCursorPosition(MAIN_MENU_X - cursor_width, MAIN_MENU_Y + line_height * selection);

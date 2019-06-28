@@ -33,10 +33,6 @@ struct save_t save;
 #ifdef CALCULATOR
 bool save_validated;
 char* save_file_name;
-const char* file_name_prompt = "File name: ";
-const char* invalid_file_name = "\nInvalid file name.";
-const char* created_by_other_program = "\nThat file was not created by ADVENT; choose a different name.";
-const char* not_enough_mem = "\nNot enough free RAM to save!";
 #endif
 
 #define IGNORE(r) do{if (r){}}while(0)
@@ -110,13 +106,13 @@ int set_save_file_name(void)
 
     if (!enough_mem())
     {
-        print(not_enough_mem);
+        print_compressed(NOT_ENOUGH_MEM);
         return GO_TOP;
     }
 
     while (true) {
         free(name);
-        name = readline_len(file_name_prompt, 8, save_file_name);
+        name = readline_len(get_arbitrary_message(FILE_NAME_PROMPT), 8, save_file_name);
         if (name == NULL || strlen(name) == 0)
         {
             free(name);
@@ -124,7 +120,7 @@ int set_save_file_name(void)
         }
         if (!valid_name(name))
         {
-            print(invalid_file_name);
+            print_compressed(INVALID_FILE_NAME);
             continue;
         }
         dungeon_file = ti_Open(name, "r");
@@ -134,7 +130,7 @@ int set_save_file_name(void)
             ti_Close(dungeon_file);
             if (strcmp(header, save_file_header))
             {
-                print(created_by_other_program);
+                print_compressed(CREATED_BY_OTHER_PROGRAM);
                 continue;
             }
         }
@@ -165,7 +161,7 @@ int suspend(void)
 #ifdef CALCULATOR
     if (!enough_mem())
     {
-        print(not_enough_mem);
+        print_compressed(NOT_ENOUGH_MEM);
         return GO_TOP;
     }
     strcpy(save.id_str, save_file_header);
@@ -179,7 +175,7 @@ int suspend(void)
 #ifndef CALCULATOR
         name = readline("\nFile name: ");
 #else
-        name = readline_len(file_name_prompt, 8, save_file_name);
+        name = readline_len(get_arbitrary_message(FILE_NAME_PROMPT), 8, save_file_name);
         was_archived = false;
 #endif
         if (name == NULL || strlen(name) == 0)
@@ -195,7 +191,7 @@ int suspend(void)
         {
             if (strcmp(ti_GetDataPtr(save_file), save_file_header))
             {
-                print(created_by_other_program);
+                print_compressed(CREATED_BY_OTHER_PROGRAM);
                 free(name);
                 continue;
             }
@@ -209,12 +205,12 @@ int suspend(void)
 #ifndef CALCULATOR
             printf("Can't open file %s, try again.\n", name);
 #else
-            print("\nFailed to open file.");
+            print_compressed(FAILED_TO_OPEN);
 #endif
 #ifdef CALCULATOR
         }
         else
-            print(invalid_file_name);
+            print_compressed(INVALID_FILE_NAME);
 #endif
         free(name);
     }
@@ -227,7 +223,7 @@ int suspend(void)
     {
         gfx_End();
         os_ClrHome();
-        os_PutStrFull("Saving . . .");
+        os_PutStrFull(get_arbitrary_message(SAVING_FILE));
         ti_SetArchiveStatus(true, fp->slot);
         gfx_Begin();
     }
@@ -271,7 +267,7 @@ int resume()
 #ifndef CALCULATOR
         name = readline("\nFile name: ");
 #else
-        name = readline_len(file_name_prompt, 8, save_file_name);
+        name = readline_len(get_arbitrary_message(FILE_NAME_PROMPT), 8, save_file_name);
 #endif
         if (name == NULL || strlen(name) == 0)
         {
@@ -287,7 +283,7 @@ int resume()
 #ifndef CALCULATOR
             printf("Can't open file %s, try again.\n", name);
 #else
-            print("\nFailed to open file. (Wrong name?)");
+            print_compressed(FAILED_TO_OPEN_2);
 #endif
         else
             break;
@@ -329,7 +325,7 @@ int restore(FILE* fp)
 
 #ifdef CALCULATOR
     if (strcmp(save.id_str, save_file_header))
-        print("\nThat is not a valid save file.");
+        print_compressed(FILE_USED_BY_OTHER_PROGRAM);
     else
 #endif
     if (save.version != VRSION) {
@@ -342,7 +338,7 @@ int restore(FILE* fp)
     }
 #ifdef CALCULATOR
     else
-        print("\nSave file appears corrupted.");
+        print_compressed(CORRUPTED_SAVE);
 #endif
     return GO_TOP;
 }

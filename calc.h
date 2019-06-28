@@ -10,6 +10,7 @@ void* malloc_safe(int size);
 
 sk_key_t wait_any_key();
 sk_key_t wait_any_key_msg(char* msg);
+extern char paginate_message[];
 
 unsigned long time(unsigned char* ignored);
 
