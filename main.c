@@ -17,6 +17,7 @@
 #include "dungeon.h"
 #ifdef CALCULATOR
 #include "calc.h"
+#include "style.h"
 #endif
 
 #define DIM(a) (sizeof(a)/sizeof(a[0]))
@@ -52,11 +53,14 @@ static bool do_move(void);
 #ifndef CALCULATOR
 int main(int argc, char *argv[])
 #else
-void play(char* save_name)
+void play()
 #endif
 {
     int seedval;
     FILE *rfp = NULL;
+#ifdef CALCULATOR
+    bool resuming = false;
+#endif
 #ifndef CALCULATOR
     int ch;
 
@@ -116,13 +120,18 @@ void play(char* save_name)
 #ifndef CALCULATOR
     if (!rfp) {
 #else
-    if (!save_name || !(rfp = fopen(save_name, "r"))) {
+    if (!save_file_name || !(rfp = fopen(save_file_name, "r"))) {
 #endif
         game.novice = yes(get_arbitrary_message_index(WELCOME_YOU), get_arbitrary_message_index(CAVE_NEARBY), get_arbitrary_message_index(NO_MESSAGE));
         if (game.novice)
             game.limit = NOVICELIMIT;
     } else {
         restore(rfp);
+#ifdef CALCULATOR
+        if (!save_validated)
+            exit_main(1);
+        resuming = true;
+#endif
     }
 #else
     game.novice = yes(get_arbitrary_message_index(WELCOME_YOU), get_arbitrary_message_index(CAVE_NEARBY), get_arbitrary_message_index(NO_MESSAGE));
@@ -138,6 +147,11 @@ void play(char* save_name)
     /* interpret commands until EOF or interrupt */
     for (;;) {
         // if we're supposed to move, move
+#ifdef CALCULATOR
+        if (resuming)
+            resuming = false;
+        else
+#endif
         if (!do_move())
             continue;
 

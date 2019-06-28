@@ -31,6 +31,7 @@
 struct save_t save;
 
 #ifdef CALCULATOR
+bool save_validated;
 char* save_file_name;
 const char* file_name_prompt = "File name: ";
 const char* invalid_file_name = "\nInvalid file name.";
@@ -298,10 +299,14 @@ int resume()
 #endif
     restore_successful = restore(fp);
 #ifdef CALCULATOR
-    if (restore_successful)
+    if (save_validated)
     {
         free(save_file_name);
         save_file_name = name;
+    }
+    else
+    {
+        free(name);
     }
 #endif
     return restore_successful;
@@ -309,6 +314,9 @@ int resume()
 
 int restore(FILE* fp)
 {
+#ifdef CALCULATOR
+    save_validated = false;
+#endif
     /*  Read and restore game state from file, assuming
      *  sane initial state.
      *  If ADVENT_NOSAVE is defined, do nothing instead. */
@@ -328,7 +336,12 @@ int restore(FILE* fp)
         rspeak(VERSION_SKEW, save.version / 10, MOD(save.version, 10), VRSION / 10, MOD(VRSION, 10));
     } else if (is_valid(save.game)) {
         game = save.game;
+        save_validated = true;
     }
+#ifdef CALCULATOR
+    else
+        print("\nSave file appears corrupted.");
+#endif
     return GO_TOP;
 }
 

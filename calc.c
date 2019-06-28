@@ -217,14 +217,14 @@ void* malloc_safe(int size)
  * START & RESUME GAME
  ******************************************************************************/
 
-static void do_game(char* save_name)
+static void do_game()
 {
     print_configure(drsans_pack_name, 14, FONTLIB_BOLD, 0);
     gfx_FillScreen(background_color);
     print_reset_pagination();
     print_clear();
     init_history();
-    play(save_name);
+    play();
     free_history();
 }
 
@@ -348,8 +348,6 @@ resume_restart:
         current_item = &save_list[start_index + selection];
         switch (key)
         {
-            case sk_Vars:
-                goto resume_restart;
             case sk_Stat:
                 file = ti_Open(current_item->name, "r");
                 if (!file)
@@ -391,7 +389,7 @@ resume_restart:
                 save_file_name = malloc(8);
                 strncpy(save_file_name, current_item->name, 8);
                 free(save_list);
-                do_game(save_file_name);
+                do_game();
             case sk_Up:
                 if (selection == 0)
                 {
@@ -533,7 +531,7 @@ void main(void) {
                     case 0:
                         free(save_file_name);
                         save_file_name = NULL;
-                        do_game(NULL);
+                        do_game();
                         break;
                     case 1:
                         redraw_main_menu = true;

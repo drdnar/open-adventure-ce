@@ -229,9 +229,10 @@ extern struct game_t game;
 extern struct settings_t settings;
 #ifdef CALCULATOR
 extern char* save_file_name;
+extern bool save_validated;
 #endif
 
-extern void play(char* save_name);
+extern void play();
 extern void load_dungeon(void);
 extern bool get_command_input(command_t *);
 extern void clear_command(command_t *);
