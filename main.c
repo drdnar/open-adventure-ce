@@ -323,6 +323,7 @@ static bool dwarfmove(void)
 {
     int kk, stick, attack;
     int i, j;
+    const travelop_t* travelop;
     loc_t tk[21];
 
     /*  Dwarf stuff.  See earlier comments for description of
@@ -393,10 +394,10 @@ static bool dwarfmove(void)
         kk = get_tkey(game.dloc[i]);
         if (kk != 0)
             do {
-                enum desttype_t desttype = get_travelop(kk)->desttype;
-                game.newloc = get_travelop(kk)->destval;
+                travelop = get_travelop(kk++);
+                game.newloc = travelop->destval;
                 /* Have we avoided a dwarf encounter? */
-                if (desttype != dest_goto)
+                if (travelop->desttype != dest_goto)
                     continue;
                 else if (!indeep(game.newloc))
                     continue;
@@ -413,11 +414,11 @@ static bool dwarfmove(void)
                     continue;
                 else if (i == PIRATE && CNDBIT(game.newloc, COND_NOARRR))
                     continue;
-                else if (get_travelop(kk)->nodwarves)
+                else if (travelop->nodwarves)
                     continue;
                 tk[j++] = game.newloc;
             } while
-            (!get_travelop(kk++)->stop);
+            (!travelop->stop);
         tk[j] = game.odloc[i];
         if (j >= 2)
             --j;
@@ -562,10 +563,18 @@ static bool traveleq(int a, int b)
  *  safe.) */
 static void playermove(int motion)
 {
-    int condarg1, condarg2, te_tmp;
+    const travelop_t* travelop;
+#ifndef CALCULATOR
     enum condtype_t condtype;
     enum desttype_t desttype;
-    int scratchloc, travel_entry = get_tkey(game.loc);
+#else
+    uint8_t condtype, desttype;
+#endif
+    uint8_t condarg1, condarg2;
+    unsigned int te_tmp;
+    int scratchloc;
+    unsigned int travel_entry = get_tkey(game.loc);
+    
     game.newloc = game.loc;
     if (travel_entry == 0)
         BUG(LOCATION_HAS_NO_TRAVEL_ENTRIES); // LCOV_EXCL_LINE
@@ -591,14 +600,15 @@ static void playermove(int motion)
 
         te_tmp = 0;
         for (;;) {
-            enum desttype_t desttype = get_travelop(travel_entry)->desttype;
-            scratchloc = get_travelop(travel_entry)->destval;
+            travelop = get_travelop(travel_entry);
+            desttype = travelop->desttype;
+            scratchloc = travelop->destval;
             if (desttype != dest_goto || scratchloc != motion) {
                 if (desttype == dest_goto) {
                     if (FORCED(scratchloc) && get_travelop(get_tkey(scratchloc))->destval == motion)
                         te_tmp = travel_entry;
                 }
-                if (!get_travelop(travel_entry)->stop) {
+                if (!travelop->stop) {
                     ++travel_entry;	/* go to next travel entry for this location */
                     continue;
                 }
@@ -637,10 +647,11 @@ static void playermove(int motion)
     /* Look for a way to fulfil the motion verb passed in - travel_entry indexes
      * the beginning of the motion entries for here (game.loc). */
     for (;;) {
-        if (T_TERMINATE(get_travelop(travel_entry)) ||
-            get_travelop(travel_entry)->motion == motion)
+        travelop = get_travelop(travel_entry);
+        if (T_TERMINATE(travelop) ||
+            travelop->motion == motion)
             break;
-        if (get_travelop(travel_entry)->stop) {
+        if (travelop->stop) {
             /*  Couldn't find an entry matching the motion word passed
              *  in.  Various messages depending on word given. */
             switch (motion) {
@@ -686,9 +697,10 @@ static void playermove(int motion)
     do {
         for (;;) { /* L12 loop */
             for (;;) {
-                condtype = get_travelop(travel_entry)->condtype;
-                condarg1 = get_travelop(travel_entry)->condarg1;
-                condarg2 = get_travelop(travel_entry)->condarg2;
+                travelop = get_travelop(travel_entry);
+                condtype = travelop->condtype;
+                condarg1 = travelop->condarg1;
+                condarg2 = travelop->condarg2;
                 if (condtype < cond_not) {
                     /* YAML N and [pct N] conditionals */
                     if (condtype == cond_goto || condtype == cond_pct) {
@@ -718,8 +730,9 @@ static void playermove(int motion)
             }
 
             /* Found an eligible rule, now execute it */
-            desttype = get_travelop(travel_entry)->desttype;
-            game.newloc = get_travelop(travel_entry)->destval;
+            travelop = get_travelop(travel_entry);
+            desttype = travelop->desttype;
+            game.newloc = travelop->destval;
             if (desttype == dest_goto)
                 return;
 
