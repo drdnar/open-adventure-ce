@@ -89,9 +89,9 @@ void save_apd()
     fp = fopen(save_file_name, WRITE_MODE);
     if (fp == NULL)
         return;
-    /* Only deduct one point---they've either already waited a few minutes, or
+    /* Only deduct two points---they've either already waited a few minutes, or
      * had to leave to do something else. */
-    game.saved++;
+    game.saved += 2;
     savefile(fp, VRSION);
     if (archived)
     {
@@ -141,6 +141,7 @@ int set_save_file_name(void)
     }
     free(save_file_name);
     save_file_name = name;
+    rspeak(OK_MAN);
     return GO_TOP;
 }
 #endif
@@ -227,7 +228,7 @@ int suspend(void)
         os_ClrHome();
         os_PutStrFull(get_arbitrary_message(SAVING_FILE));
         ti_SetArchiveStatus(true, fp->slot);
-        gfx_Begin();
+        gfx_resume_render_splash();
     }
 #endif
     fclose(fp);

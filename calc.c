@@ -60,6 +60,34 @@ static void restore_splash(void)
     gfx_Blit(gfx_buffer);
 }
 
+void gfx_resume_render_splash(void)
+{
+    gfx_sprite_t* splash;
+    gfx_Begin();
+    gfx_SetPalette(splash_pal, sizeof_splash_pal, 0);
+    gfx_SetDraw(gfx_buffer);
+    splash = gfx_AllocSprite(splashl_width, splashl_height, &malloc_safe);
+    zx7_Decompress(splash, splashl_data);
+    gfx_Sprite_NoClip(splash, 0, 0);
+    free(splash);
+    splash = gfx_AllocSprite(splashr_width, splashr_height, &malloc_safe);
+    zx7_Decompress(splash, splashr_data);
+    gfx_Sprite_NoClip(splash, splashl_width, 0);
+    free(splash);
+    asm("; Quick and dirty vertical mirror routine");
+    asm("	ld	hl, 0D52C00h + (320 * 129)");
+    asm("	ld	de, 0D52C00h + (320 * 130)");
+    asm("	ld	a, 110");
+    asm("_main_mirror_loop:");
+    asm("	ld	bc, 320");
+    asm("	ldir");
+    asm("	ld	bc, -(320 * 2)");
+    asm("	add	hl, bc");
+    asm("	dec	a");
+    asm("	jr	nz, _main_mirror_loop");
+    gfx_SetDraw(gfx_screen);
+}
+
 
 /*******************************************************************************
  * Key routines
@@ -368,7 +396,7 @@ resume_restart:
                     os_ClrHome();
                     os_PutStrFull(get_arbitrary_message(ARCHIVING_FILE));
                     ti_SetArchiveStatus(true, file);
-                    gfx_Begin();
+                    gfx_resume_render_splash();
                 }
                 current_item->archived = ti_IsArchived(file);
                 ti_Close(file);
@@ -436,7 +464,6 @@ resume_restart:
 #define ABOUT_Y 210
 
 void main(void) {
-    gfx_sprite_t* splash;
     uint8_t selection = 0;
     uint8_t key, line_height = 0, cursor_width = 0;
     bool redraw_main_menu;
@@ -445,32 +472,7 @@ void main(void) {
     ti_CloseAll();
     load_dungeon();
     decompress_string(dungeon + compressed_strings[get_arbitrary_message_index(PAGINATE_MESSAGE)], paginate_message);
-    /* Initialize splash graphic */
-    gfx_SetPalette(splash_pal, sizeof_splash_pal, 0);
-    splash = gfx_AllocSprite(splashl_width, splashl_height, &malloc_safe);
-    zx7_Decompress(splash, splashl_data);
-    gfx_Sprite_NoClip(splash, 0, 0);
-    free(splash);
-    splash = gfx_AllocSprite(splashr_width, splashr_height, &malloc_safe);
-    zx7_Decompress(splash, splashr_data);
-    gfx_Sprite_NoClip(splash, splashl_width, 0);
-    free(splash);
-    asm("; Quick and dirty vertical mirror routine");
-    asm("	ld	hl, 0D40000h + (320 * 129)");
-    asm("	ld	de, 0D40000h + (320 * 130)");
-    asm("	ld	a, 110");
-    asm("_main_mirror_loop:");
-    asm("	ld	bc, 320");
-    asm("	ldir");
-    asm("	ld	bc, -(320 * 2)");
-    asm("	add	hl, bc");
-    asm("	dec	a");
-    asm("	jr	nz, _main_mirror_loop");
-    asm("; Quick and dirty copy to other half of VRAM to cache decompressed image");
-    asm("	ld	hl, 0D40000h");
-    asm("	ld	de, 0D40000h + (320 * 240)");
-    asm("	ld	bc, 320 * 240");
-    asm("	ldir");
+    gfx_resume_render_splash();
     /*if (!setjmp(return_to_main))
         We currently have nothing that cares why we're returning here. */
     setjmp(return_to_main);
