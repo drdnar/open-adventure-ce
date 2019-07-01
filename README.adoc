@@ -50,7 +50,7 @@ You **must** type "quit" or "save" to exit.  (Alternatively, press ON, then CLEA
 The standard LoadLib libraries GRAPHX, FILEIOC, and FONTLIBC are required,
 available at https://github.com/CE-Programming/libraries .
 
-You also need the Times and Dr. Sans font packs, also included. Two versions of the Times font pack are included. The Times.8xv font pack contains several font sizes unused by Adventure, so I've also included a Times_mini.8xv file, which only contains the font sizes used by Adventure; it saves about 30 K.
+You need the Times and Dr. Sans font packs, also included. Two versions of the Times font pack are included. The Times.8xv font pack contains several font sizes unused by Adventure, so I've also included a Times_mini.8xv file, which only contains the font sizes used by Adventure; it saves about 30 K.
 
 Send both ADVENT.8xp and ADVENT_data.8xv to your calculator. The program `ADVENT` is the game itself, while the appvar `AdvenDat` is the game's dungeon data file. While changes to `AdvenDat` should be rare, different versions of the file are not compatible. If the game complains that the dungeon file is missing, make sure you have the right version of `AdvenDat`.
 
