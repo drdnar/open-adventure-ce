@@ -1,3 +1,10 @@
+/*
+ * String input and command history buffer routines.
+ *
+ * Copyright (c) 2019 Dr. D'nar
+ * SPDX-License-Identifier: BSD-2-clause
+ */
+
 #include <tice.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -25,6 +32,10 @@
 char** history = NULL;
 unsigned char history_next = 0;
 
+/**
+ * Initializes the command history buffer.
+ * Does nothing if a history buffer already exists.
+ */
 void init_history(void)
 {
     int i;
@@ -36,6 +47,9 @@ void init_history(void)
     history_next = 0;
 }
 
+/**
+ * Frees the command history buffer.  All history is deleted.
+ */
 void free_history(void)
 {
     int i;
@@ -48,10 +62,17 @@ void free_history(void)
     history = NULL;
 }
 
+/**
+ * Adds the given string to the command history.
+ * If the last string added is identical to the one passed, then it is not added
+ * again.
+ */
 void add_history(char* string)
 {
     char* item;
     if (!history)
+        return;
+    if (!strcmp(get_history_item(1), string))
         return;
     free(history[history_next]);
     item = malloc_safe(strlen(string) + 1);
@@ -61,6 +82,12 @@ void add_history(char* string)
     history_next++;
 }
 
+/**
+ * Gets an item from the history buffer.
+ * @param n How far back to go.  1 means the most recent item.
+ * 0 will either return NULL or the LAST item depending on whether the history
+ * buffer has filled up.
+ */
 char* get_history_item(unsigned char n)
 {
     /* This saves six bytes . . . eh, why not? */
@@ -190,11 +217,17 @@ void editor_left(editor_context_t* context)
     context->cursor_x -= fontlib_GetGlyphWidth(context->str[--context->cursor_index]);
 }
 
+/**
+ * Moves the cursor back to the start of the edit buffer.
+ */
 void editor_home(editor_context_t* context)
 {
     editor_cursor_set(context, 0);
 }
 
+/**
+ * Moves the cursor to the end of the edit buffer.
+ */
 void editor_end(editor_context_t* context)
 {
     editor_cursor_set(context, context->current_length);
@@ -541,6 +574,20 @@ char cursors[] = {'\4', '\6', '\7'};
 #define timer_1_value_b (*(volatile unsigned char*)0xF20002)
 #define timer_1_match_1     (*(unsigned char*)0xF2000A)
 #define timer_1_match_2     (*(unsigned char*)0xF2000E)
+/**
+ * A string input routine.  Gives the user access to their command history.
+ * @note Despite its size, this routine still can't handle multiline text, nor
+ * text wider than the text window; there is no scrolling logic.
+ * @param x_loc Location of the editor
+ * @param y_loc Location of the editor
+ * @param box_width Width of the editor window; height is implied by font choice
+ * @param text_max_length Maximum number of characters to accept
+ * @param editor_font Font to use in the editor
+ * @param default_text Places some text into the editor before letting the user
+ * start typing.
+ * @return A pointer to the text the user entered.  You must free() this string
+ * yourself.
+ */
 char* get_string(uint24_t x_loc, uint8_t y_loc, uint24_t box_width, uint8_t text_max_length, fontlib_font_t* editor_font, char* default_text)
 {
     editor_context_t* context;

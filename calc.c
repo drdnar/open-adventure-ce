@@ -1,3 +1,10 @@
+/*
+ * Main wrapper code for the game, plus some miscellaneous routines.
+ *
+ * Copyright (c) 2019 Dr. D'nar
+ * SPDX-License-Identifier: BSD-2-clause
+ */
+
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -27,7 +34,13 @@ jmp_buf return_to_main;
 char paginate_message[65];
 #define CURSOR_GLYPH '\x0F'
 
+/*******************************************************************************
+ * Miscellaneous Routines
+ ******************************************************************************/
 
+/**
+ * Checks whether the given string is a valid name for an appvar.
+ */
 bool valid_name(char* filename)
 {
     unsigned int i;
@@ -55,37 +68,13 @@ bool valid_name(char* filename)
     return true;
 }
 
+/**
+ * Internal routine to copy the splash screen back from the second screen
+ * buffer.
+ */
 static void restore_splash(void)
 {
     gfx_Blit(gfx_buffer);
-}
-
-void gfx_resume_render_splash(void)
-{
-    gfx_sprite_t* splash;
-    gfx_Begin();
-    gfx_SetPalette(splash_pal, sizeof_splash_pal, 0);
-    gfx_SetDraw(gfx_buffer);
-    splash = gfx_AllocSprite(splashl_width, splashl_height, &malloc_safe);
-    zx7_Decompress(splash, splashl_data);
-    gfx_Sprite_NoClip(splash, 0, 0);
-    free(splash);
-    splash = gfx_AllocSprite(splashr_width, splashr_height, &malloc_safe);
-    zx7_Decompress(splash, splashr_data);
-    gfx_Sprite_NoClip(splash, splashl_width, 0);
-    free(splash);
-    asm("; Quick and dirty vertical mirror routine");
-    asm("	ld	hl, 0D52C00h + (320 * 129)");
-    asm("	ld	de, 0D52C00h + (320 * 130)");
-    asm("	ld	a, 110");
-    asm("_main_mirror_loop:");
-    asm("	ld	bc, 320");
-    asm("	ldir");
-    asm("	ld	bc, -(320 * 2)");
-    asm("	add	hl, bc");
-    asm("	dec	a");
-    asm("	jr	nz, _main_mirror_loop");
-    gfx_SetDraw(gfx_screen);
 }
 
 
@@ -93,7 +82,12 @@ void gfx_resume_render_splash(void)
  * Key routines
  ******************************************************************************/
 
- sk_key_t wait_any_key()
+/**
+ * Waits for the user to press any key (except ON).
+ * @note This runs an APD timer and may terminate the program.
+ * @return The key code of the key pressed.
+ */
+sk_key_t wait_any_key()
 {
     sk_key_t key;
     unsigned int timer = get_rtc_seconds_plus(APD_DIM_TIME);
@@ -119,6 +113,12 @@ void gfx_resume_render_splash(void)
     return key;
 }
 
+/**
+ * Waits for the user to press any key (except ON).
+ * @param msg Text to display at the bottom of the screen.
+ * @note This runs an APD timer and may terminate the program.
+ * @return The key code of the key pressed.
+ */
 sk_key_t wait_any_key_msg(char* msg)
 {
     fontlib_SetCursorPosition(0, LCD_HEIGHT - fontlib_GetCurrentFontHeight());
@@ -173,6 +173,13 @@ unsigned short days_from_time(void* time)
  * readline replacement
  ******************************************************************************/
 
+/**
+ * Wraps get_string().  Returns a string.
+ * @note You must free the return string yourself.
+ * @param prompt Text prompt to display at the bottom of the screen
+ * @param max_len Maximum number of characters to accept
+ * @param default_text If not NULL, copy this string into the the edit buffer
+ */
 char* readline_len(char* prompt, unsigned char max_len, char* default_text)
 {
     fontlib_font_t* font;
@@ -187,6 +194,12 @@ char* readline_len(char* prompt, unsigned char max_len, char* default_text)
     return get_string(x, y, LCD_WIDTH - x, max_len, font, default_text);
 }
 
+/**
+ * Wraps get_string().  Returns a string.
+ * @note You must free the return string yourself.
+ * @note The maximum string length accepted will be 24 (25 including '\0')
+ * @param prompt Text prompt to display at the bottom of the screen
+ */
 char* readline(char* prompt)
 {
     return readline_len(prompt, 24, NULL);
@@ -198,7 +211,7 @@ char* readline(char* prompt)
  ******************************************************************************/
 
 /**
- * Exit and handle proper clean-up
+ * Exit and handle proper clean-up.
  */
 void exit_clean(int n)
 {
@@ -209,12 +222,19 @@ void exit_clean(int n)
     exit(n);
 }
 
+/**
+ * Exit due to APD; will attempt to save any game in-progress.
+ */
 void exit_apd()
 {
     save_apd();
     exit_clean(0);
 }
 
+/**
+ * Returns control to the main menu.
+ * @param n This is ignored.
+ */
 void exit_main(int n)
 {
     wait_any_key_msg("Press any key to continue. . . .");
@@ -252,9 +272,13 @@ void* malloc_safe(size_t size)
 
 
 /*******************************************************************************
- * START & RESUME GAME
+ * Start and Resume Code
  ******************************************************************************/
 
+/**
+ * Internal routine to set up for playing the game and then actually hands
+ * control to the game.
+ */
 static void do_game()
 {
     print_configure(drsans_pack_name, 14, FONTLIB_BOLD, 0);
@@ -279,6 +303,9 @@ typedef struct
     bool archived;
 } save_file_t;
 
+/**
+ * Internal routine used for sorting game saves.
+ */
 static int save_compare(save_file_t* a, save_file_t* b)
 {
     if (a->time == b->time)
@@ -288,6 +315,9 @@ static int save_compare(save_file_t* a, save_file_t* b)
     return 1;
 }
 
+/**
+ * Internal routine that implements the Resume menu.
+ */
 static void resume_game(void)
 {
     uint8_t key, old_fgc, line_height, cursor_width, asterisk_width;
@@ -298,7 +328,7 @@ static void resume_game(void)
     ti_var_t file;
     save_t* save;
     save_file_t* current_item;
-    save_file_t* save_list = calloc(MAX_SAVES, sizeof(save_file_t));
+    save_file_t* save_list = malloc_safe(MAX_SAVES * sizeof(save_file_t));
 resume_restart:
     redraw = true;
     selection = 0;
@@ -454,8 +484,8 @@ resume_restart:
     while (true);
 }
  
- /*******************************************************************************
- * MAIN
+/*******************************************************************************
+ * Main
  ******************************************************************************/
 
 #define MAIN_MENU_X 70
@@ -463,6 +493,9 @@ resume_restart:
 #define MAIN_MENU_FONT_SIZE 16
 #define ABOUT_Y 210
 
+/**
+ * Initializes the game and contains the main menu.
+ */
 void main(void) {
     uint8_t selection = 0;
     uint8_t key, line_height = 0, cursor_width = 0;

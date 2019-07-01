@@ -19,8 +19,6 @@ char* readline(char* prompt);
 
 bool valid_name(const char* filename);
 
-void gfx_resume_render_splash(void);
-
 #define APD_DIM_TIME 90
 #define APD_QUIT_TIME 210
 

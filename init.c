@@ -25,7 +25,8 @@
 #endif
 
 #ifndef CALCULATOR
-void load_failure(char* message)
+/* Displays an error about why loading the dungeon failed and termintes. */
+static void load_failure(char* message)
 {
     fprintf(stderr, "%s\n", message);
     exit(EXIT_FAILURE);    
@@ -34,6 +35,7 @@ void load_failure(char* message)
 FILE* dungeon_file;
 
 static uint8_t get_byte()
+/* Reads an 8-bit word from the dungeon file. */
 {
     uint8_t ret;
     if (fread(&ret, 1, 1, dungeon_file) != 1)
@@ -42,6 +44,7 @@ static uint8_t get_byte()
 }
 
 static uint16_t get_word()
+/* Reads a 16-bit word from the dungeon file. */
 {
     uint16_t ret;
     ret = get_byte() | (get_byte() << 8);
@@ -49,6 +52,7 @@ static uint16_t get_word()
 }
 
 void load_dungeon(void)
+/* Loads the dungeon file into memory. */
 {
     char id_str[sizeof(DATA_FILE_ID_STRING)];
     long huffman_tree_location, compressed_strings_location, uncompressed_strings_location,
@@ -259,6 +263,10 @@ void load_dungeon(void)
     }
 }
 #else
+/**
+ * Populates pointers to all dungeon data, or terminates with error message if
+ * dungeon file cannot be found.
+ */
 void load_dungeon(void)
 {
     char id_str[sizeof(DATA_FILE_ID_STRING)];

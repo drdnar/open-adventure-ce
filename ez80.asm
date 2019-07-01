@@ -1,4 +1,8 @@
-;include 'ti84pceg.inc'
+;
+; Native eZ80 assembly routines
+;
+; Copyright (c) 2019 Dr. D'nar
+; SPDX-License-Identifier: BSD-2-clause
 
 	.assume adl=1
 	.def _decompress_string
@@ -81,26 +85,38 @@ _decompress_string:
 
 ;-------------------------------------------------------------------------------
 _lcd_dim:
+; Calls the OS's LCD idle dimming routines.
 	ld	iy, flags
 	jp	_DimLCDSlow
 
 
 _lcd_bright:
+; Restores the LCD brightness to the user's preference.
 	ld	iy, flags
 	jp	_RestoreLCDBrightness
 
 
 ;-------------------------------------------------------------------------------
 _get_rtc_seconds:
+; Returns the number of seconds elapsed since the start of the hour.
+; Used by APD routines.
+	ld	hl, rtc_Seconds
+	ld	a, (hl)
 	ld	de, (rtc_Minutes)
+	ld	hl, (hl)
+	cp	l
+	jr	nz, _get_rtc_seconds
 	ld	d, 60
 	mlt	de
-	ld	hl, (rtc_Seconds)
 	add	hl, de
 	ret
 
 
 _get_rtc_seconds_plus:
+; Returns the number of seconds elapsed since the start of the hour, plus an
+; offset.  If the resulting time passes the end of the hour, wraps the time
+; around.
+; Used by APD routines.
 	call	_get_rtc_seconds
 	pop	bc
 	pop	de
@@ -134,6 +150,9 @@ _get_csc:
 
 
 _on_key_pressed:
+; Returns 1 if the ON key has been pressed since the last time the
+; ON-key-pressed flag was checked.
+; Returns 0 if the ON key has not been pressed.
 	ld	hl, flags + 9
 	and	10h
 	ret	z
@@ -142,6 +161,7 @@ _on_key_pressed:
 
 
 _clear_on_key:
+; Resets the ON-key-pressed flag.
 	ld	hl, flags + 9	; iy + onFlags
 	res	4, (hl)		; onInterrupt
 	ret

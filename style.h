@@ -13,6 +13,7 @@ extern unsigned char foreground_color;
 extern unsigned char background_color;
 extern unsigned char print_lines_printed;
 
+void gfx_resume_render_splash(void);
 void font_missing(char* name);
 fontlib_font_t* set_font(char* name, uint8_t size, uint8_t weight, uint8_t style_set, uint8_t style_reset, fontlib_load_options_t options);
 fontlib_font_t* set_times(uint8_t size, fontlib_load_options_t options);

@@ -1,3 +1,10 @@
+/*
+ * Console replacement routines and miscellaneous graphics routines.
+ *
+ * Copyright (c) 2019 Dr. D'nar
+ * SPDX-License-Identifier: BSD-2-clause
+ */
+
 #include <graphx.h>
 #include <fontlibc.h>
 #include "calc.h"
@@ -7,6 +14,41 @@
 unsigned char foreground_color = gfx_white;
 unsigned char background_color = gfx_black;
 
+
+/**
+ * Switching to the homescreen erases the cached copy of the decompressed splash
+ * graphic; call this routine to switch back to GraphX mode and decompress the
+ * splash graphic again.
+ */
+void gfx_resume_render_splash(void)
+{
+    gfx_sprite_t* splash;
+    gfx_Begin();
+    gfx_SetPalette(splash_pal, sizeof_splash_pal, 0);
+    gfx_SetDraw(gfx_buffer);
+    splash = gfx_AllocSprite(splashl_width, splashl_height, &malloc_safe);
+    zx7_Decompress(splash, splashl_data);
+    gfx_Sprite_NoClip(splash, 0, 0);
+    free(splash);
+    splash = gfx_AllocSprite(splashr_width, splashr_height, &malloc_safe);
+    zx7_Decompress(splash, splashr_data);
+    gfx_Sprite_NoClip(splash, splashl_width, 0);
+    free(splash);
+    asm("; Quick and dirty vertical mirror routine");
+    asm("	ld	hl, 0D52C00h + (320 * 129)");
+    asm("	ld	de, 0D52C00h + (320 * 130)");
+    asm("	ld	a, 110");
+    asm("_main_mirror_loop:");
+    asm("	ld	bc, 320");
+    asm("	ldir");
+    asm("	ld	bc, -(320 * 2)");
+    asm("	add	hl, bc");
+    asm("	dec	a");
+    asm("	jr	nz, _main_mirror_loop");
+    gfx_SetDraw(gfx_screen);
+}
+
+
 /*******************************************************************************
  * Font Stuff
  ******************************************************************************/
@@ -14,6 +56,9 @@ unsigned char background_color = gfx_black;
 char* times_pack_name = "Times";
 char* drsans_pack_name = "DrSans";
 
+/**
+ * Display an error about a missing font file and terminate.
+ */
 void font_missing(char* name)
 {
     gfx_SetTextFGColor(gfx_red);
@@ -25,6 +70,11 @@ void font_missing(char* name)
     exit_clean(1);
 }
 
+/**
+ * Select a font with given properties.
+ * Display an error and terminate if the font cannot be located.
+ * @param weight If 0, choose any weight; otherwise, accept ONLY the given weight
+ */
 fontlib_font_t* set_font(char* name, uint8_t size, uint8_t weight, uint8_t style_set, uint8_t style_reset, fontlib_load_options_t options)
 {
     fontlib_font_t* font;
@@ -32,36 +82,64 @@ fontlib_font_t* set_font(char* name, uint8_t size, uint8_t weight, uint8_t style
     if (font && fontlib_SetFont(font, options))
         return font;
     font_missing(name);
+    /* Make ZDS shutup about no return value. */
     return NULL;
 }
 
+/**
+ * Select the Times font.
+ */
 fontlib_font_t* set_times(uint8_t size, fontlib_load_options_t options)
 {
     return set_font(times_pack_name, size, 0, 0, 0, options);
 }
 
+/**
+ * Select the Dr. Sans font.
+ */
 fontlib_font_t* set_drsans(uint8_t size, uint8_t weight, fontlib_load_options_t options)
 {
     return set_font(drsans_pack_name, size, weight, 0, 0, options);
 }
 
+
+/*******************************************************************************
+ * Some Text Drawing Routines
+ ******************************************************************************/
+
+/**
+ * Does fontlib_DrawString, but using the given arbitrary message reference.
+ * Not part of the console replacement routines.
+ */
 void draw_compressed(int message)
 {
     char* string = get_arbitrary_message(message);
     fontlib_DrawString(string);
 }
 
+/**
+ * Prints a string, centering it in the current text window.
+ * Not part of the console replacement routines.
+ */
 void print_centered(const char* string)
 {
     fontlib_SetCursorPosition(fontlib_GetWindowWidth() / 2 + fontlib_GetWindowXMin() - (fontlib_GetStringWidth(string) / 2), fontlib_GetCursorY());
     fontlib_DrawString(string);
 }
 
+/**
+ * Prints a comprssed string centered.
+ * Not part of the console replacement routines.
+ */
 void print_centered_compressed(int message)
 {
     print_centered(get_arbitrary_message(message));
 }
 
+/**
+ * Prints a compressed string right-aligned.
+ * Not part of the console replacement routines.
+ */
 void print_right(int message)
 {
     char* string = get_arbitrary_message(message);
@@ -69,11 +147,10 @@ void print_right(int message)
     fontlib_DrawString(string);
 }
 
-void fontlib_reverse_colors(void)
-{
-    fontlib_SetColors(fontlib_GetBackgroundColor(), fontlib_GetForegroundColor());
-}
 
+/*******************************************************************************
+ * Console Replacement
+ ******************************************************************************/
 unsigned char print_lines_printed;
 char* print_font_pack_name;
 unsigned char print_size, print_weight, print_lines;
@@ -82,6 +159,9 @@ unsigned char print_window_height;
 unsigned int print_cursor_x;
 unsigned char print_cursor_y;
 
+/**
+ * Resets the count of lines printed for pagination purposes.
+ */
 void print_reset_pagination(void)
 {
     print_lines_printed = 0;
@@ -92,8 +172,7 @@ void print_reset_pagination(void)
  * This prints one line at a time; call it in a loop.
  * @param string Text to print
  * @param fake_print Set to true to perform the exact same layout logic, but
- * without actually printing anything, and also return at the first newline.
- * This allows finding word wrap points.
+ * without actually printing anything.  This allows finding word wrap points.
  * @note fake_print DOES care what the current cursor X position is---it uses
  * that to figure out how to deal with words too big to fit into the text
  * window.  Such words will get force-printed starting on their own line.
@@ -204,6 +283,10 @@ char* print_word_wrap(const char* string, bool fake_print)
     return string;
 }
 
+/**
+ * Configures the console replacement.
+ * This is hard-coded to accept input at the bottom of the screen.
+ */
 void print_configure(char* name, uint8_t size, uint8_t weight, fontlib_load_options_t options)
 {
     uint8_t fheight;
@@ -219,6 +302,10 @@ void print_configure(char* name, uint8_t size, uint8_t weight, fontlib_load_opti
     print_window_height = fheight * print_lines;
 }
 
+/**
+ * Internal routine called before printing to the console replacement.
+ * Configures the text window, cursor, and font.
+ */
 static void print_setup_internal(void)
 {
     fontlib_SetWindow(0, 0, LCD_WIDTH, print_window_height);
@@ -227,12 +314,19 @@ static void print_setup_internal(void)
     fontlib_SetNewlineOptions(FONTLIB_AUTO_CLEAR_TO_EOL | FONTLIB_AUTO_SCROLL | FONTLIB_ENABLE_AUTO_WRAP);
 }
 
+/**
+ * Internal routine called after printing to the console replacement.
+ * Saves cursor position.
+ */
 static void print_cleanup_internal(void)
 {
     print_cursor_x = fontlib_GetCursorX();
     print_cursor_y = fontlib_GetCursorY();
 }
 
+/**
+ * Clears the console-replacement window of all text.
+ */
 void print_clear(void)
 {
     print_setup_internal();
@@ -243,27 +337,35 @@ void print_clear(void)
     print_cleanup_internal();
 }
 
-static void print_paginate(void)
-{
-    print_reset_pagination();
-    wait_any_key_msg(paginate_message);
-}
-
+/**
+ * Prints a newline in the console replacement.
+ * Pauses if the console is full.
+ */
 void print_newline(void)
 {
     if (++print_lines_printed >= print_lines)
-        print_paginate();
+    {
+        print_reset_pagination();
+        wait_any_key_msg(paginate_message);
+    }
     print_setup_internal();
     fontlib_Newline();
     print_cleanup_internal();
 }
 
+/**
+ * Prints an arbitrary message to the console replacement.
+ */
 void print_compressed(int message)
 {
     char* string = get_arbitrary_message(message);
     print(string);
 }
 
+/**
+ * Prints the given string to the console replacement.
+ * Control codes are processed.
+ */
 void print(const char* string)
 {
     unsigned char next;
