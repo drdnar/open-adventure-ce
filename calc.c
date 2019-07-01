@@ -17,7 +17,6 @@
 #include <graphx.h>
 #include <fileioc.h>
 #include <fontlibc.h>
-#include <compression.h>
 
 #include "dungeon.h"
 #include "calc.h"
@@ -25,7 +24,6 @@
 #include "style.h"
 #include "advent.h"
 #include "ez80.h"
-#include "splash.h"
 
 /* Random place to put globals */
 command_word_t empty_command_word;

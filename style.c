@@ -6,10 +6,13 @@
  */
 
 #include <graphx.h>
+#include <compression.h>
 #include <fontlibc.h>
+
+#include "dungeon.h"
 #include "calc.h"
 #include "style.h"
-#include "dungeon.h"
+#include "splash.h"
 
 unsigned char foreground_color = gfx_white;
 unsigned char background_color = gfx_black;
