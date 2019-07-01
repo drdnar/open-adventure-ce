@@ -10,10 +10,11 @@
 # Copyright (c) 2017 by Eric S. Raymond
 # SPDX-License-Identifier: BSD-2-clause
 
-import sys, yaml
+import sys, yaml, re
 
 from collections import defaultdict
- 
+
+DUNGEON_HEADER = "Colossal Cave Adventure dungeon v4" 
 YAML_NAME = "adventure_calculator.yaml"
 H_NAME = "dungeon.h"
 C_NAME = "dungeon.c"
@@ -27,6 +28,17 @@ statedefines = ""
 
 condtype_t = {0: 0, "cond_goto": 0, "cond_pct": 1, "cond_carry": 2, "cond_with": 3, "cond_not": 4 }
 desttype_t = {0: 0, "dest_goto": 0, "dest_special": 1, "dest_speak": 2 }
+
+re_hex = re.compile('0x([0-9A-Fa-f][0-9A-Fa-f])')
+
+def get_c_array(filename):
+    """Really quick-and-dirty routine to parse the C array."""
+    lines = open(filename, "r").readlines()
+    bytes = [ ]
+    for line in lines:
+        for item in re_hex.findall(line):
+            bytes.append(int(item, 16))
+    return bytes
 
 huffman_nodes = [ ]
 huffman_codes = { }
@@ -825,7 +837,7 @@ def generate_dungeon():
     
     # Generate header
     data_file = [ ]
-    for ch in "Colossal Cave Adventure dungeon v3":
+    for ch in DUNGEON_HEADER:
         data_file.append(ord(ch))
     data_file.append(0)
     huffman_table_location_location = len(data_file)
@@ -871,6 +883,12 @@ def generate_dungeon():
     data_file.append(0)
     data_file.append(0)
     travel_location_location = len(data_file)
+    data_file.append(0)
+    data_file.append(0)
+    splashl_location_location = len(data_file)
+    data_file.append(0)
+    data_file.append(0)
+    splashr_location_location = len(data_file)
     data_file.append(0)
     data_file.append(0)
     
@@ -1092,6 +1110,14 @@ def generate_dungeon():
         # stop
         data_file.append(1 if item[9] == "true" else 0)
     
+    # Splash image
+    splashl_location = len(data_file)
+    write_offset(data_file, splashl_location_location, splashl_location)
+    data_file.extend(splashl)
+    splashr_location = len(data_file)
+    write_offset(data_file, splashr_location_location, splashr_location)
+    data_file.extend(splashr)
+    
     print('Data file size: {}'.format(len(data_file)))
     
     # 0-origin index of birds's last song.  Bird should
@@ -1138,7 +1164,7 @@ def generate_dungeon():
         com_dup_omit = duplicate_compressed_strings,
         com_dup_chars = duplicate_compressed_strings_chars))
     print('Huffman table codes: {}'.format(len(symbol_frequencies)))
-    print('{uncom_str_count} uncompressed strings with {uncom_str_chars}'.format(
+    print('{uncom_str_count} uncompressed strings with {uncom_str_chars} characters'.format(
         uncom_str_count = len(uncompressed_string_list),
         uncom_str_chars = total_uncompressed_strings_chars))
     print('{uncom_dup_omit} duplicates omitted saving {uncom_dup_chars} characters'.format(
@@ -1146,6 +1172,12 @@ def generate_dungeon():
         uncom_dup_chars = duplicate_uncompressed_strings_chars))
 
 if __name__ == "__main__":
+    print('Fetching splashl.c. . . .')
+    splashl = get_c_array('splashl.c')
+    print('Fetching splashr.c. . . .')
+    splashr = get_c_array('splashr.c')
+    print('Total size of splash: {}'.format(len(splashl) + len(splashr)))
+    print()
     print('Processing adventure.yaml. . . .')
     YAML_NAME = "adventure.yaml"
     H_NAME = "dungeon.h"

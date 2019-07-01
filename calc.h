@@ -6,7 +6,7 @@ void exit_clean(int n);
 void exit_apd(void);
 void exit_main(int n);
 void exit_fail(char* message);
-void* malloc_safe(int size);
+void* malloc_safe(size_t size);
 
 sk_key_t wait_any_key();
 sk_key_t wait_any_key_msg(char* msg);

@@ -57,6 +57,11 @@ uint16_t* tkey;
 
 travelop_t* travel;
 
+#ifdef CALCULATOR
+uint8_t* splashl_data;
+uint8_t* splashr_data;
+#endif
+
 const char *ignore = "{ignore}";
 
 unsigned int conditions[] = {{

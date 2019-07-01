@@ -106,7 +106,6 @@ FASMG_FILES = $(subst $(space),$(comma) ,$(patsubst %,"%",$(subst ",\",$(subst \
 #SRCDIR := $(call NATIVEPATH,$(SRCDIR))
 OBJDIR := $(call NATIVEPATH,$(OBJDIR))
 BINDIR := $(call NATIVEPATH,$(BINDIR))
-GFXDIR := $(call NATIVEPATH,$(GFXDIR))
 
 # generate default names
 TARGETBIN     := $(TARGET).bin
@@ -124,9 +123,9 @@ rwildcard = $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2)$(filter $(subst
 
 # find all of the available C, H and ASM files (Remember, you can create C <-> assembly routines easily this way)
 # TODO: Rework some of this, since we're using a different file organization
-CSOURCES      := calc.c editor.c style.c actions1.c actions2.c actions3.c actions4.c actions5.c dungeon.c init.c main.c misc.c saveresume.c score.c
+CSOURCES      := calc.c editor.c style.c actions1.c actions2.c actions3.c actions4.c actions5.c dungeon.c init.c main.c misc.c saveresume.c score.c splash.c
 #CPPSOURCES    := $(call rwildcard,$(SRCDIR),*.cpp)
-USERHEADERS   := editor.h advent.h actions.h calc.h ez80.h dungeon.h style.h
+USERHEADERS   := editor.h advent.h actions.h calc.h ez80.h dungeon.h style.h splash.h
 ASMSOURCES    := ez80.asm
 
 # create links for later
@@ -223,7 +222,7 @@ check:
 pc:
 	make -f makefile.pc
 
-dungeon_calculator.bin dungeon.bin dungeon.c dungeon.h tests/dungeon.bin: make_dungeon.py templates/dungeon.c.tpl templates/dungeon.h.tpl adventure_calculator.yaml adventure.yaml
+dungeon_calculator.bin dungeon.bin dungeon.c dungeon.h tests/dungeon.bin: make_dungeon.py templates/dungeon.c.tpl templates/dungeon.h.tpl adventure_calculator.yaml adventure.yaml splashl.c splashr.c
 	./make_dungeon.py
 	$(CP) dungeon.bin tests/dungeon.bin
 
@@ -239,10 +238,10 @@ clean:
 	make -f makefile.pc clean
 	@echo Cleaned build files.
 
-gfx:
-	$(Q)$(CD) $(GFXDIR) && convpng
+gfx splash splashl.c splashr.c splash.c splash.h: splashl.png splashr.png convpng.ini
+	$(Q)convpng
 
 version:
 	@echo C SDK Version $(VERSION)
 
-.PHONY: all clean version gfx dirs debug check pc dungeon
+.PHONY: all clean version gfx dirs debug check pc dungeon splash

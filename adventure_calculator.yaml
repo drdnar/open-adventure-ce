@@ -1538,7 +1538,10 @@ locations: !!omap
 - LOC_ANTEROOM:
     description:
       long: |-
-          You are in an anteroom leading to a large passage to the east.  Small passages go west and up.  The remnants of recent digging are evident. A sign in midair here says "Cave under construction beyond this point.  Proceed at own risk.  [Witt Construction Company]"
+          You are in an anteroom leading to a large passage to the east.  Small passages go west and up.  The remnants of recent digging are evident. A sign in midair here says
+          \cCave under construction beyond this point.
+          \cProceed at own risk.
+          \c[Witt Construction Company]
       short: 'You''re in anteroom.'
     conditions: {DEEP: true}
     travel: [
@@ -2764,7 +2767,7 @@ arbitrary_messages:  !!omap
 # to adjust code frequencies to balance the tree a bit.  Might as well put it
 # here.
 - NUMERIC_REQUIRED:
-    This command requires a numeric argument.\c\c
+    This command requires a numeric argument.
 - ANY_KEY_TO_RETURN: 'Press any key to return. . . .'
 - NO_SAVED_GAMES: 'You have no saved games.'
 - SELECT_FILE: 'Select a file to resume:'

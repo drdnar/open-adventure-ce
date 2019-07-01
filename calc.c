@@ -10,6 +10,7 @@
 #include <graphx.h>
 #include <fileioc.h>
 #include <fontlibc.h>
+#include <compression.h>
 
 #include "dungeon.h"
 #include "calc.h"
@@ -17,6 +18,7 @@
 #include "style.h"
 #include "advent.h"
 #include "ez80.h"
+#include "splash.h"
 
 /* Random place to put globals */
 command_word_t empty_command_word;
@@ -52,6 +54,12 @@ bool valid_name(char* filename)
     }
     return true;
 }
+
+static void restore_splash(void)
+{
+    gfx_Blit(gfx_buffer);
+}
+
 
 /*******************************************************************************
  * Key routines
@@ -89,6 +97,7 @@ sk_key_t wait_any_key_msg(char* msg)
     fontlib_DrawString(msg);
     return wait_any_key();
 }
+
 
 /*******************************************************************************
  * time.h replacement
@@ -205,7 +214,7 @@ void exit_fail(char* message)
  * malloc(), but checks for NULL.
  * If NULL, exits with an error message instead of crashing.
  */
-void* malloc_safe(int size)
+void* malloc_safe(size_t size)
 {
     char* memory = malloc(size);
     if (!memory)
@@ -222,6 +231,7 @@ static void do_game()
 {
     print_configure(drsans_pack_name, 14, FONTLIB_BOLD, 0);
     gfx_FillScreen(background_color);
+    fontlib_SetTransparency(false);
     print_reset_pagination();
     print_clear();
     init_history();
@@ -296,7 +306,7 @@ resume_restart:
 
     if (total_saves == 0)
     {
-        gfx_FillScreen(background_color);
+        restore_splash();
         free(save_list);
         fontlib_SetCursorPosition(0, LCD_HEIGHT / 3 - 7);
         print_centered_compressed(NO_SAVED_GAMES);
@@ -319,7 +329,7 @@ resume_restart:
             redraw = false;
             stop_index = start_index + saves_per_screen;
             fontlib_SetWindow(SAVE_LIST_X, SAVE_LIST_Y, LCD_WIDTH - SAVE_LIST_X, LCD_HEIGHT - SAVE_LIST_Y);
-            gfx_FillScreen(background_color);
+            restore_splash();
             fontlib_SetCursorPosition(1, 1);
             draw_compressed(SELECT_FILE);
             fontlib_HomeUp();
@@ -340,11 +350,7 @@ resume_restart:
         fontlib_SetCursorPosition(SAVE_LIST_X - cursor_width, SAVE_LIST_Y + line_height * selection);
         fontlib_DrawGlyph(CURSOR_GLYPH);
         key = wait_any_key();
-        old_fgc = fontlib_GetForegroundColor();
-        fontlib_SetForegroundColor(fontlib_GetBackgroundColor());
-        fontlib_SetCursorPosition(SAVE_LIST_X - cursor_width, SAVE_LIST_Y + line_height * selection);
-        fontlib_DrawGlyph(CURSOR_GLYPH);
-        fontlib_SetForegroundColor(old_fgc);
+        gfx_BlitRectangle(gfx_buffer, SAVE_LIST_X - cursor_width, SAVE_LIST_Y + line_height * selection, cursor_width, line_height);
 
         current_item = &save_list[start_index + selection];
         switch (key)
@@ -429,22 +435,48 @@ resume_restart:
 #define MAIN_MENU_FONT_SIZE 16
 #define ABOUT_Y 210
 
-/* Main Function */
 void main(void) {
+    gfx_sprite_t* splash;
     uint8_t selection = 0;
-    uint8_t key, old_fgc, line_height = 0, cursor_width = 0;
+    uint8_t key, line_height = 0, cursor_width = 0;
     bool redraw_main_menu;
-    load_dungeon();
-    decompress_string(dungeon + compressed_strings[get_arbitrary_message_index(PAGINATE_MESSAGE)], paginate_message);
     /* Initialize stuff */
     gfx_Begin();
+    ti_CloseAll();
+    load_dungeon();
+    decompress_string(dungeon + compressed_strings[get_arbitrary_message_index(PAGINATE_MESSAGE)], paginate_message);
+    /* Initialize splash graphic */
+    gfx_SetPalette(splash_pal, sizeof_splash_pal, 0);
+    splash = gfx_AllocSprite(splashl_width, splashl_height, &malloc_safe);
+    zx7_Decompress(splash, splashl_data);
+    gfx_Sprite_NoClip(splash, 0, 0);
+    free(splash);
+    splash = gfx_AllocSprite(splashr_width, splashr_height, &malloc_safe);
+    zx7_Decompress(splash, splashr_data);
+    gfx_Sprite_NoClip(splash, splashl_width, 0);
+    free(splash);
+    asm("; Quick and dirty vertical mirror routine");
+    asm("	ld	hl, 0D40000h + (320 * 129)");
+    asm("	ld	de, 0D40000h + (320 * 130)");
+    asm("	ld	a, 110");
+    asm("_main_mirror_loop:");
+    asm("	ld	bc, 320");
+    asm("	ldir");
+    asm("	ld	bc, -(320 * 2)");
+    asm("	add	hl, bc");
+    asm("	dec	a");
+    asm("	jr	nz, _main_mirror_loop");
+    asm("; Quick and dirty copy to other half of VRAM to cache decompressed image");
+    asm("	ld	hl, 0D40000h");
+    asm("	ld	de, 0D40000h + (320 * 240)");
+    asm("	ld	bc, 320 * 240");
+    asm("	ldir");
     /*if (!setjmp(return_to_main))
         We currently have nothing that cares why we're returning here. */
     setjmp(return_to_main);
     redraw_main_menu = true;
     /* Make sure RTC is running */
     rtc_Control = RTC_ENABLE;
-    ti_CloseAll();
     /* Need to initialize some globals */
     settings.logfp = NULL;
     settings.oldstyle = false;
@@ -457,12 +489,13 @@ void main(void) {
         if (redraw_main_menu)
         {
             redraw_main_menu = false;
-            gfx_FillScreen(background_color);
+            restore_splash();
+            
+            fontlib_SetTransparency(true);
             fontlib_SetFirstPrintableCodePoint(12);
             fontlib_SetWindowFullScreen();
             fontlib_SetCursorPosition(0, 50);
             fontlib_SetColors(foreground_color, background_color);
-            fontlib_SetTransparency(false);
             fontlib_SetNewlineOptions(FONTLIB_ENABLE_AUTO_WRAP);
 
             set_times(16, 0);
@@ -494,14 +527,8 @@ void main(void) {
 
         fontlib_SetCursorPosition(MAIN_MENU_X - cursor_width, MAIN_MENU_Y + line_height * selection);
         fontlib_DrawGlyph(CURSOR_GLYPH);
-
         key = wait_any_key();
-
-        old_fgc = fontlib_GetForegroundColor();
-        fontlib_SetForegroundColor(fontlib_GetBackgroundColor());
-        fontlib_SetCursorPosition(MAIN_MENU_X - cursor_width, MAIN_MENU_Y + line_height * selection);
-        fontlib_DrawGlyph(CURSOR_GLYPH);
-        fontlib_SetForegroundColor(old_fgc);
+        gfx_BlitRectangle(gfx_buffer, MAIN_MENU_X - cursor_width, MAIN_MENU_Y + line_height * selection, cursor_width, line_height);
 
         switch (key)
         {

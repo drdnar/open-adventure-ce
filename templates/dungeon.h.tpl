@@ -127,7 +127,9 @@ typedef struct {{
  */
 #define T_TERMINATE(entry)	((entry)->motion == 1)
 
-#define DATA_FILE_ID_STRING "Colossal Cave Adventure dungeon v3"
+/* WARNING: If you change the size of this, the inline assembly in init.c needs
+ * to be updated to reflect the new size. */
+#define DATA_FILE_ID_STRING "Colossal Cave Adventure dungeon v4"
 
 typedef struct {{
     /* "Colossal Cave Adventure dungeon" */
@@ -148,6 +150,8 @@ typedef struct {{
     uint16_t actions;
     uint16_t tkey;
     uint16_t travel;
+    uint16_t splashl;
+    uint16_t splashr;
 }} data_file_header_t;
 
 const char* get_compressed_string(int n);
@@ -207,6 +211,10 @@ extern uint16_t* actions;
 #endif
 extern travelop_t* travel;
 extern uint16_t* tkey;
+#ifdef CALCULATOR
+extern uint8_t* splashl_data;
+extern uint8_t* splashr_data;
+#endif
 extern const char *ignore;
 
 #define NLOCATIONS	{num_locations}

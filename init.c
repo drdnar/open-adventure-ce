@@ -279,7 +279,7 @@ void load_dungeon(void)
      *  void* target = (void*)huffman_tree;
      *  uint16_t* offsets = (uint16_t*)(dungeon + sizeof(DATA_FILE_ID_STRING));
      *  unsigned char count;
-     *  for (count = 15; count > 0; offsets++, target++, count--)
+     *  for (count = 17; count > 0; offsets++, target++, count--)
      *      *target = (void*)(dungeon + *offsets);
      * 
      * You should note that this code assumes that the dungeon variables are
@@ -295,7 +295,7 @@ void load_dungeon(void)
     asm("	add	hl, bc");
     asm("	ex	de, hl");
     asm("	ld	iy, _huffman_tree");
-    asm("	ld	a, 15");
+    asm("	ld	a, 17");
     asm("load_dungeon_loop:");
     asm("	sbc	hl, hl	; Previous use of ADD should keep C reset");
     asm("	ex	de, hl");
