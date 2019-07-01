@@ -1,11 +1,14 @@
 
 
 
-                                Open Adventure CE
-                                      1.8.0
-				   1 July 2019
+                             Open Adventure CE 1.8.0
 
-				    Dr. D'nar
+                                    a port of
+
+                         The Colossal Cave Adventure 2.5
+
+                                   1 July 2019
+                                    Dr. D'nar
 
 
 
@@ -50,8 +53,11 @@ so you have to type "ne" instead to go northeast.
 
     The input parser was the first attempt ever at natural-language parsing in a
 game and has some known deficiencies.  Thus you get anomalies like "eat
-building" interpreted as a command to move to the building. These should not be
+building" interpreted as a command to move to the building.  These should not be
 reported as bugs; instead, consider them historical curiosities.
+
+    NOTA BENE: YOU CANNOT quit the main game just pressing MODE, DEL, or CLEAR.
+You MUST type "quit" or "save" to exit.  (Alternatively, press ON, then CLEAR).
 
 
 ------- Installation -----------------------------------------------------------

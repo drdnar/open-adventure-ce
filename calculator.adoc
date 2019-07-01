@@ -29,6 +29,12 @@ but also maps all of its flash memory, too, allowing unchanging data to be read 
 I wrote all of the code that deals with the dungeon file before ever writing any calculator code.
 I wanted to verify that the semicompressed dungeon file worked before any actual porting.
 
+Having a separate dungeon file reduces the program's RAM footprint.
+While it would have been possible to keep all the data in the program binary,
+it would double the program's RAM footprint, essentially requiring all of user memory to run the program.
+Reading the data from the archive makes the program a bit less efficient,
+but significantly reduces the RAM footprint, making it more user friendly.
+
 The accessor routines for reading data out of the arrays have been left it.
 They slightly reduce code size, and even though our little eZ80 is encumbered by an atrocious number of wait states,
 we still don't need the extra speed.
@@ -39,3 +45,36 @@ and the senior engineers never wondered even for a moment whether it ran efficie
 
 === Platform-Specific Code ===
 
+Open Adventure CE has been extended with quite a bit of platform-specific code,
+because the TI-84 Plus CE does not have a native console feature.
+(Well, not one I'd want to use, anyway.)
+
+`calc.c` contains:
+
+* The main menu
+* Resume menu
+* Error routines
+* File name validation routine
+* `safe_malloc()` so as to prevent writing to NULL pointers
+
+`editor.c` contains:
+
+* The command history buffer
+* The string input routine
+
+`style.c` contains:
+
+* The routine for decompressing the splash screen
+* Font selection routines
+* Some draw-text-with-specific-alignment routines
+* The console replacement routines
+
+The console replacement does not currently handle any scroll back,
+but it does handle basic formatting: word-wrap and centered text when selected.
+
+`ez80.asm` contains native eZ80 assembly routines:
+
+* `_decompress_string` a semioptimized Huffman decompression routine
+* LCD dimming control
+* Optimized time routines for the idle-timeout feature
+* Key input wrappers that check for the ON+CLEAR abort combo

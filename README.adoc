@@ -1,4 +1,6 @@
-= Open Adventure CE =
+= Open Adventure CE 1.8.0 =
+
+====== A port of The Colossal Cave Adventure 2.5 for your calculator. ======
 
 The Colossal Cave Adventure is an adventure game, featuring a maze-like cave
 with treasure and monsters.  The game draws elements from fantasy literature
@@ -29,7 +31,7 @@ Adventure is played using textual commands that resemble English.  However,
 the original system Adventure was programmed on has some odd limitations, some
 of which are present still in this calculator port.
 
-In particular, only the first five characters of word are examined.  This
+In particular, **only the first five characters of word are examined.**  This
 means that you only need to enter the first five characters of any word.  For
 example, the word "bottle" has six letters in it, so you can abbreviate it to
 `bottl`.  Unfortunately, this also means that "northeast" is the same as "north"
@@ -40,6 +42,8 @@ game and has some known deficiencies.  Thus you get anomalies like "eat
 building" interpreted as a command to move to the building. These should not be
 reported as bugs; instead, consider them historical curiosities.
 
+*Nota bene:* YOU **cannot** quit the main game just pressing MODE, DEL, or CLEAR.
+You **must** type "quit" or "save" to exit.  (Alternatively, press ON, then CLEAR).
 
 ==== Installation ====
 
