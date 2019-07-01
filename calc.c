@@ -418,7 +418,7 @@ resume_restart:
                 goto resume_restart;
             case sk_Mode:
             case sk_Clear:
-                ,free(save_list);
+                free(save_list);
                 return;
             case sk_Enter:
             case sk_2nd:
