@@ -1,19 +1,56 @@
 = Open Adventure CE =
 
-This is a port of http://www.catb.org/~esr/open-adventure[Open Adventure] to the TI-84 Plus CE.
+The Colossal Cave Adventure is an adventure game, featuring a maze-like cave
+with treasure and monsters.  The game draws elements from fantasy literature
+and role-playing games like Dungeons and Dragons.  In Adventure, you will dodge
+angry dwarves, fight a dragon, and find your way through a maze (or die trying).
+Puzzles in the game range from easy to quite hard, and you will not get a
+perfect score in just a single day of playing.  The original Colossal Cave
+Adventure game was written in 1975 through 1977; this game is one of the oldest
+classic computer games you can play.  Guaranteed 100 % free of
+https://en.wikipedia.org/wiki/Zork[grues!]
+
+The Colossal Cave Adventure is the original interactive fiction game, the
+first text adventure game, and inspiration for many games published in the 80's
+through early 90's.  Will Crowther based the initial cave on the actual Colossal
+Cave in Kentucky.  Don Woods significantly expanded the game.  In 2017 Eric S.
+Raymond began rewriting the awkward original FORTRAN code into something more
+modern and portable, a project he dubbed Open Adventure; Jason Ninneman, Peje
+Nilsson, Petr Voropaev, and Aaron Traas subsequently also jointed the project.
+
+Open Adventure CE is a port of http://www.catb.org/~esr/open-adventure[Open Adventure]
+to the TI-84 Plus CE.  For the French
+market, of course, the TI-83 Premium CE and Edition Python are also naturally
+supported.
 
 === Usage ===
 
+Adventure is played using textual commands that resemble English.  However,
+the original system Adventure was programmed on has some odd limitations, some
+of which are present still in this calculator port.
+
+In particular, only the first five characters of word are examined.  This
+means that you only need to enter the first five characters of any word.  For
+example, the word "bottle" has six letters in it, so you can abbreviate it to
+`bottl`.  Unfortunately, this also means that "northeast" is the same as "north"
+so you have to type `ne` instead to go northeast.
+
+The input parser was the first attempt ever at natural-language parsing in a
+game and has some known deficiencies.  Thus you get anomalies like "eat
+building" interpreted as a command to move to the building. These should not be
+reported as bugs; instead, consider them historical curiosities.
+
+
 ==== Installation ====
 
-The https://github.com/CE-Programming/libraries[standard LoadLib libraries GRAPHX and FILEIOC] are required.
-
-Additionally, FontLibC, a library not currently packaged with LoadLib (though it will be in the next release), is also required.
-A compatible copy of FontLibC is included with current releases.
+The standard LoadLib libraries GRAPHX, FILEIOC, and FONTLIBC are required,
+available at https://github.com/CE-Programming/libraries .
 
 You also need the Times and Dr. Sans font packs, also included. Two versions of the Times font pack are included. The Times.8xv font pack contains several font sizes unused by Adventure, so I've also included a Times_mini.8xv file, which only contains the font sizes used by Adventure; it saves about 30 K.
 
 Send both ADVENT.8xp and ADVENT_data.8xv to your calculator. The program `ADVENT` is the game itself, while the appvar `AdvenDat` is the game's dungeon data file. While changes to `AdvenDat` should be rare, different versions of the file are not compatible. If the game complains that the dungeon file is missing, make sure you have the right version of `AdvenDat`.
+
+You will want to keep the AdvenDat appvar archived.  You will otherwise run low on RAM.
 
 ==== Usage ====
 
@@ -21,13 +58,14 @@ Send both ADVENT.8xp and ADVENT_data.8xv to your calculator. The program `ADVENT
 
 The following standard command shortcuts are available:
 
-* `i` for `inventory`
-* `g` for `get` or `take`
-* `l` for `look`; or alternatively, `x` for `examine` (does the same thing)
-* `u` and `d` for `up` and `down`, respectively
-* `n`, `e`, `w`, and `s` for `north`, `east`, `west`, and `south`, respectively
+* `i` for `inventory`.
+* `g` for `get` or `take`.
+* `l` for `look`; or alternatively, `x` for `examine` (does the same thing).
+* `u` and `d` for `up` and `down`, respectively.
+* `n`, `e`, `w`, and `s` for `north`, `east`, `west`, and `south`, respectively.
 * `ne`, `nw`, `se`, `sw` for northeast, northwest, southeast, and southwest. Note that because the text parser only looks at the first five letters of each word, those are, in fact, the *only* way to enter those directions!
-* `z` to do nothing for a turn (this may still cause other events to proceed)
+* `y` for `yes` and `n` for `no`.
+* `z` to do nothing for a turn (this may still cause other events to proceed).
 
 ===== Command History =====
 
@@ -48,13 +86,7 @@ Simply use the cursor to select a save file, and then press ENTER to resume that
 You can delete a file directly from the Resume menu using the DEL key.
 Archived files on the Resume menu have a dot to the left of their name.
 You can archive a save file at the Resume screen using the STAT key.
-
-(Due to a bug in the FileIOC library (as of June 2019), unarchiving does not currently work.
-This will be fixed in the next release of the C libraries.
-Adventure already has the unarchive code.
-It will become functional as soon as FileIOC is updated.
-Saving over an archived file still functions correctly.)
-
+The standard `resume` command also still works.
 
 ==== Battery Saving ====
 
@@ -66,36 +98,29 @@ However, if you do not set a save name, then the game will be discarded.
 You can quit the game instantly at any time by pressing ON, then CLEAR.
 *Nothing will be saved.*
 
+== About Open Adventure ==
 
+The homepage for Open Adventure CE is
+https://github.com/drdnar/open-adventure-ce .  You can check there for the
+lastest updates, releases, and to file bug reports.
 
+Eric S. Raymond's home for this project is at
+http://www.catb.org/~esr/open-adventure .  You can go there for tarball
+downloads and other resources related to his original PC/POSIX version of this
+game.
 
-== README for Open Adventure PC ==
+This code is a forward-port of the Crowther/Woods Adventure 2.5 from 1995,
+last version in the main line of Colossal Cave Adventure development written by
+the original authors.  The authors have given permission and encouragement for
+Open Adventure; it obsolesces all the 350-point versions and previous 2.x
+(430-point) ports.
 
-ESR's home site for this project is at http://www.catb.org/~esr/open-adventure .
-You can go there for tarball downloads and other resources related to his
-original PC/POSIX version of this game.
+Additional information about the history of the Colossal Cave Adventure and
+Open Adventure is available at Eric S. Raymond's site.
 
-This code is a forward-port of the Crowther/Woods Adventure 2.5 from
-1995, last version in the main line of Colossal Cave Adventure
-development written by the original authors.  The authors have given
-permission and encouragement for this release; it obsolesces all
-the 350-point versions and previous 2.x (430-point) ports.
-
-The file history.adoc contains a more detailed history of this game
-and its ancestors.  The file notes.adoc is the maintainer's notes,
-describing project goals and recent changes.
-
-This project is called "Open Adventure" because it's not at all clear
-how to number Adventure past 2.5 without misleading or causing
-collisions or both.  See the history file for discussion.  The
-original 6-character name on the PDP-10 has been reverted to for the
-executable in order to avoid a collision with the BSD games port of
-the ancestral 1977 version.
-
-Please see INSTALL.adoc for build info.
-
+This project is called "Open Adventure" because it's not at all clear how to
+number Adventure past 2.5 without misleading or causing collisions or both.  See
+Raymond's history file for discussion.  The original 6-character name ADVENT on
+the PDP-10 has been kept for the retro feel.
 
 // end
-
-
-

@@ -1,6 +1,9 @@
 = Technical Notes for this Calculator Port =
-I looked at several different implementations of Adventure.
-They generally required a large text database that would be difficult to get onto a calculator,
+
+This is not the first time I've looked into porting Adventure.
+However, for a long time, the various implementations were all based on the original FORTRAN code,
+which doesn't make porting a very pleasant experience.
+Furthermore, they generally required a large text database that would be difficult to get onto a calculator,
 and would be needlessly inefficient space-wise.
 Then I found Open Adventure, which completely reworked the text database system into native C arrays.
 Not only that, but the code was written in fairly idiomatic C, not machine-translated from Fortran!
@@ -13,3 +16,26 @@ Helpfully, ESR wrote a comprehensive test suite to compare his new C code agains
 This made it easy for me to check that my completely reworked dungeon loader didn't break the game.
 Unfortunately, keeping tests working requires some akward `#ifdef`s scattered around the code,
 but it's worth it to keep the tests working.
+
+=== The Dungeon File ===
+
+The decision to move the dungeon into a readable database
+and then use a Python program to convert it into a more usable form was extremely helpful.
+The `make_dungeon.py` file has been extensively modified so that instead of generating a set
+of static C arrays, it instead generates an external file.
+This is particularly useful for the calculator, which maps not only RAM into the CPU's address space,
+but also maps all of its flash memory, too, allowing unchanging data to be read directly from flash.
+
+I wrote all of the code that deals with the dungeon file before ever writing any calculator code.
+I wanted to verify that the semicompressed dungeon file worked before any actual porting.
+
+The accessor routines for reading data out of the arrays have been left it.
+They slightly reduce code size, and even though our little eZ80 is encumbered by an atrocious number of wait states,
+we still don't need the extra speed.
+(It's three per RAM access.  And the eZ80 has no cache and only a 1-byte bus.
+It was **not** intended to be used with anything other than zero-wait-state RAM.
+It's like they handed ASIC design to a freshman intern who slapped IP blocks together
+and the senior engineers never wondered even for a moment whether it ran efficiently.)
+
+=== Platform-Specific Code ===
+

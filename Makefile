@@ -1,5 +1,5 @@
 NAME ?= ADVENT
-COMPRESSED ?= NO
+COMPRESSED ?= YES
 ICON ?= icon.png
 VERS := 1.8.0
 DESCRIPTION ?= "Colossal Cave Adventure $(VERS)"
