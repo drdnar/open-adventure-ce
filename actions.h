@@ -1,5 +1,5 @@
 /*
- * Actions for the duneon-running code.
+ * Actions for the dungeon-running code.
  * 
  * Zilog's C compiler is a bit . . . special, so this file is broken up into
  * smaller units.

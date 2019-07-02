@@ -69,8 +69,8 @@ static bool enough_mem()
 static bool is_archived(char* name)
 {
     bool archived;
-    ti_var_t file = 0;
-    if (!ti_Open(name, "r"))
+    ti_var_t file;
+    if (!(file = ti_Open(name, "r")))
         return false;
     archived = ti_IsArchived(file);
     ti_Close(file);
@@ -89,9 +89,9 @@ void save_apd()
     fp = fopen(save_file_name, WRITE_MODE);
     if (fp == NULL)
         return;
-    /* Only deduct two points---they've either already waited a few minutes, or
-     * had to leave to do something else. */
-    game.saved += 2;
+    /* Only deduct three points---they've either already waited a few minutes,
+     * or had to leave to do something else. */
+    game.saved += 3;
     savefile(fp, VRSION);
     if (archived)
     {
@@ -229,6 +229,7 @@ int suspend(void)
         os_PutStrFull(get_arbitrary_message(SAVING_FILE));
         ti_SetArchiveStatus(true, fp->slot);
         gfx_resume_render_splash();
+        gfx_FillScreen(background_color);
     }
 #endif
     fclose(fp);

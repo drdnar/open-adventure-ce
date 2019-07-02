@@ -42,7 +42,7 @@ game and has some known deficiencies.  Thus you get anomalies like "eat
 building" interpreted as a command to move to the building. These should not be
 reported as bugs; instead, consider them historical curiosities.
 
-*Nota bene:* YOU **cannot** quit the main game just pressing MODE, DEL, or CLEAR.
+*Nota bene:* You **cannot** quit the main game just pressing MODE, DEL, or CLEAR.
 You **must** type "quit" or "save" to exit.  (Alternatively, press ON, then CLEAR).
 
 ==== Installation ====

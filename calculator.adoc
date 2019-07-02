@@ -28,6 +28,8 @@ but also maps all of its flash memory, too, allowing unchanging data to be read 
 
 I wrote all of the code that deals with the dungeon file before ever writing any calculator code.
 I wanted to verify that the semicompressed dungeon file worked before any actual porting.
+The text is compressed with basic Huffman coding,
+though most of the space saving actually comes from string deduplication.
 
 Having a separate dungeon file reduces the program's RAM footprint.
 While it would have been possible to keep all the data in the program binary,

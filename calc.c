@@ -337,6 +337,9 @@ resume_restart:
     var_name = NULL;
     search_pos = NULL;
     
+    /* Build a list of up to MAX_SAVES save files.
+     * The game won't prevent you making more than MAX_SAVES files, but you
+     * won't be able to scroll to all of them through this menu. */
     while ((var_name = ti_Detect(&search_pos, save_file_header)) != NULL)
     {
         file = ti_Open(var_name, "r");
@@ -360,6 +363,8 @@ resume_restart:
             break;
     }
 
+    /* If the user has no save games, display an message to that effect instead
+     * of garbage. */
     if (total_saves == 0)
     {
         restore_splash();
@@ -378,8 +383,10 @@ resume_restart:
     line_height = fontlib_GetCurrentFontHeight();
     saves_per_screen = (LCD_HEIGHT - SAVE_LIST_Y) / line_height;
 
+    /* Let the user select a file.  Implement scrolling if necessary. */
     do
     {
+        /* Handle redrawing the screen if necessary. */
         if (redraw)
         {
             redraw = false;
@@ -433,7 +440,7 @@ resume_restart:
             case sk_Del:
                 redraw = true;
                 fontlib_SetWindowFullScreen();
-                gfx_FillScreen(background_color);
+                restore_splash();
                 fontlib_SetCursorPosition(0, LCD_HEIGHT / 3 - 16);
                 print_centered_compressed(CONFIRM_DELETE);
                 print_centered(current_item->name);
