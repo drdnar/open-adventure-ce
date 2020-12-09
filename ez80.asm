@@ -153,7 +153,7 @@ _on_key_pressed:
 ; Returns 1 if the ON key has been pressed since the last time the
 ; ON-key-pressed flag was checked.
 ; Returns 0 if the ON key has not been pressed.
-	ld	hl, flags + 9
+	ld	a, (flags + 9)
 	and	10h
 	ret	z
 	inc	a
