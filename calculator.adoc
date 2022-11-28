@@ -40,10 +40,6 @@ but significantly reduces the RAM footprint, making it more user friendly.
 The accessor routines for reading data out of the arrays have been left it.
 They slightly reduce code size, and even though our little eZ80 is encumbered by an atrocious number of wait states,
 we still don't need the extra speed.
-(It's three per RAM access.  And the eZ80 has no cache and only a 1-byte bus.
-It was **not** intended to be used with anything other than zero-wait-state RAM.
-It's like they handed ASIC design to a freshman intern who slapped IP blocks together
-and the senior engineers never wondered even for a moment whether it ran efficiently.)
 
 === Platform-Specific Code ===
 
